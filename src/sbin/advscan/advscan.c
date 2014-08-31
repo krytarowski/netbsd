@@ -41,6 +41,7 @@
 static char rcsid[] = "@(#)$RCSfile: advscan.c,v $ $Revision: 1.1.48.1 $ (DEC) $Date: 2002/09/26 17:14:54 $";
 #endif
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
