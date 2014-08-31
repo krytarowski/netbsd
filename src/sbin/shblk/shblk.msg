@@ -29,7 +29,7 @@ $  */
 $quote "
 
 $set 1
-USAGE	"usage: %s [-startblk N] [-blkcnt N] filename\n"
+1	"usage: %s [-startblk N] [-blkcnt N] filename\n"
 2	"usage: %s [-sb N] [-bc N] filename\n"
 3	"\n%s: missing parameter for option <-sb>\n"
 4	"\n%s: missing parameter for option <-bc>\n"

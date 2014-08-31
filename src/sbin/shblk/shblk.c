@@ -27,7 +27,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <locale.h>
-#include "shblk_msg.h"
+#include <nl_types.h>
 
 nl_catd catd;
 static char *Prog_name = "shblk";
@@ -35,7 +35,7 @@ static char *Prog_name = "shblk";
 void
 usage(void)
 {
-	fprintf(stderr, catgets(catd, 1, USAGE, "usage: %s [-startblk N] [-blkcnt N] filename\n"), Prog_name);
+	fprintf(stderr, catgets(catd, 1, 1, "usage: %s [-startblk N] [-blkcnt N] filename\n"), Prog_name);
 	fprintf(stderr, catgets(catd, 1, 2, "usage: %s [-sb N] [-bc N] filename\n"), Prog_name);
 }
 main(int argc, char *argv[])
@@ -52,7 +52,7 @@ main(int argc, char *argv[])
 	int n;
 
 	(void) setlocale(LC_ALL, "");
-	catd = catopen(MF_SHBLK, NL_CAT_LOCALE);
+	catd = catopen("shblk.cat", NL_CAT_LOCALE);
 
 	/* check for root */
 	if (geteuid()) {
