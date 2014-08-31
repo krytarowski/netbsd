@@ -64,7 +64,10 @@ static char rcsid[] = "@(#)$RCSfile: advscan.c,v $ $Revision: 1.1.48.1 $ (DEC) $
 #include <overlap.h>
 #include <msfs/bs_error.h>
 #include <msfs/msfs_syscalls.h>
-#include <msfs/advfs_evm.h>
+/*
+ * XXX: Tru64 Event Manager (evm(5)) machinery is undisclosed
+ */
+/* #include <msfs/advfs_evm.h> */
 
 #include <locale.h>
 #include <nl_types.h>
