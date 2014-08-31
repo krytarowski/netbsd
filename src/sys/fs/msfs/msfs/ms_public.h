@@ -8,12 +8,12 @@
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -43,10 +43,14 @@
  */
 
 #if 0
-struct mount {int notused;};
+struct mount {
+	int notused;
+};
 #endif
-struct vnode {int notused;};
-#endif /* USER_MODE */
+struct vnode {
+	int notused;
+};
+#endif				/* USER_MODE */
 
 #ifndef KERNEL
 #define uprintf printf
@@ -77,22 +81,24 @@ struct vnode {int notused;};
 #define BMTR_FS_INDEX_FILE 250
 #define BMTR_FS_DIR_INDEX_FILE 249
 
-typedef enum { BMTR_NO_LOCK, BMTR_LOCK, BMTR_UNLOCK, BMTR_IGNORE_LOCK } bmtrLkT;
+typedef enum {
+	BMTR_NO_LOCK, BMTR_LOCK, BMTR_UNLOCK, BMTR_IGNORE_LOCK
+}    bmtrLkT;
 
 int
-bmtr_max_rec_size( void );
+    bmtr_max_rec_size(void);
 
 #define bmtr_get_rec( bfap, rt, bp, bs ) \
     bmtr_get_rec_n_lk( bfap, rt, bp, bs, BMTR_NO_LOCK )
 
 statusT
 bmtr_get_rec_n_lk(
-    struct bfAccess *bfap,      /* in - bf access structure */
-    u_short rType,              /* in - type of record */
-    void *bPtr,                 /* in/out - ptr to buffer */
-    u_short bSize,              /* in - size of buffer */
-    bmtrLkT lk                  /* in - keep mcell locked? */
-    );
+    struct bfAccess * bfap,	/* in - bf access structure */
+    u_short rType,		/* in - type of record */
+    void *bPtr,			/* in/out - ptr to buffer */
+    u_short bSize,		/* in - size of buffer */
+    bmtrLkT lk			/* in - keep mcell locked? */
+);
 
 #define bmtr_put_rec( bfap, rt, bp, bs, ftxh ) \
     bmtr_put_rec_n_unlk( bfap, rt, bp, bs, ftxh, BMTR_NO_LOCK, 0 )
@@ -102,28 +108,28 @@ bmtr_get_rec_n_lk(
 
 statusT
 bmtr_put_rec_n_unlk(
-    struct bfAccess *bfap,      /* in - bf access structure */
-    u_short rType,              /* in - type of record */
-    void *bPtr,                 /* in - ptr to buffer */
-    u_short bSize,              /* in - size of buffer */
-    ftxHT parentFtxH,           /* in - transaction handle */
-    bmtrLkT lk,                 /* in - unlock mcell? */
-    long xid                    /* in - CFS transaction id */
-    );
+    struct bfAccess * bfap,	/* in - bf access structure */
+    u_short rType,		/* in - type of record */
+    void *bPtr,			/* in - ptr to buffer */
+    u_short bSize,		/* in - size of buffer */
+    ftxHT parentFtxH,		/* in - transaction handle */
+    bmtrLkT lk,			/* in - unlock mcell? */
+    long xid			/* in - CFS transaction id */
+);
 
 statusT
 bmtr_put_rec_n_unlk_int(
-    struct bfAccess *bfap,      /* in - bf access structure */
-    u_short rType,              /* in - type of record */
-    void *bPtr,                 /* in - ptr to buffer */
-    u_short bSize,              /* in - size of buffer */
-    ftxHT parentFtxH,           /* in - transaction handle */
-    bmtrLkT lk,                 /* in - unlock mcell? */
-    long xid                    /* in - CFS transaction id */
-    );
+    struct bfAccess * bfap,	/* in - bf access structure */
+    u_short rType,		/* in - type of record */
+    void *bPtr,			/* in - ptr to buffer */
+    u_short bSize,		/* in - size of buffer */
+    ftxHT parentFtxH,		/* in - transaction handle */
+    bmtrLkT lk,			/* in - unlock mcell? */
+    long xid			/* in - CFS transaction id */
+);
 
 #ifdef KERNEL
-dev_t bs_bfset_get_dev( bfSetT *bfSetp );
+dev_t bs_bfset_get_dev(bfSetT * bfSetp);
 #endif
 
 
@@ -131,9 +137,9 @@ dev_t bs_bfset_get_dev( bfSetT *bfSetp );
  * user time used by the calling task
  */
 void
-task_getrusage( struct rusage * ru);
+     task_getrusage(struct rusage * ru);
 
 /* for advfs smoothsync */
-#define SMSYNC_NQS 16   /* best at n*15+1 */
+#define SMSYNC_NQS 16		/* best at n*15+1 */
 
-#endif /* MS_PUBLIC */
+#endif				/* MS_PUBLIC */

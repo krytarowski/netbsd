@@ -2,19 +2,19 @@
  *                                                                          *
  *  (C) DIGITAL EQUIPMENT CORPORATION 1991                                  *
  */
-/* 
+/*
  * =======================================================================
  *   (c) Copyright Hewlett-Packard Development Company, L.P., 2008
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -59,7 +59,7 @@
 /*
  ** msfsSyscallp
  *
- * This is a function pointer to the MegaSafe system call handler.  It 
+ * This is a function pointer to the MegaSafe system call handler.  It
  * exists so that we can have msfs_syscall() in the kernel and have no
  * real syscall (as is the case when the customer has not installed
  * MegaSafe).  When MegaSafe is installed it initializes the syscall
@@ -67,11 +67,11 @@
  */
 
 int
-(* MsfsSyscallp)( 
-    int     opType,
-    void    *parmBuf,
-    int     parmBufLen
-    ) = NULL;
+    (*MsfsSyscallp) (
+        int opType,
+        void *parmBuf,
+        int parmBufLen
+) = NULL;
 
 /*
  * msfs_syscall
@@ -86,35 +86,33 @@ int
 
 int
 msfs_syscall(
-    struct proc *p,     /* in - ?? */
-    void *args,         /* in - pointer system call arguments */
-    long *retval        /* out - system call return value */
-    )
+    struct proc * p,		/* in - ?? */
+    void *args,			/* in - pointer system call arguments */
+    long *retval		/* out - system call return value */
+)
 {
-    /* 
-     * Define a pointer to a struct that contains the user args 
-     */
-    register struct args {
-        int  opType;
-        void *parmBuf;
-        int  parmBufLen;
-    } *uap = (struct args *) args;  /* User Args Pointer */
+	/* Define a pointer to a struct that contains the user args */
+	register struct args {
+		int opType;
+		void *parmBuf;
+		int parmBufLen;
+	}   *uap = (struct args *) args;	/* User Args Pointer */
 
-    if (MsfsSyscallp == NULL) {
-        /*
-         ** MegaSafe is not installed/initialized.
-         */
-        *retval = -1;
-        return( ENOSYS );
-    } else {
+	if (MsfsSyscallp == NULL) {
+		/*
+	         ** MegaSafe is not installed/initialized.
+	         */
+		*retval = -1;
+		return (ENOSYS);
+	} else {
 
-        /*
-         ** Call the MegaSafe syscall handler.  Note that we never set
-         ** errno when MegaSafe is installed.  The syscall return value
-         ** is either zero (EOK) or an errno, or a MegaSafe status.  We
-         ** don't use errno to indicate an error; it is too limited.
-         */
-        *retval = (long)MsfsSyscallp( uap->opType, uap->parmBuf, uap->parmBufLen );
-        return( 0 );
-    }
+		/*
+	         ** Call the MegaSafe syscall handler.  Note that we never set
+	         ** errno when MegaSafe is installed.  The syscall return value
+	         ** is either zero (EOK) or an errno, or a MegaSafe status.  We
+	         ** don't use errno to indicate an error; it is too limited.
+	         */
+		*retval = (long) MsfsSyscallp(uap->opType, uap->parmBuf, uap->parmBufLen);
+		return (0);
+	}
 }

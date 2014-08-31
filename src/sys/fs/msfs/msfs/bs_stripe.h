@@ -8,12 +8,12 @@
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -65,50 +65,50 @@
 
 
 void
-str_register_stripe_agent (
-                           );
+str_register_stripe_agent(
+);
 
 statusT
-str_stripe (
-            bfAccessT *bfAccess,  /* in */
-            uint32T segmentCnt,   /* in */
-            uint32T segmentSize,  /* in */
-            long xid              /* in */
-            );
+str_stripe(
+    bfAccessT * bfAccess,	/* in */
+    uint32T segmentCnt,		/* in */
+    uint32T segmentSize,	/* in */
+    long xid			/* in */
+);
 
 statusT
-str_stripe_clone (
-                  bfAccessT *bfap,      /* in - clone access */
-                  bsInMemXtntT *oXtntp, /* in - original xtnt map */
-                  ftxHT pftxH           /* in - parent ftxH */
-                  );
+str_stripe_clone(
+    bfAccessT * bfap,		/* in - clone access */
+    bsInMemXtntT * oXtntp,	/* in - original xtnt map */
+    ftxHT pftxH			/* in - parent ftxH */
+);
 
 statusT
-str_create_stripe_hdr (
-                       uint32T segmentCnt,          /* in */
-                       uint32T segmentSize,         /* in */
-                       bsStripeHdrT **newStripeHdr  /* out */
-                       );
+str_create_stripe_hdr(
+    uint32T segmentCnt,		/* in */
+    uint32T segmentSize,	/* in */
+    bsStripeHdrT ** newStripeHdr/* out */
+);
 
 void
-str_delete_stripe_hdr (
-                       bsStripeHdrT *stripeHdr  /* in */
-                       );
+str_delete_stripe_hdr(
+    bsStripeHdrT * stripeHdr	/* in */
+);
 
 void
-str_calc_page_alloc (
-                     uint32T bfPageOffset,    /* in */
-                     uint32T bfPageCnt,       /* in */
-                     bsStripeHdrT *stripeHdr  /* in */
-                     );
+str_calc_page_alloc(
+    uint32T bfPageOffset,	/* in */
+    uint32T bfPageCnt,		/* in */
+    bsStripeHdrT * stripeHdr	/* in */
+);
 
 statusT
-str_create_bf_rel_xtnt_map (
-                            bsStripeHdrT *stripeHdr,       /* in */
-                            uint32T mapIndex,              /* in */
-                            bsInMemXtntMapT *xmXtntMap,    /* in */
-                            bsXtntMapTypeT bsXtntMapType,  /* in */
-                            bsInMemXtntMapT **bfXtntMap    /* out */
-                            );
+str_create_bf_rel_xtnt_map(
+    bsStripeHdrT * stripeHdr,	/* in */
+    uint32T mapIndex,		/* in */
+    bsInMemXtntMapT * xmXtntMap,/* in */
+    bsXtntMapTypeT bsXtntMapType,	/* in */
+    bsInMemXtntMapT ** bfXtntMap/* out */
+);
 
-#endif  /* _BS_STRIPE_H_ */
+#endif				/* _BS_STRIPE_H_ */

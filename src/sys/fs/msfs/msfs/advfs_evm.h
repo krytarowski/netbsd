@@ -4,12 +4,12 @@
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -59,7 +59,7 @@
 #define EVENT_FSET_BAD_FRAG          _EvmSYSTEM_EVENT_NAME("fs.advfs.fset.bad.frag")
 #define EVENT_FSET_OPTIONS           _EvmSYSTEM_EVENT_NAME("fs.advfs.fset.options")
 #define EVENT_FSET_INCONSISTENT_DIR_ENTRY  _EvmSYSTEM_EVENT_NAME("fs.advfs.fset.inconsistent_dir_entry")
-#define EVENT_FSET_FRAG_ABANDONED    _EvmSYSTEM_EVENT_NAME("fs.advfs.fset.frag.abandoned") 
+#define EVENT_FSET_FRAG_ABANDONED    _EvmSYSTEM_EVENT_NAME("fs.advfs.fset.frag.abandoned")
 
 #define EVENT_QUOTA_ON		 _EvmSYSTEM_EVENT_NAME("fs.advfs.quota.on")
 #define EVENT_QUOTA_OFF		 _EvmSYSTEM_EVENT_NAME("fs.advfs.quota.off")
@@ -81,32 +81,32 @@
 #define EVENT_FDMN_CCBT_IGNORED         _EvmSYSTEM_EVENT_NAME("fs.advfs.fdmn.ccbt.ignored")
 
 typedef struct _advfs_event {
-    char *special;
-    char *domain;
-    char *fileset;
-    char *directory;
-    char *clonefset;
-    char *renamefset;
-    char *user;
-    char *group;
-    char *options;
-    long fileHLimit;
-    long blkHLimit;
-    long fileSLimit;
-    long blkSLimit;
-    long dirTag;
-    long dirPg;
-    long pgOffset;
-    long frag;
-    long fragtype;
-    char *ev_info_str;
-} advfs_ev;
+	char *special;
+	char *domain;
+	char *fileset;
+	char *directory;
+	char *clonefset;
+	char *renamefset;
+	char *user;
+	char *group;
+	char *options;
+	long fileHLimit;
+	long blkHLimit;
+	long fileSLimit;
+	long blkSLimit;
+	long dirTag;
+	long dirPg;
+	long pgOffset;
+	long frag;
+	long fragtype;
+	char *ev_info_str;
+}            advfs_ev;
 
 
 #ifdef KERNEL
-    int advfs_post_kernel_event(char *evname, advfs_ev *advfs_event);
+int advfs_post_kernel_event(char *evname, advfs_ev * advfs_event);
 #else
-    int init_event(advfs_ev *advfs_event);
-    int advfs_post_user_event
-                    (char *evname, advfs_ev advfs_event, char *Prog);
+int init_event(advfs_ev * advfs_event);
+int advfs_post_user_event
+    (char *evname, advfs_ev advfs_event, char *Prog);
 #endif

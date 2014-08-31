@@ -8,12 +8,12 @@
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -38,49 +38,47 @@ struct logDesc;
  */
 #define MAX_RD_PGS (32)
 
-#define BS_DEF_LOG_PGS 512   /* Default number of pages per log */
-#define BS_MIN_LOG_PGS 512   /* Minimum number of pages per log */
+#define BS_DEF_LOG_PGS 512	/* Default number of pages per log */
+#define BS_MIN_LOG_PGS 512	/* Minimum number of pages per log */
 
-static const lsnT nilLSN = { 0 };
-static const lsnT firstLSN = { LSN_MIN };
-static const lsnT maxLSN = { LSN_MAX };
+static const lsnT nilLSN = {0};
+static const lsnT firstLSN = {LSN_MIN};
+static const lsnT maxLSN = {LSN_MAX};
 
-typedef uint32T logHT;  /* Handles to open logs are of this type */
+typedef uint32T logHT;		/* Handles to open logs are of this type */
 
 /*
- * logRdHT - Handle to an open log read stream.  See lgr_read... for 
+ * logRdHT - Handle to an open log read stream.  See lgr_read... for
  * more info.
  */
 typedef struct logRdH {
-    struct logDesc *ldP;     /* pointer to the open log */
-    uint32T rdH;            /* Handle to the read stream descriptor */
-} logRdHT;
-
+	struct logDesc *ldP;	/* pointer to the open log */
+	uint32T rdH;		/* Handle to the read stream descriptor */
+}      logRdHT;
 /*
  * logWriteModeT - When writing a record via lgr_writev() the following
  * write modes can be specified.
  */
-typedef enum { 
-    LW_SYNC,        /* Synchronous write (wait for completion) */
-    LW_ASYNC        /* Asynchronous write (don't wait for completion) */
-} logWriteModeT;
-
+typedef enum {
+	LW_SYNC,		/* Synchronous write (wait for completion) */
+	LW_ASYNC		/* Asynchronous write (don't wait for
+				 * completion) */
+}    logWriteModeT;
 /*
  * logReadModeT - When reading log records via lgr_read() the following
  * read modes can be specified.  lgr_read() will read the specified record
  * return the address of the "next" record based on the read mode.
  */
-typedef enum { 
-    LR_FWD,     /* Return the next log rec's addr */
-    LR_BWD,     /* Return the prev log rec's addr */
-    LR_BWD_LINK     /* Return the prev client rec's addr */
-} logReadModeT;
+typedef enum {
+	LR_FWD,			/* Return the next log rec's addr */
+	LR_BWD,			/* Return the prev log rec's addr */
+	LR_BWD_LINK		/* Return the prev client rec's addr */
+}    logReadModeT;
 
 typedef struct {
-    uint32T *bufPtr;      /* pointer to data buffer */
-    int bufWords;         /* number of words in buffer */
-} logBufVectorT;
-
+	uint32T *bufPtr;	/* pointer to data buffer */
+	int bufWords;		/* number of words in buffer */
+}      logBufVectorT;
 /*****************************************************************************
  * Logger In-Memory Structures.                                              *
  *****************************************************************************/
@@ -92,11 +90,12 @@ typedef struct {
  * which contains information about the current page being accessed.
  */
 typedef struct rdPgDesc {
-    int         refed;  /* flag is true if we hold the page referrenced */
-    bfPageRefHT refH;   /* page's ref handle */
-    struct logPg *pgP;  /* pointer to page */
-    uint32T     num;    /* page's number */
-} rdPgDescT;
+	int refed;		/* flag is true if we hold the page
+				 * referrenced */
+	bfPageRefHT refH;	/* page's ref handle */
+	struct logPg *pgP;	/* pointer to page */
+	uint32T num;		/* page's number */
+}        rdPgDescT;
 
 static const rdPgDescT NilRdPgDesc = NULL_STRUCT;
 
@@ -106,20 +105,19 @@ static const rdPgDescT NilRdPgDesc = NULL_STRUCT;
  * Describes the current log page being used by lgr_writev().
  */
 typedef struct wtPgDesc {
-    unsigned    pinned   :  1; /* true if we hold the page pinned */
-    unsigned    repinned :  1; /* true if we pinned, unpinned, pinned pg */
-    unsigned    dirty    :  1; /* true if we have written to the page */
-    unsigned             : 28;
-    bfPageRefHT refH;          /* page's ref handle */
-    struct logPg  *pgP;        /* pointer to page */
-    uint32T     num;           /* page's number */
-    int16T      prevLastRec;   /* word offset into pg.data */
-    int16T     writers;
-    logRecAddrT lastRec;       /* Log record addr of the last record on */
-                               /* on this page */
-    
-} wtPgDescT;
+	unsigned pinned:1;	/* true if we hold the page pinned */
+	unsigned repinned:1;	/* true if we pinned, unpinned, pinned pg */
+	unsigned dirty:1;	/* true if we have written to the page */
+	unsigned:28;
+	bfPageRefHT refH;	/* page's ref handle */
+	struct logPg *pgP;	/* pointer to page */
+	uint32T num;		/* page's number */
+	int16T prevLastRec;	/* word offset into pg.data */
+	int16T writers;
+	logRecAddrT lastRec;	/* Log record addr of the last record on */
+	/* on this page */
 
+}        wtPgDescT;
 /*
  * logDescT -
  *
@@ -134,42 +132,43 @@ typedef struct wtPgDesc {
  */
 typedef struct logDesc {
 #ifdef KERNEL
-    lock_data_t descLock;          /* Protects all fields in the descriptor */
+	lock_data_t descLock;	/* Protects all fields in the descriptor */
 #endif
-    struct domain *dmnP  ;         /* Domain pointer for log bitfile */
-    struct bfAccess  *logAccP;     /* Ptr to log's bf access struct */
-    logRecAddrT nextRec;           /* Log record addr of next rec to write */
-    logRecAddrT firstRec;          /* Log record addr of first rec in log */
-    logRecAddrT lastRec;           /* Log record addr of the last record */
-    logRecAddrT lastRecFirstSeg;   /* Addr of the last record's 1st segment */
-    lsnT        quadLsn[2];        /* First lsn in last two quadrants */
-    uint32T     oldestPg;          /* oldest log page (meta data not written) */
-    uint32T     pgCnt;             /* Number of pages in the log */
-    unsigned    logWrapStateKnown:1; /* 1 = we know log has wrapped or not */
-    unsigned    logWrapped : 1;    /* 1 = log has wrapped */
-    unsigned    flushing : 1;      /* 1 = log is being flushed */
-    unsigned    switching : 1;     /* 1 = switching logs is in progress */
-    unsigned    reuseLastPg : 1;   /* 1 = repin last page after flushing */
-    unsigned    : 27;
+	struct domain *dmnP;	/* Domain pointer for log bitfile */
+	struct bfAccess *logAccP;	/* Ptr to log's bf access struct */
+	logRecAddrT nextRec;	/* Log record addr of next rec to write */
+	logRecAddrT firstRec;	/* Log record addr of first rec in log */
+	logRecAddrT lastRec;	/* Log record addr of the last record */
+	logRecAddrT lastRecFirstSeg;	/* Addr of the last record's 1st
+					 * segment */
+	lsnT quadLsn[2];	/* First lsn in last two quadrants */
+	uint32T oldestPg;	/* oldest log page (meta data not written) */
+	uint32T pgCnt;		/* Number of pages in the log */
+	unsigned logWrapStateKnown:1;	/* 1 = we know log has wrapped or not */
+	unsigned logWrapped:1;	/* 1 = log has wrapped */
+	unsigned flushing:1;	/* 1 = log is being flushed */
+	unsigned switching:1;	/* 1 = switching logs is in progress */
+	unsigned reuseLastPg:1;	/* 1 = repin last page after flushing */
+	unsigned:27;
 #ifdef KERNEL
-    lock_data_t flushLock;          /* Protects flushLsn, flushing, wrtPgD */
+	lock_data_t flushLock;	/* Protects flushLsn, flushing, wrtPgD */
 #endif
-    lsnT        flushLsn;          /* lsn we're flushing to */
-    wtPgDescT   *wrtPgD;           /* Desc for current log end page */
-    rdPgDescT   *rdPgD[MAX_RD_PGS];/* Info about page being held referenced */
-} logDescT;
-
+	lsnT flushLsn;		/* lsn we're flushing to */
+	wtPgDescT *wrtPgD;	/* Desc for current log end page */
+	rdPgDescT *rdPgD[MAX_RD_PGS];	/* Info about page being held
+					 * referenced */
+}       logDescT;
 #define get_wrtPgD_index(_log_page,_pgs_in_log) (_log_page%(_pgs_in_log/4)) + 1;
 
 
-/*             
+/*
  *** Function Prototypes ***
  */
 
-int lgr_lsn_lt( lsnT lsn1, lsnT lsn2, logDescT *ldP );
-int lgr_lsn_gt( lsnT lsn1, lsnT lsn2, logDescT *ldP );
-int lgr_seq_lt( lsnT lsn1, lsnT lsn2 );
-int lgr_seq_gt( lsnT lsn1, lsnT lsn2 );
+int lgr_lsn_lt(lsnT lsn1, lsnT lsn2, logDescT * ldP);
+int lgr_lsn_gt(lsnT lsn1, lsnT lsn2, logDescT * ldP);
+int lgr_seq_lt(lsnT lsn1, lsnT lsn2);
+int lgr_seq_gt(lsnT lsn1, lsnT lsn2);
 
 /*
  * lgr_calc_num_pgs
@@ -181,7 +180,7 @@ int lgr_seq_gt( lsnT lsn1, lsnT lsn2 );
  * must have an integral number of log pages.
  */
 
-int lgr_calc_num_pgs( int requestedLogPgs );
+int lgr_calc_num_pgs(int requestedLogPgs);
 
 /*
  * lgr_open - Opens a log.  If the log is being opened for the first time
@@ -193,16 +192,16 @@ int lgr_calc_num_pgs( int requestedLogPgs );
  */
 statusT
 lgr_open(
-    logDescT  **ldP,            /* out - pointer to the open log */
-    logRecAddrT *nextLogRec,    /* out - rec addr of next rec in log */
-    struct bfAccess **logbfap,  /* out - access structure of the open log */
-    bfTagT logtag,              /* in - the log's tag */
-    bfSetT *bfSetp,             /* in - the log's bitfile-set desc ptr */
-    uint32T flag                /* in - if set, re-init log */
-    );
+    logDescT ** ldP,		/* out - pointer to the open log */
+    logRecAddrT * nextLogRec,	/* out - rec addr of next rec in log */
+    struct bfAccess ** logbfap,	/* out - access structure of the open log */
+    bfTagT logtag,		/* in - the log's tag */
+    bfSetT * bfSetp,		/* in - the log's bitfile-set desc ptr */
+    uint32T flag		/* in - if set, re-init log */
+);
 
 /*
- * lgr_close - Close a log.  
+ * lgr_close - Close a log.
  *
  * NOTES:
  *
@@ -211,29 +210,29 @@ lgr_open(
  */
 statusT
 lgr_close(
-     logDescT  *ldP
-     );
+    logDescT * ldP
+);
 
 /*
  * lgr_flush - Writes the log's cached pages to disk.
  */
 void
 lgr_flush(
-     logDescT *ldP
-     );
+    logDescT * ldP
+);
 
 statusT
 lgr_flush_start(
-     logDescT *ldP,
-     int noBlock,
-     lsnT lsn
-     );
+    logDescT * ldP,
+    int noBlock,
+    lsnT lsn
+);
 
 statusT
-lgr_flush_sync( 
-     logDescT *ldP,
-     lsnT lsn
-     );
+lgr_flush_sync(
+    logDescT * ldP,
+    lsnT lsn
+);
 
 /*
  * lgr_switch_vol
@@ -247,12 +246,12 @@ lgr_flush_sync(
 
 statusT
 lgr_switch_vol(
-    logDescT *ldP,        /* in - pointer to an open log */
-    vdIndexT newVolIdx,   /* in - move log to this vdIndex */
-    uint32T newNumPgs,    /* in - if > 0 then change log's size */
-    serviceClassT logSvc, /* in - if != 0 then change log service class */
-    long xid              /* in - CFS transaction id */
-    );
+    logDescT * ldP,		/* in - pointer to an open log */
+    vdIndexT newVolIdx,		/* in - move log to this vdIndex */
+    uint32T newNumPgs,		/* in - if > 0 then change log's size */
+    serviceClassT logSvc,	/* in - if != 0 then change log service class */
+    long xid			/* in - CFS transaction id */
+);
 
 /*
  * lgr_writev - Writes a record into the log.  The records are doubly
@@ -281,23 +280,23 @@ lgr_switch_vol(
  */
 statusT
 lgr_writev(
-     logWriteModeT lw_mode, /* in  - write mode (sync, async, ...) */
-     logHT logh,            /* in  - log handle */
-     logRecAddrT *rec_addr, /* out - log address of record written */
-     logRecAddrT bwd_link,  /* in  - rec addr of client's prev rec */
-     logBufVectorT bufv[],  /* in  - buffer vector */
-     int bufCnt             /* in  - number of buffers in vector */
-     );
+    logWriteModeT lw_mode,	/* in  - write mode (sync, async, ...) */
+    logHT logh,			/* in  - log handle */
+    logRecAddrT * rec_addr,	/* out - log address of record written */
+    logRecAddrT bwd_link,	/* in  - rec addr of client's prev rec */
+    logBufVectorT bufv[],	/* in  - buffer vector */
+    int bufCnt			/* in  - number of buffers in vector */
+);
 
 statusT
 lgr_write(
-     logWriteModeT lw_mode, /* in  - write mode (sync, async, ...) */
-     logHT logh,            /* in  - log handle */
-     logRecAddrT *rec_addr, /* out - log address of record written */
-     logRecAddrT bwd_link,  /* in  - rec addr of client's prev rec */
-     uint32T *buf,          /* in  - record data buffer */
-     int buf_words          /* in  - num words in buffer */
-     );
+    logWriteModeT lw_mode,	/* in  - write mode (sync, async, ...) */
+    logHT logh,			/* in  - log handle */
+    logRecAddrT * rec_addr,	/* out - log address of record written */
+    logRecAddrT bwd_link,	/* in  - rec addr of client's prev rec */
+    uint32T * buf,		/* in  - record data buffer */
+    int buf_words		/* in  - num words in buffer */
+);
 
 /*
  * lgr_read_open - Opens a log "read stream".  In order to read a log one
@@ -315,9 +314,9 @@ lgr_write(
  */
 statusT
 lgr_read_open(
-         logDescT *ldP,   /* in  - log descriptor pointer */
-         logRdHT *logrdh /* out - lgr_read handle */
-         );
+    logDescT * ldP,		/* in  - log descriptor pointer */
+    logRdHT * logrdh		/* out - lgr_read handle */
+);
 
 /*
  * lgr_dmn_read_open - Identical to lgr_read_open above except it
@@ -328,9 +327,9 @@ lgr_read_open(
  */
 statusT
 lgr_dmn_read_open(
-                  struct domain *dmnP,    /* in  - domain pointer */
-                  logRdHT *logrdh   /* out - lgr_read handle */
-                  );
+    struct domain * dmnP,	/* in  - domain pointer */
+    logRdHT * logrdh		/* out - lgr_read handle */
+);
 
 
 /*
@@ -341,25 +340,26 @@ lgr_dmn_read_open(
  * the log.  lgr_read() returns the log record address of the next record.
  * The meaning of "next record" is dependent on the read mode specified; see
  * the comments for logReadModeT for a description of the various modes
- * and how they affect the meaning of "next record". 
+ * and how they affect the meaning of "next record".
  */
 statusT
 lgr_read(
-    logReadModeT rd_mode, /* in  - read mode (fwd, bwd, bwd_link, ...) */
-    logRdHT logrdh,       /* in  - lgr_read handle */
-    logRecAddrT *rec_addr,/* in/out  - log address of record */
-    uint32T **buf,        /* out - ptr to record data */
-    int *buf_words,       /* out - words read */
-    int *recWords         /* out - size of record (not just this segment) */
-    );
+    logReadModeT rd_mode,	/* in  - read mode (fwd, bwd, bwd_link, ...) */
+    logRdHT logrdh,		/* in  - lgr_read handle */
+    logRecAddrT * rec_addr,	/* in/out  - log address of record */
+    uint32T ** buf,		/* out - ptr to record data */
+    int *buf_words,		/* out - words read */
+    int *recWords		/* out - size of record (not just this
+				 * segment) */
+);
 
 /*
  * lgr_read_close - Closes a log "read stream".
  */
 statusT
-lgr_read_close( 
-          logRdHT logrdh   /* in  - lgr_read handle */
-          );
+lgr_read_close(
+    logRdHT logrdh		/* in  - lgr_read handle */
+);
 
 #define lgr_end     lgr_get_last_rec
 #define lgr_dmn_end lgr_dmn_get_last_rec
@@ -367,36 +367,36 @@ lgr_read_close(
 #define lgr_dmn_beg lgr_dmn_get_first_rec
 
 /*
- * lgr_get_last_rec - Returns the log record address of the last 
+ * lgr_get_last_rec - Returns the log record address of the last
  * record in the log.
  */
 statusT
-lgr_get_last_rec( logDescT *ldP, logRecAddrT *rec_addr  );
+lgr_get_last_rec(logDescT * ldP, logRecAddrT * rec_addr);
 
 /*
  * lgr_dmn_get_last_rec - same as lgr_end except for domain's log
  */
 statusT
 lgr_dmn_get_last_rec(
-            struct domain  *dmnP,   /* in - domain pointer */
-            logRecAddrT *rec_addr   /* out - log record address */
-            );
+    struct domain * dmnP,	/* in - domain pointer */
+    logRecAddrT * rec_addr	/* out - log record address */
+);
 
 /*
- * lgr_get_first_rec - Returns the log record address of the first record 
+ * lgr_get_first_rec - Returns the log record address of the first record
  * in the log.
  */
 statusT
-lgr_get_first_rec( logDescT *ldP, logRecAddrT *rec_addr  );
+lgr_get_first_rec(logDescT * ldP, logRecAddrT * rec_addr);
 
 /*
  * lgr_dmn_get_first_rec - same as lgr_beg except for domain's log
  */
 statusT
 lgr_dmn_get_first_rec(
-            struct domain *dmnP,    /* in - domain pointer */
-            logRecAddrT *rec_addr   /* out - log record address */
-            );
+    struct domain * dmnP,	/* in - domain pointer */
+    logRecAddrT * rec_addr	/* out - log record address */
+);
 
 /*
  * lgr_dmn_get_pseudo_first_rec - Returns the address of the record
@@ -405,8 +405,8 @@ lgr_dmn_get_first_rec(
  */
 statusT
 lgr_dmn_get_pseudo_first_rec(
-            struct domain *dmnP,    /* in - domain pointer */
-            logRecAddrT *rec_addr   /* out - log record address */
-            );
+    struct domain * dmnP,	/* in - domain pointer */
+    logRecAddrT * rec_addr	/* out - log record address */
+);
 
-#endif /* _MS_LOGGERH_ */
+#endif				/* _MS_LOGGERH_ */

@@ -1,16 +1,16 @@
-/* 
+/*
  * =======================================================================
  *   (c) Copyright Hewlett-Packard Development Company, L.P., 2008
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -36,22 +36,21 @@
 #include <stdlib.h>
 #ifndef _OSF_SOURCE
 #include <msfs/bs_extern.h>
-#endif /* _OSF_SOURCE */
-#endif /* KERNEL */
+#endif				/* _OSF_SOURCE */
+#endif				/* KERNEL */
 
 extern unsigned TrFlags;
 
 #ifdef KERNEL
 
 char *
-kalloc();
+     kalloc();
 
 struct msHdr {
-    unsigned int magic;
-    unsigned int size;
+	unsigned int magic;
+	unsigned int size;
 };
-
-#endif /* KERNEL */
+#endif				/* KERNEL */
 
 #define ADVFS_MODULE MS_MODE
 
@@ -59,175 +58,174 @@ struct msHdr {
 
 void
 mem_trace(
-          char *ftype,   /* in */
-          int size,      /* in */
-          int ln,        /* in */
-          char *fn       /* in */
-          )
+    char *ftype,		/* in */
+    int size,			/* in */
+    int ln,			/* in */
+    char *fn			/* in */
+)
 {
-    char *ptr;
-    trace_hdr();
+	char *ptr;
+	trace_hdr();
 
-    if (!(ptr = (char *)strrchr( fn, '/' ))) return;
+	if (!(ptr = (char *) strrchr(fn, '/')))
+		return;
 #ifdef KERNEL
-    log( LOG_MEGASAFE | LOG_INFO,
+	log(LOG_MEGASAFE | LOG_INFO,
 #else
-    ms_printf( 
+	ms_printf(
 #endif
-        "%6s( %8d )  %4d:%s\n", ftype, size, ln, &ptr[1] );
+	    "%6s( %8d )  %4d:%s\n", ftype, size, ln, &ptr[1]);
 }
 
 char *
 _ms_malloc(
-           unsigned size,       /* in */
-           int ln,              /* in */
-           char *fn,            /* in */
-           int flag,            /* in */
-           int rad_id           /* in */
-           )
+    unsigned size,		/* in */
+    int ln,			/* in */
+    char *fn,			/* in */
+    int flag,			/* in */
+    int rad_id			/* in */
+)
 {
 #ifdef KERNEL
-    struct msHdr *hdr;
-    long amt = size + sizeof( struct msHdr );
-    if (flag & M_WAITOK) {
-        MS_SMP_ASSERT(!SLOCK_COUNT);
-    }
-    MS_SMP_ASSERT(size != 0);
+	struct msHdr *hdr;
+	long amt = size + sizeof(struct msHdr);
+	if (flag & M_WAITOK) {
+		MS_SMP_ASSERT(!SLOCK_COUNT);
+	}
+	MS_SMP_ASSERT(size != 0);
 
-    if (flag & (M_INSIST | M_PREFER)) {
-        RAD_MALLOC(hdr,struct msHdr *,amt,M_ADVFS,flag, rad_id);
-    }
-    else {
-        MALLOC_VAR(hdr,struct msHdr *,amt,M_ADVFS,flag);
-    }
+	if (flag & (M_INSIST | M_PREFER)) {
+		RAD_MALLOC(hdr, struct msHdr *, amt, M_ADVFS, flag, rad_id);
+	} else {
+		MALLOC_VAR(hdr, struct msHdr *, amt, M_ADVFS, flag);
+	}
 
-    if( hdr == (struct msHdr *)NULL ) {
-        return( (char *)NULL );
-    }
+	if (hdr == (struct msHdr *) NULL) {
+		return ((char *) NULL);
+	}
+	bzero((char *) hdr, amt);
+	hdr->magic = ALLOC_MAGIC;
+	hdr->size = amt;
 
-    bzero( (char *)hdr, amt );
-    hdr->magic = ALLOC_MAGIC;
-    hdr->size = amt;
+	if (TrFlags & trMem)
+		mem_trace("malloc", amt, ln, fn);
 
-    if ( TrFlags & trMem )
-         mem_trace( "malloc", amt, ln, fn );
-
-    return( (char *)hdr + sizeof( struct msHdr ) );
+	return ((char *) hdr + sizeof(struct msHdr));
 #else
-    return( malloc( size ) );
-#endif /* KERNEL */
+	return (malloc(size));
+#endif				/* KERNEL */
 }
 
 void
 _ms_free(
-         void *ptr,
-         int ln,              /* in */
-         char *fn             /* in */
+    void *ptr,
+    int ln,			/* in */
+    char *fn			/* in */
 
-         )
+)
 {
 #ifdef KERNEL
-    struct msHdr *hdr;
-    int size;
+	struct msHdr *hdr;
+	int size;
 
-    if( ptr == 0 )
-        return;
-    
-    hdr = (struct msHdr *)((char *)ptr - sizeof( struct msHdr ));
+	if (ptr == 0)
+		return;
 
-    MS_SMP_ASSERT( hdr->magic == ALLOC_MAGIC );
-	MS_SMP_ASSERT( hdr->size != 0xdeadbeef );  /* already freed? */
+	hdr = (struct msHdr *) ((char *) ptr - sizeof(struct msHdr));
 
-    if ( TrFlags & trMem )
-         mem_trace( "free  ", hdr->size, ln, fn );
+	MS_SMP_ASSERT(hdr->magic == ALLOC_MAGIC);
+	MS_SMP_ASSERT(hdr->size != 0xdeadbeef);	/* already freed? */
 
-    size = hdr->size;
-    hdr->size = 0xdeadbeef;
+	if (TrFlags & trMem)
+		mem_trace("free  ", hdr->size, ln, fn);
 
-    FREE(hdr,M_ADVFS);
+	size = hdr->size;
+	hdr->size = 0xdeadbeef;
+
+	FREE(hdr, M_ADVFS);
 
 #else
-    free( ptr );
+	    free(ptr);
 
 
-#endif /* KERNEL */
+#endif				/* KERNEL */
 }
 
 
 #ifdef KERNEL
 
 long int
-atol( char *nptr )
+atol(char *nptr)
 {
-    register long n;
-    register int sign;
+	register long n;
+	register int sign;
 
-    n = 0;
-    sign = 1;
-    for(;;nptr++) {
-        switch(*nptr) {
-        case ' ':       /* check for whitespace */
-        case '\t':
-        case '\f':
-        case '\n':
-        case '\v':
-        case '\r':
-            continue;
-        case '-':
-            sign = -1;
-        case '+':
-            nptr++;
-        }
-        break;
-    }
-    while(*nptr >= '0' && *nptr <= '9') {
-          /*
-        Check for overflow.  If the current value (before
-        adding current digit) is already greater than
-            INT_MAX / 10, we know that another digit will
-        not fit.  Also if after the current digit is added,
-            if the new value is less than the old value, we 
-        know that overflow will occur.
-              */
-        if (((n * 10 + *nptr - '0') < n) || (n > (INT_MAX /10))) {
-            if (sign == 1)
-                n = INT_MAX;
-            else
-                n = INT_MIN;
-            panic( "atol: integer overflow" );
-            return(n);
-        }
-        n = n * 10 + *nptr++ - '0';
-    }
-    n *= sign;
-    return (n);
+	n = 0;
+	sign = 1;
+	for (;; nptr++) {
+		switch (*nptr) {
+		case ' ':	/* check for whitespace */
+		case '\t':
+		case '\f':
+		case '\n':
+		case '\v':
+		case '\r':
+			continue;
+		case '-':
+			sign = -1;
+		case '+':
+			nptr++;
+		}
+		break;
+	}
+	while (*nptr >= '0' && *nptr <= '9') {
+		/*
+              Check for overflow.  If the current value (before
+              adding current digit) is already greater than
+                  INT_MAX / 10, we know that another digit will
+              not fit.  Also if after the current digit is added,
+                  if the new value is less than the old value, we
+              know that overflow will occur.
+                    */
+		if (((n * 10 + *nptr - '0') < n) || (n > (INT_MAX / 10))) {
+			if (sign == 1)
+				n = INT_MAX;
+			else
+				n = INT_MIN;
+			panic("atol: integer overflow");
+			return (n);
+		}
+		n = n * 10 + *nptr++ - '0';
+	}
+	n *= sign;
+	return (n);
 }
-#endif /* KERNEL */
+#endif				/* KERNEL */
 
 int
-ms_copyin( void *src, void *dest, int len )
+ms_copyin(void *src, void *dest, int len)
 {
 #ifdef KERNEL
-    return copyin( src, dest, len );
+	return copyin(src, dest, len);
 #else
-    bcopy( src, dest, len );
-    return 0;
+	bcopy(src, dest, len);
+	return 0;
 #endif
 }
 
 
 int
-ms_copyout( void *src, void *dest, int len )
+ms_copyout(void *src, void *dest, int len)
 {
 #ifdef KERNEL
-    return copyout( src, dest, len );
+	return copyout(src, dest, len);
 #else
-    bcopy( src, dest, len );
-    return 0;
+	bcopy(src, dest, len);
+	return 0;
 #endif
 }
 /*
- * 
+ *
  * What to fix in mounting (bs_vd_mount.c)
  *
  * The routine bs_vd_mount opens a virtual disk that used to be the
@@ -260,7 +258,7 @@ ms_copyout( void *src, void *dest, int len )
  *
  */
 
-/* 
+/*
  * All calls to do tracing have been ifdef'd out from the code.
  * A more general messaging interface will need to be created.  Locations
  * of the trace calls are as follows:
@@ -289,7 +287,7 @@ ms_copyout( void *src, void *dest, int len )
  * and ms_generic_locks_code.h (thanks Pete!).  Currently,
  * all calls to cma or pthreads code is simply ifdef'd out
  * until we find what kernel facilities are available.
- * 
+ *
  */
 
 /*
@@ -299,7 +297,7 @@ ms_copyout( void *src, void *dest, int len )
  */
 
 /*
- * task_getrusage was ifdef'd out of the code in the 
+ * task_getrusage was ifdef'd out of the code in the
  * bs_misc.c file.
  */
 

@@ -8,12 +8,12 @@
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -34,7 +34,7 @@
 #define abs( a )    ((a) < 0 ? -(a) : (a))
 #else
 #include <stdlib.h>
-#endif /* KERNEL */
+#endif				/* KERNEL */
 
 #define MSFS_FIRST_ERR 1025
 
@@ -220,7 +220,7 @@
  *********************************************************************/
 
 /*
- * bs_errlist - 
+ * bs_errlist -
  *
  * This array can be used to print the error messages that
  * correspond the error numbers defined above.  The following illustrates
@@ -231,14 +231,14 @@
  * The macro BSERRMSG() can be used to print the error messages.
  */
 
-extern char *bs_errlist[];           /* bs_errlst.c */
+extern char *bs_errlist[];	/* bs_errlst.c */
 
 #define BSERRMSG( sts ) advfs_errmsg( sts )
 
-char * advfs_errmsg( int sts );
+char *advfs_errmsg(int sts);
 
 
-extern int sts_to_errno_map[];      /* bs_errlst.c */
+extern int sts_to_errno_map[];	/* bs_errlst.c */
 
 #define BSERRMAP( sts ) ((abs( sts ) < MSFS_FIRST_ERR) ? \
                          sts : \
@@ -246,4 +246,4 @@ extern int sts_to_errno_map[];      /* bs_errlst.c */
                          sts : \
                          sts_to_errno_map[abs( sts ) - MSFS_FIRST_ERR]))
 
-#endif /* _BS_ERROR_H_ */
+#endif				/* _BS_ERROR_H_ */

@@ -9,12 +9,12 @@
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -51,48 +51,46 @@
 #define isdir 1
 
 typedef enum {
-    FS_FRAG_NONE,
-    FS_FRAG_VALID
-} fsFragStateT;
-
+	FS_FRAG_NONE,
+	FS_FRAG_VALID
+}    fsFragStateT;
 /*
  * A directory page (size defined by ADVFS_PGSZ_IN_BLKS) consists of a
  * sequence of variable length entries. Each entry is made up of a
  * fixed header, type fs_dir_header, and a variable length name field.
  * The entire entry is of type fs_dir_entry. The entries in a page
  * (actually in the entire directory) are kept in random
- * order. The last word of a  directory page contains the offset in bytes to 
+ * order. The last word of a  directory page contains the offset in bytes to
  * the last entry in the page (for quick path traversal).
  */
 
 /* NOTE this is an on-disk structure and all sizes are for tru64 alpha */
-struct fs_stat
-{
-    bfTagT  st_ino;    
-    mode_t  st_mode;
-    uid_t   st_uid;
-    gid_t   st_gid;
-    dev_t   st_rdev;
-    off_t   st_size;
-    time_t  st_atime;
-    int     st_uatime;
-    time_t  st_mtime;
-    int     st_umtime;
-    time_t  st_ctime;
-    int     st_uctime;
-    uint_t  st_flags;          /* user defined flags for file */
-				/* 0x10000000 reserved for AUTOFS */
-				/* 0x20000000 reserved for AUTOFS */
-    bfTagT  dir_tag;           /* tag of parent directory */
-    bfFragIdT fragId;
-    u_int   st_nlink;
-    uint32T fragPageOffset;
-    uint32T st_unused_2;
+struct fs_stat {
+	bfTagT st_ino;
+	mode_t st_mode;
+	uid_t st_uid;
+	gid_t st_gid;
+	dev_t st_rdev;
+	off_t st_size;
+	time_t st_atime;
+	int st_uatime;
+	time_t st_mtime;
+	int st_umtime;
+	time_t st_ctime;
+	int st_uctime;
+	uint_t st_flags;	/* user defined flags for file */
+	/* 0x10000000 reserved for AUTOFS */
+	/* 0x20000000 reserved for AUTOFS */
+	bfTagT dir_tag;		/* tag of parent directory */
+	bfFragIdT fragId;
+	u_int st_nlink;
+	uint32T fragPageOffset;
+	uint32T st_unused_2;
 };
 
 typedef struct fs_stat statT;
 
-/* Max values for st_nlink. 
+/* Max values for st_nlink.
  * _LINK_MAX_UINT is artificially limited to a value that exceeds what
  * the customer specified as their necessary value (20 bits seemed a
  * nice mask point) when we added this support.  The decision to limit
@@ -102,19 +100,18 @@ typedef struct fs_stat statT;
  * The code and on-disk structures can handle 2^32 - 3 = 4294967293.
  */
 
-#define _LINK_MAX_UINT   1048573  
+#define _LINK_MAX_UINT   1048573
 #define _LINK_MAX_USHORT 65533
 #define _LINK_MAX_SHORT  32767
 
 /* record at the end of each directory page */
 
 struct dir_rec {
-    uint32T lastEntry_offset;         /* offset to last dir entry */
-    uint32T largestFreeSpace;         /* size of biggest empty spot on
-                                        the page */
-    uint32T pageType;                 /* note - this should always be
-                                        the last field on the page -
-                                        the type of page */
+	uint32T lastEntry_offset;	/* offset to last dir entry */
+	uint32T largestFreeSpace;	/* size of biggest empty spot on the
+					 * page */
+	uint32T pageType;	/* note - this should always be the last field
+				 * on the page - the type of page */
 };
 
 typedef struct dir_rec dirRec;
@@ -125,9 +122,9 @@ typedef struct dir_rec dirRec;
 /* directory header - *** NOTE *** same fields (order and size) as UFS */
 
 struct dir_header {
-    uint32T fs_dir_bs_tag_num;        /* tag.num of file */
-    uint16T fs_dir_size;       /* size of directory record in bytes */
-    uint16T fs_dir_namecount;  /* length in bytes of file name */
+	uint32T fs_dir_bs_tag_num;	/* tag.num of file */
+	uint16T fs_dir_size;	/* size of directory record in bytes */
+	uint16T fs_dir_namecount;	/* length in bytes of file name */
 };
 
 typedef struct dir_header directory_header;
@@ -138,14 +135,14 @@ typedef struct dir_header directory_header;
  */
 
 struct dir_ent_end {
-    bfTagT fs_dir_bs_tag;             /* full bs tag for file */
+	bfTagT fs_dir_bs_tag;	/* full bs tag for file */
 };
 
 typedef struct dir_ent_end directory_end;
 
 struct directory_entry {
-        directory_header fs_dir_header; /* fixed length header */
-        char fs_dir_name_string[FS_DIR_MAX_NAME]; /*  file name */
+	directory_header fs_dir_header;	/* fixed length header */
+	char fs_dir_name_string[FS_DIR_MAX_NAME];	/* file name */
 };
 typedef struct directory_entry fs_dir_entry;
 
@@ -165,79 +162,80 @@ typedef struct directory_entry fs_dir_entry;
          (size) < (sizeof(directory_header) + sizeof(int)))
 
 struct fsContext {
-    short initialized;          /* zero if fsContext is not initialized */
-    short quotaInitialized;     /* zero if quota stuff is not initialized */
-    bfTagT undel_dir_tag;       /* tag of undelete directory */
-    long fs_flag;               /* flag word - see below */
-    int dirty_stats;            /* flag for directories, says update the 
-                                    stats in the parent directory entry */
-    int dirty_alloc;            /* set if stats from an allocating write
-                                   are not on disk (ICHGMETA) */
+	short initialized;	/* zero if fsContext is not initialized */
+	short quotaInitialized;	/* zero if quota stuff is not initialized */
+	bfTagT undel_dir_tag;	/* tag of undelete directory */
+	long fs_flag;		/* flag word - see below */
+	int dirty_stats;	/* flag for directories, says update the stats
+				 * in the parent directory entry */
+	int dirty_alloc;	/* set if stats from an allocating write are
+				 * not on disk (ICHGMETA) */
 
-    lock_data_t file_lock;      /* Use an OSF complex lock (read_write_lock) */
+	lock_data_t file_lock;	/* Use an OSF complex lock (read_write_lock) */
 
-    long dirstamp;              /* stamp to determine directory changes */
-    mutexT fsContext_mutex;     /* mutex to take out locks on this structure */
+	long dirstamp;		/* stamp to determine directory changes */
+	mutexT fsContext_mutex;	/* mutex to take out locks on this structure */
 #ifdef ADVFS_DEBUG
-    char file_name[30];         /* first 29 chars of file name */
+	char file_name[30];	/* first 29 chars of file name */
 #endif
-    bfTagT bf_tag;              /* the tag for the file */
-    long last_offset;           /* the offset of the last found entry */
-    struct fs_stat dir_stats;   /* stats */
-    struct fileSetNode *fileSetNode;  /* pointer to per-fileset info */
-    struct dQuot *diskQuot[2];  /* pointers to quota structs */
+	bfTagT bf_tag;		/* the tag for the file */
+	long last_offset;	/* the offset of the last found entry */
+	struct fs_stat dir_stats;	/* stats */
+	struct fileSetNode *fileSetNode;	/* pointer to per-fileset info */
+	struct dQuot *diskQuot[2];	/* pointers to quota structs */
 };
 
 typedef struct {
-    bfTagT dir_tag;
-    bfTagT ins_tag;
-    bfSetIdT bfSetId;
-    uint32T page;
-    uint32T byte;
-    ulong old_size;
-} undo_headerT;
+	bfTagT dir_tag;
+	bfTagT ins_tag;
+	bfSetIdT bfSetId;
+	uint32T page;
+	uint32T byte;
+	ulong old_size;
+}      undo_headerT;
 
 struct fs_insert_undo_rec {
-    undo_headerT undo_header;
+	undo_headerT undo_header;
 };
 
-typedef struct fs_insert_undo_rec insert_undo_rec; 
+typedef struct fs_insert_undo_rec insert_undo_rec;
 
 struct undel_dir_rec {
-    bfTagT dir_tag;
+	bfTagT dir_tag;
 };
-
 /* fs_flag bits (in fsContext) */
-#define BRENAME        0x0004       /* bitfile is being renamed */
-#define MOD_MTIME      0x0020       /* mtime has changed */
-#define MOD_ATIME      0x0040       /* atime has changed */
-#define MOD_CTIME      0x0100       /* ctime has changed */
-#define M_DELETE       0x0200       /* file is marked for delete */
-#define META_OPEN      0x0400       /* metadata file was opened by tag */
-#define DONT_UNLOCK    0x1000       /* used in calls to bf_get to not unlock the parent dir */
+#define BRENAME        0x0004	/* bitfile is being renamed */
+#define MOD_MTIME      0x0020	/* mtime has changed */
+#define MOD_ATIME      0x0040	/* atime has changed */
+#define MOD_CTIME      0x0100	/* ctime has changed */
+#define M_DELETE       0x0200	/* file is marked for delete */
+#define META_OPEN      0x0400	/* metadata file was opened by tag */
+#define DONT_UNLOCK    0x1000	/* used in calls to bf_get to not unlock the
+				 * parent dir */
 
-#define IGNORE_DELETE  0x4000       /* used in calls to bf_get to ignore BSRA_DELETING flag */
+#define IGNORE_DELETE  0x4000	/* used in calls to bf_get to ignore
+				 * BSRA_DELETING flag */
 
 /* flag bits for insert_seq call */
-#define HARD_LINK      0x0001       /* inserting a hard link */
-#define FAST_SYMLINK   0x0002       /* inserting a fast symlink */
-#define START_FTX      0x1000       /* insert under a sub-ftx */
-#define DIRECTORY      0x0010       /* inserting a directory */
+#define HARD_LINK      0x0001	/* inserting a hard link */
+#define FAST_SYMLINK   0x0002	/* inserting a fast symlink */
+#define START_FTX      0x1000	/* insert under a sub-ftx */
+#define DIRECTORY      0x0010	/* inserting a directory */
 
 /* flag bits for seq_search call */
-#define PIN_PAGE       0x0001       /* pin the page */
-#define REF_PAGE       0x0002       /* ref the page */
-#define USE_OFFSET     0x1000       /* use the offset hint */
+#define PIN_PAGE       0x0001	/* pin the page */
+#define REF_PAGE       0x0002	/* ref the page */
+#define USE_OFFSET     0x1000	/* use the offset hint */
 
 /* flag bits for glom_dir_entries calls */
 
-#define SKIP_LOST_SPACE_GLOM 0x0001 /* Don't recover lost space if found */
-#define UPDATE_LAST_ENTRY    0x0002 /* Last record in page needs updating */
-#define LOST_SPACE_FOUND     0x0004 /* Lost space was recovered */
-#define SPACE_NEEDS_GLOMMING 0x0008 /* Call the 2nd part of glomming */
+#define SKIP_LOST_SPACE_GLOM 0x0001	/* Don't recover lost space if found */
+#define UPDATE_LAST_ENTRY    0x0002	/* Last record in page needs updating */
+#define LOST_SPACE_FOUND     0x0004	/* Lost space was recovered */
+#define SPACE_NEEDS_GLOMMING 0x0008	/* Call the 2nd part of glomming */
 
 /*
- * Handy macros for locking the fsContext structure. 
+ * Handy macros for locking the fsContext structure.
  */
 
 #define FS_FILE_READ_LOCK(cp)  lock_read(&((cp)->file_lock))
@@ -265,20 +263,20 @@ struct undel_dir_rec {
  * must be mmapped for all code paths that involve taking
  * the vm map lock first and then coming to the filesystem
  * and locking the file lock.
- * Fix the deadlocks when the file is mmapped by forcing the 
+ * Fix the deadlocks when the file is mmapped by forcing the
  * order to always be vm_map lock followed by file_lock.
- * The vm map lock is held for read on read()/write() system 
- * calls for mmapped files and for write on mmap() to avoid a 
- * deadlock that might occur while handling a fault in uiomove() 
- * or getting the lock in u_vp_create().  This is a problem 
- * with multi-threaded tasks, therefore lock it only if 
- * needed (indicated by utask_need_to_lock).  Note that a 
- * single threaded task on entry to fs_read(), fs_write(), 
- * msfs_mmap() will remain single threaded to the end 
- * because only that first thread may call thread_create() 
- * and it is executing in AdvFS. The kernel_map (vs a user 
- * map) is avoided because its vm_map lock is at a 
- * different hierarchy and the kernel_map may not be 
+ * The vm map lock is held for read on read()/write() system
+ * calls for mmapped files and for write on mmap() to avoid a
+ * deadlock that might occur while handling a fault in uiomove()
+ * or getting the lock in u_vp_create().  This is a problem
+ * with multi-threaded tasks, therefore lock it only if
+ * needed (indicated by utask_need_to_lock).  Note that a
+ * single threaded task on entry to fs_read(), fs_write(),
+ * msfs_mmap() will remain single threaded to the end
+ * because only that first thread may call thread_create()
+ * and it is executing in AdvFS. The kernel_map (vs a user
+ * map) is avoided because its vm_map lock is at a
+ * different hierarchy and the kernel_map may not be
  * mmapped so there is no deadlock problem.
  * For directio read() and write() requests, the user's buffer
  * is wired with a call to vm_map_pageable() in
@@ -339,65 +337,62 @@ struct undel_dir_rec {
 /*
  * define the fid structure used by NFS for short-cut opens
  */
-struct msfs_fid{
-    u_short msfs_fid_len;           /* size of struct */
-    bfTagT  msfs_fid_tag;           /* tag of bitfile */
+struct msfs_fid {
+	u_short msfs_fid_len;	/* size of struct */
+	bfTagT msfs_fid_tag;	/* tag of bitfile */
 };
 
-extern int dirTruncEnabled;     /* master switch to disable dir trunc */
+extern int dirTruncEnabled;	/* master switch to disable dir trunc */
 
 /* This struct is used for storing directory truncation info. */
 typedef struct {
-    uint32T        magic;                /* to check legal reuse */
-    uint32T        delCnt;
-    void          *delList;
-    union {
-        struct domain *dmnp;                 /* ptr to domain */
-	bfDomainIdT    id;                   /* ID of the domain */
-    } domain;
-} dtinfoT;
+	uint32T magic;		/* to check legal reuse */
+	uint32T delCnt;
+	void *delList;
+	union {
+		struct domain *dmnp;	/* ptr to domain */
+		bfDomainIdT id;	/* ID of the domain */
+	}     domain;
+}      dtinfoT;
 #define DT_INFO_MAGIC_NUM  0xfeeb1e
 
 typedef enum {
-    CLEANUP_ANY = 1,
-    CLEANUP_STATS
-} clupClosedListTypeT;
+	CLEANUP_ANY = 1,
+	CLEANUP_STATS
+}    clupClosedListTypeT;
 
 typedef struct {
-    clupClosedListTypeT clean_type;
-    union {
-        struct domain *dmnp;                 /* ptr to domain */
-        bfDomainIdT    id;                   /* ID of the domain */
-    } domain;
-} closedListInfoT;
-
+	clupClosedListTypeT clean_type;
+	union {
+		struct domain *dmnp;	/* ptr to domain */
+		bfDomainIdT id;	/* ID of the domain */
+	}     domain;
+}      closedListInfoT;
 /* This structure is used for requests to update flagged (bad) frag file
  * group header pages.
  */
 typedef struct {
-    bfSetIdT bfSetId;
-    uint32T badGrpHdrPg;
-} badFragGrpT;
-
+	bfSetIdT bfSetId;
+	uint32T badGrpHdrPg;
+}      badFragGrpT;
 /* Next 2 structs used to support fs_cleanup_thread */
 #define FS_INIT_CLEANUP_Q_ENTRIES 128
 
 typedef enum {
-    FINSH_DIR_TRUNC = 1,         /* finish a directory truncation */
-    CLEANUP_CLOSED_LIST,         /* move bfaps from closed to free list */
-    ALLOCATE_BFAPS,              /* put access structures onto free list */
-    DEALLOCATE_BFAPS,            /* deallocate an access structure */
-    UPDATE_BAD_FRAG_GRP_HDR      /* write out flagged bad group header */
-} clupThreadMsgTypeT;
+	FINSH_DIR_TRUNC = 1,	/* finish a directory truncation */
+	CLEANUP_CLOSED_LIST,	/* move bfaps from closed to free list */
+	ALLOCATE_BFAPS,		/* put access structures onto free list */
+	DEALLOCATE_BFAPS,	/* deallocate an access structure */
+	UPDATE_BAD_FRAG_GRP_HDR	/* write out flagged bad group header */
+}    clupThreadMsgTypeT;
 
 typedef struct {
-    clupThreadMsgTypeT msgType;
-    /* message contents */
-    union {
-        dtinfoT dtinfo;                  /* directory truncation info */
-        closedListInfoT closedListInfo;  /* closed list info */
-        badFragGrpT badFragGrp;          /* update flagged frag group header */
-    } body;
-} clupThreadMsgT;
-
-#endif /*FS_DIR*/
+	clupThreadMsgTypeT msgType;
+	/* message contents */
+	union {
+		dtinfoT dtinfo;	/* directory truncation info */
+		closedListInfoT closedListInfo;	/* closed list info */
+		badFragGrpT badFragGrp;	/* update flagged frag group header */
+	}     body;
+}      clupThreadMsgT;
+#endif				/* FS_DIR */

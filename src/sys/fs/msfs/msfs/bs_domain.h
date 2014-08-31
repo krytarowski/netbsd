@@ -8,12 +8,12 @@
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -40,26 +40,22 @@
 
 /* slot states */
 typedef enum {
-    FTX_SLOT_EXC = 1,           /* slot is in use by an exclusive ftx */
-    FTX_SLOT_BUSY = 2,          /* slot is in use by non exclusive ftx */
-    FTX_SLOT_AVAIL = 3,
-    FTX_SLOT_PENDING = 4,       /* waiting for an ftx struct */
-    FTX_SLOT_UNUSED = 5         /* never been used (recovery may use it) */
+	FTX_SLOT_EXC = 1,	/* slot is in use by an exclusive ftx */
+	FTX_SLOT_BUSY = 2,	/* slot is in use by non exclusive ftx */
+	FTX_SLOT_AVAIL = 3,
+	FTX_SLOT_PENDING = 4,	/* waiting for an ftx struct */
+	FTX_SLOT_UNUSED = 5	/* never been used (recovery may use it) */
 } ftxSlotStateT;
 
 typedef struct ftxSlot {
-    struct ftx* ftxp;     /* ptr to ftx struct */
-    ftxSlotStateT state;  /* slot state */
-} ftxSlotT;
-
+	struct ftx *ftxp;	/* ptr to ftx struct */
+	ftxSlotStateT state;	/* slot state */
+}       ftxSlotT;
 #define FTX_MAX_FTXH     100
 #define FTX_RR_GAP       3
-#define FTX_DEF_RR_SLOTS 30      /* default round robin slots */
-                                 /* If FTX_DEF_RR_SLOTS changes; be sure to
-                                  * change the value of MAX_RD_PGS in
-                                  * ms_logger.h since that value is dependent
-                                  * on this one.
-                                  */
+#define FTX_DEF_RR_SLOTS 30	/* default round robin slots */
+ /* If FTX_DEF_RR_SLOTS changes; be sure to change the value of MAX_RD_PGS in
+  * ms_logger.h since that value is dependent on this one. */
 
 /*
  * ftxTblD - Transaction Table Descriptor
@@ -82,27 +78,27 @@ typedef struct ftxSlot {
  */
 
 typedef struct ftxTblD {
-    int rrNextSlot;     /* next round-robin slot to use */
-    int rrSlots;        /* number of round-robin slots to use */
-    int ftxWaiters;     /* num threads waiting on slot */
-    int trimWaiters;    /* num threads waiting for log trim to finish */
-    int excWaiters;     /* num threads waiting to start exclusive ftx */
-    cvT slotCv;         /* condition variable for slot waiters */
-    cvT trimCv;         /* condition variable for trim waiters */
-    cvT excCv;          /* condition variable for exc waiters */
-    lsnT logTrimLsn;    /* lsn to trim log up to */
-    int nextNewSlot;    /* next never-used slot */
-    ftxCRLAT oldestFtxLa; /* oldest outstanding ftx logrecaddr */
-    ftxIdT lastFtxId;   /* last ftx id used */
-    int slotUseCnt;     /* slots in use count */
-    int noTrimCnt;      /* reasons not to trim */
-    ftxSlotT* tablep;   /* ftx slot table pointer */
+	int rrNextSlot;		/* next round-robin slot to use */
+	int rrSlots;		/* number of round-robin slots to use */
+	int ftxWaiters;		/* num threads waiting on slot */
+	int trimWaiters;	/* num threads waiting for log trim to finish */
+	int excWaiters;		/* num threads waiting to start exclusive ftx */
+	cvT slotCv;		/* condition variable for slot waiters */
+	cvT trimCv;		/* condition variable for trim waiters */
+	cvT excCv;		/* condition variable for exc waiters */
+	lsnT logTrimLsn;	/* lsn to trim log up to */
+	int nextNewSlot;	/* next never-used slot */
+	ftxCRLAT oldestFtxLa;	/* oldest outstanding ftx logrecaddr */
+	ftxIdT lastFtxId;	/* last ftx id used */
+	int slotUseCnt;		/* slots in use count */
+	int noTrimCnt;		/* reasons not to trim */
+	ftxSlotT *tablep;	/* ftx slot table pointer */
 
-    /* stats */
-    int oldestSlot;      /* oldest slot whose log contents is not written */
-    int totRoots;        /* num root ftxs */
-} ftxTblDT;
-
+	/* stats */
+	int oldestSlot;		/* oldest slot whose log contents is not
+				 * written */
+	int totRoots;		/* num root ftxs */
+}       ftxTblDT;
 /*
  * Link list queuing structures and MACROs
  *
@@ -254,10 +250,9 @@ typedef struct ftxTblD {
  */
 
 typedef struct bfsQueue {
-    struct bfsQueue *bfsQfwd;
-    struct bfsQueue *bfsQbck;
-} bfsQueueT;
-
+	struct bfsQueue *bfsQfwd;
+	struct bfsQueue *bfsQbck;
+}        bfsQueueT;
 #define BFSET_DMN_INSQ( _dmnp, _queue, _entry ) {               \
     MS_SMP_ASSERT(SLOCK_HOLDER(&((_dmnp)->mutex.mutex)));       \
     (_entry)->bfsQfwd = (_queue)->bfsQfwd;                      \
@@ -283,28 +278,27 @@ typedef struct bfsQueue {
 #define DOMAIN_TRACE_HISTORY 100
 
 typedef struct {
-  uint32T       seq;
-  uint16T       mod;
-  uint16T       ln;
-  struct thread *thd;
-  void          *val;
-} dmnTraceElmtT;
-
-#endif /* ADVFS_DOMAIN_TRACE */
+	uint32T seq;
+	uint16T mod;
+	uint16T ln;
+	struct thread *thd;
+	void *val;
+}      dmnTraceElmtT;
+#endif				/* ADVFS_DOMAIN_TRACE */
 
 typedef enum {
-    BFD_UNKNOWN,                /* domain is in unknown state */
-    BFD_VIRGIN,                 /* domain has never been activated */
-    BFD_DEACTIVATED,            /* domain is deactivated */
-    BFD_RECOVER_REDO,           /* recovering redo */
+	BFD_UNKNOWN,		/* domain is in unknown state */
+	BFD_VIRGIN,		/* domain has never been activated */
+	BFD_DEACTIVATED,	/* domain is deactivated */
+	BFD_RECOVER_REDO,	/* recovering redo */
 /* logging can occur in the following states */
-    BFD_RECOVER_FTX,            /* recover partial ftx trees */
-    BFD_RECOVER_CONTINUATIONS,  /* finish ftx continuations */
-    BFD_ACTIVATED               /* fully activated */
-} bfDmnStatesT;
+	BFD_RECOVER_FTX,	/* recover partial ftx trees */
+	BFD_RECOVER_CONTINUATIONS,	/* finish ftx continuations */
+	BFD_ACTIVATED		/* fully activated */
+}    bfDmnStatesT;
 
-enum contBits { PB_CONT=1, CK_WAITQ=2 };
-
+enum contBits {
+PB_CONT = 1, CK_WAITQ = 2};
 /* Domain dmnFlag values */
 
 
@@ -348,134 +342,141 @@ struct bfAccess;
  */
 
 typedef struct vdDesc {
-    char vdName[MAXPATHLEN+1];  /* block special device name */
-    serviceClassT  serviceClass;/* service class */
-    dev_t device;               /* dev_t for raw device */
-} vdDescT;
-
+	char vdName[MAXPATHLEN + 1];	/* block special device name */
+	serviceClassT serviceClass;	/* service class */
+	dev_t device;		/* dev_t for raw device */
+}      vdDescT;
 /*
  * Bitfile domain descriptor, filled in from bf domain table.
  */
 
 typedef struct bfDmnDesc {
-    int vdCount;                /* number of vds described */
-    uint32T dmnMajor;           /* fake major number for domain */
-    vdDescT* vddp[BS_MAX_VDI];  /* array of vd descriptor ptrs */
-} bfDmnDescT;
+	int vdCount;		/* number of vds described */
+	uint32T dmnMajor;	/* fake major number for domain */
+	vdDescT *vddp[BS_MAX_VDI];	/* array of vd descriptor ptrs */
+}         bfDmnDescT;
 
 typedef struct domain {
-    mutexT mutex;               /* protects vd.mcell_lk, vd.stgMap_lk, */
-                                /* totalBlks, freeBlks */
-                                /* vd.ddlActiveWaitMCId */
-                                /* bfSetHead, bfSetList */
-    uint_t dmnMagic;            /* magic number: structure validation */
+	mutexT mutex;		/* protects vd.mcell_lk, vd.stgMap_lk, */
+	/* totalBlks, freeBlks */
+	/* vd.ddlActiveWaitMCId */
+	/* bfSetHead, bfSetList */
+	uint_t dmnMagic;	/* magic number: structure validation */
 
-    int logVdRadId;             /* the RAD the the log's vd structure */
-                                /* lives on. */
+	int logVdRadId;		/* the RAD the the log's vd structure */
+	/* lives on. */
 
-    /* all domainTs are on a circular doubly-linked list. */
-    struct domain *dmnFwd;       /* Forward pointer of all domainTs */
-    struct domain *dmnBwd;      /* Backward pointer of all domainTs */
+	/* all domainTs are on a circular doubly-linked list. */
+	struct domain *dmnFwd;	/* Forward pointer of all domainTs */
+	struct domain *dmnBwd;	/* Backward pointer of all domainTs */
 
 #ifdef KERNEL
-    dyn_hashlinks_w_keyT dmnHashlinks;   /* dyn_hashtable links */
-#endif /* KERNEL */
+	dyn_hashlinks_w_keyT dmnHashlinks;	/* dyn_hashtable links */
+#endif				/* KERNEL */
 
-    int dmnVersion;             /* version number: on-disk validation */
-    bfDmnStatesT state;         /* domain state */
-    bfDomainIdT domainId;       /* unique identifier for domain */
-    bfDomainIdT dualMountId;    /* unique on-disk identifier for domain, */
-                                /* used only when doing dual-mounts */
-    bsIdT bfDmnMntId;           /* last domain activation id */
-    int dmnAccCnt;              /* number of domain accesses */
-    int dmnRefWaiters;          /* number of waiters on dmnAccCnt */
-    int activateCnt;            /* number of domain activations */
-    int mountCnt;               /* number of active mounts */
-    bfSetT *bfSetDirp;          /* root bitfile-set handle */
-    bfTagT bfSetDirTag;         /* tag of root bitfile-set's tag directory */
-    ftxLkT BfSetTblLock;        /* protects the filesets in the domain */
-    struct bfsQueue bfSetHead;  /* bitfile-sets associated with this domain */
-    struct bfAccess *bfSetDirAccp; /* bfAccess of bitfile-set's tag directory */
-    bfTagT ftxLogTag;           /* tag of domain ftx log */
-    logDescT * ftxLogP;         /* pointer to ftx log for this domain */
-    uint32T ftxLogPgs;          /* number of pages in the log */
-    struct bfAccess *logAccessp; /* bfAccess pointer for log */
-    ftxTblDT ftxTbld;           /* ftx table descriptor */
-#ifdef ADVFS_SMP_ASSERT          /* For debugging only, to check for lock */
-    lock_data_t ftxSlotLock;     /* hierarchy violations between locks    */
-#endif                           /* and starting a root transaction       */
-    struct bsBuf *pinBlockBuf;  /* the current pin block buffer, if any */
-    char domainName[BS_DOMAIN_NAME_SZ]; /* temp - should be global name */
-    uint32T majorNum;           /* domain's device major number (fabricated) */
-    uint32T dmnFlag;           /* special domain state indicator */
-    uid_t uid;                  /* domain's owner */
-    gid_t gid;                  /* domain's group */
-    mode_t mode;                /* domain's mode */
+	int dmnVersion;		/* version number: on-disk validation */
+	bfDmnStatesT state;	/* domain state */
+	bfDomainIdT domainId;	/* unique identifier for domain */
+	bfDomainIdT dualMountId;/* unique on-disk identifier for domain, */
+	/* used only when doing dual-mounts */
+	bsIdT bfDmnMntId;	/* last domain activation id */
+	int dmnAccCnt;		/* number of domain accesses */
+	int dmnRefWaiters;	/* number of waiters on dmnAccCnt */
+	int activateCnt;	/* number of domain activations */
+	int mountCnt;		/* number of active mounts */
+	bfSetT *bfSetDirp;	/* root bitfile-set handle */
+	bfTagT bfSetDirTag;	/* tag of root bitfile-set's tag directory */
+	ftxLkT BfSetTblLock;	/* protects the filesets in the domain */
+	struct bfsQueue bfSetHead;	/* bitfile-sets associated with this
+					 * domain */
+	struct bfAccess *bfSetDirAccp;	/* bfAccess of bitfile-set's tag
+					 * directory */
+	bfTagT ftxLogTag;	/* tag of domain ftx log */
+	logDescT *ftxLogP;	/* pointer to ftx log for this domain */
+	uint32T ftxLogPgs;	/* number of pages in the log */
+	struct bfAccess *logAccessp;	/* bfAccess pointer for log */
+	ftxTblDT ftxTbld;	/* ftx table descriptor */
+#ifdef ADVFS_SMP_ASSERT		/* For debugging only, to check for lock */
+	lock_data_t ftxSlotLock;/* hierarchy violations between locks    */
+#endif				/* and starting a root transaction       */
+	struct bsBuf *pinBlockBuf;	/* the current pin block buffer, if
+					 * any */
+	char domainName[BS_DOMAIN_NAME_SZ];	/* temp - should be global
+						 * name */
+	uint32T majorNum;	/* domain's device major number (fabricated) */
+	uint32T dmnFlag;	/* special domain state indicator */
+	uid_t uid;		/* domain's owner */
+	gid_t gid;		/* domain's group */
+	mode_t mode;		/* domain's mode */
 
-    /*
-     * Following fields are protected by the domain's lsnLock; seizing
-     * lsnLock also guards bsBuf.lsnFwd and .lsnBwd fields of any buffers
-     * on this domain's lsnList.
-     */
-    mutexT lsnLock;
-    struct bsBufHdr lsnList; /* Dirty transactional buffers to be written */
-    lsnT writeToLsn;         /* pin block until up to this lsn is written */
-    uint16T pinBlockWait;
-    cvT pinBlockCv;
-    int pinBlockRunning;     /* boolean; TRUE if lsn_io_list is running */
-    enum contBits contBits;  /* check if log flush or pinblock cont needed */
-    int lsnListFlushing;     /* boolean: TRUE if bs_lsnList_flush running */
-    ftxCRLAT dirtyBufLa;     /* oldest dirty buffer log address */
+	/*
+         * Following fields are protected by the domain's lsnLock; seizing
+         * lsnLock also guards bsBuf.lsnFwd and .lsnBwd fields of any buffers
+         * on this domain's lsnList.
+         */
+	mutexT lsnLock;
+	struct bsBufHdr lsnList;/* Dirty transactional buffers to be written */
+	lsnT writeToLsn;	/* pin block until up to this lsn is written */
+	uint16T pinBlockWait;
+	cvT pinBlockCv;
+	int pinBlockRunning;	/* boolean; TRUE if lsn_io_list is running */
+	enum contBits contBits;	/* check if log flush or pinblock cont needed */
+	int lsnListFlushing;	/* boolean: TRUE if bs_lsnList_flush running */
+	ftxCRLAT dirtyBufLa;	/* oldest dirty buffer log address */
 
-    /* This lock protects the storage class table. */
-    lock_data_t scLock;
-    serviceClassTblT *scTbl;        /* service class table */
+	/* This lock protects the storage class table. */
+	lock_data_t scLock;
+	serviceClassTblT *scTbl;/* service class table */
 
-    /*
-     * These fields used to be protected by the DmnTblLock.  That function
-     * of the DmnTblLock has been replaced by the domain-wide lock, 
-     * vdpTblLock, so eventually the use of DmnTblLock will be able to 
-     * be reduced.
-     */
-    mutexT     vdpTblLock;          /* protects next 2 fields   */
-    int maxVds;                     /* Maximum allowed vds */
-    int vdCnt;                      /* number of vd's in vdpTbl */
-    struct vd* vdpTbl[BS_MAX_VDI];  /* table of vd ptrs */
+	/*
+         * These fields used to be protected by the DmnTblLock.  That function
+         * of the DmnTblLock has been replaced by the domain-wide lock,
+         * vdpTblLock, so eventually the use of DmnTblLock will be able to
+         * be reduced.
+         */
+	mutexT vdpTblLock;	/* protects next 2 fields   */
+	int maxVds;		/* Maximum allowed vds */
+	int vdCnt;		/* number of vd's in vdpTbl */
+	struct vd *vdpTbl[BS_MAX_VDI];	/* table of vd ptrs */
 
-    lock_data_t rmvolTruncLk;   /* serializes truncation and rmvol */
+	lock_data_t rmvolTruncLk;	/* serializes truncation and rmvol */
 
-    struct bcStat bcStat;       /* per domain buffer cache stats */
-    struct bmtStat bmtStat;     /* per domain BMT stats */
-    struct logStat logStat;     /* per domain LOG stats */
-    /*
-     * These fields are protected by the domain mutex.
-     */
-    uint64T totalBlks;          /* total # of BS_BLKSIZE blocks in domain */
-    uint64T freeBlks;           /* total # of free BS_BLKSIZE blocks in dmn */
-    int dmn_panic;              /* a boolean for implimenting domain panic */
-    xidRecoveryT xidRecovery;   /* Holds CFS xid recovery status information */
-    lock_data_t xidRecoveryLk;  /* protects the xidRecovery structure */
-    u_int smsync_policy;        /* mirror of M_SMSYNC2 flag */
-    struct bsMPg *metaPagep;    /* ptr to page 0 buffer */
-    int fs_full_time;           /* last time fs full msg logged */
+	struct bcStat bcStat;	/* per domain buffer cache stats */
+	struct bmtStat bmtStat;	/* per domain BMT stats */
+	struct logStat logStat;	/* per domain LOG stats */
+	/*
+         * These fields are protected by the domain mutex.
+         */
+	uint64T totalBlks;	/* total # of BS_BLKSIZE blocks in domain */
+	uint64T freeBlks;	/* total # of free BS_BLKSIZE blocks in dmn */
+	int dmn_panic;		/* a boolean for implimenting domain panic */
+	xidRecoveryT xidRecovery;	/* Holds CFS xid recovery status
+					 * information */
+	lock_data_t xidRecoveryLk;	/* protects the xidRecovery structure */
+	u_int smsync_policy;	/* mirror of M_SMSYNC2 flag */
+	struct bsMPg *metaPagep;/* ptr to page 0 buffer */
+	int fs_full_time;	/* last time fs full msg logged */
 
-    mutexT  dmnFreezeMutex;     /* protects dmnFreezeFlags, dmnFreezeWaiting and dmnFreezeRefCnt */
-    uint32T dmnFreezeFlags;     /* freezefs status */
-    uint32T dmnFreezeWaiting;   /* Freeze thread is waiting to freeze this domain */
-    uint32T dmnFreezeRefCnt;    /* Count of threads currently blocking the start of a freeze */
+	mutexT dmnFreezeMutex;	/* protects dmnFreezeFlags, dmnFreezeWaiting
+				 * and dmnFreezeRefCnt */
+	uint32T dmnFreezeFlags;	/* freezefs status */
+	uint32T dmnFreezeWaiting;	/* Freeze thread is waiting to freeze
+					 * this domain */
+	uint32T dmnFreezeRefCnt;/* Count of threads currently blocking the
+				 * start of a freeze */
 
-    ssDmnInfoT ssDmnInfo;       /* vfast elements. */
-/*>>>>>>> Maintain as last elements of domain structure <<<<<<<<*/ 
+	ssDmnInfoT ssDmnInfo;	/* vfast elements. */
+/*>>>>>>> Maintain as last elements of domain structure <<<<<<<<*/
 #ifdef ADVFS_DOMAIN_TRACE
-    uint32T trace_ptr;
-    dmnTraceElmtT trace_buf[DOMAIN_TRACE_HISTORY];
-#endif /* ADVFS_DOMAIN_TRACE */
-} domainT;
+	uint32T trace_ptr;
+	dmnTraceElmtT trace_buf[DOMAIN_TRACE_HISTORY];
+#endif				/* ADVFS_DOMAIN_TRACE */
+}      domainT;
 
 extern domainT nilDomain;
 
 extern int DomainCnt;
-extern domainT* DomainTbl[];
+extern domainT *DomainTbl[];
 
 #ifdef ADVFS_DOMAIN_TRACE
 
@@ -483,16 +484,16 @@ extern domainT* DomainTbl[];
     domain_trace((dmnp), (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void*)(n1))
 
 void
-domain_trace( domainT *dmnp,
-              uint16T module,
-              uint16T line,
-              void    *value);
+domain_trace(domainT * dmnp,
+    uint16T module,
+    uint16T line,
+    void *value);
 
-#else  /* ADVFS_DOMAIN_TRACE */
+#else				/* ADVFS_DOMAIN_TRACE */
 
 #define DOMAIN_TRACE( dmnp, n1 )
 
-#endif /* ADVFS_DOMAIN_TRACE */
+#endif				/* ADVFS_DOMAIN_TRACE */
 
 /*
  * Macros for the xidRecoveryLk
@@ -580,7 +581,7 @@ extern lock_data_t DmnTblLock;
 #define DOMAIN_HASH_INITIAL_SIZE 32
 #define DOMAIN_HASH_CHAIN_LENGTH 16
 #define DOMAIN_HASH_ELEMENTS_TO_BUCKETS 4
-#define DOMAIN_HASH_USECS_BETWEEN_SPLITS 5000000 /* 5 seconds */
+#define DOMAIN_HASH_USECS_BETWEEN_SPLITS 5000000	/* 5 seconds */
 
 #define DOMAIN_GET_HASH_KEY( _domainId ) \
     ( (_domainId).tv_sec)
@@ -603,64 +604,64 @@ extern lock_data_t DmnTblLock;
 *****************************************************************/
 domainT *
 domain_name_lookup(
-                   char *dmnName,   /* in - domain to lookup */
-                   u_long flag      /* in - mount flags/check DmnTblLock? */
-                   );
+    char *dmnName,		/* in - domain to lookup */
+    u_long flag			/* in - mount flags/check DmnTblLock? */
+);
 void
 bs_domain_init(
     void
-    );
+);
 
 void
 bs_bfdmn_flush_bfrs(
-                    domainT* dmnp
-                    );
+    domainT * dmnp
+);
 
 void
 bs_bfdmn_flush(
-               domainT* dmnp
-               );
+    domainT * dmnp
+);
 
 int
 bs_bfdmn_flush_sync(
-                    domainT* dmnp
-                    );
+    domainT * dmnp
+);
 
 statusT
 advfs_enum_domain_devts(
-                  char *domain,               /* in */
-                  bsDevtListT *DevtList       /* out */
-                 );
+    char *domain,		/* in */
+    bsDevtListT * DevtList	/* out */
+);
 
 void
 cfs_xid_free_memory(
-                    char *arg
-                   );
+    char *arg
+);
 void
 cfs_xid_free_memory_int(
-                    domainT *dmnp
-                   );
+    domainT * dmnp
+);
 
 statusT
-find_del_entry (
-                domainT *domain,              /* in */
-                bfTagT bfSetTag,              /* in */
-                bfTagT bfTag,                 /* in */
-                struct vd **delVd,                  /* out */
-                bfMCIdT *delMcellId,          /* out */
-                int *delFlag                  /* out */
-                );
+find_del_entry(
+    domainT * domain,		/* in */
+    bfTagT bfSetTag,		/* in */
+    bfTagT bfTag,		/* in */
+    struct vd ** delVd,		/* out */
+    bfMCIdT * delMcellId,	/* out */
+    int *delFlag		/* out */
+);
 
 statusT
-bs_fix_root_dmn (
-                 bfDmnDescT *dmntbl,          /* in */
-                 domainT *dmnP,               /* in */
-                 char *dmnName                /* in */
-                 );
+bs_fix_root_dmn(
+    bfDmnDescT * dmntbl,	/* in */
+    domainT * dmnP,		/* in */
+    char *dmnName		/* in */
+);
 
 statusT
-bs_check_root_dmn_sc (
-                 domainT *dmnP                /* in */
-                 );
+bs_check_root_dmn_sc(
+    domainT * dmnP		/* in */
+);
 
-#endif /* _DOMAIN_H_ */
+#endif				/* _DOMAIN_H_ */

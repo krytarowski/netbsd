@@ -8,12 +8,12 @@
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -140,7 +140,7 @@
  * package has been enabled.
  */
 #define SMOOTHSYNC_DEBUG 1
-#endif /* ADVFS_SMP_ASSERT */
+#endif				/* ADVFS_SMP_ASSERT */
 
 #if SMOOTHSYNC_DEBUG
 extern u_int smsync_debug;
@@ -153,11 +153,11 @@ extern u_int smsync_debug;
 }
 #else
 #define SMSYNC_DBG(flag,action)
-#endif /* SMOOTHSYNC_DEBUG */
-#endif /* _KERNEL */
+#endif				/* SMOOTHSYNC_DEBUG */
+#endif				/* _KERNEL */
 
 #include <msfs/bs_ods.h>
 #include <msfs/bs_ims.h>
-enum msfs_setproplist_enum { NO_SET_CTIME=0, SET_CTIME = 1 };
-
-#endif /* MS_PRIVATES */
+enum msfs_setproplist_enum {
+NO_SET_CTIME = 0, SET_CTIME = 1};
+#endif				/* MS_PRIVATES */

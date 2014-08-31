@@ -8,12 +8,12 @@
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of version 2 the GNU General Public License as
  *   published by the Free Software Foundation.
- *   
+ *
  *   This program is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
- *   
+ *
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -32,7 +32,7 @@ typedef uint32T ftxIdT;
 
 struct domain;
 
-/* 
+/*
  * An xid has its high bit set to differentiate it from
  * other ftxId's.
  */
@@ -45,19 +45,18 @@ struct domain;
 #define XID_TIMEOUT 15*60	/* Release xid memory after 15 minutes */
 
 typedef struct xidInfo {
-    struct xidInfo *next;
-    ftxIdT data[NUM_XIDS];	 
-} xidInfoT;			
+	struct xidInfo *next;
+	ftxIdT data[NUM_XIDS];
+}       xidInfoT;
 
 typedef struct xidRecovery {
-    xidInfoT *head;              /* head of xidInfoT chain */
-    xidInfoT *tail;              /* last in xidInfoT chain */
-    int current_free_slot;       /* Index of next free xidInfoT.data */	
-    struct timeval timestamp;    /* Time of recovery */
-} xidRecoveryT;			
-
+	xidInfoT *head;		/* head of xidInfoT chain */
+	xidInfoT *tail;		/* last in xidInfoT chain */
+	int current_free_slot;	/* Index of next free xidInfoT.data */
+	struct timeval timestamp;	/* Time of recovery */
+}           xidRecoveryT;
 /*
- * cfs_check_for_pfs_commit() is called by CFS to 
+ * cfs_check_for_pfs_commit() is called by CFS to
  * check for xid status.
  */
 
@@ -65,7 +64,7 @@ typedef struct xidRecovery {
 int cfs_check_for_pfs_commit(fsid_t fsid, ftxIdT xid);
 #endif
 
-extern ftxHT FtxNilFtxH; /* Nil ftx for use as root parent */
+extern ftxHT FtxNilFtxH;	/* Nil ftx for use as root parent */
 
 #define FTX_EQ(ftxA, ftxB) ((ftxA).dmnP == (ftxB).dmnP && \
                             (ftxA).hndl == (ftxB).hndl && \
@@ -74,11 +73,10 @@ extern ftxHT FtxNilFtxH; /* Nil ftx for use as root parent */
 /* crash redo log address structure */
 
 typedef struct ftxCRLA {
-    int read;           /* read "index" */
-    int update;         /* update "index" */
-    logRecAddrT lgra[2]; /* two log address records */
-} ftxCRLAT;
-
+	int read;		/* read "index" */
+	int update;		/* update "index" */
+	logRecAddrT lgra[2];	/* two log address records */
+}       ftxCRLAT;
 /*
  * agent operational redo/undo/rootDn execution
  *
@@ -99,11 +97,12 @@ typedef struct ftxCRLA {
  *
  */
 
-typedef void opxT (
-                   ftxHT ftxH,      /* in - ftx handle */
-                   int opRecSz,     /* in - size of opx record */
-                   void* opRec      /* in - ptr to opx record */
-                   );
+typedef void 
+opxT(
+    ftxHT ftxH,			/* in - ftx handle */
+    int opRecSz,		/* in - size of opx record */
+    void *opRec			/* in - ptr to opx record */
+);
 
 /*
  * ftx_register_agent
@@ -128,29 +127,29 @@ typedef void opxT (
  *
  */
 statusT
-ftx_register_agent_n2(ftxAgentIdT agentId, /* in - agent id */
-                      opxT *undoOpX,       /* in - undo opx proc ptr */
-                      opxT *rootDnOpX,     /* in - root done opx proc ptr */
-                      opxT *redoOpX,       /* in - redo opx proc ptr */
-                      opxT *contOpX        /* in - continuation opx */
-                                /* Note - opX routines must NOT fail !! */
-                   );
+ftx_register_agent_n2(ftxAgentIdT agentId,	/* in - agent id */
+    opxT * undoOpX,		/* in - undo opx proc ptr */
+    opxT * rootDnOpX,		/* in - root done opx proc ptr */
+    opxT * redoOpX,		/* in - redo opx proc ptr */
+    opxT * contOpX		/* in - continuation opx */
+ /* Note - opX routines must NOT fail !! */
+);
 
 statusT
-ftx_register_agent_n(ftxAgentIdT agentId, /* in - agent id */
-                   opxT *undoOpX,       /* in - undo opx proc ptr */
-                   opxT *rootDnOpX,     /* in - root done opx proc ptr */
-                   opxT *redoOpX        /* in - redo opx proc ptr */
-                                /* Note - opX routines must NOT fail !! */
-                   );
+ftx_register_agent_n(ftxAgentIdT agentId,	/* in - agent id */
+    opxT * undoOpX,		/* in - undo opx proc ptr */
+    opxT * rootDnOpX,		/* in - root done opx proc ptr */
+    opxT * redoOpX		/* in - redo opx proc ptr */
+ /* Note - opX routines must NOT fail !! */
+);
 
 
 statusT
-ftx_register_agent(ftxAgentIdT agentId, /* in - agent id */
-                   opxT *undoOpX,   /* in - undo opx routine ptr */
-                   opxT *rootDnOpX  /* in - root done opx routine ptr */
-                                /* Note - opX routines must fail !! */
-                   );
+ftx_register_agent(ftxAgentIdT agentId,		/* in - agent id */
+    opxT * undoOpX,		/* in - undo opx routine ptr */
+    opxT * rootDnOpX		/* in - root done opx routine ptr */
+ /* Note - opX routines must fail !! */
+);
 
 
 /*
@@ -193,15 +192,15 @@ ftx_register_agent(ftxAgentIdT agentId, /* in - agent id */
  * (sub) trees must be undone at the end of a given pass, so that
  * whatever structures they modify are consistent prior to starting
  * the next recovery pass.  It is only meaningful if there will be an
- * ftx subtree associated with the ftx.  A value of zero (FINAL_PASS) is 
+ * ftx subtree associated with the ftx.  A value of zero (FINAL_PASS) is
  * taken to mean "final pass", that is, no special action on earlier passes.
  *
- * All new code should use the FTX_START* macros.  
+ * All new code should use the FTX_START* macros.
  */
 #define FTX_EXC    0x01		/* exclusive ftx */
 #define FTX_NOWAIT 0x04		/* don't wait if slot not available */
 
-/* Because we can't #include ftx_privates.h here, but we want to use 
+/* Because we can't #include ftx_privates.h here, but we want to use
  * the #defined values for the recovery passes, they are duplicated here.
  * If you change the values here, be sure to change them there as well.
  */
@@ -209,29 +208,29 @@ ftx_register_agent(ftxAgentIdT agentId, /* in - agent id */
 #ifndef FTX_MAX_RECOVERY_PASS
 #define FINAL_PASS            0
 #define META_META_PASS        3
-#define META_PASS             1         /* do not change this value */
-#define DATA_PASS             2         /* do not change this value */
-#define FTX_MAX_RECOVERY_PASS DATA_PASS /* last recovery pass */
-#endif /* FTX_MAX_RECOVERY_PASS */
+#define META_PASS             1	/* do not change this value */
+#define DATA_PASS             2	/* do not change this value */
+#define FTX_MAX_RECOVERY_PASS DATA_PASS	/* last recovery pass */
+#endif				/* FTX_MAX_RECOVERY_PASS */
 
 
 statusT
 _ftx_start_i(
-    ftxHT *ftxH,                /* out - ftx handle */
-    ftxHT parentFtxH,           /* in - parent ftx handle */
+    ftxHT * ftxH,		/* out - ftx handle */
+    ftxHT parentFtxH,		/* in - parent ftx handle */
 #ifdef FTX_PROFILING
-    ftxAgentIdT agentId,        /* in - agent ID; only if profiling */
-#endif /* FTX_PROFILING */
-    struct domain *dmnP,        /* in - domain pointer */
-    int page_reservation,       /* in - ref/pin pages reserved */
-    unsigned int atomicRPass,   /* in - atomic recovery pass */
-    int flag,                   /* in - 1 == start exclusive ftx, 2 == force */
-    long xid                    /* in - transaction id (gen'd by CFS client) */
+    ftxAgentIdT agentId,	/* in - agent ID; only if profiling */
+#endif				/* FTX_PROFILING */
+    struct domain * dmnP,	/* in - domain pointer */
+    int page_reservation,	/* in - ref/pin pages reserved */
+    unsigned int atomicRPass,	/* in - atomic recovery pass */
+    int flag,			/* in - 1 == start exclusive ftx, 2 == force */
+    long xid			/* in - transaction id (gen'd by CFS client) */
 #ifdef ADVFS_DEBUG
-    , int ln,                     /* in - caller's line number */
-    char *fn                    /* in - caller's file name */
-#endif /* ADVFS_DEBUG */
-    );
+    ,int ln,			/* in - caller's line number */
+    char *fn			/* in - caller's file name */
+#endif				/* ADVFS_DEBUG */
+);
 
 #if defined(FTX_PROFILING) && defined(ADVFS_DEBUG)
 
@@ -253,7 +252,7 @@ _ftx_start_i(
     _ftx_start_i((fh), FtxNilFtxH, (ag), (dh), (pr), 0, FTX_EXC, xid, __LINE__, __FILE__)
 #define FTX_START_META_XID(ag, fh, pfh, dh, pr, xid) \
     _ftx_start_i((fh), (pfh), (ag), (dh), (pr), META_PASS, 0, xid, __LINE__, __FILE__)
-#endif /* FTX_PROFILING && ADVFS_DEBUG */
+#endif				/* FTX_PROFILING && ADVFS_DEBUG */
 
 #if defined(FTX_PROFILING) && !defined(ADVFS_DEBUG)
 
@@ -275,7 +274,7 @@ _ftx_start_i(
     _ftx_start_i((fh), FtxNilFtxH, (ag), (dh), (pr), 0, FTX_EXC, xid)
 #define FTX_START_META_XID(ag, fh, pfh, dh, pr, xid) \
     _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 1, 0, xid)
-#endif /* FTX_PROFILING && !ADVFS_DEBUG */
+#endif				/* FTX_PROFILING && !ADVFS_DEBUG */
 
 #if !defined(FTX_PROFILING) && !defined(ADVFS_DEBUG)
 
@@ -297,7 +296,7 @@ _ftx_start_i(
     _ftx_start_i((fh), FtxNilFtxH, (dh), (pr), 0, FTX_EXC, xid)
 #define FTX_START_META_XID(ag, fh, pfh, dh, pr, xid) \
     _ftx_start_i((fh), (pfh), (dh), (pr), META_PASS, 0, xid)
-#endif /* !FTX_PROFILING && !ADVFS_DEBUG */
+#endif				/* !FTX_PROFILING && !ADVFS_DEBUG */
 
 #if !defined(FTX_PROFILING) && defined(ADVFS_DEBUG)
 
@@ -319,7 +318,7 @@ _ftx_start_i(
     _ftx_start_i((fh), FtxNilFtxH, (dh), (pr), 0, FTX_EXC, xid, __LINE__, __FILE__)
 #define FTX_START_META_XID(ag, fh, pfh, dh, pr, xid) \
     _ftx_start_i((fh), (pfh), (dh), (pr), META_PASS, 0, xid, __LINE__, __FILE__)
-#endif /* !FTX_PROFILING && ADVFS_DEBUG */
+#endif				/* !FTX_PROFILING && ADVFS_DEBUG */
 
 
 #define FTX_NOOP_REDO 0
@@ -328,8 +327,8 @@ _ftx_start_i(
 
 void
 ftx_quit(
-        ftxHT ftxH        /* in - root ftx handle */
-        );
+    ftxHT ftxH			/* in - root ftx handle */
+);
 /*
  *
  * ftx_fail
@@ -343,8 +342,8 @@ ftx_quit(
 
 void
 ftx_fail(
-         ftxHT ftxH     /* in - leaf (current) ftx handle */
-         );
+    ftxHT ftxH			/* in - leaf (current) ftx handle */
+);
 
 /*
  * ftx_done
@@ -376,7 +375,7 @@ ftx_fail(
  *
  * This action specifies an action to be taken only if the root ftx
  * calls ftx_done.  In this case, the deferred action must not depend
- * on the to acquire any limited (quota-controlled or physically 
+ * on the to acquire any limited (quota-controlled or physically
  * limited) resources, such as storage.  In other words, whatever
  * resources a deferred action requires must have been reserved by
  * the current ftx.
@@ -394,58 +393,58 @@ ftx_fail(
 
 void
 ftx_done_n(
-         ftxHT ftxH,
-         ftxAgentIdT agentId
-         );
+    ftxHT ftxH,
+    ftxAgentIdT agentId
+);
 
 void
 ftx_done_fs(
-            ftxHT ftxH,
-            ftxAgentIdT agentId,
-            long server_only
-            );
+    ftxHT ftxH,
+    ftxAgentIdT agentId,
+    long server_only
+);
 
 statusT
 ftx_done(
-         ftxHT ftxH,            /* in - leaf ftx handle */
-         ftxAgentIdT agentId,   /* in - opx agent id */
-         int undoOpSz,          /* in - size of op undo struct */
-         void* undoOp,          /* in - ptr to op undo struct */
-         int redoOpSz,          /* in - size of op redo struct */
-         void* redoOp,          /* in - ptr to op redo struct */
-         int rootDnOpSz,        /* in - size of root done struct */
-         void* rootDnOp         /* in - ptr to root done struct */
-         );
+    ftxHT ftxH,			/* in - leaf ftx handle */
+    ftxAgentIdT agentId,	/* in - opx agent id */
+    int undoOpSz,		/* in - size of op undo struct */
+    void *undoOp,		/* in - ptr to op undo struct */
+    int redoOpSz,		/* in - size of op redo struct */
+    void *redoOp,		/* in - ptr to op redo struct */
+    int rootDnOpSz,		/* in - size of root done struct */
+    void *rootDnOp		/* in - ptr to root done struct */
+);
 
 void
 ftx_done_u(
-           ftxHT ftxH,          /* in - leaf ftx handle */
-           ftxAgentIdT agentId, /* in - opx agent id */
-           int undoOpSz,        /* in - size of op undo struct */
-           void* undoOp         /* in - ptr to op undo struct */
-           );
+    ftxHT ftxH,			/* in - leaf ftx handle */
+    ftxAgentIdT agentId,	/* in - opx agent id */
+    int undoOpSz,		/* in - size of op undo struct */
+    void *undoOp		/* in - ptr to op undo struct */
+);
 
 void
 ftx_done_urd(
-             ftxHT ftxH,        /* in - leaf ftx handle */
-             ftxAgentIdT agentId, /* in - opx agent id */
-             int undoOpSz,      /* in - size of op undo struct */
-             void* undoOp,      /* in - ptr to op undo struct */
-             int rootDnOpSz,    /* in - size of root done struct */
-             void* rootDnOp     /* in - ptr to root done struct */
-             );
+    ftxHT ftxH,			/* in - leaf ftx handle */
+    ftxAgentIdT agentId,	/* in - opx agent id */
+    int undoOpSz,		/* in - size of op undo struct */
+    void *undoOp,		/* in - ptr to op undo struct */
+    int rootDnOpSz,		/* in - size of root done struct */
+    void *rootDnOp		/* in - ptr to root done struct */
+);
 
 void
 ftx_done_urdr(
-              ftxHT ftxH,       /* in - leaf ftx handle */
-              ftxAgentIdT agentId, /* in - opx agent id */
-              int undoOpSz,     /* in - size of op undo struct */
-              void* undoOp,     /* in - ptr to op undo struct */
-              int rootDnOpSz,   /* in - size of root done struct */
-              void* rootDnOp,   /* in - ptr to root done struct */
-              int redoOpSz,     /* in - size of op redo struct */
-              void* redoOp      /* in - ptr to op redo struct */
-              );
+    ftxHT ftxH,			/* in - leaf ftx handle */
+    ftxAgentIdT agentId,	/* in - opx agent id */
+    int undoOpSz,		/* in - size of op undo struct */
+    void *undoOp,		/* in - ptr to op undo struct */
+    int rootDnOpSz,		/* in - size of root done struct */
+    void *rootDnOp,		/* in - ptr to root done struct */
+    int redoOpSz,		/* in - size of op redo struct */
+    void *redoOp		/* in - ptr to op redo struct */
+);
 
 /*
  * ftx_set_special - set special done mode
@@ -457,23 +456,23 @@ ftx_done_urdr(
  */
 
 typedef enum {
-    FTXDONE_NORMAL,
-    FTXDONE_LOGSYNC,
-    FTXDONE_SKIP_SUBFTX_UNDO
-} ftxDoneModeT;
+	FTXDONE_NORMAL,
+	FTXDONE_LOGSYNC,
+	FTXDONE_SKIP_SUBFTX_UNDO
+}    ftxDoneModeT;
 
 void
 ftx_set_continuation(
-                     ftxHT ftxH,        /* in - ftx handle */
-                     int contRecSz,     /* in - cont rec size */
-                     void* contRec      /* in - continuation record */
-                     );
+    ftxHT ftxH,			/* in - ftx handle */
+    int contRecSz,		/* in - cont rec size */
+    void *contRec		/* in - continuation record */
+);
 
 void
 ftx_special_done_mode(
-                      ftxHT ftxH,       /* in - ftx handle */
-                      ftxDoneModeT mode /* in - special done mode */
-                      );
+    ftxHT ftxH,			/* in - ftx handle */
+    ftxDoneModeT mode		/* in - special done mode */
+);
 /*
  * Recoverable bitfile functions.
  *
@@ -511,14 +510,14 @@ struct bfAccess;
 
 statusT
 rbf_create(
-           bfTagT *tag,                 /* out */
-           bfSetT *bfSetp,              /* in */
-           bfParamsT *bfParams,         /* in */
-           ftxHT parentFtx,             /* in */
-           int checkmigtrunclock        /* in */
-           );
+    bfTagT * tag,		/* out */
+    bfSetT * bfSetp,		/* in */
+    bfParamsT * bfParams,	/* in */
+    ftxHT parentFtx,		/* in */
+    int checkmigtrunclock	/* in */
+);
 
-void ftbs_create(void);  /* obsolete */
+void ftbs_create(void);		/* obsolete */
 
 /*
  * rbf_delete - recoverable bitfile deletion
@@ -526,31 +525,31 @@ void ftbs_create(void);  /* obsolete */
 
 statusT
 rbf_delete(
-           struct bfAccess *bfap,       /* in */
-           ftxHT parentFtx              /* in */
-           );
+    struct bfAccess * bfap,	/* in */
+    ftxHT parentFtx		/* in */
+);
 
 /*
  * rbf_add_stg - recoverable bitfile storage allocation
  */
 
 statusT
-rbf_add_stg( 
-            struct bfAccess *bfap,          /* in */
-            unsigned long pageOFfset,       /* in */
-            unsigned long pageCnt,          /* in */
-            ftxHT parentFtx,                /* in */
-            int checkmigtrunclock           /* in */
-            );
+rbf_add_stg(
+    struct bfAccess * bfap,	/* in */
+    unsigned long pageOFfset,	/* in */
+    unsigned long pageCnt,	/* in */
+    ftxHT parentFtx,		/* in */
+    int checkmigtrunclock	/* in */
+);
 
 statusT
-rbf_add_overlapping_stg( 
-                        struct bfAccess *bfap,          /* in */
-                        unsigned long pageOFfset,       /* in */
-                        unsigned long pageCnt,          /* in */
-                        ftxHT parentFtx,                /* in */
-                        uint32T *allocPageCnt           /* out */
-                        );
+rbf_add_overlapping_stg(
+    struct bfAccess * bfap,	/* in */
+    unsigned long pageOFfset,	/* in */
+    unsigned long pageCnt,	/* in */
+    ftxHT parentFtx,		/* in */
+    uint32T * allocPageCnt	/* out */
+);
 
 /*
  * rbf_refpg, rbf_pinpg - recoverable, resource assured
@@ -561,20 +560,19 @@ rbf_add_overlapping_stg(
  */
 
 typedef struct rbfPgRefH {
-    struct domain *dmnP;        /* domain pointer */
-    signed hndl : 16;           /* handle into ftx table */
-    unsigned pgHndl : 8;        /* page ref handle */
-} rbfPgRefHT;
-
+	struct domain *dmnP;	/* domain pointer */
+	signed hndl:16;		/* handle into ftx table */
+	unsigned pgHndl:8;	/* page ref handle */
+}         rbfPgRefHT;
 statusT
-rbf_pinpg( 
-          rbfPgRefHT *rbfPgRefH,        /* out */
-          void **bfPageAddr,            /* out */
-          struct bfAccess *bfap,        /* in */
-          unsigned long bsPage,         /* in */
-          bfPageRefHintT refHint,       /* in */
-          ftxHT ftxH                    /* in */
-          );
+rbf_pinpg(
+    rbfPgRefHT * rbfPgRefH,	/* out */
+    void **bfPageAddr,		/* out */
+    struct bfAccess * bfap,	/* in */
+    unsigned long bsPage,	/* in */
+    bfPageRefHintT refHint,	/* in */
+    ftxHT ftxH			/* in */
+);
 
 /*
  * rbf_deref_page - deref an unmodified pinned page or ref'd page
@@ -586,9 +584,9 @@ rbf_pinpg(
 
 void
 rbf_deref_page(
-               rbfPgRefHT rbfPgRefH,            /* in */
-               bfPageCacheHintT cacheHint       /* in */
-               );
+    rbfPgRefHT rbfPgRefH,	/* in */
+    bfPageCacheHintT cacheHint	/* in */
+);
 
 /*
  * Record image undo/redo.
@@ -624,12 +622,12 @@ rbf_deref_page(
 
 void
 rbf_pin_record(
-               rbfPgRefHT pgRefH,       /* in - pinned page handle */
-               void* recAddr,           /* in - address of record */
-               int recSz                /* in - byte count of record */
-               );
+    rbfPgRefHT pgRefH,		/* in - pinned page handle */
+    void *recAddr,		/* in - address of record */
+    int recSz			/* in - byte count of record */
+);
 
-void pin_record(void);  /* obsolete */
+void pin_record(void);		/* obsolete */
 
 /*
  * get_ftx_id
@@ -637,19 +635,19 @@ void pin_record(void);  /* obsolete */
  */
 
 ftxIdT
-get_ftx_id(ftxHT ftxH           /* in - ftx handle */
-           );
+get_ftx_id(ftxHT ftxH		/* in - ftx handle */
+);
 
 void
-ftx_init();
+     ftx_init();
 
 statusT
 rbf_set_bfset_params(
-    bfSetT *bfSetp,             /* in - bitfile-set's descriptor pointer */
-    bfSetParamsT *bfSetParams,  /* in - bitfile-set's params */
+    bfSetT * bfSetp,		/* in - bitfile-set's descriptor pointer */
+    bfSetParamsT * bfSetParams,	/* in - bitfile-set's params */
     ftxHT ftxH,
-    long xid                    /* in - CFS transaction id */
-    );
+    long xid			/* in - CFS transaction id */
+);
 
 #define FTX_LOCKS
 
@@ -673,26 +671,26 @@ rbf_set_bfset_params(
 
 void
 ftx_lock_write(
-    ftxLkT *lk,      /* in */
-    ftxHT ftxH,      /* in */
-    int ln,          /* in */
-    char *fn         /* in */
-    );
+    ftxLkT * lk,		/* in */
+    ftxHT ftxH,			/* in */
+    int ln,			/* in */
+    char *fn			/* in */
+);
 
 void
 ftx_lock_read(
-    ftxLkT *lk,      /* in */
-    ftxHT ftxH,      /* in */
-    int ln,          /* in */
-    char *fn         /* in */
-    );
+    ftxLkT * lk,		/* in */
+    ftxHT ftxH,			/* in */
+    int ln,			/* in */
+    char *fn			/* in */
+);
 
 void
 _ftx_add_lock(
-              ftxLkT *lk,      /* in */
-              ftxHT ftxH,      /* in */
-              int ln,          /* in */
-              char *fn         /* in */
-              );
+    ftxLkT * lk,		/* in */
+    ftxHT ftxH,			/* in */
+    int ln,			/* in */
+    char *fn			/* in */
+);
 
-#endif  /* FTX_PUBLIC */
+#endif				/* FTX_PUBLIC */
