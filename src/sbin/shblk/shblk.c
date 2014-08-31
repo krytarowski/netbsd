@@ -22,6 +22,7 @@
 #pragma ident "@(#)$RCSfile: shblk.c,v $ $Revision: 1.1.9.1 $ (DEC) $Date: 2001/10/10 21:25:46 $"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <strings.h>
 #include <sys/file.h>
 #include <sys/types.h>
