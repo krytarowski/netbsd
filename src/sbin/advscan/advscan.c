@@ -563,7 +563,7 @@ main(argc, argv)
          */
 
 	(void) setlocale(LC_ALL, "");
-	catd = catopen(MF_ADVSCAN, NL_CAT_LOCALE);
+	catd = catopen("advscan.h", NL_CAT_LOCALE);
 
 	/* check for root */
 	if (geteuid()) {
