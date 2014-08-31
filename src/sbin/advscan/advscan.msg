@@ -38,7 +38,7 @@ $set 1
 7	"\tV%d, %s"
 8	"\n\t\tCreated\t\t\t%s "
 9	"\t\tLast mount\t\t%s\n"
-USAGE	"usage: %s [-argq] [-f domain] <disk list> <lsm diskgroup list>\n"
+10	"usage: %s [-argq] [-f domain] <disk list> <lsm diskgroup list>\n"
 11	"Ex: %s rz10 rz11 rz12 rootdg acctdg\n"
 13	"Ex: %s -a              (Scans all disks found in /etc/fdmns)\n"
 14	"Ex: %s -a -r           (Recreates anything missing from /etc/fdmns)\n"

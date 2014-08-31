@@ -65,7 +65,7 @@ static char rcsid[] = "@(#)$RCSfile: advscan.c,v $ $Revision: 1.1.48.1 $ (DEC) $
 #include <msfs/advfs_evm.h>
 
 #include <locale.h>
-#include "advscan_msg.h"
+#include <nl_types.h>
 
 
 nl_catd catd;
@@ -523,7 +523,7 @@ usage(prog)
 	char *prog;
 {
 
-	printf(catgets(catd, 1, USAGE, "usage: %s [-argq] [-f domain] <disk list> <lsm diskgroup list>\n"),
+	printf(catgets(catd, 1, 10, "usage: %s [-argq] [-f domain] <disk list> <lsm diskgroup list>\n"),
 	    prog);
 	printf(catgets(catd, 1, 11, "Ex: %s rz10 rz11 rz12 rootdg acctdg\n"), prog);
 	printf(catgets(catd, 1, 13, "Ex: %s -a              (Scans all disks found in /etc/fdmns)\n"), prog);
