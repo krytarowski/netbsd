@@ -48,7 +48,7 @@ static char rcsid[] = "@(#)$RCSfile: advscan.c,v $ $Revision: 1.1.48.1 $ (DEC) $
 #include <sys/time.h>
 #include <sys/file.h>
 #include <sys/mount.h>
-#include <ufs/fs.h>
+#include <ufs/ffs/fs.h>
 #include <sys/ioctl.h>
 #include <sys/errno.h>
 #include <dirent.h>
