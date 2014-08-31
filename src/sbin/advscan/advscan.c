@@ -145,7 +145,7 @@ extern char *optarg;
 extern int optind;
 
 static domm nil_domain = {0};
-static advfs_ev advfs_event;
+/* static advfs_ev advfs_event; */
 bsIdT domain;
 uint32T blkcnt;
 char state[14] = " ";
@@ -935,9 +935,9 @@ main(argc, argv)
 						set_usage(part->part_path, FS_ADVFS, 1);
 					}
 				}
-				init_event(&advfs_event);
+/*				init_event(&advfs_event);
 				advfs_event.domain = fdmns_name;
-				advfs_post_user_event(EVENT_ADVSCAN_RECREATE, advfs_event, argv[0]);
+				advfs_post_user_event(EVENT_ADVSCAN_RECREATE, advfs_event, argv[0]); */
 			}
 		}
 	}
