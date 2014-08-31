@@ -262,7 +262,7 @@ $set 1
 245	"Scanning directories and files ...\n"
 246	"Scanning tags ...\n"
 247	"Searching for lost files ...\n"
-USAGE	"usage: %s [-l | -d] [-v | -q] [-t] [-a | -f] [-F] [-D] domainName\n"
+248	"usage: %s [-l | -d] [-v | -q] [-t] [-a | -f] [-F] [-D] domainName\n"
 249	"All filesets in the domain must be unmounted.\n"
 250	"-l  Creates a symbolic link to a lost file in the /???/lost+found directory.\n"
 251     "-d  Deletes lost files.\n"

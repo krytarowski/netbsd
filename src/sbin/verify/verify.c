@@ -67,7 +67,7 @@ static char rcsid[] = "@(#)$RCSfile: verify.c,v $ $Revision: 1.1.148.2 $ (DEC) $
 #include <msfs/bs_index.h>
 
 #include <locale.h>
-#include "verify_msg.h"
+#include <nl_types.h>
 nl_catd catd;
 
 extern int errno;
@@ -635,7 +635,7 @@ usage(void)
 
 	fprintf(stderr, catgets(catd, 1, 1, "exiting...\n"));
 
-	fprintf(stderr, catgets(catd, 1, USAGE, "usage: %s [-l | -d] [-v | -q] [-t] [-a | -f] [-F] [-D] domainName\n"), Prog);
+	fprintf(stderr, catgets(catd, 1, 248, "usage: %s [-l | -d] [-v | -q] [-t] [-a | -f] [-F] [-D] domainName\n"), Prog);
 	fprintf(stderr, "\n");
 	fprintf(stderr, catgets(catd, 1, 249, "All filesets in the domain must be unmounted.\n"));
 	fprintf(stderr, "\n");
@@ -676,7 +676,7 @@ main(int argc, char *argv[])
 	int ssRunningState = 0;
 
 	(void) setlocale(LC_ALL, "");
-	catd = catopen(MF_VERIFY, NL_CAT_LOCALE);
+	catd = catopen("verify.cat", NL_CAT_LOCALE);
 
 	/* store only the file name part of argv[0] */
 	if ((Prog = strrchr(argv[0], '/')) == NULL) {
