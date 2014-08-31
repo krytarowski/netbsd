@@ -67,7 +67,9 @@ static char rcsid[] = "@(#)$RCSfile: advscan.c,v $ $Revision: 1.1.48.1 $ (DEC) $
 /*
  * XXX: Tru64 Event Manager (evm(5)) machinery is undisclosed
  */
-/* #include <msfs/advfs_evm.h> */
+#ifdef XXX_NOT_IMPLEMENTED_EVM
+#include <msfs/advfs_evm.h>
+#endif
 
 #include <locale.h>
 #include <nl_types.h>
@@ -145,7 +147,9 @@ extern char *optarg;
 extern int optind;
 
 static domm nil_domain = {0};
-/* static advfs_ev advfs_event; */
+#ifdef XXX_NOT_IMPLEMENTED_EVM
+static advfs_ev advfs_event;
+#endif
 bsIdT domain;
 uint32T blkcnt;
 char state[14] = " ";
@@ -935,9 +939,11 @@ main(argc, argv)
 						set_usage(part->part_path, FS_ADVFS, 1);
 					}
 				}
-/*				init_event(&advfs_event);
+#ifdef XXX_NOT_IMPLEMENTED_EVM
+				init_event(&advfs_event);
 				advfs_event.domain = fdmns_name;
-				advfs_post_user_event(EVENT_ADVSCAN_RECREATE, advfs_event, argv[0]); */
+				advfs_post_user_event(EVENT_ADVSCAN_RECREATE, advfs_event, argv[0]);
+#endif
 			}
 		}
 	}
