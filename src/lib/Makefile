@@ -84,6 +84,10 @@ SUBDIR+=	../external/lgpl3/mpc/lib/libmpc
 . endif
 .endif
 
+.if (${ADVFS} != "no")
+SUBDIR+= libmsfs
+.endif
+
 #
 # Libraries that depend upon any listed previously
 # (and those that depend upon these [and ...])
