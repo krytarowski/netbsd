@@ -72,4 +72,9 @@ SUBDIR+=npf
 SUBDIR+=pf
 .endif
 
+.if (${MKADVFS} != "no")
+SUBDIR+= addvol advfsstat balance chfile defragment migrate mktrashcan
+SUBDIR+= renamefset rmvol showfile stripe vfast
+.endif
+
 .include <bsd.subdir.mk>
