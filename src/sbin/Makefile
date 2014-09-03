@@ -65,4 +65,10 @@ SUBDIR+= iscsictl iscsid
 # IPsec
 SUBDIR+= setkey
 
+.if (${MKADVFS} != "no")
+SUBDIR+= advscan fixfdmn mountlist salvage shblk shfragbf switchlog
+SUBDIR+= tag2name vdf verify vods shared vdump vrestore chfsets chvol
+SUBDIR+= mkfdmn mkfset rmfdmn rmfset showfdmn showfsets
+.endif
+
 .include <bsd.subdir.mk>
