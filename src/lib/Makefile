@@ -84,7 +84,7 @@ SUBDIR+=	../external/lgpl3/mpc/lib/libmpc
 . endif
 .endif
 
-.if (${ADVFS} != "no")
+.if (${MKADVFS} != "no")
 SUBDIR+= libmsfs
 .endif
 
