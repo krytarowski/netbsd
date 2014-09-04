@@ -54,11 +54,7 @@
 #include <msfs/advfs_evm.h>
 #include <msfs/bs_msg_queue.h>
 
-#ifdef _OSF_SOURCE
-#include <sys/mode.h>
-#else
 #include <sys/stat.h>
-#endif
 
 #define ADVFS_MODULE BS_BITFILE_SETS
 

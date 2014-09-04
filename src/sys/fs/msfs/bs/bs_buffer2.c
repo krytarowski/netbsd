@@ -27,11 +27,7 @@
 
 #include <sys/types.h>
 #include <sys/time.h>
-#ifdef _OSF_SOURCE
-#include <machine/machparam.h>
-#else
 #include <machine/param.h>
-#endif				/* _OSF_SOURCE */
 #include <msfs/ms_public.h>
 #include <msfs/ms_privates.h>
 #include <msfs/ms_logger.h>
