@@ -27,7 +27,6 @@ static char     rcsid[] = "@(#)$RCSfile: xtntmap.c,v $ $Revision: 1.1.9.3 $ (DEC
 #include <strings.h>
 #include <sys/types.h>
 #include <sys/param.h>
-#include <sys/mode.h>
 #include <sys/stat.h>
 #include <msfs/bs_error.h>
 #include <msfs/bs_public.h>	/* for bs_ods.h */
