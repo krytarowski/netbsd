@@ -52,7 +52,7 @@ static char     rcsid[] = "@(#)$RCSfile: mu_task_getrusage.c,v $ $Revision: 1.1.
 #include <mach.h>
 #endif				/* _OSF_SOURCE */
 
-#include "libmsfs_msg.h"
+#include <nl_types.h>
 
 #ifdef _OSF_SOURCE
 /*
@@ -92,7 +92,7 @@ task_getrusage(
 	task_infoCnt = TASK_BASIC_INFO_COUNT;
 	if (task_info(task_self(), TASK_BASIC_INFO, (task_info_t) & atask_info,
 		      &task_infoCnt) != KERN_SUCCESS) {
-		catd = catopen(MF_LIBMSFS, NL_CAT_LOCALE);
+		catd = catopen("libmsfs.cat", NL_CAT_LOCALE);
 		fprintf(stderr, catgets(catd, S_MU_TASK_GETRUSAGE1, MU_TASK_GETRUSAGE1, "task_threads:task_getrusage task_info call error\n"));
 		(void) catclose(catd);
 	}
