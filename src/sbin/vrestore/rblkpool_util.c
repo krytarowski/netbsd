@@ -2,43 +2,43 @@
  *                                                                          *
  *  (C) DIGITAL EQUIPMENT CORPORATION 1991                                  *
  */
-/* 
+/*
  * =======================================================================
- *   (c) Copyright Hewlett-Packard Development Company, L.P., 2008
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of version 2 the GNU General Public License as
- *   published by the Free Software Foundation.
- *   
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *   
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * (c) Copyright Hewlett-Packard Development Company, L.P., 2008
+ * 
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of version 2 the GNU General Public License as published by the
+ * Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
  * =======================================================================
- *
- *
+ * 
+ * 
  * Facility:
- *
- *      MegaSafe Storage System
- *
+ * 
+ * MegaSafe Storage System
+ * 
  * Abstract:
- *
- *      Recoverable block pool routines.
- *
+ * 
+ * Recoverable block pool routines.
+ * 
  * Date:
- *
- *      Wed Apr 10 14:28:18 1991
- *
+ * 
+ * Wed Apr 10 14:28:18 1991
+ * 
  */
 /*
  * HISTORY
  */
 #ifndef lint
-static char rcsid[] = "@(#)$RCSfile: rblkpool_util.c,v $ $Revision: 1.1.10.2 $ (DEC) $Date: 1998/10/30 21:48:58 $";
+static char     rcsid[] = "@(#)$RCSfile: rblkpool_util.c,v $ $Revision: 1.1.10.2 $ (DEC) $Date: 1998/10/30 21:48:58 $";
 #endif
 
 
@@ -52,12 +52,13 @@ static char rcsid[] = "@(#)$RCSfile: rblkpool_util.c,v $ $Revision: 1.1.10.2 $ (
 #include "restore_msg.h"
 #include "vrestore_msg.h"
 
-extern nl_catd catd;
+extern nl_catd  catd;
 extern unsigned long Bytes_read;
-extern int Src_fd;
-extern int (*read_buf)( int fd, char *blk, int cnt );
+extern int      Src_fd;
+extern int      (*read_buf) (int fd, char *blk, int cnt);
 
-
+
+
 /******************************************************************************
  *
  * RECOVERABLE BLOCK POOL
@@ -65,7 +66,7 @@ extern int (*read_buf)( int fd, char *blk, int cnt );
  * HOW IT ALL WORKS!
  *
  * Design Requirements:
- *  
+ *
  *  There two major functions that the block manager must support:
  *
  *    - XOR recovery:  When the save-set contains XOR blocks for error
@@ -83,7 +84,7 @@ extern int (*read_buf)( int fd, char *blk, int cnt );
  *    Save-sets with XOR blocks have the following format:
  *
  *           BLK1 BLK2 BLK3 XOR.BLK BLK4 BLK5 BLK6 XOR.BLK ...
- *  
+ *
  *    The XOR.BLK consists of the XOR of the previous N blocks (3
  *    in this case); the N blocks are called an XOR block group.  To
  *    recover a block in a block group one simple XORs the remaining blocks
@@ -102,11 +103,11 @@ extern int (*read_buf)( int fd, char *blk, int cnt );
  *    ReadThread.  The block manager and the thread share a message queue
  *    and a block pool.  The thread tries to keep all the blocks full and
  *    the block manager is informed of ready blocks via the message queue.
- *    
- *    Since the block manager hangs on to all the blocks in a group when 
+ *
+ *    Since the block manager hangs on to all the blocks in a group when
  *    the save-set contains XOR blocks the block reads would normally be
  *    done in bursts (start reading blocks, process blocks, release blooks,
- *    repeat the cycle).  This does not take good advantage of the 
+ *    repeat the cycle).  This does not take good advantage of the
  *    asynchrony of the ReadThread.  To achieve better throughput the
  *    block manager is capable of maintaining several block groups where
  *    only one is the group that is being restored; the others are being
@@ -116,7 +117,7 @@ extern int (*read_buf)( int fd, char *blk, int cnt );
  *    Note that if the save-set does not contain XOR blocks the block
  *    manager releases each block once the block has been restored.
  *
- *    All in-memory blocks are kept in the buffer pool.  The block manager 
+ *    All in-memory blocks are kept in the buffer pool.  The block manager
  *    keeps track of blocks via a block descriptor array (blkd).  This
  *    array is partitioned into equal-sized groups of blocks.  When the
  *    save-set contains XOR blocks the groups size is equal to the XOR
@@ -125,42 +126,45 @@ extern int (*read_buf)( int fd, char *blk, int cnt );
  *    the blocks into groups so there is just on large block group.
  *
  */
-
+
+
 
 /*
  * Block descriptor array definitions.
  */
-typedef enum { 
-    BLK_FREE,              /* the block is not allocated (blk ptr == NULL)  */
-    BLK_READY,             /* the block is allocated and correct            */
-    BLK_BAD,               /* the block is allocated but corrupted          */
-    BLK_FREE_PENDING       /* the block is ready to be deallocated          */
-} blk_state_t;
+typedef enum {
+	BLK_FREE,		/* the block is not allocated (blk ptr ==
+				 * NULL)  */
+	BLK_READY,		/* the block is allocated and correct            */
+	BLK_BAD,		/* the block is allocated but corrupted          */
+	BLK_FREE_PENDING	/* the block is ready to be deallocated          */
+}               blk_state_t;
 
 typedef struct blk_desc {
-    struct blk_t *blk;     /* pointer to a save-set block                   */
-    blk_state_t  state;    /* the state of the corresponding block          */
-} blk_desc_t;
+	struct blk_t   *blk;	/* pointer to a save-set block                   */
+	blk_state_t     state;	/* the state of the corresponding block          */
+}               blk_desc_t;
 
 typedef struct {
-    blk_desc_t *blkd;      /* block descriptor array                        */
-    int *first_grp_blk;    /* each element contains the number of the first */
-                           /*   block in the corresponding group; the array */
-                           /*   is indexed by group number                  */
-    int cur_grp;           /* current group number                          */
-    int nxt_grp;           /* next group number                             */
-    int xor;               /* flag indicates if XOR recovery is possible    */
-    int blk_size;          /* bytes per block                               */
-    int blks;              /* total number of blocks                        */
-    int blks_per_grp;      /* number of blocks in each group                */
-    int grps;              /* number groups                                 */
-    int cur_blk;           /* current block number                          */
-    blk_pool_handle_t bph; /* handle to block pool                          */
-    msg_q_handle_t pt_mq;  /* handle to WriteThread message queue           */
+	blk_desc_t     *blkd;	/* block descriptor array                        */
+	int            *first_grp_blk;	/* each element contains the number
+					 * of the first */
+	/* block in the corresponding group; the array */
+	/* is indexed by group number                  */
+	int             cur_grp;/* current group number                          */
+	int             nxt_grp;/* next group number                             */
+	int             xor;	/* flag indicates if XOR recovery is possible    */
+	int             blk_size;	/* bytes per block                               */
+	int             blks;	/* total number of blocks                        */
+	int             blks_per_grp;	/* number of blocks in each group                */
+	int             grps;	/* number groups                                 */
+	int             cur_blk;/* current block number                          */
+	blk_pool_handle_t bph;	/* handle to block pool                          */
+	msg_q_handle_t  pt_mq;	/* handle to WriteThread message queue           */
 
-} recov_blk_pool_t;
+}               recov_blk_pool_t;
 
-static const recov_blk_pool_t nil_recov_blk_pool = { 0 };
+static const recov_blk_pool_t nil_recov_blk_pool = {0};
 
 #define XOR_BLOCK \
     (rblkp->blkd[rblkp->cur_blk].blk->bhdr.bheader.flags & BF_XOR_BLOCK)
@@ -168,7 +172,8 @@ static const recov_blk_pool_t nil_recov_blk_pool = { 0 };
 #define BLOCK_OK  (hdr_crc_ok( rblkp->blkd[rblkp->cur_blk].blk ) && \
 (!rblkp->xor || (rblkp->xor && (blk_crc_ok(rblkp->blkd[rblkp->cur_blk].blk)))))
 
-
+
+
 /*
  * hdr_crc_ok - Verifies that a save-set header is valid by checking
  * its CRC.
@@ -177,44 +182,41 @@ static const recov_blk_pool_t nil_recov_blk_pool = { 0 };
  */
 int
 hdr_crc_ok(
-           struct blk_t *blk  /* in - a pointer to a save-set block */
-           )
+	   struct blk_t * blk	/* in - a pointer to a save-set block */
+)
 {
-    u_short restore_blk_crc,
-    backup_blk_crc,
-    restore_hdr_crc,
-    backup_hdr_crc;
+	u_short         restore_blk_crc, backup_blk_crc, restore_hdr_crc, backup_hdr_crc;
 
-    /*----------------------------------------------------------------------*/
+	/*----------------------------------------------------------------------*/
 
-    if (blk == NULL) {
-        return FALSE;
-    }
-    
-    /* save CRCs in block header */
-    backup_blk_crc = blk->bhdr.bheader.block_crc;
-    backup_hdr_crc = blk->bhdr.bheader.header_crc;
+	if (blk == NULL) {
+		return FALSE;
+	}
+	/* save CRCs in block header */
+	backup_blk_crc = blk->bhdr.bheader.block_crc;
+	backup_hdr_crc = blk->bhdr.bheader.header_crc;
 
-    /* zero out CRCs in block header */
-    blk->bhdr.bheader.block_crc  = 0;
-    blk->bhdr.bheader.header_crc = 0;
+	/* zero out CRCs in block header */
+	blk->bhdr.bheader.block_crc = 0;
+	blk->bhdr.bheader.header_crc = 0;
 
-    /* calc CRC of block header */
-    restore_hdr_crc = crc16( (u_char *) &blk->bhdr, sizeof( blk->bhdr ) );
+	/* calc CRC of block header */
+	restore_hdr_crc = crc16((u_char *) & blk->bhdr, sizeof(blk->bhdr));
 
-    /* restore original CRCs to block */
-    blk->bhdr.bheader.header_crc = backup_hdr_crc;
-    blk->bhdr.bheader.block_crc  = backup_blk_crc;
+	/* restore original CRCs to block */
+	blk->bhdr.bheader.header_crc = backup_hdr_crc;
+	blk->bhdr.bheader.block_crc = backup_blk_crc;
 
-    if (restore_hdr_crc != backup_hdr_crc) {
-        return FALSE;
-    } else {
-        return TRUE;
-    }
+	if (restore_hdr_crc != backup_hdr_crc) {
+		return FALSE;
+	} else {
+		return TRUE;
+	}
 }
 
 /* end hdr_crc_ok */
-
+
+
 /*
  * blk_crc_ok - Verifies that a save-set block is valid by checking
  * its CRC.
@@ -227,39 +229,38 @@ hdr_crc_ok(
 
 int
 blk_crc_ok(
-    struct blk_t *blk  /* in - a pointer to a save-set block. */
-    )
+	   struct blk_t * blk	/* in - a pointer to a save-set block. */
+)
 {
-    u_short restore_blk_crc,
-    backup_blk_crc;
+	u_short         restore_blk_crc, backup_blk_crc;
 
-    /*----------------------------------------------------------------------*/
+	/*----------------------------------------------------------------------*/
 
-    if (blk == NULL) {
-        return FALSE;
-    }
-    
-    /* save CRCs in block header */
-    backup_blk_crc = blk->bhdr.bheader.block_crc;
+	if (blk == NULL) {
+		return FALSE;
+	}
+	/* save CRCs in block header */
+	backup_blk_crc = blk->bhdr.bheader.block_crc;
 
-    /* zero out CRCs in block header */
-    blk->bhdr.bheader.block_crc  = 0;
+	/* zero out CRCs in block header */
+	blk->bhdr.bheader.block_crc = 0;
 
-    /* calc CRC of block */
-    restore_blk_crc = crc16( (u_char *) blk, blk->bhdr.bheader.block_size );
+	/* calc CRC of block */
+	restore_blk_crc = crc16((u_char *) blk, blk->bhdr.bheader.block_size);
 
-    /* restore original CRCs to block */
-    blk->bhdr.bheader.block_crc  = backup_blk_crc;
+	/* restore original CRCs to block */
+	blk->bhdr.bheader.block_crc = backup_blk_crc;
 
-    if (restore_blk_crc != backup_blk_crc) {
-        return FALSE;
-    } else {
-        return TRUE;
-    }
+	if (restore_blk_crc != backup_blk_crc) {
+		return FALSE;
+	} else {
+		return TRUE;
+	}
 }
 
 /* end blk_crc_ok */
-
+
+
 /*
  * rblk_pool_create - This routine initializes the block manager.
  * Specifically, it initializes the global variables, allocates the
@@ -270,66 +271,72 @@ blk_crc_ok(
  */
 
 int
-rblk_pool_create( 
-   recov_blk_pool_handle_t *rblk_pool_h,  /* out - handle of new rblk_pool */
-   blk_pool_handle_t blkh,   /* in - blk pool handle */
-   int using_xor,            /* in - flag when XOR recovery is possible */
-   int blocks_per_group,     /* in - num blocks in each block group */
-   int groups,               /* in - number of groups */
-   msg_q_handle_t pt_mq      /* in - */
-   )
+rblk_pool_create(
+		 recov_blk_pool_handle_t * rblk_pool_h,	/* out - handle of new
+							 * rblk_pool */
+		 blk_pool_handle_t blkh,	/* in - blk pool handle */
+		 int using_xor,	/* in - flag when XOR recovery is possible */
+		 int blocks_per_group,	/* in - num blocks in each block
+					 * group */
+		 int groups,	/* in - number of groups */
+		 msg_q_handle_t pt_mq	/* in - */
+)
 {
-    int b, g;      /* block and group indices */
-    recov_blk_pool_t *rblkp;
+	int             b, g;	/* block and group indices */
+	recov_blk_pool_t *rblkp;
 
-    /*------------------------------------------------------------------------*/
+	/*------------------------------------------------------------------------*/
 
-    rblkp = (recov_blk_pool_t *) malloc( sizeof( recov_blk_pool_t ) );
-    if (rblkp == NULL) {return ERROR;}
+	rblkp = (recov_blk_pool_t *) malloc(sizeof(recov_blk_pool_t));
+	if (rblkp == NULL) {
+		return ERROR;
+	}
+	/* initialize global variables from parameters */
 
-    /* initialize global variables from parameters */
+	*rblkp = nil_recov_blk_pool;
 
-    *rblkp = nil_recov_blk_pool;
+	rblkp->xor = using_xor;
+	rblkp->blks_per_grp = blocks_per_group;
+	rblkp->grps = groups;
+	rblkp->blks = groups * blocks_per_group;
+	rblkp->cur_blk = 0;
+	rblkp->pt_mq = pt_mq;
 
-    rblkp->xor = using_xor;
-    rblkp->blks_per_grp = blocks_per_group;
-    rblkp->grps = groups;
-    rblkp->blks = groups * blocks_per_group;
-    rblkp->cur_blk = 0;
-    rblkp->pt_mq = pt_mq;
+	/* allocate and initialize the block descriptor array */
+	rblkp->blkd = (blk_desc_t *) malloc(rblkp->blks * sizeof(blk_desc_t));
+	if (rblkp->blkd == NULL) {
+		return ERROR;
+	}
+	for (b = 0; b < rblkp->blks; b++) {
+		rblkp->blkd[b].blk = NULL;
+		rblkp->blkd[b].state = BLK_FREE;
+	}
 
-    /* allocate and initialize the block descriptor array */
-    rblkp->blkd = (blk_desc_t *) malloc( rblkp->blks * sizeof( blk_desc_t ) );
-    if (rblkp->blkd == NULL) {return ERROR;}
+	/* allocate and initialize the "first group block" array */
+	rblkp->first_grp_blk = (int *) malloc(rblkp->grps * sizeof(int));
 
-    for (b = 0; b < rblkp->blks; b++) {
-        rblkp->blkd[b].blk   = NULL;
-        rblkp->blkd[b].state = BLK_FREE;
-    }
+	if (rblkp->first_grp_blk == NULL) {
+		return ERROR;
+	}
+	for (g = 0; g < rblkp->grps; g++) {
+		rblkp->first_grp_blk[g] = g * rblkp->blks_per_grp;
+	}
 
-    /* allocate and initialize the "first group block" array */
-    rblkp->first_grp_blk = (int *) malloc ( rblkp->grps * sizeof( int ) );
+	rblkp->cur_grp = 0;
+	rblkp->nxt_grp = (rblkp->cur_grp + 1) % rblkp->grps;
 
-    if (rblkp->first_grp_blk == NULL) {return ERROR;}
+	rblkp->bph = blkh;
+	rblkp->blk_size = blk_pool_blk_size(blkh);
+	blk_pool_expand(blkh, rblkp->blks);
 
-    for (g = 0; g < rblkp->grps; g++) {
-        rblkp->first_grp_blk[g] = g * rblkp->blks_per_grp;
-    }
+	*rblk_pool_h = (recov_blk_pool_handle_t) rblkp;
 
-    rblkp->cur_grp = 0;
-    rblkp->nxt_grp = (rblkp->cur_grp + 1) % rblkp->grps;
-
-    rblkp->bph = blkh;
-    rblkp->blk_size = blk_pool_blk_size( blkh );
-    blk_pool_expand( blkh, rblkp->blks );
-
-    *rblk_pool_h = (recov_blk_pool_handle_t) rblkp;
-
-    return OKAY;
+	return OKAY;
 }
 
 /* end rblk_pool_create */
-
+
+
 /*
  * rblk_pool_delete - Shuts down the block manager by deallocating
  * everything.
@@ -337,34 +344,35 @@ rblk_pool_create(
 
 void
 rblk_pool_delete(
-    recov_blk_pool_handle_t rblk_pool_h  /* in - rblk pool handle */
-    )
+		 recov_blk_pool_handle_t rblk_pool_h	/* in - rblk pool handle */
+)
 {
-    int b;
-    recov_blk_pool_t *rblkp;
+	int             b;
+	recov_blk_pool_t *rblkp;
 
-    rblkp = (recov_blk_pool_t *) rblk_pool_h;
+	rblkp = (recov_blk_pool_t *) rblk_pool_h;
 
-    for (b = 0; b < rblkp->blks; b++) {
-        /* 
-         * release all blks that are still allocated; should 
-         * this ever happen? 
-         */
-        if (rblkp->blkd[b].state != BLK_FREE) {
-            blk_release( rblkp->bph, rblkp->blkd[b].blk );
-        }
-    }
+	for (b = 0; b < rblkp->blks; b++) {
+		/*
+		 * release all blks that are still allocated; should this
+		 * ever happen?
+		 */
+		if (rblkp->blkd[b].state != BLK_FREE) {
+			blk_release(rblkp->bph, rblkp->blkd[b].blk);
+		}
+	}
 
-    free( rblkp->blkd );
-    rblkp->blkd = NULL;
-    free( rblkp->first_grp_blk );
-    rblkp->first_grp_blk = NULL;
+	free(rblkp->blkd);
+	rblkp->blkd = NULL;
+	free(rblkp->first_grp_blk);
+	rblkp->first_grp_blk = NULL;
 
-    free( rblkp );
+	free(rblkp);
 }
 
 /* end rblk_pool_delete */
-
+
+
 /*
  * recover_blk - This routine attempts to recover a corrupt block by
  * XORing the remaining good blocks in the corrupt block's XOR group.
@@ -375,9 +383,9 @@ rblk_pool_delete(
  */
 static int
 recover_blk(
-            recov_blk_pool_t *rblkp,  /* in - ptr to rblk pool */
-            int bad_blk               /* in - block id */
-            )
+	    recov_blk_pool_t * rblkp,	/* in - ptr to rblk pool */
+	    int bad_blk		/* in - block id */
+)
 /*
  * Notes:
  *
@@ -393,274 +401,292 @@ recover_blk(
  */
 
 {
-    int 
-      result,
-      b, 
-      actual_xor_blks,                   /* see note 2                      */
-      recoverable_bad_blk = TRUE,        /* the bad block can be recovered  */
-      rcnt;                              /* bytes read                      */
+	int
+	                result, b, actual_xor_blks,	/* see note 2                      */
+	                recoverable_bad_blk = TRUE,	/* the bad block can be
+							 * recovered  */
+	                rcnt;	/* bytes read                      */
 
-    mssg_t msg;
+	mssg_t          msg;
 #ifndef _THREADS_
-    struct blk_t *blk;
+	struct blk_t   *blk;
 #endif
 
-    /*----------------------------------------------------------------------*/
+	/*----------------------------------------------------------------------*/
 
-    /* mark current block 'bad'; will be changed to 'ready' if recovered  */
-    rblkp->blkd[bad_blk].state = BLK_BAD;
+	/* mark current block 'bad'; will be changed to 'ready' if recovered  */
+	rblkp->blkd[bad_blk].state = BLK_BAD;
 
-    /* get remaining blocks in XOR group and the XOR block */
-    b    = bad_blk + 1;
-    rcnt = 1;
+	/* get remaining blocks in XOR group and the XOR block */
+	b = bad_blk + 1;
+	rcnt = 1;
 
-    while (b < (rblkp->first_grp_blk[rblkp->cur_grp] + rblkp->blks_per_grp)) {
+	while (b < (rblkp->first_grp_blk[rblkp->cur_grp] + rblkp->blks_per_grp)) {
 #ifndef _THREADS_
-        blk_allocate( rblkp->bph, &blk );
+		blk_allocate(rblkp->bph, &blk);
 
-        /*
-         * Read the next save-set block.
-         */
-        result = read_buf( Src_fd, (char *) blk, rblkp->blk_size );
+		/*
+	         * Read the next save-set block.
+	         */
+		result = read_buf(Src_fd, (char *) blk, rblkp->blk_size);
 
-        if (result > 0) {
-            /* 
-             * Good block. 
-             */
-            Bytes_read += rblkp->blk_size;
+		if (result > 0) {
+			/*
+			 * Good block.
+			 */
+			Bytes_read += rblkp->blk_size;
 
-            rblkp->blkd[b].blk = blk;
+			rblkp->blkd[b].blk = blk;
 
-            if ((rblkp->blkd[b].blk->bhdr.bheader.flags & BF_XOR_BLOCK) || 
-                (blk_crc_ok( rblkp->blkd[b].blk ))) {
-                /* XOR block or good data block */
-                rblkp->blkd[b].state = BLK_READY;
-            } else {
-                /*
-                 * encountered another bad blk in the XOR group; can't
-                 * recover!! 
-                 */
-                rblkp->blkd[b].state = BLK_BAD;
-                recoverable_bad_blk = FALSE;
-            }
+			if ((rblkp->blkd[b].blk->bhdr.bheader.flags & BF_XOR_BLOCK) ||
+			    (blk_crc_ok(rblkp->blkd[b].blk))) {
+				/* XOR block or good data block */
+				rblkp->blkd[b].state = BLK_READY;
+			} else {
+				/*
+		                 * encountered another bad blk in the XOR group; can't
+		                 * recover!!
+		                 */
+				rblkp->blkd[b].state = BLK_BAD;
+				recoverable_bad_blk = FALSE;
+			}
 
-            b++;   /* goto next block */
+			b++;	/* goto next block */
 
-        } else if (result == ERROR) {
-            /* encountered another bad blk in the XOR group; can't recover!!*/
-            rblkp->blkd[b].state   = BLK_BAD;
-            recoverable_bad_blk = FALSE;
+		} else if (result == ERROR) {
+			/*
+			 * encountered another bad blk in the XOR group;
+			 * can't recover!!
+			 */
+			rblkp->blkd[b].state = BLK_BAD;
+			recoverable_bad_blk = FALSE;
 
-        } else /* result == 0 */ {
-            /*
-             * No block; end of file.
-             */
-            blk_release( rblkp->bph, blk );
-            break; /* terminate loop */
-        }
-#else /* _THREADS_ */
-        msg_recv( rblkp->pt_mq, (char *) &msg, sizeof( mssg_t ) );
+		} else {	/* result == 0 */
+			/*
+	                 * No block; end of file.
+	                 */
+			blk_release(rblkp->bph, blk);
+			break;	/* terminate loop */
+		}
+#else				/* _THREADS_ */
+		msg_recv(rblkp->pt_mq, (char *) &msg, sizeof(mssg_t));
 
-        if (msg.type == MSG_BLK_READ_ERROR) {
-            /* encountered another bad blk in the XOR group; can't recover!!*/
-            rblkp->blkd[b].state   = BLK_BAD;
-            recoverable_bad_blk = FALSE;
-        } else if (msg.type == MSG_BLK_READY) {
-            rblkp->blkd[b].blk = msg.p.blk;
-            if ((rblkp->blkd[b].blk->bhdr.bheader.flags & BF_XOR_BLOCK) || 
-                (blk_crc_ok( rblkp->blkd[b].blk ))) {
-                /* XOR block or good data block */
-                rblkp->blkd[b].state = BLK_READY;
-            } else {
-                /*
-                 * encountered another bad blk in the XOR group; can't
-                 * recover!! 
-                 */
-                rblkp->blkd[b].state = BLK_BAD;
-                recoverable_bad_blk = FALSE;
-            }
+		if (msg.type == MSG_BLK_READ_ERROR) {
+			/*
+			 * encountered another bad blk in the XOR group;
+			 * can't recover!!
+			 */
+			rblkp->blkd[b].state = BLK_BAD;
+			recoverable_bad_blk = FALSE;
+		} else if (msg.type == MSG_BLK_READY) {
+			rblkp->blkd[b].blk = msg.p.blk;
+			if ((rblkp->blkd[b].blk->bhdr.bheader.flags & BF_XOR_BLOCK) ||
+			    (blk_crc_ok(rblkp->blkd[b].blk))) {
+				/* XOR block or good data block */
+				rblkp->blkd[b].state = BLK_READY;
+			} else {
+				/*
+		                 * encountered another bad blk in the XOR group; can't
+		                 * recover!!
+		                 */
+				rblkp->blkd[b].state = BLK_BAD;
+				recoverable_bad_blk = FALSE;
+			}
 
-            b++;   /* goto next block */
-        } else { /* rcnt == 0 or msg.type == MSG_END_OF_FILE */
-            break; /* terminate loop */
-        }
-#endif /* _THREADS_ */
-    }
+			b++;	/* goto next block */
+		} else {	/* rcnt == 0 or msg.type == MSG_END_OF_FILE */
+			break;	/* terminate loop */
+		}
+#endif				/* _THREADS_ */
+	}
 
-    actual_xor_blks = b - rblkp->first_grp_blk[rblkp->cur_grp];
+	actual_xor_blks = b - rblkp->first_grp_blk[rblkp->cur_grp];
 
-    if (recoverable_bad_blk) {
-        /* bad block is recoverable so recover it */
-        fprintf( stderr, catgets(catd, S_RBLKPOOL_UTIL1, RBLKPOOL_UTIL1, "%s: recovering corrupt block,"), Prog );
+	if (recoverable_bad_blk) {
+		/* bad block is recoverable so recover it */
+		fprintf(stderr, catgets(catd, S_RBLKPOOL_UTIL1, RBLKPOOL_UTIL1, "%s: recovering corrupt block,"), Prog);
 
-        bzero( rblkp->blkd[bad_blk].blk, rblkp->blk_size );
-        
-        for (b = rblkp->first_grp_blk[rblkp->cur_grp]; 
-             b < (rblkp->first_grp_blk[rblkp->cur_grp] + actual_xor_blks); 
-             b++) {
-            if (b != bad_blk) {
-                xor_bufs( (u_char *) rblkp->blkd[bad_blk].blk, 
-                         (u_char *) rblkp->blkd[b].blk, 
-                         rblkp->blk_size );
-            }
-        }
+		bzero(rblkp->blkd[bad_blk].blk, rblkp->blk_size);
 
-        /* clear XOR block bit; it got set in the 'xor_bufs' loop above */
-        rblkp->blkd[bad_blk].blk->bhdr.bheader.flags &= ~BF_XOR_BLOCK; 
+		for (b = rblkp->first_grp_blk[rblkp->cur_grp];
+		b < (rblkp->first_grp_blk[rblkp->cur_grp] + actual_xor_blks);
+		     b++) {
+			if (b != bad_blk) {
+				xor_bufs((u_char *) rblkp->blkd[bad_blk].blk,
+					 (u_char *) rblkp->blkd[b].blk,
+					 rblkp->blk_size);
+			}
+		}
 
-        if (blk_crc_ok( rblkp->blkd[bad_blk].blk )) {
-            /* the block was recovered so change state to 'ready' */
-            rblkp->blkd[bad_blk].state = BLK_READY;
-            fprintf( stderr, catgets(catd, S_RBLKPOOL_UTIL1, RBLKPOOL_UTIL2, " block recovered\n") );
-        } else {
-            /* some other blk was corrupt so the blk couldn't be recovered */
-            fprintf( stderr, catgets(catd, S_RBLKPOOL_UTIL1, RBLKPOOL_UTIL3, " unable to recover block\n") );
-        }
-    }
+		/*
+		 * clear XOR block bit; it got set in the 'xor_bufs' loop
+		 * above
+		 */
+		rblkp->blkd[bad_blk].blk->bhdr.bheader.flags &= ~BF_XOR_BLOCK;
 
-    return OKAY;
+		if (blk_crc_ok(rblkp->blkd[bad_blk].blk)) {
+			/* the block was recovered so change state to 'ready' */
+			rblkp->blkd[bad_blk].state = BLK_READY;
+			fprintf(stderr, catgets(catd, S_RBLKPOOL_UTIL1, RBLKPOOL_UTIL2, " block recovered\n"));
+		} else {
+			/*
+			 * some other blk was corrupt so the blk couldn't be
+			 * recovered
+			 */
+			fprintf(stderr, catgets(catd, S_RBLKPOOL_UTIL1, RBLKPOOL_UTIL3, " unable to recover block\n"));
+		}
+	}
+	return OKAY;
 }
 
 /* end recover_blk */
-
+
+
 /*
  * rblk_get - Gets the next save-set block.
  *
  * returns ERROR or OKAY.
  */
 int
-rblk_get( 
-   recov_blk_pool_handle_t rblk_pool_h,   /* in - rblk pool handle */
-   struct blk_t **blk,                    /* out - ptr to next ss blk */   
-   int *blk_id                            /* in - block id */
-   )
+rblk_get(
+	 recov_blk_pool_handle_t rblk_pool_h,	/* in - rblk pool handle */
+	 struct blk_t ** blk,	/* out - ptr to next ss blk */
+	 int *blk_id		/* in - block id */
+)
 {
-    int result, end_of_file = FALSE, read_error = FALSE; 
-    int b, status = OKAY, prev_grp = 0;
-    mssg_t msg;
-    recov_blk_pool_t *rblkp;
+	int             result, end_of_file = FALSE, read_error = FALSE;
+	int             b, status = OKAY, prev_grp = 0;
+	mssg_t          msg;
+	recov_blk_pool_t *rblkp;
 #ifndef _THREADS_
-    struct blk_t *_blk;
+	struct blk_t   *_blk;
 #endif
 
-    /*-----------------------------------------------------------------------*/
+	/*-----------------------------------------------------------------------*/
 
-    rblkp = (recov_blk_pool_t *) rblk_pool_h;
-   
-    /* 
-     * when the save-set has XOR blocks and we are about to switch to a new
-     * block group we need to release all the FREE-PENDING blocks in the
-     * just-finished group (note that 'rblkp->cur_grp' and 'rblkp->cur_blk' 
-     * already refer to the new group; hence the references to prev_grp which 
-     * is really the "just-finished" group) 
-     */
+	rblkp = (recov_blk_pool_t *) rblk_pool_h;
 
-    if (rblkp->xor && 
-        (rblkp->cur_blk == rblkp->first_grp_blk[rblkp->cur_grp])){
+	/*
+	 * when the save-set has XOR blocks and we are about to switch to a
+	 * new block group we need to release all the FREE-PENDING blocks in
+	 * the just-finished group (note that 'rblkp->cur_grp' and
+	 * 'rblkp->cur_blk' already refer to the new group; hence the
+	 * references to prev_grp which is really the "just-finished" group)
+	 */
 
-        prev_grp = (rblkp->cur_grp + (rblkp->grps + 1)) % rblkp->grps;
+	if (rblkp->xor &&
+	    (rblkp->cur_blk == rblkp->first_grp_blk[rblkp->cur_grp])) {
 
-        for (b = rblkp->first_grp_blk[prev_grp];
-             b < (rblkp->first_grp_blk[prev_grp] + rblkp->blks_per_grp); 
-             b++ ) {
-            if (rblkp->blkd[b].state == BLK_FREE_PENDING) {
-                blk_release( rblkp->bph, rblkp->blkd[b].blk );
-                rblkp->blkd[b].state = BLK_FREE;
-                rblkp->blkd[b].blk   = NULL;
-            }
-        }
-    }
+		prev_grp = (rblkp->cur_grp + (rblkp->grps + 1)) % rblkp->grps;
 
-    if (rblkp->blkd[rblkp->cur_blk].state == BLK_FREE) {
-        /* the current block has no data so get the next save-set block */
+		for (b = rblkp->first_grp_blk[prev_grp];
+		 b < (rblkp->first_grp_blk[prev_grp] + rblkp->blks_per_grp);
+		     b++) {
+			if (rblkp->blkd[b].state == BLK_FREE_PENDING) {
+				blk_release(rblkp->bph, rblkp->blkd[b].blk);
+				rblkp->blkd[b].state = BLK_FREE;
+				rblkp->blkd[b].blk = NULL;
+			}
+		}
+	}
+	if (rblkp->blkd[rblkp->cur_blk].state == BLK_FREE) {
+		/*
+		 * the current block has no data so get the next save-set
+		 * block
+		 */
 
 #ifndef _THREADS_
-        blk_allocate( rblkp->bph, &_blk );
+		blk_allocate(rblkp->bph, &_blk);
 
-        /*
-         * Read the next save-set block.
-         */
-            result = read_buf( Src_fd, (char *) _blk, rblkp->blk_size );
+		/*
+	         * Read the next save-set block.
+	         */
+		result = read_buf(Src_fd, (char *) _blk, rblkp->blk_size);
 
-        if (result > 0) {
-            /* 
-             * Good block. 
-             */
-            Bytes_read += rblkp->blk_size;
-            rblkp->blkd[rblkp->cur_blk].blk = _blk;
+		if (result > 0) {
+			/*
+			 * Good block.
+			 */
+			Bytes_read += rblkp->blk_size;
+			rblkp->blkd[rblkp->cur_blk].blk = _blk;
 
-        } else if (result == ERROR) {
-            read_error = TRUE;
+		} else if (result == ERROR) {
+			read_error = TRUE;
 
-        } else /* result == 0 */ {
-            blk_release( rblkp->bph, _blk );
-            end_of_file = TRUE;
-        }
-#else /* _THREADS_ */
-        msg_recv( rblkp->pt_mq, (char *) &msg, sizeof( mssg_t ) );
+		} else {	/* result == 0 */
+			blk_release(rblkp->bph, _blk);
+			end_of_file = TRUE;
+		}
+#else				/* _THREADS_ */
+		msg_recv(rblkp->pt_mq, (char *) &msg, sizeof(mssg_t));
 
-        rblkp->blkd[rblkp->cur_blk].blk = msg.p.blk;
+		rblkp->blkd[rblkp->cur_blk].blk = msg.p.blk;
 
-        if (msg.type == MSG_END_OF_FILE) {
-            end_of_file = TRUE;
-        } else if (msg.type == MSG_BLK_READ_ERROR) {
-            read_error = TRUE;
-        }
-#endif /* _THREADS_ */
+		if (msg.type == MSG_END_OF_FILE) {
+			end_of_file = TRUE;
+		} else if (msg.type == MSG_BLK_READ_ERROR) {
+			read_error = TRUE;
+		}
+#endif				/* _THREADS_ */
 
-        if (end_of_file) {
-            /* end of save-set */
-            return END_OF_BLKS;
-        } else {
-            /*
-             * Need to test if the current block used by BLOCK_OK and 
-             * XOR_BLOCK is not NULL first. Otherwise using them on a 
-             * read error could cause a core dump since they both use 
-             * the current block as a pointer.
-             */
-            if ((!read_error && BLOCK_OK) || 
-                ((rblkp->blkd[rblkp->cur_blk].blk != NULL) && XOR_BLOCK)) {
-                rblkp->blkd[rblkp->cur_blk].state = BLK_READY;
-            } else if (rblkp->xor) {
-                /* block is bad; tape has XOR blocks so recover the block */
-                recover_blk( rblkp, rblkp->cur_blk );
-            } else {
-                /* bad blk; can't recover since tape doesn't have XOR blks */
-                rblkp->blkd[rblkp->cur_blk].state = BLK_BAD;
-            }
-        }
-    }
+		if (end_of_file) {
+			/* end of save-set */
+			return END_OF_BLKS;
+		} else {
+			/*
+	                 * Need to test if the current block used by BLOCK_OK and
+	                 * XOR_BLOCK is not NULL first. Otherwise using them on a
+	                 * read error could cause a core dump since they both use
+	                 * the current block as a pointer.
+	                 */
+			if ((!read_error && BLOCK_OK) ||
+			    ((rblkp->blkd[rblkp->cur_blk].blk != NULL) && XOR_BLOCK)) {
+				rblkp->blkd[rblkp->cur_blk].state = BLK_READY;
+			} else if (rblkp->xor) {
+				/*
+				 * block is bad; tape has XOR blocks so
+				 * recover the block
+				 */
+				recover_blk(rblkp, rblkp->cur_blk);
+			} else {
+				/*
+				 * bad blk; can't recover since tape doesn't
+				 * have XOR blks
+				 */
+				rblkp->blkd[rblkp->cur_blk].state = BLK_BAD;
+			}
+		}
+	}
+	if (rblkp->blkd[rblkp->cur_blk].state == BLK_READY) {
+		/* return ready block */
+		*blk = rblkp->blkd[rblkp->cur_blk].blk;
+		*blk_id = rblkp->cur_blk;
+	} else if (rblkp->blkd[rblkp->cur_blk].state == BLK_BAD) {
+		/* return status indicating block is bad */
+		*blk = rblkp->blkd[rblkp->cur_blk].blk;
+		*blk_id = rblkp->cur_blk;
+		status = ERR_BAD_BLK;
+	} else {
+		/* oops! something is really messed up! */
+		fprintf(stderr,
+			catgets(catd, S_RBLKPOOL_UTIL1, RBLKPOOL_UTIL4, "Invalid block state <%d> encountered in 'rblk_get'\n"),
+			rblkp->blkd[rblkp->cur_blk].state);
+		status = ERROR;
+	}
 
-    if (rblkp->blkd[rblkp->cur_blk].state == BLK_READY) {
-        /* return ready block */
-        *blk    = rblkp->blkd[rblkp->cur_blk].blk;
-        *blk_id = rblkp->cur_blk;
-    } else if (rblkp->blkd[rblkp->cur_blk].state == BLK_BAD) {
-        /* return status indicating block is bad */
-        *blk    = rblkp->blkd[rblkp->cur_blk].blk;
-        *blk_id = rblkp->cur_blk;
-        status  = ERR_BAD_BLK;
-    } else {
-        /* oops! something is really messed up! */
-        fprintf( stderr, 
-                 catgets(catd, S_RBLKPOOL_UTIL1, RBLKPOOL_UTIL4, "Invalid block state <%d> encountered in 'rblk_get'\n"), 
-                rblkp->blkd[rblkp->cur_blk].state );
-        status = ERROR;
-    }
+	/* circularly increment current block index */
+	rblkp->cur_blk = (rblkp->cur_blk + 1) % rblkp->blks;
 
-    /* circularly increment current block index */
-    rblkp->cur_blk = (rblkp->cur_blk + 1) % rblkp->blks;
-
-    if (rblkp->cur_blk == rblkp->first_grp_blk[rblkp->nxt_grp]) {
-        rblkp->cur_grp = rblkp->nxt_grp;
-        rblkp->nxt_grp = (rblkp->nxt_grp + 1) % rblkp->grps;
-    }
-
-    return status;
+	if (rblkp->cur_blk == rblkp->first_grp_blk[rblkp->nxt_grp]) {
+		rblkp->cur_grp = rblkp->nxt_grp;
+		rblkp->nxt_grp = (rblkp->nxt_grp + 1) % rblkp->grps;
+	}
+	return status;
 }
 
 /* end rblk_get */
-
+
+
 /*
  * rblk_free - The routine frees a block (or marks it as
  * free-pending).
@@ -669,75 +695,77 @@ rblk_get(
  */
 int
 rblk_free(
-          recov_blk_pool_handle_t rblk_pool_h,  /* in - rblk pool handle */
-          int blk_id                            /* in - block id */
-          )
+	  recov_blk_pool_handle_t rblk_pool_h,	/* in - rblk pool handle */
+	  int blk_id		/* in - block id */
+)
 {
-    recov_blk_pool_t *rblkp;
+	recov_blk_pool_t *rblkp;
 
-    /*-----------------------------------------------------------------------*/
+	/*-----------------------------------------------------------------------*/
 
-    rblkp = (recov_blk_pool_t *) rblk_pool_h;
+	rblkp = (recov_blk_pool_t *) rblk_pool_h;
 
-    if (rblkp->xor) {
-        /*
-         * if the save-set contains XOR blocks then we cannot release
-         * the block until all blocks in the current group have been
-         * restored; so mark the block as free-pending and let 'rblk_get'
-         * free the block when the block group has been restored
-         */
-        rblkp->blkd[blk_id].state = BLK_FREE_PENDING;
-    } else {
-        /* free the block */
-        blk_release( rblkp->bph, rblkp->blkd[blk_id].blk );
-        rblkp->blkd[blk_id].state = BLK_FREE;
-        rblkp->blkd[blk_id].blk   = NULL;
-    }
-    
-    return OKAY;
+	if (rblkp->xor) {
+		/*
+	         * if the save-set contains XOR blocks then we cannot release
+	         * the block until all blocks in the current group have been
+	         * restored; so mark the block as free-pending and let 'rblk_get'
+	         * free the block when the block group has been restored
+	         */
+		rblkp->blkd[blk_id].state = BLK_FREE_PENDING;
+	} else {
+		/* free the block */
+		blk_release(rblkp->bph, rblkp->blkd[blk_id].blk);
+		rblkp->blkd[blk_id].state = BLK_FREE;
+		rblkp->blkd[blk_id].blk = NULL;
+	}
+
+	return OKAY;
 }
 
 /* end rblk_free */
 
-
+
+
 /*
  * rblk_allocate - allocate a recoverable block.
  *
  * returns value of blk_allocate call.
  */
-int 
-rblk_allocate ( 
-   recov_blk_pool_handle_t rblk_pool_h,
-   struct blk_t **blk             /* out    */
-   ) 
+int
+rblk_allocate(
+	      recov_blk_pool_handle_t rblk_pool_h,
+	      struct blk_t ** blk	/* out    */
+)
 {
-    recov_blk_pool_t *rblkp;
-   
-    /*-----------------------------------------------------------------------*/
+	recov_blk_pool_t *rblkp;
 
-    rblkp = (recov_blk_pool_t *) rblk_pool_h;
+	/*-----------------------------------------------------------------------*/
 
-    return blk_allocate( rblkp->bph, blk );
+	rblkp = (recov_blk_pool_t *) rblk_pool_h;
+
+	return blk_allocate(rblkp->bph, blk);
 }
-
+
+
 /*
  * rblk_release - blk_release rblk.
  *
  * returns value of blk_release call.
  */
-int 
-rblk_release ( 
-   recov_blk_pool_handle_t rblk_pool_h,
-   struct blk_t *blk              /* in     */
-   ) 
+int
+rblk_release(
+	     recov_blk_pool_handle_t rblk_pool_h,
+	     struct blk_t * blk	/* in     */
+)
 {
-    recov_blk_pool_t *rblkp;
+	recov_blk_pool_t *rblkp;
 
-    /*-----------------------------------------------------------------------*/
+	/*-----------------------------------------------------------------------*/
 
-    rblkp = (recov_blk_pool_t *) rblk_pool_h;
+	rblkp = (recov_blk_pool_t *) rblk_pool_h;
 
-    return blk_release( rblkp->bph, blk );
+	return blk_release(rblkp->bph, blk);
 }
 
 
