@@ -51,9 +51,7 @@ static char     rcsid[] = "@(#)$RCSfile: library.c,v $ $Revision: 1.1.92.5 $ (DE
 #include <sys/param.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
-#ifdef _OSF_SOURCE
 #include <sys/disklabel.h>
-#endif
 #include <machine/limits.h>
 #include <msfs/ms_public.h>
 #include <msfs/ms_privates.h>
@@ -2102,9 +2100,6 @@ volume_avail(
 	     char *volName	/* in - name of volume to add */
 )
 {
-#ifndef _OSF_SOURCE
-	return TRUE;
-#else
 	DIR            *dp;
 	struct dirent  *dirEnt;
 	struct stat     volStats, entStats;
@@ -2160,7 +2155,6 @@ volume_avail(
 	closedir(dp);
 
 	return TRUE;
-#endif
 }
 
 
@@ -2171,9 +2165,6 @@ volume_in_use(
 	      struct stat * volStats	/* in - new volume's stats */
 )
 {
-#ifndef _OSF_SOURCE
-	return TRUE;
-#else
 	DIR            *dp;
 	struct dirent  *dirEnt;
 	struct stat     dmnVolStats;
@@ -2233,7 +2224,6 @@ volume_in_use(
 	closedir(dp);
 
 	return FALSE;
-#endif
 }
 
 int

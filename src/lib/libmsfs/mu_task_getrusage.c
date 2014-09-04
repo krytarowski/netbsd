@@ -46,15 +46,9 @@ static char     rcsid[] = "@(#)$RCSfile: mu_task_getrusage.c,v $ $Revision: 1.1.
 #endif
 
 #include <stdio.h>
-
-#ifdef _OSF_SOURCE
 #include <sys/resource.h>
-#include <mach.h>
-#endif				/* _OSF_SOURCE */
-
 #include <nl_types.h>
 
-#ifdef _OSF_SOURCE
 /*
  * task_getrusage
  *
@@ -162,6 +156,5 @@ task_getrusage(
 	ru->ru_stime.tv_usec = allthreads_stime.microseconds;;
 }
 
-#endif				/* _OSF_SOURCE */
 
 /* end bs_task_getrusage.c */
