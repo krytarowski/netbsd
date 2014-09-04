@@ -54,7 +54,7 @@ static char     rcsid[] = "@(#)$RCSfile: library.c,v $ $Revision: 1.1.92.5 $ (DE
 #ifdef _OSF_SOURCE
 #include <sys/disklabel.h>
 #endif
-#include <sys/limits.h>
+#include <machine/limits.h>
 #include <msfs/ms_public.h>
 #include <msfs/ms_privates.h>
 #include <msfs/msfs_syscalls.h>
