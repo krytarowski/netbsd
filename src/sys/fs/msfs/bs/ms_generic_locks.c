@@ -106,17 +106,10 @@ decl_simple_lock_info(, msfs_mp_mutex_lockinfo)
 		perror("gettimeofday");
 		exit(1);
 	}
-#ifdef _OSF_SOURCE
 
-	ms_printf("%2d.%3d %d ", time.tv_sec & 0x7f,
+	ms_printf("%2d.%3d %u ", time.tv_sec & 0x7f,
 	    (time.tv_usec >> 10),
-	    tid);
-#else
-	ms_printf("%2d.%3d %d ", time.tv_sec & 0x7f,
-	    (time.tv_usec >> 10),
-	    ((uint32T) tid.field1 >> 4) & 0xfff);
-
-#endif				/* _OSF_SOURCE */
+	    tid.pta_magic);
 
 #endif				/* KERNEL */
 }
