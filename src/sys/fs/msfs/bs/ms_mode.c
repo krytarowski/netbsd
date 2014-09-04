@@ -34,9 +34,6 @@
 #include <sys/limits.h>
 #else
 #include <stdlib.h>
-#ifndef _OSF_SOURCE
-#include <msfs/bs_extern.h>
-#endif				/* _OSF_SOURCE */
 #endif				/* KERNEL */
 
 extern unsigned TrFlags;
