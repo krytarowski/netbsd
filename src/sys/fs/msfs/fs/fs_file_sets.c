@@ -52,9 +52,6 @@
 #include <msfs/fs_dir_routines.h>
 #include <msfs/ms_osf.h>
 #include <sys/stat.h>
-#ifdef _OSF_SOURCE
-#include <sys/mode.h>
-#endif
 
 #include <sys/user.h>
 #include <sys/kernel.h>
