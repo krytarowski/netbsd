@@ -99,7 +99,7 @@ MACRO_END
 /*
  * name/value limits
  */
-int MsfsPlMaxLen = BSR_PL_MAX_LARGE;
+int64_t MsfsPlMaxLen = BSR_PL_MAX_LARGE;
 #define MSFS_PROPLIST_VALUE_MAX (16384)
 
 /*
