@@ -69,11 +69,6 @@ static u32T targetVolIndex;
 static int unlockWorkFlag = 0;
 static int unmountFlag = 0;
 static char *volName;
-#ifdef _OSF_SOURCE
-static char *workDir = "/RMVOL";
-#else
-static char *workDir = "./RMVOL";
-#endif
 static int workLock;
 static char workPathName[MAXPATHLEN + 1];
 
