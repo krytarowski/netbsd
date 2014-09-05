@@ -45,9 +45,7 @@ static char rcsid[] = "@(#)$RCSfile: mountlist.c,v $ $Revision: 1.1.4.2 $ (DEC) 
 #include <sys/errno.h>
 #include <sys/file.h>
 #include <sys/signal.h>
-#ifdef _OSF_SOURCE
 #include <sys/mount.h>
-#endif
 #include <msfs/msfs_syscalls.h>
 #include <msfs/bs_error.h>
 
