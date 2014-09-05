@@ -49,13 +49,6 @@ static char rcsid[] = "@(#)$RCSfile: mountlist.c,v $ $Revision: 1.1.4.2 $ (DEC) 
 #include <msfs/msfs_syscalls.h>
 #include <msfs/bs_error.h>
 
-#ifdef _OSF_SOURCE
-#define O_open open
-#define O_close close
-#else
-#include <msfs/fs_syscalls.h>
-#endif
-
 #include <locale.h>
 #include "mountlist_msg.h"
 
