@@ -50,8 +50,7 @@ static char rcsid[] = "@(#)$RCSfile: mountlist.c,v $ $Revision: 1.1.4.2 $ (DEC) 
 #include <msfs/bs_error.h>
 
 #include <locale.h>
-#include "mountlist_msg.h"
-
+#include <nl_types.h>
 nl_catd catd;
 
 extern int errno;
@@ -79,7 +78,7 @@ usage(
     void
 )
 {
-	fprintf(stderr, catgets(catd, 1, USAGE, "usage: %s [-v]\n"), Prog);
+	fprintf(stderr, catgets(catd, 1, 1, "usage: %s [-v]\n"), Prog);
 }
 
 
@@ -113,7 +112,7 @@ main(
 	struct statfs *mountTbl = NULL;
 
 	(void) setlocale(LC_ALL, "");
-	catd = catopen(MF_MOUNTLIST, NL_CAT_LOCALE);
+	catd = catopen("mountlist.cat", NL_CAT_LOCALE);
 
 	/* store only the file name part of argv[0] */
 	if ((Prog = (char *) strrchr(argv[0], '/')) == NULL) {

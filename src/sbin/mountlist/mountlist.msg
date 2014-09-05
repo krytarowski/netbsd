@@ -29,7 +29,7 @@ $  */
 $quote "
 
 $set 1
-USAGE	"usage: %s [-v]\n"
+1	"usage: %s [-v]\n"
 2	"%s: getfsstat failed.\n"
 3	"%s: can't malloc file system mount table.\n"
 4	"%s: error = [%d] %s\n"
