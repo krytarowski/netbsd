@@ -49,7 +49,7 @@
 #include <sys/file.h>
 #include <sys/mount.h>
 #include <sys/mode.h>
-#include <ufs/fs.h>
+#include <ufs/ffs/fs.h>
 #include <assert.h>
 
 #define ADVFS_SHELVE		/* for mss_entry.h & bs_ods.h */

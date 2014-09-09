@@ -48,7 +48,7 @@
 #include <sys/time.h>
 #include <sys/file.h>
 #include <sys/mount.h>
-#include <ufs/fs.h>
+#include <ufs/ffs/fs.h>
 #include <overlap.h>
 #include <sys/ioctl.h>		/* for get_vol_blocks */
 #include <sys/disklabel.h>	/* for get_vol_blocks */

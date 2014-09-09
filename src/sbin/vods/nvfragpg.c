@@ -45,7 +45,7 @@
 #include <sys/time.h>
 #include <sys/file.h>
 #include <sys/mount.h>
-#include <ufs/fs.h>
+#include <ufs/ffs/fs.h>
 #include <sys/types.h>
 #include <unistd.h>
 

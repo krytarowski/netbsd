@@ -45,7 +45,7 @@
 #include <sys/time.h>
 #include <sys/file.h>
 #include <sys/mount.h>
-#include <ufs/fs.h>
+#include <ufs/ffs/fs.h>
 #include <msfs/bs_public.h>
 #include <msfs/ms_generic_locks.h>
 #include <msfs/ftx_public.h>
