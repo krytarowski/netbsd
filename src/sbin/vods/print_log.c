@@ -48,7 +48,6 @@
 #include <sys/time.h>
 #include <sys/file.h>
 #include <sys/mount.h>
-#include <sys/mode.h>
 #include <ufs/ffs/fs.h>
 #include <assert.h>
 
