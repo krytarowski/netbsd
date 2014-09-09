@@ -59,7 +59,9 @@ usage() {
 # check that this script is only getting its utilities from /sbin.  This will
 # help ensure that the script will run in single user mode.
 #
-PATH=/sbin
+# NetBSD serves sh inside /bin, use it too.
+#
+PATH=/sbin:/bin
 export PATH
 
 VODSPATH=/sbin/advfs/
