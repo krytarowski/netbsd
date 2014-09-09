@@ -1,4 +1,4 @@
-#!/sbin/sh
+#!/bin/sh
 # 
 # =======================================================================
 #   (c) Copyright Hewlett-Packard Development Company, L.P., 2008
