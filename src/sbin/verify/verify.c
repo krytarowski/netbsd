@@ -46,7 +46,6 @@ static char rcsid[] = "@(#)$RCSfile: verify.c,v $ $Revision: 1.1.148.2 $ (DEC) $
 #include <overlap.h>
 #include <sys/syslimits.h>
 #include <sys/types.h>
-#include <sys/fs_types.h>
 #include <sys/stat.h>
 #include <sys/mount.h>
 #include <unistd.h>
