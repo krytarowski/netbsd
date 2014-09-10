@@ -49,7 +49,7 @@
 #include <msfs/bs_error.h>
 #include <msfs/msfs_syscalls.h>
 #include <locale.h>
-#include "tag2name_msg.h"
+#include <nl_types.h>
 nl_catd         catd;
 
 extern int      errno;
@@ -61,7 +61,7 @@ usage()
 {
 	char           *errstr;
 
-	errstr = catgets(catd, 1, USAGE, "usage: %s [-r] <domain> {[-S] <fileset> | [-T] <fileset_tag>} <file_tag>\n");
+	errstr = catgets(catd, 1, 1, "usage: %s [-r] <domain> {[-S] <fileset> | [-T] <fileset_tag>} <file_tag>\n");
 	fprintf(stderr, errstr, Prog);
 	errstr = catgets(catd, 1, 2, "       %s <mount_point>/.tags/<file_tag>\n");
 	fprintf(stderr, errstr, Prog);
@@ -80,7 +80,7 @@ main(int argc, char *argv[])
 	}
 
 	(void) setlocale(LC_ALL, "");
-	catd = catopen(MF_TAG2NAME, NL_CAT_LOCALE);
+	catd = catopen("tag2name.cat", NL_CAT_LOCALE);
 
 	if (argc >= 4) {
 		raw_t2n(argc, argv);

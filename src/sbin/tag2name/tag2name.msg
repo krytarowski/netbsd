@@ -30,7 +30,7 @@ $  */
 $quote "
 
 $set 1
-USAGE	"usage: %s [-r] <domain> {[-S] <fileset> | [-T] <fileset_tag>} <file_tag>\n"
+1	"usage: %s [-r] <domain> {[-S] <fileset> | [-T] <fileset_tag>} <file_tag>\n"
 2	"       %s <mount_point>/.tags/<file_tag>\n"
 
 $ ----Message 3 is now unused----
