@@ -30,7 +30,7 @@
 #include <msfs/ms_public.h>
 #include <sys/types.h>
 
-#include <kern/lock.h>
+#include <sys/rwlock.h>
 
 #include <sys/vnode.h>
 #include <msfs/ms_generic_locks.h>
@@ -171,7 +171,7 @@ struct fsContext {
 	int dirty_alloc;	/* set if stats from an allocating write are
 				 * not on disk (ICHGMETA) */
 
-	lock_data_t file_lock;	/* Use an OSF complex lock (read_write_lock) */
+	krwlock_t file_lock;	/* Use an OSF complex lock (read_write_lock) */
 
 	long dirstamp;		/* stamp to determine directory changes */
 	mutexT fsContext_mutex;	/* mutex to take out locks on this structure */
