@@ -26,12 +26,12 @@
 #ifndef _GENERIC_LOCKS_
 #define _GENERIC_LOCKS_
 
-#ifdef KERNEL
+#ifdef _KERNEL
 #include <kern/sched_prim.h>
 #include <kern/lock.h>
 #include <sys/kernel.h>
 
-#else				/* KERNEL */
+#else				/* _KERNEL */
 
 #include <stdio.h>
 #include <strings.h>
@@ -40,7 +40,7 @@
 #else
 #include <sys/types.h>
 #endif
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 
 #include <sys/time.h>
 
@@ -62,11 +62,11 @@ typedef short cvT;
  */
 
 typedef struct mutex {
-#ifdef KERNEL
+#ifdef _KERNEL
 	simple_lock_data_t mutex;
-#else				/* KERNEL */
+#else				/* _KERNEL */
 	pthread_mutex_t mutex;
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 
 #ifdef ADVFS_DEBUG
 	/*
