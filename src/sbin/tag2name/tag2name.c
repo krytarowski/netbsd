@@ -53,7 +53,7 @@
 nl_catd         catd;
 
 extern int      errno;
-extern char    *sys_errlist[];
+extern const char *const *sys_errlist;
 
 static char    *Prog;
 
