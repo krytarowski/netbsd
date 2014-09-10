@@ -63,7 +63,7 @@ typedef short cvT;
 
 typedef struct mutex {
 #ifdef _KERNEL
-	simple_lock_data_t mutex;
+	kmutex_t mutex;
 #else				/* _KERNEL */
 	pthread_mutex_t mutex;
 #endif				/* _KERNEL */
@@ -258,7 +258,7 @@ typedef struct lkHdr {
 
 typedef struct ftxLk {
 	lkHdrT hdr;		/* header used by ftx lock routines only */
-	lock_data_t lock;	/* The OSF lock .  */
+	krwlock_t lock;		/* shared access, exclusive reader.  */
 	cvT cv;			/* condition variable */
 }     ftxLkT;
 /*
