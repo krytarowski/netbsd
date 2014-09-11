@@ -403,7 +403,7 @@ print_block(bitFileT * bfp, int lbn, int flgs)
 		exit(3);
 	}
 	seek_read(bfp, pagep, BF_FRAG_SLOT_BYTES,
-		  (ulong_t) lbn * DEV_BSIZE, "print_block");
+		  (u_long) lbn * DEV_BSIZE, "print_block");
 
 	bfp->pgNum = (uint32T) - 1;	/* for routines that expect pgNum to
 					 * be set up */

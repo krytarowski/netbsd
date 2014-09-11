@@ -627,7 +627,7 @@ print_pg_at_blk(bitFileT * bfp, lbnT lbn)
 		perror("print_pg_at_blk");
 		return ENOMEM;
 	}
-	if (lseek(bfp->fd, (ulong_t) lbn * DEV_BSIZE, SEEK_SET) == -1) {
+	if (lseek(bfp->fd, (u_long) lbn * DEV_BSIZE, SEEK_SET) == -1) {
 		sprintf(errstr, "lseek to block %u failed", lbn);
 		perror(errstr);
 		return 1;
