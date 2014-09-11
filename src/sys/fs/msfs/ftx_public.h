@@ -26,7 +26,7 @@
 #ifndef FTX_PUBLIC
 #define FTX_PUBLIC
 
-#include <msfs/ftx_agents.h>
+#include <fs/msfs/ftx_agents.h>
 
 typedef uint32T ftxIdT;
 

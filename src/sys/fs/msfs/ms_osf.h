@@ -28,8 +28,8 @@
  */
 
 #include <sys/mode.h>
-#include <msfs/ms_generic_locks.h>
-#include <msfs/fs_quota.h>
+#include <fs/msfs/ms_generic_locks.h>
+#include <fs/msfs/fs_quota.h>
 
 /*
  * bfNode is the msfs structure at the end of a vnode

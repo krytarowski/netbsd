@@ -39,17 +39,17 @@
  */
 #pragma ident "@(#)$RCSfile: fs_create.c,v $ $Revision: 1.1.225.5 $ (DEC) $Date: 2006/03/20 15:11:00 $"
 
-#include <msfs/fs_dir_routines.h>
-#include <msfs/ms_public.h>
-#include <msfs/fs_dir.h>
+#include <fs/msfs/fs_dir_routines.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/fs_dir.h>
 #include <sys/stat.h>
-#include <msfs/fs_quota.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_access.h>
-#include <msfs/fs_file_sets.h>
+#include <fs/msfs/fs_quota.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_access.h>
+#include <fs/msfs/fs_file_sets.h>
 #include <sys/errno.h>
 #include <sys/time.h>
-#include <msfs/ms_osf.h>
+#include <fs/msfs/ms_osf.h>
 #include <sys/kernel.h>
 #include <sys/vnode.h>
 #include <sys/namei.h>
@@ -57,9 +57,9 @@
 #include <sys/user.h>
 #include <sys/ucred.h>
 #include <sys/lock_probe.h>
-#include <msfs/bs_params.h>
-#include <msfs/ms_assert.h>
-#include <msfs/bs_index.h>
+#include <fs/msfs/bs_params.h>
+#include <fs/msfs/ms_assert.h>
+#include <fs/msfs/bs_index.h>
 
 #define ADVFS_MODULE FS_CREATE
 

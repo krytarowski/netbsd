@@ -40,15 +40,15 @@
  */
 #pragma ident "@(#)$RCSfile: bs_stripe.c,v $ $Revision: 1.1.91.5 $ (DEC) $Date: 2008/02/12 13:07:04 $"
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_extents.h>
-#include <msfs/bs_inmem_map.h>
-#include <msfs/bs_migrate.h>
-#include <msfs/bs_ods.h>
-#include <msfs/bs_service_classes.h>
-#include <msfs/bs_stripe.h>
-#include <msfs/ms_assert.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_extents.h>
+#include <fs/msfs/bs_inmem_map.h>
+#include <fs/msfs/bs_migrate.h>
+#include <fs/msfs/bs_ods.h>
+#include <fs/msfs/bs_service_classes.h>
+#include <fs/msfs/bs_stripe.h>
+#include <fs/msfs/ms_assert.h>
 
 #define ADVFS_MODULE BS_STRIPE
 

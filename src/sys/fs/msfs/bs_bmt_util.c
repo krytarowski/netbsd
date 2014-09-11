@@ -65,17 +65,17 @@
 
 #include <sys/param.h>
 #include <sys/lock_probe.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_delete.h>
-#include <msfs/bs_extents.h>
-#include <msfs/bs_migrate.h>
-#include <msfs/bs_stg.h>
-#include <msfs/ms_osf.h>
-#include <msfs/ftx_public.h>
-#include <msfs/ftx_privates.h>
-#include <msfs/bs_msg_queue.h>
-#include <msfs/advfs_evm.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_delete.h>
+#include <fs/msfs/bs_extents.h>
+#include <fs/msfs/bs_migrate.h>
+#include <fs/msfs/bs_stg.h>
+#include <fs/msfs/ms_osf.h>
+#include <fs/msfs/ftx_public.h>
+#include <fs/msfs/ftx_privates.h>
+#include <fs/msfs/bs_msg_queue.h>
+#include <fs/msfs/advfs_evm.h>
 
 #define ADVFS_MODULE BS_BMT_UTIL
 

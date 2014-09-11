@@ -23,8 +23,8 @@
 #define _SS_H_
 
 /* include header files */
-#include <msfs/bs_ods.h>
-#include <msfs/bs_msg_queue.h>
+#include <fs/msfs/bs_ods.h>
+#include <fs/msfs/bs_msg_queue.h>
 
 #define GETCURRWDAY(tv_sec, newday)                    \
 {                                                      \

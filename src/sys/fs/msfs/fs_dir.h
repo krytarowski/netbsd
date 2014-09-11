@@ -27,14 +27,14 @@
 #ifndef FS_DIR
 #define FS_DIR
 
-#include <msfs/ms_public.h>
+#include <fs/msfs/ms_public.h>
 #include <sys/types.h>
 
 #include <sys/rwlock.h>
 
 #include <sys/vnode.h>
-#include <msfs/ms_generic_locks.h>
-#include <msfs/fs_quota.h>
+#include <fs/msfs/ms_generic_locks.h>
+#include <fs/msfs/fs_quota.h>
 
 #define FS_DIR_MAX_NAME 255
 #define FS_MAX_NAME 80

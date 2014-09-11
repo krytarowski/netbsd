@@ -38,10 +38,10 @@
  */
 #pragma ident "@(#)$RCSfile: bs_tagdir.c,v $ $Revision: 1.1.131.5 $ (DEC) $Date: 2008/02/12 13:07:05 $"
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_assert.h>
-#include <msfs/ms_osf.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/ms_assert.h>
+#include <fs/msfs/ms_osf.h>
 
 #define ADVFS_MODULE BS_TAGDIR
 

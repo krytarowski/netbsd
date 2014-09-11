@@ -44,21 +44,21 @@
 #define ADVFS_MODULE   BS_PARAMS
 
 #include <sys/param.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_extents.h>
-#include <msfs/bs_inmem_map.h>
-#include <msfs/bs_stripe.h>
-#include <msfs/bs_ims.h>
-#include <msfs/fs_dir.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_extents.h>
+#include <fs/msfs/bs_inmem_map.h>
+#include <fs/msfs/bs_stripe.h>
+#include <fs/msfs/bs_ims.h>
+#include <fs/msfs/fs_dir.h>
 #include <sys/vnode.h>
-#include <msfs/ms_osf.h>
+#include <fs/msfs/ms_osf.h>
 #include <sys/lock_probe.h>
-#include <msfs/ms_assert.h>
-#include <msfs/bs_public.h>
-#include <msfs/msfs_syscalls.h>
+#include <fs/msfs/ms_assert.h>
+#include <fs/msfs/bs_public.h>
+#include <fs/msfs/msfs_syscalls.h>
 #include <sys/clu.h>
-#include <msfs/bs_index.h>
+#include <fs/msfs/bs_index.h>
 
 
 static

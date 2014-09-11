@@ -41,12 +41,12 @@
 #pragma ident "@(#)$RCSfile: ms_logger.c,v $ $Revision: 1.1.243.5 $ (DEC) $Date: 2008/02/12 13:07:09 $"
 
 #include <sys/param.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_ods.h>
-#include <msfs/ftx_privates.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_ods.h>
+#include <fs/msfs/ftx_privates.h>
 #include <kern/lock.h>
-#include <msfs/ms_logger.h>
+#include <fs/msfs/ms_logger.h>
 #include <kern/sched_prim.h>
 
 #define ADVFS_MODULE MS_LOGGER

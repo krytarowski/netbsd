@@ -26,8 +26,8 @@
  * in user mode or in kernel mode.
  */
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_assert.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_assert.h>
 
 #ifdef KERNEL
 #include <sys/syslog.h>

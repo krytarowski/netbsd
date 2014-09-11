@@ -31,12 +31,12 @@
 #include <sys/errno.h>
 #include <mach/vm_param.h>
 #include <machine/machlimits.h>
-#include <msfs/ms_assert.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_delete.h>
-#include <msfs/bs_inmem_map.h>
-#include <msfs/bs_vd.h>
+#include <fs/msfs/ms_assert.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_delete.h>
+#include <fs/msfs/bs_inmem_map.h>
+#include <fs/msfs/bs_vd.h>
 
 #ifdef ADVFS_SMP_ASSERT
 /* This var allows MS_SMP_ASSERT() to be disabled on the fly; default is ON */

@@ -43,16 +43,16 @@
 
 #include <sys/dlm.h>
 #include <sys/clu.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_copy.h>
-#include <msfs/bs_delete.h>
-#include <msfs/bs_extents.h>
-#include <msfs/bs_inmem_map.h>
-#include <msfs/bs_migrate.h>
-#include <msfs/bs_stg.h>
-#include <msfs/bs_stripe.h>
-#include <msfs/ms_osf.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_copy.h>
+#include <fs/msfs/bs_delete.h>
+#include <fs/msfs/bs_extents.h>
+#include <fs/msfs/bs_inmem_map.h>
+#include <fs/msfs/bs_migrate.h>
+#include <fs/msfs/bs_stg.h>
+#include <fs/msfs/bs_stripe.h>
+#include <fs/msfs/ms_osf.h>
 
 #define ADVFS_MODULE BS_MIGRATE
 

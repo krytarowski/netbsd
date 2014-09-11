@@ -43,10 +43,10 @@
 #define ADVFS_MODULE  BS_QIO
 
 #include <sys/file.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_msg_queue.h>
-#include <msfs/ms_osf.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_msg_queue.h>
+#include <fs/msfs/ms_osf.h>
 
 #include <sys/syslog.h>
 #include <mach/std_types.h>

@@ -48,11 +48,11 @@
 #define AGENT_STRINGS   1
 #endif
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ftx_privates.h>
-#include <msfs/ftx_agents.h>
-#include <msfs/ms_assert.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/ftx_privates.h>
+#include <fs/msfs/ftx_agents.h>
+#include <fs/msfs/ms_assert.h>
 #include <sys/radset.h>
 #include <vm/vm_numa.h>
 #include <kern/rad.h>

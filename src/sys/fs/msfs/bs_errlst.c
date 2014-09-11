@@ -53,7 +53,7 @@
 /* THIS FILE MUST NOT INCLUDE ANY ADVFS FILES EXCEPT bs_error.h */
 /* Otherwise you'll break user mode apps that link with this file */
 
-#include <msfs/bs_error.h>
+#include <fs/msfs/bs_error.h>
 
 char *bs_errlist[] = {
 	"ETAG_OVF (-1025)",

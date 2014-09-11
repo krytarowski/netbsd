@@ -22,7 +22,7 @@
 #ifndef _INDEX_H_
 #define _INDEX_H_
 
-#include <msfs/bs_ods.h>
+#include <fs/msfs/bs_ods.h>
 
 /*
  * Indicate to the idx_close_index_file routine the proper

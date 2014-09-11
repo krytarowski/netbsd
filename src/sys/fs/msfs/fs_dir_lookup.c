@@ -43,20 +43,20 @@
 #pragma ident "@(#)$RCSfile: fs_dir_lookup.c,v $ $Revision: 1.1.125.4 $ (DEC) $Date: 2006/03/20 15:11:01 $"
 
 #include <sys/lock_probe.h>
-#include <msfs/fs_dir.h>
-#include <msfs/ms_public.h>
-#include <msfs/fs_dir_routines.h>
+#include <fs/msfs/fs_dir.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/fs_dir_routines.h>
 #include <sys/stat.h>
 #include <sys/errno.h>
 #include <sys/kernel.h>
 #include <sys/mount.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_osf.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/ms_osf.h>
 #include <sys/vnode.h>
-#include <msfs/ms_assert.h>
-#include <msfs/bs_msg_queue.h>
-#include <msfs/bs_index.h>
-#include <msfs/advfs_evm.h>
+#include <fs/msfs/ms_assert.h>
+#include <fs/msfs/bs_msg_queue.h>
+#include <fs/msfs/bs_index.h>
+#include <fs/msfs/advfs_evm.h>
 
 #define ADVFS_MODULE FS_DIR_LOOKUP
 

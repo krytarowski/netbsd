@@ -56,12 +56,12 @@ struct vnode {
 #define uprintf printf
 #endif
 
-#include <msfs/bs_error.h>
-#include <msfs/bs_public.h>
-/*#include <msfs/mss_common.h>*/
-#include <msfs/ms_logger.h>
-#include <msfs/ms_generic_locks.h>
-#include <msfs/ftx_public.h>
+#include <fs/msfs/bs_error.h>
+#include <fs/msfs/bs_public.h>
+/*#include <fs/msfs/mss_common.h>*/
+#include <fs/msfs/ms_logger.h>
+#include <fs/msfs/ms_generic_locks.h>
+#include <fs/msfs/ftx_public.h>
 
 #include <sys/resource.h>
 

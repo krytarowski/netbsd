@@ -38,10 +38,10 @@
 #pragma ident "@(#)$RCSfile: bs_sbm.c,v $ $Revision: 1.1.112.3 $ (DEC) $Date: 2008/02/12 13:07:01 $"
 
 #include <sys/param.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_stg.h>
-#include <msfs/vfast.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_stg.h>
+#include <fs/msfs/vfast.h>
 
 #define VD_MAX_DESC 50
 

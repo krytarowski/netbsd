@@ -26,7 +26,7 @@
 #ifndef _BS_STG_
 #define _BS_STG_
 
-#include <msfs/bs_public.h>
+#include <fs/msfs/bs_public.h>
 
 /*****************************************
  *

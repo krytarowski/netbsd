@@ -37,18 +37,18 @@
 #define CONTINUE 7
 
 #include <sys/lock_probe.h>
-#include <msfs/fs_dir_routines.h>
-#include <msfs/ms_public.h>
-#include <msfs/bs_public.h>
-#include <msfs/ftx_public.h>
-#include <msfs/fs_dir.h>
+#include <fs/msfs/fs_dir_routines.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/bs_public.h>
+#include <fs/msfs/ftx_public.h>
+#include <fs/msfs/fs_dir.h>
 #include <sys/stat.h>
-#include <msfs/fs_quota.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_access.h>
-#include <msfs/ms_osf.h>
-#include <msfs/bs_msg_queue.h>
-#include <msfs/bs_index.h>
+#include <fs/msfs/fs_quota.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_access.h>
+#include <fs/msfs/ms_osf.h>
+#include <fs/msfs/bs_msg_queue.h>
+#include <fs/msfs/bs_index.h>
 
 #define MIN_DIR_ENTRY_SIZE (sizeof(directory_header) + 4 + sizeof(bfTagT))
 

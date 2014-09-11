@@ -28,13 +28,13 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <machine/param.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_logger.h>
-#include <msfs/bs_extents.h>
-#include <msfs/bs_public.h>
-#include <msfs/ms_assert.h>
-#include <msfs/ms_osf.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/ms_logger.h>
+#include <fs/msfs/bs_extents.h>
+#include <fs/msfs/bs_public.h>
+#include <fs/msfs/ms_assert.h>
+#include <fs/msfs/ms_osf.h>
 #include <sys/syslog.h>
 #include <sys/vnode.h>
 #include <sys/buf.h>
@@ -44,7 +44,7 @@
 #include <vm/vm_numa.h>
 #include <kern/rad.h>
 #include <sys/lock_probe.h>
-#include <msfs/vfast.h>
+#include <fs/msfs/vfast.h>
 #include <machine/clock.h>
 
 extern void rm_from_lazyq(struct bsBuf * bp, ioDescT ** ioList, int *listLen, int *noqfnd);

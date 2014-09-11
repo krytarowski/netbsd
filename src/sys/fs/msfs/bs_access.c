@@ -30,26 +30,26 @@
 
 #include <kern/sched_prim.h>
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_delete.h>
-#include <msfs/bs_extents.h>
-#include <msfs/bs_stg.h>
-#include <msfs/advfs_evm.h>
-#include <msfs/fs_dir_routines.h>
-#include <msfs/fs_file_sets.h>
-#include <msfs/ms_assert.h>
-#include <msfs/bs_index.h>
-#include <msfs/ms_osf.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_delete.h>
+#include <fs/msfs/bs_extents.h>
+#include <fs/msfs/bs_stg.h>
+#include <fs/msfs/advfs_evm.h>
+#include <fs/msfs/fs_dir_routines.h>
+#include <fs/msfs/fs_file_sets.h>
+#include <fs/msfs/ms_assert.h>
+#include <fs/msfs/bs_index.h>
+#include <fs/msfs/ms_osf.h>
 #include <sys/buf.h>
 #include <sys/user.h>
 #include <sys/ucred.h>
 #include <sys/fcntl.h>		/* for MAXEND */
 #include <vm/vm_ubc.h>
 #include <vm/vm_numa.h>
-#include <msfs/bs_msg_queue.h>
-#include <msfs/bs_access.h>
-#include <msfs/fs_dir.h>
+#include <fs/msfs/bs_msg_queue.h>
+#include <fs/msfs/bs_access.h>
+#include <fs/msfs/fs_dir.h>
 
 static bfAccessT *get_free_acc(int *retry, int forceFlag);
 

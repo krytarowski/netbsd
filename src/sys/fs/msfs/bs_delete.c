@@ -40,20 +40,20 @@
 #pragma ident "@(#)$RCSfile: bs_delete.c,v $ $Revision: 1.1.173.11 $ (DEC) $Date: 2007/05/30 15:27:58 $"
 
 #include <sys/param.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_assert.h>
-#include <msfs/bs_bmt.h>
-#include <msfs/bs_delete.h>
-#include <msfs/bs_stg.h>
-#include <msfs/ms_osf.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/ms_assert.h>
+#include <fs/msfs/bs_bmt.h>
+#include <fs/msfs/bs_delete.h>
+#include <fs/msfs/bs_stg.h>
+#include <fs/msfs/ms_osf.h>
 #include <sys/user.h>
 #include <sys/ucred.h>
 #include <kern/lock.h>
 #include <sys/lock_probe.h>
-#include <msfs/bs_params.h>
-#include <msfs/bs_stripe.h>
-#include <msfs/bs_index.h>
+#include <fs/msfs/bs_params.h>
+#include <fs/msfs/bs_stripe.h>
+#include <fs/msfs/bs_index.h>
 
 #define ADVFS_MODULE BS_DELETE
 

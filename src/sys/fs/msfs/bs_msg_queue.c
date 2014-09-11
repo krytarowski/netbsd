@@ -40,9 +40,9 @@
 #pragma ident "@(#)$RCSfile: bs_msg_queue.c,v $ $Revision: 1.1.41.2 $ (DEC) $Date: 2008/02/12 13:07:00 $"
 
 #include <sys/param.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_msg_queue.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_msg_queue.h>
 
 #define ADVFS_MODULE BS_MSG_QUEUE
 

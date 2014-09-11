@@ -39,7 +39,7 @@
 #include <sys/user.h>
 #endif				/* KERNEL */
 
-#include <msfs/advfs_modules.h>
+#include <fs/msfs/advfs_modules.h>
 
 #define NULL_STRUCT { 0 }
 
@@ -869,7 +869,7 @@ typedef enum {
 /****   Bitfile services  ****/
 /*****************************/
 
-#include <msfs/bs_params.h>
+#include <fs/msfs/bs_params.h>
 
 struct bfAccess;
 

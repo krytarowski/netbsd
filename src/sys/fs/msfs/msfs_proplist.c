@@ -60,17 +60,17 @@
 #include <vm/vm_debug.h>
 #include <sys/proplist.h>
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_assert.h>
-#include <msfs/bs_ods.h>
-#include <msfs/bs_access.h>
-#include <msfs/bs_bmt.h>
-#include <msfs/ms_osf.h>
-#include <msfs/fs_dir.h>
-#include <msfs/fs_dir_routines.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/ms_assert.h>
+#include <fs/msfs/bs_ods.h>
+#include <fs/msfs/bs_access.h>
+#include <fs/msfs/bs_bmt.h>
+#include <fs/msfs/ms_osf.h>
+#include <fs/msfs/fs_dir.h>
+#include <fs/msfs/fs_dir_routines.h>
 #include    <sys/lock_probe.h>
-#include <msfs/msfs_syscalls.h>
+#include <fs/msfs/msfs_syscalls.h>
 
 
 
