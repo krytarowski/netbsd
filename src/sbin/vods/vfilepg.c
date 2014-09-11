@@ -536,7 +536,7 @@ process_frag(bitFileT * bfp, int flg)
 		char           *block;
 
 		if (lseek(bfp->fd, (off_t) bfp->pgNum * PAGE_SIZE, SEEK_SET) == -1) {
-			sprintf(stderr, "lseek to block %u failed", bfp->pgLbn);
+			fprintf(stderr, "lseek to block %u failed", bfp->pgLbn);
 			perror("process_frag");
 			return 1;
 		}
