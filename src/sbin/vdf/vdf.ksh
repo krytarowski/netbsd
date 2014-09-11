@@ -1,4 +1,4 @@
-#!/usr/bin/ksh -p
+#!/bin/ksh -p
 # 
 # =======================================================================
 #   (c) Copyright Hewlett-Packard Development Company, L.P., 2008
@@ -52,11 +52,11 @@
 SHOWFSETS="eval LC_MESSAGES=C /sbin/showfsets"
 SHOWFDMN="eval LC_MESSAGES=C /sbin/showfdmn"
 SHFRAGBF="eval LC_MESSAGES=C /sbin/advfs/shfragbf"
-LS="eval LC_MESSAGES=C /sbin/ls"
+LS="eval LC_MESSAGES=C /bin/ls"
 ID="eval LC_MESSAGES=C /usr/bin/id"
-DF="eval LC_MESSAGES=C /sbin/df"
+DF="eval LC_MESSAGES=C /bin/df"
 
-DF_OUT=/sbin/df
+DF_OUT=/bin/df
 FGREP=/usr/bin/fgrep
 AWK=/usr/bin/awk
 DSPMSG=/usr/bin/dspmsg
@@ -441,4 +441,3 @@ then
 fi
 
 exit 0
-
