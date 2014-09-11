@@ -5213,30 +5213,30 @@ print_unknown(char *pdata, int size)
 {
 	int             lines = size / BPL;
 	int             ln;
-	uchar_t        *line;
-	uchar_t        *cp;
+	u_char         *line;
+	u_char         *cp;
 	uint32T         x;
 
 	for (ln = 0; ln < lines; ln++) {
-		line = (uchar_t *) & pdata[ln * BPL];
+		line = (u_char *) & pdata[ln * BPL];
 		printf("        ");
-		for (cp = line; cp < (uchar_t *) & pdata[ln * BPL + BPL]; cp += INTSZ) {
+		for (cp = line; cp < (u_char *) & pdata[ln * BPL + BPL]; cp += INTSZ) {
 			bcopy(cp, (char *) &x, sizeof(uint32T));
 			printf("%08x ", x);
 		}
 		printf("\n");
 	}
 
-	line = (uchar_t *) & pdata[ln * BPL];
-	if (line != (uchar_t *) & pdata[size]) {
+	line = (u_char *) & pdata[ln * BPL];
+	if (line != (u_char *) & pdata[size]) {
 		printf("        ");
-		for (cp = line; cp < (uchar_t *) & pdata[size - (INTSZ - 1)]; cp += INTSZ) {
+		for (cp = line; cp < (u_char *) & pdata[size - (INTSZ - 1)]; cp += INTSZ) {
 			bcopy(cp, (char *) &x, sizeof(uint32T));
 			printf("%08x ", x);
 		}
 
-		if (cp != (uchar_t *) & pdata[size]) {
-			for (; cp < (uchar_t *) & pdata[size]; cp++) {
+		if (cp != (u_char *) & pdata[size]) {
+			for (; cp < (u_char *) & pdata[size]; cp++) {
 				printf("%02x ", *cp);
 			}
 		}

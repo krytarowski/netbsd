@@ -703,12 +703,12 @@ get_format(char *argv[], int argc, int *optind, int *flags)
 /*****************************************************************************/
 #define BPL 16			/* bytes of data per line */
 
-print_page(uchar_t * page, int offset, int len)
+print_page(u_char * page, int offset, int len)
 {
 	int             lines = (len + BPL - 1) / BPL;
 	int             ln;
-	uchar_t        *line;
-	uchar_t        *cp;
+	u_char          *line;
+	u_char          *cp;
 
 	for (ln = 0; ln < lines; ln++) {
 		line = &page[ln * BPL];
@@ -735,7 +735,7 @@ print_page(uchar_t * page, int offset, int len)
 /* insert_seq */
 /* lastEntry_offset */
 /* p = (char *)begin_page + pageSz * BS_BLKSIZE - sizeof(dirRec) */
-print_dirpage(uchar_t * page, int vflg)
+print_dirpage(u_char * page, int vflg)
 {
 	fs_dir_entry   *dir_ent_p;
 	dirRec         *dirRecp;
@@ -753,7 +753,7 @@ print_dirpage(uchar_t * page, int vflg)
 		printf("    tag  name\n");
 	}
 
-	while ((uchar_t *) dir_ent_p < &page[PAGE_SIZE]) {
+	while ((u_char *) dir_ent_p < &page[PAGE_SIZE]) {
 		if (dir_ent_p->fs_dir_header.fs_dir_namecount > FS_DIR_MAX_NAME) {
 			printf("dir err\n");
 			exit(1);
