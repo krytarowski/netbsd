@@ -31,7 +31,8 @@
 #endif
 
 #include <fs/msfs/vfast.h>
-#include <kern/e_dyn_hash.h>
+/* XXX: To be examined */
+/* #include <kern/e_dyn_hash.h> */
 
 /*
  * Some ftx types that are part of the domain structure, so must be
