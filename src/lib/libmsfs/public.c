@@ -36,8 +36,8 @@
 #include <sys/mount.h>
 #include <dirent.h>
 
-#include <msfs/bs_error.h>
-#include <msfs/msfs_syscalls.h>
+#include <fs/msfs/bs_error.h>
+#include <fs/msfs/msfs_syscalls.h>
 #include <locale.h>
 
 int

@@ -28,12 +28,12 @@ static char     rcsid[] = "@(#)$RCSfile: xtntmap.c,v $ $Revision: 1.1.9.3 $ (DEC
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/stat.h>
-#include <msfs/bs_error.h>
-#include <msfs/bs_public.h>	/* for bs_ods.h */
-#include <msfs/ms_generic_locks.h>	/* for ftx_public.h */
-#include <msfs/ftx_public.h>	/* for bs_ods.h */
-#include <msfs/bs_ods.h>	/* for XTNT_TERM  & PERM_HOLE_START */
-#include <msfs/msfs_syscalls.h>
+#include <fs/msfs/bs_error.h>
+#include <fs/msfs/bs_public.h>	/* for bs_ods.h */
+#include <fs/msfs/ms_generic_locks.h>	/* for ftx_public.h */
+#include <fs/msfs/ftx_public.h>	/* for bs_ods.h */
+#include <fs/msfs/bs_ods.h>	/* for XTNT_TERM  & PERM_HOLE_START */
+#include <fs/msfs/msfs_syscalls.h>
 
 typedef struct xtntMap {
 	struct xtntMap *nextMap;

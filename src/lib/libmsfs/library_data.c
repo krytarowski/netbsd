@@ -21,8 +21,8 @@
  */
 #pragma ident "@(#)$RCSfile: library_data.c,v $ $Revision: 1.1.4.2 $ (DEC) $Date: 1998/11/25 16:17:08 $"
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_domain.h>
+#include <fs/msfs/ms_public.h>
+#include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_domain.h>
 
 logRecAddrT     logEndOfRecords = {0xffffffff, 0xffffffff, 0};
