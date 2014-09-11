@@ -1,11 +1,12 @@
 #	$NetBSD: Makefile,v 1.20 2011/06/27 11:52:24 uch Exp $
 
+.include <bsd.own.mk>
+
 SUBDIR=	adosfs cd9660 efs filecorefs hfs msdosfs nilfs ntfs ptyfs	\
 	puffs smbfs sysvbfs tmpfs udf union v7fs
 
 .if (${MKADVFS} != "no")
 SUBDIR+= msfs
 .endif
-
 
 .include <bsd.kinc.mk>
