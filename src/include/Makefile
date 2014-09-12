@@ -1,6 +1,8 @@
 #	$NetBSD: Makefile,v 1.140 2013/12/11 01:24:08 joerg Exp $
 #	@(#)Makefile	8.2 (Berkeley) 1/4/94
 
+.include <bsd.own.mk>
+
 # Doing a make includes builds /usr/include
 
 NOOBJ=		# defined
@@ -35,6 +37,10 @@ INCS+=  ssp/ssp.h ssp/stdio.h ssp/string.h ssp/strings.h ssp/unistd.h
 
 .if (${MACHINE_ARCH} != "vax")
 INCS+=	ieeefp.h
+.endif
+
+.if (${MKADVFS} != "no")
+INCS+=	overlap.h
 .endif
 
 .include <bsd.own.mk>
