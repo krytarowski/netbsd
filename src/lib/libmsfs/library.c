@@ -56,9 +56,11 @@ static char     rcsid[] = "@(#)$RCSfile: library.c,v $ $Revision: 1.1.92.5 $ (DE
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/msfs_syscalls.h>
-#include <io/common/devgetinfo.h>
+/* XXX: Missing */
+/* #include <io/common/devgetinfo.h> */
 #include <overlap.h>
-#include <fs/msfs/advfs_evm.h>
+/* XXX: EVM Missing*/
+/* #include <fs/msfs/advfs_evm.h> */
 
 #include "libmsfs_msg.h"
 

@@ -22,7 +22,8 @@
 #pragma ident "@(#)$RCSfile: public.c,v $ $Revision: 1.1.6.1 $ (DEC) $Date: 2001/11/01 14:52:14 $"
 
 
-#include <sys/advfs_syscalls.h>
+/* XXX: to be examined */
+/* #include <sys/advfs_syscalls.h> */
 
 #include <signal.h>
 #include <stdio.h>
