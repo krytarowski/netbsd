@@ -47,7 +47,6 @@
 #include <sys/ioctl.h>
 #include <fs/msfs/bs_index.h>
 #include <sys/clu.h>
-#include <sys/versw.h>
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_params.h>
 #include <sys/sp_attr.h>

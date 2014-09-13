@@ -65,7 +65,6 @@
 #include <sys/conf.h>
 #include <sys/ucred.h>
 #include <sys/vnode.h>
-#include <sys/versw.h>
 #include <sys/clu.h>
 
 /*  This sentinel pointer is init'd to the first advfs domain

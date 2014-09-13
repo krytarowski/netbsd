@@ -60,7 +60,6 @@
 #include <fs/msfs/ms_osf.h>
 #include <fs/msfs/bs_ims.h>
 #include <fs/msfs/bs_index.h>
-#include <sys/versw.h>
 
 #ifdef ESS
 #include <ess/event_simulation.h>
