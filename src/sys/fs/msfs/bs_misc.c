@@ -38,7 +38,7 @@
  */
 #pragma ident "@(#)$RCSfile: bs_misc.c,v $ $Revision: 1.1.442.15 $ (DEC) $Date: 2007/08/10 11:43:53 $"
 
-#include <varargs.h>
+#include <sys/stdarg.h>
 #include <sys/file.h>
 #include <sys/vnode.h>
 #include <sys/audit.h>
