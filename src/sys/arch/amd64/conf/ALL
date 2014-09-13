@@ -194,6 +194,7 @@ file-system 	ADOSFS		# AmigaDOS file system
 file-system	NILFS		# experimental - NTT's NiLFS(2)
 file-system	V7FS		# 7th Edition(V7) File System
 file-system	CHFS		# Chip File System
+file-system	MSFS		# Mega Secure File System / AdvFS
 
 # File system options
 options 	QUOTA		# legacy UFS quotas
