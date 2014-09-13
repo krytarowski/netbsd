@@ -129,8 +129,8 @@ cp_stg_alloc_from_one_disk(
 statusT
 xfer_stg(
     bfAccessT * bfap,		/* file to add storage to */
-    ulong_t bfPageOffset,	/* offset to add storage */
-    ulong_t bfPageCnt,		/* number of pages to add */
+    u_long bfPageOffset,	/* offset to add storage */
+    u_long bfPageCnt,		/* number of pages to add */
     uint32T startblk,		/* storage in hand to add */
     vdIndexT vdIndex,		/* storage is on this disk */
     ftxHT parentFtx
