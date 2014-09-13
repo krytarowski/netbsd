@@ -32,6 +32,7 @@
 #ifdef KERNEL
 #include <kern/e_dyn_hash.h>
 #endif
+#include <sys/rwlock.h>
 
 #define NEW_ACCESS
 
@@ -224,11 +225,11 @@ typedef struct bfAccess {
 					 * this page */
 	unsigned long seqWritePgCnt;	/* Track # of sequentially written
 					 * pages */
-	lock_data_t trunc_xfer_lk;	/* prevent clone reads during orig
+	rwlock_t trunc_xfer_lk;	/* prevent clone reads during orig
 					 * truncation */
-	lock_data_t cow_lk;
+	rwlock_t cow_lk;
 
-	lock_data_t clu_clonextnt_lk;	/* clusters only lock protecting clone
+	rwlock_t clu_clonextnt_lk;	/* clusters only lock protecting clone
 					 * xtnts */
 	unsigned int cloneXtntsRetrieved;	/* Indicates cluster client
 						 * obtained xtnts */
