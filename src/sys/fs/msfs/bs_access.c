@@ -28,7 +28,9 @@
 #if 0 /* XXX: MISSING */
 #include <sys/lock_probe.h>
 #endif
+#if 0 /* XXX: missing */
 #include <sys/clu.h>
+#endif
 
 #include <kern/sched_prim.h>
 
