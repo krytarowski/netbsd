@@ -32,7 +32,6 @@
 #include <fs/msfs/ms_osf.h>
 #include <fs/msfs/fs_dir.h>
 #include <fs/msfs/fs_dir_routines.h>
-#include <sys/mode.h>
 #include <sys/mount.h>
 #include <fs/msfs/ms_assert.h>
 #include <machine/vm_ubc.h>

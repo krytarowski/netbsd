@@ -47,7 +47,6 @@
 #include <sys/namei.h>
 #include <fs/msfs/fs_dir_routines.h>
 #include <fs/msfs/ms_public.h>
-#include <sys/mode.h>
 #include <sys/errno.h>
 #include <fs/msfs/fs_dir.h>
 #include <fs/msfs/ms_privates.h>

@@ -54,7 +54,6 @@
 #include <sys/vnode.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
-#include <sys/mode.h>
 #include <sys/malloc.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>

@@ -32,7 +32,6 @@
 #include <sys/kernel.h>
 #include <sys/namei.h>
 #include <sys/stat.h>
-#include <sys/mode.h>
 #include <sys/fcntl.h>
 #include <sys/flock.h>
 #include <fs/msfs/ms_public.h>
