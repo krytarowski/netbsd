@@ -52,7 +52,6 @@
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_params.h>
 #include <sys/sp_attr.h>
-#include <sys/specdev.h>
 #include <unistd.h>
 #include <mach/memory_object.h>
 #include <nfs/nfs.h>

@@ -58,7 +58,6 @@ extern char *sys_errlist[];
 #else				/* _KERNEL */
 #include <sys/kernel.h>
 #include <sys/mount.h>
-#include <sys/specdev.h>
 #include <sys/buf.h>
 #include <sys/ucred.h>
 #include <sys/vnode.h>

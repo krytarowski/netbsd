@@ -61,7 +61,6 @@
 #include <fs/msfs/msfs_syscalls.h>
 #include <sys/time.h>
 #include <sys/mount.h>
-#include <sys/specdev.h>
 #include <sys/buf.h>
 #include <sys/conf.h>
 #include <sys/ucred.h>

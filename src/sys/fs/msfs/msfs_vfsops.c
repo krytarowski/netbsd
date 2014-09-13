@@ -52,7 +52,6 @@
 #include <sys/systm.h>
 #include <sys/time.h>
 #include <sys/vnode.h>
-#include <sys/specdev.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
 #include <sys/mode.h>

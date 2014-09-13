@@ -50,7 +50,6 @@
 #include <fs/msfs/ms_osf.h>
 #include <sys/param.h>
 #include <sys/errno.h>
-#include <sys/specdev.h>
 #include <sys/buf.h>
 #include <sys/radset.h>
 #include <sys/ucred.h>		/* only for NOCRED */
