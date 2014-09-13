@@ -96,6 +96,7 @@
 #define MOUNT_NILFS	"nilfs"		/* NTT's NiLFS(2) logging file system */
 #define MOUNT_RUMPFS	"rumpfs"	/* rump virtual file system */
 #define	MOUNT_V7FS	"v7fs"		/* 7th Edition of Unix Filesystem */
+#define	MOUNT_MSFS	"msfs"		/* MegaSave File System / AdvFS */
 
 #ifndef _STANDALONE
 
