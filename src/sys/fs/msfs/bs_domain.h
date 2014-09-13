@@ -33,6 +33,7 @@
 #include <fs/msfs/vfast.h>
 /* XXX: To be examined */
 /* #include <kern/e_dyn_hash.h> */
+#include <sys/rwlock.h>
 
 /*
  * Some ftx types that are part of the domain structure, so must be
@@ -398,7 +399,7 @@ typedef struct domain {
 	struct bfAccess *logAccessp;	/* bfAccess pointer for log */
 	ftxTblDT ftxTbld;	/* ftx table descriptor */
 #ifdef ADVFS_SMP_ASSERT		/* For debugging only, to check for lock */
-	lock_data_t ftxSlotLock;/* hierarchy violations between locks    */
+	rwlock_t ftxSlotLock;/* hierarchy violations between locks    */
 #endif				/* and starting a root transaction       */
 	struct bsBuf *pinBlockBuf;	/* the current pin block buffer, if
 					 * any */
@@ -426,7 +427,7 @@ typedef struct domain {
 	ftxCRLAT dirtyBufLa;	/* oldest dirty buffer log address */
 
 	/* This lock protects the storage class table. */
-	lock_data_t scLock;
+	rwlock_t scLock;
 	serviceClassTblT *scTbl;/* service class table */
 
 	/*
@@ -440,7 +441,7 @@ typedef struct domain {
 	int vdCnt;		/* number of vd's in vdpTbl */
 	struct vd *vdpTbl[BS_MAX_VDI];	/* table of vd ptrs */
 
-	lock_data_t rmvolTruncLk;	/* serializes truncation and rmvol */
+	rwlock_t rmvolTruncLk;	/* serializes truncation and rmvol */
 
 	struct bcStat bcStat;	/* per domain buffer cache stats */
 	struct bmtStat bmtStat;	/* per domain BMT stats */
@@ -453,7 +454,7 @@ typedef struct domain {
 	int dmn_panic;		/* a boolean for implimenting domain panic */
 	xidRecoveryT xidRecovery;	/* Holds CFS xid recovery status
 					 * information */
-	lock_data_t xidRecoveryLk;	/* protects the xidRecovery structure */
+	rwlock_t xidRecoveryLk;	/* protects the xidRecovery structure */
 	u_int smsync_policy;	/* mirror of M_SMSYNC2 flag */
 	struct bsMPg *metaPagep;/* ptr to page 0 buffer */
 	int fs_full_time;	/* last time fs full msg logged */
@@ -575,7 +576,7 @@ domain_trace(domainT * dmnp,
 
 #define DMNTBL_UNLOCK( sLk )  lock_done( sLk );
 
-extern lock_data_t DmnTblLock;
+extern rwlock_t DmnTblLock;
 
 /* Dynamic hash macros */
 
