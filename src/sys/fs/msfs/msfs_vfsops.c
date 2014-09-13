@@ -48,7 +48,6 @@
 
 #include <sys/lock_probe.h>
 #include <sys/lock.h>
-#include <kern/rad.h>
 #include <sys/param.h>
 #include <sys/errno.h>
 #include <sys/systm.h>
