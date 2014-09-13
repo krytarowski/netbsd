@@ -36,7 +36,6 @@
 #endif
 
 #ifdef KERNEL
-#include <sys/user.h>
 #endif				/* KERNEL */
 
 #include <fs/msfs/advfs_modules.h>

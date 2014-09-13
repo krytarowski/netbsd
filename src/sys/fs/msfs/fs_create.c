@@ -54,7 +54,6 @@
 #include <sys/vnode.h>
 #include <sys/namei.h>
 #include <sys/mount.h>
-#include <sys/user.h>
 #include <sys/ucred.h>
 #include <sys/lock_probe.h>
 #include <fs/msfs/bs_params.h>

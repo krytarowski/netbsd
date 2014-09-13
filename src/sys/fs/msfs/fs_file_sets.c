@@ -53,7 +53,6 @@
 #include <fs/msfs/ms_osf.h>
 #include <sys/stat.h>
 
-#include <sys/user.h>
 #include <sys/kernel.h>
 #include <sys/ucred.h>
 #include <sys/mount.h>

@@ -60,7 +60,6 @@
 #include <fs/msfs/bs_migrate.h>
 #include <fs/msfs/msfs_syscalls.h>
 #include <sys/time.h>
-#include <sys/user.h>
 #include <sys/mount.h>
 #include <sys/specdev.h>
 #include <sys/buf.h>

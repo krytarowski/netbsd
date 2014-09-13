@@ -32,7 +32,6 @@
 
 #include <sys/param.h>
 #include <sys/systm.h>
-#include <sys/user.h>
 #include <sys/kernel.h>
 #include <sys/file.h>
 #include <sys/stat.h>

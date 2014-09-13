@@ -53,7 +53,6 @@
 #include <sys/errno.h>
 #include <sys/systm.h>
 #include <sys/time.h>
-#include <sys/user.h>
 #include <sys/vnode.h>
 #include <sys/specdev.h>
 #include <sys/mount.h>

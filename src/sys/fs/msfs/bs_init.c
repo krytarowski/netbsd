@@ -56,7 +56,6 @@
 extern int errno;
 extern char *sys_errlist[];
 #else				/* KERNEL */
-#include <sys/user.h>
 #include <sys/kernel.h>
 #include <sys/mount.h>
 #include <sys/specdev.h>

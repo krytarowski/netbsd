@@ -51,7 +51,6 @@
 #include <sys/systm.h>
 #include <sys/kernel.h>
 #include <sys/proc.h>
-#include <sys/user.h>
 #include <kern/task.h>
 #include <kern/thread.h>
 #include    <sys/lock_probe.h>

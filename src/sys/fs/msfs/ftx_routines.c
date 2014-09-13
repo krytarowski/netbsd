@@ -57,7 +57,6 @@
 #include <kern/rad.h>
 #include <sys/kernel.h>
 #include <sys/time.h>
-#include <sys/user.h>
 #include <sys/clu.h>
 #ifdef MSFS_CRASHTEST
 #include <sys/reboot.h>

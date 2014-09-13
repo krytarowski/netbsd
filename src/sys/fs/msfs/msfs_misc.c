@@ -24,7 +24,6 @@
 
 #include <sys/lock_probe.h>
 #include <sys/param.h>
-#include <sys/user.h>
 #include <sys/file.h>
 #include <sys/vnode.h>
 #include <sys/buf.h>
