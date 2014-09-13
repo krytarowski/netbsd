@@ -27,6 +27,7 @@
 #define _VD_H_
 
 #include <sys/param.h>
+#include <sys/rwlock.h>
 
 /*
  * stgDescT - Describes a contiguous set of available (free) vd blocks.
@@ -155,7 +156,7 @@ typedef struct vd {
 
 	ftxLkT del_list_lk;	/* protects global defered delete list */
 
-	lock_data_t ddlActiveLk;/* Synchs processing of deferred-delete list
+	rwlock_t ddlActiveLk;/* Synchs processing of deferred-delete list
 				 * entries */
 	/* used with domain mutex */
 	bfMCIdT ddlActiveWaitMCId;	/* If non-nil, a thread is waiting on
