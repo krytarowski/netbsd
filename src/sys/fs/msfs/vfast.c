@@ -40,7 +40,6 @@
 #include <sys/time.h>
 #include <sys/clu.h>
 #include <sys/dlm.h>
-#include <machine/clock.h>
 
 #include <fs/msfs/fs_dir_routines.h>
 #include <fs/msfs/ms_public.h>
