@@ -47,7 +47,7 @@
 #pragma ident "@(#)$RCSfile: msfs_vfsops.c,v $ $Revision: 1.1.827.17 $ (DEC) $Date: 2006/08/08 18:25:09 $"
 
 #include <sys/lock_probe.h>
-#include <kern/lock.h>
+#include <sys/lock.h>
 #include <kern/rad.h>
 #include <sys/param.h>
 #include <sys/errno.h>

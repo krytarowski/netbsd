@@ -45,7 +45,7 @@
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/bs_ods.h>
 #include <fs/msfs/ftx_privates.h>
-#include <kern/lock.h>
+#include <sys/lock.h>
 #include <fs/msfs/ms_logger.h>
 #include <kern/sched_prim.h>
 
