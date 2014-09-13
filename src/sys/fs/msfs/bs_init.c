@@ -63,7 +63,6 @@ extern char *sys_errlist[];
 #include <sys/ucred.h>
 #include <sys/vnode.h>
 #include <sys/mode.h>
-#include <sys/lock_probe.h>
 #include <sys/versw.h>
 #include <sys/clu.h>
 #include <sys/ioctl.h>

@@ -38,7 +38,6 @@
 #include <sys/syslog.h>
 #include <sys/vnode.h>
 #include <sys/buf.h>
-#include <sys/lock_probe.h>
 #include <fs/msfs/vfast.h>
 #include <machine/clock.h>
 

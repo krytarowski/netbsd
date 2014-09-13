@@ -44,7 +44,6 @@
 #pragma ident "@(#)$RCSfile: bs_stg.c,v $ $Revision: 1.1.357.20 $ (DEC) $Date: 2008/01/16 13:32:15 $"
 
 #include <sys/param.h>
-#include <sys/lock_probe.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/bs_delete.h>

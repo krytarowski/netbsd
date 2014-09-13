@@ -49,7 +49,6 @@
 #include <fs/msfs/ms_osf.h>
 #include <sys/ucred.h>
 #include <sys/lock.h>
-#include <sys/lock_probe.h>
 #include <fs/msfs/bs_params.h>
 #include <fs/msfs/bs_stripe.h>
 #include <fs/msfs/bs_index.h>

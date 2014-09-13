@@ -67,7 +67,6 @@
 #include <sys/ucred.h>
 #include <sys/vnode.h>
 #include <sys/prestoioctl.h>
-#include <sys/lock_probe.h>
 #include <sys/open.h>
 #include <sys/versw.h>
 #include <sys/clu.h>

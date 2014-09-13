@@ -54,7 +54,6 @@
 #include <sys/buf.h>
 #include <sys/uio.h>
 #include <sys/kernel.h>
-#include <sys/lock_probe.h>
 #include <fs/msfs/ftx_public.h>
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_params.h>

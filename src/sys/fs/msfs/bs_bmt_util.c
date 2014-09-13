@@ -65,7 +65,6 @@
 
 #include <sys/param.h>
 #if 0 /* XXX: missing */
-#include <sys/lock_probe.h>
 #endif
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>

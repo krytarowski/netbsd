@@ -43,7 +43,6 @@
 #include <sys/vnode.h>
 #include <sys/specdev.h>
 #include <sys/audit.h>
-#include <sys/lock_probe.h>
 #include <sys/clu.h>
 #include <sys/dlm.h>
 

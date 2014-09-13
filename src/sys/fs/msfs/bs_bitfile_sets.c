@@ -46,7 +46,6 @@
 #include <fs/msfs/bs_extents.h>
 #include <sys/syslog.h>
 #if 0 /* XXX: missing */
-#include <sys/lock_probe.h>
 #include <sys/clu.h>
 #endif
 #include <fs/msfs/bs_stripe.h>

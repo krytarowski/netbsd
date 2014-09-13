@@ -46,7 +46,6 @@
 #include <fs/msfs/ftx_privates.h>
 #include <fs/msfs/bs_domain.h>
 #include <fs/msfs/bs_public.h>
-#include <sys/lock_probe.h>
 #include <fs/msfs/ms_osf.h>
 #include <sys/clu.h>
 

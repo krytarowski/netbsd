@@ -36,7 +36,6 @@
 #define UPDATE 6
 #define CONTINUE 7
 
-#include <sys/lock_probe.h>
 #include <fs/msfs/fs_dir_routines.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/bs_public.h>

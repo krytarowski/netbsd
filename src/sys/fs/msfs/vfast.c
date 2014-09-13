@@ -36,7 +36,6 @@
 
 #define ADVFS_MODULE VFAST
 
-#include <sys/lock_probe.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/clu.h>

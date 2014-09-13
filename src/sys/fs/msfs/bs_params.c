@@ -53,7 +53,6 @@
 #include <fs/msfs/fs_dir.h>
 #include <sys/vnode.h>
 #include <fs/msfs/ms_osf.h>
-#include <sys/lock_probe.h>
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_public.h>
 #include <fs/msfs/msfs_syscalls.h>

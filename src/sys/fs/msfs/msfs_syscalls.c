@@ -53,7 +53,6 @@
 #include <sys/proc.h>
 #include <kern/task.h>
 #include <kern/thread.h>
-#include    <sys/lock_probe.h>
 
 /*
  ** msfsSyscallp

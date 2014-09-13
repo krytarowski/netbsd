@@ -21,7 +21,6 @@
  */
 #pragma ident "@(#)$RCSfile: msfs_vnops.c,v $ $Revision: 1.1.528.21 $ (DEC) $Date: 2008/01/31 13:03:33 $"
 
-#include <sys/lock_probe.h>
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/time.h>
@@ -44,7 +43,6 @@
 #include <fs/msfs/fs_dir_routines.h>
 #include <fs/msfs/fs_quota.h>
 #include <sys/buf.h>
-#include <sys/lock_probe.h>
 #include <sys/secpolicy.h>
 #include <sys/sec_objects.h>
 #include <sys/ioctl.h>

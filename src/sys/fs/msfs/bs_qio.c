@@ -50,7 +50,6 @@
 
 #include <sys/syslog.h>
 #include <mach/std_types.h>
-#include <sys/lock_probe.h>
 
 #define BUF_WRITE_LIM 5
 #define DEV_LOCKED 1

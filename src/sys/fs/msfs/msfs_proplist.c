@@ -64,7 +64,6 @@
 #include <fs/msfs/ms_osf.h>
 #include <fs/msfs/fs_dir.h>
 #include <fs/msfs/fs_dir_routines.h>
-#include    <sys/lock_probe.h>
 #include <fs/msfs/msfs_syscalls.h>
 
 

@@ -55,7 +55,6 @@
 #include <sys/radset.h>
 #include <sys/ucred.h>		/* only for NOCRED */
 #include <sys/mount.h>
-#include <sys/lock_probe.h>
 #include <kern/event.h>
 #include <fs/msfs/advfs_evm.h>
 #include <io/common/deveei.h>
