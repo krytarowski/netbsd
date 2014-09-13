@@ -61,9 +61,6 @@
 #include <io/common/deveei.h>
 #include <stdarg.h>
 
-#include <vm/vm_page.h>
-#include <vm/vm_numa.h>
-#include <vm/vm_ubc.h>
 #include <sys/lwc.h>
 #include <sys/syslog_pri.h>
 #include <dec/binlog/binlog.h>

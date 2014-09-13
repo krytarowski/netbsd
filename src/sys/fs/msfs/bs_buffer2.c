@@ -40,8 +40,6 @@
 #include <sys/buf.h>
 #include <sys/radset.h>
 #include <mach/std_types.h>
-#include <vm/vm_ubc.h>
-#include <vm/vm_numa.h>
 #include <kern/rad.h>
 #include <sys/lock_probe.h>
 #include <fs/msfs/vfast.h>

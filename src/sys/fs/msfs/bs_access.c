@@ -47,8 +47,6 @@
 #include <sys/buf.h>
 #include <sys/ucred.h>
 #include <sys/fcntl.h>		/* for MAXEND */
-#include <vm/vm_ubc.h>
-#include <vm/vm_numa.h>
 #include <fs/msfs/bs_msg_queue.h>
 #include <fs/msfs/bs_access.h>
 #include <fs/msfs/fs_dir.h>

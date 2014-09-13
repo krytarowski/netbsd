@@ -61,7 +61,6 @@
 #include <sys/sp_attr.h>
 #include <fs/msfs/advfs_evm.h>
 #include <sys/syslog.h>
-#include <vm/vm_numa.h>
 #include <sys/fcntl.h>
 
 #define POSIX1B_MSFS_SYNC_STATS

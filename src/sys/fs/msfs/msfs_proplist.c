@@ -54,10 +54,6 @@
 #include <kern/assert.h>
 #endif
 #include <mach/mach_types.h>
-#include <vm/vm_page.h>
-#include <vm/vm_vppage.h>
-#include <vm/vm_mmap.h>
-#include <vm/vm_debug.h>
 #include <sys/proplist.h>
 
 #include <fs/msfs/ms_public.h>

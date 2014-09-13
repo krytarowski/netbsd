@@ -54,7 +54,6 @@
 #include <fs/msfs/ftx_agents.h>
 #include <fs/msfs/ms_assert.h>
 #include <sys/radset.h>
-#include <vm/vm_numa.h>
 #include <kern/rad.h>
 #include <sys/kernel.h>
 #include <sys/time.h>
