@@ -19,7 +19,6 @@
  * @(#)$RCSfile: advfs_evm.h,v $ $Revision: 1.1.27.2 $ (DEC) $Date: 2006/03/01 22:24:27 $
  */
 
-#include <evm/evm.h>
 
 #define EVENT_FDMN_MK 		_EvmSYSTEM_EVENT_NAME("fs.advfs.fdmn.mk")
 #define EVENT_FDMN_RM		_EvmSYSTEM_EVENT_NAME("fs.advfs.fdmn.rm")

@@ -56,7 +56,6 @@
 #include <sys/ucred.h>		/* only for NOCRED */
 #include <sys/mount.h>
 #include <kern/event.h>
-#include <fs/msfs/advfs_evm.h>
 #include <io/common/deveei.h>
 #include <stdarg.h>
 

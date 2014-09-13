@@ -70,7 +70,6 @@ extern char *sys_errlist[];
 #include <sys/disklabel.h>
 #include <fs/msfs/bs_vd.h>
 #include <fs/msfs/bs_extents.h>
-#include <fs/msfs/advfs_evm.h>
 
 #include <sys/open.h>
 

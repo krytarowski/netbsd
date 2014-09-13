@@ -55,7 +55,6 @@
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_msg_queue.h>
 #include <fs/msfs/bs_index.h>
-#include <fs/msfs/advfs_evm.h>
 
 #define ADVFS_MODULE FS_DIR_LOOKUP
 

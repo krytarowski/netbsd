@@ -60,7 +60,6 @@
 #include <fs/msfs/msfs_syscalls.h>
 #include <fs/msfs/ms_osf.h>
 #include <fs/msfs/bs_ims.h>
-#include <fs/msfs/advfs_evm.h>
 #include <fs/msfs/bs_index.h>
 #include <sys/versw.h>
 

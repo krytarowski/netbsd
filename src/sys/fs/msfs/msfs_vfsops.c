@@ -74,7 +74,6 @@
 #include <sys/disklabel.h>
 #include <sys/clu.h>
 #include <fs/msfs/bs_params.h>
-#include <fs/msfs/advfs_evm.h>
 #include <sys/syslog_pri.h>
 #include <fs/msfs/bs_freeze.h>
 #include <fs/msfs/bs_domain.h>

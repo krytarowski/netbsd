@@ -62,7 +62,6 @@
 #include <fs/msfs/bs_domain.h>
 #include <fs/msfs/ms_osf.h>
 #include <fs/msfs/bs_freeze.h>
-#include <vfs/vfs_evm.h>
 
 /******************************************************************************
  *

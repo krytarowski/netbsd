@@ -58,7 +58,6 @@
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_params.h>
 #include <sys/sp_attr.h>
-#include <fs/msfs/advfs_evm.h>
 #include <sys/syslog.h>
 #include <sys/fcntl.h>
 
