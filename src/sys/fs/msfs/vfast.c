@@ -38,7 +38,6 @@
 
 #include <sys/stat.h>
 #include <sys/time.h>
-#include <sys/dlm.h>
 
 #include <fs/msfs/fs_dir_routines.h>
 #include <fs/msfs/ms_public.h>
