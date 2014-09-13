@@ -32,6 +32,7 @@
 #include <sys/vnode.h>
 #include <kern/event.h>
 #endif				/* KERNEL */
+#include <sys/rwlock.h>
 
 /*
  ** LOG_FLUSH_THRESHOLD must be a multiple of 4 **
@@ -238,7 +239,7 @@ typedef struct bsInMemXtnt {
 	bsInMemXtntMapT *shadowXtntMap;	/* Link to shadow extent maps */
 	bsStripeHdrT *stripeXtntMap;	/* Link to stripe extent maps */
 	bsInMemXtntMapT *copyXtntMap;	/* Link to copy extent maps */
-	lock_data_t migTruncLk;	/* Serialize migrate and truncate */
+	rwlock_t migTruncLk;	/* Serialize migrate and truncate */
 	bsXtntMapTypeT type;	/* The type of extent maps */
 	uint32T allocPageCnt;	/* Number of allocated pages */
 }           bsInMemXtntT;
