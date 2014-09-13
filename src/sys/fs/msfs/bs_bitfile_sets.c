@@ -53,9 +53,7 @@
 #include <fs/msfs/bs_extents.h>
 #if 0 /* XXX: missing */
 #include <kern/sched_prim.h>
-#endif
 #include <kern/event.h>
-#if 0 /* XXX: missing */
 #include <fs/msfs/advfs_evm.h>
 #endif
 #include <fs/msfs/bs_msg_queue.h>
