@@ -30,7 +30,7 @@
 #if 0 /* XXX: missing */
 #include <kern/sched_prim.h>
 #endif
-#include <kern/lock.h>
+#include <sys/lock.h>
 #include <sys/kernel.h>
 
 #else				/* _KERNEL */
