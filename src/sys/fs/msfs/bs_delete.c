@@ -47,7 +47,6 @@
 #include <fs/msfs/bs_delete.h>
 #include <fs/msfs/bs_stg.h>
 #include <fs/msfs/ms_osf.h>
-#include <sys/user.h>
 #include <sys/ucred.h>
 #include <kern/lock.h>
 #include <sys/lock_probe.h>
