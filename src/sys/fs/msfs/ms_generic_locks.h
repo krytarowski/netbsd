@@ -27,7 +27,9 @@
 #define _GENERIC_LOCKS_
 
 #ifdef _KERNEL
+#if 0 /* XXX: missing */
 #include <kern/sched_prim.h>
+#endif
 #include <kern/lock.h>
 #include <sys/kernel.h>
 
