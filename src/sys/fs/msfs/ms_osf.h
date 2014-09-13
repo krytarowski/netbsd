@@ -27,7 +27,6 @@
  * is in fs_dir.h.
  */
 
-#include <sys/mode.h>
 #include <fs/msfs/ms_generic_locks.h>
 #include <fs/msfs/fs_quota.h>
 
