@@ -69,7 +69,6 @@ extern char *sys_errlist[];
 #include <fs/msfs/bs_vd.h>
 #include <fs/msfs/bs_extents.h>
 
-#include <sys/open.h>
 
 #endif				/* _KERNEL */
 
