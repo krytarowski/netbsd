@@ -70,7 +70,6 @@
 #include <sys/buf.h>
 #include <sys/ioctl.h>
 #include <sys/disklabel.h>
-#include <sys/clu.h>
 #include <fs/msfs/bs_params.h>
 #include <sys/syslog_pri.h>
 #include <fs/msfs/bs_freeze.h>

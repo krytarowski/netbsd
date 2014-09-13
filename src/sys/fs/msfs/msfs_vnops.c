@@ -46,7 +46,6 @@
 #include <sys/sec_objects.h>
 #include <sys/ioctl.h>
 #include <fs/msfs/bs_index.h>
-#include <sys/clu.h>
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_params.h>
 #include <sys/sp_attr.h>

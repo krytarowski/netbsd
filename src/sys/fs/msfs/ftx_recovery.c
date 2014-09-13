@@ -47,7 +47,6 @@
 #include <fs/msfs/bs_domain.h>
 #include <fs/msfs/bs_public.h>
 #include <fs/msfs/ms_osf.h>
-#include <sys/clu.h>
 
 #define ADVFS_MODULE FTX_RECOVERY
 

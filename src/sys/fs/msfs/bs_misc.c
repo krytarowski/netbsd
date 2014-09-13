@@ -42,7 +42,6 @@
 #include <sys/file.h>
 #include <sys/vnode.h>
 #include <sys/audit.h>
-#include <sys/clu.h>
 #include <sys/dlm.h>
 
 #include <kern/event.h>

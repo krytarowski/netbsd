@@ -55,7 +55,6 @@
 #include <sys/kernel.h>
 #include <sys/ucred.h>
 #include <sys/mount.h>
-#include <sys/clu.h>
 #include <fs/msfs/bs_params.h>
 #include <fs/msfs/ms_assert.h>
 

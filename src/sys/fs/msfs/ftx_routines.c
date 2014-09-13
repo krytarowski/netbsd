@@ -56,7 +56,6 @@
 #include <sys/radset.h>
 #include <sys/kernel.h>
 #include <sys/time.h>
-#include <sys/clu.h>
 #ifdef MSFS_CRASHTEST
 #include <sys/reboot.h>
 void

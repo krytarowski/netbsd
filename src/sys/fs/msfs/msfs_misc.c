@@ -26,7 +26,6 @@
 #include <sys/file.h>
 #include <sys/vnode.h>
 #include <sys/buf.h>
-#include <sys/clu.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/ms_osf.h>

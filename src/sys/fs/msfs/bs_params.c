@@ -56,7 +56,6 @@
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_public.h>
 #include <fs/msfs/msfs_syscalls.h>
-#include <sys/clu.h>
 #include <fs/msfs/bs_index.h>
 
 

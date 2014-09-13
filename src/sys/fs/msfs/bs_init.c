@@ -61,7 +61,6 @@ extern char *sys_errlist[];
 #include <sys/buf.h>
 #include <sys/ucred.h>
 #include <sys/vnode.h>
-#include <sys/clu.h>
 #include <sys/ioctl.h>
 #include <sys/vnode.h>
 #include <sys/disklabel.h>

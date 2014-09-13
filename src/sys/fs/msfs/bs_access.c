@@ -26,7 +26,6 @@
 #include <sys/param.h>
 #include <sys/mount.h>
 #if 0 /* XXX: MISSING */
-#include <sys/clu.h>
 #include <kern/sched_prim.h>
 #endif
 
