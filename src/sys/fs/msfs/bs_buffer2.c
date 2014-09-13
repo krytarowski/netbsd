@@ -38,8 +38,6 @@
 #include <sys/syslog.h>
 #include <sys/vnode.h>
 #include <sys/buf.h>
-#include <sys/radset.h>
-#include <mach/std_types.h>
 #include <kern/rad.h>
 #include <sys/lock_probe.h>
 #include <fs/msfs/vfast.h>
