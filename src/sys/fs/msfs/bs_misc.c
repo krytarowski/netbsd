@@ -41,7 +41,6 @@
 #include <sys/stdarg.h>
 #include <sys/file.h>
 #include <sys/vnode.h>
-#include <sys/audit.h>
 
 #include <kern/event.h>
 
