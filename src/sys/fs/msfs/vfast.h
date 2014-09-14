@@ -219,7 +219,7 @@ typedef struct ssHotEntry {
 	struct ssHotEntry *ssHotFwd;	/* must stay in first position */
 	struct ssHotEntry *ssHotBwd;	/* must stay in second position */
 	int ssHotPlaced;	/* vd where file was placed, set by work thd  */
-	/* whenever ss first migrates this file, also an error /* can go here. */
+	/* whenever ss first migrates this file, also an error can go here. */
 	int ssHotVdi;		/* current vd of primary mcell; if
 				 * ssHotPlaced, should be same */
 	bfTagT ssHotTag;	/* tag of file */
