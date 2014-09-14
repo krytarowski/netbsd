@@ -28,7 +28,6 @@
 
 #include <sys/types.h>
 #include <sys/errno.h>
-#include <mach/vm_param.h>
 #include <machine/machlimits.h>
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/ms_public.h>

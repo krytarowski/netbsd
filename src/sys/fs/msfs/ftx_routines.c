@@ -64,7 +64,6 @@ msfs_reboot(
 #endif				/* MSFS_CRASHTEST */
 
 #ifdef MSFS_CRASHTEST
-#include <mach/port.h>
 #include <kern/thread.h>
 #endif
 

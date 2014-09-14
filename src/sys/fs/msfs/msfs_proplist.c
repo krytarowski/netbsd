@@ -50,7 +50,6 @@
 #include <sys/syslimits.h>
 #include <kern/assert.h>
 #endif
-#include <mach/mach_types.h>
 #include <sys/proplist.h>
 
 #include <fs/msfs/ms_public.h>

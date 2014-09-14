@@ -49,13 +49,11 @@
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_params.h>
 #include <unistd.h>
-#include <mach/memory_object.h>
 #include <nfs/nfs.h>
 #if SEC_BASE
 #include <sys/security.h>
 #endif
 #include <builtin/ux_exception.h>
-#include <mach/exception.h>
 #include <sys/file.h>
 
 extern void *BsAccessHashTbl;
