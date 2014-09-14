@@ -186,8 +186,8 @@ alloc_from_one_disk(
 static statusT
 xfer_stg_to_bf(
     bfAccessT * bfap,
-    ulong_t bfPageOffset,
-    ulong_t bfPageCnt,
+    u_long bfPageOffset,
+    u_long bfPageCnt,
     uint32T startblk,
     vdIndexT vdIndex,
     ftxHT parentFtx
@@ -196,8 +196,8 @@ xfer_stg_to_bf(
 static statusT
 xfer_stg_to_xtnts(bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
-    ulong_t bfPageOffset,
-    ulong_t bfPageCnt,
+    u_long bfPageOffset,
+    u_long bfPageCnt,
     uint32T startblk,
     vdIndexT vdIndex,
     ftxHT parentFtx);
@@ -206,8 +206,8 @@ static statusT
 xfer_append_stg(
     bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
-    ulong_t bfPageOffset,
-    ulong_t bfPageCnt,
+    u_long bfPageOffset,
+    u_long bfPageCnt,
     uint32T startblk,
     vdIndexT vdIndex,
     ftxHT parentFtx
@@ -219,8 +219,8 @@ xfer_hole_stg(
     bsInMemXtntMapT * xtntMap,
     uint32T mapIndex,
     uint32T descIndex,
-    ulong_t bfPageOffset,
-    ulong_t bfPageCnt,
+    u_long bfPageOffset,
+    u_long bfPageCnt,
     uint32T startblk,
     vdIndexT vdIndex,
     ftxHT parentFtx
@@ -231,9 +231,9 @@ xfer_stg_on_one_disk(
     bfAccessT * bfap,
     bfTagT bfSetTag,
     bsInMemXtntMapT * xtntMap,
-    ulong_t bfPageOffset,
-    ulong_t bfPageCnt,
-    ulong_t startBlk,
+    u_long bfPageOffset,
+    u_long bfPageCnt,
+    u_long startBlk,
     vdIndexT vdIndex,
     ftxHT parentFtx
 );
@@ -243,8 +243,8 @@ static statusT
 xfer_stg_in_one_subxtnt(
     bsInMemSubXtntMapT * subXtntMap,
     int bfPageSize,
-    ulong_t bfPageOffset,
-    ulong_t bfPageCnt,
+    u_long bfPageOffset,
+    u_long bfPageCnt,
     uint32T blkOff
 );
 
@@ -4600,8 +4600,8 @@ EXIT_ALLOC_FROM_BITMAP:
 statusT
 xfer_stg(
     bfAccessT * bfap,		/* file to add storage to */
-    ulong_t bfPageOffset,	/* offset to add storage */
-    ulong_t bfPageCnt,		/* number of pages to add */
+    u_long bfPageOffset,	/* offset to add storage */
+    u_long bfPageCnt,		/* number of pages to add */
     uint32T startblk,		/* storage in hand to add */
     vdIndexT vdIndex,		/* storage is on this disk */
     ftxHT parentFtx
@@ -4696,8 +4696,8 @@ HANDLE_EXCEPTION:
 static statusT
 xfer_stg_to_bf(
     bfAccessT * bfap,		/* add storage to this file */
-    ulong_t bfPageOffset,	/* at this page offset */
-    ulong_t bfPageCnt,		/* for this many pages */
+    u_long bfPageOffset,	/* at this page offset */
+    u_long bfPageCnt,		/* for this many pages */
     uint32T startblk,		/* storage exists at this block */
     vdIndexT vdIndex,		/* on this disk */
     ftxHT parentFtx
@@ -4760,8 +4760,8 @@ static statusT
 xfer_stg_to_xtnts(
     bfAccessT * bfap,		/* Add stg to this file */
     bsInMemXtntMapT * xtntMap,	/* in this extent map */
-    ulong_t bfPageOffset,	/* Add storage at this page */
-    ulong_t bfPageCnt,		/* add this many pages */
+    u_long bfPageOffset,	/* Add storage at this page */
+    u_long bfPageCnt,		/* add this many pages */
     uint32T startblk,		/* Storage is at this block */
     vdIndexT vdIndex,		/* on this disk */
     ftxHT parentFtx
@@ -4834,8 +4834,8 @@ static statusT
 xfer_append_stg(
     bfAccessT * bfap,		/* add storage to this file */
     bsInMemXtntMapT * xtntMap,	/* in this xtntMap */
-    ulong_t bfPageOffset,	/* add at this page offset */
-    ulong_t bfPageCnt,		/* add this many pages */
+    u_long bfPageOffset,	/* add at this page offset */
+    u_long bfPageCnt,		/* add this many pages */
     uint32T startblk,		/* The storage is at this blk */
     vdIndexT vdIndex,		/* on this disk */
     ftxHT parentFtx
@@ -4939,8 +4939,8 @@ xfer_hole_stg(
     bsInMemXtntMapT * xtntMap,	/* in this xtnt map */
     uint32T mapIndex,		/* at this subextent */
     uint32T descIndex,		/* before this descriptor */
-    ulong_t bfPageOffset,	/* add storge at this page */
-    ulong_t bfPageCnt,		/* add this many pages */
+    u_long bfPageOffset,	/* add storge at this page */
+    u_long bfPageCnt,		/* add this many pages */
     uint32T startblk,		/* storage is at this blk */
     vdIndexT vdIndex,		/* on this disk */
     ftxHT parentFtx
@@ -5234,9 +5234,9 @@ xfer_stg_on_one_disk(
     bfAccessT * bfap,		/* Add stg to this file */
     bfTagT bfSetTag,		/* in this file set */
     bsInMemXtntMapT * xtntMap,	/* using this map */
-    ulong_t bfPageOffset,	/* at this file page */
-    ulong_t bfPageCnt,		/* for this many pages */
-    ulong_t startBlk,		/* stg starts at this blk */
+    u_long bfPageOffset,	/* at this file page */
+    u_long bfPageCnt,		/* for this many pages */
+    u_long startBlk,		/* stg starts at this blk */
     vdIndexT vdIndex,		/* on this disk */
     ftxHT parentFtx
 )
@@ -5383,8 +5383,8 @@ static statusT
 xfer_stg_in_one_subxtnt(
     bsInMemSubXtntMapT * subXtntMap,	/* in this subxtnt */
     int bfPageSize,
-    ulong_t bfPageOffset,	/* at this offset */
-    ulong_t bfPageCnt,		/* this many pages */
+    u_long bfPageOffset,	/* at this offset */
+    u_long bfPageCnt,		/* this many pages */
     uint32T blkOff		/* from this place */
 )
 {
