@@ -27,7 +27,6 @@
  */
 
 #include <sys/types.h>
-#include <sys/sysconfig.h>
 #include <sys/errno.h>
 #include <mach/vm_param.h>
 #include <machine/machlimits.h>

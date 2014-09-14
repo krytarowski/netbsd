@@ -39,7 +39,6 @@
  */
 #pragma ident "@(#)$RCSfile: msfs_config.c,v $ $Revision: 1.1.10.3 $ (DEC) $Date: 1997/06/18 15:35:22 $"
 
-#include <sys/sysconfig.h>
 #include <sys/mount.h>
 #include <sys/errno.h>
 
