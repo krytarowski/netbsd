@@ -64,7 +64,6 @@ msfs_reboot(
 #endif				/* MSFS_CRASHTEST */
 
 #ifdef MSFS_CRASHTEST
-#include <kern/thread.h>
 #endif
 
 ftxHT FtxNilFtxH = {0, 0};	/* Nil ftx for use as root parent */
