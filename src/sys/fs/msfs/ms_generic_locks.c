@@ -32,8 +32,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: ms_generic_locks.c,v $ $Revision: 1.1.37.1 $ (DEC) $Date: 2001/01/24 21:05:26 $"
-
+#endif
 #ifdef ADVFS_DEBUG
 #define ADVFS_LK_STRINGS	/* needed for lock string arrays */
  /* in ms_generic_locks.h */

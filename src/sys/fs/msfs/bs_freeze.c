@@ -51,8 +51,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_freeze.c,v $ $Revision: 1.1.5.4 $ (DEC) $Date: 2002/01/29 15:11:06 $"
-
+#endif
 #define ADVFS_MODULE BS_FREEZE
 
 #include <fs/msfs/ms_public.h>

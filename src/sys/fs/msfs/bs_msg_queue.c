@@ -37,8 +37,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_msg_queue.c,v $ $Revision: 1.1.41.2 $ (DEC) $Date: 2008/02/12 13:07:00 $"
-
+#endif
 #include <sys/param.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>

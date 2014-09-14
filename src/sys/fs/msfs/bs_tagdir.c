@@ -36,8 +36,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_tagdir.c,v $ $Revision: 1.1.131.5 $ (DEC) $Date: 2008/02/12 13:07:05 $"
-
+#endif
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/ms_assert.h>

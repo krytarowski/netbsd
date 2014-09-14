@@ -38,8 +38,9 @@
  * HISTORY
  *
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_qio.c,v $ $Revision: 1.1.367.9 $ (DEC) $Date: 2006/07/05 12:23:11 $"
-
+#endif
 #define ADVFS_MODULE  BS_QIO
 
 #include <sys/file.h>

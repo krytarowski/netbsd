@@ -39,8 +39,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: ftx_recovery.c,v $ $Revision: 1.1.159.2 $ (DEC) $Date: 2004/09/16 20:38:54 $"
-
+#endif
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/ftx_privates.h>

@@ -32,8 +32,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: vfast.c,v $ $Revision: 1.1.16.11 $ (DEC) $Date: 2006/04/06 13:48:55 $ "
-
+#endif
 #define ADVFS_MODULE VFAST
 
 #include <sys/stat.h>

@@ -19,8 +19,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: msfs_cfg.c,v $ $Revision: 1.1.96.3 $ (DEC) $Date: 2008/01/18 14:23:10 $"
-
+#endif
 /*
  * This file contains the configuration entrypoint for the advfs kernel
  * subsystem.

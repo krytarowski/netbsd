@@ -38,8 +38,9 @@
  * HISTORY
  *
  */
+#if 0
 #pragma ident "@(#)$RCSfile: ms_logger.c,v $ $Revision: 1.1.243.5 $ (DEC) $Date: 2008/02/12 13:07:09 $"
-
+#endif
 #include <sys/param.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>

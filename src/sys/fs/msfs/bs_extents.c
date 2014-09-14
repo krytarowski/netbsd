@@ -40,8 +40,9 @@
  * HISTORY
  *
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_extents.c,v $ $Revision: 1.1.145.7 $ (DEC) $Date: 2006/01/03 18:54:59 $"
-
+#endif
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/bs_bmt.h>

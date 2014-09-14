@@ -19,8 +19,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: msfs_proplist.c,v $ $Revision: 1.1.145.6 $ (DEC) $Date: 2005/03/04 19:58:08 $"
-
+#endif
 #define ADVFS_MODULE MSFS_PROPLIST
 
 /*

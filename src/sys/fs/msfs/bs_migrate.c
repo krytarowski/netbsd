@@ -39,8 +39,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_migrate.c,v $ $Revision: 1.1.239.19 $ (DEC) $Date: 2008/02/12 13:06:53 $"
-
+#endif
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/bs_copy.h>

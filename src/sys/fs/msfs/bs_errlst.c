@@ -37,8 +37,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_errlst.c,v $ $Revision: 1.1.51.2 $ (DEC) $Date: 2004/10/01 06:25:14 $"
-
+#endif
 #include <sys/types.h>
 #include <sys/systm.h>
 #ifdef OSF

@@ -19,8 +19,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: msfs_vnops.c,v $ $Revision: 1.1.528.21 $ (DEC) $Date: 2008/01/31 13:03:33 $"
-
+#endif
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/time.h>

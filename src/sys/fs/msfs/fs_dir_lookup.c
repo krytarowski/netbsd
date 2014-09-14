@@ -40,8 +40,9 @@
  *
  */
 
+#if 0
 #pragma ident "@(#)$RCSfile: fs_dir_lookup.c,v $ $Revision: 1.1.125.4 $ (DEC) $Date: 2006/03/20 15:11:01 $"
-
+#endif
 #include <fs/msfs/fs_dir.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/fs_dir_routines.h>

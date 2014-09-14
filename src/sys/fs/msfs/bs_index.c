@@ -22,8 +22,9 @@
  *
  *
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_index.c,v $ $Revision: 1.1.92.8 $ (DEC) $Date: 2007/08/10 11:43:50 $"
-
+#endif
 #define ADVFS_MODULE BS_INDEX
 
 /* These are internal status */

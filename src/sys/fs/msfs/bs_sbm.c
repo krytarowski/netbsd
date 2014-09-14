@@ -35,8 +35,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_sbm.c,v $ $Revision: 1.1.112.3 $ (DEC) $Date: 2008/02/12 13:07:01 $"
-
+#endif
 #include <sys/param.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>

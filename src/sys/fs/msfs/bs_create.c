@@ -38,8 +38,9 @@
  * HISTORY
  *
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_create.c,v $ $Revision: 1.1.132.3 $ (DEC) $Date: 2008/02/12 13:06:51 $"
-
+#endif
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/ms_assert.h>
