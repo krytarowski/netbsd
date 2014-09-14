@@ -30,9 +30,7 @@
  **** THIS FILE MUST NOT INCLUDE ANY OTHER MSFS HEADER FILES ****
  */
 
-#ifdef _KERNEL
-#define abs( a )    ((a) < 0 ? -(a) : (a))
-#else
+#ifndef _KERNEL
 #include <stdlib.h>
 #endif				/* _KERNEL */
 
