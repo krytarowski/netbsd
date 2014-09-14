@@ -41,7 +41,6 @@
 
 #include <sys/secdefines.h>
 #if     SEC_BASE
-#include <sys/security.h>
 #endif
 #if     SEC_ARCH
 #include <sys/secpolicy.h>
