@@ -435,7 +435,7 @@ advfs_mutex_destroy(
 		lk = nxtLk;
 	}
 #endif				/* ADVFS_DEBUG */
-	simple_lock_terminate(&mp->mutex);
+	mutex_destroy(mp);
 }
 
 
