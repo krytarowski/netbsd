@@ -2028,7 +2028,7 @@ ss_trace(vdT * vdp,
 )
 {
 	register ssTraceElmtT *te;
-	extern simple_lock_data_t TraceLock;
+	extern kmutex_t TraceLock;
 	extern int TraceSequence;
 
 	simple_lock(&TraceLock);

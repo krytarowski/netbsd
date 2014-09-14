@@ -430,7 +430,7 @@ bs_kernel_init(int doingRoot)
 /* TraceLock & TraceSequence can move to vfs_init if tracing is added to */
 /* vnodes. They can move to vm_mem_init (earier than vfs_init) if object or */
 /* vm page tracing is added. */
-simple_lock_data_t TraceLock;
+kmutex_t TraceLock;
 struct lockinfo *TraceLock_info;
 int TraceSequence;
 

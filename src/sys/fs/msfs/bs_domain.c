@@ -330,7 +330,7 @@ domain_trace(domainT * dmnP,
     void *value)
 {
 	register dmnTraceElmtT *te;
-	extern simple_lock_data_t TraceLock;
+	extern kmutex_t TraceLock;
 	extern int TraceSequence;
 
 	simple_lock(&TraceLock);
@@ -356,7 +356,7 @@ vd_trace(vdT * vdp,
     void *value)
 {
 	register vdTraceElmtT *te;
-	extern simple_lock_data_t TraceLock;
+	extern kmutex_t TraceLock;
 	extern int TraceSequence;
 
 	simple_lock(&TraceLock);

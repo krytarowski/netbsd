@@ -5761,7 +5761,7 @@ iodh_trace(ioDescHdrT * ioDH,
     void *value)
 {
 	register ioDHTraceElmT *te;
-	extern simple_lock_data_t TraceLock;
+	extern kmutex_t TraceLock;
 	extern int TraceSequence;
 
 	simple_lock(&TraceLock);

@@ -110,7 +110,7 @@ decl_simple_lock_info(, ADVbfSetT_bfSetMutex_lockinfo)
          void *value)
 {
 	register bfsetTraceElmtT *te;
-	extern simple_lock_data_t TraceLock;
+	extern kmutex_t TraceLock;
 	extern int TraceSequence;
 
 	simple_lock(&TraceLock);

@@ -283,7 +283,7 @@ mcell_trace(uint16T vdi, uint32T pg, uint16T mcidx,
     uint16T module, uint16T line, void *value)
 {
 	register mcellTraceElmtT *mtep;
-	extern simple_lock_data_t TraceLock;
+	extern kmutex_t TraceLock;
 	extern int TraceSequence;
 	mcellTraceT *mtp;
 
