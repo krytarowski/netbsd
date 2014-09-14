@@ -527,7 +527,7 @@ void bs_dump_locks(int locked);
 void lk_init(void *lkp, mutexT * mp, lkTypeT type, int res, lkUsageT usage);
 void lk_re_init(void *lkp, mutexT * mp, lkTypeT lkType, int res, lkUsageT usage);
 void lk_destroy(void *lk);
-void cv_init(cvT * cvp);
+void advfs_cv_init(cvT * cvp);
 
 void
 _lk_wait_while(

@@ -3254,7 +3254,7 @@ vd_alloc(
 	VD_TRACE(vdp, 0);
 
 	vdp->ddlActiveWaitMCId = bsNilMCId;
-	cv_init(&vdp->ddlActiveWaitCv);
+	advfs_cv_init(&vdp->ddlActiveWaitCv);
 
 	if (dmnP->dmnFlag & BFD_DUAL_MOUNT_IN_PROGRESS) {
 		vdp->vdState = BSR_VD_DMNT_INPROG;
@@ -5456,7 +5456,7 @@ dmn_alloc(
 	dmnP->lsnList.lsnFwd = (struct bsBuf *) & dmnP->lsnList;
 	dmnP->lsnList.lsnBwd = (struct bsBuf *) & dmnP->lsnList;
 	dmnP->writeToLsn = nilLSN;
-	cv_init(&dmnP->pinBlockCv);
+	advfs_cv_init(&dmnP->pinBlockCv);
 	dmnP->pinBlockWait = 0;
 	dmnP->pinBlockBuf = NULL;
 	dmnP->pinBlockRunning = FALSE;
@@ -5484,9 +5484,9 @@ dmn_alloc(
 	dmnP->ftxTbld.rrSlots = FTX_DEF_RR_SLOTS;
 	dmnP->ftxTbld.rrNextSlot = 0;
 	dmnP->ftxTbld.nextNewSlot = FTX_DEF_RR_SLOTS;	/* so ftx_fail() works */
-	cv_init(&dmnP->ftxTbld.slotCv);
-	cv_init(&dmnP->ftxTbld.trimCv);
-	cv_init(&dmnP->ftxTbld.excCv);
+	advfs_cv_init(&dmnP->ftxTbld.slotCv);
+	advfs_cv_init(&dmnP->ftxTbld.trimCv);
+	advfs_cv_init(&dmnP->ftxTbld.excCv);
 
 	dmnP->ftxTbld.tablep =
 	    (ftxSlotT *) ms_malloc(sizeof(ftxSlotT) * FTX_MAX_FTXH);

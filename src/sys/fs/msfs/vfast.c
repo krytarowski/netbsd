@@ -379,7 +379,7 @@ ss_kern_init()
 
 	mutex_init3(&ssStoppedMutex, 0, "Smartstore global Mutex",
 	    ADVssStoppedMutex_lockinfo);
-	cv_init(&ss_stopped_cv);
+	advfs_cv_init(&ss_stopped_cv);
 
 	SMARTSTORE_LOCK_INIT(&SSLock);
 	SS_WRITE_LOCK(&SSLock);
@@ -1822,7 +1822,7 @@ ss_init_vd(vdT * vdp)
 	mutex_init3(&vdp->ssVolInfo.ssFragLk, 0,
 	    "ssFragLk", ADVvdT_ssFragLk_lockinfo);
 	mutex_lock(&vdp->ssVolInfo.ssVdMigLk);
-	cv_init(&vdp->ssVolInfo.ssContMig_cv);
+	advfs_cv_init(&vdp->ssVolInfo.ssContMig_cv);
 	vdp->ssVolInfo.ssVdMigState = SS_MIG_IDLE;
 	mutex_unlock(&vdp->ssVolInfo.ssVdMigLk);
 	vdp->ssVolInfo.ssVdMsgState = SS_MSG_IDLE;

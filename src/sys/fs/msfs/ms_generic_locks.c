@@ -658,7 +658,7 @@ _cond_broadcast(
 	thread_wakeup((vm_offset_t) cvp);
 }
 void
-cv_init(
+advfs_cv_init(
     cvT * cvp
 )
 {
@@ -699,7 +699,7 @@ lk_init(
 			stateLkT nilStateLk = {LKT_STATE, 0};
 			*lk = nilStateLk;
 #ifndef _KERNEL
-			cv_init(&lk->cv);
+			advfs_cv_init(&lk->cv);
 #ifdef ADVFS_DEBUG
 			lk->hdr.try_line_num = -1;
 #endif				/* ADVFS_DEBUG */
@@ -713,7 +713,7 @@ lk_init(
 			bufLkT NilBufLk = {LKT_BUF, 0};
 			*lk = NilBufLk;
 #ifndef _KERNEL
-			cv_init(&lk->bufCond);
+			advfs_cv_init(&lk->bufCond);
 #ifdef ADVFS_DEBUG
 			lk->hdr.try_line_num = -1;
 #endif				/* ADVFS_DEBUG */

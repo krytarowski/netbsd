@@ -365,7 +365,7 @@ init_access(bfAccessT * bfap)
 		bfap->ssHotCnt[wkday] = 0;
 	}
 	bfap->ssMigrating = SS_MSG_IDLE;
-	cv_init(&bfap->migWait);
+	advfs_cv_init(&bfap->migWait);
 	bfap->migPagesPending = 0;
 
 	/*
