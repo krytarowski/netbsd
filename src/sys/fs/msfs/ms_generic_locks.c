@@ -369,7 +369,7 @@ mutex_init3(
 
 
 void
-mutex_destroy(
+advfs_mutex_destroy(
     mutexT * mp			/* in - mutex */
 )
 {
@@ -397,11 +397,11 @@ mutex_destroy(
 
 	if (!found) {
 		/* Ooops! */
-		ADVFS_SAD1("mutex_destroy: unknown mutex ",
+		ADVFS_SAD1("advfs_mutex_destroy: unknown mutex ",
 		    (unsigned) mp);
 	}
 	if (mp->locked || (mp->lock_cnt > 0)) {
-		ADVFS_SAD1("mutex_destroy: mutex is 'in use'",
+		ADVFS_SAD1("advfs_mutex_destroy: mutex is 'in use'",
 		    (unsigned) mp);
 	}
 	/*

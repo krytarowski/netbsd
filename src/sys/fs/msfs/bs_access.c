@@ -4727,9 +4727,9 @@ bs_dealloc_access(bfAccessT * bfap)
 	/*
          * Mutex locks.
          */
-	mutex_destroy(&bfap->bfaLock);
-	mutex_destroy(&bfap->bfIoLock);
-	mutex_destroy(&bfap->actRangeLock);
+	advfs_mutex_destroy(&bfap->bfaLock);
+	advfs_mutex_destroy(&bfap->bfIoLock);
+	advfs_mutex_destroy(&bfap->actRangeLock);
 
 	/*
          * Complex locks.

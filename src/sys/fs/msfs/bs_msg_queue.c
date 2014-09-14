@@ -361,7 +361,7 @@ msgq_destroy(
 	ulmq_destroy_freelist(msgQ);
 
 	mutex_unlock(&msgQ->mutex);
-	mutex_destroy(&msgQ->mutex);
+	advfs_mutex_destroy(&msgQ->mutex);
 
 	ms_free(msgQ);
 

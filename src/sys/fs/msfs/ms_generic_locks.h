@@ -516,7 +516,7 @@ void _mutex_unlock(mutexT * mp, int ln, char *fn);
 
 void 
 mutex_init2(mutexT * mp, int num_cvs, char *name);
-void mutex_destroy(mutexT * mp);
+void advfs_mutex_destroy(mutexT * mp);
 void _cond_wait(cvT * cvp, mutexT * mp, int line_num, char *file_name);
 void _cond_broadcast(cvT * cvp, int ln, char *fn);
 void _cond_signal(cvT * cvp, int ln, char *fn);

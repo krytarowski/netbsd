@@ -309,7 +309,7 @@ bs_free_bsbuf(
 		ms_free(bp->ioList.ioDesc);
 	}
 	lk_destroy(&bp->lock);
-	mutex_destroy(&bp->bufLock);
+	advfs_mutex_destroy(&bp->bufLock);
 
 	ms_free(bp);
 }
@@ -3168,7 +3168,7 @@ bs_pinpg_direct(void *addr,
 	    number_to_write - *number_written, cred);
 	if (sts != EOK) {
 		lk_destroy(&bp->lock);
-		mutex_destroy(&bp->bufLock);
+		advfs_mutex_destroy(&bp->bufLock);
 		ms_free(bp);
 		return (sts);
 	}

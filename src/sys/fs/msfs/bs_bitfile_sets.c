@@ -2448,14 +2448,14 @@ bfs_dealloc(
 		BfsFreeListStats.allocCnt--;
 		mutex_unlock(&LookupMutex);
 
-		mutex_destroy(&bfSetp->setMutex);
+		advfs_mutex_destroy(&bfSetp->setMutex);
 
-		mutex_destroy(&bfSetp->cloneDelStateMutex);
+		advfs_mutex_destroy(&bfSetp->cloneDelStateMutex);
 		lk_destroy(&bfSetp->cloneDelState);
 
-		mutex_destroy(&bfSetp->accessChainLock);
+		advfs_mutex_destroy(&bfSetp->accessChainLock);
 
-		mutex_destroy(&bfSetp->bfSetMutex);
+		advfs_mutex_destroy(&bfSetp->bfSetMutex);
 
 		bfSetp->bfSetMagic |= MAGIC_DEALLOC;
 		ms_free(bfSetp);
