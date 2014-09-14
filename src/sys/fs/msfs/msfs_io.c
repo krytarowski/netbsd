@@ -51,7 +51,6 @@
 #include <sys/param.h>
 #include <sys/errno.h>
 #include <sys/buf.h>
-#include <sys/radset.h>
 #include <sys/ucred.h>		/* only for NOCRED */
 #include <sys/mount.h>
 #include <io/common/deveei.h>

@@ -53,7 +53,6 @@
 #include <fs/msfs/ftx_privates.h>
 #include <fs/msfs/ftx_agents.h>
 #include <fs/msfs/ms_assert.h>
-#include <sys/radset.h>
 #include <sys/kernel.h>
 #include <sys/time.h>
 #ifdef MSFS_CRASHTEST
