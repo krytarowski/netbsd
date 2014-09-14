@@ -50,7 +50,6 @@
 #include <fs/msfs/bs_stripe.h>
 #include <fs/msfs/bs_extents.h>
 #if 0 /* XXX: missing */
-#include <kern/sched_prim.h>
 #endif
 #include <fs/msfs/bs_msg_queue.h>
 

@@ -28,7 +28,6 @@
 
 #ifdef _KERNEL
 #if 0 /* XXX: missing */
-#include <kern/sched_prim.h>
 #endif
 #include <sys/lock.h>
 #include <sys/kernel.h>

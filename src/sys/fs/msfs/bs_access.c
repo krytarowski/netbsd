@@ -26,7 +26,6 @@
 #include <sys/param.h>
 #include <sys/mount.h>
 #if 0 /* XXX: MISSING */
-#include <kern/sched_prim.h>
 #endif
 
 #include <fs/msfs/ms_public.h>

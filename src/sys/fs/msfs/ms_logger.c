@@ -47,7 +47,6 @@
 #include <fs/msfs/ftx_privates.h>
 #include <sys/lock.h>
 #include <fs/msfs/ms_logger.h>
-#include <kern/sched_prim.h>
 
 #define ADVFS_MODULE MS_LOGGER
 
