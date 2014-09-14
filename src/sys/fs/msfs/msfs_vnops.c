@@ -41,7 +41,6 @@
 #include <fs/msfs/fs_dir_routines.h>
 #include <fs/msfs/fs_quota.h>
 #include <sys/buf.h>
-#include <sys/sec_objects.h>
 #include <sys/ioctl.h>
 #include <fs/msfs/bs_index.h>
 #include <fs/msfs/ms_assert.h>
