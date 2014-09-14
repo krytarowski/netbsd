@@ -45,7 +45,7 @@
 #include <fs/msfs/bs_index.h>
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_params.h>
-#include <unistd.h>
+#include <sys/unistd.h>
 #include <nfs/nfs.h>
 #if SEC_BASE
 #endif

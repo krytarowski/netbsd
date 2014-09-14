@@ -102,7 +102,7 @@
 /*
  * Access call.
  * These are defined here for use by access() system call.  User level
- * programs should get these definitions from <unistd.h>. Included here
+ * programs should get these definitions from <sys/unistd.h>. Included here
  * for historical reasons.
  */
 #define F_OK        0		/* does file exist */
