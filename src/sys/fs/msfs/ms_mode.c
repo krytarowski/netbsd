@@ -31,7 +31,7 @@
 
 #ifdef _KERNEL
 #include <sys/syslog.h>
-#include <sys/limits.h>
+#include <sys/syslimits.h>
 #else
 #include <stdlib.h>
 #endif				/* _KERNEL */
