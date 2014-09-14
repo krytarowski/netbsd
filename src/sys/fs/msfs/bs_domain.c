@@ -46,7 +46,6 @@
 
 #define ADVFS_MODULE    BS_DOMAIN
 
-#include <sys/dirent.h>
 #include <sys/types.h>
 #include <sys/systm.h>
 #include <sys/file.h>
