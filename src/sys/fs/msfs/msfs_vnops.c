@@ -25,7 +25,7 @@
 #include <sys/systm.h>
 #include <sys/time.h>
 #include <sys/vnode.h>
-#include <sys/vfs_proto.h>
+#include <sys/buf.h>
 #include <sys/mount.h>
 #include <sys/uio.h>
 #include <sys/errno.h>
