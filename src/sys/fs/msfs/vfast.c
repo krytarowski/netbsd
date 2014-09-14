@@ -60,7 +60,7 @@ msgQHT ssWorkQH;		/* ss work msg queue */
 static tpoolT ssListTpool;	/* pool of list worker threads */
 static tpoolT ssWorkTpool;	/* pool of ss general worker threads */
 
-lock_data_t SSLock;		/* complex lock for SS_is_running */
+rwlock_t SSLock;		/* complex lock for SS_is_running */
 
 #ifndef REPLICATED
 #define REPLICATED const

@@ -154,7 +154,7 @@ extern void advfs_range_init(void);
  * Global mutex and lock to serialize access to fileset (fileSetNode) list.
  */
 
-lock_data_t FilesetLock;
+rwlock_t FilesetLock;
 struct lockinfo *ADVFilesetLock_lockinfo;
 struct lockinfo *ADVquotaInfoT_qiLock;
 
