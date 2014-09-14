@@ -1,0 +1,2 @@
+- go for native condvar(9)
+- go for native mutexes, not wrappers around
