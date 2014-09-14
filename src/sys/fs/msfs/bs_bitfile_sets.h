@@ -28,7 +28,6 @@
 
 #ifdef _KERNEL
 #if 0 /* XXX: missing */
-#include <kern/e_dyn_hash.h>
 #endif
 #endif				/* _KERNEL */
 

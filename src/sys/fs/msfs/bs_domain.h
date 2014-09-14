@@ -32,7 +32,6 @@
 
 #include <fs/msfs/vfast.h>
 /* XXX: To be examined */
-/* #include <kern/e_dyn_hash.h> */
 #include <sys/rwlock.h>
 
 /*

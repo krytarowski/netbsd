@@ -29,7 +29,6 @@
 #include <sys/vnode.h>
 #include <fs/msfs/ms_assert.h>
 #ifdef _KERNEL
-#include <kern/e_dyn_hash.h>
 #endif
 #include <sys/rwlock.h>
 
