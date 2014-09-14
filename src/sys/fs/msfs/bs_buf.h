@@ -22,11 +22,10 @@
 #ifndef _BS_BUF_H_
 #define _BS_BUF_H_
 
-/* ifdef'd because sas/sys_advfs.c compilation has no vm_page.h.*/
-#ifdef _KERNEL
-#else
-typedef void *vm_page_t;	/* so bsBuf stays the same size */
-#endif				/* _KERNEL */
+#include <uvm/uvm.h>
+
+/* XXX: comment with bsBuf to be investigated */
+typedef struct vm_page *vm_page_t;	/*  so bsBuf stays the same size */
 
 #ifdef ADVFS_BSBUF_TRACE
 
