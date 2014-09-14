@@ -1287,7 +1287,7 @@ ms_uaprintf(
 );
 
 void
-     ms_pfflush();
+     ms_pfflush(void);
 
 /*
  * public bitfile set routines
