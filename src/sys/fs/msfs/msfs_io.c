@@ -56,7 +56,6 @@
 #include <sys/stdarg.h>
 
 #include <sys/syslog.h>
-#include <dec/binlog/binlog.h>
 
 #ifdef ADVFS_SMP_ASSERT
 static char *smdbg1 = "bs_startio:    bsBuf 0x%lx  (blockingQ)  vd 0x%lx\n";
