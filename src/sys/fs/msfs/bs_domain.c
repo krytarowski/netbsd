@@ -1656,7 +1656,6 @@ bs_bfdmn_deactivate(
 	statusT sts = EOK;
 	bfSetT *bfSetp;
 	int vdCnt;
-	bfTagT bfTag;
 	int isMount = flag & M_MSFS_MOUNT;
 	bfAccessT *badBfap;
 
