@@ -33,7 +33,6 @@
 #include <fs/msfs/fs_dir_routines.h>
 #include <sys/mount.h>
 #include <fs/msfs/ms_assert.h>
-#include <machine/vm_ubc.h>
 #include <fs/msfs/bs_index.h>
 #include <fs/msfs/bs_params.h>
 #include <sys/resource.h>
