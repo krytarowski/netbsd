@@ -33,7 +33,6 @@
 #include <sys/namei.h>
 #include <sys/stat.h>
 #include <sys/fcntl.h>
-#include <sys/flock.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/ftx_public.h>

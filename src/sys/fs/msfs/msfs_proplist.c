@@ -41,7 +41,6 @@
 #include <sys/conf.h>
 #include <sys/mount.h>
 #include <sys/vnode.h>
-#include <sys/flock.h>
 #include <ufs/quota.h>
 #include <ufs/inode.h>
 #include <ufs/fs.h>
