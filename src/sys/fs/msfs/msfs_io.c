@@ -55,7 +55,6 @@
 #include <sys/mount.h>
 #include <sys/stdarg.h>
 
-#include <sys/lwc.h>
 #include <sys/syslog.h>
 #include <dec/binlog/binlog.h>
 
