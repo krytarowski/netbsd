@@ -30,7 +30,6 @@
 #include <fs/msfs/fs_dir.h>	/* for fsContext def - bad layering? */
 #ifdef KERNEL
 #include <sys/vnode.h>
-#include <kern/event.h>
 #endif				/* KERNEL */
 #include <sys/rwlock.h>
 

@@ -42,7 +42,6 @@
 #include <sys/file.h>
 #include <sys/vnode.h>
 
-#include <kern/event.h>
 
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>

@@ -54,7 +54,6 @@
 #include <sys/radset.h>
 #include <sys/ucred.h>		/* only for NOCRED */
 #include <sys/mount.h>
-#include <kern/event.h>
 #include <io/common/deveei.h>
 #include <stdarg.h>
 
