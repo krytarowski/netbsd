@@ -24,7 +24,6 @@
 
 #ifdef _KERNEL			/* need this so user mode utils (msfsck.c) can
 				 * compile - ps */
-#include <vm/vm_ubc.h>
 #endif
 
 #include <sys/vnode.h>

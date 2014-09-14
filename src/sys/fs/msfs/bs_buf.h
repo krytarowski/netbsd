@@ -24,7 +24,6 @@
 
 /* ifdef'd because sas/sys_advfs.c compilation has no vm_page.h.*/
 #ifdef _KERNEL
-#include <vm/vm_page.h>
 #else
 typedef void *vm_page_t;	/* so bsBuf stays the same size */
 #endif				/* _KERNEL */
