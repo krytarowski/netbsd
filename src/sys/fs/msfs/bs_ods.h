@@ -977,7 +977,7 @@ typedef struct logPg {
  * Function prototypes for on-disk structure utility routines.               *
  *****************************************************************************/
 
-#ifdef KERNEL
+#ifdef _KERNEL
 int
 read_raw_page(
     struct vnode * vp,		/* in - device's vnode */
@@ -1010,5 +1010,5 @@ write_raw_sbm_page(
     struct bsStgBm * sbmPg	/* ptr to sbm buffer */
 );
 
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 #endif				/* BS_ODS */

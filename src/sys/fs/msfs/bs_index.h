@@ -34,7 +34,7 @@ typedef enum {
 	IDX_REMOVING_DIR,
 	IDX_RECOVERY
 }    idxCloseActionT;
-#ifdef KERNEL
+#ifdef _KERNEL
 
 statusT
 idx_remove_index_file(
@@ -156,7 +156,7 @@ typedef struct bsDirIdxRec {
 	bfAccessT *idx_bfap;
 	bfTagT index_tag;
 }           bsDirIdxRecT;
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 
 /* This record will be a new MCELL record associated with the index *
  *  file's MCELL. It will be updated every time there is a change to
@@ -173,7 +173,7 @@ typedef struct bsIdxBmtRec {
 	uint32T fname_levels;
 	uint32T ffree_levels;
 }           bsIdxBmtRecT;
-#ifdef KERNEL
+#ifdef _KERNEL
 
 typedef struct bsIdxRec {
 	ulong flags;		/* This field must not move ! */
@@ -182,7 +182,7 @@ typedef struct bsIdxRec {
 	ulong prune_key_ffree;
 	ulong prune_key_fname;
 }        bsIdxRecT;
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 
 typedef struct bsUnkIdxRec {
 	ulong flags;

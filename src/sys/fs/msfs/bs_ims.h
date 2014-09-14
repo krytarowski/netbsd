@@ -28,9 +28,9 @@
 
 #include <fs/msfs/bs_ods.h>
 #include <fs/msfs/fs_dir.h>	/* for fsContext def - bad layering? */
-#ifdef KERNEL
+#ifdef _KERNEL
 #include <sys/vnode.h>
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 #include <sys/rwlock.h>
 
 /*

@@ -35,8 +35,8 @@
 #define REUSABLE_TAGS
 #endif
 
-#ifdef KERNEL
-#endif				/* KERNEL */
+#ifdef _KERNEL
+#endif				/* _KERNEL */
 
 #include <fs/msfs/advfs_modules.h>
 
@@ -1273,21 +1273,21 @@ domain_panic(struct domain * dmnP,
 
 void
 ms_printf(
-#ifndef KERNEL
+#ifndef _KERNEL
     char *msg,...
 #endif
 );
 
 void
 ms_uprintf(
-#ifndef KERNEL
+#ifndef _KERNEL
     char *msg,...
 #endif
 );
 
 void
 ms_uaprintf(
-#ifndef KERNEL
+#ifndef _KERNEL
     char *msg,...
 #endif
 );

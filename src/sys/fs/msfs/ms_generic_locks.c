@@ -41,11 +41,11 @@
 
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
-#ifdef KERNEL
+#ifdef _KERNEL
 #include <sys/syslog.h>
 #include <sys/kernel.h>
 #include <sys/time.h>
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 
 static lkHdrT *find_locked_lock(lkHdrT * lk);
 
@@ -88,7 +88,7 @@ decl_simple_lock_info(, msfs_mp_mutex_lockinfo)
 	void
 	     trace_hdr(void)
 {
-#ifdef KERNEL
+#ifdef _KERNEL
 	struct timeval hdrTime;
 	int s;
 	TIME_READ(hdrTime);
@@ -111,9 +111,9 @@ decl_simple_lock_info(, msfs_mp_mutex_lockinfo)
 	    (time.tv_usec >> 10),
 	    tid.pta_magic);
 
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 }
-#ifdef KERNEL
+#ifdef _KERNEL
 char *
 strrchr(char *s, char c)
 {
@@ -697,7 +697,7 @@ lk_init(
 			stateLkT *lk = (void *) lkHdr;
 			stateLkT nilStateLk = {LKT_STATE, 0};
 			*lk = nilStateLk;
-#ifndef KERNEL
+#ifndef _KERNEL
 			cv_init(&lk->cv);
 #ifdef ADVFS_DEBUG
 			lk->hdr.try_line_num = -1;
@@ -711,7 +711,7 @@ lk_init(
 			bufLkT *lk = (void *) lkHdr;
 			bufLkT NilBufLk = {LKT_BUF, 0};
 			*lk = NilBufLk;
-#ifndef KERNEL
+#ifndef _KERNEL
 			cv_init(&lk->bufCond);
 #ifdef ADVFS_DEBUG
 			lk->hdr.try_line_num = -1;

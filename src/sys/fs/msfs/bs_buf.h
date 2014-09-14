@@ -23,11 +23,11 @@
 #define _BS_BUF_H_
 
 /* ifdef'd because sas/sys_advfs.c compilation has no vm_page.h.*/
-#ifdef KERNEL
+#ifdef _KERNEL
 #include <vm/vm_page.h>
 #else
 typedef void *vm_page_t;	/* so bsBuf stays the same size */
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 
 #ifdef ADVFS_BSBUF_TRACE
 
@@ -369,7 +369,7 @@ bs_pinpg_ftx(bfPageRefHT * bfPageRefH,		/* out */
     bfPageRefHintT refHint,	/* in */
     ftxHT ftxH);		/* in */
 
-#ifdef KERNEL
+#ifdef _KERNEL
 statusT
 bs_refpg_get(
     struct bfAccess * bfap,	/* in */
@@ -423,7 +423,7 @@ bs_pinpg_direct(void *bfPageAddr,	/* in */
     int cowingDone,		/* in */
     struct ucred * cred);	/* in */
 
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 
 void
 set_state(

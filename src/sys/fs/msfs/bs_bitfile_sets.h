@@ -272,7 +272,7 @@ extern bfSetT nilBfSet;
 						 * flags */
 #define BFS_IM_DIRECTIO        0x00010000	/* Default direct I/O */
 
-#ifdef KERNEL
+#ifdef _KERNEL
 /*
  * MACROs for working with the BfSetHashTbl
  */
@@ -519,5 +519,5 @@ int get_clu_clone_locks(bfAccessT *, struct fsContext *, bfSetT **, bfAccessT **
 
 void release_clu_clone_locks(bfAccessT *, bfSetT *, bfAccessT *, int);
 
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 #endif				/* _BS_BITFILE_SETS_ */

@@ -1015,7 +1015,7 @@ typedef union {
 	opSSGetFraglistT ssGetFraglist;
 	opSSGetHotlistT ssGetHotlist;
 }     libParamsT;
-#ifndef KERNEL
+#ifndef _KERNEL
 
 static mlBfDomainIdT nilMlBfDomainIdT = {0};
 
@@ -1490,7 +1490,7 @@ msfs_get_name(
     mlBfTagT * parentTag	/* out */
 );
 
-#endif				/* KERNEL */
+#endif				/* _KERNEL */
 
 #define GDSERRMSG( gds_err ) gds_errlst[ (gds_err) ]
 extern char *gds_errlst[];
