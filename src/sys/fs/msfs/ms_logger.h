@@ -134,7 +134,7 @@ typedef struct wtPgDesc {
  */
 typedef struct logDesc {
 #ifdef _KERNEL
-	rwlock_t descLock;	/* Protects all fields in the descriptor */
+	krwlock_t descLock;	/* Protects all fields in the descriptor */
 #endif
 	struct domain *dmnP;	/* Domain pointer for log bitfile */
 	struct bfAccess *logAccP;	/* Ptr to log's bf access struct */
@@ -153,7 +153,7 @@ typedef struct logDesc {
 	unsigned reuseLastPg:1;	/* 1 = repin last page after flushing */
 	unsigned:27;
 #ifdef _KERNEL
-	rwlock_t flushLock;	/* Protects flushLsn, flushing, wrtPgD */
+	krwlock_t flushLock;	/* Protects flushLsn, flushing, wrtPgD */
 #endif
 	lsnT flushLsn;		/* lsn we're flushing to */
 	wtPgDescT *wrtPgD;	/* Desc for current log end page */

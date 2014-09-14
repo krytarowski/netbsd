@@ -398,7 +398,7 @@ typedef struct domain {
 	struct bfAccess *logAccessp;	/* bfAccess pointer for log */
 	ftxTblDT ftxTbld;	/* ftx table descriptor */
 #ifdef ADVFS_SMP_ASSERT		/* For debugging only, to check for lock */
-	rwlock_t ftxSlotLock;/* hierarchy violations between locks    */
+	krwlock_t ftxSlotLock;/* hierarchy violations between locks    */
 #endif				/* and starting a root transaction       */
 	struct bsBuf *pinBlockBuf;	/* the current pin block buffer, if
 					 * any */
@@ -426,7 +426,7 @@ typedef struct domain {
 	ftxCRLAT dirtyBufLa;	/* oldest dirty buffer log address */
 
 	/* This lock protects the storage class table. */
-	rwlock_t scLock;
+	krwlock_t scLock;
 	serviceClassTblT *scTbl;/* service class table */
 
 	/*
@@ -440,7 +440,7 @@ typedef struct domain {
 	int vdCnt;		/* number of vd's in vdpTbl */
 	struct vd *vdpTbl[BS_MAX_VDI];	/* table of vd ptrs */
 
-	rwlock_t rmvolTruncLk;	/* serializes truncation and rmvol */
+	krwlock_t rmvolTruncLk;	/* serializes truncation and rmvol */
 
 	struct bcStat bcStat;	/* per domain buffer cache stats */
 	struct bmtStat bmtStat;	/* per domain BMT stats */
@@ -453,7 +453,7 @@ typedef struct domain {
 	int dmn_panic;		/* a boolean for implimenting domain panic */
 	xidRecoveryT xidRecovery;	/* Holds CFS xid recovery status
 					 * information */
-	rwlock_t xidRecoveryLk;	/* protects the xidRecovery structure */
+	krwlock_t xidRecoveryLk;	/* protects the xidRecovery structure */
 	u_int smsync_policy;	/* mirror of M_SMSYNC2 flag */
 	struct bsMPg *metaPagep;/* ptr to page 0 buffer */
 	int fs_full_time;	/* last time fs full msg logged */
@@ -575,7 +575,7 @@ domain_trace(domainT * dmnp,
 
 #define DMNTBL_UNLOCK( sLk )  lock_done( sLk );
 
-extern rwlock_t DmnTblLock;
+extern krwlock_t DmnTblLock;
 
 /* Dynamic hash macros */
 

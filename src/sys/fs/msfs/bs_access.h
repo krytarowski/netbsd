@@ -223,11 +223,11 @@ typedef struct bfAccess {
 					 * this page */
 	unsigned long seqWritePgCnt;	/* Track # of sequentially written
 					 * pages */
-	rwlock_t trunc_xfer_lk;	/* prevent clone reads during orig
+	krwlock_t trunc_xfer_lk;	/* prevent clone reads during orig
 					 * truncation */
-	rwlock_t cow_lk;
+	krwlock_t cow_lk;
 
-	rwlock_t clu_clonextnt_lk;	/* clusters only lock protecting clone
+	krwlock_t clu_clonextnt_lk;	/* clusters only lock protecting clone
 					 * xtnts */
 	unsigned int cloneXtntsRetrieved;	/* Indicates cluster client
 						 * obtained xtnts */

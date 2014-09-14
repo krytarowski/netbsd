@@ -95,7 +95,7 @@ extern void bs_lock_mgr_init(void);
 
 #define ADVFS_MODULE BS_MISC
 
-rwlock_t InitLock;
+krwlock_t InitLock;
 event_t MsfsDbgEvent;
 
 struct lockinfo *ADVInitLock_info;
