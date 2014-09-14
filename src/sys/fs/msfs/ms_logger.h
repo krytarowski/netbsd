@@ -26,6 +26,8 @@
 #ifndef _MS_LOGGERH_
 #define _MS_LOGGERH_
 
+#include <sys/rwlock.h>
+
 struct logPg;
 struct bfAccess;
 struct logDesc;
