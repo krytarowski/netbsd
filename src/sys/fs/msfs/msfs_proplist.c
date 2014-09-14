@@ -47,7 +47,6 @@
 #include <sys/syslimits.h>
 #include <kern/assert.h>
 #endif
-#include <sys/proplist.h>
 
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
