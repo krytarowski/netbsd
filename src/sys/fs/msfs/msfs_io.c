@@ -53,7 +53,6 @@
 #include <sys/buf.h>
 #include <sys/ucred.h>		/* only for NOCRED */
 #include <sys/mount.h>
-#include <io/common/deveei.h>
 #include <stdarg.h>
 
 #include <sys/lwc.h>
