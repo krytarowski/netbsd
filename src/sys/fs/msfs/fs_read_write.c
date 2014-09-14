@@ -55,7 +55,6 @@
 #include <fs/msfs/ftx_public.h>
 #include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_params.h>
-#include <sys/sp_attr.h>
 #include <sys/syslog.h>
 #include <sys/fcntl.h>
 

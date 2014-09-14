@@ -28,7 +28,6 @@
  */
 #include <sys/security.h>
 #include <sys/secpolicy.h>
-#include <sys/sp_attr.h>
 
 #include <sys/param.h>
 #include <sys/systm.h>
