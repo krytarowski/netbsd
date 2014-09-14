@@ -172,7 +172,7 @@ typedef struct bfSet {
 	dyn_hashlinks_w_keyT hashlinks;	/* dyn_hashtable links */
 	char bfSetName[BS_SET_NAME_SZ];	/* bitfile-set's name */
 	bfSetIdT bfSetId;	/* bitfile-set's ID */
-	uint_t bfSetMagic;	/* magic number: structure validation */
+	u_int bfSetMagic;	/* magic number: structure validation */
 	int fsRefCnt;		/* current number of bfs_access() accessors */
 	domainT *dmnP;		/* pointer to BF-set's domain structure */
 	bfsQueueT bfSetList;	/* list of bfSetT's associated with this
