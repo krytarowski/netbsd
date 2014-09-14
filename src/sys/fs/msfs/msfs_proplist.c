@@ -26,7 +26,6 @@
 /*
  * INCLUDES
  */
-#include <sys/secpolicy.h>
 
 #include <sys/param.h>
 #include <sys/systm.h>

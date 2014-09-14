@@ -42,7 +42,6 @@
 #if     SEC_BASE
 #endif
 #if     SEC_ARCH
-#include <sys/secpolicy.h>
 #endif
 
 #include <sys/param.h>
