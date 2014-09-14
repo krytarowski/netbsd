@@ -71,7 +71,7 @@
 #include <sys/ioctl.h>
 #include <sys/disklabel.h>
 #include <fs/msfs/bs_params.h>
-#include <sys/syslog_pri.h>
+#include <sys/syslog.h>
 #include <fs/msfs/bs_freeze.h>
 #include <fs/msfs/bs_domain.h>
 

@@ -57,7 +57,7 @@
 #include <stdarg.h>
 
 #include <sys/lwc.h>
-#include <sys/syslog_pri.h>
+#include <sys/syslog.h>
 #include <dec/binlog/binlog.h>
 
 #ifdef ADVFS_SMP_ASSERT
