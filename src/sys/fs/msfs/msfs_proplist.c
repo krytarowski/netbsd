@@ -42,7 +42,7 @@
 #include <sys/vnode.h>
 #include <ufs/ufs/quota.h>
 #include <ufs/ufs/inode.h>
-#include <ufs/ufs/fs.h>
+#include <ufs/ffs/fs.h>
 #if	MACH
 #include <sys/syslimits.h>
 #include <kern/assert.h>
