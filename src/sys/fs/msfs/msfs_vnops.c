@@ -49,7 +49,6 @@
 #include <nfs/nfs.h>
 #if SEC_BASE
 #endif
-#include <builtin/ux_exception.h>
 #include <sys/file.h>
 
 extern void *BsAccessHashTbl;
