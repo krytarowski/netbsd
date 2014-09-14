@@ -47,7 +47,6 @@
 #include <sys/errno.h>
 #include <fs/msfs/ms_osf.h>
 #include <sys/conf.h>
-#include <sys/unix_defs.h>
 #include <sys/mount.h>
 #include <sys/vnode.h>
 #include <sys/buf.h>
