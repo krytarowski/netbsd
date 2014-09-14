@@ -49,7 +49,6 @@
 #include <fs/msfs/ms_osf.h>
 
 #include <sys/syslog.h>
-#include <mach/std_types.h>
 
 #define BUF_WRITE_LIM 5
 #define DEV_LOCKED 1
