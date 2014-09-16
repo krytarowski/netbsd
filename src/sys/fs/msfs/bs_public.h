@@ -1241,10 +1241,10 @@ extern char *SadFmt3;
     advfs_sad( __FILE__, __LINE__, SadFmt3, msg, (n1), (n2), (n3) );
 
 void
-advfs_sad(char *module,
+advfs_sad(const char *module,
     int line,
     char *fmt,
-    char *msg,
+    const char *msg,
     long n1,
     long n2,
     long n3);
