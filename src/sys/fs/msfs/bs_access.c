@@ -237,7 +237,7 @@ decl_simple_lock_info(, ADVBfactRangeLock_info)
 	extern int TraceSequence;
 	tagTraceT *tt;
 
-	simple_lock(&TraceLock);
+	mutex_enter(&TraceLock);
 
 	tt = &TagTrace[hash & (TAG_TRACE_NUM_BUCKETS - 1)];
 	tt->tagTracePtr = (tt->tagTracePtr + 1) % TAG_TRACE_HISTORY;
@@ -251,7 +251,7 @@ decl_simple_lock_info(, ADVBfactRangeLock_info)
 	te->qual = (signed) qual;
 	te->val = value;
 
-	simple_unlock(&TraceLock);
+	mutex_exit(&TraceLock);
 }
 #endif
 
