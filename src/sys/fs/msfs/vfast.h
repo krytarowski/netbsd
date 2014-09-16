@@ -22,6 +22,8 @@
 #ifndef _SS_H_
 #define _SS_H_
 
+#include <sys/clock.h>
+
 /* include header files */
 #include <fs/msfs/bs_ods.h>
 #include <fs/msfs/bs_msg_queue.h>
@@ -32,7 +34,7 @@
      * on a Monday.  This will not be correct if YRREF \
      * changes!                                        \
      */                                                \
-    MS_SMP_ASSERT(YRREF == 1970);                      \
+    MS_SMP_ASSERT(POSIX_BASE_YEAR == 1970);            \
     newday = (tv_sec / SECDAY + 4) % 7;                \
 }
 
