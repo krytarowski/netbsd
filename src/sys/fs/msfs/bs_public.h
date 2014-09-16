@@ -1259,12 +1259,12 @@ advfs_sad(const char *module,
 
 void
 _domain_panic(struct domain * dmnP,
-    char *msg,
+    const char *msg,
     int flags
 );
 void
 domain_panic(struct domain * dmnP,
-    char *format,
+    const char *format,
     ...
 );
 
