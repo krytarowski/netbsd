@@ -43,6 +43,7 @@
 #endif
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
+#include <fs/msfs/bs_access.h>
 
 #define ADVFS_MODULE BS_CREATE
 
