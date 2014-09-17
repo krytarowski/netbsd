@@ -1172,7 +1172,7 @@ void
 _ms_free(
     void *ptr,
     int ln,			/* in */
-    char *fn			/* in */
+    const char *fn			/* in */
 
 );
 
