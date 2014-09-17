@@ -282,7 +282,7 @@ rbf_int_create(
 	*tag = mcellUId.ut.tag;
 	return (EOK);
 
-HANDLE_EXCEPTION:
+HANDLE_EXCEPTION: ;
 
 	if (bfap) {
 		mutex_lock(&bfap->bfaLock);
