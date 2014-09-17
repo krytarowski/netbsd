@@ -23,6 +23,7 @@
 #define _BS_BUF_H_
 
 #include <uvm/uvm.h>
+#include <sys/ucred.h>
 
 /* XXX: comment with bsBuf to be investigated */
 typedef struct vm_page *vm_page_t;	/*  so bsBuf stays the same size */
@@ -419,7 +420,7 @@ bs_pinpg_direct(void *bfPageAddr,	/* in */
     int *number_written,	/* out */
     int *aio_flag,		/* out */
     int cowingDone,		/* in */
-    struct ucred * cred);	/* in */
+    struct uucred * cred);	/* in */
 
 #endif				/* _KERNEL */
 

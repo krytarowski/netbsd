@@ -113,7 +113,7 @@ bcopy_frag(
 static statusT
 fs_write_direct(bfAccessT * bfap,
     struct uio * uio,
-    struct ucred * cred,
+    struct uucred * cred,
     int *number_to_write,
     unsigned long byte_offset_in_page,
     int cowingDone,
@@ -152,7 +152,7 @@ fs_zero_fill_pages(
     int data_logging,		/* in - is data logging on/off? */
     int sparse_alloc,		/* in - are we zero-filling a page allocated
 				 * for a sparse write? */
-    struct ucred * cred		/* in - credentials of caller */
+    struct uucred * cred		/* in - credentials of caller */
 )
 {
 	statusT sts;
@@ -577,7 +577,7 @@ fs_write(
     struct vnode * vp,		/* in - vnode of file to write */
     struct uio * uio,		/* in - structure for uiomove */
     int ioflag,			/* in - flags - append, sync */
-    struct ucred * cred		/* in - credentials of caller */
+    struct uucred * cred		/* in - credentials of caller */
 )
 {
 	statusT ret;
@@ -1937,7 +1937,7 @@ fs_update_times(struct vnode * vp, int attr_flags)
  *
  *    bfAccessT *bfap                    Bitfile Access Pointer (in)
  *    struct uio *uio                    UIO pointer (in)
- *    struct ucred *cred
+ *    struct uucred *cred
  *    int *number_to_write               Number of bytes to write/written.
  *                                       (in/out)
  *    unsigned long byte_offset_in_page  Starting byte offset into first page
@@ -1953,7 +1953,7 @@ fs_update_times(struct vnode * vp, int attr_flags)
 static statusT
 fs_write_direct(bfAccessT * bfap,
     struct uio * uio,
-    struct ucred * cred,
+    struct uucred * cred,
     int *number_to_write,
     unsigned long byte_offset_in_page,
     int cowingDone,
@@ -2561,7 +2561,7 @@ fs_write_add_stg(
 					 * written */
     unsigned long file_size,	/* in - bytes in file */
     unsigned int starting_byte_in_page,	/* in - first byte written in page */
-    struct ucred * cred,	/* in - credentials of caller */
+    struct uucred * cred,	/* in - credentials of caller */
     int add_stg_flags,		/* in - control bit flags */
     int *pgs_allocated		/* out - # pgs allocated */
 )
@@ -2996,7 +2996,7 @@ fs_read(
     struct vnode * vp,		/* in - vnode of file to read    */
     struct uio * uio,		/* in - structure for uiomove    */
     int ioflag,			/* in - includes sync i/o flags  */
-    struct ucred * cred		/* in - credentials of caller    */
+    struct uucred * cred		/* in - credentials of caller    */
 )
 {
 	statusT ret;
@@ -3931,7 +3931,7 @@ EXIT:
 statusT
 copy_and_del_frag(
     struct vnode * vp,
-    struct ucred * cred,
+    struct uucred * cred,
     int flushit,
     ftxHT ftxH
 )

@@ -2015,7 +2015,7 @@ advfs_quotactl(
 	int root_check = TRUE;	/* Most commands require root user check */
 	uid_t ruid;
 	struct fileSetNode *dnp = GETFILESETNODE(mp);
-	struct ucred *credp = u.u_cred;
+	struct uucred *credp = u.u_cred;
 	char *setName = NULL;
 	char *dmnName = NULL;
 	char uid_str[20];

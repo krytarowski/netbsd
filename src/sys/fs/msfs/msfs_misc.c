@@ -1444,7 +1444,7 @@ msfs_putpage(
     vm_page_t * pl,
     int pcnt,
     int flags,
-    struct ucred * cred)
+    struct uucred * cred)
 {
 	vm_page_t pp, plp;
 	bfPageRefHT page_ref;
@@ -1619,7 +1619,7 @@ msfs_getpage(
     int plsz,
     vm_policy_t vmp,
     int ubc_flags,
-    struct ucred * cred)
+    struct uucred * cred)
 {
 	struct vnode *vp;
 	struct fsContext *contextp;
@@ -2118,7 +2118,7 @@ msfs_mmap(register struct vnode * vp,
     vm_prot_t prot,
     vm_prot_t maxprot,
     int flags,
-    struct ucred * cred)
+    struct uucred * cred)
 {
 	struct vp_mmap_args args;
 	register struct vp_mmap_args *ap = &args;
@@ -2333,7 +2333,7 @@ msfs_unset_mmap(struct vnode * vp)
 msfs_bread(register struct vnode * vp,
     off_t lbn,
     struct buf ** bpp,
-    struct ucred * cred)
+    struct uucred * cred)
 {
 	vm_page_t pl[VP_PAGELIST + 1];
 	register vm_page_t *pp, lp, fp;

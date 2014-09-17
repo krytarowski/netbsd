@@ -55,7 +55,7 @@ typedef struct quotaInfo {
 	char qiFlags;		/* flags, see below */
 	uint32T qiPgSz;		/* page size */
 	uint32T qiFilePgs;	/* pages allocated to quota file */
-	struct ucred *qiCred;	/* credentials */
+	struct uucred *qiCred;	/* credentials */
 	/*
          * This lock is protected by the filesetMutex in the fileSetNode.
          * The lock itself serializes adding storage to the quota file.
