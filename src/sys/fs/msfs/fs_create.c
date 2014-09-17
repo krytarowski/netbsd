@@ -57,7 +57,6 @@
 #include <sys/mount.h>
 #include <sys/ucred.h>
 #include <fs/msfs/bs_params.h>
-#include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_index.h>
 
 #define ADVFS_MODULE FS_CREATE

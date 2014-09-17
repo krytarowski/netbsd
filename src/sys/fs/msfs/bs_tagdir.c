@@ -41,7 +41,6 @@
 #endif
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
-#include <fs/msfs/ms_assert.h>
 #include <fs/msfs/ms_osf.h>
 
 #define ADVFS_MODULE BS_TAGDIR

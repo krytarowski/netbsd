@@ -55,7 +55,6 @@
 #include <sys/kernel.h>
 #include <sys/time.h>
 #include <fs/msfs/bs_params.h>
-#include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_msg_queue.h>
 
 #define ROOTMASK 0755

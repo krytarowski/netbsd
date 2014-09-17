@@ -28,7 +28,6 @@
  */
 
 #include <fs/msfs/ms_public.h>
-#include <fs/msfs/ms_assert.h>
 
 #ifdef _KERNEL
 #include <sys/syslog.h>

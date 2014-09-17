@@ -57,7 +57,6 @@
 #include <sys/ucred.h>
 #include <sys/mount.h>
 #include <fs/msfs/bs_params.h>
-#include <fs/msfs/ms_assert.h>
 
 #define ADVFS_MODULE FS_FILE_SETS
 

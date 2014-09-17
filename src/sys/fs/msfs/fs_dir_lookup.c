@@ -53,7 +53,6 @@
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/ms_osf.h>
 #include <sys/vnode.h>
-#include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_msg_queue.h>
 #include <fs/msfs/bs_index.h>
 

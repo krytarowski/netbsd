@@ -30,7 +30,6 @@
 #include <sys/types.h>
 #include <sys/errno.h>
 #include <machine/limits.h>
-#include <fs/msfs/ms_assert.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/bs_delete.h>

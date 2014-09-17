@@ -44,7 +44,6 @@
 #include <sys/buf.h>
 #include <sys/ioctl.h>
 #include <fs/msfs/bs_index.h>
-#include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_params.h>
 #include <sys/unistd.h>
 #include <nfs/nfs.h>

@@ -38,7 +38,6 @@
 #endif
 #include <fs/msfs/fs_dir_routines.h>
 #include <fs/msfs/fs_file_sets.h>
-#include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_index.h>
 #include <fs/msfs/ms_osf.h>
 #include <sys/buf.h>

@@ -49,7 +49,6 @@
 #include <fs/msfs/bs_ods.h>
 #include <fs/msfs/bs_service_classes.h>
 #include <fs/msfs/bs_stripe.h>
-#include <fs/msfs/ms_assert.h>
 
 #define ADVFS_MODULE BS_STRIPE
 

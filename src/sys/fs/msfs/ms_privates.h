@@ -127,7 +127,6 @@
 
 #if 0 /* missing */
 #endif
-#include <fs/msfs/ms_assert.h>
 #define ASSERT_NO_LOCKS()     KASSERT(current_thread()->lock_count == 0)
 
 #endif

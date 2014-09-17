@@ -63,7 +63,6 @@
 #include <fs/msfs/fs_dir_routines.h>
 #include <fs/msfs/ms_generic_locks.h>
 #include <fs/msfs/fs_quota.h>
-#include <fs/msfs/ms_assert.h>
 #include <fs/msfs/msfs_syscalls.h>
 #include <fs/msfs/bs_index.h>
 #include <sys/proc.h>

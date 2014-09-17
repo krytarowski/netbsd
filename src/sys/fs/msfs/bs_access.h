@@ -27,7 +27,6 @@
 #endif
 
 #include <sys/vnode.h>
-#include <fs/msfs/ms_assert.h>
 #ifdef _KERNEL
 #endif
 #include <sys/rwlock.h>

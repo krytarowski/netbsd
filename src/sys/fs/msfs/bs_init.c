@@ -45,7 +45,6 @@
 #include <sys/time.h>
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
-#include <fs/msfs/ms_assert.h>
 #include <fs/msfs/bs_migrate.h>
 #include <fs/msfs/bs_delete.h>
 #ifndef _KERNEL
