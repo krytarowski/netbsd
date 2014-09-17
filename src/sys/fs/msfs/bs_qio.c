@@ -193,32 +193,32 @@ check_queue(ioDescHdrT * qhdr)
 
 	while (iop != (ioDescT *) qhdr) {
 		cnt++;
-		MS_SMP_ASSERT(iop->ioQ == qhdr->ioQ);
-		MS_SMP_ASSERT(iop->bsBuf->bufMagic == BUFMAGIC);
+		KASSERT(iop->ioQ == qhdr->ioQ);
+		KASSERT(iop->bsBuf->bufMagic == BUFMAGIC);
 		iop = iop->fwd;
 		if (cnt >= orig_len)
 			break;
 	}
 
-	MS_SMP_ASSERT(orig_len == qhdr->ioQLen);	/* should not change */
-	MS_SMP_ASSERT(cnt == qhdr->ioQLen);
-	MS_SMP_ASSERT(iop == (ioDescT *) qhdr);
+	KASSERT(orig_len == qhdr->ioQLen);	/* should not change */
+	KASSERT(cnt == qhdr->ioQLen);
+	KASSERT(iop == (ioDescT *) qhdr);
 
 	iop = qhdr->bwd;
 	cnt = 0;
 	/* scan the queue backwards */
 	while (iop != (ioDescT *) qhdr) {
 		cnt++;
-		MS_SMP_ASSERT(iop->ioQ == qhdr->ioQ);
-		MS_SMP_ASSERT(iop->bsBuf->bufMagic == BUFMAGIC);
+		KASSERT(iop->ioQ == qhdr->ioQ);
+		KASSERT(iop->bsBuf->bufMagic == BUFMAGIC);
 		iop = iop->bwd;
 		if (cnt >= orig_len)
 			break;
 	}
 
-	MS_SMP_ASSERT(orig_len == qhdr->ioQLen);	/* should not change */
-	MS_SMP_ASSERT(cnt == qhdr->ioQLen);
-	MS_SMP_ASSERT(iop == (ioDescT *) qhdr);
+	KASSERT(orig_len == qhdr->ioQLen);	/* should not change */
+	KASSERT(cnt == qhdr->ioQLen);
+	KASSERT(iop == (ioDescT *) qhdr);
 
 	return;
 }
@@ -277,7 +277,7 @@ bs_q_blocking(
 			asm("ldl $31,0(%0)", (tmp->fwd->bsBuf));
 		}
 		mutex_lock(&bp->bufLock);
-		MS_SMP_ASSERT(bp->lock.state & (IO_TRANS | BUSY));
+		KASSERT(bp->lock.state & (IO_TRANS | BUSY));
 		if (!(bp->lock.state & IO_COUNTED)) {
 			if (bp->lock.state & READING)
 				read_count++;
@@ -355,7 +355,7 @@ bs_q_flushq(
 			asm("ldl $31,0(%0)", (tmp->fwd->bsBuf));
 		}
 		mutex_lock(&bp->bufLock);
-		MS_SMP_ASSERT(bp->lock.state & (IO_TRANS | BUSY));
+		KASSERT(bp->lock.state & (IO_TRANS | BUSY));
 		if (!(bp->lock.state & IO_COUNTED)) {
 			if (bp->lock.state & READING)
 				read_count++;
@@ -364,7 +364,7 @@ bs_q_flushq(
 
 			bp->lock.state |= IO_COUNTED;
 		}
-		MS_SMP_ASSERT((bp->lock.state & RAWRW) || bp->vmpage->pg_busy);
+		KASSERT((bp->lock.state & RAWRW) || bp->vmpage->pg_busy);
 
 		mutex_unlock(&bp->bufLock);
 		tmp = tmp->fwd;
@@ -434,7 +434,7 @@ bs_q_ubcreq(
 			asm("ldl $31,0(%0)", (tmp->fwd->bsBuf));
 		}
 		mutex_lock(&bp->bufLock);
-		MS_SMP_ASSERT(bp->lock.state & (IO_TRANS | BUSY));
+		KASSERT(bp->lock.state & (IO_TRANS | BUSY));
 		if (!(bp->lock.state & IO_COUNTED)) {
 			if (bp->lock.state & READING)
 				read_count++;
@@ -443,7 +443,7 @@ bs_q_ubcreq(
 
 			bp->lock.state |= IO_COUNTED;
 		}
-		MS_SMP_ASSERT((bp->lock.state & RAWRW) || bp->vmpage->pg_busy);
+		KASSERT((bp->lock.state & RAWRW) || bp->vmpage->pg_busy);
 
 		mutex_unlock(&bp->bufLock);
 		tmp = tmp->fwd;
@@ -576,7 +576,7 @@ bs_aio_write_cleanup(
 
 	s = splbio();
 	VN_OUTPUT_LOCK(vp);
-	MS_SMP_ASSERT(vp->v_numoutput > 0);
+	KASSERT(vp->v_numoutput > 0);
 	vp->v_numoutput--;
 	if ((vp->v_numoutput == 0) && (vp->v_outflag & VOUTWAIT)) {
 		vp->v_outflag &= ~VOUTWAIT;
@@ -658,7 +658,7 @@ bs_io_complete(
 	int radId = 0;
 	int ubc_flags;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
 
 	/*
          * Raw I/O's that do not have UBC pages come through this
@@ -686,7 +686,7 @@ bs_io_complete(
 	if (bp->lock.state & WRITING) {
 
 		/* be sure that this buffer is on dirty list */
-		MS_SMP_ASSERT(bp->accFwd && bp->lock.state & ACC_DIRTY);
+		KASSERT(bp->accFwd && bp->lock.state & ACC_DIRTY);
 
 		/* Seize file's bfIoLock while moving buffer around on dirty
 		 * list. */
@@ -797,7 +797,7 @@ bs_io_complete(
 
 		dmnP->contBits |= contBits;
 
-		MS_SMP_ASSERT(bfap->dmnP->logVdRadId != -1);
+		KASSERT(bfap->dmnP->logVdRadId != -1);
 		/* this means the log has NOT been initialized if the log
 		 * isn't initialized, we can't do log I/O...  panic the system */
 		radId = bfap->dmnP->logVdRadId;
@@ -812,7 +812,7 @@ bs_io_complete(
 					break;
 				}
 			}
-			MS_SMP_ASSERT(IoMsgQH[radId] != NULL);
+			KASSERT(IoMsgQH[radId] != NULL);
 		}
 		msg = (ioThreadMsgT *) msgq_alloc_msg(IoMsgQH[radId]);
 		if (msg) {
@@ -884,7 +884,7 @@ clearSignal:
 	} else {
 		/* There is an active range associated with this buffer.
 		 * Decrement the # IOs outstanding in the range. */
-		MS_SMP_ASSERT(bp->actRangep->arIosOutstanding > 0);
+		KASSERT(bp->actRangep->arIosOutstanding > 0);
 		mutex_lock(&bp->bfAccess->actRangeLock);
 		bp->actRangep->arIosOutstanding--;
 		if (bp->directIO && bp->aio_bp) {
@@ -892,7 +892,7 @@ clearSignal:
 			 * and then free the associated bsBuf structure. Do
 			 * this check before releasing the bufLock. Remember
 			 * to clean up bsBuf after we drop locks. */
-			MS_SMP_ASSERT(bp->lock.waiting == 0);
+			KASSERT(bp->lock.waiting == 0);
 			free_bsbuf = 1;
 
 			/* If this completes all I/O on an activeRange, then
@@ -1098,7 +1098,7 @@ lsn_io_list(struct domain * dmnP)
 	lsnT origLsn;
 	int noqfnd, couldnt_hold;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&dmnP->lsnLock.mutex));
+	KASSERT(SLOCK_HOLDER(&dmnP->lsnLock.mutex));
 
 	/* we only run one lsn_io_list at a time - before this check was in
 	 * bs_pinblock, but there was a window where lsn_io_list could end
@@ -1127,13 +1127,13 @@ loop:
 	ioListp = NULL;
 
 	bp = lsnp->lsnFwd;
-	MS_SMP_ASSERT(bp != (struct bsBuf *) (NULL));
+	KASSERT(bp != (struct bsBuf *) (NULL));
 
 	/* bp->origLogRec can't change while on the lsnList; no buffer lock */
 	while (bp != (struct bsBuf *) lsnp &&
 	    LSN_LTE(bp->origLogRec.lsn, dmnP->writeToLsn)) {
 
-		MS_SMP_ASSERT(LSN_LTE(bp->currentLogRec.lsn, logBfap->hiFlushLsn));
+		KASSERT(LSN_LTE(bp->currentLogRec.lsn, logBfap->hiFlushLsn));
 
 		/* If this buffer is already BUSY, either because this routine
 		 * already marked it so or because another thread did so, then
@@ -1416,7 +1416,7 @@ loop:
 		return;
 	}
 	bp = lsnp->lsnFwd;
-	MS_SMP_ASSERT(bp != (struct bsBuf *) (NULL));
+	KASSERT(bp != (struct bsBuf *) (NULL));
 
 	/* bp->origLogRec can't change while on the lsnList; no buffer lock */
 	while (bp != (struct bsBuf *) lsnp &&
@@ -1627,8 +1627,8 @@ bs_q_lazy(
 	extern u_int smsync_period;
 	domainT *dmnp;
 
-	MS_SMP_ASSERT(ioListp->bsBuf->bfAccess->dmnP->vdpTbl);
-	MS_SMP_ASSERT(ioListp->blkDesc.vdIndex <= BS_MAX_VDI);
+	KASSERT(ioListp->bsBuf->bfAccess->dmnP->vdpTbl);
+	KASSERT(ioListp->blkDesc.vdIndex <= BS_MAX_VDI);
 	vdp = VD_HTOP(ioListp->blkDesc.vdIndex, ioListp->bsBuf->bfAccess->dmnP);
 	dmnp = ioListp->bsBuf->bfAccess->dmnP;
 
@@ -1638,7 +1638,7 @@ bs_q_lazy(
 	do {
 		bp = tmp->bsBuf;
 		mutex_lock(&bp->bufLock);
-		MS_SMP_ASSERT(bp->lock.state & IO_TRANS);	/* I think this is true */
+		KASSERT(bp->lock.state & IO_TRANS);	/* I think this is true */
 		if (!(bp->lock.state & IO_COUNTED)) {
 			if (bp->lock.state & READING)
 				u.u_tru.tru_inblock++;
@@ -1823,7 +1823,7 @@ wait_to_readyq(struct vd * vdp)
 			/* Remove from the waitLazyQ */
 			start->bwd->fwd = end->fwd;
 			end->fwd->bwd = start->bwd;
-			MS_SMP_ASSERT(vdp->waitLazyQ.ioQLen >= count);
+			KASSERT(vdp->waitLazyQ.ioQLen >= count);
 			vdp->waitLazyQ.ioQLen -= count;
 
 			/* hand doubly-linked list off to be added to correct
@@ -2030,7 +2030,7 @@ sort_to_list(
 	}
 
 	/* should never get here */
-	MS_SMP_ASSERT(prev != sorted_list_head);
+	KASSERT(prev != sorted_list_head);
 }
 /* This routine attempts to keep several temporary lists of buffers on
  * the temporary queue, separated by thread id. It is called with the
@@ -2130,8 +2130,8 @@ sort_onto_readyq(
 	int cum_added_here;	/* for statistics */
 	int added_this_group;
 
-	MS_SMP_ASSERT(iop->bwd->fwd == iop);
-	MS_SMP_ASSERT(cnt > 0);
+	KASSERT(iop->bwd->fwd == iop);
+	KASSERT(cnt > 0);
 
 	if (cnt > RdySort[6])
 		RdySort[6] = cnt;	/* Keep track of largest request made */
@@ -2146,7 +2146,7 @@ sort_onto_readyq(
 		if (vdp->readyLazyQ.ioQLen == 0) {
 			/* ReadyLazyQ is empty; just add this one in. */
 			readyp = (ioDescT *) (vdp->readyLazyQ.fwd);
-			MS_SMP_ASSERT(readyp == (ioDescT *) & vdp->readyLazyQ);
+			KASSERT(readyp == (ioDescT *) & vdp->readyLazyQ);
 			readyp->fwd = iop;
 			readyp->bwd = iop;
 			iop->fwd = readyp;
@@ -2157,7 +2157,7 @@ sort_onto_readyq(
 			 * this seems to happen frequently when writing large
 			 * files sequentially. */
 			readyp = (ioDescT *) (&vdp->readyLazyQ);
-			MS_SMP_ASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
+			KASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
 			iop->fwd = readyp;
 			iop->bwd = readyp->bwd;
 			readyp->bwd->fwd = iop;
@@ -2168,7 +2168,7 @@ sort_onto_readyq(
 			 * readyQ; this keeps us from having to walk the whole
 			 * list. */
 			readyp = (ioDescT *) (&vdp->readyLazyQ);
-			MS_SMP_ASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
+			KASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
 			iop->bwd = readyp;
 			iop->fwd = readyp->fwd;
 			readyp->fwd->bwd = iop;
@@ -2181,12 +2181,12 @@ sort_onto_readyq(
 			 * pressure to move the elements off the readyq is
 			 * low. */
 			readyp = (ioDescT *) (vdp->readyLazyQ.bwd);
-			MS_SMP_ASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
+			KASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
 			while (readyp != (ioDescT *) & vdp->readyLazyQ &&
 			    readyp->blkDesc.vdBlk >= iop->blkDesc.vdBlk) {
 				readyp = readyp->bwd;
 			}
-			MS_SMP_ASSERT(readyp != (ioDescT *) & vdp->readyLazyQ);
+			KASSERT(readyp != (ioDescT *) & vdp->readyLazyQ);
 			iop->bwd = readyp;
 			iop->fwd = readyp->fwd;
 			readyp->fwd->bwd = iop;
@@ -2199,7 +2199,7 @@ sort_onto_readyq(
 		vdp->readyLazyQ.queue_cnt++;
 
 		if (vdp->readyLazyQ.ioQLen > 0)
-			MS_SMP_ASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
+			KASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
 
 		MS_VERIFY_IOQUEUE_INTEGRITY(&vdp->readyLazyQ, TRUE);
 		mutex_unlock(&vdp->readyLazyQ.ioQLock);
@@ -2279,7 +2279,7 @@ sort_onto_readyq(
 			vdp->readyLazyQ.queue_cnt += chain_len;
 
 			if (vdp->readyLazyQ.ioQLen > 0)
-				MS_SMP_ASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
+				KASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
 
 			MS_VERIFY_IOQUEUE_INTEGRITY(&vdp->readyLazyQ, TRUE);
 			mutex_unlock(&vdp->readyLazyQ.ioQLock);
@@ -2353,7 +2353,7 @@ sort_onto_readyq(
 			vdp->readyLazyQ.queue_cnt += chain_len;
 
 			if (vdp->readyLazyQ.ioQLen > 0)
-				MS_SMP_ASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
+				KASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
 
 			MS_VERIFY_IOQUEUE_INTEGRITY(&vdp->readyLazyQ, TRUE);
 
@@ -2375,7 +2375,7 @@ sort_onto_readyq(
 				break;	/* get out; add rest of list as a
 					 * group at end */
 			}
-			MS_SMP_ASSERT(iop->blkDesc.vdBlk <= readyp->blkDesc.vdBlk);
+			KASSERT(iop->blkDesc.vdBlk <= readyp->blkDesc.vdBlk);
 
 			/* Insert this entry onto the list. As an
 			 * optimization, try to place as many entries from the
@@ -2423,7 +2423,7 @@ sort_onto_readyq(
 		vdp->readyLazyQ.queue_cnt += chain_len;
 
 		if (vdp->readyLazyQ.ioQLen > 0)
-			MS_SMP_ASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
+			KASSERT(vdp->readyLazyQ.fwd != (ioDescT *) & vdp->readyLazyQ);
 	}			/* end of subchain loop */
 
 	MS_VERIFY_IOQUEUE_INTEGRITY(&vdp->readyLazyQ, TRUE);
@@ -2506,7 +2506,7 @@ call_logflush(domainT * dmnP, lsnT lsn, int wait)
 	struct bsBuf *tail;
 	lsnT logPageLsn;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
 	/*
          * Since pinned pages do not have valid lsns (flushSeq)
          * we can only look at unpinned pages (the flushSeq is
@@ -2696,7 +2696,7 @@ logflush_cont(struct bfAccess * bfap)
 	bufCnt = 0;
 
 restart:
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
 
 	head = bfap->dirtyBufList.accFwd;
 	tail = bfap->dirtyBufList.accBwd;
@@ -2950,7 +2950,7 @@ loop:
          */
 	if (bfap->dirtyBufList.accFwd == (struct bsBuf *) & bfap->dirtyBufList) {
 		/* Either the accFwd test or the length test would suffice. */
-		MS_SMP_ASSERT(bfap->dirtyBufList.length == 0);
+		KASSERT(bfap->dirtyBufList.length == 0);
 		if (end_has_been_determined) {
 			*seq = finalLsnWeNeedToFlush;
 		}
@@ -2977,7 +2977,7 @@ loop:
 		    bp != (struct bsBuf *) & bfap->dirtyBufList;
 		    bp = bp->accFwd) {
 
-			MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
+			KASSERT(bp->lock.state & ACC_DIRTY);
 			if (LSN_GT(bp->currentLogRec.lsn, hiCurrentLsn)) {
 				hiCurrentLsn = bp->currentLogRec.lsn;
 			}
@@ -3070,16 +3070,16 @@ loop:
 					 * still on the bfap */
 					/* dirtyBufList. */
 					bp = ioList->bwd->bsBuf;
-					MS_SMP_ASSERT(bp->bfAccess == bfap);
-					MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
+					KASSERT(bp->bfAccess == bfap);
+					KASSERT(bp->lock.state & ACC_DIRTY);
 					goto end_of_loop;
 				} else {
 					goto loop;
 				}
 			}
 		}
-		MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
-		MS_SMP_ASSERT(bp->bfAccess == bfap);
+		KASSERT(bp->lock.state & ACC_DIRTY);
+		KASSERT(bp->bfAccess == bfap);
 		if (bp->lock.state & FLUSH) {
 
 			/*
@@ -3244,8 +3244,8 @@ loop:
 		 * originates from a getpage write and was not on a queue. */
 		if (listLenPart || (noqfnd && (bp->lock.state & GETPAGE_WRITE))) {
 			int sts;
-			MS_SMP_ASSERT(bp->bfAccess == bfap);
-			MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
+			KASSERT(bp->bfAccess == bfap);
+			KASSERT(bp->lock.state & ACC_DIRTY);
 
 			/* Setup UBC page for IO.  We can fail here because an
 			 * mmapped page is wired by an application so we can
@@ -3479,7 +3479,7 @@ bfflush_sync(
 	         * must be done with the bfIoLock held.
 	         */
 		if (bfap->dirtyBufList.length == 0) {
-			MS_SMP_ASSERT(0);	/* Get a crash dump
+			KASSERT(0);	/* Get a crash dump
 						 * in-house... */
 			mutex_unlock(&bfap->bfIoLock);
 			domain_panic(bfap->dmnP, "bfflush_sync: No dirty buffers");
@@ -3785,7 +3785,7 @@ bfflush(
 	else
 		q_for_io = bs_q_flushq;
 
-	MS_SMP_ASSERT(priority & FLUSH_IMMEDIATE ||
+	KASSERT(priority & FLUSH_IMMEDIATE ||
 	    priority & FLUSH_INTERMEDIATE ||
 	    priority & FLUSH_UBC);
 
@@ -3810,8 +3810,8 @@ bfflush(
 	 * made with a null bfsetp and dmnp that points to trash, but we
 	 * believe that is the only invalid (and unneccessary) call. This will
 	 * catch any real nasty caller. */
-	MS_SMP_ASSERT(BFSET_VALID(bfap->bfSetp));
-	MS_SMP_ASSERT(TEST_DMNP(bfap->dmnP) == EOK);
+	KASSERT(BFSET_VALID(bfap->bfSetp));
+	KASSERT(TEST_DMNP(bfap->dmnP) == EOK);
 
 	/* If both first_page and pages_to_flush are zero, caller wants to do
 	 * a full file flush for regular files.  This is not normally used for
@@ -3835,7 +3835,7 @@ bfflush(
 		if (bfap->dataSafety == BFD_FTX_AGENT ||
 		    priority & FLUSH_PREALLOCATED_PAGES) {
 			pages_to_flush = bfap->nextPage;
-			MS_SMP_ASSERT(pages_to_flush);
+			KASSERT(pages_to_flush);
 			last_page = pages_to_flush - 1;
 		} else {
 			last_page = (bfap->file_size > 0) ?
@@ -3843,7 +3843,7 @@ bfflush(
 			pages_to_flush = last_page + 1;
 		}
 	} else {
-		MS_SMP_ASSERT(pages_to_flush);
+		KASSERT(pages_to_flush);
 		last_page = first_page + pages_to_flush - 1;
 	}
 
@@ -3894,7 +3894,7 @@ loop:
 		    LSN_GTE(flushTerminatorLsn, bp->flushSeq);
 		    bp = bp->accFwd) {
 
-			MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
+			KASSERT(bp->lock.state & ACC_DIRTY);
 
 			/*
 	                 * If this bsBuf represents a page in the range we want to flush,
@@ -3993,7 +3993,7 @@ loop:
 	                 *        disappear, so it's critical at this place that
 	                 *        the bfap->bfIoLock is held by this thread.
 	                 */
-			MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+			KASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
 
 			for (rflp = bp->rflList;
 			    rflp && rflp->rfp != rfp;
@@ -4034,7 +4034,7 @@ loop:
 		                 */
 				if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
 				    (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-					MS_SMP_ASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
+					KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
 				}
 #endif
 				mutex_unlock(&rfp->rangeFlushLock);
@@ -4071,16 +4071,16 @@ loop:
 					 * still on the bfap */
 					/* dirtyBufList. */
 					bp = ioList->bwd->bsBuf;
-					MS_SMP_ASSERT(bp->bfAccess == bfap);
-					MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
+					KASSERT(bp->bfAccess == bfap);
+					KASSERT(bp->lock.state & ACC_DIRTY);
 					continue;
 				} else {
 					goto loop;
 				}
 			}
 		}
-		MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
-		MS_SMP_ASSERT(bp->bfAccess == bfap);
+		KASSERT(bp->lock.state & ACC_DIRTY);
+		KASSERT(bp->bfAccess == bfap);
 
 		if (bp->lock.state & (FLUSH | IO_TRANS)) {
 
@@ -4180,7 +4180,7 @@ loop:
 		                 */
 				if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
 				    (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-					MS_SMP_ASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
+					KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
 				}
 #endif
 				mutex_unlock(&rfp->rangeFlushLock);
@@ -4250,8 +4250,8 @@ loop:
 		mutex_lock(&bfap->bfIoLock);
 
 		if (listLenPart || (noqfnd && (bp->lock.state & GETPAGE_WRITE))) {
-			MS_SMP_ASSERT(bp->bfAccess == bfap);
-			MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
+			KASSERT(bp->bfAccess == bfap);
+			KASSERT(bp->lock.state & ACC_DIRTY);
 
 			/*
 	                 * If we have not already marked this bsBuf as belonging
@@ -4311,7 +4311,7 @@ loop:
 		                 */
 				if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
 				    (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-					MS_SMP_ASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
+					KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
 				}
 #endif
 				mutex_unlock(&rfp->rangeFlushLock);
@@ -4473,7 +4473,7 @@ loop:
 		                         */
 					if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
 					    (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-						MS_SMP_ASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
+						KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
 					}
 #endif
 					mutex_unlock(&rfp->rangeFlushLock);
@@ -4673,18 +4673,18 @@ rm_from_lazyq(struct bsBuf * bp,
 	/* The buffer is scheduled for IO. It is on one of the I/O queues or
 	 * is on a temporary queue because it is being moved between I/O
 	 * queues. */
-	MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
+	KASSERT(bp->lock.state & ACC_DIRTY);
 
 	/* The ioList is protected by bufLock. */
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
 	first = bp->ioList.write;
 	last = bp->ioList.write + bp->ioList.writeCnt;
 
 	/* "first" will always be 0, "last" will never be more than 2. */
 	/* There are never more than 2 ioDescT per bp, one for the xtntMap */
 	/* location on disk, one for the copyXtntMap location. */
-	MS_SMP_ASSERT(first == 0);
-	MS_SMP_ASSERT(last <= 2);
+	KASSERT(first == 0);
+	KASSERT(last <= 2);
 
 	for (i = first; i < last; i++) {
 
@@ -4732,7 +4732,7 @@ again:
 					 * possible iops, the IO could not
 					 * have completed. Therefore we must
 					 * not have removed any iops. */
-					MS_SMP_ASSERT(*listLen == 0);
+					KASSERT(*listLen == 0);
 					mutex_unlock(lockptr);
 					lockflag = FALSE;
 					break;
@@ -4743,14 +4743,14 @@ again:
 					 * if there were 2 iop and migration
 					 * got done then buf_remap() was
 					 * called. */
-					MS_SMP_ASSERT(i == 1);
-					MS_SMP_ASSERT(bp->ioList.write == 0);
-					MS_SMP_ASSERT(bp->ioList.writeCnt == 1);
+					KASSERT(i == 1);
+					KASSERT(bp->ioList.write == 0);
+					KASSERT(bp->ioList.writeCnt == 1);
 					mutex_unlock(lockptr);
 					lockflag = FALSE;
 					break;
 				}
-				MS_SMP_ASSERT(&bp->ioList.ioDesc[i] == iop);
+				KASSERT(&bp->ioList.ioDesc[i] == iop);
 			} else
 				lockflag = TRUE;
 
@@ -4782,7 +4782,7 @@ again:
 			    aprintf("rm_or_mvq:     bsBuf 0x%lx  vd 0x%lx\n", bp, vdp));
 
 			if (qhdr != (ioDescHdrT *) & vdp->tempQ) {
-				MS_SMP_ASSERT(qhdr->ioQLen > 0);
+				KASSERT(qhdr->ioQLen > 0);
 				qhdr->ioQLen--;
 				MS_VERIFY_IOQUEUE_INTEGRITY(qhdr, lockflag);
 			}
@@ -4873,7 +4873,7 @@ rm_ioq(struct bsBuf * bp)
 	u_int period = smsync_period;
 	u_int j;
 
-	MS_SMP_ASSERT(bp->lock.state & IO_TRANS);
+	KASSERT(bp->lock.state & IO_TRANS);
 	first = bp->ioList.write;
 	last = bp->ioList.write + bp->ioList.writeCnt;
 
@@ -4890,7 +4890,7 @@ tryagain:
 		on_lazyq = FALSE;
 		get_ioq(vdp, iop, &qhdr, &on_lazyq);
 
-		MS_SMP_ASSERT((qhdr != &vdp->blockingQ) && (qhdr != &vdp->devQ) && (qhdr != &vdp->flushQ) && (qhdr != &vdp->ubcReqQ));
+		KASSERT((qhdr != &vdp->blockingQ) && (qhdr != &vdp->devQ) && (qhdr != &vdp->flushQ) && (qhdr != &vdp->ubcReqQ));
 
 again:
 		if (qhdr != NULL) {
@@ -4907,7 +4907,7 @@ again:
 			on_lazyq = FALSE;
 			get_ioq(vdp, iop, &new_qhdr, &on_lazyq);
 
-			MS_SMP_ASSERT((new_qhdr != &vdp->blockingQ) && (new_qhdr != &vdp->devQ) && (new_qhdr != &vdp->flushQ) && (new_qhdr != &vdp->ubcReqQ));
+			KASSERT((new_qhdr != &vdp->blockingQ) && (new_qhdr != &vdp->devQ) && (new_qhdr != &vdp->flushQ) && (new_qhdr != &vdp->ubcReqQ));
 
 			if (new_qhdr != qhdr) {
 				mutex_unlock(lockptr);
@@ -4926,7 +4926,7 @@ again:
 			iop->ioQ = NONE;
 
 			if (qhdr != (ioDescHdrT *) & vdp->tempQ) {
-				MS_SMP_ASSERT(qhdr->ioQLen > 0);
+				KASSERT(qhdr->ioQLen > 0);
 				qhdr->ioQLen--;
 				MS_VERIFY_IOQUEUE_INTEGRITY(qhdr, TRUE);
 			}
@@ -5070,7 +5070,7 @@ bs_io_thread(int radId)
 	while (!done) {
 
 		/* if the queue disappears, we've probably lost some I/O */
-		MS_SMP_ASSERT(IoMsgQH[radId] != NULL);
+		KASSERT(IoMsgQH[radId] != NULL);
 
 		msg = (ioThreadMsgT *) msgq_recv_msg(IoMsgQH[radId]);
 		switch (msg->msgType) {
@@ -5111,7 +5111,7 @@ bs_io_thread(int radId)
 				 * still there. It should no longer be
 				 * possible to have the domain and vd go away
 				 * while a START_MORE_IO message is queued.
-				 * The MS_SMP_ASSERT is here to test this
+				 * The KASSERT is here to test this
 				 * theory and should eventually be removed
 				 * (along with the TEST_DMNP).
 				 * 
@@ -5124,8 +5124,8 @@ bs_io_thread(int radId)
 				 * removed, vdp may not be found in the
 				 * dmnP->vdpTbl[]. */
 
-				MS_SMP_ASSERT(TEST_DMNP(dmnP) == EOK);
-				MS_SMP_ASSERT(vdp);
+				KASSERT(TEST_DMNP(dmnP) == EOK);
+				KASSERT(vdp);
 				if ((TEST_DMNP(dmnP) == EOK) && vdp) {
 
 					startiocalls[9]++;
@@ -5153,11 +5153,11 @@ bs_io_thread(int radId)
 		                         * be treated as a no-op and vd_remove must be unblocked.
 		                         */
 
-					MS_SMP_ASSERT(vdp->start_io_posted != 0);
+					KASSERT(vdp->start_io_posted != 0);
 					vdp->start_io_posted = 0;
 					if (vdp->start_io_posted_waiter) {
 						vdp->start_io_posted_waiter = 0;
-						MS_SMP_ASSERT(vdp->devQ.ioQLen == 0);
+						KASSERT(vdp->devQ.ioQLen == 0);
 						thread_wakeup((vm_offset_t) & vdp->start_io_posted_waiter);
 						mutex_unlock(&vdp->devQ.ioQLock);
 					} else {
@@ -5365,7 +5365,7 @@ sendtoiothread(struct vd * vdp,	/* in */
 				break;
 			}
 		}
-		MS_SMP_ASSERT(IoMsgQH[radId] != NULL);
+		KASSERT(IoMsgQH[radId] != NULL);
 	}
 	msg = (ioThreadMsgT *) msgq_alloc_msg(IoMsgQH[radId]);
 	if (msg) {
@@ -5383,7 +5383,7 @@ sendtoiothread(struct vd * vdp,	/* in */
 			/*
 	                 * Unknown send sendType
 	                 */
-			MS_SMP_ASSERT(0);
+			KASSERT(0);
 			rtn = 1;
 			goto _done;
 		}
@@ -5709,7 +5709,7 @@ smsync_to_readyq(struct vd * vdp, int flushFlag)
 		}
 		if (iop != ((ioDescT *) smsyncq)) {
 
-			MS_SMP_ASSERT(qlen != 0);
+			KASSERT(qlen != 0);
 
 			/* Remove entries from the smooth sync queue; but keep
 			 * the remaining list as a doubly-linked list. */
@@ -5729,7 +5729,7 @@ smsync_to_readyq(struct vd * vdp, int flushFlag)
 			HISTOGRAM_UPDATE(Sm2RdySz, qlen);
 #endif
 		} else {
-			MS_SMP_ASSERT(qlen == 0);
+			KASSERT(qlen == 0);
 			mutex_unlock(&smsyncq->ioQLock);
 		}
 

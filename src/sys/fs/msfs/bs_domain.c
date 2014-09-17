@@ -426,7 +426,7 @@ void
 bs_domain_close(domainT * dmnP)
 {
 
-	MS_SMP_ASSERT(TEST_DMNP(dmnP) == EOK);
+	KASSERT(TEST_DMNP(dmnP) == EOK);
 
 	mutex_lock(&DmnTblMutex);
 
@@ -1021,7 +1021,7 @@ get_table_error:
 		ndp->ni_dirp = volPathName;
 
 		rem_vol = ((char *) strrchr(volPathName, '/'));
-		MS_SMP_ASSERT(rem_vol != NULL);
+		KASSERT(rem_vol != NULL);
 
 		ms_uprintf("Interrupted rmvol of volume %s in domain %s.\n",
 		    rem_vol + 1, domainName);
@@ -1797,7 +1797,7 @@ bs_bfdmn_deactivate(
 	/* We saw as many volumes as there are in the domain. This ASSERTion
 	 * is OK since we have the DmnTblLock and no racing threads can add or
 	 * remove disks while we go thru this loop. */
-	MS_SMP_ASSERT(vdCnt == dmnP->vdCnt);
+	KASSERT(vdCnt == dmnP->vdCnt);
 
 	/* close the log file */
 	sts = lgr_close(dmnP->ftxLogP);
@@ -1844,7 +1844,7 @@ bs_bfdmn_deactivate(
          * deallocation.
          */
 
-	MS_SMP_ASSERT((badBfap = check_closed_list(dmnP)) == NULL);
+	KASSERT((badBfap = check_closed_list(dmnP)) == NULL);
 
 HANDLE_EXCEPTION:
 	if (tblLocked) {
@@ -1902,7 +1902,7 @@ bs_bfdmn_activate(
 	extern int MountWriteDelay;
 	bfDmnStatesT orig_dmnP_state;
 
-	MS_SMP_ASSERT((flag & M_GLOBAL_ROOT) ? 1 : lock_holder(&DmnTblLock));
+	KASSERT((flag & M_GLOBAL_ROOT) ? 1 : lock_holder(&DmnTblLock));
 	if ((dmnP = domain_lookup(domainId, flag)) == 0) {
 		return (ENO_SUCH_DOMAIN);
 	}
@@ -1946,7 +1946,7 @@ bs_bfdmn_activate(
 	logOpen = TRUE;
 
 	/* assert that the log has valid in-mem structures */
-	MS_SMP_ASSERT(dmnP->logAccessp->xtnts.validFlag);
+	KASSERT(dmnP->logAccessp->xtnts.validFlag);
 	/* then proceed to figure out which RAD the log's vd struct is on */
 	mutex_lock(&dmnP->vdpTblLock);
 	dmnP->logVdRadId = PA_TO_MID(vtop(current_processor(),
@@ -2063,7 +2063,7 @@ bs_bfdmn_activate(
 	}
 	/* We saw as many volumes as there are in the domain. OK: DmnTblLock
 	 * is held to prevent racing addvol and rmvol. */
-	MS_SMP_ASSERT(vdcnt == dmnP->vdCnt);
+	KASSERT(vdcnt == dmnP->vdCnt);
 
 	/*
          * If not doing write delay then flush all dirty buffers and wait for
@@ -2374,7 +2374,7 @@ bs_bfdmn_sweep(domainT * dmnP)
 		bmtPgRef = NilBfPageRefH;
 	}
 	/* We saw as many volumes as there are in the domain. */
-	MS_SMP_ASSERT(vdCnt == dmnP->vdCnt);
+	KASSERT(vdCnt == dmnP->vdCnt);
 	return EOK;
 
 err_cleanup:
@@ -2845,13 +2845,13 @@ setup_vd(
 	extern int max_iosize_read;	/* default system-wide max read size */
 	extern long lbolt;
 
-	MS_SMP_ASSERT((flag & M_GLOBAL_ROOT) ? 1 : lock_holder(&DmnTblLock));
+	KASSERT((flag & M_GLOBAL_ROOT) ? 1 : lock_holder(&DmnTblLock));
 
 	if ((sts = vd_alloc(&vdp, dmnP)) != EOK) {
 		return sts;
 	}
 	vdIndex = vdAttrp->vdIndex;
-	MS_SMP_ASSERT(TEST_VDI_RANGE(vdIndex) == EOK);
+	KASSERT(TEST_VDI_RANGE(vdIndex) == EOK);
 	vdp->vdIndex = vdIndex;
 
 	/*
@@ -3467,14 +3467,14 @@ vd_free(
 {
 	int i;
 
-	MS_SMP_ASSERT(vdp->vdMagic == VDMAGIC);
+	KASSERT(vdp->vdMagic == VDMAGIC);
 
 	mutex_lock(&vdp->vdStateLock);
-	MS_SMP_ASSERT(vdp->vdState == BSR_VD_ZOMBIE ||
+	KASSERT(vdp->vdState == BSR_VD_ZOMBIE ||
 	    vdp->vdState == BSR_VD_VIRGIN ||	/* error path state */
 	    vdp->vdState == BSR_VD_DMNT_INPROG);	/* error path state */
-	MS_SMP_ASSERT(vdp->vdRefCnt == 0);
-	MS_SMP_ASSERT(vdp->vdRefWaiters == 0);
+	KASSERT(vdp->vdRefCnt == 0);
+	KASSERT(vdp->vdRefWaiters == 0);
 
 	mutex_unlock(&vdp->vdStateLock);
 
@@ -3485,30 +3485,30 @@ vd_free(
 	/* Let's make sure that the I/O queues for this disk have been
 	 * properly drained. */
 
-	MS_SMP_ASSERT(vdp->waitLazyQ.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ0.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ1.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ2.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ3.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ4.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ5.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ6.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ7.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ8.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ9.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ10.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ11.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ12.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ13.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ14.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->smSyncQ15.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->readyLazyQ.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->consolQ.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->blockingQ.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->flushQ.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->ubcReqQ.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->devQ.ioQLen == 0);
-	MS_SMP_ASSERT(vdp->tempQ.cnt == 0);
+	KASSERT(vdp->waitLazyQ.ioQLen == 0);
+	KASSERT(vdp->smSyncQ0.ioQLen == 0);
+	KASSERT(vdp->smSyncQ1.ioQLen == 0);
+	KASSERT(vdp->smSyncQ2.ioQLen == 0);
+	KASSERT(vdp->smSyncQ3.ioQLen == 0);
+	KASSERT(vdp->smSyncQ4.ioQLen == 0);
+	KASSERT(vdp->smSyncQ5.ioQLen == 0);
+	KASSERT(vdp->smSyncQ6.ioQLen == 0);
+	KASSERT(vdp->smSyncQ7.ioQLen == 0);
+	KASSERT(vdp->smSyncQ8.ioQLen == 0);
+	KASSERT(vdp->smSyncQ9.ioQLen == 0);
+	KASSERT(vdp->smSyncQ10.ioQLen == 0);
+	KASSERT(vdp->smSyncQ11.ioQLen == 0);
+	KASSERT(vdp->smSyncQ12.ioQLen == 0);
+	KASSERT(vdp->smSyncQ13.ioQLen == 0);
+	KASSERT(vdp->smSyncQ14.ioQLen == 0);
+	KASSERT(vdp->smSyncQ15.ioQLen == 0);
+	KASSERT(vdp->readyLazyQ.ioQLen == 0);
+	KASSERT(vdp->consolQ.ioQLen == 0);
+	KASSERT(vdp->blockingQ.ioQLen == 0);
+	KASSERT(vdp->flushQ.ioQLen == 0);
+	KASSERT(vdp->ubcReqQ.ioQLen == 0);
+	KASSERT(vdp->devQ.ioQLen == 0);
+	KASSERT(vdp->tempQ.cnt == 0);
 
 	lk_destroy(&vdp->active);
 	advfs_mutex_destroy(&vdp->vdIoLock);
@@ -3962,7 +3962,7 @@ clear_bmt(
 			    (bfTag.num > GROUP_QUOTA_FILE_TAG)) {
 
 				/* All filesets must be mounted */
-				MS_SMP_ASSERT(bfSetp->fsnp);
+				KASSERT(bfSetp->fsnp);
 
 				mp = bfSetp->fsnp->mountp;
 				open_options |= BF_OP_GET_VNODE;
@@ -4565,7 +4565,7 @@ vd_remove(
 
 	mutex_lock(&dmnP->vdpTblLock);
 	dmnP->vdCnt--;
-	MS_SMP_ASSERT(TEST_VDI_RANGE(vdp->vdIndex) == EOK);
+	KASSERT(TEST_VDI_RANGE(vdp->vdIndex) == EOK);
 	dmnP->vdpTbl[vdp->vdIndex - 1] = NULL;
 	mutex_unlock(&dmnP->vdpTblLock);
 
@@ -4680,7 +4680,7 @@ set_disk_attrs(
 	int mcell_index;
 	struct bfAccess *mdap;
 
-	MS_SMP_ASSERT(lock_holder(&DmnTblLock));
+	KASSERT(lock_holder(&DmnTblLock));
 	vdIndex = BS_BFTAG_VDI(dmnP->ftxLogTag);
 	vd = VD_HTOP(vdIndex, dmnP);
 
@@ -4836,7 +4836,7 @@ check_trans_attrs(
 	                 */
 			dmnMAttr = bmtr_find(&(bmtPage->bsMCA[mcell_index]), BSR_DMN_MATTR,
 			    dmnP);
-			MS_SMP_ASSERT(dmnMAttr);
+			KASSERT(dmnMAttr);
 			(*onDiskCnt)--;
 			dmnMAttr->vdCnt--;
 			sts = bs_unpinpg(pgPin, logNilRecord, BS_WRITETHRU);
@@ -4979,7 +4979,7 @@ bs_fix_root_dmn(
 					strcat(volPathName, "/");
 					strcat(volPathName, dmnName);
 					subs = (char *) strrchr(dmntbl->vddp[vdi]->vdName, '/');
-					MS_SMP_ASSERT(subs != NULL);
+					KASSERT(subs != NULL);
 					strcat(volPathName, subs);
 
 					ms_uprintf("Interrupted rmvol of volume %s in domain %s.\n",
@@ -5026,7 +5026,7 @@ bs_fix_root_dmn(
 				vdCnt++;
 
 				if (vdp->devVp->v_rdev == dmnTAttr->dev) {
-					MS_SMP_ASSERT((vdi) != BS_BFTAG_VDI(dmnP->ftxLogTag));
+					KASSERT((vdi) != BS_BFTAG_VDI(dmnP->ftxLogTag));
 
 					/*
 		                         * Inform CFS of the upcoming on-disk change.
@@ -5063,7 +5063,7 @@ bs_fix_root_dmn(
 							break;
 					}
 
-					MS_SMP_ASSERT(idx < global_rootdev_count);
+					KASSERT(idx < global_rootdev_count);
 
 					/*
 		                         * Update global rootdev array.
@@ -5323,12 +5323,12 @@ dmn_dealloc(
 	scEntryT *scEntry;
 	int tblPos;
 
-	MS_SMP_ASSERT(TEST_DMNP(dmnP) == EOK);
-	MS_SMP_ASSERT(DmnSentinelP != NULL);
+	KASSERT(TEST_DMNP(dmnP) == EOK);
+	KASSERT(DmnSentinelP != NULL);
 
 	mutex_lock(&DmnTblMutex);
 
-	MS_SMP_ASSERT(dmnP->activateCnt == 0);
+	KASSERT(dmnP->activateCnt == 0);
 
 	if (dmnP->dmnFwd && dmnP->dmnBwd) {	/* remove from sentinel chain */
 		/* unlink from other domains */
@@ -5339,7 +5339,7 @@ dmn_dealloc(
 		if ((--DomainCnt) == 0) {
 			DmnSentinelP = NULL;
 		}
-		MS_SMP_ASSERT(DomainCnt >= 0);
+		KASSERT(DomainCnt >= 0);
 		DOMAIN_HASH_REMOVE(dmnP, TRUE);	/* remove from dyn hash chain */
 	}
 	if (dmnP->dmnAccCnt) {
@@ -5352,7 +5352,7 @@ dmn_dealloc(
 		mutex_unlock(&DmnTblMutex);
 	}
 
-	MS_SMP_ASSERT(BFSET_VALID(dmnP->bfSetDirp))
+	KASSERT(BFSET_VALID(dmnP->bfSetDirp))
 	    BFSETTBL_LOCK_WRITE(dmnP)
 	    bfs_dealloc(dmnP->bfSetDirp, TRUE);
 	dmnP->bfSetDirp = 0;
@@ -5593,7 +5593,7 @@ domain_lookup(
 	int key;
 	domainT *dmnP_start, *dmnP;
 
-	MS_SMP_ASSERT((flag & M_GLOBAL_ROOT) ? 1 :
+	KASSERT((flag & M_GLOBAL_ROOT) ? 1 :
 	    SLOCK_HOLDER(&DmnTblMutex.mutex) || lock_holder(&DmnTblLock));
 
 	key = DOMAIN_GET_HASH_KEY(bfDomainId);
@@ -5606,7 +5606,7 @@ domain_lookup(
 		do {
 			if (BS_UID_EQL(dmnP->domainId, bfDomainId)) {
 				DOMAIN_HASH_UNLOCK(key);
-				MS_SMP_ASSERT(dmnP->bfSetDirp);
+				KASSERT(dmnP->bfSetDirp);
 				return dmnP;
 			}
 			/* get next in chain */
@@ -5638,7 +5638,7 @@ domain_name_lookup(
 	domainT *dmnP_Prev, *dmnP;
 
 	if (!(flag & (M_GLOBAL_ROOT | M_GLROOT_OTHER))) {
-		MS_SMP_ASSERT(lock_islocked(&DmnTblLock));
+		KASSERT(lock_islocked(&DmnTblLock));
 	}
 	dmnP = DmnSentinelP;	/* grab starting point */
 	do {
@@ -5657,7 +5657,7 @@ domain_name_lookup(
 	         * see that the dmnBwd pointers are correct.  Being a rare error,
 	         * we just assert the following.
 	         */
-		MS_SMP_ASSERT(dmnP_Prev == dmnP->dmnBwd);
+		KASSERT(dmnP_Prev == dmnP->dmnBwd);
 	} while (dmnP != DmnSentinelP);
 
 	/* domain not found - return zero */
@@ -6658,7 +6658,7 @@ vd_htop_if_valid(vdIndexT vdi,	/* vdIndex to check */
 	if (VDI_IS_VALID(vdi, dmnP)) {
 
 		vdT *vdp = dmnP->vdpTbl[vdi - 1];
-		MS_SMP_ASSERT(vdp->vdMagic == VDMAGIC);
+		KASSERT(vdp->vdMagic == VDMAGIC);
 		mutex_lock(&vdp->vdStateLock);
 		mutex_unlock(&dmnP->vdpTblLock);
 
@@ -6705,10 +6705,10 @@ vd_htop_already_valid(vdIndexT vdi,	/* vdIndex to retrieve */
 	/* We reduce lock contention by not seizing the dmnP->vdpTblLock in
 	 * this routine.  This is done since we call this routine only when we
 	 * know that this vdp cannot be removed.  */
-	MS_SMP_ASSERT(VDI_IS_VALID(vdi, dmnP));
+	KASSERT(VDI_IS_VALID(vdi, dmnP));
 	vdp = dmnP->vdpTbl[vdi - 1];
-	MS_SMP_ASSERT(vdp);
-	MS_SMP_ASSERT(vdp->vdMagic == VDMAGIC);
+	KASSERT(vdp);
+	KASSERT(vdp->vdMagic == VDMAGIC);
 
 	if (bump_refcnt) {
 		mutex_lock(&vdp->vdStateLock);
@@ -6732,11 +6732,11 @@ vd_dec_refcnt(vdT * vdp)
 {
 
 	mutex_lock(&vdp->vdStateLock);
-	MS_SMP_ASSERT(vdp->vdRefCnt > 0);
+	KASSERT(vdp->vdRefCnt > 0);
 	vdp->vdRefCnt--;
 
 	if (vdp->vdRefCnt == 0 && vdp->vdRefWaiters) {
-		MS_SMP_ASSERT(vdp->vdRefWaiters == 1);	/* only 1 thread can
+		KASSERT(vdp->vdRefWaiters == 1);	/* only 1 thread can
 							 * wait */
 		vdp->vdRefWaiters = 0;
 		thread_wakeup((vm_offset_t) & vdp->vdRefWaiters);

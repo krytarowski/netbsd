@@ -332,10 +332,10 @@ bfset_trace(bfSetT * bfsetp,
 #define ADD_ACC_SETLIST(bfap) \
 { \
     bfSetT *bfSetp = bfap->bfSetp; \
-    MS_SMP_ASSERT(BFSET_VALID(bfSetp)); \
+    KASSERT(BFSET_VALID(bfSetp)); \
     mutex_lock(&bfSetp->accessChainLock); \
-    MS_SMP_ASSERT(bfap->setFwd == NULL); \
-    MS_SMP_ASSERT(bfap->setBwd == NULL); \
+    KASSERT(bfap->setFwd == NULL); \
+    KASSERT(bfap->setBwd == NULL); \
     mutex_lock(&bfap->bfaLock); \
     bfap->setFwd = bfSetp->accessFwd; \
     bfap->setBwd = (bfAccessT *)(&bfSetp->accessFwd); \
@@ -358,13 +358,13 @@ bfset_trace(bfSetT * bfsetp,
 #define RM_ACC_SETLIST(bfap, lock_list) \
 { \
     bfSetT *bfSetp = bfap->bfSetp; \
-    MS_SMP_ASSERT(BFSET_VALID(bfSetp)); \
+    KASSERT(BFSET_VALID(bfSetp)); \
     if (lock_list) \
         mutex_lock(&bfSetp->accessChainLock); \
     else \
-        MS_SMP_ASSERT(SLOCK_HOLDER(&bfSetp->accessChainLock.mutex)); \
-    MS_SMP_ASSERT(bfap->setFwd != NULL); \
-    MS_SMP_ASSERT(bfap->setBwd != NULL); \
+        KASSERT(SLOCK_HOLDER(&bfSetp->accessChainLock.mutex)); \
+    KASSERT(bfap->setFwd != NULL); \
+    KASSERT(bfap->setBwd != NULL); \
     if (bfSetp->accessFwd == bfap) \
         bfSetp->accessFwd = bfap->setFwd; \
     else \

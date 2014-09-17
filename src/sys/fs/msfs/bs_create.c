@@ -351,7 +351,7 @@ create_rtdn_opx(ftxHT ftxH,	/* in - ftx handle */
 	} else {
 		bfSetp = bs_bfs_lookup_desc(rtdnR.ut.bfsid);
 	}
-	MS_SMP_ASSERT(BFSET_VALID(bfSetp));
+	KASSERT(BFSET_VALID(bfSetp));
 
 	make_mcell_valid(rtdnR, bfSetp, ftxH);
 
@@ -590,7 +590,7 @@ new_mcell(
 	/* set on-disk attributes */
 
 	*odattrp = *bfAttr;
-	MS_SMP_ASSERT(odattrp->bfPgSz != 0);
+	KASSERT(odattrp->bfPgSz != 0);
 
 	/* init a null extent record */
 
@@ -599,7 +599,7 @@ new_mcell(
 		ADVFS_SAD0("new_mcell: can't assign extent record");
 	}
 	if (oxtntp && oxtntp->type == BSXMT_STRIPE) {
-		MS_SMP_ASSERT(oxtntp->stripeXtntMap);
+		KASSERT(oxtntp->stripeXtntMap);
 		xtntp->type = BSXMT_STRIPE;
 		xtntp->segmentSize = oxtntp->stripeXtntMap->segmentSize;
 	} else {

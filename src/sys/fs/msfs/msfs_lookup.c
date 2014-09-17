@@ -368,7 +368,7 @@ msfs_lookup(
 	                 * dead_mount and is never returned here.
 	                 */
 			ndp->ni_vp = found_vp;
-			MS_SMP_ASSERT(found_vp->v_mount == vp->v_mount);
+			KASSERT(found_vp->v_mount == vp->v_mount);
 
 			if (found_vp->v_usecount == 0) {
 				ADVFS_SAD1("bf_get(1) returned bad vp N1 = tag", bf_tag.num);
@@ -453,8 +453,8 @@ msfs_lookup(
 			if (nvp != found_vp) {
 				cache_purge(nvp);
 				ndp->ni_vp = found_vp;
-				MS_SMP_ASSERT(new_bnp = (struct bfNode *) & found_vp->v_data[0]);
-				MS_SMP_ASSERT(BS_BFTAG_EQL(bf_tag, new_bnp->tag));
+				KASSERT(new_bnp = (struct bfNode *) & found_vp->v_data[0]);
+				KASSERT(BS_BFTAG_EQL(bf_tag, new_bnp->tag));
 			}
 			fsn->fileSetStats.lookup.hit++;
 

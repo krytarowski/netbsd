@@ -516,11 +516,11 @@ undo_cre_xtnt_rec(
 
 	bcopy(address, &undoRec, size);
 
-	MS_SMP_ASSERT(undoRec.mcellId.cell == RBMT_RSVD_CELL);
+	KASSERT(undoRec.mcellId.cell == RBMT_RSVD_CELL);
 
 	domain = ftxH.dmnP;
 
-	MS_SMP_ASSERT(RBMT_THERE(domain));
+	KASSERT(RBMT_THERE(domain));
 
 	vdp = VD_HTOP(undoRec.vdIndex, domain);
 	mdap = vdp->rbmtp;
@@ -656,16 +656,16 @@ odm_remove_mcells_from_xtnt_map(
 	}
 	subXtntMap = &(xtntMap->subXtntMap[xtntMap->origStart]);
 
-	MS_SMP_ASSERT((subXtntMap->type == BSR_XTRA_XTNTS) ||
+	KASSERT((subXtntMap->type == BSR_XTRA_XTNTS) ||
 	    (subXtntMap->type == BSR_XTNTS) ||
 	    (subXtntMap->type == BSR_SHADOW_XTNTS));
 
-	MS_SMP_ASSERT((subXtntMap->type != BSR_XTNTS) ||
+	KASSERT((subXtntMap->type != BSR_XTNTS) ||
 	    ((start_index == 1) &&
 		(domain->dmnVersion >= FIRST_XTNT_IN_PRIM_MCELL_VERSION)));
 
 	if (start_index == 0) {
-		MS_SMP_ASSERT(xtntMap->origStart > 0);
+		KASSERT(xtntMap->origStart > 0);
 		subXtntMap = &(xtntMap->subXtntMap[xtntMap->origStart - 1]);
 	}
 	sts = bmt_unlink_mcells(domain,
@@ -812,15 +812,15 @@ create_xtnt_map_hdr(
 	statusT sts;
 	vdT *vd;
 
-	MS_SMP_ASSERT(!BS_BFTAG_RSVD(bfap->tag));	/* not designed for rsvd
+	KASSERT(!BS_BFTAG_RSVD(bfap->tag));	/* not designed for rsvd
 							 * files */
 
 	bfTag = bfap->tag;
 	bfSetp = bfap->bfSetp;
 
 	if (xferFlg) {
-		MS_SMP_ASSERT(BFSET_VALID(bfSetp->cloneSetp));
-		MS_SMP_ASSERT(bfap->noClone == FALSE);
+		KASSERT(BFSET_VALID(bfSetp->cloneSetp));
+		KASSERT(bfap->noClone == FALSE);
 		bfSetp = bfSetp->cloneSetp;	/* set up to xfer xtnts to
 						 * clone */
 	}
@@ -1336,7 +1336,7 @@ x_update_ondisk_xtnt_map(
 					 * called with a BSR_XTNTS descriptor
 					 * that needs to be created */
 
-					MS_SMP_ASSERT(subXtntMap->type != BSR_XTNTS);
+					KASSERT(subXtntMap->type != BSR_XTNTS);
 
 					prevVdIndex = bfap->primVdIndex;
 					prevMcellId = bfap->primMCId;
@@ -1501,7 +1501,7 @@ update_xtnt_rec(
 	undoRec.index = subXtntMap->updateStart;
 	undoRec.cnt = (subXtntMap->updateEnd - subXtntMap->updateStart) + 1;
 
-	MS_SMP_ASSERT(subXtntMap->updateEnd >= subXtntMap->updateStart);
+	KASSERT(subXtntMap->updateEnd >= subXtntMap->updateStart);
 
 	for (i = 0; i < undoRec.cnt; i++) {
 		undoRec.bsXA.xtnt[i] = bsXA[undoRec.index + i];
@@ -1811,7 +1811,7 @@ x_create_shadow_rec(
          * striped temporarily look like that and so are excluded from
          * the check.
          */
-	MS_SMP_ASSERT(striping_file ||
+	KASSERT(striping_file ||
 	    !FIRST_XTNT_IN_PRIM_MCELL(bfap->dmnP->dmnVersion,
 		bfap->xtnts.type));
 
@@ -2266,7 +2266,7 @@ x_load_inmem_xtnt_map(
 	 * ftx_fail() in rbmt_extend(), where we have already taken the
 	 * necessary locks in the correct order.  This will avoid a lock
 	 * hierarchy problem. */
-	MS_SMP_ASSERT(lock_request == X_LOAD_REFERENCE ||
+	KASSERT(lock_request == X_LOAD_REFERENCE ||
 	    lock_request == X_LOAD_UPDATE ||
 	    lock_request == X_LOAD_LOCKSOWNED);
 	if (lock_request == X_LOAD_REFERENCE) {
@@ -2463,16 +2463,16 @@ load_inmem_xtnt_map(
 				return sts;
 			}
 		}
-		MS_SMP_ASSERT(imm_check_xtnt_map(xtnts->xtntMap) == EOK);
+		KASSERT(imm_check_xtnt_map(xtnts->xtntMap) == EOK);
 
 		break;
 
 	case BSXMT_STRIPE:
 
 		if (RBMT_THERE(domain)) {
-			MS_SMP_ASSERT(VD_HTOP(bfVdIndex, domain)->rbmtp != NULL);
+			KASSERT(VD_HTOP(bfVdIndex, domain)->rbmtp != NULL);
 		}
-		MS_SMP_ASSERT(VD_HTOP(bfVdIndex, domain)->bmtp != NULL);
+		KASSERT(VD_HTOP(bfVdIndex, domain)->bmtp != NULL);
 
 		sts = load_from_shadow_rec(bfap,
 		    xtntRec->chainVdIndex,
@@ -2484,7 +2484,7 @@ load_inmem_xtnt_map(
 		if (sts != EOK) {
 			return sts;
 		}
-		MS_SMP_ASSERT(imm_check_xtnt_map(xtnts->xtntMap) == EOK);
+		KASSERT(imm_check_xtnt_map(xtnts->xtntMap) == EOK);
 
 		xtnts->shadowXtntMap = xtnts->xtntMap;
 		xtnts->xtntMap = NULL;
@@ -2507,7 +2507,7 @@ load_inmem_xtnt_map(
 			if (sts != EOK) {
 				return sts;
 			}
-			MS_SMP_ASSERT(imm_check_xtnt_map(xtntMap) == EOK);
+			KASSERT(imm_check_xtnt_map(xtntMap) == EOK);
 
 			totalPageCnt = totalPageCnt + pageCnt;
 
@@ -2641,7 +2641,7 @@ load_from_shadow_rec(
 	}
 	vdp = VD_HTOP(bfVdIndex, dmnP);
 
-	MS_SMP_ASSERT(TEST_PAGE(bfMcellId.page, vdp->bmtp) == EOK);
+	KASSERT(TEST_PAGE(bfMcellId.page, vdp->bmtp) == EOK);
 	sts = bmt_refpg(&pgRef,
 	    (void *) &bmtp,
 	    vdp->bmtp,
@@ -2652,7 +2652,7 @@ load_from_shadow_rec(
 	}
 	derefPgFlag = 1;
 
-	MS_SMP_ASSERT(TEST_CELL(bfMcellId.cell) == EOK);
+	KASSERT(TEST_CELL(bfMcellId.cell) == EOK);
 	mcellp = &(bmtp->bsMCA[bfMcellId.cell]);
 	if (check_mcell_hdr(mcellp, bfap) != EOK) {
 		RAISE_EXCEPTION(E_BAD_BMT);
@@ -2764,7 +2764,7 @@ load_from_shadow_rec(
 	                ** record, the stripe continues for (a multiple of) 64K more mcells.
 	                */
 			vdp = VD_HTOP(nextVdIndex, dmnP);
-			MS_SMP_ASSERT(TEST_PAGE(nextMcellId.page, vdp->bmtp) == EOK);
+			KASSERT(TEST_PAGE(nextMcellId.page, vdp->bmtp) == EOK);
 			sts = bmt_refpg(&pgRef,
 			    (void *) &bmtp,
 			    vdp->bmtp,
@@ -2775,7 +2775,7 @@ load_from_shadow_rec(
 			}
 			derefPgFlag = 1;
 
-			MS_SMP_ASSERT(TEST_CELL(bfMcellId.cell) == EOK);
+			KASSERT(TEST_CELL(bfMcellId.cell) == EOK);
 			mcellp = &(bmtp->bsMCA[nextMcellId.cell]);
 			if (check_mcell_hdr(mcellp, bfap) != EOK) {
 				RAISE_EXCEPTION(E_BAD_BMT);
@@ -2925,7 +2925,7 @@ load_from_xtnt_rec(
 	xtntMap->hdrMcellId = bfMcellId;
 	xtntMap->allocVdIndex = -1;
 
-	MS_SMP_ASSERT(xtntMap->subXtntMap != NULL);
+	KASSERT(xtntMap->subXtntMap != NULL);
 	subXtntMap = &(xtntMap->subXtntMap[0]);
 
 	sts = imm_init_sub_xtnt_map(
@@ -3015,7 +3015,7 @@ load_from_xtnt_rec(
 	         * Note that load_from_bmt_xtra_xtnt_rec() makes the
 	         * assumption that the BMT's extent records are in memory.
 	         */
-		MS_SMP_ASSERT(BS_BFTAG_RSVD(bfap->tag));
+		KASSERT(BS_BFTAG_RSVD(bfap->tag));
 		/*
 	         * This is only for the RBMT or V3 BMT.
 	         * stg_add_rbmt_stg ensures that mcellCnt will not wrap for RBMT.
@@ -3129,14 +3129,14 @@ load_from_xtra_xtnt_rec(
 		mdap = vdp->bmtp;
 	}
 
-	MS_SMP_ASSERT(TEST_PAGE(mcellId.page, mdap) == EOK);
+	KASSERT(TEST_PAGE(mcellId.page, mdap) == EOK);
 	sts = bmt_refpg(&pgRef, (void *) &bmtp, mdap, mcellId.page, BS_NIL);
 	if (sts != EOK) {
 		return sts;
 	}
 	derefPgFlag = 1;
 
-	MS_SMP_ASSERT(TEST_CELL(mcellId.cell) == EOK);
+	KASSERT(TEST_CELL(mcellId.cell) == EOK);
 	mcellp = &(bmtp->bsMCA[mcellId.cell]);
 	if (check_mcell_hdr(mcellp, bfap) != EOK) {
 		RAISE_EXCEPTION(E_BAD_BMT);

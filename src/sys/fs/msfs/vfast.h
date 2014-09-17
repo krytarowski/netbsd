@@ -34,7 +34,7 @@
      * on a Monday.  This will not be correct if YRREF \
      * changes!                                        \
      */                                                \
-    MS_SMP_ASSERT(POSIX_BASE_YEAR == 1970);            \
+    KASSERT(POSIX_BASE_YEAR == 1970);            \
     newday = (tv_sec / SECDAY + 4) % 7;                \
 }
 

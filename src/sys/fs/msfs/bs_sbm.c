@@ -832,8 +832,8 @@ sbm_find_space(
 		if (reserved_desc == NULL) {
 			return (NULL);
 		}
-		MS_SMP_ASSERT(reserved_desc->start_clust < vdp->vdClusters);
-		MS_SMP_ASSERT(reserved_desc->start_clust + reserved_desc->num_clust <=
+		KASSERT(reserved_desc->start_clust < vdp->vdClusters);
+		KASSERT(reserved_desc->start_clust + reserved_desc->num_clust <=
 		    vdp->vdClusters);
 
 		vdp->freeRsvdStg.start_clust = reserved_desc->start_clust;
@@ -912,8 +912,8 @@ sbm_find_space(
 		requested_start = howmany(*start_blk, vdp->stgCluster);
 		do {
 
-			MS_SMP_ASSERT(cur_desc->start_clust < vdp->vdClusters);
-			MS_SMP_ASSERT(cur_desc->start_clust + cur_desc->num_clust <=
+			KASSERT(cur_desc->start_clust < vdp->vdClusters);
+			KASSERT(cur_desc->start_clust + cur_desc->num_clust <=
 			    vdp->vdClusters);
 
 			if (requested_start >= cur_desc->start_clust
@@ -951,8 +951,8 @@ sbm_find_space(
 
 	while ((cur_desc != NULL)) {
 
-		MS_SMP_ASSERT(cur_desc->start_clust < vdp->vdClusters);
-		MS_SMP_ASSERT(cur_desc->start_clust + cur_desc->num_clust <=
+		KASSERT(cur_desc->start_clust < vdp->vdClusters);
+		KASSERT(cur_desc->start_clust + cur_desc->num_clust <=
 		    vdp->vdClusters);
 		if (cur_desc->num_clust >= requested_clust) {
 			/*
@@ -1091,8 +1091,8 @@ sbm_find_space(
 	}
 	if (cur_desc != NULL) {
 use_cur_desc:
-		MS_SMP_ASSERT(cur_desc->start_clust < vdp->vdClusters);
-		MS_SMP_ASSERT(cur_desc->start_clust + cur_desc->num_clust <=
+		KASSERT(cur_desc->start_clust < vdp->vdClusters);
+		KASSERT(cur_desc->start_clust + cur_desc->num_clust <=
 		    vdp->vdClusters);
 		*start_blk = cur_desc->start_clust * vdp->stgCluster;
 		if (cur_desc->num_clust >= requested_clust) {
@@ -1139,7 +1139,7 @@ sbm_howmany_blks(
 	int lastPg;
 	int bc;
 
-	MS_SMP_ASSERT((*blkCount % pgSz) == 0);
+	KASSERT((*blkCount % pgSz) == 0);
 
 	if (*pinPages == 0) {
 		*blkCount = 0;
@@ -1168,7 +1168,7 @@ sbm_howmany_blks(
          * the number of pages that would be pinned.
          */
 	if (lastPg <= lastSbmPage) {
-		MS_SMP_ASSERT(*pinPages >= lastPg - firstSbmPage + 1);
+		KASSERT(*pinPages >= lastPg - firstSbmPage + 1);
 		*pinPages -= lastPg - firstSbmPage + 1;
 		return;
 	}
@@ -1189,7 +1189,7 @@ sbm_howmany_blks(
          */
 	bc = residue + (lastSbmPage - firstSbmPage) * SBM_BITS_PG;
 
-	MS_SMP_ASSERT(bc <= bitCount);
+	KASSERT(bc <= bitCount);
 
 	/*
          * Make sure that the returned value is an integral number of pages.
@@ -1837,7 +1837,7 @@ load_x_cache(
 
 	++AdvfsLoadXCache;
 
-	MS_SMP_ASSERT(lock_holder(&vdp->stgMap_lk.lock));
+	KASSERT(lock_holder(&vdp->stgMap_lk.lock));
 
 	/*
          * The list is simply built in scan order, and the add_cache
@@ -2204,7 +2204,7 @@ sbm_lock_unlock_range(
          * in the cache that overlap the new reserved range.
          */
 	if (startClust || numClust) {
-		MS_SMP_ASSERT(lock_holder(&vdp->stgMap_lk.lock));
+		KASSERT(lock_holder(&vdp->stgMap_lk.lock));
 		next_desc = cur_desc = vdp->freeStgLst;
 		while ((cur_desc != NULL)) {
 			cur_desc_end = cur_desc->start_clust + cur_desc->num_clust;
@@ -2857,9 +2857,9 @@ sbm_scan_v3_v4(
 	sbmLastPgBits = vdp->vdClusters - sbmLastPg * SBM_BITS_PG -
 	    sbmLastPgWholeWds * SBM_BITS_LONG;
 
-	MS_SMP_ASSERT(startPg <= sbmLastPg);
-	MS_SMP_ASSERT(startWd <= SBM_LONGS_PG);
-	MS_SMP_ASSERT(startBit < SBM_BITS_LONG);
+	KASSERT(startPg <= sbmLastPg);
+	KASSERT(startWd <= SBM_LONGS_PG);
+	KASSERT(startBit < SBM_BITS_LONG);
 
 	/*
          * Scan the pages up to the end of the sbm
@@ -2947,9 +2947,9 @@ sbm_scan_v3_v4(
 						jumpWd = bmt_rsvd_end / SBM_BITS_LONG - jumpPg * SBM_LONGS_PG;
 						jumpBit = bmt_rsvd_end - jumpPg * SBM_BITS_PG -
 						    jumpWd * SBM_BITS_LONG;
-						MS_SMP_ASSERT(jumpPg <= sbmLastPg);
-						MS_SMP_ASSERT(jumpWd <= SBM_LONGS_PG);
-						MS_SMP_ASSERT(jumpBit < SBM_BITS_LONG);
+						KASSERT(jumpPg <= sbmLastPg);
+						KASSERT(jumpWd <= SBM_LONGS_PG);
+						KASSERT(jumpBit < SBM_BITS_LONG);
 
 						if (jumpPg > pg) {
 							/* rsvd section ends
@@ -3053,7 +3053,7 @@ _PAGE_FINISHED:
 	}			/* end while pages in sbm */
 
 	/** NEVER REACHED **/
-	MS_SMP_ASSERT(0);
+	KASSERT(0);
 	return (ENOSPC);
 }
 
@@ -3083,7 +3083,7 @@ find_bmt_end(vdT * vdp)
 	bsInMemSubXtntMapT *subXMap;
 
 	xMap = vdp->bmtp->xtnts.xtntMap;
-	MS_SMP_ASSERT(xMap != NULL);
+	KASSERT(xMap != NULL);
 	subXMap = &(xMap->subXtntMap[xMap->cnt - 1]);
 
 	vdBlk = subXMap->bsXA[subXMap->cnt - 2].vdBlk;

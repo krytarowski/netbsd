@@ -285,7 +285,7 @@ bs_disk_init(
 	struct nameidata *ndp = &u.u_nd;
 #endif
 
-	MS_SMP_ASSERT(bsVdParams->vdIndex > 0);
+	KASSERT(bsVdParams->vdIndex > 0);
 
 	if (dmnVersion < FIRST_RBMT_VERSION) {
 		sts = bs_disk_init_v3(diskName,
@@ -2440,8 +2440,8 @@ vd_extend(struct vd * vdp)
 
 	vdp->bitMapPgs += newSbmPgs;
 	sbmBfap->nextPage += newSbmPgs;
-	MS_SMP_ASSERT(vdp->bitMapPgs == sbmBfap->nextPage);
-	MS_SMP_ASSERT(imm_check_xtnt_map(sbmBfap->xtnts.xtntMap) == EOK);
+	KASSERT(vdp->bitMapPgs == sbmBfap->nextPage);
+	KASSERT(imm_check_xtnt_map(sbmBfap->xtnts.xtntMap) == EOK);
 
 
 	/*
@@ -2596,7 +2596,7 @@ vd_extend_add_sbm_pgs(vdT * vdp,
 	         */
 		i = origSubXtntMap->cnt;
 		origSubXtntMap->bsXA[i - 1].vdBlk = oldVdSize;
-		MS_SMP_ASSERT(sbmBfap->nextPage == origSubXtntMap->bsXA[i - 1].bsPage);
+		KASSERT(sbmBfap->nextPage == origSubXtntMap->bsXA[i - 1].bsPage);
 		origSubXtntMap->bsXA[i].bsPage = sbmBfap->nextPage + newSbmPgs;
 		origSubXtntMap->bsXA[i].vdBlk = XTNT_TERM;
 
@@ -2618,8 +2618,8 @@ vd_extend_add_sbm_pgs(vdT * vdp,
 			origSubXtntMap->pageCnt -= newSbmPgs;
 			return sts;
 		}
-		MS_SMP_ASSERT(sbmBfap->nextPage == xtntMap->nextValidPage);
-		MS_SMP_ASSERT(sbmBfap->nextPage == xtnts->allocPageCnt);
+		KASSERT(sbmBfap->nextPage == xtntMap->nextValidPage);
+		KASSERT(sbmBfap->nextPage == xtnts->allocPageCnt);
 		xtntMap->nextValidPage += newSbmPgs;
 		xtnts->allocPageCnt += newSbmPgs;
 	} else {

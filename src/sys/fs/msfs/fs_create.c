@@ -206,7 +206,7 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 	/* Prevent races with migrate code paths */
 	/* Lock the directory */
 	/* Can't be a clone */
-	MS_SMP_ASSERT(dir_bfap->bfSetp->cloneId == BS_BFSET_ORIG);
+	KASSERT(dir_bfap->bfSetp->cloneId == BS_BFSET_ORIG);
 
 	/* Need to take the directory lock because of the call chain
 	 * insert_seq --> rbf_add_stg */
@@ -551,7 +551,7 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 		/* Directories start off with no index regardless of domain
 		 * versioning. Set a -1 in idx_params to indicate that it is
 		 * unnecessary to attempt to open the index */
-		MS_SMP_ASSERT(bfap->idx_params == NULL);
+		KASSERT(bfap->idx_params == NULL);
 		bfap->idx_params = (void *) -1;
 
 	}			/* end of if create_directory */
@@ -1046,7 +1046,7 @@ fs_flush_saved_stats(
 	statusT ret = EOK;
 	struct timeval new_time;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
 
 	/*
          * if any time fields need to be updated, do it now...

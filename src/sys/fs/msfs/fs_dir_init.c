@@ -805,9 +805,9 @@ fs_insert_undo(
          * if the dir has an initialized context area, then make sure
          * it's locked and up its dir stamp.
          */
-	MS_SMP_ASSERT(ATOV(dir_accessp));
+	KASSERT(ATOV(dir_accessp));
 	context_ptr = VTOC(ATOV(dir_accessp));
-	MS_SMP_ASSERT((dmnP->state != BFD_ACTIVATED) ||
+	KASSERT((dmnP->state != BFD_ACTIVATED) ||
 	    (lock_holder(&context_ptr->file_lock)));
 
 	sts = rbf_pinpg(
@@ -831,7 +831,7 @@ fs_insert_undo(
                BS_BFTAG_IDX(in_rec.undo_header.ins_tag),
                BS_BFTAG_IDX(in_rec.undo_header.dir_tag));
 */
-		MS_SMP_ASSERT(FALSE);
+		KASSERT(FALSE);
 
 		goto finish;
 	}
@@ -888,7 +888,7 @@ finish:
 		/*
 	         * We should only be decrementing file_size by one page.
 	         */
-		MS_SMP_ASSERT(dir_accessp->file_size - in_rec.undo_header.old_size ==
+		KASSERT(dir_accessp->file_size - in_rec.undo_header.old_size ==
 		    ADVFS_PGSZ);
 		dir_accessp->file_size = in_rec.undo_header.old_size;
 	} else {

@@ -101,7 +101,7 @@ struct bfSet;
 
 #define BS_BFAH_INSERT( _bfap, _laction)                \
 {                                                       \
-    MS_SMP_ASSERT(SLOCK_HOLDER(&_bfap->bfaLock.mutex)); \
+    KASSERT(SLOCK_HOLDER(&_bfap->bfaLock.mutex)); \
     dyn_hash_insert( BsAccessHashTbl, _bfap, _laction); \
 }
 
@@ -540,7 +540,7 @@ limits_of_active_range(
 
 #define DEC_REFCNT( bfap ) \
 { \
-    MS_SMP_ASSERT(SLOCK_HOLDER(&(bfap)->bfaLock.mutex)); \
+    KASSERT(SLOCK_HOLDER(&(bfap)->bfaLock.mutex)); \
     if ( --bfap->refCnt <= 0 ) \
         free_acc_struct( bfap ); \
 }
@@ -552,8 +552,8 @@ limits_of_active_range(
 #define ADD_ACC_CLOSEDLIST( bfap ) \
 { \
     mutex_lock(&BfAccessFreeLock); \
-    MS_SMP_ASSERT(bfap->onFreeList == 0); \
-    MS_SMP_ASSERT(ClosedAcc.freeBwd); \
+    KASSERT(bfap->onFreeList == 0); \
+    KASSERT(ClosedAcc.freeBwd); \
     bfap->freeBwd = ClosedAcc.freeBwd; \
     bfap->freeFwd = (bfAccessT *)&ClosedAcc; \
     ClosedAcc.freeBwd->freeFwd = bfap; \
@@ -607,10 +607,10 @@ limits_of_active_range(
     extern int advfs_shutting_down; \
                                 \
     mutex_lock(&BfAccessFreeLock); \
-    MS_SMP_ASSERT(bfap->onFreeList == 0); \
-    MS_SMP_ASSERT(bfap->dirtyBufList.length == 0); \
+    KASSERT(bfap->onFreeList == 0); \
+    KASSERT(bfap->dirtyBufList.length == 0); \
     if ( bfap->stateLk.state == ACC_INVALID ) { \
-        MS_SMP_ASSERT(FreeAcc.freeFwd); \
+        KASSERT(FreeAcc.freeFwd); \
         if (FreeAcc.freeFwd != (bfAccessT *)&FreeAcc) { \
             bfap->bfap_free_time = FreeAcc.freeFwd->bfap_free_time; \
         } else { \
@@ -621,7 +621,7 @@ limits_of_active_range(
         FreeAcc.freeFwd->freeBwd = bfap; \
         FreeAcc.freeFwd = bfap; \
     } else { \
-        MS_SMP_ASSERT(FreeAcc.freeBwd); \
+        KASSERT(FreeAcc.freeBwd); \
         bfap->freeBwd = FreeAcc.freeBwd; \
         bfap->freeFwd = (bfAccessT *)&FreeAcc; \
         FreeAcc.freeBwd->freeFwd = bfap; \
@@ -657,12 +657,12 @@ limits_of_active_range(
     bfap->freeBwd->freeFwd = bfap->freeFwd; \
     bfap->freeFwd = bfap->freeBwd = NULL; \
     if ( bfap->onFreeList == 1 ) { \
-        MS_SMP_ASSERT(FreeAcc.len > 0); \
+        KASSERT(FreeAcc.len > 0); \
         FreeAcc.len--; \
-        MS_SMP_ASSERT(bfap->dirtyBufList.length == 0); \
+        KASSERT(bfap->dirtyBufList.length == 0); \
         ACCMIN(FreeAcc); \
     } else { \
-        MS_SMP_ASSERT(ClosedAcc.len > 0); \
+        KASSERT(ClosedAcc.len > 0); \
         ClosedAcc.len--; \
         if (bfap->saved_stats) { \
             ClosedAcc.saved_stats_len--; \
@@ -679,9 +679,9 @@ limits_of_active_range(
 #define RM_ACC_LIST( bfap ) \
 { \
     mutex_lock(&BfAccessFreeLock); \
-    MS_SMP_ASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
-    MS_SMP_ASSERT(bfap->freeFwd); \
-    MS_SMP_ASSERT(bfap->freeBwd); \
+    KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
+    KASSERT(bfap->freeFwd); \
+    KASSERT(bfap->freeBwd); \
     RM_ACC_LIST_REAL_WORK( bfap ); \
     mutex_unlock(&BfAccessFreeLock); \
 }
@@ -692,10 +692,10 @@ limits_of_active_range(
  */
 #define RM_ACC_LIST_NOLOCK( bfap ) \
 { \
-    MS_SMP_ASSERT(SLOCK_HOLDER(&BfAccessFreeLock.mutex)); \
-    MS_SMP_ASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
-    MS_SMP_ASSERT(bfap->freeFwd); \
-    MS_SMP_ASSERT(bfap->freeBwd); \
+    KASSERT(SLOCK_HOLDER(&BfAccessFreeLock.mutex)); \
+    KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
+    KASSERT(bfap->freeFwd); \
+    KASSERT(bfap->freeBwd); \
     RM_ACC_LIST_REAL_WORK( bfap ); \
 }
 
@@ -708,8 +708,8 @@ limits_of_active_range(
 { \
     mutex_lock(&BfAccessFreeLock); \
     if (bfap->freeFwd) { \
-        MS_SMP_ASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
-        MS_SMP_ASSERT(bfap->freeBwd);  \
+        KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
+        KASSERT(bfap->freeBwd);  \
         RM_ACC_LIST_REAL_WORK( bfap ); \
     } \
     mutex_unlock(&BfAccessFreeLock); \

@@ -604,7 +604,7 @@ lgr_repair_pg(
 	logPgBlksT *logPgBlks = (logPgBlksT *) pgp;
 
 
-	MS_SMP_ASSERT(pgp->hdr.pgSafe);
+	KASSERT(pgp->hdr.pgSafe);
 
 	if (pgp->hdr.prevLastRec == -1) {
 		/*
@@ -802,7 +802,7 @@ lgr_restore_rec(
 	         * The page restoration makes sense only if the page is
 	         * still in the 'safe page' format.
 	         */
-		MS_SMP_ASSERT(offset > 0);
+		KASSERT(offset > 0);
 
 		if (blk_offset == 0) {
 			/* offset is right on a block boundary */
@@ -983,7 +983,7 @@ add_lsn_list(
 {
 	struct bsBufHdr *hp;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&dmnP->lsnLock.mutex));
+	KASSERT(SLOCK_HOLDER(&dmnP->lsnLock.mutex));
 
 	hp = &dmnP->lsnList;
 
@@ -1352,7 +1352,7 @@ lgr_writev_ftx(
 		 * logRecHdrT. */
 		/* Make sure we are writing at least the ftxDoneLRT header. */
 
-		MS_SMP_ASSERT(segment > 0 || segWdsToWrite >= DONE_LRT_WORDS);
+		KASSERT(segment > 0 || segWdsToWrite >= DONE_LRT_WORDS);
 
 		/* Setup log record header */
 
@@ -1448,8 +1448,8 @@ lgr_writev_ftx(
 			 * to locate our active rec from the active list */
 			int index;
 			index = get_wrtPgD_index(current_log_page, ldP->pgCnt);
-			MS_SMP_ASSERT(ldP->wrtPgD[index].pinned);
-			MS_SMP_ASSERT(ldP->wrtPgD[index].num == current_log_page);
+			KASSERT(ldP->wrtPgD[index].pinned);
+			KASSERT(ldP->wrtPgD[index].num == current_log_page);
 
 			if (--ldP->wrtPgD[index].writers == 0) {
 				/* We are the last writer of this page we must
@@ -1479,7 +1479,7 @@ lgr_writev_ftx(
 				 * lgr_writev_ftx. Otherwise we would have
 				 * moved off this page. */
 
-				MS_SMP_ASSERT(LSN_GTE(ldP->flushLsn, ldP->lastPg.pgP->hdr.thisPageLSN));
+				KASSERT(LSN_GTE(ldP->flushLsn, ldP->lastPg.pgP->hdr.thisPageLSN));
 
 				/* We know 3 things: 1) We are the last writer
 				 * on the page. 2) No more writers can get in
@@ -1522,7 +1522,7 @@ lgr_writev_ftx(
 			 * through the loop. */
 			int index;
 
-			MS_SMP_ASSERT(current_log_page != ldP->lastPg.num);
+			KASSERT(current_log_page != ldP->lastPg.num);
 			current_log_page = (current_log_page + 1) % ldP->pgCnt;
 
 			/* By reserving the space beforehand we know that we
@@ -1537,7 +1537,7 @@ lgr_writev_ftx(
 			if (ldP->lastPg.num != current_log_page) {
 
 				index = get_wrtPgD_index(current_log_page, ldP->pgCnt);
-				MS_SMP_ASSERT(ldP->wrtPgD[index].num == current_log_page);
+				KASSERT(ldP->wrtPgD[index].num == current_log_page);
 				log_record_addr = (char *) &ldP->wrtPgD[index].pgP->data[current_rec_offset];
 			} else {
 				log_record_addr = (char *) &ldP->lastPg.pgP->data[current_rec_offset];
@@ -1673,7 +1673,7 @@ resetfirstrec(domainT * dmnP)
 	int logpages;
 	logRecAddrT firstRec;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&dmnP->lsnLock.mutex));
+	KASSERT(SLOCK_HOLDER(&dmnP->lsnLock.mutex));
 
 	ldP = dmnP->ftxLogP;
 
@@ -1697,7 +1697,7 @@ resetfirstrec(domainT * dmnP)
 	if (logpages < 0) {
 		logpages += ldP->pgCnt;
 	}
-	MS_SMP_ASSERT(logpages >= 0);
+	KASSERT(logpages >= 0);
 	if (logpages > dmnP->logStat.maxLogPgs) {
 		dmnP->logStat.maxLogPgs = logpages;
 	}
@@ -1750,7 +1750,7 @@ getLogStats(domainT * dmnP, logStatT * logStatp)
 	if (logpages < 0) {
 		logpages += ldP->pgCnt;
 	}
-	MS_SMP_ASSERT(logpages >= 0);
+	KASSERT(logpages >= 0);
 	dmnP->logStat.maxLogPgs = logpages;
 	dmnP->logStat.minLogPgs = logpages;
 	mutex_unlock(&dmnP->lsnLock);
@@ -1765,7 +1765,7 @@ getLogStats(domainT * dmnP, logStatT * logStatp)
 		if (slots < 0) {
 			slots += ftxTDp->rrSlots;
 		}
-		MS_SMP_ASSERT(slots >= 0);
+		KASSERT(slots >= 0);
 		dmnP->logStat.maxFtxTblSlots = slots;
 		if (ftxp = ftxTDp->tablep[ftxTDp->oldestSlot].ftxp) {
 			dmnP->logStat.oldFtxTblAgent = ftxp->lrh.agentId;
@@ -1811,7 +1811,7 @@ release_dirty_pg(
 
 	if (ldP->lastPg.pinned) {
 
-		MS_SMP_ASSERT(ldP->lastPg.writers >= 0);
+		KASSERT(ldP->lastPg.writers >= 0);
 
 		if (ldP->lastPg.writers == 0) {
 			/*
@@ -1837,7 +1837,7 @@ release_dirty_pg(
 
 			index = get_wrtPgD_index(ldP->lastPg.num, ldP->pgCnt);
 
-			MS_SMP_ASSERT(!ldP->wrtPgD[index].pinned);
+			KASSERT(!ldP->wrtPgD[index].pinned);
 
 			ldP->wrtPgD[index] = ldP->lastPg;
 			ldP->wrtPgD[index].lastRec = ldP->lastRec;
@@ -2956,7 +2956,7 @@ log_init(
 	logPgT *logPgP;
 	int pg;
 
-	MS_SMP_ASSERT(LOG_BLKSZ == BS_BLKSIZE);
+	KASSERT(LOG_BLKSZ == BS_BLKSIZE);
 
 	for (pg = 0; pg < pgCnt; pg++) {
 		int i;
@@ -3039,7 +3039,7 @@ lgr_open(
 	lock_setup(&(new_ldP->descLock), ADVlogDescT_descLock_info, TRUE);
 	lock_setup(&(new_ldP->flushLock), ADVflushT_flushLock_info, TRUE);
 	/* Open the log's bitfile */
-	MS_SMP_ASSERT(BS_BFTAG_RSVD(logtag));
+	KASSERT(BS_BFTAG_RSVD(logtag));
 	sts = bfm_open_ms(&logAccP, dmnP, BS_BFTAG_VDI(logtag), BFM_FTXLOG);
 
 	if (sts != EOK) {
@@ -3183,7 +3183,7 @@ lgr_close(
 	int rdDesc;
 	DEFINE_LOCK_FLAGS;
 
-	MS_SMP_ASSERT(ldP);
+	KASSERT(ldP);
 
 	DESCRIPTOR_WRITE_LOCK;
 	log_flush_sync(ldP, ldP->flushLsn);
@@ -3255,7 +3255,7 @@ lgr_flush(
 {
 	DEFINE_LOCK_FLAGS;
 
-	MS_SMP_ASSERT(ldP);
+	KASSERT(ldP);
 
 	DESCRIPTOR_WRITE_LOCK;
 	log_flush(ldP);
@@ -3284,7 +3284,7 @@ lgr_flush_start(
 	lsnT flush_lsn = lsn;
 	DEFINE_LOCK_FLAGS;
 
-	MS_SMP_ASSERT(ldP);
+	KASSERT(ldP);
 
 	if (noBlock) {
 		/* Try to get the lock, but if we can't, just return
@@ -3383,7 +3383,7 @@ lgr_flush_sync(
 {
 	DEFINE_LOCK_FLAGS;
 
-	MS_SMP_ASSERT(ldP);
+	KASSERT(ldP);
 
 	DESCRIPTOR_WRITE_LOCK;
 
@@ -3512,7 +3512,7 @@ log_flush_sync(
 	         * Continue using the current last log page.
 	         */
 
-		MS_SMP_ASSERT(!ldP->lastPg.pinned);
+		KASSERT(!ldP->lastPg.pinned);
 
 		/*
 	         * Make page look full.  This will cause lgr_writev()
@@ -3523,7 +3523,7 @@ log_flush_sync(
 		(ldP->dmnP)->logStat.wastedWords += DATA_WORDS_PG - ldP->nextRec.offset;
 		ldP->nextRec.offset = DATA_WORDS_PG;
 
-		MS_SMP_ASSERT(SEQ_LTE(ldP->flushLsn, ldP->logAccP->hiFlushLsn));
+		KASSERT(SEQ_LTE(ldP->flushLsn, ldP->logAccP->hiFlushLsn));
 		ldP->flushing = FALSE;
 	}
 	FLUSH_UNLOCK;
@@ -3843,7 +3843,7 @@ lgr_switch_vol(
 
 	DEFINE_LOCK_FLAGS;
 
-	MS_SMP_ASSERT(ldP);
+	KASSERT(ldP);
 
 	DESCRIPTOR_WRITE_LOCK;
 
@@ -3910,7 +3910,7 @@ lgr_switch_vol(
 	         */
 
 		/* Prevent races with migrate code paths */
-		MS_SMP_ASSERT(newAccP->bfSetp->cloneId == BS_BFSET_ORIG);
+		KASSERT(newAccP->bfSetp->cloneId == BS_BFSET_ORIG);
 		MIGTRUNC_LOCK_READ(&(newAccP->xtnts.migTruncLk));
 		sts = FTX_START_N(FTA_NULL, &ftxH, FtxNilFtxH, newAccP->dmnP, 0);
 		if (sts != EOK) {
@@ -4110,7 +4110,7 @@ lgr_switch_vol(
 	dmnP->ftxLogP = newldP;
 
 	/* assert that the log has valid in-mem structures */
-	MS_SMP_ASSERT(dmnP->logAccessp->xtnts.validFlag);
+	KASSERT(dmnP->logAccessp->xtnts.validFlag);
 	/* then proceed to figure out which RAD the log's vd struct is on */
 	mutex_lock(&dmnP->vdpTblLock);
 	dmnP->logVdRadId = PA_TO_MID(vtop(current_processor(),

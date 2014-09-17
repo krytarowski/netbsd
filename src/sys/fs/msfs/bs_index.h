@@ -375,14 +375,14 @@ typedef struct idxUndoRecord {
 { \
     RBF_PIN_FIELD(_pgref,_nptr->total_elements); \
     _nptr->total_elements++; \
-    MS_SMP_ASSERT(_nptr->total_elements <= IDX_MAX_ELEMENTS); \
+    KASSERT(_nptr->total_elements <= IDX_MAX_ELEMENTS); \
 }
 
 #define IDX_DEC_TOTAL(_pgref,_nptr) \
 { \
     RBF_PIN_FIELD(_pgref,_nptr->total_elements); \
     _nptr->total_elements--; \
-    MS_SMP_ASSERT(_nptr->total_elements <= IDX_MAX_ELEMENTS); \
+    KASSERT(_nptr->total_elements <= IDX_MAX_ELEMENTS); \
 }
 
 #define IDX_GET_BFAP(_dir_bfap, _idx_bfap) \

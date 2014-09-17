@@ -792,7 +792,7 @@ bs_delete_rtdn_opx(
 	} else {
 		bfSetp = bs_bfs_lookup_desc(recp->bfSetId);
 	}
-	MS_SMP_ASSERT(BFSET_VALID(bfSetp));
+	KASSERT(BFSET_VALID(bfSetp));
 
 	if (bfs_open) {
 		/*
@@ -1574,7 +1574,7 @@ ddl_complete_delete(bfTagT setTag, bfTagT fileTag, vdT * vdp)
 	}
 	if (sts == EOK) {
 		/* We opened the fileset. CFS is not holding it open. */
-		MS_SMP_ASSERT(bfSetp->fsRefCnt == 1);
+		KASSERT(bfSetp->fsRefCnt == 1);
 		/* CFS does not have the FS open. We are doing a faux mount. */
 		sts = quota_activate(fsnp);
 		if (sts != EOK) {
@@ -1583,8 +1583,8 @@ ddl_complete_delete(bfTagT setTag, bfTagT fileTag, vdT * vdp)
 		bfSetp->fsnp = fsnp;
 	} else {		/* EBUSY */
 		/* CFS has this fileset open. fsnp not malloced. */
-		MS_SMP_ASSERT(bfSetp->fsRefCnt > 1);
-		MS_SMP_ASSERT(bfSetp->fsnp != NULL);
+		KASSERT(bfSetp->fsRefCnt > 1);
+		KASSERT(bfSetp->fsnp != NULL);
 	}
 
 	/* Open the file on the deferred delete list to get the number of
@@ -1600,11 +1600,11 @@ ddl_complete_delete(bfTagT setTag, bfTagT fileTag, vdT * vdp)
 	if (sts != EOK) {
 		goto cleanup;
 	}
-	MS_SMP_ASSERT(bfap != NULL);
-	MS_SMP_ASSERT(bfap->bfVp == vp);
+	KASSERT(bfap != NULL);
+	KASSERT(bfap->bfVp == vp);
 
 	/* CFS is not holding this file open, else we would not be here. */
-	MS_SMP_ASSERT(VTOC(vp) == NULL);
+	KASSERT(VTOC(vp) == NULL);
 	sts = fscontext_init(vp, bfap, &cp);
 	if (sts != EOK) {
 		goto cleanup;
@@ -1648,7 +1648,7 @@ cleanup:
 		}
 		FILESET_UNLOCK(&FilesetLock);
 
-		MS_SMP_ASSERT(bfSetp->fsnp == fsnp);
+		KASSERT(bfSetp->fsnp == fsnp);
 		bfSetp->fsnp = NULL;
 
 		if (fsnp->quotaStatus & QSTS_QUOTA_ON) {
@@ -1691,7 +1691,7 @@ filesetnode_init(bfSetT * bfSetp, fileSetNodeT ** fsnpA)
 	bfSetParamsT bfSetParams;
 	fileSetNodeT *fsp;
 
-	MS_SMP_ASSERT(!BS_BFS_EQL(bfSetp->bfSetId, nilBfSetId));
+	KASSERT(!BS_BFS_EQL(bfSetp->bfSetId, nilBfSetId));
 
 	fsnp = (fileSetNodeT *) ms_malloc(sizeof(fileSetNodeT));
 	fsnp->filesetMagic = FSMAGIC;
@@ -1711,7 +1711,7 @@ filesetnode_init(bfSetT * bfSetp, fileSetNodeT ** fsnpA)
 	                 * it cannot become unmounted until the recovery is complete.
 	                 * So bfSetp->fsnp is not going to disappear.
 	                 */
-			MS_SMP_ASSERT(clu_is_ready());
+			KASSERT(clu_is_ready());
 			ms_free(fsnp);
 			return EBUSY;
 		}
@@ -1789,11 +1789,11 @@ fscontext_init(struct vnode * vp, bfAccessT * bfap, struct fsContext ** cpA)
 	statusT sts;
 	uint i;
 
-	MS_SMP_ASSERT(VTOC(vp) == NULL);
+	KASSERT(VTOC(vp) == NULL);
 
 	cp = vnode_fscontext_allocate(vp);
 
-	MS_SMP_ASSERT(!cp->initialized);
+	KASSERT(!cp->initialized);
 	cp->bf_tag = bfap->tag;
 
 	sts = bmtr_get_rec(bfap, BMTR_FS_STAT, &cp->dir_stats, sizeof(statT));
@@ -1804,7 +1804,7 @@ fscontext_init(struct vnode * vp, bfAccessT * bfap, struct fsContext ** cpA)
 	cp->dirstamp = 0;
 	cp->undel_dir_tag = NilBfTag;
 	cp->last_offset = 0;
-	MS_SMP_ASSERT(bfap->bfSetp->fsnp != NULL);
+	KASSERT(bfap->bfSetp->fsnp != NULL);
 	cp->fileSetNode = bfap->bfSetp->fsnp;
 
 	for (i = 0; i < MAXQUOTAS; i++) {
@@ -1943,7 +1943,7 @@ del_dealloc_stg(
 			break;
 		default:
 
-			MS_SMP_ASSERT(FALSE);
+			KASSERT(FALSE);
 			domain_panic(dmnP,
 			    "del_dealloc_stg: unknown type");
 			RAISE_EXCEPTION(sts);
@@ -2035,7 +2035,7 @@ del_xtnt_array(
 		*nextMCId = mcp->nextMCId;
 	} else if ((prp =
 		(bsXtntRT *) bmtr_find(mcp, BSR_XTNTS, vdp->dmnP)) != NULL) {
-		MS_SMP_ASSERT(FIRST_XTNT_IN_PRIM_MCELL(dmnP->dmnVersion, prp->type))
+		KASSERT(FIRST_XTNT_IN_PRIM_MCELL(dmnP->dmnVersion, prp->type))
 		    fxp = &prp->firstXtnt.bsXA[0];
 		xCnt = prp->firstXtnt.xCnt;
 		*nextVdIndex = prp->chainVdIndex;
@@ -2147,7 +2147,7 @@ del_xtnt_array(
 		                 * extent.
 		                 */
 				dsc.rstIndex = xp - fxp;
-				MS_SMP_ASSERT(((sb - xp->vdBlk) % dsc.pgSz) == 0);
+				KASSERT(((sb - xp->vdBlk) % dsc.pgSz) == 0);
 				dsc.rstOffset = (sb - xp->vdBlk) / dsc.pgSz;
 			}
 
@@ -2272,8 +2272,8 @@ xfer_xtnts_to_clone(
 
 	BFSETTBL_UNLOCK(dmnP)
 	    if (sts == EOK) {
-		MS_SMP_ASSERT(bfSetp->cloneId > 0);
-		MS_SMP_ASSERT(
+		KASSERT(bfSetp->cloneId > 0);
+		KASSERT(
 		    (lk_get_state(bfSetp->cloneDelState) == CLONE_DEL_XFER_STG) ||
 		    (lk_get_state(bfSetp->cloneDelState) == CLONE_DEL_PENDING));
 
@@ -2288,7 +2288,7 @@ xfer_xtnts_to_clone(
 		    &nullvp,
 		    NULL);
 		if (sts == EOK) {
-			MS_SMP_ASSERT(cloneap->xtnts.type == BSXMT_APPEND ||
+			KASSERT(cloneap->xtnts.type == BSXMT_APPEND ||
 			    cloneap->xtnts.type == BSXMT_STRIPE);
 		}
 	}
@@ -2325,8 +2325,8 @@ xfer_xtnts_to_clone(
 	if (cloneap && cloneap->xtnts.type == BSXMT_STRIPE) {
 		int i;
 
-		MS_SMP_ASSERT(cloneap->xtnts.stripeXtntMap);
-		MS_SMP_ASSERT(pxp->rsvd1 > 0 &&
+		KASSERT(cloneap->xtnts.stripeXtntMap);
+		KASSERT(pxp->rsvd1 > 0 &&
 		    pxp->rsvd1 <= cloneap->xtnts.stripeXtntMap->cnt);
 
 		for (i = 0; i < cloneap->xtnts.stripeXtntMap->cnt; i++) {
@@ -2358,7 +2358,7 @@ xfer_xtnts_to_clone(
 		/* (eg stripeIndex) that we don't have. */
 		xtntType = BSXMT_APPEND;
 	} else if (cloneap) {
-		MS_SMP_ASSERT(cloneap->xtnts.type == BSXMT_APPEND);
+		KASSERT(cloneap->xtnts.type == BSXMT_APPEND);
 		xmp = cloneap->xtnts.xtntMap;
 	}
 	/*
@@ -2457,7 +2457,7 @@ xfer_xtnts_to_clone(
 
 			continue;
 		}
-		MS_SMP_ASSERT(dsc.rstIndex <= xCnt - 1);
+		KASSERT(dsc.rstIndex <= xCnt - 1);
 		/*
 	         * for each extent in the subextent
 	         */
@@ -2465,11 +2465,11 @@ xfer_xtnts_to_clone(
 			uint32T startBlk;
 
 			/* Only clones have permanent holes. */
-			MS_SMP_ASSERT(fxp[mapi].vdBlk != PERM_HOLE_START);
+			KASSERT(fxp[mapi].vdBlk != PERM_HOLE_START);
 
 			pgstofree = pgstoadd = 0;
 			startpg = fxp[mapi].bsPage + dsc.rstOffset;
-			MS_SMP_ASSERT(startpg < fxp[mapi + 1].bsPage);
+			KASSERT(startpg < fxp[mapi + 1].bsPage);
 			/*
 	                 * for each page in the extent
 	                 */
@@ -2514,7 +2514,7 @@ xfer_xtnts_to_clone(
 					/* Were there previous pages to be
 					 * COWed? */
 					if (pgstoadd) {
-						MS_SMP_ASSERT(startpg >= fxp[mapi].bsPage);
+						KASSERT(startpg >= fxp[mapi].bsPage);
 						if (fxp[mapi].vdBlk == XTNT_TERM) {
 							startBlk = PERM_HOLE_START;
 						} else {
@@ -2569,7 +2569,7 @@ xfer_xtnts_to_clone(
 				    &dsc);
 			}
 			if (pgstoadd) {
-				MS_SMP_ASSERT(startpg >= fxp[mapi].bsPage);
+				KASSERT(startpg >= fxp[mapi].bsPage);
 				if (fxp[mapi].vdBlk == XTNT_TERM) {
 					startBlk = PERM_HOLE_START;
 				} else {
@@ -2608,7 +2608,7 @@ xfer_xtnts_to_clone(
 		/* If we added any pages to the clone, update the disk. */
 		/* This is all on one disk. */
 		if (tpa != 0) {
-			MS_SMP_ASSERT(xmp->updateStart <= xmp->maxCnt);
+			KASSERT(xmp->updateStart <= xmp->maxCnt);
 			x_update_ondisk_xtnt_map(cloneap->dmnP,
 			    cloneap,
 			    xmp,
@@ -2712,8 +2712,8 @@ del_part_xtnt(bfMCIdT pmcid,	/* in - mcell ID of primary mcell */
 	FTX_LOCKWRITE(&vdp->stgMap_lk, dscp->ftxH)
 	    startblk = fxp->vdBlk;
 	/* This extent maps real storage, not a hole. */
-	MS_SMP_ASSERT(startblk != XTNT_TERM);
-	MS_SMP_ASSERT(startblk != PERM_HOLE_START);
+	KASSERT(startblk != XTNT_TERM);
+	KASSERT(startblk != PERM_HOLE_START);
 
 	startblk += (startpg - fxp->bsPage) * dscp->pgSz;
 	numblk = pgstofree * dscp->pgSz;

@@ -574,7 +574,7 @@ idx_open_index_file(
 			dir_bfap->idx_params = (void *) -1;
 			return (EOK);
 		}
-		MS_SMP_ASSERT(index_tag.num > 0);
+		KASSERT(index_tag.num > 0);
 
 		/*
 	         * Get memory for the index parameters that hang off the
@@ -703,7 +703,7 @@ idx_close_index_file(
 
 	idx_bfap = ((bsDirIdxRecT *) dir_bfap->idx_params)->idx_bfap;
 
-	MS_SMP_ASSERT(((bsIdxRecT *) idx_bfap->idx_params)->dir_bfap == dir_bfap);
+	KASSERT(((bsIdxRecT *) idx_bfap->idx_params)->dir_bfap == dir_bfap);
 
 	/* The directory is being removed. We need to break the association
 	 * between the two. This takes care of the POSIX standard that the .
@@ -802,9 +802,9 @@ idx_bsearch_int(
 	ulong cmp;
 
 	start = 0;
-	MS_SMP_ASSERT(node->total_elements <= IDX_MAX_ELEMENTS);
+	KASSERT(node->total_elements <= IDX_MAX_ELEMENTS);
 	if (node->total_elements == 0) {
-		MS_SMP_ASSERT(node->page_right < 0);
+		KASSERT(node->page_right < 0);
 		return (0);
 	}
 	if (last_node) {
@@ -1013,7 +1013,7 @@ idx_split_node_int(
 	/* Determine if the element to be inserted lies in the first half of
 	 * the node.  */
 
-	MS_SMP_ASSERT(src_node_ptr->total_elements == IDX_MAX_ELEMENTS);
+	KASSERT(src_node_ptr->total_elements == IDX_MAX_ELEMENTS);
 
 	idx_middle = (IDX_MAX_ELEMENTS) >> 1;
 
@@ -1038,7 +1038,7 @@ idx_split_node_int(
 
 		RBF_PIN_FIELD(dst_pgref, dst_node_ptr->total_elements);
 		dst_node_ptr->total_elements = idx_dst;
-		MS_SMP_ASSERT(dst_node_ptr->total_elements < IDX_MAX_ELEMENTS);
+		KASSERT(dst_node_ptr->total_elements < IDX_MAX_ELEMENTS);
 
 		/* Insert the new element by moving successive elements down
 		 * then pin the records (including the inserted element).  */
@@ -1057,7 +1057,7 @@ idx_split_node_int(
 		/* Update the new size in the record and pin it */
 		RBF_PIN_FIELD(src_pgref, src_node_ptr->total_elements);
 		src_node_ptr->total_elements = idx_src + 1;
-		MS_SMP_ASSERT(src_node_ptr->total_elements < IDX_MAX_ELEMENTS);
+		KASSERT(src_node_ptr->total_elements < IDX_MAX_ELEMENTS);
 	}
 	/* If the element to be inserted lies in the second half then move the
 	 * half in two steps inserting the new element in between. Pin the
@@ -1093,8 +1093,8 @@ idx_split_node_int(
 
 		dst_node_ptr->total_elements = idx_dst + 1;
 		src_node_ptr->total_elements = idx_src;
-		MS_SMP_ASSERT(dst_node_ptr->total_elements < IDX_MAX_ELEMENTS);
-		MS_SMP_ASSERT(src_node_ptr->total_elements < IDX_MAX_ELEMENTS);
+		KASSERT(dst_node_ptr->total_elements < IDX_MAX_ELEMENTS);
+		KASSERT(src_node_ptr->total_elements < IDX_MAX_ELEMENTS);
 	}
 
 	return;
@@ -1371,7 +1371,7 @@ idx_insert_filename_int(
 	    *search_key,
 	    ((node_ptr->page_right < 0) && (level > 0)));
 
-	MS_SMP_ASSERT((level == 0) || (index < node_ptr->total_elements));
+	KASSERT((level == 0) || (index < node_ptr->total_elements));
 
 	/* Check if this node would need to be split if the node below it were
 	 * split and if so increment the split_count, if not reset the
@@ -1379,7 +1379,7 @@ idx_insert_filename_int(
 	 * node.  */
 
 	if (level > 0) {
-		MS_SMP_ASSERT(node_ptr->total_elements > 0);
+		KASSERT(node_ptr->total_elements > 0);
 
 		if (node_ptr->total_elements == IDX_MAX_ELEMENTS) {
 			/* If this is the first caller (split_count < 0) and
@@ -1508,7 +1508,7 @@ idx_insert_filename_int(
 
 			*insert = TRUE;
 		} else {
-			MS_SMP_ASSERT((level == 0) ||
+			KASSERT((level == 0) ||
 			    (index < node_ptr->total_elements));
 
 			/* Insert the element into the node using bcopy then
@@ -1736,12 +1736,12 @@ idx_remove_filename_int(
 	    search_key,
 	    ((node_ptr->page_right < 0) && (level > 0)));
 
-	MS_SMP_ASSERT((level == 0) || (index < node_ptr->total_elements));
+	KASSERT((level == 0) || (index < node_ptr->total_elements));
 
 	/* If we are not at the leaf node then recursively call ourselves.  */
 
 	if (level > 0) {
-		MS_SMP_ASSERT(node_ptr->total_elements > 0);
+		KASSERT(node_ptr->total_elements > 0);
 		sts = idx_remove_filename_int(node_ptr->data[index].loc.node_page,
 		    level - 1,
 		    search_key,
@@ -1975,7 +1975,7 @@ idx_lookup_filename(
 			if (node_ptr->total_elements == 0) {
 				/* This can only happend with the right most
 				 * node */
-				MS_SMP_ASSERT(node_ptr->page_right < 0);
+				KASSERT(node_ptr->page_right < 0);
 				break;
 			}
 			index = 0;
@@ -2038,7 +2038,7 @@ idx_lookup_filename(
 				tagp = GETTAGP(dir_rec_ptr);
 
 				*found_bs_tag = *tagp;
-				MS_SMP_ASSERT(dir_rec_ptr->fs_dir_header.fs_dir_bs_tag_num);
+				KASSERT(dir_rec_ptr->fs_dir_header.fs_dir_bs_tag_num);
 
 				/* set the location in the nameidata just like
 				 * seq_search does */
@@ -2131,12 +2131,12 @@ idx_lookup_node_int(
 	    search_key,
 	    ((node_ptr->page_right < 0) && (level > 0)));
 
-	MS_SMP_ASSERT((level == 0) || (index < node_ptr->total_elements));
+	KASSERT((level == 0) || (index < node_ptr->total_elements));
 
 	/* If we are not at the leaf node then recursively call ourselves */
 
 	if (level > 0) {
-		MS_SMP_ASSERT(node_ptr->total_elements > 0);
+		KASSERT(node_ptr->total_elements > 0);
 
 		sts = idx_lookup_node_int(node_ptr->data[index].loc.node_page,
 		    level - 1,
@@ -2509,7 +2509,7 @@ idx_directory_insert_space_int(
 		    *search_key,
 		    ((node_ptr->page_right < 0) && (level > 0)));
 
-	MS_SMP_ASSERT((level == 0) || (index < node_ptr->total_elements));
+	KASSERT((level == 0) || (index < node_ptr->total_elements));
 
 	/* Check if this node would need to be split if the node below it were
 	 * split and if so increment the split_count, if not reset the count.
@@ -2519,7 +2519,7 @@ idx_directory_insert_space_int(
 	 * not a leaf node.  */
 
 	if (level > 0) {
-		MS_SMP_ASSERT(node_ptr->total_elements > 0);
+		KASSERT(node_ptr->total_elements > 0);
 		if (node_ptr->total_elements == IDX_MAX_ELEMENTS) {
 			if (*split_count < 0)
 				*split_count = 1;
@@ -2686,7 +2686,7 @@ idx_directory_insert_space_int(
 			/* Insert the element into the node using bcopy then
 			 * pin the record.  Bcopy will handle the overlap.  */
 
-			MS_SMP_ASSERT(node_ptr->total_elements < IDX_MAX_ELEMENTS);
+			KASSERT(node_ptr->total_elements < IDX_MAX_ELEMENTS);
 
 			rbf_pin_record(pgref, &node_ptr->data[index],
 			    (node_ptr->total_elements - index + 1) *
@@ -2702,7 +2702,7 @@ idx_directory_insert_space_int(
 
 			node_ptr->data[index].loc.free_size = *size;
 
-			MS_SMP_ASSERT((level > 0) ||
+			KASSERT((level > 0) ||
 			    (node_ptr->data[index].loc.free_size
 				>= MIN_DIR_ENTRY_SIZE));
 			node_ptr->data[index].search_key = *search_key;
@@ -2776,7 +2776,7 @@ idx_directory_get_space(
 
 	/* Get the idx_file's access structure and setup for recursive call.  */
 
-	MS_SMP_ASSERT(size <= DIRBLKSIZ);
+	KASSERT(size <= DIRBLKSIZ);
 
 	idx_bfap = ((bsDirIdxRecT *) dir_bfap->idx_params)->idx_bfap;
 	root_page = ((bsIdxRecT *) idx_bfap->idx_params)->bmt.ffree_page;
@@ -2836,11 +2836,11 @@ idx_directory_get_space(
 	 * re-insert some back into the tree. This is because it was the last
 	 * element on a node and requires an insert back into the b-tree.  */
 
-	MS_SMP_ASSERT(found_size >= MIN_DIR_ENTRY_SIZE);
+	KASSERT(found_size >= MIN_DIR_ENTRY_SIZE);
 
 
 	if (found_size > size) {
-		MS_SMP_ASSERT(found_size - size >= MIN_DIR_ENTRY_SIZE);
+		KASSERT(found_size - size >= MIN_DIR_ENTRY_SIZE);
 
 		/* We know that the first piece is the one that satisfies the
 		 * request, so peel that out and insert the rest into the
@@ -2961,7 +2961,7 @@ idx_directory_get_space_int(
 	/* If we are not at the leaf node then recursively call ourselves */
 
 	if (level > 0) {
-		MS_SMP_ASSERT(node_ptr->total_elements > 0);
+		KASSERT(node_ptr->total_elements > 0);
 
 		found_size =
 		    idx_directory_get_space_int(node_ptr->data[index].loc.node_page,
@@ -3004,7 +3004,7 @@ idx_directory_get_space_int(
 					return (E_DOMAIN_PANIC);
 				}
 				if (node_ptr->total_elements == 0) {
-					MS_SMP_ASSERT(node_ptr->page_right < 0);
+					KASSERT(node_ptr->page_right < 0);
 					return (0);	/* No Space here */
 				}
 			} else {
@@ -3031,11 +3031,11 @@ idx_directory_get_space_int(
 
 			required_size = requested_size;
 
-			MS_SMP_ASSERT(required_size > 0);
+			KASSERT(required_size > 0);
 
 			start_addr = node_ptr->data[index].search_key;
 			free_size = (ulong) node_ptr->data[index].loc.free_size;
-			MS_SMP_ASSERT(free_size > 0);
+			KASSERT(free_size > 0);
 			rounded_free_size =
 			    min(DIRBLKSIZ - (start_addr & (DIRBLKSIZ - 1)), free_size);
 
@@ -3125,7 +3125,7 @@ idx_directory_get_space_int(
 						node_ptr->data[index].search_key += required_size;
 						node_ptr->data[index].loc.free_size -= required_size;
 
-						MS_SMP_ASSERT(node_ptr->data[index].loc.free_size >=
+						KASSERT(node_ptr->data[index].loc.free_size >=
 						    MIN_DIR_ENTRY_SIZE);
 
 						RBF_PIN_FIELD(rbfpgref, node_ptr->data[index]);
@@ -3181,7 +3181,7 @@ idx_directory_get_space_int(
 			required_size = requested_size;
 			start_addr += rounded_free_size;
 
-			MS_SMP_ASSERT(free_size >= rounded_free_size);
+			KASSERT(free_size >= rounded_free_size);
 
 			rounded_free_size = free_size - rounded_free_size;
 
@@ -3210,7 +3210,7 @@ idx_directory_get_space_int(
 
 				RBF_PIN_FIELD(rbfpgref, node_ptr->data[index].loc.free_size);
 				node_ptr->data[index].loc.free_size -= rounded_free_size;
-				MS_SMP_ASSERT(node_ptr->data[index].loc.free_size >=
+				KASSERT(node_ptr->data[index].loc.free_size >=
 				    MIN_DIR_ENTRY_SIZE);
 
 				/* Two cases exist.
@@ -3266,8 +3266,8 @@ idx_directory_get_space_int(
 					node_ptr->data[index + 1].loc.free_size =
 					    rounded_free_size - required_size;
 
-					MS_SMP_ASSERT(node_ptr->total_elements < IDX_MAX_ELEMENTS);
-					MS_SMP_ASSERT(node_ptr->data[index + 1].loc.free_size >=
+					KASSERT(node_ptr->total_elements < IDX_MAX_ELEMENTS);
+					KASSERT(node_ptr->data[index + 1].loc.free_size >=
 					    MIN_DIR_ENTRY_SIZE);
 
 					IDX_INC_TOTAL(rbfpgref, node_ptr);
@@ -3279,7 +3279,7 @@ idx_directory_get_space_int(
 		}
 		index++;	/* check next piece */
 	}
-	MS_SMP_ASSERT(FALSE);
+	KASSERT(FALSE);
 }
 /*******************************************************************
  * This is the outer wrapper for the recursive truncation routine.
@@ -3390,7 +3390,7 @@ idx_setup_for_truncation(
 		idxStats.setup_for_truncation_failed++;
 		return (bytes_to_trunc);
 	}
-	MS_SMP_ASSERT(bytes_to_trunc > 0);
+	KASSERT(bytes_to_trunc > 0);
 
 	/* Put the number of pages we truncated into the undo record. */
 
@@ -3479,7 +3479,7 @@ idx_setup_for_truncation_int(
 	/* If we are not at the leaf node then recursively call ourselves.  */
 
 	if (level > 0) {
-		MS_SMP_ASSERT(node_ptr->total_elements > 0);
+		KASSERT(node_ptr->total_elements > 0);
 		bytes_to_trunc =
 		    idx_setup_for_truncation_int(idx_bfap,
 		    node_ptr->data[index].loc.node_page,
@@ -3507,7 +3507,7 @@ idx_setup_for_truncation_int(
 			 * left sibling and look at the last element of it for
 			 * the space to truncate */
 
-			MS_SMP_ASSERT(node_ptr->page_right < 0);
+			KASSERT(node_ptr->page_right < 0);
 
 			page_to_search = node_ptr->sib.page_left;
 
@@ -3536,7 +3536,7 @@ idx_setup_for_truncation_int(
 				    "idx_setup_for_truncation_int: rbf_pinpg or refpg failed");
 				return (sts);
 			}
-			MS_SMP_ASSERT(node_ptr->total_elements > 0);
+			KASSERT(node_ptr->total_elements > 0);
 
 			index = node_ptr->total_elements - 1;
 		}
@@ -3545,7 +3545,7 @@ idx_setup_for_truncation_int(
 		/* Kick out if the truncation can no longer be performed */
 
 		if (num_bytes < ADVFS_PGSZ) {
-			MS_SMP_ASSERT(operation == TRUNC_QUERY);
+			KASSERT(operation == TRUNC_QUERY);
 			bs_derefpg(bfpgref, BS_CACHE_IT);
 
 			return (0);
@@ -3557,7 +3557,7 @@ idx_setup_for_truncation_int(
 			if (operation == TRUNC_UPDATE) {
 				RBF_PIN_FIELD(rbfpgref, node_ptr->data[index].loc.free_size);
 				node_ptr->data[index].loc.free_size = num_bytes & (ADVFS_PGSZ - 1);
-				MS_SMP_ASSERT(node_ptr->data[index].loc.free_size >=
+				KASSERT(node_ptr->data[index].loc.free_size >=
 				    MIN_DIR_ENTRY_SIZE);
 				num_bytes -= node_ptr->data[index].loc.free_size;
 
@@ -3729,11 +3729,11 @@ idx_glom_entry_int(
 	if ((left_node_ptr != NULL) &&
 	    (left_node_ptr->data[left_index].search_key +
 		left_node_ptr->data[left_index].loc.free_size >= start_addr)) {
-		MS_SMP_ASSERT((start_addr ==
+		KASSERT((start_addr ==
 			left_node_ptr->data[left_index].search_key) ||
 		    ((start_addr & DIRBLKSIZ - 1) == 0));
 
-		MS_SMP_ASSERT(left_node_ptr->data[left_index].search_key <= start_addr);
+		KASSERT(left_node_ptr->data[left_index].search_key <= start_addr);
 
 		reuse_ptr = &left_node_ptr->data[left_index];
 		reuse_ptr->loc.free_size =
@@ -3790,7 +3790,7 @@ idx_glom_entry_int(
 			/*
 	                 * This is a rather costly assertion so I will remove it for
 	                 * now
-	                 *  MS_SMP_ASSERT(((right_node_ptr->data[right_index].search_key -
+	                 *  KASSERT(((right_node_ptr->data[right_index].search_key -
 	                 *              start_addr == size) &&
 	                 *             ((right_node_ptr->data[right_index].search_key &
 	                 *               DIRBLKSIZ-1) == 0))
@@ -3849,7 +3849,7 @@ idx_glom_entry_int(
 		 * have altered its size */
 
 		RBF_PIN_FIELD(left_pgref, reuse_ptr->loc.free_size);
-		MS_SMP_ASSERT(reuse_ptr->loc.free_size >=
+		KASSERT(reuse_ptr->loc.free_size >=
 		    MIN_DIR_ENTRY_SIZE);
 
 		/* Check to see if directory truncation should be performed.
@@ -3892,7 +3892,7 @@ idx_glom_entry_int(
 	}
 	if (right_node_ptr->data[right_index].search_key - start_addr <= size) {
 		/*
-	         *  MS_SMP_ASSERT(((right_node_ptr->data[right_index].search_key -
+	         *  KASSERT(((right_node_ptr->data[right_index].search_key -
 	         *             start_addr == size) &&
 	         *             ((right_node_ptr->data[right_index].search_key &
 	         *              DIRBLKSIZ-1) == 0))
@@ -3915,7 +3915,7 @@ idx_glom_entry_int(
 		    start_addr;
 
 		right_node_ptr->data[right_index].search_key = start_addr;
-		MS_SMP_ASSERT(right_node_ptr->data[right_index].loc.free_size >=
+		KASSERT(right_node_ptr->data[right_index].loc.free_size >=
 		    MIN_DIR_ENTRY_SIZE);
 
 		if ((right_node_ptr->data[right_index].loc.free_size >= ADVFS_PGSZ) &&
@@ -4155,8 +4155,8 @@ idx_convert_dir(
 		}
 		dir_p = (fs_dir_entry *) (p + n);
 
-		MS_SMP_ASSERT(free_idx <= IDX_MAX_ELEMENTS);
-		MS_SMP_ASSERT(file_idx <= IDX_MAX_ELEMENTS);
+		KASSERT(free_idx <= IDX_MAX_ELEMENTS);
+		KASSERT(file_idx <= IDX_MAX_ELEMENTS);
 	}
 
 	/* end of 'while' loop */
@@ -4183,7 +4183,7 @@ idx_convert_dir(
 	RBF_PIN_FIELD(free_pgref, freespace_node->total_elements);
 
 	freespace_node->total_elements = free_idx;
-	MS_SMP_ASSERT(freespace_node->total_elements <= IDX_MAX_ELEMENTS);
+	KASSERT(freespace_node->total_elements <= IDX_MAX_ELEMENTS);
 
 	/* We must initialize the nameidata hint. This will be set in the
 	 * initial lookup call followed by the call to insert or delete. This
@@ -4323,7 +4323,7 @@ idx_prune_start(
 
 				goto finish_prune;
 			}
-			MS_SMP_ASSERT(sts != CONTINUE);
+			KASSERT(sts != CONTINUE);
 			sts = EOK;
 			/* Also check to see if our root node has changed and
 			 * if so update the BMT MCELL. */
@@ -4457,7 +4457,7 @@ idx_prune_btree_int(
 	 * the root node which may be removed all together. It may later be
 	 * dereffed */
 
-	MS_SMP_ASSERT(root_level > 0);
+	KASSERT(root_level > 0);
 
 	sts = rbf_pinpg(&dst_pgref,
 	    (void *) &dst_node_ptr,
@@ -4476,13 +4476,13 @@ idx_prune_btree_int(
 		/* Search for the entry that will get us to the node that
 		 * contains our search key. */
 
-		MS_SMP_ASSERT(dst_node_ptr->total_elements > 0);
+		KASSERT(dst_node_ptr->total_elements > 0);
 
 		index = idx_bsearch_int(dst_node_ptr,
 		    *search_key,
 		    (dst_node_ptr->page_right < 0));
 
-		MS_SMP_ASSERT(index < dst_node_ptr->total_elements);
+		KASSERT(index < dst_node_ptr->total_elements);
 
 		/*
 	         * Although close to impossible (i think), if the hashvalues
@@ -4670,7 +4670,7 @@ idx_prune_btree_int(
 				 * right_node is smaller than the current
 				 * node. Otherwise we can let it fall thru. */
 
-				MS_SMP_ASSERT(right_node_ptr->total_elements > 0);
+				KASSERT(right_node_ptr->total_elements > 0);
 
 				if ((redistribute) &&
 				    (dst_node_ptr->total_elements >=
@@ -4689,7 +4689,7 @@ idx_prune_btree_int(
 						    dst_node_ptr->total_elements) >> 1) -
 					    (right_node_ptr->total_elements - 1));
 
-					MS_SMP_ASSERT(copy_cnt >= 0);
+					KASSERT(copy_cnt >= 0);
 
 					/* Make room at the beginning of the
 					 * node by moving the existing slots
@@ -4725,7 +4725,7 @@ idx_prune_btree_int(
 						dst_node_ptr->total_elements -= copy_cnt;
 					}
 					right_node_ptr->total_elements += (copy_cnt - 1);
-					MS_SMP_ASSERT(right_node_ptr->total_elements <=
+					KASSERT(right_node_ptr->total_elements <=
 					    IDX_MAX_ELEMENTS);
 
 					/* Inform our parent that the range
@@ -4751,7 +4751,7 @@ idx_prune_btree_int(
 			copy_cnt = right_node_ptr->total_elements - copy_index;
 		}
 
-		MS_SMP_ASSERT(copy_cnt >= 0);
+		KASSERT(copy_cnt >= 0);
 
 		/* The right sibling can now be copied over in rare cases the
 		 * copy count could be zero, we will let the routines handle
@@ -4766,7 +4766,7 @@ idx_prune_btree_int(
 			    copy_cnt * sizeof(idxNodeEntryT));
 
 			dst_node_ptr->total_elements += copy_cnt;
-			MS_SMP_ASSERT(dst_node_ptr->total_elements <= IDX_MAX_ELEMENTS);
+			KASSERT(dst_node_ptr->total_elements <= IDX_MAX_ELEMENTS);
 		}
 		status = REMOVE;
 
@@ -4787,7 +4787,7 @@ idx_prune_btree_int(
 				(copy_cnt + copy_index)) * sizeof(idxNodeEntryT));
 
 			right_node_ptr->total_elements -= (copy_cnt + copy_index);
-			MS_SMP_ASSERT(dst_node_ptr->total_elements <= IDX_MAX_ELEMENTS);
+			KASSERT(dst_node_ptr->total_elements <= IDX_MAX_ELEMENTS);
 
 			status = MODIFY;
 		}
@@ -4963,7 +4963,7 @@ idx_prune_btree_int(
 		 * removed actually lives on the sibling to our right,
 		 * otherwise we only need to remove it from this node */
 
-		MS_SMP_ASSERT(index < dst_node_ptr->total_elements - 1);
+		KASSERT(index < dst_node_ptr->total_elements - 1);
 
 		/* This node needs updating, Lets reuse some of our local
 		 * variables */
@@ -5104,7 +5104,7 @@ idx_prune_finish(
 	clupThreadMsgT *msg;
 	extern msgQHT CleanupMsgQH;
 
-	MS_SMP_ASSERT(idx_bfap->dirTruncp);
+	KASSERT(idx_bfap->dirTruncp);
 
 	pmsgs = (idxPruneMsgsT *) idx_bfap->dirTruncp;
 	idx_bfap->dirTruncp = (void *) NIL;
@@ -5158,7 +5158,7 @@ idx_undo_opx(
 	/* The undo transaction can make no assumptions about what has
 	 * happened so far. So first open the fileset itself. */
 
-	MS_SMP_ASSERT(opRecSz == sizeof(idxUndoRecordT));
+	KASSERT(opRecSz == sizeof(idxUndoRecordT));
 
 	bcopy(opRec, &recp, opRecSz);
 
@@ -5266,7 +5266,7 @@ idx_undo_opx(
 			domain_panic(ftxH.dmnP,
 			    "idx_undo_opx: idx_insert_filename_int failed");
 		}
-		MS_SMP_ASSERT((split_count == 0) && (insert == 0));
+		KASSERT((split_count == 0) && (insert == 0));
 		break;
 
 	case IDX_DIRECTORY_INSERT_SPACE_UNDO:
@@ -5301,7 +5301,7 @@ idx_undo_opx(
 			domain_panic(ftxH.dmnP,
 			    "idx_undo_opx: idx_directory_insert_space_int failed");
 		}
-		MS_SMP_ASSERT(sts == DONE);
+		KASSERT(sts == DONE);
 		break;
 
 	case IDX_CREATE_UNDO:
@@ -5319,7 +5319,7 @@ idx_undo_opx(
 		 * Since we break the association with the index file, we must
 		 * manually close it here. */
 
-		MS_SMP_ASSERT(dir_bfap->idx_params != NULL);
+		KASSERT(dir_bfap->idx_params != NULL);
 
 		ms_free(dir_bfap->idx_params);
 		dir_bfap->idx_params = (void *) -1;
@@ -5447,7 +5447,7 @@ idx_directory_insert_space_undo(
 		 * space leaving the left half on the left node and inserting
 		 * the right half back on to the right node. */
 
-		MS_SMP_ASSERT(node_ptr->sib.page_left != -1);
+		KASSERT(node_ptr->sib.page_left != -1);
 
 		right_node_ptr = node_ptr;
 		right_pgref = pgref;
@@ -5465,7 +5465,7 @@ idx_directory_insert_space_undo(
 		}
 		index = node_ptr->total_elements - 1;
 
-		MS_SMP_ASSERT((node_ptr->data[index].search_key <= start_addr) &&
+		KASSERT((node_ptr->data[index].search_key <= start_addr) &&
 		    ((node_ptr->data[index].search_key +
 			    node_ptr->data[index].loc.free_size) >=
 			(start_addr + size)));
@@ -5497,7 +5497,7 @@ idx_directory_insert_space_undo(
 			} else {
 				index++;
 			}
-			MS_SMP_ASSERT(index < IDX_MAX_ELEMENTS);
+			KASSERT(index < IDX_MAX_ELEMENTS);
 			if (index < node_ptr->total_elements) {
 				/* Make room for the new entry */
 
@@ -5532,7 +5532,7 @@ idx_directory_insert_space_undo(
 		node_ptr->data[index].loc.free_size -= size;
 
 	} else {
-		MS_SMP_ASSERT(start_addr == entry_sa);
+		KASSERT(start_addr == entry_sa);
 
 		/* No glomming occured with this insertion. Just remove the
 		 * entry */

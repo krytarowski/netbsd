@@ -279,13 +279,13 @@ DevWrite = 0x20} TraceActionT;
 
 #define ADD_DIRTYACCESSLIST( bp, seize_bfiolock ) \
 { \
-    MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex)); \
+    KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex)); \
     if (seize_bfiolock) \
         mutex_lock(&bp->bfAccess->bfIoLock); \
     else \
-        MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bfAccess->bfIoLock.mutex)); \
+        KASSERT(SLOCK_HOLDER(&bp->bfAccess->bfIoLock.mutex)); \
     bp->accListSeq++; \
-    MS_SMP_ASSERT(!(bp->lock.state & ACC_DIRTY)); \
+    KASSERT(!(bp->lock.state & ACC_DIRTY)); \
     bp->lock.state |= ACC_DIRTY; \
     bp->accFwd = (struct bsBuf *)&bp->bfAccess->dirtyBufList; \
     bp->accBwd = bp->bfAccess->dirtyBufList.accBwd; \
@@ -298,14 +298,14 @@ DevWrite = 0x20} TraceActionT;
 
 #define RM_ACCESSLIST( bp, seize_bfiolock ) \
 { \
-    MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex)); \
+    KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex)); \
     if (seize_bfiolock) \
         mutex_lock(&bp->bfAccess->bfIoLock); \
     else \
-        MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bfAccess->bfIoLock.mutex)); \
-    MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY); \
+        KASSERT(SLOCK_HOLDER(&bp->bfAccess->bfIoLock.mutex)); \
+    KASSERT(bp->lock.state & ACC_DIRTY); \
     bp->bfAccess->dirtyBufList.length--; \
-    MS_SMP_ASSERT(bp->bfAccess->dirtyBufList.length >= 0); \
+    KASSERT(bp->bfAccess->dirtyBufList.length >= 0); \
     bp->lock.state &= ~ACC_DIRTY; \
     bp->accListSeq++; \
     bp->accFwd->accBwd = bp->accBwd; \

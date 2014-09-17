@@ -150,7 +150,7 @@ imm_create_xtnt_map(
 	bsInMemXtntMapT *xtntMap;
 
 	xtntMap = (bsInMemXtntMapT *) ms_malloc(sizeof(bsInMemXtntMapT));
-	MS_SMP_ASSERT(xtntMap != NULL);
+	KASSERT(xtntMap != NULL);
 	xtntMap->subXtntMap = NULL;
 	sts = imm_init_xtnt_map(xtntMap,
 	    blksPerPage,
@@ -283,7 +283,7 @@ imm_big_extend_xtnt_map(bsInMemXtntMapT * xtntMap)
 	newSubXtntMap =
 	    (bsInMemSubXtntMapT *) ms_malloc(maxCnt * sizeof(bsInMemSubXtntMapT));
 	/* ms_malloc waits. It never returns ENO_MORE_MEMORY */
-	MS_SMP_ASSERT(newSubXtntMap != NULL);
+	KASSERT(newSubXtntMap != NULL);
 
 	for (i = 0; i < xtntMap->maxCnt; i++) {
 		newSubXtntMap[i] = xtntMap->subXtntMap[i];
@@ -577,7 +577,7 @@ imm_init_sub_xtnt_map(
 
 	switch (type) {
 	case BSR_XTNTS:
-		MS_SMP_ASSERT(onDiskMaxCnt == BMT_XTNTS);
+		KASSERT(onDiskMaxCnt == BMT_XTNTS);
 		if (maxCnt) {
 			/* The first part of this ASSERTion will fail on the
 			 * miscellaneous bitfile, which, as an exception, has
@@ -587,7 +587,7 @@ imm_init_sub_xtnt_map(
 			 * primary mcell is in BMT page 0 mcell 5 to slip thru
 			 * this test disguised as a miscellaneous bitfile, but
 			 * that is better than removing this check altogether. */
-			MS_SMP_ASSERT((maxCnt <= onDiskMaxCnt) ||
+			KASSERT((maxCnt <= onDiskMaxCnt) ||
 			    (subXtntMap->mcellId.page == 0 &&
 				subXtntMap->mcellId.cell == BFM_MISC &&
 				maxCnt == 3 &&
@@ -599,9 +599,9 @@ imm_init_sub_xtnt_map(
 		}
 		break;
 	case BSR_XTRA_XTNTS:
-		MS_SMP_ASSERT(onDiskMaxCnt == BMT_XTRA_XTNTS);
+		KASSERT(onDiskMaxCnt == BMT_XTRA_XTNTS);
 		if (maxCnt) {
-			MS_SMP_ASSERT(maxCnt <= onDiskMaxCnt);
+			KASSERT(maxCnt <= onDiskMaxCnt);
 			subXtntMap->maxCnt = maxCnt;
 		} else {
 			subXtntMap->maxCnt = 10;	/* arbitary. currently
@@ -609,9 +609,9 @@ imm_init_sub_xtnt_map(
 		}
 		break;
 	case BSR_SHADOW_XTNTS:
-		MS_SMP_ASSERT(onDiskMaxCnt == BMT_SHADOW_XTNTS);
+		KASSERT(onDiskMaxCnt == BMT_SHADOW_XTNTS);
 		if (maxCnt) {
-			MS_SMP_ASSERT(maxCnt <= onDiskMaxCnt);
+			KASSERT(maxCnt <= onDiskMaxCnt);
 			subXtntMap->maxCnt = maxCnt;
 		} else {
 			subXtntMap->maxCnt = 10;	/* arbitary. currently
@@ -619,7 +619,7 @@ imm_init_sub_xtnt_map(
 		}
 		break;
 	default:
-		MS_SMP_ASSERT(0);
+		KASSERT(0);
 	}
 
 	subXtntMap->bsXA =
@@ -776,7 +776,7 @@ imm_load_sub_xtnt_map(
 
 	vd = VD_HTOP(vdIndex, xtntMap->domain);
 
-	MS_SMP_ASSERT(TEST_PAGE(mcellId.page, vd->bmtp) == EOK);
+	KASSERT(TEST_PAGE(mcellId.page, vd->bmtp) == EOK);
 	sts = bmt_refpg(&pgRef,
 	    (void *) &bmt,
 	    vd->bmtp,
@@ -787,7 +787,7 @@ imm_load_sub_xtnt_map(
 	}
 	derefFlag = 1;
 
-	MS_SMP_ASSERT(TEST_CELL(mcellId.cell) == EOK);
+	KASSERT(TEST_CELL(mcellId.cell) == EOK);
 	mcell = &(bmt->bsMCA[mcellId.cell]);
 	if (check_mcell_hdr(mcell, bfap) != EOK) {
 		RAISE_EXCEPTION(E_BAD_BMT);
@@ -1132,8 +1132,8 @@ imm_copy_xtnt_descs(
 			subXtntMap->bsXA[dst].bsPage = copyBsXA[src + 1].bsPage;
 			subXtntMap->bsXA[dst].vdBlk = XTNT_TERM;
 
-			MS_SMP_ASSERT((int) dst >= 0);
-			MS_SMP_ASSERT(dst < subXtntMap->maxCnt);
+			KASSERT((int) dst >= 0);
+			KASSERT(dst < subXtntMap->maxCnt);
 		}
 		src++;
 		cnt++;
@@ -1806,8 +1806,8 @@ imm_page_to_sub_xtnt_map(
 	int last;
 	statusT sts;
 
-	MS_SMP_ASSERT(xtntMap->validCnt <= xtntMap->cnt);
-	MS_SMP_ASSERT(xtntMap->cnt <= xtntMap->maxCnt);
+	KASSERT(xtntMap->validCnt <= xtntMap->cnt);
+	KASSERT(xtntMap->cnt <= xtntMap->maxCnt);
 	if (!updateFlg) {
 		/* look at the valid (ie non update) subextents */
 		if (xtntMap->validCnt == 0) {
@@ -1818,8 +1818,8 @@ imm_page_to_sub_xtnt_map(
 		last = upr;
 	} else {
 		/* look at the update subextents */
-		MS_SMP_ASSERT(xtntMap->updateStart <= xtntMap->updateEnd);
-		MS_SMP_ASSERT(xtntMap->updateEnd < xtntMap->cnt);
+		KASSERT(xtntMap->updateStart <= xtntMap->updateEnd);
+		KASSERT(xtntMap->updateEnd < xtntMap->cnt);
 		if (xtntMap->cnt == 0) {
 			return E_PAGE_NOT_MAPPED;
 		}
@@ -1840,7 +1840,7 @@ imm_page_to_sub_xtnt_map(
 		if (pageOffset < xtntMap->subXtntMap[mid].pageOffset) {
 
 			upr = mid - 1;
-			MS_SMP_ASSERT(xtntMap->subXtntMap[upr].pageOffset <=
+			KASSERT(xtntMap->subXtntMap[upr].pageOffset <=
 			    xtntMap->subXtntMap[mid].pageOffset);
 
 		} else {
@@ -1849,7 +1849,7 @@ imm_page_to_sub_xtnt_map(
 				/* found it */
 				break;
 			}
-			MS_SMP_ASSERT(xtntMap->subXtntMap[mid + 1].pageOffset >=
+			KASSERT(xtntMap->subXtntMap[mid + 1].pageOffset >=
 			    xtntMap->subXtntMap[mid].pageOffset);
 			if (pageOffset < xtntMap->subXtntMap[mid + 1].pageOffset) {
 				/* found it */
@@ -1902,8 +1902,8 @@ imm_page_to_xtnt(
 						 * descriptor */
 		/* and convert the count to an index. */
 	} else {
-		MS_SMP_ASSERT(subXtntMap->updateStart <= subXtntMap->updateEnd);
-		MS_SMP_ASSERT(subXtntMap->updateEnd < subXtntMap->cnt);
+		KASSERT(subXtntMap->updateStart <= subXtntMap->updateEnd);
+		KASSERT(subXtntMap->updateEnd < subXtntMap->cnt);
 		lwr = subXtntMap->updateStart;
 		upr = subXtntMap->updateEnd - 1;
 	}
@@ -1919,7 +1919,7 @@ imm_page_to_xtnt(
 		if (pageOffset < subXtntMap->bsXA[mid].bsPage) {
 
 			upr = mid - 1;
-			MS_SMP_ASSERT(subXtntMap->bsXA[upr].bsPage <
+			KASSERT(subXtntMap->bsXA[upr].bsPage <
 			    subXtntMap->bsXA[mid].bsPage);
 
 		} else {
@@ -1938,7 +1938,7 @@ imm_page_to_xtnt(
 			} else {
 
 				lwr = mid + 1;
-				MS_SMP_ASSERT(subXtntMap->bsXA[lwr].bsPage >
+				KASSERT(subXtntMap->bsXA[lwr].bsPage >
 				    subXtntMap->bsXA[mid].bsPage);
 			}
 		}
@@ -2138,9 +2138,9 @@ overlay_xtnt_map(bfAccessT * bfap,
 	overSubXtntMapp = &overXtntMap->subXtntMap[overXtntMap->cnt - 1];
 	lastOverlayPage = overSubXtntMapp->bsXA[overSubXtntMapp->cnt - 1].bsPage - 1;
 
-	MS_SMP_ASSERT(lastOverlayPage >= firstOverlayPage);
-	MS_SMP_ASSERT(firstOverlayPage >= baseXtntMap->subXtntMap[0].pageOffset);
-	MS_SMP_ASSERT(lastOverlayPage <=
+	KASSERT(lastOverlayPage >= firstOverlayPage);
+	KASSERT(firstOverlayPage >= baseXtntMap->subXtntMap[0].pageOffset);
+	KASSERT(lastOverlayPage <=
 	    baseXtntMap->subXtntMap[baseXtntMap->cnt - 1].pageOffset +
 	    baseXtntMap->subXtntMap[baseXtntMap->cnt - 1].pageCnt - 1);
 
@@ -2148,7 +2148,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 ** step 1) copy first unchanged sub extent maps from baseXtntMap to modXtntMap
 */
 
-	MS_SMP_ASSERT(baseXtntMap->cnt > 0);
+	KASSERT(baseXtntMap->cnt > 0);
 	for (modSXMapCnt = 0, baseSXMapCnt = 0;
 	    baseSXMapCnt < baseXtntMap->cnt - 1;
 	    baseSXMapCnt++, modSXMapCnt++) {
@@ -2165,7 +2165,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		/* of this routine.  */
 		mcellCnt = baseXtntMap->cnt;
 
-		MS_SMP_ASSERT(modXtntMap->maxCnt > modSXMapCnt);
+		KASSERT(modXtntMap->maxCnt > modSXMapCnt);
 		modSubXtntMapp = &modXtntMap->subXtntMap[modSXMapCnt];
 		sts = imm_copy_sub_xtnt_map(bfap,
 		    baseXtntMap,
@@ -2180,7 +2180,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 	baseSubXtntMapp = &baseXtntMap->subXtntMap[baseSXMapCnt];
 	/* check if overlay lines up on subxtnt boundary. if so skip step 2 &
 	 * 3 */
-	MS_SMP_ASSERT(firstOverlayPage >= baseSubXtntMapp->pageOffset);
+	KASSERT(firstOverlayPage >= baseSubXtntMapp->pageOffset);
 	if ((baseSubXtntMapp->pageCnt > 0) &&
 	    (firstOverlayPage != baseSubXtntMapp->pageOffset)) {
 
@@ -2188,7 +2188,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 ** step 2) copy part of a subextent from baseXtntMap to modXtntMap
 */
 
-		MS_SMP_ASSERT(modXtntMap->maxCnt > modSXMapCnt);
+		KASSERT(modXtntMap->maxCnt > modSXMapCnt);
 
 		modSubXtntMapp = &modXtntMap->subXtntMap[modSXMapCnt];
 		sts = imm_copy_sub_xtnt_map(bfap,
@@ -2210,7 +2210,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		 * extent in */
 		/* two. Save descIndex and the second half of the extent for
 		 * step 3. */
-		MS_SMP_ASSERT(modSubXtntMapp->cnt > 1);
+		KASSERT(modSubXtntMapp->cnt > 1);
 		for (descIndex = 0; descIndex < modSubXtntMapp->cnt - 1; descIndex++) {
 			if (firstOverlayPage >= modSubXtntMapp->bsXA[descIndex + 1].bsPage) {
 				continue;
@@ -2246,7 +2246,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 */
 
 		if (baseXtntMap->subXtntMap[baseSXMapCnt].type == BSR_XTNTS) {
-			MS_SMP_ASSERT(FIRST_XTNT_IN_PRIM_MCELL(dmnVersion,
+			KASSERT(FIRST_XTNT_IN_PRIM_MCELL(dmnVersion,
 				bfap->xtnts.type));
 		} else {
 			sts = stg_alloc_new_mcell(bfap,
@@ -2266,7 +2266,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 	                 * as the subextent copied in step 2 above. It will have the same
 	                 * position in the mod chain as it had in the base so its type is OK
 	                 */
-			MS_SMP_ASSERT(bfap->dmnP == baseXtntMap->domain);
+			KASSERT(bfap->dmnP == baseXtntMap->domain);
 			sts = odm_create_xtnt_rec(bfap,
 			    baseXtntMap->allocVdIndex,
 			    modSubXtntMapp,
@@ -2301,9 +2301,9 @@ overlay_xtnt_map(bfAccessT * bfap,
 				/* The file is striped and this is not the
 				 * first stripe. */
 				/* Unlink this stripe from the mcell chain. */
-				MS_SMP_ASSERT(bfap->xtnts.type == BSXMT_STRIPE);
-				MS_SMP_ASSERT(bfap->xtnts.stripeXtntMap != NULL);
-				MS_SMP_ASSERT(stripeIndex < bfap->xtnts.stripeXtntMap->cnt);
+				KASSERT(bfap->xtnts.type == BSXMT_STRIPE);
+				KASSERT(bfap->xtnts.stripeXtntMap != NULL);
+				KASSERT(stripeIndex < bfap->xtnts.stripeXtntMap->cnt);
 
 				prevStripeXtntMap =
 				    bfap->xtnts.stripeXtntMap->xtntMap[stripeIndex - 1];
@@ -2475,7 +2475,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 			if (sts != EOK) {
 				RAISE_EXCEPTION(sts);
 			}
-			MS_SMP_ASSERT(bfap->dmnP == baseXtntMap->domain);
+			KASSERT(bfap->dmnP == baseXtntMap->domain);
 			sts = odm_create_xtnt_rec(bfap,
 			    baseXtntMap->allocVdIndex,
 			    replSubXtntMapp,
@@ -2490,11 +2490,11 @@ overlay_xtnt_map(bfAccessT * bfap,
 	                 * a new mcell to take its place so we can just free it.
 	                 */
 			if (baseXtntMap->subXtntMap[baseSXMapCnt - 1].type == BSR_XTNTS) {
-				MS_SMP_ASSERT(baseSubXtntMapp->vdIndex ==
+				KASSERT(baseSubXtntMapp->vdIndex ==
 				    modSubXtntMapp->vdIndex);
-				MS_SMP_ASSERT(baseSubXtntMapp->mcellId.cell ==
+				KASSERT(baseSubXtntMapp->mcellId.cell ==
 				    modSubXtntMapp->mcellId.cell);
-				MS_SMP_ASSERT(baseSubXtntMapp->mcellId.page ==
+				KASSERT(baseSubXtntMapp->mcellId.page ==
 				    modSubXtntMapp->mcellId.page);
 				modSubXtntMapp->updateStart = 0;
 				modSubXtntMapp->updateEnd = modSubXtntMapp->cnt - 1;
@@ -2532,7 +2532,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 	         * this mcell is not going to be the first in the modified chain, then
 	         * we must replace this mcell with a BSR_XTRA_XTNTS mcell.
 	         */
-		MS_SMP_ASSERT(overXtntMap->cnt);
+		KASSERT(overXtntMap->cnt);
 		if (overXtntMap->subXtntMap[0].type == BSR_SHADOW_XTNTS) {
 			if (overXtntMap->cnt > 1) {
 				/*
@@ -2577,7 +2577,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 			/* This is used to initialize the mcell. */
 			overXtntMap->subXtntMap[0].type = BSR_XTRA_XTNTS;
 			overXtntMap->subXtntMap[0].onDiskMaxCnt = BMT_XTRA_XTNTS;
-			MS_SMP_ASSERT(bfap->dmnP == overXtntMap->domain);
+			KASSERT(bfap->dmnP == overXtntMap->domain);
 			sts = odm_create_xtnt_rec(bfap,
 			    overXtntMap->allocVdIndex,
 			    &overXtntMap->subXtntMap[0],
@@ -2659,7 +2659,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 	    (baseXtntMap->subXtntMap[0].cnt == 1)) {
 		bsXtntT *oldbsXA;
 
-		MS_SMP_ASSERT(baseXtntMap->subXtntMap[0].type == BSR_XTNTS);
+		KASSERT(baseXtntMap->subXtntMap[0].type == BSR_XTNTS);
 
 		modSubXtntMapp = &modXtntMap->subXtntMap[0];
 		overSubXtntMapp = &overXtntMap->subXtntMap[0];
@@ -2742,7 +2742,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 	         *      for later deallocation of the mcell but not of any
 	         *      extents.
 	         */
-		MS_SMP_ASSERT(replXtntMap->maxCnt > replSXMapCnt);
+		KASSERT(replXtntMap->maxCnt > replSXMapCnt);
 
 		overSubXtntMapp->cnt = 1;
 		overSubXtntMapp->bsXA[0].bsPage = 0;
@@ -2810,7 +2810,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		    overXtntMap->subXtntMap[0].bsXA[0].vdBlk))) {
 		bsXtntT *oldbsXA;
 
-		MS_SMP_ASSERT(baseXtntMap->subXtntMap[0].type == BSR_XTNTS);
+		KASSERT(baseXtntMap->subXtntMap[0].type == BSR_XTNTS);
 
 		overSubXtntMapp = &overXtntMap->subXtntMap[0];
 		baseSubXtntMapp = &baseXtntMap->subXtntMap[0];
@@ -2923,7 +2923,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 	         * we need to make sure that the overlay mcell itself gets
 	         * deallocated since we're not going to use it.
 	         */
-		MS_SMP_ASSERT(replXtntMap->maxCnt > replSXMapCnt);
+		KASSERT(replXtntMap->maxCnt > replSXMapCnt);
 
 		sts = deferred_free_mcell(
 		    VD_HTOP(overSubXtntMapp->vdIndex, bfap->dmnP),
@@ -3090,7 +3090,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		for (overSXMapCnt = 0;
 		    overSXMapCnt < overXtntMap->cnt;
 		    overSXMapCnt++, modSXMapCnt++) {
-			MS_SMP_ASSERT(modXtntMap->maxCnt > modSXMapCnt);
+			KASSERT(modXtntMap->maxCnt > modSXMapCnt);
 
 			sts = imm_copy_sub_xtnt_map(bfap,
 			    overXtntMap,
@@ -3111,7 +3111,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 	         * from the primary mcell before linking these new mcells to the
 	         * primary mcell.
 	         */
-		MS_SMP_ASSERT(overXtntMap->cnt);
+		KASSERT(overXtntMap->cnt);
 		if (savVdI) {
 			/* Case I -III, V, VI, VIII */
 
@@ -3232,7 +3232,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		if (lastOverlayPage + 1 < nextPg) {
 			break;
 		}
-		MS_SMP_ASSERT(replXtntMap->maxCnt > replSXMapCnt);
+		KASSERT(replXtntMap->maxCnt > replSXMapCnt);
 
 		replSubXtntMapp = &replXtntMap->subXtntMap[replSXMapCnt];
 
@@ -3296,7 +3296,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 			/*
 	                 * There should be no other mcells in the replace extent map.
 	                 */
-			MS_SMP_ASSERT(replSXMapCnt == 0);
+			KASSERT(replSXMapCnt == 0);
 
 		}		/* If we just copied a BSR_XTNTS subextent map */
 	}			/* End loop to copy subextents from
@@ -3339,7 +3339,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 ** step 6) copy part of a subextent from baseXtntMap to replXtntMap
 */
 
-		MS_SMP_ASSERT(replXtntMap->maxCnt > replSXMapCnt);
+		KASSERT(replXtntMap->maxCnt > replSXMapCnt);
 
 		replSubXtntMapp = &replXtntMap->subXtntMap[replSXMapCnt];
 		/* replSXMapCnt will be == 0 in case III where we don't want
@@ -3434,7 +3434,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		if (sts != EOK) {
 			RAISE_EXCEPTION(sts);
 		}
-		MS_SMP_ASSERT(bfap->dmnP == baseXtntMap->domain);
+		KASSERT(bfap->dmnP == baseXtntMap->domain);
 		sts = odm_create_xtnt_rec(bfap,
 		    baseXtntMap->allocVdIndex,
 		    replSubXtntMapp,
@@ -3449,10 +3449,10 @@ overlay_xtnt_map(bfAccessT * bfap,
 	         * take its place so we can just free it.
 	         */
 		if (baseSubXtntMapp->type == BSR_XTNTS) {
-			MS_SMP_ASSERT(baseSubXtntMapp->vdIndex == modSubXtntMapp->vdIndex);
-			MS_SMP_ASSERT(baseSubXtntMapp->mcellId.cell ==
+			KASSERT(baseSubXtntMapp->vdIndex == modSubXtntMapp->vdIndex);
+			KASSERT(baseSubXtntMapp->mcellId.cell ==
 			    modSubXtntMapp->mcellId.cell);
-			MS_SMP_ASSERT(baseSubXtntMapp->mcellId.page ==
+			KASSERT(baseSubXtntMapp->mcellId.page ==
 			    modSubXtntMapp->mcellId.page);
 			modSubXtntMapp->updateStart = 0;
 			modSubXtntMapp->updateEnd = modSubXtntMapp->cnt - 1;
@@ -3499,7 +3499,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		 * step. */
 		descIndex += moveCnt;
 
-		MS_SMP_ASSERT(modXtntMap->maxCnt > modSXMapCnt);
+		KASSERT(modXtntMap->maxCnt > modSXMapCnt);
 		modSubXtntMapp = &modXtntMap->subXtntMap[modSXMapCnt];
 		sts = imm_copy_sub_xtnt_map(bfap,
 		    baseXtntMap,
@@ -3550,7 +3550,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		 * mcell. */
 		modSubXtntMapp->type = BSR_XTRA_XTNTS;
 		modSubXtntMapp->onDiskMaxCnt = BMT_XTRA_XTNTS;
-		MS_SMP_ASSERT(bfap->dmnP == baseXtntMap->domain);
+		KASSERT(bfap->dmnP == baseXtntMap->domain);
 		sts = odm_create_xtnt_rec(bfap,
 		    baseXtntMap->allocVdIndex,
 		    modSubXtntMapp,
@@ -3559,7 +3559,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		if (sts != EOK) {
 			RAISE_EXCEPTION(sts);
 		}
-		MS_SMP_ASSERT(modSXMapCnt > 0);
+		KASSERT(modSXMapCnt > 0);
 		sts = bmt_link_mcells(bfap->dmnP,
 		    bfap->tag,
 		    modXtntMap->subXtntMap[modSXMapCnt - 1].vdIndex,
@@ -3583,14 +3583,14 @@ overlay_xtnt_map(bfAccessT * bfap,
 	if (baseSXMapCnt >= baseXtntMap->cnt) {
 		goto done;
 	}
-	MS_SMP_ASSERT(modSXMapCnt > 0);
+	KASSERT(modSXMapCnt > 0);
 	savMC = modXtntMap->subXtntMap[modSXMapCnt - 1].mcellId;
 	savVdI = modXtntMap->subXtntMap[modSXMapCnt - 1].vdIndex;
 	savBaseMC = baseXtntMap->subXtntMap[baseSXMapCnt].mcellId;
 	savBaseVdI = baseXtntMap->subXtntMap[baseSXMapCnt].vdIndex;
 	savBaseCnt = baseSXMapCnt;
 	for (; baseSXMapCnt < baseXtntMap->cnt; baseSXMapCnt++, modSXMapCnt++) {
-		MS_SMP_ASSERT(modXtntMap->maxCnt > modSXMapCnt);
+		KASSERT(modXtntMap->maxCnt > modSXMapCnt);
 		sts = imm_copy_sub_xtnt_map(bfap,
 		    baseXtntMap,
 		    &baseXtntMap->subXtntMap[baseSXMapCnt],
@@ -3639,7 +3639,7 @@ done:
 			RAISE_EXCEPTION(sts);
 		}
 	}
-	MS_SMP_ASSERT(imm_check_xtnt_map(modXtntMap) == EOK);
+	KASSERT(imm_check_xtnt_map(modXtntMap) == EOK);
 	*retModXtntMap = modXtntMap;
 
 	replXtntMap->updateEnd = 0;
@@ -4174,7 +4174,7 @@ imm_merge_xtnt_map(
 					newXtntMap->validCnt = overDescId.subXtntMapIndex + 1;
 				}
 				sxmP = &newXtntMap->subXtntMap[overDescId.subXtntMapIndex];
-				MS_SMP_ASSERT(sxmP->cnt > 1);
+				KASSERT(sxmP->cnt > 1);
 				if (overDesc.pageCnt > 1) {
 					sxmP->bsXA[xI + 1].bsPage = cloneBfap->fragPageOffset;
 					if (xI < sxmP->cnt - 1) {
@@ -4385,7 +4385,7 @@ imm_merge_xtnt_map(
 		                 * If a clone fragment and a orig extent are at the same
 		                 * page the merged extent map ahould have the clone fragment.
 		                 */
-				MS_SMP_ASSERT(cloneBfap->fragPageOffset >= overDesc.pageOffset);
+				KASSERT(cloneBfap->fragPageOffset >= overDesc.pageOffset);
 				if (cloneBfap->fragPageOffset == bsXA[0].bsPage) {
 					break;
 				}
@@ -4554,7 +4554,7 @@ imm_remove_page_map(
 	bsInMemSubXtntMapT *subXtntMap;
 	lbnT blk;
 
-	MS_SMP_ASSERT(xtntMap->cnt == xtntMap->validCnt);
+	KASSERT(xtntMap->cnt == xtntMap->validCnt);
 
 	pageOffset = bfPageOffset;
 	endPageOffset = (bfPageOffset + bfPageCnt) - 1;
@@ -4581,7 +4581,7 @@ imm_remove_page_map(
 	    FALSE,		/* perm hole returns E_PAGE_HOLE */
 	    &descStart);
 	if (sts == EOK) {
-		MS_SMP_ASSERT(descStart < subXtntMap->cnt - 1);
+		KASSERT(descStart < subXtntMap->cnt - 1);
 		if (pageOffset == subXtntMap->bsXA[descStart].bsPage) {
 			/*
 	                 * The page range's starting page offset is the first
@@ -4635,7 +4635,7 @@ imm_remove_page_map(
 							 * hopes that we can
 							 * reuse * it.  */
 
-							MS_SMP_ASSERT(subXtntMap->bsXA[0].vdBlk ==
+							KASSERT(subXtntMap->bsXA[0].vdBlk ==
 							    XTNT_TERM);
 							xtntMap->origStart--;
 							descStart = 0;
@@ -4706,7 +4706,7 @@ imm_remove_page_map(
 						 * these extents in the range
 						 * being removed */
 
-						MS_SMP_ASSERT(subXtntMap->bsXA[0].vdBlk == XTNT_TERM);
+						KASSERT(subXtntMap->bsXA[0].vdBlk == XTNT_TERM);
 						xtntMap->origStart--;
 						descStart = 0;
 					}
@@ -4732,7 +4732,7 @@ imm_remove_page_map(
 					 * range in hopes that we can reuse
 					 * it.  */
 
-					MS_SMP_ASSERT(subXtntMap->bsXA[0].vdBlk == XTNT_TERM);
+					KASSERT(subXtntMap->bsXA[0].vdBlk == XTNT_TERM);
 					xtntMap->origStart--;
 					descStart = 0;
 					pageOffset = 0;
@@ -4761,7 +4761,7 @@ imm_remove_page_map(
 	    FALSE,		/* perm hole returns E_PAGE_HOLE */
 	    &descEnd);
 	if (sts == EOK) {
-		MS_SMP_ASSERT(descEnd < subXtntMap->cnt - 1);
+		KASSERT(descEnd < subXtntMap->cnt - 1);
 		if (endPageOffset == (subXtntMap->bsXA[descEnd + 1].bsPage - 1)) {
 			/*
 	                 * The page range's ending page offset is the last
@@ -5087,10 +5087,10 @@ imm_check_xtnt_map(bsInMemXtntMapT * xtntMap)
 	int holeFlg;
 	int permHole;
 
-	MS_SMP_ASSERT(xtntMap->domain);
+	KASSERT(xtntMap->domain);
 
-	MS_SMP_ASSERT(xtntMap->validCnt <= xtntMap->cnt);
-	MS_SMP_ASSERT(xtntMap->cnt <= xtntMap->maxCnt);
+	KASSERT(xtntMap->validCnt <= xtntMap->cnt);
+	KASSERT(xtntMap->cnt <= xtntMap->maxCnt);
 	for (i = 0; i < xtntMap->validCnt; i++) {
 		subXtntMap = &xtntMap->subXtntMap[i];
 
@@ -5098,13 +5098,13 @@ imm_check_xtnt_map(bsInMemXtntMapT * xtntMap)
 		permHole = FALSE;
 
 		/* Check counts */
-		MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+		KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
 
 		/* First part of this ASSERT works in all cases except the
 		 * miscellaneous bitfile; check for valid misc bitfile extents
 		 * in the second half. The check for BFM_MISC works for both
 		 * Version 3 and Version 4 domains. */
-		MS_SMP_ASSERT((subXtntMap->maxCnt <= subXtntMap->onDiskMaxCnt) ||
+		KASSERT((subXtntMap->maxCnt <= subXtntMap->onDiskMaxCnt) ||
 		    (subXtntMap->mcellId.page == 0 &&
 			subXtntMap->mcellId.cell == BFM_MISC &&
 			subXtntMap->type == BSR_XTNTS &&
@@ -5119,13 +5119,13 @@ imm_check_xtnt_map(bsInMemXtntMapT * xtntMap)
 
 		switch (subXtntMap->type) {
 		case BSR_XTNTS:
-			MS_SMP_ASSERT(subXtntMap->onDiskMaxCnt == BMT_XTNTS);
+			KASSERT(subXtntMap->onDiskMaxCnt == BMT_XTNTS);
 			/* only the first subextent map can be type BSR_XTNTS */
-			MS_SMP_ASSERT(i == 0);
+			KASSERT(i == 0);
 			break;
 		case BSR_XTRA_XTNTS:
-			MS_SMP_ASSERT(subXtntMap->onDiskMaxCnt == BMT_XTRA_XTNTS);
-			MS_SMP_ASSERT(i != 0);
+			KASSERT(subXtntMap->onDiskMaxCnt == BMT_XTRA_XTNTS);
+			KASSERT(i != 0);
 			/* no empty subextents allowed */
 
 			/* Only make the following assertions for version 4
@@ -5133,24 +5133,24 @@ imm_check_xtnt_map(bsInMemXtntMapT * xtntMap)
 			 * incorrect xtnts on disk.  */
 
 			if (xtntMap->domain->dmnVersion >= FIRST_PERM_HOLE_XTNTS_VERSION) {
-				MS_SMP_ASSERT(subXtntMap->cnt > 1);
+				KASSERT(subXtntMap->cnt > 1);
 			}
 			break;
 		case BSR_SHADOW_XTNTS:
-			MS_SMP_ASSERT(subXtntMap->onDiskMaxCnt == BMT_SHADOW_XTNTS);
-			MS_SMP_ASSERT(i == 0);
+			KASSERT(subXtntMap->onDiskMaxCnt == BMT_SHADOW_XTNTS);
+			KASSERT(i == 0);
 			break;
 		default:
-			MS_SMP_ASSERT(0);
+			KASSERT(0);
 		}
 
 		/* Newly created files come here with no extents and vdIndex
 		 * == 0 */
 		if (subXtntMap->vdIndex == bsNilVdIndex) {
 			/* new files will have only one subextent map */
-			MS_SMP_ASSERT(xtntMap->validCnt == 1);
+			KASSERT(xtntMap->validCnt == 1);
 			/* and it will be empty */
-			MS_SMP_ASSERT(subXtntMap->cnt == 1);
+			KASSERT(subXtntMap->cnt == 1);
 			continue;
 		}
 		vdp = VD_HTOP(subXtntMap->vdIndex, xtntMap->domain);
@@ -5158,15 +5158,15 @@ imm_check_xtnt_map(bsInMemXtntMapT * xtntMap)
 			page = subXtntMap->bsXA[j].bsPage;
 			if (j == 0) {
 				/* test pageOffset */
-				MS_SMP_ASSERT(subXtntMap->pageOffset == page);
+				KASSERT(subXtntMap->pageOffset == page);
 				/* Each subextent starts where the last sub
 				 * left off. */
 				/* The first subextent starts at page 0. */
-				MS_SMP_ASSERT(page == lastPg);
+				KASSERT(page == lastPg);
 			} else {
 				/* Within a subextent the pages increase
 				 * monotonically. */
-				MS_SMP_ASSERT(page > lastPg);
+				KASSERT(page > lastPg);
 			}
 			lastPg = page;
 
@@ -5180,7 +5180,7 @@ imm_check_xtnt_map(bsInMemXtntMapT * xtntMap)
 			if (block == XTNT_TERM) {
 				/* Can't have 2 holes in a row, or end a mcell
 				 * with a hole. */
-				MS_SMP_ASSERT(!(xtntMap->domain->dmnVersion >= FIRST_PERM_HOLE_XTNTS_VERSION) ||
+				KASSERT(!(xtntMap->domain->dmnVersion >= FIRST_PERM_HOLE_XTNTS_VERSION) ||
 				    (holeFlg == FALSE));
 				holeFlg = TRUE;
 				permHole = FALSE;
@@ -5190,7 +5190,7 @@ imm_check_xtnt_map(bsInMemXtntMapT * xtntMap)
 			if (block == PERM_HOLE_START) {
 				/* Can't have 2 permanent holes in a row, they
 				 * combine. */
-				MS_SMP_ASSERT(!(xtntMap->domain->dmnVersion >= FIRST_PERM_HOLE_XTNTS_VERSION) ||
+				KASSERT(!(xtntMap->domain->dmnVersion >= FIRST_PERM_HOLE_XTNTS_VERSION) ||
 				    (permHole == FALSE));
 				permHole = TRUE;
 				continue;
@@ -5198,13 +5198,13 @@ imm_check_xtnt_map(bsInMemXtntMapT * xtntMap)
 			permHole = FALSE;
 
 			pgs = block / xtntMap->blksPerPage;
-			MS_SMP_ASSERT(pgs * xtntMap->blksPerPage ==
+			KASSERT(pgs * xtntMap->blksPerPage ==
 			    subXtntMap->bsXA[j].vdBlk);
 
-			MS_SMP_ASSERT(block < vdp->vdSize);
+			KASSERT(block < vdp->vdSize);
 		}
 
-		MS_SMP_ASSERT(subXtntMap->pageCnt ==
+		KASSERT(subXtntMap->pageCnt ==
 		    lastPg - subXtntMap->bsXA[0].bsPage);
 	}
 
@@ -5525,7 +5525,7 @@ advfs_get_extent_map(
 	if (bfSetp->cloneId != BS_BFSET_ORIG) {
 		cloned_file = 1;
 		orig_bfap = bfap->origAccp;
-		MS_SMP_ASSERT(orig_bfap);
+		KASSERT(orig_bfap);
 
 		if (bfap->cloneId == BS_BFSET_ORIG) {
 			/*
@@ -5605,7 +5605,7 @@ advfs_get_extent_map(
 
 			/* Holes and permanent holes return FALSE */
 			ret = page_is_mapped(bfap, pg, &nextPage, FALSE);
-			MS_SMP_ASSERT(clone_nextPage <= bfap->maxClonePgs);
+			KASSERT(clone_nextPage <= bfap->maxClonePgs);
 			if (ret == FALSE) {	/* hole or permanent hole or
 						 * not mapped */
 				/* Permanent holes return TRUE */
@@ -5692,7 +5692,7 @@ advfs_get_extent_map(
 	if (i == 0) {
 		/* we fall out of the loop without creating the first extent
 		 * only for a sparse file composed of just a frag */
-		MS_SMP_ASSERT(bfap->fragState == FS_FRAG_VALID);
+		KASSERT(bfap->fragState == FS_FRAG_VALID);
 		offset = (long) bfap->fragPageOffset * ADVFS_PGSZ;
 		if (fileSize > offset) {
 			size = fileSize - offset;

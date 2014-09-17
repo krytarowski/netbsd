@@ -303,7 +303,7 @@ bs_free_bsbuf(
     struct bsBuf * bp		/* in - buffer header to free */
 )
 {
-	MS_SMP_ASSERT(!(bp->lock.state & ACC_DIRTY));
+	KASSERT(!(bp->lock.state & ACC_DIRTY));
 	bp->bufMagic |= MAGIC_DEALLOC;
 	if (bp->ioList.maxCnt > BUFIODESC) {
 		ms_free(bp->ioList.ioDesc);
@@ -374,7 +374,7 @@ blkMap(struct bsBuf * bp, bfAccessT * bfap)
 	if (bp->ioList.maxCnt > BUFIODESC) {
 #ifndef UBC_PROJECT_DEBUG
 		for (i = 0; i < bp->ioList.maxCnt; i++) {
-			MS_SMP_ASSERT(bp->ioList.ioDesc[i].ioQ == NONE);
+			KASSERT(bp->ioList.ioDesc[i].ioQ == NONE);
 		}
 #endif
 		ms_free(bp->ioList.ioDesc);
@@ -389,7 +389,7 @@ blkMap(struct bsBuf * bp, bfAccessT * bfap)
 		if (step) {
 #ifndef UBC_PROJECT_DEBUG
 			for (i = 0; i < bp->ioList.maxCnt; i++) {
-				MS_SMP_ASSERT(bp->ioList.ioDesc[i].ioQ == NONE);
+				KASSERT(bp->ioList.ioDesc[i].ioQ == NONE);
 			}
 #endif
 			ms_free(bp->ioList.ioDesc);
@@ -401,7 +401,7 @@ blkMap(struct bsBuf * bp, bfAccessT * bfap)
 
 		res = x_page_to_iolist(bfap, bp->bfPgNum, &bp->ioList);
 		/* bp->ioList will never need to be expanded beyond 2. */
-		MS_SMP_ASSERT(res != E_BLKDESC_ARRAY_TOO_SMALL);
+		KASSERT(res != E_BLKDESC_ARRAY_TOO_SMALL);
 	}
 
 	if (res == EOK || res == E_PAGE_NOT_MAPPED) {
@@ -503,7 +503,7 @@ blkmap_direct(struct bsBuf * bp,
 				 * storage, so we need to have code right here
 				 * to add it back. */
 				struct fsContext *contextp = VTOC(bfap->bfVp);
-				MS_SMP_ASSERT(contextp);	/* cannot be an internal
+				KASSERT(contextp);	/* cannot be an internal
 								 * open */
 				/* Object safety already has lock */
 				if (!bfap->bfSetp->bfSetFlags & BFS_OD_OBJ_SAFETY) {
@@ -620,7 +620,7 @@ blkmap_direct(struct bsBuf * bp,
 				if (bp->lock.state & WRITING) {
 
 					struct fsContext *contextp = VTOC(bfap->bfVp);
-					MS_SMP_ASSERT(contextp);
+					KASSERT(contextp);
 					/* Object safety already has lock */
 					if (!bfap->bfSetp->bfSetFlags & BFS_OD_OBJ_SAFETY) {
 						FS_FILE_WRITE_LOCK(contextp);
@@ -838,7 +838,7 @@ bmt_refpg(
 	statusT sts;
 
 	/* bfap, bfap->dmnP, and dmnVersion must be set up */
-	MS_SMP_ASSERT(bfap->dmnP->dmnVersion);
+	KASSERT(bfap->dmnP->dmnVersion);
 
 	/* callers read in a loop until they hit a non-existent bmt page,
 	 * detected by (sts == E_PAGE_NOT_MAPPED), which probably isn't a
@@ -919,7 +919,7 @@ bs_refpg_newpage(
          */
 	if (sts == EOK) {	/* make sure blkMap succeeded */
 		vdIndexT vdi = bp->ioList.ioDesc->blkDesc.vdIndex;
-		MS_SMP_ASSERT(TEST_VDI_RANGE(vdi) == EOK);
+		KASSERT(TEST_VDI_RANGE(vdi) == EOK);
 		if (!vd_htop_if_valid(vdi, bp->bfAccess->dmnP, FALSE, FALSE)) {
 			sts = EIO;
 		}
@@ -956,8 +956,8 @@ bs_refpg_newpage(
 					mutex_lock(&bp->bufLock);
 					bp->lock.state |= UNMAPPED;
 					bp->result = sts;
-					MS_SMP_ASSERT(bp->lsnFwd == NULL);
-					MS_SMP_ASSERT(bp->directIO == 0);
+					KASSERT(bp->lsnFwd == NULL);
+					KASSERT(bp->directIO == 0);
 					/* have bs_io_complete() drop UBC
 					 * pg_hold reference */
 					bp->ubc_flags |= B_BUSY;
@@ -997,8 +997,8 @@ bs_refpg_newpage(
 			mutex_lock(&bp->bufLock);
 			bp->lock.state |= UNMAPPED;
 			bp->result = (sts == E_PAGE_NOT_MAPPED) ? EOK : sts;
-			MS_SMP_ASSERT(bp->lsnFwd == NULL);
-			MS_SMP_ASSERT(bp->directIO == 0);
+			KASSERT(bp->lsnFwd == NULL);
+			KASSERT(bp->directIO == 0);
 			/* have bs_io_complete() drop UBC pg_hold reference */
 			bp->ubc_flags |= B_BUSY;
 			bs_io_complete(bp, &s);
@@ -1102,7 +1102,7 @@ bs_refpg_int(
 	int wday;
 	uint32T totHotCnt;
 
-	MS_SMP_ASSERT(bfap->refCnt != 0);
+	KASSERT(bfap->refCnt != 0);
 
 	if (bfap->bfSetp->cloneId != BS_BFSET_ORIG) {
 		if (bfap->outOfSyncClone) {
@@ -1355,9 +1355,9 @@ bs_refpg_direct(void *addr,	/* in */
          * that is currently held.
          */
 	npages = lastPage - firstPage + 1;
-	MS_SMP_ASSERT(bsBlock >= arp->arStartBlock &&
+	KASSERT(bsBlock >= arp->arStartBlock &&
 	    bsBlock <= arp->arEndBlock);
-	MS_SMP_ASSERT((bsBlock + total_blocks - 1) >= arp->arStartBlock &&
+	KASSERT((bsBlock + total_blocks - 1) >= arp->arStartBlock &&
 	    (bsBlock + total_blocks - 1) <= arp->arEndBlock);
 
 	/*
@@ -1544,7 +1544,7 @@ on_error:
 	 * don't expect an AIO call to come here with a seg_flag of
 	 * UIO_USERSPACE, so check for this in testing, but handle it in the
 	 * field. */
-	MS_SMP_ASSERT(seg_flag == UIO_USERSPACE ? !aio_bp : 1);
+	KASSERT(seg_flag == UIO_USERSPACE ? !aio_bp : 1);
 	if ((seg_flag == UIO_USERSPACE) && !(bfap->origAccp) && !(aio_bp)) {
 		mymap = current_task()->map;
 		start = (vm_offset_t) trunc_page(addr);
@@ -1649,7 +1649,7 @@ on_error:
 	         * to the user's iodone routine and free the bp.
 	         */
 		if (aio_bp) {
-			MS_SMP_ASSERT(!mymap);	/* We should NOT have wired a
+			KASSERT(!mymap);	/* We should NOT have wired a
 						 * page. */
 			if (origbfap)
 				COW_UNLOCK(&(origbfap->cow_lk));
@@ -1702,7 +1702,7 @@ bs_derefpg(
 
 	/* Convert handle. */
 	bp = (struct bsBuf *) bfPageRefH;
-	MS_SMP_ASSERT(bp->bfAccess->refCnt);
+	KASSERT(bp->bfAccess->refCnt);
 
 	if (TrFlags & trRef) {
 		bfr_trace(bp->bfAccess->tag, bp->bfPgNum, Deref, 0);
@@ -1751,7 +1751,7 @@ bs_pinpg_get(
 	void (*q_fn) (ioDescT *, int);
 
 	/* Can't pin clone pages; this was already checked in msfs_getpage() */
-	MS_SMP_ASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
+	KASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
 
 retry_lookup:
 
@@ -1952,7 +1952,7 @@ bs_pinpg_put(vm_page_t plp,	/* in */
 	    curpg = plp, pageCount++) {
 
 		/* check why does this really matter? */
-		MS_SMP_ASSERT(curpg->pg_object == first_pg_object);
+		KASSERT(curpg->pg_object == first_pg_object);
 
 		/* save next page in chain and (paranoid) clean up the list */
 		plp = curpg->pg_pnext;
@@ -1967,7 +1967,7 @@ bs_pinpg_put(vm_page_t plp,	/* in */
 		prevLn = bp->ln;
 		set_state(bp, __LINE__, IO_TRANS);
 
-		MS_SMP_ASSERT(!bp->writeRef);
+		KASSERT(!bp->writeRef);
 
 		/* Update statistics counter. */
 		bp->bfAccess->dmnP->bcStat.unpinCnt.blocking++;
@@ -1983,8 +1983,8 @@ bs_pinpg_put(vm_page_t plp,	/* in */
 			bp->lock.state |= REMOVE_FROM_IOQ;
 			rm_from_lazyq(bp, &ioListp, &listLen, &noqfnd);
 			bp->lock.state &= ~REMOVE_FROM_IOQ;
-			MS_SMP_ASSERT(bp->vmpage->pg_busy);
-			MS_SMP_ASSERT(bp->lock.state & IO_TRANS);
+			KASSERT(bp->vmpage->pg_busy);
+			KASSERT(bp->lock.state & IO_TRANS);
 
 			if (listLen) {
 				bp->ln = SET_LINE_AND_THREAD(__LINE__);
@@ -2187,8 +2187,8 @@ bs_wakeup_flush_threads(struct bsBuf * bp,	/* in - Buffer being released */
 	flushWaiterT *curFlushWaiter, *nextFlushWaiter;
 	struct bsBuf *prevbp;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
 
 	if (recordDiskError) {
 		if (bfap->dkResult == EOK) {
@@ -2219,7 +2219,7 @@ bs_wakeup_flush_threads(struct bsBuf * bp,	/* in - Buffer being released */
 		 * checking the wait LSN. */
 		curFlushWaiter = bfap->flushWaiterQ.head;
 
-		MS_SMP_ASSERT(!LSN_EQ_NIL(bp->flushSeq));
+		KASSERT(!LSN_EQ_NIL(bp->flushSeq));
 
 		while ((curFlushWaiter != (flushWaiterT *) & bfap->flushWaiterQ) &&
 		    SEQ_LTE(curFlushWaiter->waitLsn, bp->flushSeq)) {
@@ -2262,11 +2262,11 @@ bs_wakeup_flush_threads(struct bsBuf * bp,	/* in - Buffer being released */
 	         */
 		prevbp = bp->accBwd;
 
-		MS_SMP_ASSERT(prevbp->bfAccess->accMagic == ACCMAGIC);
+		KASSERT(prevbp->bfAccess->accMagic == ACCMAGIC);
 		if (LSN_EQL(prevbp->flushSeq, bfap->hiWaitLsn)) {
 			bfap->hiWaitLsn = bp->flushSeq;
 		}
-		MS_SMP_ASSERT(LSN_EQ_NIL(prevbp->flushSeq) ||
+		KASSERT(LSN_EQ_NIL(prevbp->flushSeq) ||
 		    LSN_GT(bp->flushSeq, prevbp->flushSeq));
 		prevbp->flushSeq = bp->flushSeq;
 	}
@@ -2302,7 +2302,7 @@ bs_wakeup_flush_threads(struct bsBuf * bp,	/* in - Buffer being released */
 			rflp = bp->rflList;
 			rfp = rflp->rfp;
 			mutex_lock(&rfp->rangeFlushLock);
-			MS_SMP_ASSERT(rfp->outstandingIoCount > 0);
+			KASSERT(rfp->outstandingIoCount > 0);
 
 #ifdef ADVFS_SMP_ASSERT
 			/*
@@ -2313,7 +2313,7 @@ bs_wakeup_flush_threads(struct bsBuf * bp,	/* in - Buffer being released */
 	                 */
 			if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
 			    (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-				MS_SMP_ASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
+				KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
 			}
 #endif
 			if (--rfp->outstandingIoCount == 0) {
@@ -2453,7 +2453,7 @@ bs_pinpg_one_int(
 		if (advfsstats)
 			AdvfsUbcHit++;
 		bp = (struct bsBuf *) * bfPageRefH;
-		MS_SMP_ASSERT((bp == NULL) || bp->vmpage->pg_dirty);
+		KASSERT((bp == NULL) || bp->vmpage->pg_dirty);
 	} else {
 		/* Page is not in the UBC cache. A cache miss. Setup a new
 		 * buffer page. */
@@ -2464,7 +2464,7 @@ bs_pinpg_one_int(
 		if (advfsstats)
 			AdvfsUbcMiss++;
 		bp = (struct bsBuf *) * bfPageRefH;
-		MS_SMP_ASSERT((bp == NULL) || bp->vmpage->pg_dirty);
+		KASSERT((bp == NULL) || bp->vmpage->pg_dirty);
 
 		if (SS_is_running &&
 		    bfap->dmnP->ssDmnInfo.ssDmnSmartPlace &&
@@ -2984,9 +2984,9 @@ bs_pinpg_direct(void *addr,
 
 		/* Check our calculated range is within the actRanges
 		 * currently held */
-		MS_SMP_ASSERT(bsBlock >= arp->arStartBlock &&
+		KASSERT(bsBlock >= arp->arStartBlock &&
 		    bsBlock <= arp->arEndBlock);
-		MS_SMP_ASSERT((bsBlock + total_blocks - 1) >= arp->arStartBlock &&
+		KASSERT((bsBlock + total_blocks - 1) >= arp->arStartBlock &&
 		    (bsBlock + total_blocks - 1) <= arp->arEndBlock);
 
 
@@ -3187,7 +3187,7 @@ bs_pinpg_direct(void *addr,
          * call to come here with a seg_flag of UIO_USERSPACE, so
          * check for this in testing, but handle it in the field.
          */
-	MS_SMP_ASSERT(seg_flag == UIO_USERSPACE ? !aio_bp : 1);
+	KASSERT(seg_flag == UIO_USERSPACE ? !aio_bp : 1);
 	if (seg_flag == UIO_USERSPACE && !aio_bp) {
 
 		mymap = current_task()->map;
@@ -3303,7 +3303,7 @@ bs_pinpg_direct(void *addr,
 	         * to the user's iodone routine and free the bp.
 	         */
 		if (aio_bp) {
-			MS_SMP_ASSERT(!mymap);	/* We should NOT have wired a
+			KASSERT(!mymap);	/* We should NOT have wired a
 						 * page. */
 			*aio_flag = 1;
 			return (sts);
@@ -3408,7 +3408,7 @@ bs_unpinpg(
 
 		bp->bfAccess->dmnP->bcStat.unpinCnt.blocking++;
 
-		MS_SMP_ASSERT(bp->writeRef == 1);
+		KASSERT(bp->writeRef == 1);
 
 		/*
 	         * Add modified page to dirtyBufList if it is not listed.
@@ -3517,7 +3517,7 @@ bs_unpinpg(
 				    bp->currentLogRec.lsn,
 				    TRUE);
 			}
-			MS_SMP_ASSERT(LSN_GTE(logbfap->hiFlushLsn,
+			KASSERT(LSN_GTE(logbfap->hiFlushLsn,
 				bp->currentLogRec.lsn));
 			mutex_unlock(&logbfap->bfIoLock);
 		}
@@ -3556,9 +3556,9 @@ bs_unpinpg(
 			mutex_lock(&bp->bufLock);
 			bp->lock.state &= ~REMAP;
 		}
-		MS_SMP_ASSERT(bp->writeRef > 0);
-		MS_SMP_ASSERT(!(bp->vmpage->pg_busy));
-		MS_SMP_ASSERT(bp->vmpage->pg_dirty);
+		KASSERT(bp->writeRef > 0);
+		KASSERT(!(bp->vmpage->pg_busy));
+		KASSERT(bp->vmpage->pg_dirty);
 
 		bp->lock.state |= DIRTY;
 
@@ -3624,7 +3624,7 @@ bs_unpinpg(
 						    bp->currentLogRec.lsn,
 						    TRUE);
 					}
-					MS_SMP_ASSERT(LSN_GTE(logbfap->hiFlushLsn,
+					KASSERT(LSN_GTE(logbfap->hiFlushLsn,
 						bp->currentLogRec.lsn));
 					mutex_unlock(&logbfap->bfIoLock);
 					mutex_lock(&bp->bufLock);
@@ -3689,8 +3689,8 @@ bs_unpinpg(
 			mutex_lock(&bp->bufLock);
 		}
 		if (q_fn == bs_q_lazy) {
-			MS_SMP_ASSERT(!(bp->vmpage->pg_busy));
-			MS_SMP_ASSERT(bp->vmpage->pg_dirty);
+			KASSERT(!(bp->vmpage->pg_busy));
+			KASSERT(bp->vmpage->pg_dirty);
 			clear_state(bp, IO_TRANS);
 		}
 		mutex_unlock(&bp->bufLock);
@@ -3701,7 +3701,7 @@ bs_unpinpg(
 	case BS_NOMOD:
 	case BS_NOMOD_DIRECT:
 
-		MS_SMP_ASSERT(bp->writeRef > 0);
+		KASSERT(bp->writeRef > 0);
 
 		/* bp->bufLock is locked; IO_TRANS is set */
 		bp->ln = SET_LINE_AND_THREAD(__LINE__);
@@ -3743,7 +3743,7 @@ bs_unpinpg(
 							    bp->currentLogRec.lsn,
 							    TRUE);
 						}
-						MS_SMP_ASSERT(LSN_GTE(logbfap->hiFlushLsn,
+						KASSERT(LSN_GTE(logbfap->hiFlushLsn,
 							bp->currentLogRec.lsn));
 						mutex_unlock(&logbfap->bfIoLock);
 						mutex_lock(&bp->bufLock);
@@ -3873,7 +3873,7 @@ bs_unpinpg(
 
 	case BS_LOG_PAGE:
 
-		MS_SMP_ASSERT(bp->writeRef > 0);
+		KASSERT(bp->writeRef > 0);
 
 		/* bp->bufLock is locked; IO_TRANS is set */
 		bp->ln = SET_LINE_AND_THREAD(__LINE__);
@@ -3888,16 +3888,16 @@ bs_unpinpg(
 	                 * twice.
 	                 */
 			--bp->writeRef;
-			MS_SMP_ASSERT(!bp->writeRef);
+			KASSERT(!bp->writeRef);
 
 			/* If the page is not previously modified, then tell
 			 * UBC to move the page from the UBC object dirty to
 			 * clean list. */
 			if (!(bp->lock.state & DIRTY)) {
-				MS_SMP_ASSERT(bp->accFwd);
+				KASSERT(bp->accFwd);
 				if (bp->lock.state & ACC_DIRTY) {
 					mutex_lock(&bp->bfAccess->bfIoLock);
-					MS_SMP_ASSERT(bp->accFwd);
+					KASSERT(bp->accFwd);
 					RM_ACCESSLIST(bp, FALSE);	/* take off dirty */
 					mutex_unlock(&bp->bfAccess->bfIoLock);
 
@@ -3957,12 +3957,12 @@ bs_unpinpg(
 		if (LSN_EQ_NIL(bp->flushSeq)) {
 			bp->flushSeq = wrtAhdLogAddr.lsn;
 		} else
-			MS_SMP_ASSERT(LSN_GT(bp->flushSeq, wrtAhdLogAddr.lsn));
+			KASSERT(LSN_GT(bp->flushSeq, wrtAhdLogAddr.lsn));
 
 		/* Log pages are placed on the dirtybuf list at pin time in
 		 * order to keep track of lsn's. So there is no need to put it
 		 * on the list here. */
-		MS_SMP_ASSERT(bp->accFwd);
+		KASSERT(bp->accFwd);
 
 		mutex_unlock(&bp->bfAccess->bfIoLock);
 
@@ -3970,10 +3970,10 @@ bs_unpinpg(
 	         * This should never happen as the log file should only
 	         * be moved via switchlog functionality, not via migrate.
 	         */
-		MS_SMP_ASSERT(!(bp->lock.state & REMAP));
+		KASSERT(!(bp->lock.state & REMAP));
 
 		--bp->writeRef;
-		MS_SMP_ASSERT(!bp->writeRef);
+		KASSERT(!bp->writeRef);
 		logbfap = bp->bfAccess->dmnP->logAccessp;
 		lsn = bp->flushSeq;
 		pageNum = bp->bfPgNum;
@@ -3995,7 +3995,7 @@ bs_unpinpg(
 			    ((logPgT *) ubc_load(bp->vmpage, 0, 0))->hdr.thisPageLSN))
 		    ) {
 			link_write_req(bp);
-			MS_SMP_ASSERT(bp->writeRef == 0);
+			KASSERT(bp->writeRef == 0);
 
 			/* Setup UBC page for IO. Assumes only log code can
 			 * start IO since UBC cannot initiate IO on metadata.
@@ -4140,7 +4140,7 @@ _state_block(
 	bp->lock.hdr.try_file_name = fn;
 #endif				/* ADVFS_DEBUG */
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
 	if (AdvfsLockStats) {
 		if (*wait) {
 			AdvfsLockStats->usageStats[bp->lock.hdr.lkUsage].reWait++;
@@ -4285,7 +4285,7 @@ set_state(
          * First wait until the buffer is
          * not in the specified state.
          */
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
 	while (bp->lock.state & state) {
 		state_block(bp, &wait);
 	}
@@ -4309,7 +4309,7 @@ wait_state(
 {
 	int wait = 0;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
 	while (bp->lock.state & state) {
 		state_block(bp, &wait);
 	}
@@ -4328,7 +4328,7 @@ clear_state(
     uint32T state		/* in */
 )
 {
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
 	if (bp->lock.state & state) {
 		bp->lock.state &= ~state;
 
@@ -4391,7 +4391,7 @@ buf_remap(
 	bp->ioList.read = blkMap->read;
 	bp->ioList.readCnt = blkMap->readCnt;
 	bp->ioList.write = blkMap->write;
-	MS_SMP_ASSERT(bp->ioList.write == 0);
+	KASSERT(bp->ioList.write == 0);
 	bp->ioList.writeCnt = blkMap->writeCnt;
 	bp->ioList.maxCnt = blkMap->maxCnt;
 	descCnt = blkMap->maxCnt;
@@ -4828,7 +4828,7 @@ seq_ahead(struct bfAccess * bfap,	/* in */
 			mutex_lock(&bp->bufLock);
 			bp->lock.state |= UNMAPPED;
 			if (sts == E_PAGE_NOT_MAPPED) {
-				MS_SMP_ASSERT(bp->result == EOK);
+				KASSERT(bp->result == EOK);
 			} else {
 				bp->result = sts;
 			}
@@ -5032,7 +5032,7 @@ startover:
 			mutex_unlock(&bp->bufLock);
 			continue;
 		}
-		MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
+		KASSERT(bp->lock.state & ACC_DIRTY);
 
 		if (bp->writeRef) {
 			ADVFS_SAD0("bs_invalidate_pages(1): buf pinned");
@@ -5059,7 +5059,7 @@ startover:
 		 * we must not touch either again. */
 		if (purge_buffer) {
 			mutex_lock(&purge_buffer->bufLock);
-			MS_SMP_ASSERT(purge_buffer->lock.state & WRITING);
+			KASSERT(purge_buffer->lock.state & WRITING);
 #ifdef ADVFS_SMP_ASSERT
 			purge_buffer->busyLn = SET_LINE_AND_THREAD(__LINE__);
 			purge_buffer->ioqLn = -1;
@@ -5092,7 +5092,7 @@ startover:
 	mutex_unlock(&bfap->bfIoLock);
 	if (purge_buffer) {
 		mutex_lock(&purge_buffer->bufLock);
-		MS_SMP_ASSERT(purge_buffer->lock.state & WRITING);
+		KASSERT(purge_buffer->lock.state & WRITING);
 #ifdef ADVFS_SMP_ASSERT
 		purge_buffer->busyLn = SET_LINE_AND_THREAD(__LINE__);
 		purge_buffer->ioqLn = -1;
@@ -5253,7 +5253,7 @@ msfs_flush_and_invalidate(
 	}
 	/* Invalidate the file's UBC pages upon request. */
 	if (fiflags & (INVALIDATE_UNWIRED | INVALIDATE_ALL)) {
-		MS_SMP_ASSERT(!(fiflags & NO_INVALIDATE));
+		KASSERT(!(fiflags & NO_INVALIDATE));
 		/* pass in B_DONE to flush any dirty pages before invalidating
 		 * pages */
 		ubc_invalidate(bfap->bfObj, (vm_offset_t) 0, (vm_size_t) 0,

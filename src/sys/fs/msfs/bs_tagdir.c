@@ -314,7 +314,7 @@ tagdir_remove_tag(
 	slot = TAGTOSLOT(tp);
 
 	/* Pseudo-tag should not come here. */
-	MS_SMP_ASSERT(BS_BFTAG_PSEUDO(*tp) == 0);
+	KASSERT(BS_BFTAG_PSEUDO(*tp) == 0);
 
 	TAG_DIR_LOCK(bfSetp, ftxH)
 	/* Pin the page containing the tag to remove. */
@@ -331,7 +331,7 @@ tagdir_remove_tag(
          * included in the assertion.
          */
 
-	MS_SMP_ASSERT(tp->seq == (uint32T) tdmap->tmSeqNo
+	KASSERT(tp->seq == (uint32T) tdmap->tmSeqNo
 	    || ((uint16T) ~ BS_TD_IN_USE & tp->seq) == (uint32T) tdmap->tmSeqNo);
 	rbf_pin_record(pgRef, (void *) tdmap, sizeof(bsTMapT));
 	tdmap->tmSeqNo &= (uint16T) ~ BS_TD_IN_USE;
@@ -368,7 +368,7 @@ tagdir_tag_to_freelist(
 	unsigned int seqno = 0;
 
 	/* Pseudo-tag should not come here. */
-	MS_SMP_ASSERT(BS_BFTAG_PSEUDO(*tp) == 0);
+	KASSERT(BS_BFTAG_PSEUDO(*tp) == 0);
 
 	tagPg = TAGTOPG(tp);
 	slot = TAGTOSLOT(tp);
@@ -399,7 +399,7 @@ tagdir_tag_to_freelist(
 	         * still set on the tag to be deleted if the set_tag_to_unused
 	         * flag is not set.
 	         */
-		MS_SMP_ASSERT(tp->seq == ((uint32T) tdmap->tmSeqNo ^ BS_TD_IN_USE));
+		KASSERT(tp->seq == ((uint32T) tdmap->tmSeqNo ^ BS_TD_IN_USE));
 	}
 
 	rbf_pin_record(pgRef, (void *) &tdpgp->tpPgHdr, sizeof(struct bsTDirPgHdr));
@@ -693,7 +693,7 @@ tagdir_alloc_tag(
 
 
 	TAG_DIR_LOCK(bfSetp, parentFtxH)
-	    MS_SMP_ASSERT(bfSetp->tagUnInPg <= bfSetp->tagUnMpPg);
+	    KASSERT(bfSetp->tagUnInPg <= bfSetp->tagUnMpPg);
 
 	/*
          * Pick up the page number from the free list.  Note that it is
@@ -1167,8 +1167,8 @@ tagdir_set_next_tag(
 	         */
 		bfSetp->tagFrLst = tagPg + 1;
 	}
-	MS_SMP_ASSERT(bfSetp->tagFrLst == tagPg + 1);
-	MS_SMP_ASSERT(tdpgntp->tpCurrPage == tagPg);
+	KASSERT(bfSetp->tagFrLst == tagPg + 1);
+	KASSERT(tdpgntp->tpCurrPage == tagPg);
 
 	/*
          *  Now modify slot list on target page (if necessary) such that desired
@@ -1373,7 +1373,7 @@ tagdir_write_undo_opx(
 		bfs_opened = 1;
 	} else {
 		bfSetp = bs_bfs_lookup_desc(rp->bfSetId);
-		MS_SMP_ASSERT(BFSET_VALID(bfSetp));
+		KASSERT(BFSET_VALID(bfSetp));
 	}
 
 	tagPg = TAGTOPG(&rp->tag);
@@ -1384,7 +1384,7 @@ tagdir_write_undo_opx(
 		ADVFS_SAD1("tagdir_write_undo_opx: can't pin page", sts);
 	}
 	tdmap = &tdpgp->tMapA[slot];
-	MS_SMP_ASSERT(rp->tag.seq == (uint32T) tdmap->tmSeqNo);
+	KASSERT(rp->tag.seq == (uint32T) tdmap->tmSeqNo);
 
 	rbf_pin_record(pgRef, (void *) tdmap, sizeof(bsTMapT));
 	*tdmap = rp->map;
@@ -1522,7 +1522,7 @@ tagdir_lookup2(
 	default:
 		return (sts);
 	}
-	MS_SMP_ASSERT(FALSE);
+	KASSERT(FALSE);
 	return (EOK);		/* Satisfy the compiler */
 }
 
@@ -1587,7 +1587,7 @@ tagdir_lookup_next(
 			}
 			isReferenced = 1;
 		}
-		MS_SMP_ASSERT(tdpgp->tpCurrPage == tagPg);
+		KASSERT(tdpgp->tpCurrPage == tagPg);
 		tdmap = &tdpgp->tMapA[slot];
 
 		if ((tdmap->tmSeqNo & BS_TD_IN_USE) == 0) {
@@ -1642,7 +1642,7 @@ tagdir_lookup_next(
 		}
 		return EOK;
 	}
-	MS_SMP_ASSERT(FALSE);
+	KASSERT(FALSE);
 	return (EOK);		/* Satisfy the compiler */
 }
 

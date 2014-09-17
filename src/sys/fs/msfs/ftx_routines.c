@@ -345,13 +345,13 @@ _ftx_start_i(
 	                 */
 			thread_t thread = current_thread();
 
-			MS_SMP_ASSERT(ftxTDp->rrSlots == FTX_DEF_RR_SLOTS);
+			KASSERT(ftxTDp->rrSlots == FTX_DEF_RR_SLOTS);
 			for (ftxSlot = 0; ftxSlot < ftxTDp->rrSlots; ftxSlot++) {
 				if (ftxTDp->tablep[ftxSlot].ftxp != NULL) {
-					MS_SMP_ASSERT(ftxTDp->tablep[ftxSlot].ftxp->thd != thread);
+					KASSERT(ftxTDp->tablep[ftxSlot].ftxp->thd != thread);
 				}
 			}
-			MS_SMP_ASSERT(ftxTDp->rrNextSlot < ftxTDp->rrSlots);
+			KASSERT(ftxTDp->rrNextSlot < ftxTDp->rrSlots);
 		}
 #endif				/* ADVFS_SMP_ASSERT */
 
@@ -1296,7 +1296,7 @@ ftx_fail_2(
 	ftxDoneLRT *ftxDLRp;
 	int segwordcnt = 0, recwordcnt = 0, cntRead = 0;
 
-	MS_SMP_ASSERT(ftxH.dmnP != NULL);
+	KASSERT(ftxH.dmnP != NULL);
 	dmnP = ftxH.dmnP;
 
 	/* set ftx table pointer and slot */
@@ -1305,15 +1305,15 @@ ftx_fail_2(
 
 	/* check slot */
 	ftxSlot = ftxH.hndl - 1;
-	MS_SMP_ASSERT(ftxSlot < FTX_MAX_FTXH);
+	KASSERT(ftxSlot < FTX_MAX_FTXH);
 
 	/* pick up ftx pointer from slot */
 
-	MS_SMP_ASSERT(ftxTDp->tablep[ftxSlot].ftxp != 0);
+	KASSERT(ftxTDp->tablep[ftxSlot].ftxp != 0);
 	ftxp = ftxTDp->tablep[ftxSlot].ftxp;
 
 	/* check if level in handle matches current level. */
-	MS_SMP_ASSERT(ftxp->currLvl == ftxH.level);
+	KASSERT(ftxp->currLvl == ftxH.level);
 	lvl = ftxp->currLvl;
 
 #ifdef ADVFS_SMP_ASSERT
@@ -3430,7 +3430,7 @@ reset_oldest_lsn(
 	ftxTblDT *ftxTDp = &dmnP->ftxTbld;
 	ftxCRLAT *oldftxlap = &ftxTDp->oldestFtxLa;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&FtxMutex.mutex));
+	KASSERT(SLOCK_HOLDER(&FtxMutex.mutex));
 	if ((dmnP->state < BFD_RECOVER_CONTINUATIONS) &&
 	    (!(dmnP->dmnFlag & BFD_DEACTIVATE_IN_PROGRESS))) {
 		return;

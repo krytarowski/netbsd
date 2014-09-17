@@ -374,7 +374,7 @@ init_access(bfAccessT * bfap)
          * to increment NumAccess.
          */
 	mutex_lock(&BfAccessFreeLock);
-	MS_SMP_ASSERT(FreeAcc.freeFwd);
+	KASSERT(FreeAcc.freeFwd);
 	bfap->freeBwd = (bfAccessT *) & FreeAcc;
 	bfap->freeFwd = FreeAcc.freeFwd;
 	FreeAcc.freeFwd->freeBwd = bfap;
@@ -453,7 +453,7 @@ cleanup_closed_list(clupClosedListTypeT clean_type)
 		break;
 	default:
 		/* shouldn't be here */
-		MS_SMP_ASSERT(0);
+		KASSERT(0);
 		return;
 	}
 
@@ -863,7 +863,7 @@ restart:
 		mutex_lock(&bfap->bfaLock);
 		state = lk_get_state(bfap->stateLk);
 
-		MS_SMP_ASSERT(state != ACC_INIT_TRANS);
+		KASSERT(state != ACC_INIT_TRANS);
 
 		nextp = bfap->setFwd;
 		vp = bfap->bfVp;
@@ -1263,7 +1263,7 @@ restart:
 		                 */
 			{
 				mutex_lock(&findBfap->bfaLock);
-				MS_SMP_ASSERT((BS_BFTAG_EQL(findBfap->tag, tag)) &&
+				KASSERT((BS_BFTAG_EQL(findBfap->tag, tag)) &&
 				    findBfap->bfSetp == bfSetp);
 				if (lk_get_state(findBfap->stateLk) == ACC_RECYCLE) {
 					BS_BFAH_UNLOCK(hash_key);
@@ -1304,7 +1304,7 @@ restart:
 				if (BS_BFS_EQL(bfSetp->bfSetId,
 					((bfSetT *) findBfap->bfSetp)->bfSetId)) {
 					mutex_lock(&findBfap->bfaLock);
-					MS_SMP_ASSERT((BS_BFTAG_EQL(findBfap->tag, tag)) &&
+					KASSERT((BS_BFTAG_EQL(findBfap->tag, tag)) &&
 					    findBfap->bfSetp == bfSetp);
 					if (lk_get_state(findBfap->stateLk) == ACC_RECYCLE) {
 						BS_BFAH_UNLOCK(hash_key);
@@ -1338,8 +1338,8 @@ restart:
 	findBfap = NULL;
 
 return_it:
-	MS_SMP_ASSERT(findBfap ? SLOCK_HOLDER(&findBfap->bfaLock.mutex) : 1);
-	MS_SMP_ASSERT(findBfap ? lk_get_state(findBfap->stateLk) != ACC_RECYCLE : 1);
+	KASSERT(findBfap ? SLOCK_HOLDER(&findBfap->bfaLock.mutex) : 1);
+	KASSERT(findBfap ? lk_get_state(findBfap->stateLk) != ACC_RECYCLE : 1);
 	if (!hold_hashlock)
 		BS_BFAH_UNLOCK(hash_key);
 	return (findBfap);
@@ -1369,12 +1369,12 @@ start:
 	    bfap != (bfAccessT *) (&bfSetp->accessFwd);
 	    bfap = nextbfap) {
 
-		MS_SMP_ASSERT(bfap->accMagic == ACCMAGIC);
+		KASSERT(bfap->accMagic == ACCMAGIC);
 		/*
 	         * Lock the access structure.
 	         */
 		mutex_lock(&bfap->bfaLock);
-		MS_SMP_ASSERT(bfap->bfSetp == bfSetp);
+		KASSERT(bfap->bfSetp == bfSetp);
 
 		/*
 	         * If fs_cleanup_thread() is deallocating the access structure,
@@ -1410,8 +1410,8 @@ start:
 	         * Make sure access structure isn't in use since
 	         * we're about to invalidate it.
 	         */
-		MS_SMP_ASSERT(bfap->refCnt == 0);
-		MS_SMP_ASSERT(bfap->dirtyBufList.length == 0);
+		KASSERT(bfap->refCnt == 0);
+		KASSERT(bfap->dirtyBufList.length == 0);
 
 		(void) lk_set_state(&bfap->stateLk, ACC_INVALID);
 		bfap->bfVp = NULL;
@@ -1544,10 +1544,10 @@ bs_invalidate_rsvd_access_struct(
 	tbfap = bfap;
 	bfap = grab_bsacc(domain->bfSetDirp, bfTag, FALSE, NULL);
 	if (bfap != NULL) {
-		MS_SMP_ASSERT(bfap->refCnt == 1);
+		KASSERT(bfap->refCnt == 1);
 		if ((tbfap == bfap) &&
 		    (lk_get_state(bfap->stateLk) == ACC_VALID)) {
-			MS_SMP_ASSERT(bfap->dirtyBufList.length == 0);
+			KASSERT(bfap->dirtyBufList.length == 0);
 			bfap->stateLk.state = ACC_INVALID;
 		}
 		DEC_REFCNT(bfap);
@@ -1819,7 +1819,7 @@ bs_map_bf(
 
 	/*-----------------------------------------------------------------------*/
 
-/*    MS_SMP_ASSERT(lk_get_state(bfap->stateLk) == ACC_INIT_TRANS);
+/*    KASSERT(lk_get_state(bfap->stateLk) == ACC_INIT_TRANS);
       will not work when called by extend_bmt_redo_opx during recovery... */
 
 	dmnP = bfap->dmnP;
@@ -2325,7 +2325,7 @@ retry_clu_clone_access:
 	         * succeeds, and chances are it will, then it will setup
 	         * a vnode to use so we'll vrele() the one we preallocated.
 	         */
-		MS_SMP_ASSERT(got_clu_clone_vnode == TRUE);
+		KASSERT(got_clu_clone_vnode == TRUE);
 		DEC_REFCNT(bfap);
 		mutex_unlock(&bfap->bfaLock);
 		vrele(vp);
@@ -2400,9 +2400,9 @@ retry_clu_clone_access:
 			mutex_unlock(&bfap->bfaLock);
 			sts = getnewvnode(VT_MSFS, &msfs_vnodeops, &vp);
 			mutex_lock(&bfap->bfaLock);
-			MS_SMP_ASSERT(bfap->refCnt > 0);
-			MS_SMP_ASSERT(BS_BFTAG_EQL(tag, bfap->tag));
-			MS_SMP_ASSERT(bfSetp == bfap->bfSetp);
+			KASSERT(bfap->refCnt > 0);
+			KASSERT(BS_BFTAG_EQL(tag, bfap->tag));
+			KASSERT(bfSetp == bfap->bfSetp);
 			if (sts != EOK) {
 				goto err_deref;
 			}
@@ -2525,9 +2525,9 @@ retry_clu_clone_access:
 			mutex_unlock(&bfap->bfaLock);
 			sts = getnewvnode(VT_MSFS, &msfs_vnodeops, &vp);
 			mutex_lock(&bfap->bfaLock);
-			MS_SMP_ASSERT(bfap->refCnt > 0);
-			MS_SMP_ASSERT(BS_BFTAG_EQL(tag, bfap->tag));
-			MS_SMP_ASSERT(bfSetp == bfap->bfSetp);
+			KASSERT(bfap->refCnt > 0);
+			KASSERT(BS_BFTAG_EQL(tag, bfap->tag));
+			KASSERT(bfSetp == bfap->bfSetp);
 			if (sts != EOK) {
 				goto err_deref;
 			}
@@ -2553,7 +2553,7 @@ retry_clu_clone_access:
 	         * Setting "vp" tells the exit path not to do another vget on
 	         * this vnode.
 	         */
-		MS_SMP_ASSERT(bfap->bfObj == NULL);
+		KASSERT(bfap->bfObj == NULL);
 		/*
 	         * Don't allocate object for shadow bfap.
 	         */
@@ -2561,7 +2561,7 @@ retry_clu_clone_access:
 			bfap->bfObj = ubc_object_allocate((vfs_private_t) & bfap,
 			    &msfs_ubcops,
 			    0);
-			MS_SMP_ASSERT(bfap->bfObj);
+			KASSERT(bfap->bfObj);
 
 			/*
 	                 * Give the ref count an extra bump to guarantee no one
@@ -2854,7 +2854,7 @@ retry_clu_clone_access:
 		                 * preallocated vnode and continue.
 		                 */
 				if (got_clu_clone_vnode) {
-					MS_SMP_ASSERT(vp != bfap->bfVp);
+					KASSERT(vp != bfap->bfVp);
 					clu_clone_vnode_to_vrele = vp;
 					got_clu_clone_vnode = FALSE;
 				}
@@ -3187,7 +3187,7 @@ get_n_setup_new_vnode(
 	struct fsContext *fscp;
 	bfSetIdT bfSetId;
 
-	MS_SMP_ASSERT(lk_get_state(bfap->stateLk) == ACC_INIT_TRANS);
+	KASSERT(lk_get_state(bfap->stateLk) == ACC_INIT_TRANS);
 
 #ifdef DEBUG
 	if (xxx_vnode_cnt) {
@@ -3328,7 +3328,7 @@ found:
 	                 * access structure with state ACC_INVALID and the refCnt
 	                 * up.  We just bump the refCnt and return.
 	                 */
-			MS_SMP_ASSERT(bfSetp->cloneId != BS_BFSET_ORIG);
+			KASSERT(bfSetp->cloneId != BS_BFSET_ORIG);
 			bfap->refCnt++;
 			return bfap;
 		} else if (lk_get_state(bfap->stateLk) != ACC_INVALID) {
@@ -3371,7 +3371,7 @@ found:
 		} else {
 			/* State == ACC_INVALID; take off free or closed list
 			 * if on one */
-			MS_SMP_ASSERT(bfap->refCnt == 0);
+			KASSERT(bfap->refCnt == 0);
 			RM_ACC_LIST_COND(bfap);
 		}
 	} else {
@@ -3428,7 +3428,7 @@ found:
 		VN_UNLOCK(vp);
 	}
 	if (bfap->bfObj) {
-		MS_SMP_ASSERT(bfap->freeFwd == NULL);
+		KASSERT(bfap->freeFwd == NULL);
 		if (vp) {
 			VN_LOCK(vp);
 			/*
@@ -3441,7 +3441,7 @@ found:
 			VN_UNLOCK(vp);
 		}
 		mutex_unlock(&bfap->bfaLock);
-		MS_SMP_ASSERT(vm_object_type((vm_object_t) bfap->bfObj) == OT_UBC);
+		KASSERT(vm_object_type((vm_object_t) bfap->bfObj) == OT_UBC);
 		msfs_flush_and_invalidate(bfap, INVALIDATE_ALL | INVALIDATE_QUOTA_FILES);
 		bfap->bfObj->vu_object.ob_ref_count -= 1;
 		ubc_object_free(bfap->bfObj);
@@ -3592,7 +3592,7 @@ found:
          * bfSetT.fraglock in the lock hierarchy.  This is similar to
          * the game we play with the BMT in bfm_open_ms().
          */
-	MS_SMP_ASSERT(bfap->bfSetp == NULL);
+	KASSERT(bfap->bfSetp == NULL);
 	if (bfSetp->cloneId == BS_BFSET_ORIG) {
 		lock_terminate(&(bfap->xtnts.migTruncLk));
 		lock_setup(&(bfap->xtnts.migTruncLk),
@@ -3611,7 +3611,7 @@ found:
 	bfap->mmapFlush = 0;
 	bfap->tag = tag;
 	bfap->bfSetp = bfSetp;
-	MS_SMP_ASSERT(TEST_DMNP(bfSetp->dmnP) == EOK);
+	KASSERT(TEST_DMNP(bfSetp->dmnP) == EOK);
 	bfap->dmnP = bfSetp->dmnP;
 	bfap->mapped = FALSE;
 	bfap->flushWait = 0;
@@ -3646,7 +3646,7 @@ found:
          * bfalock held.
          */
 	ADD_ACC_SETLIST(bfap);
-	MS_SMP_ASSERT(bfap->accMagic == ACCMAGIC);
+	KASSERT(bfap->accMagic == ACCMAGIC);
 
 	/* Link entry into fileset-tag hash list. We are holding the hash
 	 * chains lock already and dyn_hash_insert will release it */
@@ -3853,7 +3853,7 @@ bs_close_one(
 	        ** (and finish) a root transaction. We can't start a second root
 	        ** transaction when we already have a transaction active.
 	        */
-		MS_SMP_ASSERT(FTX_EQ(parentFtxH, FtxNilFtxH));
+		KASSERT(FTX_EQ(parentFtxH, FtxNilFtxH));
 		if (clu_is_ready() && bfap->bfSetp->cloneId == BS_BFSET_ORIG) {
 			token_flg = get_clu_clone_locks(bfap, NULL, &cloneSetp, &cloneap);
 			setHeld = TRUE;
@@ -3908,7 +3908,7 @@ bs_close_one(
 		ftxFlag = TRUE;
 		goto _close_it;
 	}
-	MS_SMP_ASSERT(bfap->accessCnt >= 0);
+	KASSERT(bfap->accessCnt >= 0);
 
 	/*
          * Note that the access count must be tested while holding the
@@ -4296,9 +4296,9 @@ free_acc_struct(
 {
 	int added_bfap_to_list = FALSE;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
 
-	MS_SMP_ASSERT(bfap->accessCnt == 0);
+	KASSERT(bfap->accessCnt == 0);
 	if (bfap->refCnt < 0) {
 		ADVFS_SAD0("neg refCnt");
 	}
@@ -4384,8 +4384,8 @@ check_mv_bfap_to_free(bfAccessT * bfap)
 	struct vnode *vp = bfap->bfVp;
 	struct vm_ubc_object *obj = bfap->bfObj;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
+	KASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
 
 	/* Check following conditions; if any prevail, then do not move to
 	 * free list. 1. Not on closed list. 2. There are still buffers
@@ -4406,7 +4406,7 @@ check_mv_bfap_to_free(bfAccessT * bfap)
 		return;
 	}
 	/* The bfap is on the closed list (must NOT be on free list yet). */
-	MS_SMP_ASSERT(bfap->onFreeList == -1);
+	KASSERT(bfap->onFreeList == -1);
 
 	/* if the object has no dirty pages or busy pages then we can move */
 	/* the access struct to the free list */
@@ -4561,9 +4561,9 @@ bs_dealloc_access(bfAccessT * bfap)
 	/*
          * Sanity checks.
          */
-	MS_SMP_ASSERT(bfap->accMagic == ACCMAGIC);
-	MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
-	MS_SMP_ASSERT(!bfap->onFreeList);
+	KASSERT(bfap->accMagic == ACCMAGIC);
+	KASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
+	KASSERT(!bfap->onFreeList);
 
 	/*
          * Set the state of the access structure to ACC_DEALLOC.
@@ -4634,7 +4634,7 @@ bs_dealloc_access(bfAccessT * bfap)
          */
 
 	if (bfap->bfObj) {
-		MS_SMP_ASSERT(bfap->freeFwd == NULL);
+		KASSERT(bfap->freeFwd == NULL);
 		if (vp) {
 			VN_LOCK(vp);
 			/*
@@ -4647,7 +4647,7 @@ bs_dealloc_access(bfAccessT * bfap)
 			VN_UNLOCK(vp);
 		}
 		mutex_unlock(&bfap->bfaLock);
-		MS_SMP_ASSERT(vm_object_type((vm_object_t) bfap->bfObj) == OT_UBC);
+		KASSERT(vm_object_type((vm_object_t) bfap->bfObj) == OT_UBC);
 		msfs_flush_and_invalidate(bfap, INVALIDATE_ALL | INVALIDATE_QUOTA_FILES);
 		bfap->bfObj->vu_object.ob_ref_count -= 1;
 		ubc_object_free(bfap->bfObj);
@@ -4972,10 +4972,10 @@ search_actRange_list(
 				listp = listp->arFwd;
 			}
 		}
-		MS_SMP_ASSERT(listp != (actRangeT *) actListHead);
+		KASSERT(listp != (actRangeT *) actListHead);
 		/* NOTREACHED */
 	}
-	MS_SMP_ASSERT(0);
+	KASSERT(0);
 	return ((actRangeT *) NULL);	/* Keep the compiler from whining. */
 }
 /* insert_actRange_onto_list
@@ -5099,8 +5099,8 @@ void
 remove_actRange_from_list(bfAccessT * bfap,
     actRangeT * arp)
 {
-	MS_SMP_ASSERT(arp->arFwd != NULL);
-	MS_SMP_ASSERT(arp->arBwd != NULL);
+	KASSERT(arp->arFwd != NULL);
+	KASSERT(arp->arBwd != NULL);
 
 	/* Remove the actRange from the list. */
 	arp->arFwd->arBwd = arp->arBwd;
@@ -5120,7 +5120,7 @@ remove_actRange_from_list(bfAccessT * bfap,
 		actRangeT *actp, *nextwaiterp;
 		arp->arWaiters = 0;
 
-		MS_SMP_ASSERT(bfap->actRangeList.arWaitFwd !=
+		KASSERT(bfap->actRangeList.arWaitFwd !=
 		    (actRangeT *) (&bfap->actRangeList));
 		while (waitp != (actRangeT *) (&bfap->actRangeList)) {
 			actRangeT *carp = (actRangeT *) NULL;	/* conflicting range */
@@ -5236,11 +5236,11 @@ limits_of_active_range(
 	mutex_lock(&bfap->actRangeLock);
 	ar = page_to_active_range(bfap, pg);
 
-	MS_SMP_ASSERT(ar);
+	KASSERT(ar);
 
 	/* check that this thread is indeed the thread that holds the active
 	 * range. */
-	MS_SMP_ASSERT(THREAD_ID(ar->arDebug) ==
+	KASSERT(THREAD_ID(ar->arDebug) ==
 	    THREAD_ID((unsigned long) current_thread()));
 
 	/* catch the impossible even if asserts are turned off */

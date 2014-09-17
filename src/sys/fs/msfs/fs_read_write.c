@@ -181,7 +181,7 @@ fs_zero_fill_pages(
          * If force_immediate_write = 1 and virtualZeroRangeP != NULL, we want
          * to zero memory quickly and get it out to disk.
          */
-	MS_SMP_ASSERT(virtualZeroRangeP != NULL);
+	KASSERT(virtualZeroRangeP != NULL);
 	if (force_immediate_write && (virtualZeroRangeP != NULL)) {
 		bytes_to_transfer = npages * ADVFS_PGSZ;
 		starting_blk_num = (long) ADVFS_PGSZ_IN_BLKS *(long) start_pg;
@@ -205,7 +205,7 @@ fs_zero_fill_pages(
 			    cred);
 
 			if (sts != EOK) {
-				MS_SMP_ASSERT(0);	/* We should never get
+				KASSERT(0);	/* We should never get
 							 * here. */
 				goto not_vm_zeroing;
 			}
@@ -806,7 +806,7 @@ _retry:
 			if (arp) {
 				/* Remove active range */
 				mutex_lock(&bfap->actRangeLock);
-				MS_SMP_ASSERT(arp->arIosOutstanding == 0);
+				KASSERT(arp->arIosOutstanding == 0);
 				remove_actRange_from_list(bfap, arp);
 				mutex_unlock(&bfap->actRangeLock);
 				ms_free(arp);
@@ -965,7 +965,7 @@ _retry:
 				FS_FILE_UNLOCK_RECURSIVE(contextp);
 				lk_state = LKS_UNLOCKED;
 
-				MS_SMP_ASSERT(!retry);
+				KASSERT(!retry);
 				if (retry) {
 					/*
 		                         * It is impossible to retry more than once
@@ -1708,7 +1708,7 @@ _no_zero_exit:
 			 * POSIX definition of O_SYNC . */
 			if (((ioflag & IO_SYNC) && strict_posix_osync_local)
 			    || (contextp->dirty_alloc == TRUE)) {
-				MS_SMP_ASSERT(ftx_started == FALSE);
+				KASSERT(ftx_started == FALSE);
 				ret = FTX_START_N(FTA_NULL,
 				    &parentftxH,
 				    FtxNilFtxH,
@@ -2213,7 +2213,7 @@ fs_write_direct(bfAccessT * bfap,
 	                 * what is specified in the current uio_iov structure, then the
 	                 * following code will not work.
 	                 */
-			MS_SMP_ASSERT(uio->uio_iov->iov_len + nbytes <= saved_iovec.iov_len);
+			KASSERT(uio->uio_iov->iov_len + nbytes <= saved_iovec.iov_len);
 			uio->uio_iov->iov_base -= nbytes;
 			uio->uio_iov->iov_len += nbytes;
 			uio->uio_resid += nbytes;
@@ -2226,7 +2226,7 @@ fs_write_direct(bfAccessT * bfap,
          */
 	last_page_nbytes = (int) ((num_to_write - nbytes) % ADVFS_PGSZ);
 	nbytes = (int) (num_to_write - nbytes - last_page_nbytes);
-	MS_SMP_ASSERT(nbytes <= uio->uio_iov->iov_len);
+	KASSERT(nbytes <= uio->uio_iov->iov_len);
 	page_addr = uio->uio_iov->iov_base;
 
 	/*
@@ -2240,7 +2240,7 @@ fs_write_direct(bfAccessT * bfap,
          * be changed to deal with an array of uio->uio_iov structures.
          */
 	saved_iovec = *uio->uio_iov;	/* used in asserts */
-	MS_SMP_ASSERT(nbytes <= uio->uio_iov->iov_len);
+	KASSERT(nbytes <= uio->uio_iov->iov_len);
 	uio->uio_iov->iov_base += nbytes;
 	uio->uio_iov->iov_len -= nbytes;
 	uio->uio_resid -= nbytes;
@@ -2328,7 +2328,7 @@ fs_write_direct(bfAccessT * bfap,
 		                 * deal with an array of uio->uio_iov structures.
 		                 */
 				if ((ret != EOK) || (bytes_written != xfer_bytes)) {
-					MS_SMP_ASSERT(uio->uio_iov->iov_len + last_page_nbytes <=
+					KASSERT(uio->uio_iov->iov_len + last_page_nbytes <=
 					    saved_iovec.iov_len);
 					uio->uio_iov->iov_base -= last_page_nbytes;
 					uio->uio_iov->iov_len += last_page_nbytes;
@@ -2431,7 +2431,7 @@ do_direct_xfer:
 	                 * iov_len, then the following will need to be changed to deal
 	                 * with an array of uio->uio_iov structures.
 	                 */
-			MS_SMP_ASSERT(uio->uio_iov->iov_len + (last_page_nbytes + nbytes) <=
+			KASSERT(uio->uio_iov->iov_len + (last_page_nbytes + nbytes) <=
 			    saved_iovec.iov_len);
 			uio->uio_iov->iov_base -= (last_page_nbytes + nbytes);
 			uio->uio_iov->iov_len += (last_page_nbytes + nbytes);
@@ -2452,7 +2452,7 @@ do_direct_xfer:
 	                 * with an array of uio->uio_iov structures.
 	                 */
 			if (bytes_written != nbytes) {
-				MS_SMP_ASSERT(uio->uio_iov->iov_len +
+				KASSERT(uio->uio_iov->iov_len +
 				    (last_page_nbytes + nbytes - bytes_written) <=
 				    saved_iovec.iov_len);
 				uio->uio_iov->iov_base -= (last_page_nbytes +
@@ -2496,7 +2496,7 @@ EXIT:
 	 * range when the I/O completes. */
 	if (!arp_passed_in && !asynch_io_started) {
 		mutex_lock(&bfap->actRangeLock);
-		MS_SMP_ASSERT(arp->arIosOutstanding == 0);
+		KASSERT(arp->arIosOutstanding == 0);
 		remove_actRange_from_list(bfap, arp);	/* also wakes waiters */
 		mutex_unlock(&bfap->actRangeLock);
 		ms_free(arp);
@@ -2622,7 +2622,7 @@ fs_write_add_stg(
 			/* checking that we are not back in the bad
 			 * interaction range with the sbm */
 			extern uint32T AdvfsNotPickyBlkCnt;
-			MS_SMP_ASSERT(AdvfsNotPickyBlkCnt < AdvfsMaxPreallocPages * ADVFS_PGSZ_IN_BLKS);
+			KASSERT(AdvfsNotPickyBlkCnt < AdvfsMaxPreallocPages * ADVFS_PGSZ_IN_BLKS);
 
 			/*
 	                 * if seeing sequential writes, ramp slowly up to maximum
@@ -3308,7 +3308,7 @@ _retry_map:
 			if (directIO) {
 				ret = fs_read_direct(bfap, uio,
 				    &number_to_read, starting_byte);
-				MS_SMP_ASSERT(ret != E_BLKDESC_ARRAY_TOO_SMALL);
+				KASSERT(ret != E_BLKDESC_ARRAY_TOO_SMALL);
 			} else if (do_prefetch && ahead_mode == PREFETCH) {
 				ret = bs_refpg_fetch(
 				    &page_ref,
@@ -3480,7 +3480,7 @@ _retry_map:
 					 * beyond the frag is the same as
 					 * reading beyong end-of-file and
 					 * should never be done. */
-					MS_SMP_ASSERT(!uio);
+					KASSERT(!uio);
 
 					uio->uio_rw = UIO_READ;
 					error = uiomove(
@@ -3837,7 +3837,7 @@ fs_read_direct(bfAccessT * bfap,
 	         */
 		asynch_io_started = FALSE;
 
-		MS_SMP_ASSERT(middle_bytes + trailing_bytes <= uio->uio_iov->iov_len);
+		KASSERT(middle_bytes + trailing_bytes <= uio->uio_iov->iov_len);
 		ret = bs_refpg_direct((void *) uio->uio_iov->iov_base,
 		    middle_bytes,
 		    bfap,
@@ -3859,7 +3859,7 @@ fs_read_direct(bfAccessT * bfap,
 	         * with an array of uio->uio_iov structures.
 	         */
 		if (ret == EOK && bs_number_read > 0) {
-			MS_SMP_ASSERT(bs_number_read <= uio->uio_iov->iov_len);
+			KASSERT(bs_number_read <= uio->uio_iov->iov_len);
 			uio->uio_iov->iov_base += bs_number_read;
 			uio->uio_iov->iov_len -= bs_number_read;
 			uio->uio_resid -= bs_number_read;
@@ -3920,7 +3920,7 @@ EXIT:
 	if (!asynch_io_started || ret != EOK) {
 		/* cleanup if error or synchronous I/O */
 		mutex_lock(&bfap->actRangeLock);
-		MS_SMP_ASSERT(arp->arIosOutstanding == 0);
+		KASSERT(arp->arIosOutstanding == 0);
 		remove_actRange_from_list(bfap, arp);	/* also wakes waiters */
 		mutex_unlock(&bfap->actRangeLock);
 		ms_free(arp);

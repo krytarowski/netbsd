@@ -173,7 +173,7 @@ _domain_panic(domainT * dmnP, char *msg, int flags)
 	int errno;
 	advfs_ev advfs_event;
 
-	MS_SMP_ASSERT(dmnP);
+	KASSERT(dmnP);
 
 	if (AdvfsDomainPanicLevel == 3) {
 		if (flags & DMN_PANIC_IO_CONNECTIVITY) {
@@ -797,7 +797,7 @@ bs_osf_complete(
 	 * targetAddr is set on cache IO using ubc pages. The check for vmpage
 	 * (only set for ubc) excludes raw/directIO just for debug ability
 	 * since they don't use the ubc cache. Up to here we could:
-	 * MS_SMP_ASSERT(taddr == iop->targetAddr); */
+	 * KASSERT(taddr == iop->targetAddr); */
 	if (iop->bsBuf->vmpage)
 		iop->targetAddr = NULL;
 
@@ -847,7 +847,7 @@ bs_osf_complete(
 	 * each buffer to wake any waiters. */
 	while (len--) {
 		next = iop->fwd;
-		MS_SMP_ASSERT(iop->ioQ == DEVICE);
+		KASSERT(iop->ioQ == DEVICE);
 		iop->fwd = iop->bwd = NULL;
 		iop->consolidated = 0;
 		iop->ioQ = NONE;
@@ -1129,13 +1129,13 @@ consecutive_list_io(
 	void bp_map_free(vm_offset_t, int);
 	int map_status = -1;
 
-	MS_SMP_ASSERT(max_buffers > 1);
+	KASSERT(max_buffers > 1);
 
 	MS_VERIFY_IOQUEUE_INTEGRITY(qhdr, TRUE);
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&vdp->devQ.ioQLock.mutex));
-	MS_SMP_ASSERT(SLOCK_HOLDER(&qhdr->ioQLock.mutex));
-	MS_SMP_ASSERT(locks_held[qindex] != 0);
+	KASSERT(SLOCK_HOLDER(&vdp->devQ.ioQLock.mutex));
+	KASSERT(SLOCK_HOLDER(&qhdr->ioQLock.mutex));
+	KASSERT(locks_held[qindex] != 0);
 
 	/* Position ourselves to point to first ioDesc that can have IO done. */
 	if (qhdr == &vdp->consolQ) {
@@ -1167,7 +1167,7 @@ retry:
 			 * ok since eventually we will see it again on a
 			 * future pass. RAWRW requests never go on the
 			 * consolQ. */
-			MS_SMP_ASSERT(!(start->bsBuf->lock.state & RAWRW));
+			KASSERT(!(start->bsBuf->lock.state & RAWRW));
 			if (advfs_page_get(start->bsBuf, UBC_GET_BUSY)) {
 				mutex_unlock(&start->bsBuf->bufLock);
 				start = start->fwd;
@@ -1448,7 +1448,7 @@ call_disk(
 	/*
          * Fill OSF buf struct.
          */
-	MS_SMP_ASSERT(ioList->targetAddr);
+	KASSERT(ioList->targetAddr);
 	bp->b_un.b_addr = (caddr_t) ioList->targetAddr;
 
 	if (ioList->bsBuf->directIO) {
@@ -1468,7 +1468,7 @@ call_disk(
 		 * transfers. */
 		bp->b_proc = ioList->bsBuf->procp;
 		bp->b_flags = B_RAW | B_PHYS;
-		MS_SMP_ASSERT(!(ioAmt % BS_BLKSIZE));
+		KASSERT(!(ioAmt % BS_BLKSIZE));
 	}
 	bp->b_bcount = ioAmt;
 	bp->b_dev = vdp->devVp->v_rdev;
@@ -1601,14 +1601,14 @@ get_locks(ioDescHdrT * qhdr, vdT * vdp, qtypeT qindex, int *locks_held)
 {
 	errT error = OK;
 
-	MS_SMP_ASSERT(SLOCK_HOLDER(&vdp->devQ.ioQLock.mutex));
+	KASSERT(SLOCK_HOLDER(&vdp->devQ.ioQLock.mutex));
 	if (!mutex_lock_try(&qhdr->ioQLock.mutex)) {
 
 		mutex_unlock(&vdp->devQ.ioQLock);
 		mutex_lock(&qhdr->ioQLock);
 		mutex_lock(&vdp->devQ.ioQLock);
 
-		MS_SMP_ASSERT(vdp->devQ.lenLimit > 0);
+		KASSERT(vdp->devQ.lenLimit > 0);
 		if (vdp->devQ.ioQLen >= vdp->devQ.lenLimit) {	/* no room */
 			/* Note: There is no danger that our I/O will be
 			 * stranded if we bail out here, because the
@@ -1624,7 +1624,7 @@ get_locks(ioDescHdrT * qhdr, vdT * vdp, qtypeT qindex, int *locks_held)
 			mutex_unlock(&vdp->devQ.ioQLock);
 		} else if (qhdr->ioQLen <= 0) {
 			/* a negative queue length is invalid */
-			MS_SMP_ASSERT(qhdr->ioQLen == 0);
+			KASSERT(qhdr->ioQLen == 0);
 			error = CONT;
 			mutex_unlock(&qhdr->ioQLock);
 		} else {
@@ -1633,7 +1633,7 @@ get_locks(ioDescHdrT * qhdr, vdT * vdp, qtypeT qindex, int *locks_held)
 	} else {
 		if (qhdr->ioQLen <= 0) {
 			/* a negative queue length is invalid */
-			MS_SMP_ASSERT(qhdr->ioQLen == 0);
+			KASSERT(qhdr->ioQLen == 0);
 			error = CONT;
 			mutex_unlock(&qhdr->ioQLock);
 		} else
@@ -1690,7 +1690,7 @@ bs_startio(
 	int locks_held[4];
 	int i;
 
-	MS_SMP_ASSERT(flushFlag == IO_FLUSH ||
+	KASSERT(flushFlag == IO_FLUSH ||
 	    flushFlag == IO_NOFLUSH ||
 	    flushFlag == IO_SOMEFLUSH);
 
@@ -1871,7 +1871,7 @@ bs_startio(
 
 				/* Setup the UBC page for IO. Raw and Direct
 				 * I/O do not put buffers on the consolq. */
-				MS_SMP_ASSERT(!(ioList->bsBuf->lock.state & RAWRW));
+				KASSERT(!(ioList->bsBuf->lock.state & RAWRW));
 				if (advfs_page_get(ioList->bsBuf, UBC_GET_BUSY)) {
 					/* If the UBC page is already setup
 					 * for IO (the pg_busy flag is on),
@@ -2001,7 +2001,7 @@ bs_startio(
 				blks = howmany(ioAmt, BS_BLKSIZE);
 
 				/* directIO transfers must be full-sectors */
-				MS_SMP_ASSERT(!(ioAmt % BS_BLKSIZE));
+				KASSERT(!(ioAmt % BS_BLKSIZE));
 			} else {
 				blks = ioList->numBlks;
 				ioAmt = blks * BS_BLKSIZE;

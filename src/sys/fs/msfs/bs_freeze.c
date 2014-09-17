@@ -315,7 +315,7 @@ freeze_domain(advfsFreezeMsgT * msg)
 		mutex_unlock(&dmnP->dmnFreezeMutex);
 		thread_block();
 		dmnP->dmnFreezeWaiting--;
-		MS_SMP_ASSERT(!dmnP->dmnFreezeRefCnt);
+		KASSERT(!dmnP->dmnFreezeRefCnt);
 	} else {
 		mutex_unlock(&dmnP->dmnFreezeMutex);
 	}

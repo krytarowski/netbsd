@@ -193,7 +193,7 @@ start:
 				mutex_unlock(&bfSetp->accessChainLock);
 				goto start;
 			}
-			MS_SMP_ASSERT(bfap->bfSetp == bfSetp);
+			KASSERT(bfap->bfSetp == bfSetp);
 
 			/*
 	                 * If the access structure is in the process of
@@ -966,7 +966,7 @@ fs_create_frag(
 	/*
          * Assert no frags on direct I/O files.
          */
-	MS_SMP_ASSERT(!(bfap->bfVp->v_flag & VDIRECTIO));
+	KASSERT(!(bfap->bfVp->v_flag & VDIRECTIO));
 
 	inuseByteCnt = bfap->file_size % ADVFS_PGSZ;
 
@@ -1117,7 +1117,7 @@ fs_quick_frag_test(
 	struct mount *mountPoint;
 	bfSetT *bfSetp;
 	struct vnode *vnode = bfap->bfVp;
-	MS_SMP_ASSERT(vnode);
+	KASSERT(vnode);
 
 
 	/* If any of the following conditions are true then we can not frag

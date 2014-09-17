@@ -627,7 +627,7 @@ msfs_open(
 			 * an active range that covers the entire file to
 			 * block active directIO threads while the open mode
 			 * is changed. */
-			MS_SMP_ASSERT(!(mode & O_CACHE));
+			KASSERT(!(mode & O_CACHE));
 		}
 
 		/*
@@ -1428,7 +1428,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 	 * requires migTruncLk locked. This lock must be locked before
 	 * starting a root ftx. */
 	/* can't be a clone */
-	MS_SMP_ASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
+	KASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
 	MIGTRUNC_LOCK_READ(&bfap->xtnts.migTruncLk);
 
 	/* No need to take the quota lock here. Storage is only added to the
@@ -1790,7 +1790,7 @@ msfs_ioctl(struct vnode * vp, int cmd, caddr_t data,
 					 * active range for the entire file to
 					 * block directIO threads while
 					 * changing the open mode. */
-					MS_SMP_ASSERT(mode != CS_CACHE);
+					KASSERT(mode != CS_CACHE);
 				}
 				/* Unlock the file */
 				if (vn_locked)
@@ -2146,7 +2146,7 @@ remove_it_1:
 	/* Prevent races with migrate code paths */
 	/* we don't need to worry about clones, because they are read-only,
 	 * and we cannot remove a file from a clone. */
-	MS_SMP_ASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
+	KASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
 	/* Need index lock because of call chain remove_dir_ent -->
 	 * idx_directory_insert_space --> idx_directory_insert_space_int -->
 	 * idx_index_get_free_pgs_int --> rbf_add_stg */
@@ -2563,7 +2563,7 @@ msfs_link(
 	/* prevent races between storage and migrate code paths */
 	/* we don't need to worry about clones, because they are read-only */
 
-	MS_SMP_ASSERT(dir_bfap->bfSetp->cloneId == BS_BFSET_ORIG);
+	KASSERT(dir_bfap->bfSetp->cloneId == BS_BFSET_ORIG);
 
 	/* Need to take the directory lock because of the call chain
 	 * insert_seq --> rbf_add_stg */
@@ -3111,8 +3111,8 @@ again:
 		/* we don't need to worry about clones, because they are
 		 * read-only */
 
-		MS_SMP_ASSERT(from_dir_accessp->bfSetp->cloneId == BS_BFSET_ORIG);
-		MS_SMP_ASSERT(to_dir_accessp->bfSetp->cloneId == BS_BFSET_ORIG);
+		KASSERT(from_dir_accessp->bfSetp->cloneId == BS_BFSET_ORIG);
+		KASSERT(to_dir_accessp->bfSetp->cloneId == BS_BFSET_ORIG);
 
 		/* Need to take the to_dir lock because of the call chain
 		 * insert_seq --> rbf_add_stg on it. this lock is not taken in
@@ -3325,8 +3325,8 @@ again:
 		/* we don't need to worry about clones, because they are
 		 * read-only */
 
-		MS_SMP_ASSERT(from_dir_accessp->bfSetp->cloneId == BS_BFSET_ORIG);
-		MS_SMP_ASSERT(to_dir_accessp->bfSetp->cloneId == BS_BFSET_ORIG);
+		KASSERT(from_dir_accessp->bfSetp->cloneId == BS_BFSET_ORIG);
+		KASSERT(to_dir_accessp->bfSetp->cloneId == BS_BFSET_ORIG);
 
 		/* Need to take the lock on the index of the from directory
 		 * because of the call chain remove_dir_ent-->
@@ -3888,7 +3888,7 @@ msfs_rmdir(
 	/* Prevent races with migrate code paths */
 	/* we don't need to worry about clones, because they are read-only */
 
-	MS_SMP_ASSERT(par_access->bfSetp->cloneId == BS_BFSET_ORIG);
+	KASSERT(par_access->bfSetp->cloneId == BS_BFSET_ORIG);
 
 	/* Need to lock the index because of the call chain remove_dir_ent -->
 	 * idx_directory_insert_space --> idx_directory_insert_space_int -->
@@ -4260,7 +4260,7 @@ msfs_strategy(struct buf * bp)
          *           get the value out before passing the buf structure anywhere
          *           that might result in its value being changed.
          */
-	MS_SMP_ASSERT(sizeof(bp->b_driver_un_1.longvalue) == sizeof(uio.uio_offset));
+	KASSERT(sizeof(bp->b_driver_un_1.longvalue) == sizeof(uio.uio_offset));
 	uio.uio_offset = (off_t) bp->b_driver_un_1.longvalue;
 	bp->b_driver_un_1.longvalue = 0;
 
@@ -4439,7 +4439,7 @@ msfs_pathconf(
 	/*
          * Satisfy the compiler.  Should never be reached.
          */
-	MS_SMP_ASSERT(FALSE);
+	KASSERT(FALSE);
 	return (0);
 }
 
@@ -4748,7 +4748,7 @@ msfsspec_revoke(
 		bfSetp = bs_bfs_lookup_desc(bnp->bfSetId);
 		if (BFSET_VALID(bfSetp)) {
 			if (bfap = find_bfap(bfSetp, bnp->tag, TRUE, NULL)) {
-				MS_SMP_ASSERT(vp == bfap->bfVp);
+				KASSERT(vp == bfap->bfVp);
 				BS_BFAH_REMOVE(bfap, FALSE);
 				if (VTOA(vp) == NULL) {
 					/*
@@ -5787,7 +5787,7 @@ msfs_objtovp(
     vm_ubc_object_t vop,
     struct vnode ** vp)
 {
-	MS_SMP_ASSERT(vop->vu_ap);	/* have an access structure */
+	KASSERT(vop->vu_ap);	/* have an access structure */
 	*vp = vop->vu_ap->bfVp;
 	return (0);
 }

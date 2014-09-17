@@ -746,7 +746,7 @@ ss_boss_thread(void)
 			ss_adj_msgs_flow_rate();
 			break;
 		default:
-			MS_SMP_ASSERT(0);
+			KASSERT(0);
 			break;
 		}
 
@@ -1023,7 +1023,7 @@ ss_list_thd_pool(void)
 			break;
 
 		default:
-			MS_SMP_ASSERT(0);
+			KASSERT(0);
 			break;
 		}
 
@@ -1062,7 +1062,7 @@ ss_adj_msgs_flow_rate()
 		return;
 	}
 	dmnP = DmnSentinelP;	/* grab starting point */
-	MS_SMP_ASSERT(TEST_DMNP(dmnP) == EOK);
+	KASSERT(TEST_DMNP(dmnP) == EOK);
 	++dmnP->dmnAccCnt;	/* get reference so domain can't dissappear */
 	mutex_unlock(&DmnTblMutex);
 	do {
@@ -1120,7 +1120,7 @@ ss_adj_msgs_flow_rate()
 		return;
 	}
 	dmnP = DmnSentinelP;	/* grab starting point */
-	MS_SMP_ASSERT(TEST_DMNP(dmnP) == EOK);
+	KASSERT(TEST_DMNP(dmnP) == EOK);
 	++dmnP->dmnAccCnt;	/* get our reference for the adjustment */
 	mutex_unlock(&DmnTblMutex);
 	do {
@@ -1233,7 +1233,7 @@ ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
 		return (EOK);
 	}
 	dmnP = DmnSentinelP;	/* grab starting point */
-	MS_SMP_ASSERT(TEST_DMNP(dmnP) == EOK);
+	KASSERT(TEST_DMNP(dmnP) == EOK);
 	++dmnP->dmnAccCnt;	/* get our ref so domain can't dissappear */
 	mutex_unlock(&DmnTblMutex);
 
@@ -1441,7 +1441,7 @@ ss_dmn_activate(domainT * dmnP, u_long flag)
 	/*
          * Check validity of pointer.
          */
-	MS_SMP_ASSERT(dmnP);
+	KASSERT(dmnP);
 
 	logVdp = VD_HTOP(BS_BFTAG_VDI(dmnP->ftxLogTag), dmnP);
 	if (RBMT_THERE(dmnP)) {
@@ -1502,7 +1502,7 @@ ss_dmn_deactivate(domainT * dmnP, int flag)
 	int vdi, vdCnt = 0;
 	vdT *vdp;
 
-	MS_SMP_ASSERT(dmnP);
+	KASSERT(dmnP);
 
 	if (flag == TRUE) {
 		mutex_lock(&dmnP->ssDmnInfo.ssDmnLk);
@@ -1638,7 +1638,7 @@ ss_change_state(char *domain_name,	/* in */
 	}
 	dmnOpen = TRUE;
 
-	MS_SMP_ASSERT(dmnP);
+	KASSERT(dmnP);
 	if (dmnP->ssDmnInfo.ssDmnState == state) {
 		/* already set to this new state-abort */
 		RAISE_EXCEPTION(EOK);
@@ -1948,7 +1948,7 @@ ss_put_rec(domainT * dmnP)
 	int ftxStarted = FALSE;
 	int vd_refed = FALSE;
 
-	MS_SMP_ASSERT(dmnP);
+	KASSERT(dmnP);
 
 	/*
          * If there has been a domain_panic, do not start another root
@@ -2099,10 +2099,10 @@ ss_xtnt_counter(bfAccessT * bfap)
 		/* stripe files defragment not supported in vfast yet */
 		return (0);
 	default:
-		MS_SMP_ASSERT(0);
+		KASSERT(0);
 	}
 
-	MS_SMP_ASSERT(xtntMap);
+	KASSERT(xtntMap);
 
 	/* determine total number of non-contiguous extents for this file */
 	for (i = 0; i < xtntMap->validCnt; i++) {
@@ -2185,7 +2185,7 @@ ss_chk_fragratio(
 	statusT sts = EOK;
 	int vd_refed = FALSE;
 
-	MS_SMP_ASSERT(bfap);
+	KASSERT(bfap);
 
 	/* ignore files under directio control if user desires */
 	if ((bfap->dmnP->ssDmnInfo.ssDmnDirectIo == FALSE) &&
@@ -2441,8 +2441,8 @@ ss_delete_from_frag_list(vdT * vdp,	/* in */
 	ssFragHdrT *fhp;	/* pointer to frag list header */
 	statusT sts;
 
-	MS_SMP_ASSERT(vdp);
-	MS_SMP_ASSERT(SLOCK_HOLDER(&vdp->ssVolInfo.ssFragLk.mutex));
+	KASSERT(vdp);
+	KASSERT(SLOCK_HOLDER(&vdp->ssVolInfo.ssFragLk.mutex));
 	fhp = &vdp->ssVolInfo.ssFragHdr;
 
 	/* check for a null list first! */
@@ -2490,10 +2490,10 @@ ss_select_frag_file(vdT * vdp)
 	ssFragLLT *fp;		/* local entry pointer */
 	ssFragHdrT *fhp;
 
-	MS_SMP_ASSERT(vdp);
+	KASSERT(vdp);
 	mutex_lock(&vdp->ssVolInfo.ssFragLk);
 	fhp = &vdp->ssVolInfo.ssFragHdr;
-	MS_SMP_ASSERT(fhp);
+	KASSERT(fhp);
 
 	/* check for a null list first! */
 	if (fhp->ssFragListCnt == 0) {
@@ -2525,10 +2525,10 @@ ss_dealloc_frag_list(vdT * vdp)
 	ssFragHdrT *fhp;
 	ssFragLLT *currp, *nextp;	/* entry pointer */
 
-	MS_SMP_ASSERT(vdp);
+	KASSERT(vdp);
 	mutex_lock(&vdp->ssVolInfo.ssFragLk);
 	fhp = &vdp->ssVolInfo.ssFragHdr;
-	MS_SMP_ASSERT(fhp);
+	KASSERT(fhp);
 
 	/* check for a null list first! */
 	if (fhp->ssFragListCnt == 0) {
@@ -2546,9 +2546,9 @@ ss_dealloc_frag_list(vdT * vdp)
 		fhp->ssFragListCnt--;
 		currp = nextp;
 	}
-	MS_SMP_ASSERT(vdp->ssVolInfo.ssFragHdr.ssFragRatFwd ==
+	KASSERT(vdp->ssVolInfo.ssFragHdr.ssFragRatFwd ==
 	    (struct ssFragEntry *) (&vdp->ssVolInfo.ssFragHdr));
-	MS_SMP_ASSERT(vdp->ssVolInfo.ssFragHdr.ssFragRatBwd ==
+	KASSERT(vdp->ssVolInfo.ssFragHdr.ssFragRatBwd ==
 	    (struct ssFragEntry *) (&vdp->ssVolInfo.ssFragHdr));
 
 	mutex_unlock(&vdp->ssVolInfo.ssFragLk);
@@ -2564,9 +2564,9 @@ print_frag_list(vdT * vdp)
 	ssFragLLT *fp;		/* entry pointer */
 	ssFragHdrT *fhp;
 
-	MS_SMP_ASSERT(vdp);
+	KASSERT(vdp);
 	fhp = &vdp->ssVolInfo.ssFragHdr;
-	MS_SMP_ASSERT(fhp);
+	KASSERT(fhp);
 
 	/* check for a null list first! */
 	if (fhp->ssFragListCnt == 0) {
@@ -2622,9 +2622,9 @@ ss_dealloc_pack_list(vdT * vdp)
 	ssPackHdrT *php;
 	ssPackLLT *currp, *nextp;	/* entry pointer */
 
-	MS_SMP_ASSERT(vdp);
+	KASSERT(vdp);
 	php = &vdp->ssVolInfo.ssPackHdr;
-	MS_SMP_ASSERT(php);
+	KASSERT(php);
 
 	/* check for a null list first! */
 	if (php->ssPackListCnt == 0) {
@@ -2641,9 +2641,9 @@ ss_dealloc_pack_list(vdT * vdp)
 		php->ssPackListCnt--;
 		currp = nextp;
 	}
-	MS_SMP_ASSERT(vdp->ssVolInfo.ssPackHdr.ssPackFwd ==
+	KASSERT(vdp->ssVolInfo.ssPackHdr.ssPackFwd ==
 	    (struct ssPackEntry *) (&vdp->ssVolInfo.ssPackHdr));
-	MS_SMP_ASSERT(vdp->ssVolInfo.ssPackHdr.ssPackBwd ==
+	KASSERT(vdp->ssVolInfo.ssPackHdr.ssPackBwd ==
 	    (struct ssPackEntry *) (&vdp->ssVolInfo.ssPackHdr));
 	return;
 }
@@ -2654,8 +2654,8 @@ print_pack_list(ssPackHdrT * php,	/* list head */
 {				/* in  */
 	ssPackLLT *p;		/* entry pointer */
 
-	MS_SMP_ASSERT(vdp);
-	MS_SMP_ASSERT(php);
+	KASSERT(vdp);
+	KASSERT(php);
 
 	/* check for a null list first! */
 	if (php->ssPackListCnt == 0) {
@@ -2709,7 +2709,7 @@ ss_snd_hot(
 	bfSetIdT bfSetId;
 	ssListMsgT *listmsg;
 
-	MS_SMP_ASSERT(bfap);
+	KASSERT(bfap);
 	/* ignore files under directio control if user desires */
 	if ((bfap->dmnP->ssDmnInfo.ssDmnDirectIo == FALSE) &&
 	    (((bfSetT *) bfap->bfSetp)->bfSetFlags & BFS_IM_DIRECTIO)) {
@@ -3094,7 +3094,7 @@ ss_rmvol_from_hotlst(domainT * dmnP,	/* in */
 	time_t saved_t;
 
 	/* domain state is irrelavant, cleanup list if domain is in any state. */
-	MS_SMP_ASSERT(dmnP);
+	KASSERT(dmnP);
 	mutex_lock(&dmnP->ssDmnInfo.ssDmnHotLk);
 	hhp = &dmnP->ssDmnInfo.ssDmnHotHdr;
 
@@ -3249,8 +3249,8 @@ ss_chk_hot_list(domainT * dmnP,	/* in */
 
 	mutex_lock(&dmnP->ssDmnInfo.ssDmnHotLk);
 	hhp = &dmnP->ssDmnInfo.ssDmnHotHdr;
-	MS_SMP_ASSERT(hhp);
-	MS_SMP_ASSERT(flag != 0);
+	KASSERT(hhp);
+	KASSERT(flag != 0);
 
 	if (hhp->ssHotListCnt == 0) {
 		mutex_unlock(&dmnP->ssDmnInfo.ssDmnHotLk);
@@ -3352,7 +3352,7 @@ ss_dealloc_hot(domainT * dmnP)
 
 	mutex_lock(&dmnP->ssDmnInfo.ssDmnHotLk);
 	hhp = &dmnP->ssDmnInfo.ssDmnHotHdr;
-	MS_SMP_ASSERT(hhp);
+	KASSERT(hhp);
 	currp = hhp->ssHotFwd;
 
 	/* check for a null list first! */
@@ -3369,9 +3369,9 @@ ss_dealloc_hot(domainT * dmnP)
 		hhp->ssHotListCnt--;
 		currp = nextp;
 	}
-	MS_SMP_ASSERT(dmnP->ssDmnInfo.ssDmnHotHdr.ssHotFwd ==
+	KASSERT(dmnP->ssDmnInfo.ssDmnHotHdr.ssHotFwd ==
 	    (struct ssHotEntry *) (&dmnP->ssDmnInfo.ssDmnHotHdr));
-	MS_SMP_ASSERT(dmnP->ssDmnInfo.ssDmnHotHdr.ssHotBwd ==
+	KASSERT(dmnP->ssDmnInfo.ssDmnHotHdr.ssHotBwd ==
 	    (struct ssHotEntry *) (&dmnP->ssDmnInfo.ssDmnHotHdr));
 
 	mutex_unlock(&dmnP->ssDmnInfo.ssDmnHotLk);
@@ -3624,7 +3624,7 @@ ss_close_file(
     int fsetMounted
 )
 {
-	MS_SMP_ASSERT(bfap);
+	KASSERT(bfap);
 
 	if (fsetMounted) {
 		vrele(bfap->bfVp);
@@ -3632,7 +3632,7 @@ ss_close_file(
 		bs_close(bfap, MSFS_SS_NOCALL);
 	}
 
-	MS_SMP_ASSERT(bfSetp);
+	KASSERT(bfSetp);
 
 	DEC_SSTHDCNT(bfSetp->dmnP);
 
@@ -3998,7 +3998,7 @@ ss_get_n_lk_free_space(
 	         * Note: SSPackRangePctFree is already a reciprocal percentage.
 	         */
 		sts = EOK;
-		MS_SMP_ASSERT(vdp->stgCluster);
+		KASSERT(vdp->stgCluster);
 		clustCnt = scanBlkOffset = 0;
 		/*
 	         * sbm_scan_v3_v4 returns enough free blk in a range, or ENOSPC.
@@ -4259,7 +4259,7 @@ ss_get_most_xtnts(bfAccessT * bfap,	/* in - file */
 	bsInMemXtntDescIdT xtntDescId;
 	bsXtntDescT nextXtntDesc;
 
-	MS_SMP_ASSERT(bfap);
+	KASSERT(bfap);
 
 	xtnts = &bfap->xtnts;
 	xtntMap = xtnts->xtntMap;
@@ -4601,7 +4601,7 @@ ss_vd_migrate(bfTagT filetag,
 	xmEndPage = srcPageOffset + xmTotalPageCnt;
 	pgsMigSoFar = 0;
 
-	MS_SMP_ASSERT(srcPageOffset <= xmEndPage);
+	KASSERT(srcPageOffset <= xmEndPage);
 	while ((srcPageOffset < xmEndPage) && (pgsMigSoFar < allocPageCnt)) {
 
 		/* get the first page not in a hole */
@@ -4617,7 +4617,7 @@ ss_vd_migrate(bfTagT filetag,
 			if (page_is_mapped(bfap, page, &nextpage, FALSE) == TRUE) {
 				/* nextpage is the page beyond the current
 				 * extent. */
-				MS_SMP_ASSERT(nextpage > page);
+				KASSERT(nextpage > page);
 				page = nextpage;
 				continue;
 			}
@@ -4849,13 +4849,13 @@ ss_blks_on_vd(bfAccessT * bfap,	/* in */
 		break;
 	case BSXMT_STRIPE:	/* should never be stripe files on any lists */
 	default:
-		MS_SMP_ASSERT(0);
+		KASSERT(0);
 	}
 
 	/* determine total number of blocks on this volume */
 	for (i = 0; i < xtntMap->validCnt; i++) {
 		subXtntMap = &(xtntMap->subXtntMap[i]);
-		MS_SMP_ASSERT(subXtntMap);
+		KASSERT(subXtntMap);
 		if (subXtntMap->vdIndex == vdi) {
 			tot_blks_on_vd += subXtntMap->pageCnt * xtntMap->blksPerPage;
 		}
