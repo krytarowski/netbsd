@@ -5836,8 +5836,7 @@ bs_domain_init(
 	    DOMAIN_HASH_ELEMENTS_TO_BUCKETS,
 	    DOMAIN_HASH_USECS_BETWEEN_SPLITS,
 	    offsetof(domainT, dmnHashlinks),
-	    ADVDomainHashChainLock_lockinfo,
-	    NULL);
+	    ADVDomainHashChainLock_lockinfo);
 
 	if (DomainHashTbl == NULL) {
 		ADVFS_SAD0("bs_domain_init: can't get space for domain hash table");

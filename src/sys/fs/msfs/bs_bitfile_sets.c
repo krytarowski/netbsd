@@ -2012,8 +2012,7 @@ bs_bfs_init(
 	    BFSET_HASH_ELEMENTS_TO_BUCKETS,
 	    BFSET_HASH_USECS_BETWEEN_SPLITS,
 	    offsetof(bfSetT, hashlinks),
-	    ADVBfSetHashChainLock_lockinfo,
-	    NULL);
+	    ADVBfSetHashChainLock_lockinfo);
 	if (BfSetHashTbl == NULL) {
 		ADVFS_SAD0("bs_bfs_init: can't get space for hash table");
 	}
