@@ -77,8 +77,6 @@
 #include <fs/msfs/ftx_public.h>
 #include <fs/msfs/ftx_privates.h>
 #include <fs/msfs/bs_msg_queue.h>
-#if 0 /* XXX: evm missing */
-#endif
 
 #define ADVFS_MODULE BS_BMT_UTIL
 
