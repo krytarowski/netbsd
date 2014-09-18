@@ -29,22 +29,6 @@
 #define NEW_ACCESS
 
 /*
- * ACCESS_TRACE - used to trace per access activity
- */
-#ifdef  ADVFS_ACCESS_TRACE
-
-#define ACCESS_TRACE_HISTORY 200
-
-typedef struct {
-	uint32T seq;
-	uint16T mod;
-	uint16T ln;
-	struct thread *thd;
-	void *val;
-}      AccessTraceElmtT;
-#endif				/* ADVFS_ACCESS_TRACE */
-
-/*
  * min_free_vnodes: This is the minimum number of free vnodes on the free list.
  *                  If the number of vnodes on the free list is less than the
  *                  value of the min_free_vnodes parameter, than vnodes are
@@ -311,10 +295,6 @@ typedef struct bfAccess {
 
 	struct bfAccess *real_bfap;	/* the original bfap in the root
 					 * fileset this one is shadowing */
-#ifdef ADVFS_ACCESS_TRACE
-	uint32T trace_ptr;	/* access trace buffer */
-	AccessTraceElmtT trace_buf[ACCESS_TRACE_HISTORY];
-#endif				/* ADVFS_ACCESS_TRACE */
 
 	void *idx_params;	/* Pointer to index file parameters */
 	int idxQuotaBlks;	/* Additional quota credits at dir removal */
@@ -341,24 +321,6 @@ typedef struct bfAccess {
 				 * yet */
 	cvT migWait;		/* will sleep until queue reduced to this size */
 }        bfAccessT;
-#ifdef    ADVFS_ACCESS_TRACE
-
-#define ACCESS_TRACE( bfap, n1 ) \
-    access_trace((bfap), (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void*)(n1))
-
-void
-access_trace(
-    bfAccessT * bfap,
-    uint16T module,
-    uint16T line,
-    void *value
-);
-
-#else				/* ADVFS_ACCESS_TRACE */
-
-#define ACCESS_TRACE( bfap, n1 )
-
-#endif				/* ADVFS_ACCESS_TRACE */
 
 #ifdef ADVFS_TAG_TRACE
 
