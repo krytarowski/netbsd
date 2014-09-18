@@ -60,25 +60,6 @@ typedef struct mutex {
 #else				/* _KERNEL */
 	pthread_mutex_t mutex;
 #endif				/* _KERNEL */
-
-#ifdef ADVFS_DEBUG
-	/*
-         * The following are for debugging only.
-         */
-	int psw;		/* save previous value when doing splxxx */
-	struct mutex *next_mutex;
-	void *locks;		/* head of lock list */
-	char name[64];
-	u_int locked;
-	u_int lock_cnt;
-	u_int line_num;
-	/* try_line_num & try_file_name are not protected by the simple lock. */
-	/* They must be int or long, alpha does not do shorter writes
-	 * atomically */
-	u_int try_line_num;
-	char *try_file_name;
-	char *file_name;
-#endif				/* ADVFS_DEBUG */
 }     mutexT;
 
 extern mutexT *MutexList;
@@ -233,20 +214,6 @@ typedef struct lkHdr {
 	void *nxtFtxLk;
 	mutexT *mutex;
 	lkUsageT lkUsage;
-
-#ifdef ADVFS_DEBUG
-	/*
-         * The following are for debugging only.
-         */
-	void *nxtLk;
-	u_short lock_cnt;
-	u_short try_line_num;
-	u_short line_num;
-	u_int use_cnt;
-	char *try_file_name;
-	char *file_name;
-	int thread;
-#endif				/* ADVFS_DEBUG */
 }     lkHdrT;
 
 typedef struct ftxLk {
@@ -429,19 +396,6 @@ typedef struct advfsLockStats {
 
 extern advfsLockStatsT *AdvfsLockStats;
 
-#ifdef ADVFS_DEBUG
-
-#define mutex_lock( mp )    _mutex_lock( mp, __LINE__, __FILE__ )
-#define mutex_lock_try( mp ) _mutex_lock_try( mp, __LINE__, __FILE__ )
-#define mutex_unlock( mp )  _mutex_unlock( mp, __LINE__, __FILE__ )
-
-#define real_mutex_lock_io( mp, s ) \
-    s = splbio(); \
-    (mp)->psw = s; \
-    _mutex_lock( mp, __LINE__, __FILE__ )
-
-#else
-
 #define mutex_lock( mp )   simple_lock( &((mp)->mutex) )
 #define mutex_lock_try( mp )   simple_lock_try( mp )
 #define mutex_unlock( mp ) simple_unlock( &((mp)->mutex) )
@@ -452,8 +406,6 @@ extern advfsLockStatsT *AdvfsLockStats;
 #define real_mutex_lock_io( mp, s ) \
     s = splbio(); \
     simple_lock( &((mp)->mutex) )
-
-#endif				/* ADVFS_DEBUG */
 
 #define real_mutex_unlock_io( mp, s ) \
     mutex_unlock( (mp) ); \
@@ -467,7 +419,6 @@ extern advfsLockStatsT *AdvfsLockStats;
 #define lk_waiters( lk )          ((lk).waiters)
 #define lk_get_state( lk )        ((lk).state)
 
-#ifndef ADVFS_DEBUG
 #define cond_wait( cvp, mp )  _cond_wait( cvp, mp, __LINE__, NULL )
 #define cond_signal( cvp )    _cond_signal( cvp, __LINE__, NULL )
 #define cond_broadcast( cvp ) _cond_broadcast( cvp, __LINE__, NULL )
@@ -481,30 +432,10 @@ extern advfsLockStatsT *AdvfsLockStats;
        _lk_wait_for2( lkp, mp, state1, state2 , __LINE__, NULL )
 #define lk_wait_while( lkp, mp, state ) \
        _lk_wait_while( lkp, mp, state , __LINE__, NULL )
-#else				/* ADVFS_DEBUG */
-#define cond_wait( cvp, mp )  _cond_wait( cvp, mp, __LINE__, __FILE__ )
-#define cond_signal( cvp )    _cond_signal( cvp, __LINE__, __FILE__ )
-#define cond_broadcast( cvp ) _cond_broadcast( cvp, __LINE__, __FILE__ )
-
-#define lk_signal( act, lkp ) _lk_signal( act, lkp, __LINE__, __FILE__ )
-#define lk_set_state( lkp, state ) \
-        _lk_set_state( lkp, state , __LINE__, __FILE__ )
-#define lk_wait_for( lkp, mp, state ) \
-       _lk_wait_for( lkp, mp, state , __LINE__, __FILE__ )
-#define lk_wait_for2( lkp, mp, state1, state2 ) \
-       _lk_wait_for2( lkp, mp, state1, state2 , __LINE__, __FILE__ )
-#define lk_wait_while( lkp, mp, state ) \
-       _lk_wait_while( lkp, mp, state , __LINE__, __FILE__ )
-#endif				/* ADVFS_DEBUG */
 
 /*
  ** Prototypes.
  */
-
-#ifdef ADVFS_DEBUG
-void _mutex_lock(mutexT * mp, int line_num, char *file_name);
-void _mutex_unlock(mutexT * mp, int ln, char *fn);
-#endif				/* ADVFS_DEBUG */
 
 void 
 mutex_init2(mutexT * mp, int num_cvs, char *name);
