@@ -218,9 +218,6 @@ statusT
 _ftx_start_i(
     ftxHT * ftxH,		/* out - ftx handle */
     ftxHT parentFtxH,		/* in - parent ftx handle */
-#ifdef FTX_PROFILING
-    ftxAgentIdT agentId,	/* in - agent ID; only if profiling */
-#endif				/* FTX_PROFILING */
     struct domain * dmnP,	/* in - domain pointer */
     int page_reservation,	/* in - ref/pin pages reserved */
     unsigned int atomicRPass,	/* in - atomic recovery pass */

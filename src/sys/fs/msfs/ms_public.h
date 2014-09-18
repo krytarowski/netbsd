@@ -28,11 +28,7 @@
 
 #ifdef USER_MODE
 
-#ifdef PTHREADS_OSF
-#include <pthread_osf.h>
-#else
 #include <pthread.h>
-#endif
 
 /*
  * These struct defs are necessary so that we don't have to put a bunch of
@@ -42,11 +38,6 @@
  * because ftx_public.h defines rbf_vfs_access()'s proto.
  */
 
-#if 0
-struct mount {
-	int notused;
-};
-#endif
 struct vnode {
 	int notused;
 };
@@ -58,7 +49,6 @@ struct vnode {
 
 #include <fs/msfs/bs_error.h>
 #include <fs/msfs/bs_public.h>
-/*#include <fs/msfs/mss_common.h>*/
 #include <fs/msfs/ms_logger.h>
 #include <fs/msfs/ms_generic_locks.h>
 #include <fs/msfs/ftx_public.h>
