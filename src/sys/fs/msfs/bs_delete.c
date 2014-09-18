@@ -1318,14 +1318,6 @@ del_clean_mcell_list(
 
 	bs_derefpg(pgRef, BS_CACHE_IT);
 
-#ifdef ADVFS_DEBUG
-	if (MCIDEQL(mcellId, bsNilMCId)) {
-		printf("ADVFS delete pending list empty.");
-	} else {
-		printf("ADVFS recovering partially cleared storage:\n    ");
-	}
-#endif
-
 	bfSetId.domainId = vdp->dmnP->domainId;
 	while (!MCIDEQL(mcellId, bsNilMCId)) {
 
@@ -1334,11 +1326,6 @@ del_clean_mcell_list(
 			return (sts);	/* XXX */
 		}
 		mcellp = &bmtp->bsMCA[mcellId.cell];
-
-#ifdef ADVFS_DEBUG
-		printf("page %d cell %d set %d tag %d\n",
-		    mcellId.page, mcellId.cell, mcellp->bfSetTag, mcellp->tag);
-#endif
 
 		/*
 	         * If this is a cluster we may not want to delete the file yet.

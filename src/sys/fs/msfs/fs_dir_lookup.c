@@ -635,12 +635,7 @@ remove_dir_ent(
 	    ftx_handle
 	    );
 	if (ret != EOK) {
-#ifdef ADVFS_DEBUG
-		ADVFS_SAD3("rbf_pinpg error in remove_dir_ent N1 acc = N2 pg = N3",
-		    ret, dir_access, page);
-#else
 		return (ret);
-#endif
 	}
 	/*
          * Check that we are pointing to the correct tag.

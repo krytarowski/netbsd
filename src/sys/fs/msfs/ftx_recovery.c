@@ -529,10 +529,6 @@ after_inactive:
 
 	ftx_set_oldestftxla(dmnP, crashRedo);
 
-#ifdef ADVFS_DEBUG
-	printf("\nADVFS file domain recovery starting.\n");
-#endif
-
 	if (RBMT_THERE(dmnP)) {
 		/*********************************************/
 		/* scan log to recover reserved file metadata */

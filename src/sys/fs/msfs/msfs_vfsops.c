@@ -1129,10 +1129,6 @@ advfs_mountfs(struct mount * mp)
          */
 
 	root_context->bf_tag = dn->rootTag;
-#ifdef ADVFS_DEBUG
-	root_context->file_name[0] = '/';
-	root_context->file_name[1] = '\0';
-#endif
 	root_context->fileSetNode = dn;
 	root_context->dirstamp = 0;
 	root_context->fs_flag = 0;

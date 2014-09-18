@@ -1747,10 +1747,6 @@ bs_init_area()
 			ADVFS_SAD0("bs_init_area: can't get space for access structures");
 		init_access(new_bfap);
 	}
-
-#ifdef ADVFS_DEBUG
-	FreeAcc.min = FreeAcc.len;
-#endif
 	BsAccessHashTbl = dyn_hashtable_init(BS_BFAH_INITIAL_SIZE,
 	    BS_BFAH_HASH_CHAIN_LENGTH,
 	    BS_BFAH_ELEMENTS_TO_BUCKETS,

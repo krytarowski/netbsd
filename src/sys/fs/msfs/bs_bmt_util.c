@@ -2687,9 +2687,6 @@ start2:
 
 	if (!BS_BFTAG_EQL(mcp->tag, NilBfTag) &&
 	    !BS_BFTAG_EQL(mcp->bfSetTag, NilBfTag)) {
-#ifdef ADVFS_DEBUG
-		ADVFS_SAD2("alloc_mcell: mcell not really free", mcid.cell, mcid.page);
-#endif
 		aprintf("ADVFS error: alloc_mcell: mcell (%d.%d) not really free\n", mcid.cell, mcid.page);
 		aprintf("ADVFS cont : alloc_mcell: domain = %s, vol = %s, page = %d\n", dmnP->domainName, vd->vdName, page);
 		aprintf("ADVFS cont : alloc_mcell: tag = 0x%08x.%04x, setTag = 0x%08x.%04x\n",
@@ -2716,10 +2713,6 @@ start2:
 		if ((bmtpgp->freeMcellCnt == 0) &&
 		    ((bmtpgp->nextfreeMCId.cell != 0) ||
 			(bmtpgp->nextfreeMCId.page != 0))) {
-#ifdef ADVFS_DEBUG
-			ADVFS_SAD2("alloc_mcell: freeMCellCnt == 0, nextFreeMCId == (N1.N2)",
-			    bmtpgp->nextfreeMCId.cell, bmtpgp->nextfreeMCId.page);
-#endif
 			aprintf("ADVFS error: alloc_mcell: invalid free list\n");
 			aprintf("ADVFS cont : alloc_mcell: domain = %s, vol = %s, page = %d\n", dmnP->domainName, vd->vdName, page);
 			aprintf("ADVFS cont : alloc_mcell: freeMCellCnt = %d, nextFreeMCId == (%d.%d)",
