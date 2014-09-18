@@ -31,8 +31,8 @@
 #endif
 
 #include <fs/msfs/vfast.h>
-/* XXX: To be examined */
 #include <sys/rwlock.h>
+#include "dyn_hash.h"
 
 /*
  * Some ftx types that are part of the domain structure, so must be
