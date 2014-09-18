@@ -43,11 +43,12 @@
 #include <sys/types.h>
 #include <sys/systm.h>
 #include <sys/errno.h>
-#ifdef USER_MODE
+
+#ifndef _KERNEL
 #include <stdio.h>
-#include <sys/errno.h>
+#endif /* _KERNEL */
+
 #define ESUCCESS 0
-#endif
 
 /* THIS FILE MUST NOT INCLUDE ANY ADVFS FILES EXCEPT bs_error.h */
 /* Otherwise you'll break user mode apps that link with this file */
@@ -414,7 +415,7 @@ advfs_errmsg(
 
 	if ((abs(sts) < MSFS_FIRST_ERR)) {
 #ifdef _KERNEL
-		aprintf("errno = %d\n", abs(sts));
+		printf("errno = %d\n", abs(sts));
 		return errNo;
 #else
 		extern char *sys_errlist[];
@@ -423,7 +424,7 @@ advfs_errmsg(
 
 	} else if ((abs(sts) > abs(MSFS_LAST_ERR))) {
 #ifdef _KERNEL
-		aprintf("unknown error = %d", sts);
+		printf("unknown error = %d", sts);
 		return unknownErr;
 #else
 		static char msg[256];
