@@ -1758,7 +1758,7 @@ filesetnode_init(bfSetT * bfSetp, fileSetNodeT ** fsnpA)
 	fsnp->qi[GRPQUOTA].qiTag.num = bfSetParamsp->fsContext[4 + 2 * GRPQUOTA];
 	fsnp->qi[GRPQUOTA].qiTag.seq = bfSetParamsp->fsContext[5 + 2 * GRPQUOTA];
 
-	mutex_init3(&fsnp->filesetMutex, 0, "filesetMutex", ADVfilesetMutex_lockinfo);
+	mutex_init(&fsnp->filesetMutex);
 	for (qip = &fsnp->qi[0]; qip < &fsnp->qi[MAXQUOTAS]; qip++) {
 		lock_setup(&qip->qiLock, ADVquotaInfoT_qiLock, TRUE);
 	}

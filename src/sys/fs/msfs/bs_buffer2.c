@@ -278,7 +278,7 @@ bs_get_bsbuf(int rad_id, int wait)
 		    M_PREFER, rad_id);
 
 	if (bp) {
-		mutex_init3(&bp->bufLock, 0, "bsBufLock", ADVbufLock_lockinfo);
+		mutex_init(&bp->bufLock);
 		lk_init(&bp->lock, &bp->bufLock, LKT_BUF, 0, LKU_BUFFER);
 		bp->bufMagic = BUFMAGIC;
 	}

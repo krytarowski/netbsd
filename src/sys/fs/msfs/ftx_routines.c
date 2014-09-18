@@ -3030,7 +3030,7 @@ ftx_init(void)
 	int f;
 	struct ftx *ftxp;
 
-	mutex_init3(&FtxMutex, 0, "FtxMutex", ADVFtxMutex_lockinfo);
+	mutex_init(&FtxMutex);
 	advfs_cv_init(&FtxDynAlloc.cv);
 	FtxDynAlloc.waiters = 0;
 	FtxDynAlloc.currAllocated = 0;

@@ -123,7 +123,7 @@ void
 {
 	extern task_t first_task;
 
-	mutex_init3(&AdvfsFreezeMsgsLock, 0, "AdvfsFreezeMsgsLock", ADVFreezeMsgs_lockinfo);
+	mutex_init(&AdvfsFreezeMsgsLock);
 	if (!kernel_thread(first_task, bs_freeze_thread)) {
 		ADVFS_SAD0("The AdvFS freeze thread was not spawned.\n");
 	}
