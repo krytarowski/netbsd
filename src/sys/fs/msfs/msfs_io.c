@@ -78,12 +78,6 @@ int AdvfsDomainPanicLevel = 1;
   * 1: call live_dump if domain is mounted (default) 2: call live_dump even if
   * domain is not mounted 3: promote domain panic to system panic */
 
-#ifdef ADVFS_DEBUG
-/* Next added for checking queue integrity */
-extern unsigned int Verify_Io_Queue;
-#endif
-
-
 void
      bs_printf(char *fmt,...);
 
@@ -343,42 +337,6 @@ _domain_panic(domainT * dmnP, char *msg, int flags)
 		printf("Error number %d returned from live_dump().\n", errno);
 	}
 }
-#ifdef ADVFS_DEBUG
-statusT
-bs_diskerror(
-    domainT * dmnP,
-    int vd,
-    int flags,
-    int count)
-{
-	struct vd *vdp;
-
-	/*
-         * Check validity of handle.  Get vdp.
-         */
-
-	if (dmnP == NULL) {
-		return (EBAD_DOMAIN_POINTER);
-	}
-	/* Bump vdRefCnt on this volume */
-	if (!(vdp = vd_htop_if_valid(vd, dmnP, TRUE, FALSE))) {
-		return (EBAD_VDI);
-	}
-	mutex_lock(&vdp->vdIoLock);
-	/*
-         * Set flags and count
-         */
-	vdp->errorFlag = flags;
-	vdp->errorCount = count;
-	vdp->errorRepeat = count;
-
-	mutex_unlock(&vdp->vdIoLock);
-	vd_dec_refcnt(vdp);
-	return (EOK);
-}
-#endif				/* ADVFS_DEBUG */
-
-
 
 /*
  * bs_osf_complete
@@ -613,75 +571,6 @@ bs_osf_complete(
 	/* We are done with the bp->b_eei setting, so clear. */
 	bp->b_eei = 0;
 
-#ifdef ADVFS_DEBUG
-	mutex_lock(&vdp->vdIoLock);
-	if (sts == EOK && vdp->errorCount) {
-
-		/*
-	         * Determine whether errorCount should be
-	         * decremented.
-	         */
-		if (vdp->errorFlag & DEF_READ) {
-			if (iop->bsBuf->lock.state & READING) {
-				if (vdp->errorFlag & DEF_META) {
-					if (iop->bsBuf->bfAccess->dataSafety > BFD_NO_NWR) {
-						vdp->errorCount--;
-					}
-				} else if (vdp->errorFlag & DEF_LOG) {
-					if (iop->bsBuf->bfAccess->dataSafety == BFD_NO_NWR) {
-						vdp->errorCount--;
-					}
-				} else {
-					if (iop->bsBuf->bfAccess->dataSafety < BFD_NO_NWR) {
-						vdp->errorCount--;
-					}
-				}
-			}
-		} else if (vdp->errorFlag & DEF_WRITE) {
-			if (iop->bsBuf->lock.state & WRITING) {
-				if (vdp->errorFlag & DEF_META) {
-					if (iop->bsBuf->bfAccess->dataSafety > BFD_NO_NWR) {
-						vdp->errorCount--;
-					}
-				} else if (vdp->errorFlag & DEF_LOG) {
-					if (iop->bsBuf->bfAccess->dataSafety == BFD_NO_NWR) {
-						vdp->errorCount--;
-					}
-				} else {
-					if (iop->bsBuf->bfAccess->dataSafety < BFD_NO_NWR) {
-						vdp->errorCount--;
-					}
-				}
-			}
-		}
-		/*
-	         * Generate the error
-	         */
-		if (vdp->errorCount == 0) {
-			sts = EIO;
-			if (vdp->errorFlag & DEF_REPEAT) {
-				vdp->errorCount = vdp->errorRepeat;
-			} else {
-				vdp->errorFlag = DEF_NONE;
-			}
-			setp = iop->bsBuf->bfAccess->bfSetp;
-			aprintf("advfs induced I/O error: "
-			    "setId 0x%08x.%08x.%x.%04x  tag 0x%08x.%04x  page %u\n",
-			    setp->bfSetId.domainId.tv_sec,
-			    setp->bfSetId.domainId.tv_usec,
-			    setp->bfSetId.dirTag.num,
-			    setp->bfSetId.dirTag.seq,
-			    iop->bsBuf->bfAccess->tag.num, iop->bsBuf->bfAccess->tag.seq,
-			    iop->bsBuf->bfPgNum);
-			aprintf("\tvd %u  blk %u  blkCnt %u\n",
-			    iop->blkDesc.vdIndex, iop->blkDesc.vdBlk,
-			    iop->desCnt ? iop->totalBlks : iop->numBlks);
-			aprintf("\t%s error = EIO\n",
-			    iop->bsBuf->lock.state & WRITING ? "write" : "read");
-		}
-	}
-	mutex_unlock(&vdp->vdIoLock);
-#endif				/* ADVFS_DEBUG */
 	/*
          * If a write to a metadata file fails, call domain_panic().
          * That routine will decide whether to panic the domain or

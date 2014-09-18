@@ -390,10 +390,6 @@ struct bfAccessHdr {
 	struct bfAccess *freeBwd;
 	int len;
 	int saved_stats_len;
-#ifdef ADVFS_DEBUG
-	int max;
-	int min;
-#endif
 };
 
 
@@ -714,11 +710,7 @@ limits_of_active_range(
     mutex_unlock(&BfAccessFreeLock); \
 }
 
-#ifdef ADVFS_DEBUG
-#define ACCMAX(accHdr) if ( accHdr.len > accHdr.max ) accHdr.max = accHdr.len
-#define ACCMIN(accHdr) if ( accHdr.len < accHdr.min ) accHdr.min = accHdr.len
-#else
 #define ACCMAX(accHdr)
 #define ACCMIN(accHdr)
-#endif
+
 #endif				/* _ACCESS_H_ */

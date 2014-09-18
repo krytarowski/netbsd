@@ -44,11 +44,6 @@ typedef struct stgDesc {
 	struct stgDesc *prevp;
 	struct stgDesc *nextp;
 }       stgDescT;
-#ifdef ADVFS_DEBUG
-enum deFlags {
-	DEF_NONE = 0, DEF_META = 1, DEF_DATA = 2,
-DEF_READ = 4, DEF_WRITE = 8, DEF_REPEAT = 16, DEF_LOG = 32};
-#endif				/* ADVFS_DEBUG */
 
 #ifdef ADVFS_VD_TRACE
 
@@ -221,11 +216,6 @@ typedef struct vd {
 	mutexT vdIoLock;	/* simple lock for guarding I/O fields */
 	u_int syncQIndx;	/* next smsync queue to be processed */
 	u_int vdRetryCount;	/* count of AdvFS initiated retries */
-#ifdef ADVFS_DEBUG
-	enum deFlags errorFlag;
-	int errorCount;
-	int errorRepeat;
-#endif				/* ADVFS_DEBUG */
 #ifdef ADVFS_SMP_ASSERT
 	u_long rmioq_cnt;	/* count of bufs rm_ioq'ed */
 	u_long rmormvq_cnt;	/* count of bufs rm_or_moveq'ed */

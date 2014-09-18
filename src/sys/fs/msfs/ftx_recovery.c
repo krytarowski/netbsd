@@ -660,9 +660,6 @@ flushlog:
 			sts = E_DOMAIN_PANIC;
 		}
 	}
-#ifdef ADVFS_DEBUG
-	printf("ADVFS file domain recovery now complete.\n\n");
-#endif
 logclose:
 	/* close the log read stream */
 
@@ -1147,10 +1144,6 @@ ftx_recovery_pass(
 			if (RECOV_PASS_LT(dmnP, recoveryPass, clvlp->atomicRPass)) {
 				continue;
 			}
-#ifdef ADVFS_DEBUG
-			printf("ADVFS Pass %d recovery - ftx rollback\n",
-			    recoveryPass);
-#endif
 			if ((recoveryPass == FTX_MAX_RECOVERY_PASS) &&
 			    (CFS_XID(ftxp->lrh.ftxId))) {
 				cfs_list(dmnP, ftxp->lrh.ftxId, FALSE);
@@ -1305,12 +1298,6 @@ ftx_recovery_pass(
 				ftx_free_2(ftxp);
 				mutex_unlock(&FtxMutex);
 			}
-#ifdef ADVFS_DEBUG
-			if (rdcnt) {
-				printf("ADVFS Pass %d recovery - %d rootdone completion\n",
-				    recoveryPass, rdcnt);
-			}
-#endif
 		}
 	}
 

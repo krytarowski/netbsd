@@ -467,11 +467,6 @@ msfs_lookup(
 			ndp->ni_vp = NULL;
 		}
 
-#ifdef ADVFS_DEBUG
-		if (error == ENO_SUCH_TAG) {
-			printf("lookup could not find cached entry\n");
-		}
-#endif
 	}
 	/*
          * well the cache lookup failed, so do a regular search of the
@@ -614,11 +609,6 @@ lookup:
 		    mp, &found_vp, ndp);
 	}
 	if (error) {
-#ifdef ADVFS_DEBUG
-		if (error == ENO_SUCH_TAG) {
-			printf("error from bf_get in lookup\n");
-		}
-#endif
 		ndp->ni_vp = NULL;
 		goto _exit;
 	}

@@ -158,12 +158,7 @@ typedef int statusT;		/* tmp */
 #define BSR_API_MAX 21		/* !!!! do not change !!!!   (see above
 				 * comment) */
 
-
-#ifndef ADVFS_DEBUG
 #define BS_MAX_VDI           256
-#else
-#define BS_MAX_VDI            50
-#endif
 
 
 /* Test the validity of the range of a volume index.  Return

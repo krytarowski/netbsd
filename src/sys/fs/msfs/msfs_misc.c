@@ -213,16 +213,7 @@ vnode_fscontext_allocate(
 				VN_LOCK(vp);
 				fscp = bnp->fsContextp;
 			} else {
-#ifdef ADVFS_DEBUG
-				/* for debugging, the LockMgrMutex needs to be
-				 * locked which is higher in hierarchy than
-				 * vnode v_lock */
-				VN_UNLOCK(vp);
-#endif
 				fscontext_lock_init(fscp);
-#ifdef ADVFS_DEBUG
-				VN_LOCK(vp);
-#endif
 				bnp->fsContextp = fscp;
 				fscp->initialized = 0;
 				fscp->quotaInitialized = 0;
@@ -237,15 +228,7 @@ vnode_fscontext_allocate(
 			fscp = (struct fsContext *)
 			    & vp->v_data[roundup(sizeof(struct bfNode),
 				sizeof(void *))];
-#ifdef ADVFS_DEBUG
-			/* for debugging, the LockMgrMutex needs to be locked
-			 * which is higher in hierarchy than vnode v_lock */
-			VN_UNLOCK(vp);
-#endif
 			fscontext_lock_init(fscp);
-#ifdef ADVFS_DEBUG
-			VN_LOCK(vp);
-#endif
 			bnp->fsContextp = fscp;
 			fscp->initialized = 0;
 			fscp->quotaInitialized = 0;

@@ -363,21 +363,9 @@ bs_kernel_pre_init(void)
 	           libParamsT * parmBuf,
 	           int parmBufLen
 	);
-#ifdef ADVFS_DEBUG
-	extern mutexT LockMgrMutex;
-	/*
-         * Initialize the Lock Mgr's mutex.
-         */
-	simple_lock_setup(&LockMgrMutex.mutex, msfs_lockmgrmutex_lockinfo);
-#endif
-
 	MsfsSyscallp = msfs_real_syscall;
 
-#ifdef ADVFS_DEBUG
-	AdvfsLockStats = (advfsLockStatsT *) ms_malloc(sizeof(advfsLockStatsT));
-#else
 	bs_lock_mgr_init();
-#endif
 
 	lock_setup(&InitLock, ADVInitLock_info, TRUE);
 	event_init(&MsfsDbgEvent);

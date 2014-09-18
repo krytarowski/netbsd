@@ -273,18 +273,11 @@ statusT
 _ftx_start_i(
     ftxHT * ftxH,		/* out - ftx handle */
     ftxHT parentFtxH,		/* in - parent ftx handle */
-#ifdef FTX_PROFILING
-    ftxAgentIdT agentId,	/* in - agent ID */
-#endif	/* FTX_PROFILING */
     domainT * dmnP,		/* in - domain pointer */
     int page_reservation,	/* in - ref/pin pages reserved */
     unsigned int atomicRPass,	/* in - atomic recovery pass */
     int flag,			/* in - 1 == start exclusive ftx */
     long xid			/* in - CFS-generated transaction id */
-#ifdef ADVFS_DEBUG
-    ,int ln,			/* in - caller's line number */
-    char *fn			/* in - caller's file name */
-#endif				/* ADVFS_DEBUG */
 )
 {
 	unsigned int ftxSlot;
@@ -672,13 +665,6 @@ _ftx_start_i(
 	clvlp->lkList = NULL;
 	clvlp->skipSubsLink = ftxp->lastLogRec;
 	clvlp->lastPinS = -1;
-#ifdef ADVFS_DEBUG
-	clvlp->startLn = ln;
-	clvlp->startFn = fn;
-#endif
-#ifdef FTX_PROFILING
-	clvlp->agentId = agentId;
-#endif
 
 	/* return ftx handle */
 
@@ -2785,15 +2771,6 @@ ftx_lock_init(
 	ftxLkT nilLk = {{LKT_FTX}, 0};
 	*lk = nilLk;
 
-#ifdef ADVFS_DEBUG
-	if (lkHdr->mutex != NULL) {
-		/* Assume it is already linked properly */
-		return;
-	}
-	/* add to head of linked list */
-	lkHdr->nxtLk = mutex->locks;
-	mutex->locks = lkHdr;
-#endif				/* ADVFS_DEBUG */
 	lkHdr->mutex = mutex;
 	lock_setup(&(lk->lock), Plinfo, TRUE);
 
@@ -2819,29 +2796,12 @@ ftx_lock_write(
 	          */
 		ADVFS_SAD0("ftx_lock_write: bad ftx handle");
 	}
-#ifdef ADVFS_DEBUG
-	mutex_lock(lk->hdr.mutex);
-	lk->hdr.try_line_num = ln;
-	lk->hdr.try_file_name = fn;
-	mutex_unlock(lk->hdr.mutex);
-#endif				/* ADVFS_DEBUG */
-
 	lock_write(&(lk->lock));
 
 	/* Mutex locking unnecessary because of single threaded ftx structure */
 
 	lk->hdr.nxtFtxLk = clvlp->lkList;
 	clvlp->lkList = lk;
-
-#ifdef ADVFS_DEBUG
-	mutex_lock(lk->hdr.mutex);
-	lk->hdr.line_num = ln;
-	lk->hdr.file_name = fn;
-	lk->hdr.thread = *((int *) &(current_thread()));
-	lk->hdr.lock_cnt++;
-	lk->hdr.use_cnt++;
-	mutex_unlock(lk->hdr.mutex);
-#endif				/* ADVFS_DEBUG */
 }
 
 void
@@ -2857,29 +2817,12 @@ ftx_lock_read(
 	if ((clvlp = get_perlvl_p(ftxH)) == NULL) {
 		ADVFS_SAD0("ftx_lock_read: bad ftx handle");
 	}
-#ifdef ADVFS_DEBUG
-	mutex_lock(lk->hdr.mutex);
-	lk->hdr.try_line_num = ln;
-	lk->hdr.try_file_name = fn;
-	mutex_unlock(lk->hdr.mutex);
-#endif				/* ADVFS_DEBUG */
-
 	lock_read(&(lk->lock));
 
 	/* Mutex locking unnecessary because of single threaded ftx structure */
 
 	lk->hdr.nxtFtxLk = clvlp->lkList;
 	clvlp->lkList = lk;
-
-#ifdef ADVFS_DEBUG
-	mutex_lock(lk->hdr.mutex);
-	lk->hdr.line_num = ln;
-	lk->hdr.file_name = fn;
-	lk->hdr.thread = *((int *) &(current_thread()));
-	lk->hdr.lock_cnt++;
-	lk->hdr.use_cnt++;
-	mutex_unlock(lk->hdr.mutex);
-#endif				/* ADVFS_DEBUG */
 }
 
 
@@ -2911,12 +2854,6 @@ ftx_unlock(
 	default:
 		ADVFS_SAD1("ftx_unlock: unknown lock type", lkHdr->lkType);
 	}
-
-#ifdef ADVFS_DEBUG
-	mutex_lock(lkHdr->mutex);
-	lkHdr->lock_cnt--;
-	mutex_unlock(lkHdr->mutex);
-#endif				/* ADVFS_DEBUG */
 
 }				/* end ftx_unlock */
 

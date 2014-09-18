@@ -728,20 +728,6 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 	new_file_cp->dirty_stats = TRUE;
 	new_file_cp->dirstamp = 0;
 
-#ifdef ADVFS_DEBUG
-	/* copy in the file name. the +1 is to copy the \0 at the string end */
-	if (ndp->ni_dent.d_namlen < 29) {
-		(void) bcopy(
-		    ndp->ni_dent.d_name,
-		    new_file_cp->file_name,
-		    ndp->ni_dent.d_namlen + 1
-		    );
-	} else {
-		(void) bcopy(ndp->ni_dent.d_name, new_file_cp->file_name, 29);
-		new_file_cp->file_name[29] = '\0';
-	}
-#endif
-
 	if (create_directory) {
 		bfap->file_size = ADVFS_PGSZ;
 		new_file_cp->dir_stats.st_nlink = 2;

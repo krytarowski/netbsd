@@ -3292,11 +3292,6 @@ vd_alloc(
 	vdp->vdMagic = VDMAGIC;
 	vdp->vdRefCnt = 0;
 	vdp->vdRefWaiters = 0;
-#ifdef ADVFS_DEBUG
-	vdp->errorFlag = 0;
-	vdp->errorCount = 0;
-	vdp->errorRepeat = 0;
-#endif				/* ADVFS_DEBUG */
 
 	mutex_lock(&vdp->devQ.ioQLock);
 	lk_init(&vdp->active, &vdp->devQ.ioQLock, LKT_STATE, 0, LKU_VD_ACTIVE);

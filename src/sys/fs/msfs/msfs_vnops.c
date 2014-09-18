@@ -3233,22 +3233,7 @@ again:
 	         * write the new fsContext to disk. Do this as a
 	         * sub-transaction so the stats will not be updated if we crash.
 	         */
-#ifdef ADVFS_DEBUG
-		if (tndp->ni_dent.d_namlen < 30) {
-			(void) bcopy(
-			    tndp->ni_dent.d_name,
-			    from_file_context->file_name,
-			    tndp->ni_dent.d_namlen + 1
-			    );
-		} else {
-			(void) bcopy(
-			    tndp->ni_dent.d_name,
-			    from_file_context->file_name,
-			    29
-			    );
-			from_file_context->file_name[29] = '\0';
-		}
-#endif
+
 		/*
 	         * update the parent dir tag in the stats
 	         */
@@ -3379,22 +3364,7 @@ again:
 	         * fsContext area (it reflects the real file, the 'to' file
 	         * actually goes away, we only use it's dir entry)
 	         */
-#ifdef ADVFS_DEBUG
-		if (tndp->ni_dent.d_namlen < 30) {
-			(void) bcopy(
-			    tndp->ni_dent.d_name,
-			    from_file_context->file_name,
-			    tndp->ni_dent.d_namlen + 1
-			    );
-		} else {
-			(void) bcopy(
-			    tndp->ni_dent.d_name,
-			    from_file_context->file_name,
-			    29
-			    );
-			from_file_context->file_name[29] = '\0';
-		}
-#endif
+
 		/* note - the to_file_context isn't locked here. I don't think
 		 * that is a problem... */
 
@@ -4324,43 +4294,11 @@ msfs_strategy(struct buf * bp)
 	}
 	return (retval);
 }
-#ifndef ADVFS_DEBUG
 msfs_print(
     struct vnode * vp
 )
 {
 }
-#else
-static char *vtagtypename[] =
-{"VT_NON", "VT_UFS", "VT_NFS", "VT_MFS", "VT_S5FS", "VT_CDFS",
-"VT_DFS", "VT_EFS", "VT_PRFS", "VT_MSFS"};
-msfs_print(
-    struct vnode * vp
-)
-{
-	struct bfNode *bp;
-	struct fsContext *cp;
-	bfAccessT *bfap;
-	bfTagT tag;
-	bfSetIdT setId;
-
-	bp = (struct bfNode *) (&vp->v_data[0]);
-	bfap = bp->accessp;
-	cp = bp->fsContextp;
-	tag = bp->tag;
-	setId = bp->bfSetId;
-
-	if (bfap != NULL && cp != NULL) {
-		printf("%s: ", cp->file_name);
-	}
-	printf("type %s, tag <0x%x, 0x%x>, accessp 0x%x, dirTag.num 0x%x\n",
-	    vtagtypename[vp->v_tag],
-	    tag.num,
-	    tag.seq,
-	    bfap,
-	    setId.dirTag.num);
-}
-#endif
 
 /*
  * MIN_BITS_CONSTANT and its helper MB_TST will calculate the number of bits
