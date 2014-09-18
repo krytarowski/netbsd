@@ -218,7 +218,7 @@ typedef struct lkHdr {
 
 typedef struct ftxLk {
 	lkHdrT hdr;		/* header used by ftx lock routines only */
-	krwlock_t lock;		/* shared access, exclusive reader.  */
+	krwlock_t lock;		/* shared access, exclusive writer.  */
 	cvT cv;			/* condition variable */
 }     ftxLkT;
 /*
@@ -399,9 +399,6 @@ extern advfsLockStatsT *AdvfsLockStats;
 #define mutex_lock( mp )   simple_lock( &((mp)->mutex) )
 #define mutex_lock_try( mp )   simple_lock_try( mp )
 #define mutex_unlock( mp ) simple_unlock( &((mp)->mutex) )
-#define _mutex_lock( mp, ln, fn )   simple_lock( &((mp)->mutex) )
-#define _mutex_lock_try( mp, ln, fn )   simple_lock_try( &((mp)->mutex) )
-#define _mutex_unlock( mp, ln, fn ) simple_unlock( &((mp)->mutex) )
 
 #define real_mutex_lock_io( mp, s ) \
     s = splbio(); \
