@@ -121,12 +121,6 @@ struct bsBuf {
 	ioListT ioList;		/* buffer's block map info */
 	ioDescT ioDesc;		/* if buf has one ioDesc, this is it */
 
-#ifdef ADVFS_SMP_ASSERT
-	vm_page_t last_vmpage;	/* previous exchanged vm page struct */
-	long busyLn;		/* Set when advfs_page_get(busy) is called */
-	long ioqLn;		/* cleared(-1) on advfs_page_get(busy) */
-	/* and set at io completion time */
-#endif
 #ifdef ADVFS_BSBUF_TRACE
 	int trace_ptr;
 	bsbufTraceElmtT trace_buf[BSBUF_TRACE_HISTORY];

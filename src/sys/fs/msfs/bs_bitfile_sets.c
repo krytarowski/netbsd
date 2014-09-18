@@ -59,18 +59,6 @@
 
 #define RBF_PIN_FIELD( h, f ) rbf_pin_record( h, &(f), sizeof( f ) )
 
-
-/*
- * These can be patched via DBX on-the-fly.  Can go in sysconfigtab
- * as a dynamic variable.
- */
-
-#ifdef ADVFS_SMP_ASSERT
-	int AdvfsFragDbg = 0;	/* 1 == bs_frag_validate calls dmn_panic */
- /* 2 == bs_frag_validate calls SAD */
- /* 3 == display frag group msgs */
- /* 4 == also display frag msgs  */
-#endif
 /*
  * Private prototypes
  */
@@ -80,11 +68,6 @@
             uint32T options,	/* in - options flags */
             ftxHT ftxH		/* in - transaction handle */
 );
-
-#ifdef ADVFS_SMP_ASSERT
-	static void bs_frag_validate(
-         bfSetT * setp);	/* in */
-#endif
 
 	statusT rbf_add_overlapping_clone_stg(
             bfAccessT * bfap,	/* in */
@@ -296,15 +279,6 @@ bs_fragbf_thread(void)
 
 		bfSetId = msg->bfSetId;
 
-#ifdef ADVFS_SMP_ASSERT
-		if (AdvfsFragDbg > 2) {
-			aprintf("ADVFS-FRAG: trunc frag bf for fileset 0x%08x.%04x.%04x\n",
-			    bfSetId.domainId.tv_sec,
-			    bfSetId.domainId.tv_usec,
-			    bfSetId.dirTag.num);
-		}
-#endif
-
 		msgq_free_msg(FragBfMsgQH, msg);
 
 		/*
@@ -357,16 +331,6 @@ bs_fragbf_thread(void)
 			}
 			FTX_LOCKWRITE(&bfSetp->fragLock, ftxH)
 			    grpPg = bfSetp->fragGrps[BF_FRAG_FREE_GRPS].firstFreeGrp;
-
-#ifdef ADVFS_SMP_ASSERT
-			if (AdvfsFragDbg > 2) {
-				aprintf("ADVFS-FRAG: trunc group %d for fileset 0x%08x.%04x.%04x\n",
-				    grpPg,
-				    bfSetId.domainId.tv_sec,
-				    bfSetId.domainId.tv_usec,
-				    bfSetId.dirTag.num);
-			}
-#endif
 
 			/*
 	                 * Get a pointer to the next free group
@@ -428,12 +392,6 @@ bs_fragbf_thread(void)
 			setAttrp->freeFragGrps--;
 			bfSetp->freeFragGrps--;
 			done = (bfSetp->freeFragGrps <= BF_FRAG_FREE_GRPS_MIN);
-
-#ifdef ADVFS_SMP_ASSERT
-			if (AdvfsFragDbg > 0) {
-				bs_frag_validate(bfSetp);
-			}
-#endif
 
 			ftx_done_n(ftxH, FTA_FRAG_GRP_DEALLOC);
 
@@ -498,17 +456,6 @@ frag_group_dealloc(
 	uint32T nextFreeGrp = grpHdrp->nextFreeGrp;
 	rbfPgRefHT pinPgH;
 	bsBfSetAttrT *setAttrp;
-
-#ifdef ADVFS_SMP_ASSERT
-	if (AdvfsFragDbg > 2) {
-		aprintf("ADVFS-FRAG: dealloc group %6d, type %d, for fileset 0x%08x.%04x.%04x\n",
-		    grpPg,
-		    fragType,
-		    setp->bfSetId.domainId.tv_sec,
-		    setp->bfSetId.domainId.tv_usec,
-		    setp->bfSetId.dirTag.num);
-	}
-#endif
 
 	if (grpPg != firstGrpPg) {
 
@@ -638,26 +585,11 @@ frag_group_dealloc(
 
 		if (msg != NULL) {
 			setp->truncating = TRUE;
-
 			msg->bfSetId = setp->bfSetId;
-
-#ifdef ADVFS_SMP_ASSERT
-			if (AdvfsFragDbg > 2) {
-				aprintf("ADVFS-FRAG: request trunc for fileset 0x%08x.%04x.%04x\n",
-				    setp->bfSetId.domainId.tv_sec,
-				    setp->bfSetId.domainId.tv_usec,
-				    setp->bfSetId.dirTag.num);
-			}
-#endif
-
 			msgq_send_msg(FragBfMsgQH, msg);
 		}
 	}
-#ifdef ADVFS_SMP_ASSERT
-	if (AdvfsFragDbg > 0) {
-		bs_frag_validate(setp);
-	}
-#endif
+
 	return (EOK);
 }
 
@@ -842,16 +774,6 @@ frag_list_extend(
 
 		newPgCnt = BF_FRAG_GRP_PGS * initGrps;
 
-#ifdef ADVFS_SMP_ASSERT
-		if (AdvfsFragDbg > 2) {
-			aprintf("ADVFS-FRAG: %s at pg %6d, pgcnt %2d, for fileset 0x%08x.%04x.%04x\n",
-			    (holePgCnt == 0) ? "extend " : "fill   ", newPg, newPgCnt,
-			    setp->bfSetId.domainId.tv_sec,
-			    setp->bfSetId.domainId.tv_usec,
-			    setp->bfSetId.dirTag.num);
-		}
-#endif
-
 		/* Unlock the extent maps here; the add storage will relock
 		 * them for modification. */
 		XTNMAP_UNLOCK(&(fragBfAp->xtntMap_lk))
@@ -960,16 +882,6 @@ frag_list_extend(
 	}
 	grpPg = setp->fragGrps[BF_FRAG_FREE_GRPS].firstFreeGrp;
 
-#ifdef ADVFS_SMP_ASSERT
-	if (AdvfsFragDbg > 2) {
-		aprintf("ADVFS-FRAG: alloc group %8d, type %d, for fileset 0x%08x.%04x.%04x\n",
-		    grpPg, fragType,
-		    setp->bfSetId.domainId.tv_sec,
-		    setp->bfSetId.domainId.tv_usec,
-		    setp->bfSetId.dirTag.num);
-	}
-#endif
-
 	sts = rbf_pinpg(&grpPgRef,
 	    (void *) &grpHdrp,
 	    setp->fragBfAp,
@@ -1012,11 +924,6 @@ frag_list_extend(
 	setAttrp->freeFragGrps--;
 	setp->freeFragGrps--;
 
-#ifdef ADVFS_SMP_ASSERT
-	if (AdvfsFragDbg > 0) {
-		bs_frag_validate(setp);
-	}
-#endif
 	ftx_done_n(ftxH, FTA_FRAG_ALLOC2);
 
 	sts = EOK;
@@ -1286,16 +1193,6 @@ bs_frag_alloc(
 
 					frag = grpPg * BF_FRAG_PG_SLOTS + fragSlot;
 
-#ifdef ADVFS_SMP_ASSERT
-					if (AdvfsFragDbg > 3) {
-						aprintf("ADVFS-FRAG: alloc frag %8d, slot %6d, grp %6d, type %d, for fileset 0x%08x.%04x.%04x\n",
-						    frag, fragSlot, grpPg, fragType,
-						    setp->bfSetId.domainId.tv_sec,
-						    setp->bfSetId.domainId.tv_usec,
-						    setp->bfSetId.dirTag.num);
-					}
-#endif
-
 					have_not_found_frag = FALSE;
 				}
 			}
@@ -1360,12 +1257,6 @@ bs_frag_alloc(
 				grpHdrp->lastFreeFrag = BF_FRAG_EOF;
 			}
 		}
-#ifdef ADVFS_SMP_ASSERT
-		if (AdvfsFragDbg > 0) {
-			bs_frag_validate(setp);
-		}
-#endif
-
 	}			/* while (have_not_found_frag)
 				 * 
 				/* return allocated frag's fragId */
@@ -1581,16 +1472,6 @@ bs_frag_dealloc(
 
 		fragSlot = freeFrag - grpPg * BF_FRAG_PG_SLOTS;
 
-#ifdef ADVFS_SMP_ASSERT
-		if (AdvfsFragDbg > 3) {
-			aprintf("ADVFS-FRAG: dealloc frag %6d, slot %6d, grp %6d, type %d, for fileset 0x%08x.%04x.%04x\n",
-			    freeFrag, fragSlot, grpPg, fragType,
-			    setp->bfSetId.domainId.tv_sec,
-			    setp->bfSetId.domainId.tv_usec,
-			    setp->bfSetId.dirTag.num);
-		}
-#endif
-
 		if ((fragSlot < 1) ||
 		    (fragSlot >= BF_FRAG_GRP_SLOTS)) {
 			ADVFS_SAD1("invalid fragSlot", fragSlot);
@@ -1663,11 +1544,6 @@ bs_frag_dealloc(
 			setp->fragGrps[fragType].firstFreeGrp = grpPg;
 		}
 	}
-#ifdef ADVFS_SMP_ASSERT
-	if (AdvfsFragDbg > 0) {
-		bs_frag_validate(setp);
-	}
-#endif
 
 done:
 	if (fragBfOpen) {
@@ -1694,92 +1570,6 @@ abandoned_frag:
 
 	goto done;
 }
-/*
- * bs_frag_validate
- * Note: this is mousetrap code to help uncover frag corruption bugs.
- */
-#ifdef ADVFS_SMP_ASSERT
-
-static void
-bs_frag_validate(
-    bfSetT * setp		/* in */
-)
-{
-	statusT sts;
-	uint32T grpPg, lastFreeGrpPg;
-	bfFragT fragType;
-	grpHdrT *grpHdrp;
-	slotsPgT *grpPgp;
-	bfPageRefHT grpPgRef;
-
-	for (fragType = BF_FRAG_1K; fragType < BF_FRAG_MAX; fragType++) {
-
-		grpPg = setp->fragGrps[fragType].firstFreeGrp;
-		lastFreeGrpPg = BF_FRAG_EOG;
-		while (grpPg != BF_FRAG_EOG) {
-
-			sts = bs_refpg(&grpPgRef,
-			    (void *) &grpPgp,
-			    setp->fragBfAp,
-			    grpPg,
-			    BS_NIL);
-
-			if (sts != EOK) {
-				if (AdvfsFragDbg == 1)
-					domain_panic(setp->dmnP,
-					    "bs_frag_validate: bs_refpg failed");
-				else
-					ADVFS_SAD0("bs_frag_validate: bs_refpg failed");
-
-			}
-			grpHdrp = (grpHdrT *) grpPgp;
-			if ((grpHdrp->version != 0) && (grpHdrp->version != 1)) {
-				if (AdvfsFragDbg == 1)
-					domain_panic(setp->dmnP,
-					    "bs_frag_validate: invalid grpHdr version");
-				else
-					ADVFS_SAD0("bs_frag_validate: invalid grpHdr version");
-			}
-			if (grpHdrp->self != grpPg) {
-				if (AdvfsFragDbg == 1)
-					domain_panic(setp->dmnP,
-					    "bs_frag_validate: self != grpPg");
-				else
-					ADVFS_SAD2("bs_frag_validate: self != grpPg",
-					    grpHdrp->self, grpPg);
-			}
-			if (grpHdrp->fragType != fragType) {
-				if (AdvfsFragDbg == 1)
-					domain_panic(setp->dmnP,
-					    "bs_frag_validate: grpHdrp->fragType != fragType");
-				else
-					ADVFS_SAD2("bs_frag_validate: grpHdrp->fragType != fragType",
-					    grpHdrp->fragType, fragType);
-			}
-			if (grpHdrp->freeFrags == 0) {
-				if (AdvfsFragDbg == 1)
-					domain_panic(setp->dmnP,
-					    "bs_frag_validate: freeFrags = 0");
-				else
-					ADVFS_SAD0("bs_frag_validate: freeFrags = 0");
-			}
-			lastFreeGrpPg = grpPg;
-			grpPg = grpHdrp->nextFreeGrp;
-			(void) bs_derefpg(grpPgRef, BS_CACHE_IT);
-		}
-
-		if (setp->fragGrps[fragType].lastFreeGrp != lastFreeGrpPg) {
-			if (AdvfsFragDbg == 1)
-				domain_panic(setp->dmnP,
-				    "bs_frag_validate: lastFreeGrp mismatch");
-			else
-				ADVFS_SAD0("bs_frag_validate: lastFreeGrp mismatch");
-		}
-	}
-}
-#endif
-
-
 
 /****************************************************************************
  * bf set mgt
