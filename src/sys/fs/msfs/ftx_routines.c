@@ -77,15 +77,6 @@ int CrashByAgent = 0;
 int CrashPrintRtDn = 0;
 bfDomainIdT CrashDomain = {0, 0};
 #endif				/* MSFS_CRASHTEST */
-/*
- * Crude transaction profiling:  Count the number of ftx_done's for
- * each agent.  It might also be interesting to record cumulative time
- * spent within each agent, but for this ftx_start would have to be
- * modified to also pass the agent Id.
- */
-#ifdef FTX_PROFILING
-ftxProfT AgentProfStats[FTX_MAX_AGENTS];
-#endif
 
 /* Ftx stats collection can be turned on in dbx by setting FtxStats to 1. */
 int FtxStats = 0;
@@ -288,16 +279,6 @@ _ftx_start_i(
 	ftxHT retFtxH;
 	ftxTblDT *ftxTDp;
 	int trimwait = 0;
-#ifdef FTX_PROFILING
-	int s;
-	struct timeval new_time;
-#endif
-
-#ifdef FTX_PROFILING
-	TIME_READ(new_time);
-	AgentProfStats[agentId].start_time = new_time;
-	AgentProfStats[agentId].total_calls++;
-#endif
 
 	if (dmnP == NULL) {
 		return EBAD_DOMAIN_POINTER;
@@ -824,11 +805,6 @@ ftx_done_urdr(
 	ftxTblDT *ftxTDp;
 	unsigned int lvl;
 	lrDescT *lrvecp = NULL;
-#ifdef FTX_PROFILING
-	int s;
-	struct timeval cur_time, start_time;
-	ftxAgentIdT agentId2;
-#endif
 
 	/*
          * Range check handle.  This depends on unsigned assignment to test 0.
@@ -866,33 +842,6 @@ ftx_done_urdr(
 	         */
 		ADVFS_SAD1("ftx_done_urdr: N1 not NORMAL ftx", ftxp->type);
 	}
-#ifdef FTX_PROFILING
-	/*
-         * One argument to this function is the agent ID.  The agent ID
-         * is also stored in the perLvlT structure.  Since we're in the
-         * process of transitioning to the new FTX_START* macros, we have
-         * to assume the one in the perLvl structure is correct.
-         *
-         * There really should be a spin lock surrounding these time
-         * manipulations, but we're content with vague stats.
-         */
-	TIME_READ(cur_time);
-	agentId2 = ftxp->cLvl[lvl].agentId;
-
-	start_time = AgentProfStats[agentId2].start_time;
-
-	/*
-         * Compute cur_time - start_time.
-         */
-	if (cur_time.tv_usec < start_time.tv_usec) {
-		cur_time.tv_usec += 1000000;
-		cur_time.tv_sec -= 1;
-	}
-	AgentProfStats[agentId2].cum_time.tv_sec +=
-	    cur_time.tv_sec - start_time.tv_sec;
-	AgentProfStats[agentId2].cum_time.tv_usec +=
-	    cur_time.tv_usec - start_time.tv_usec;
-#endif
 
 	/* common log record header initialization */
 

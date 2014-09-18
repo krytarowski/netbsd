@@ -86,10 +86,6 @@ extern logWriteModeT FtxDoneMode;
 extern bfDomainIdT CrashDomain;
 #endif
 
-#ifdef FTX_PROFILING
-extern ftxProfT AgentProfStats[];
-#endif
-
 extern void bs_lock_mgr_init(void);
 
 #define ADVFS_MODULE BS_MISC
