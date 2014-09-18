@@ -22,13 +22,8 @@
 #ifndef _ACCESS_H_
 #define _ACCESS_H_
 
-#ifdef _KERNEL			/* need this so user mode utils (msfsck.c) can
-				 * compile - ps */
-#endif
-
+#include <sys/param.h>
 #include <sys/vnode.h>
-#ifdef _KERNEL
-#endif
 #include <sys/rwlock.h>
 
 #define NEW_ACCESS
@@ -49,7 +44,16 @@ typedef struct {
 }      AccessTraceElmtT;
 #endif				/* ADVFS_ACCESS_TRACE */
 
-#define ADVFS_MIN_FREE_ACCESS MIN_FREE_VNODES
+/*
+ * min_free_vnodes: This is the minimum number of free vnodes on the free list.
+ *                  If the number of vnodes on the free list is less than the
+ *                  value of the min_free_vnodes parameter, than vnodes are
+ *                  removed. The minimum value for this parameter is 150 for
+ *                  24 MB systems and nvnodes for 32 MB and larger memory
+ *                  systems.
+ *  -- Tru64 Unix File System Administration Handbook, Steven M. Hancock
+ */
+#define ADVFS_MIN_FREE_ACCESS NVNODE
 #define ADVFSMAXFREEACCESSPERCENT 80
 extern ulong ncache_valid_time;
 #define BFAP_VALID_TIME ncache_valid_time

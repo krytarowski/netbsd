@@ -52,7 +52,7 @@ struct flags {
 	unsigned short getflag:1,	/* getpage caller info */
 	      cowLkLocked:1,	/* copy-on-write lock flag */
 	      useOrigMap:1,	/* used if clone bfap doesn't map the page */
-	      unused:13
+	      unused:13;
 };
 /* Global counters to track AdvFS's UBC cache lookup hit and miss rates.
  * Patch advfsstats = 1 to enable and 0 to disable.
