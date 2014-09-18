@@ -52,6 +52,8 @@ typedef struct {
  *                  24 MB systems and nvnodes for 32 MB and larger memory
  *                  systems.
  *  -- Tru64 Unix File System Administration Handbook, Steven M. Hancock
+ *
+ * NetBSD miss MIN_FREE_VNODES so go for NVNODE.
  */
 #define ADVFS_MIN_FREE_ACCESS NVNODE
 #define ADVFSMAXFREEACCESSPERCENT 80
