@@ -54,7 +54,7 @@
 
 #include <fs/msfs/bs_error.h>
 
-char *bs_errlist[] = {
+const char *bs_errlist[] = {
 	"ETAG_OVF (-1025)",
 	"EHANDLE_OVF (-1026)",
 	"EINVALID_HANDLE (-1027)",
