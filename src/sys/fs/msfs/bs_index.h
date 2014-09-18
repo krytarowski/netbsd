@@ -79,7 +79,7 @@ idx_lookup_filename(
     bfTagT * found_bs_tag,	/* if found files tag # */
     fs_dir_entry ** found_buffer,	/* pointer to directory record */
     rbfPgRefHT * pgref,		/* pgref for pinning record */
-    int flag,			/* flag: PIN_PAGE return pointer to /* dir
+    int flag,			/* flag: PIN_PAGE return pointer to dir
 				 * entry with page pinned */
     ftxHT ftxH			/* parent ftx */
 );
