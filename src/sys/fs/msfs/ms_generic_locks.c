@@ -35,10 +35,6 @@
 #if 0
 #pragma ident "@(#)$RCSfile: ms_generic_locks.c,v $ $Revision: 1.1.37.1 $ (DEC) $Date: 2001/01/24 21:05:26 $"
 #endif
-#ifdef ADVFS_DEBUG
-#define ADVFS_LK_STRINGS	/* needed for lock string arrays */
- /* in ms_generic_locks.h */
-#endif
 
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
@@ -162,178 +158,12 @@ mutex_init2(
     char *name			/* in - name of mutex */
 )
 {
-#ifdef ADVFS_DEBUG
-	int i;
-	mutexT *cur_mp = NULL;
-
-	/*
-         * See if mutex is already initialized (in our linked list).
-         */
-
-	mutex_lock(&LockMgrMutex);
-
-	cur_mp = MutexList;
-
-	while (cur_mp != NULL) {
-
-		if (cur_mp == mp) {
-			/* already in list!! */
-			ADVFS_SAD2("mutex_init2: mutex (N1 = name, N2 = pointer) is already initialized!!",
-			    name, (unsigned) mp);
-		}
-		cur_mp = cur_mp->next_mutex;
-	}
-
-	mutex_unlock(&LockMgrMutex);
-#endif				/* ADVFS_DEBUG */
-
 	/*
          * Initialize the mutex.
          */
 
 	simple_lock_setup(&mp->mutex, msfs_mp_mutex_lockinfo);
-
-#ifdef ADVFS_DEBUG
-	mp->locked = 0;
-	mp->line_num = 0;
-	mp->file_name = NULL;
-	mp->lock_cnt = 0;
-
-	if (name != NULL) {
-		strncpy(mp->name, name, sizeof(mp->name) - 1);
-	} else {
-		mp->name[0] = '\0';
-	}
-
-	mutex_lock(&LockMgrMutex);
-
-	/*
-         * Add mutex to mutex list.
-         */
-	mp->next_mutex = MutexList;
-	MutexList = mp;
-
-	mutex_unlock(&LockMgrMutex);
-#endif				/* ADVFS_DEBUG */
 }
-
-#ifdef ADVFS_DEBUG
-/*
- * mutex_lock
- */
-void
-_mutex_lock(
-    mutexT * mp,		/* in - mutex */
-    int ln,			/* in */
-    char *fn			/* in */
-)
-{
-	if (mp->try_line_num == 0) {
-		mp->try_line_num = ln;
-		mp->try_file_name = fn;
-	}
-	if (SLOCK_HOLDER(&mp->mutex)) {
-		printf("mutex_lock: mp = 0x%lx\n ln = %d, fn = %s\n", mp, ln, fn);
-		ADVFS_SAD0("mutex_lock:  Mutex already locked!  Time to die!");
-	}
-	simple_lock(&mp->mutex);
-
-	/*
-         * If a thread held a lock, then called mpsleep(), the lock is released but
-         * mpsleep() does not update our mp->locked field and this test would
-         * not be valid during the sleep!  While we sleep, another thread may get
-         * the same lock successfully.
-         * Example:  bfap->bfIoLock is held by bfflush_sync() and called
-         * mpsleep().  Now a buffer completed the IO, bs_osf_complete()->
-         * bs_io_complete()->bs_notify_fsync_waiter() would lock bfap->bfIoLock
-         * and it should suceed.
-         */
-	if (!mp->locked) {
-		mp->locked = TRUE;
-		mp->try_line_num = 0;
-		mp->try_file_name = 0;
-
-		mp->lock_cnt++;
-		mp->line_num = ln;
-		mp->file_name = fn;
-	}
-	if (AdvfsLockStats) {
-		AdvfsLockStats->mutexLock++;
-	}
-}
-
-
-/*
- * _mutex_lock_try
- *
- * For ADVFS_DEBUG, we cannot just call simple_lock_try() because
- * if a thread held a lock, then called mpsleep(), the lock is released but
- * mpsleep() does not update our mp->locked field and this test would
- * not be valid during the sleep!  While we sleep, another thread may get
- * the same lock successfully.
- * Example:  bfap->bfIoLock is held by bfflush_sync() and called
- * mpsleep().  Now a buffer completed the IO, bs_osf_complete()->
- * bs_io_complete()->bs_notify_fsync_waiter() would lock bfap->bfIoLock
- * and it should suceed.
- */
-
-int
-_mutex_lock_try(
-    mutexT * mp,		/* in - mutex */
-    int ln,			/* in */
-    char *fn			/* in */
-)
-{
-	if (mp->try_line_num == 0) {
-		mp->try_line_num = ln;
-		mp->try_file_name = fn;
-	}
-	if (!simple_lock_try(&mp->mutex)) {
-		return FALSE;
-	}
-	if (!mp->locked) {
-		mp->locked = TRUE;
-		mp->try_line_num = 0;
-		mp->try_file_name = 0;
-
-		mp->lock_cnt++;
-		mp->line_num = ln;
-		mp->file_name = fn;
-	}
-	if (AdvfsLockStats) {
-		AdvfsLockStats->mutexLock++;
-	}
-	return TRUE;
-}
-
-
-/*
- * mutex_unlock
- */
-void
-_mutex_unlock(
-    mutexT * mp,		/* in - mutex */
-    int ln,			/* in */
-    char *fn			/* in */
-)
-{
-	/* As stated in _mutex_lock(), we cannot rely on mp->locked to know if
-	 * if the lock is held! */
-	if (!SLOCK_HOLDER(&mp->mutex)) {
-		printf("mutex_unlock: mp = 0x%lx\n ln = %d, fn = %s\n", mp, ln, fn);
-		ADVFS_SAD0("mutex_unlock:  Mutex not locked!  Time to die!");
-	}
-	if (mp->locked) {
-		mp->locked = FALSE;
-		mp->lock_cnt--;
-	}
-	if (AdvfsLockStats) {
-		AdvfsLockStats->mutexUnlock++;
-	}
-	simple_unlock(&mp->mutex);
-}
-#endif				/* ADVFS_DEBUG */
-
 
 /*
  * cond_wait
@@ -346,15 +176,6 @@ _cond_wait(
     char *fn			/* in */
 )
 {
-#ifdef ADVFS_DEBUG
-	if (!mp->locked) {
-		printf("cond_wait: ln = %d, fn = %s\n", ln, fn);
-		ADVFS_SAD0("_cond_wait:  Mutex not locked!  Time to die!");
-	}
-	mp->locked = FALSE;
-
-#endif				/* ADVFS_DEBUG */
-
 	if (AdvfsLockStats) {
 		AdvfsLockStats->wait++;
 	}
@@ -367,16 +188,6 @@ _cond_wait(
          */
 	thread_sleep((vm_offset_t) cvp, &mp->mutex, FALSE);
 	simple_lock(&mp->mutex);
-
-#ifdef ADVFS_DEBUG
-	if (mp->locked) {
-		printf("cond_wait: ln = %d, fn = %s\n", ln, fn);
-		ADVFS_SAD0("_cond_wait:  Mutex already locked!  Time to die!");
-	}
-	mp->locked = TRUE;
-	mp->line_num = ln;
-	mp->file_name = fn;
-#endif				/* ADVFS_DEBUG */
 }
 /*
  * cond_signel
@@ -444,13 +255,6 @@ lk_init(
 {
 	lkHdrT *lkHdr = lk, *curLk, *newLk;
 
-#ifdef ADVFS_DEBUG
-	if (lkHdr->mutex != NULL) {
-		/* Assume it is already linked properly */
-		return;
-	}
-#endif				/* ADVFS_DEBUG */
-
 	switch (lkType) {
 	case LKT_STATE:
 		{
@@ -459,9 +263,6 @@ lk_init(
 			*lk = nilStateLk;
 #ifndef _KERNEL
 			advfs_cv_init(&lk->cv);
-#ifdef ADVFS_DEBUG
-			lk->hdr.try_line_num = -1;
-#endif				/* ADVFS_DEBUG */
 #endif
 		}
 		break;
@@ -473,9 +274,6 @@ lk_init(
 			*lk = NilBufLk;
 #ifndef _KERNEL
 			advfs_cv_init(&lk->bufCond);
-#ifdef ADVFS_DEBUG
-			lk->hdr.try_line_num = -1;
-#endif				/* ADVFS_DEBUG */
 #endif
 		}
 		break;
@@ -485,13 +283,6 @@ lk_init(
 	}
 
 	lkHdr->lkUsage = usage;
-
-#ifdef ADVFS_DEBUG
-	/* add to head of linked list */
-	lkHdr->nxtLk = mutex->locks;
-	mutex->locks = lkHdr;
-#endif				/* ADVFS_DEBUG */
-
 	lkHdr->mutex = mutex;
 }
 
@@ -509,44 +300,6 @@ lk_destroy(
     void *lk			/* in - pointer to the lock */
 )
 {
-#ifdef ADVFS_DEBUG
-	lkHdrT *prevLk, *curLk, *lkHdr = lk;
-	int found = FALSE;
-
-	/*
-         * Find the lock in the mutex's linked list of locks.
-         */
-
-	if (lkHdr->mutex == NULL) {
-		ADVFS_SAD0("lk_destroy: lk has no mutex");
-	}
-	prevLk = curLk = lkHdr->mutex->locks;
-
-	while (!found && (curLk != NULL)) {
-		if (curLk == lk) {
-			found = TRUE;
-		} else {
-			prevLk = curLk;
-			curLk = curLk->nxtLk;
-		}
-	}
-
-	if (!found) {
-		ADVFS_SAD0("lk_destroy: lk is not in mutex's linked list");
-	}
-	/*
-         * Remove the lock from the mutex's linked list.
-         */
-
-	if (lkHdr == lkHdr->mutex->locks) {
-		lkHdr->mutex->locks = lkHdr->nxtLk;
-	} else {
-		prevLk->nxtLk = lkHdr->nxtLk;
-	}
-
-	lkHdr->mutex = NULL;
-	lkHdr->nxtLk = NULL;
-#endif				/* ADVFS_DEBUG */
 }
 
 
@@ -653,15 +406,6 @@ _lk_wait_for(
 {
 	int wait = 0;
 
-#ifdef ADVFS_DEBUG
-	if (!lk_mutex->locked) {
-		printf("_lk_wait_for: ln = %d, fn = %s\n", ln, fn);
-		ADVFS_SAD0("_lk_wait_for: mutex not locked");
-	}
-	lk->hdr.try_line_num = ln;
-	lk->hdr.try_file_name = fn;
-#endif				/* ADVFS_DEBUG */
-
 	if (AdvfsLockStats) {
 		AdvfsLockStats->usageStats[lk->hdr.lkUsage].lock++;
 		AdvfsLockStats->stateLock++;
@@ -686,11 +430,6 @@ _lk_wait_for(
 
 		lk->waiters--;
 	}
-#ifdef ADVFS_DEBUG
-	lk->hdr.line_num = ln;
-	lk->hdr.file_name = fn;
-	lk->hdr.use_cnt++;
-#endif				/* ADVFS_DEBUG */
 }
 
 
@@ -716,15 +455,6 @@ _lk_wait_for2(
 {
 	int wait = 0;
 
-#ifdef ADVFS_DEBUG
-	if (!lk_mutex->locked) {
-		printf("_lk_wait_for2: ln = %d, fn = %s\n", ln, fn);
-		ADVFS_SAD0("_lk_wait_for2: mutex not locked");
-	}
-	lk->hdr.try_line_num = ln;
-	lk->hdr.try_file_name = fn;
-#endif				/* ADVFS_DEBUG */
-
 	if (AdvfsLockStats) {
 		AdvfsLockStats->usageStats[lk->hdr.lkUsage].lock++;
 		AdvfsLockStats->stateLock++;
@@ -747,12 +477,6 @@ _lk_wait_for2(
 
 		lk->waiters--;
 	}
-
-#ifdef ADVFS_DEBUG
-	lk->hdr.line_num = ln;
-	lk->hdr.file_name = fn;
-	lk->hdr.use_cnt++;
-#endif				/* ADVFS_DEBUG */
 }
 
 
@@ -776,15 +500,6 @@ _lk_wait_while(
 )
 {
 	int wait = 0;
-
-#ifdef ADVFS_DEBUG
-	if (!lk_mutex->locked) {
-		printf("_lk_wait_while ln = %d, fn = %s\n", ln, fn);
-		ADVFS_SAD0("_lk_wait_while: mutex not locked");
-	}
-	lk->hdr.try_line_num = ln;
-	lk->hdr.try_file_name = fn;
-#endif				/* ADVFS_DEBUG */
 
 	if (AdvfsLockStats) {
 		AdvfsLockStats->usageStats[lk->hdr.lkUsage].lock++;
@@ -810,11 +525,6 @@ _lk_wait_while(
 
 		lk->waiters--;
 	}
-#ifdef ADVFS_DEBUG
-	lk->hdr.line_num = ln;
-	lk->hdr.file_name = fn;
-	lk->hdr.use_cnt++;
-#endif				/* ADVFS_DEBUG */
 }
 
 
@@ -847,146 +557,8 @@ lk_is_locked(
 	}
 }
 
-
-#ifdef ADVFS_DEBUG
-static lkHdrT *
-find_locked_lock(
-    lkHdrT * lk
-)
-{
-	while (lk != NULL) {
-		if (lk_is_locked(lk)) {
-			return lk;
-		}
-		lk = lk->nxtLk;
-	}
-
-	return NULL;
-}
-#endif				/* ADVFS_DEBUG */
-
-
 void
 bs_dump_locks(int locked)
 {
-#ifdef ADVFS_DEBUG
-	mutexT *mp = NULL;
-	lkHdrT *lkHdr = NULL;
-
-	mp = MutexList;
-
-	while (mp != NULL) {
-		if (!locked ||
-		    (locked &&
-			((mp->lock_cnt > 0) || find_locked_lock(mp->locks)))) {
-			printf("\n");
-			printf(" mutex : 0x%08x  (%s)\n", mp, mp->name);
-			printf("\tlocked        : %d\n", mp->locked);
-			printf("\ttry line num  : %d\n", mp->try_line_num);
-			if (mp->try_file_name == NULL) {
-				printf("\ttry file name : \n");
-			} else {
-				printf("\ttry file name : %s\n", mp->try_file_name);
-			}
-			printf("\tlock cnt      : %d\n", mp->lock_cnt);
-			printf("\tline num      : %d\n", mp->line_num);
-			if (mp->file_name == NULL) {
-				printf("\tfile name     : \n");
-			} else {
-				printf("\tfile name     : %s\n", mp->file_name);
-			}
-
-			lkHdr = mp->locks;
-
-			while (lkHdr != NULL) {
-				if (locked && !lk_is_locked(lkHdr)) {
-					lkHdr = lkHdr->nxtLk;
-					continue;
-				}
-				printf("\n");
-				printf("\tlock type     : %s\n", lkTypeNames[lkHdr->lkType]);
-				printf("\tlock usage    : %s\n", lkUsageNames[lkHdr->lkUsage]);
-				printf("\tuse cnt       : %d\n", lkHdr->use_cnt);
-				printf("\tmutex         : 0x%08x\n", lkHdr->mutex);
-				printf("\tnxtFtxLk      : 0x%08x\n", lkHdr->nxtFtxLk);
-				printf("\ttry_line_num  : %d\n", lkHdr->try_line_num);
-				if (lkHdr->try_file_name == NULL) {
-					printf("\ttry_file_name : \n");
-				} else {
-					printf("\ttry_file_name : %s\n", lkHdr->try_file_name);
-				}
-				printf("\tline_num      : %d\n", lkHdr->line_num);
-				if (lkHdr->file_name == NULL) {
-					printf("\tfile_name     : \n");
-				} else {
-					printf("\tfile_name     : %s\n", lkHdr->file_name);
-				}
-
-				switch (lkHdr->lkType) {
-
-				case LKT_BUF:
-					{
-						bufLkT *lk = (void *) lkHdr;
-						printf("\tstate         : 0x%08x\n", lk->state);
-						printf("\twaiting       : %d\n", lk->waiting);
-					}
-					break;
-
-				case LKT_STATE:
-					{
-						stateLkT *lk = (void *) lkHdr;
-						char *stateNames[] = {
-							"LKW_NONE",
-
-							/* bfAccessT client
-							 * states */
-							"ACC_VALID",
-							"ACC_INVALID",
-							"ACC_INIT_TRANS",
-							"ACC_FTX_TRANS",
-
-							/* struct vd */
-							"ACTIVE_DISK",
-							"INACTIVE_DISK",
-							"BLOCKED_Q",
-							"UNBLOCKED_Q",
-
-							/* struct bsBuf */
-							"BUF_DIRTY",
-							"BUF_BUSY",
-							"BUF_UNPIN_BLOCK",
-							"BUF_PIN_BLOCK",
-
-							/* block for a free
-							 * buffer header */
-							"BUF_AVAIL",
-							"NO_BUF_AVAIL",
-
-							/* bitfile set states
-							 * in bfSetT */
-							"BFS_INVALID",
-							"BFS_READY",
-							"BFS_CLONING",
-							"BFS_BUSY",
-							"BFS_DELETING",
-							"BFS_DELETING_CLONE"
-						};
-						printf("\twaiters       : %d\n", lk->waiters);
-						printf("\tstate         : %s\n", stateNames[lk->state]);
-						printf("\tpending state : %s\n", stateNames[lk->state]);
-					}
-					break;
-
-				default:
-					break;
-				}
-
-				lkHdr = lkHdr->nxtLk;
-			}
-		}
-		mp = mp->next_mutex;
-	}
-#else
-	     printf("no lock dumps when ADVFS_DEBUG is not defined\n");
-#endif				/* ADVFS_DEBUG */
+	     printf("no lock dumps (XXX: ADVFS_DEBUG is removed)\n");
 }
