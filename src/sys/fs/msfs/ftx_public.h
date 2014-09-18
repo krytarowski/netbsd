@@ -226,57 +226,7 @@ _ftx_start_i(
     unsigned int atomicRPass,	/* in - atomic recovery pass */
     int flag,			/* in - 1 == start exclusive ftx, 2 == force */
     long xid			/* in - transaction id (gen'd by CFS client) */
-#ifdef ADVFS_DEBUG
-    ,int ln,			/* in - caller's line number */
-    char *fn			/* in - caller's file name */
-#endif				/* ADVFS_DEBUG */
 );
-
-#if defined(FTX_PROFILING) && defined(ADVFS_DEBUG)
-
-#define FTX_START_N(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 0, 0, 0, __LINE__, __FILE__)
-#define FTX_START_EXC(ag, fh, dh, pr) \
-    _ftx_start_i((fh), FtxNilFtxH, (ag), (dh), (pr), 0, FTX_EXC, 0, __LINE__, __FILE__)
-#define FTX_START_META(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), META_PASS, 0, 0, __LINE__, __FILE__)
-#define FTX_START_RSVD_META(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), META_META_PASS, FTX_EXC, 0, __LINE__, __FILE__)
-#define FTX_START(ag, fh, pfh, sh, dh, fl, pr) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 0, 0, 0, __LINE__, __FILE__)
-#define FTX_START_NOWAIT(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 0, FTX_NOWAIT, 0, __LINE__, __FILE__)
-#define FTX_START_XID(ag, fh, pfh, dh, pr, xid) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 0, 0, xid, __LINE__, __FILE__)
-#define FTX_START_EXC_XID(ag, fh, dh, pr, xid) \
-    _ftx_start_i((fh), FtxNilFtxH, (ag), (dh), (pr), 0, FTX_EXC, xid, __LINE__, __FILE__)
-#define FTX_START_META_XID(ag, fh, pfh, dh, pr, xid) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), META_PASS, 0, xid, __LINE__, __FILE__)
-#endif				/* FTX_PROFILING && ADVFS_DEBUG */
-
-#if defined(FTX_PROFILING) && !defined(ADVFS_DEBUG)
-
-#define FTX_START_N(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 0, 0, 0)
-#define FTX_START_EXC(ag, fh, dh, pr) \
-    _ftx_start_i((fh), FtxNilFtxH, (ag), (dh), (pr), 0, FTX_EXC, 0)
-#define FTX_START_META(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 1, 0, 0)
-#define FTX_START_RSVD_META(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), META_META_PASS, FTX_EXC, 0)
-#define FTX_START(ag, fh, pfh, sh, dh, fl, pr) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 0, 0, 0)
-#define FTX_START_NOWAIT(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 0, FTX_NOWAIT, 0)
-#define FTX_START_XID(ag, fh, pfh, dh, pr, xid) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 0, 0, xid)
-#define FTX_START_EXC_XID(ag, fh, dh, pr, xid) \
-    _ftx_start_i((fh), FtxNilFtxH, (ag), (dh), (pr), 0, FTX_EXC, xid)
-#define FTX_START_META_XID(ag, fh, pfh, dh, pr, xid) \
-    _ftx_start_i((fh), (pfh), (ag), (dh), (pr), 1, 0, xid)
-#endif				/* FTX_PROFILING && !ADVFS_DEBUG */
-
-#if !defined(FTX_PROFILING) && !defined(ADVFS_DEBUG)
 
 #define FTX_START_N(ag, fh, pfh, dh, pr) \
     _ftx_start_i((fh), (pfh), (dh), (pr), 0, 0, 0)
@@ -296,30 +246,6 @@ _ftx_start_i(
     _ftx_start_i((fh), FtxNilFtxH, (dh), (pr), 0, FTX_EXC, xid)
 #define FTX_START_META_XID(ag, fh, pfh, dh, pr, xid) \
     _ftx_start_i((fh), (pfh), (dh), (pr), META_PASS, 0, xid)
-#endif				/* !FTX_PROFILING && !ADVFS_DEBUG */
-
-#if !defined(FTX_PROFILING) && defined(ADVFS_DEBUG)
-
-#define FTX_START_N(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (dh), (pr), 0, 0, 0, __LINE__, __FILE__)
-#define FTX_START_EXC(ag, fh, dh, pr) \
-    _ftx_start_i((fh), FtxNilFtxH, (dh), (pr), 0, FTX_EXC, 0, __LINE__, __FILE__)
-#define FTX_START_META(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (dh), (pr), META_PASS, 0, 0, __LINE__, __FILE__)
-#define FTX_START_RSVD_META(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (dh), (pr), META_META_PASS, FTX_EXC, 0, __LINE__, __FILE__)
-#define FTX_START(ag, fh, pfh, sh, dh, fl, pr) \
-    _ftx_start_i((fh), (pfh), (dh), (pr), 0, 0, 0, __LINE__, __FILE__)
-#define FTX_START_NOWAIT(ag, fh, pfh, dh, pr) \
-    _ftx_start_i((fh), (pfh), (dh), (pr), 0, FTX_NOWAIT, 0, __LINE__, __FILE__)
-#define FTX_START_XID(ag, fh, pfh, dh, pr, xid) \
-    _ftx_start_i((fh), (pfh), (dh), (pr), 0, 0, xid, __LINE__, __FILE__)
-#define FTX_START_EXC_XID(ag, fh, dh, pr, xid) \
-    _ftx_start_i((fh), FtxNilFtxH, (dh), (pr), 0, FTX_EXC, xid, __LINE__, __FILE__)
-#define FTX_START_META_XID(ag, fh, pfh, dh, pr, xid) \
-    _ftx_start_i((fh), (pfh), (dh), (pr), META_PASS, 0, xid, __LINE__, __FILE__)
-#endif				/* !FTX_PROFILING && ADVFS_DEBUG */
-
 
 #define FTX_NOOP_REDO 0
 #define FTX_OP_REDO 1

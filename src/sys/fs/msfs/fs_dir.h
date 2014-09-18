@@ -175,9 +175,6 @@ struct fsContext {
 
 	long dirstamp;		/* stamp to determine directory changes */
 	mutexT fsContext_mutex;	/* mutex to take out locks on this structure */
-#ifdef ADVFS_DEBUG
-	char file_name[30];	/* first 29 chars of file name */
-#endif
 	bfTagT bf_tag;		/* the tag for the file */
 	long last_offset;	/* the offset of the last found entry */
 	struct fs_stat dir_stats;	/* stats */

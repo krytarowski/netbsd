@@ -152,13 +152,6 @@ typedef struct {
 #define FTX_MX_PINP 7		/* maximum pinned pages per level */
 
 typedef struct {		/* per level context */
-#ifdef ADVFS_DEBUG
-	int startLn;		/* line number of ftx_start call; debug */
-	char *startFn;		/* file name of ftx_start call; debug */
-#endif
-#ifdef FTX_PROFILING
-	ftxAgentIdT agentId;	/* agent ID */
-#endif
 	ftxDoneModeT donemode;	/* done mode for this level */
 	unsigned int atomicRPass;	/* atomic recovery pass number */
 	int member;		/* current member within the level */
@@ -233,18 +226,6 @@ typedef struct {
 	int dataLcnt;		/* total data count in longs */
 	logBufVectorT bfrvec[4 + FTX_MX_PINP * (FTX_MX_PINR + 2)];
 }      lrDescT;
-#ifdef ADVFS_FTX_TRACE
-
-#define FTX_TRACE_HISTORY 100
-
-typedef struct {
-	uint32T seq;
-	uint16T mod;
-	uint16T ln;
-	struct thread *thd;
-	void *val;
-}      ftxTraceElmtT;
-#endif				/* ADVFS_FTX_TRACE */
 
 typedef struct ftx {
 	struct thread *thd;
@@ -262,10 +243,6 @@ typedef struct ftx {
 	int32T rootDoneRecs[FTX_RD_BFRSZ];	/* buffered root done records */
 	ftxContRecT contDesc;	/* continuation record descriptor */
 	lrDescT lrdesc;		/* so we don't malloc at ftx_done */
-#ifdef ADVFS_FTX_TRACE
-	uint32T trace_ptr;	/* access trace buffer */
-	ftxTraceElmtT trace_buf[FTX_TRACE_HISTORY];
-#endif
 }   ftxStateT;
 /* Structure to control the dynamic allocation and deallocation of
  * the ftxStateT structs.  Manipulation of this struct is guarded
@@ -280,22 +257,7 @@ struct ftx_dyn_alloc {
 					 * stats */
 	unsigned int sumWaits;	/* # times a thread had to wait */
 };
-#ifdef ADVFS_FTX_TRACE
-
-#define FTX_TRACE( ftxp, n1 ) \
-    ftx_trace((ftxp), (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void*)(n1))
-
-void
-ftx_trace(ftxStateT * ftxp,
-    uint16T module,
-    uint16T line,
-    void *value);
-
-#else
-
 #define FTX_TRACE( ftxp, n1 )
-
-#endif				/* ADVFS_FTX_TRACE */
 
 /******************************************************
  *******   Function Prototypes ************************
