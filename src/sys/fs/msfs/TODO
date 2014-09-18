@@ -1,2 +1,28 @@
 - go for native condvar(9)
 - go for native mutexes, not wrappers around
+
+Tru64 ubc -> NetBSD UVM
+- ubc_load
+- CURRENT_UC()
+- CURRENT_UC()->ubc_pages
+- CURRENT_UC()->ubc_maxpages
+- CURRENT_UC()->vm_free_count
+- vm_ubc_object_t
+- ubc_fs_page_get
+- ubc_page_release
+- ubc_object_allocate
+- ubc_object_free
+- ubc_page_wait
+- ubc_flags
+- ubc_load
+- ubc_lookup
+- ubc_invalidate
+- ubc_flush_dirty
+- vm_policy_t
+- vm_offset_t
+- vm_size_t
+- vm_map_t
+- vm_map_pageable
+- vm_object_type
+- vm_object_lock
+- vm_object_unlock
