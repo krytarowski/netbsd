@@ -42,9 +42,7 @@
 #endif
 #include <sys/types.h>
 #include <sys/systm.h>
-#ifdef OSF
 #include <sys/errno.h>
-#endif
 #ifdef USER_MODE
 #include <stdio.h>
 #include <sys/errno.h>
