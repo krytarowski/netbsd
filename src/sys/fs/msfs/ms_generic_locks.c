@@ -257,8 +257,6 @@ _mutex_lock(
 		mp->line_num = ln;
 		mp->file_name = fn;
 	}
-	if (TrFlags & trMutex)
-		trace_lkcall(MUTEX_LOCK, NULL, mp, ln, fn, NULL);
 	if (AdvfsLockStats) {
 		AdvfsLockStats->mutexLock++;
 	}
@@ -302,8 +300,6 @@ _mutex_lock_try(
 		mp->line_num = ln;
 		mp->file_name = fn;
 	}
-	if (TrFlags & trMutex)
-		trace_lkcall(MUTEX_LOCK, NULL, mp, ln, fn, NULL);
 	if (AdvfsLockStats) {
 		AdvfsLockStats->mutexLock++;
 	}
@@ -331,9 +327,6 @@ _mutex_unlock(
 		mp->locked = FALSE;
 		mp->lock_cnt--;
 	}
-	if (TrFlags & trMutex) {
-		trace_lkcall(MUTEX_UNLOCK, NULL, mp, ln, fn, NULL);
-	}
 	if (AdvfsLockStats) {
 		AdvfsLockStats->mutexUnlock++;
 	}
@@ -360,8 +353,6 @@ _cond_wait(
 	}
 	mp->locked = FALSE;
 
-	if (TrFlags & trCond)
-		trace_lkcall(CV_WAIT, cvp, mp, ln, fn, NULL);
 #endif				/* ADVFS_DEBUG */
 
 	if (AdvfsLockStats) {
@@ -385,10 +376,6 @@ _cond_wait(
 	mp->locked = TRUE;
 	mp->line_num = ln;
 	mp->file_name = fn;
-
-	if (TrFlags & trCond) {
-		trace_lkcall(CV_DONEWAIT, cvp, mp, ln, fn, NULL);
-	}
 #endif				/* ADVFS_DEBUG */
 }
 /*
@@ -403,9 +390,6 @@ _cond_signal(
 {
 	if (AdvfsLockStats) {
 		AdvfsLockStats->signal++;
-	}
-	if (TrFlags & trCond) {
-		trace_lkcall(CV_SIGNAL, cvp, NULL, ln, fn, NULL);
 	}
 	/*
          * The cast should be to a long for alpha but
@@ -425,9 +409,6 @@ _cond_broadcast(
 {
 	if (AdvfsLockStats) {
 		AdvfsLockStats->broadcast++;
-	}
-	if (TrFlags & trCond) {
-		trace_lkcall(CV_BROADCAST, cvp, NULL, ln, fn, NULL);
 	}
 	/*
          * The cast should be to a long for alpha but
@@ -630,12 +611,6 @@ _lk_set_state(
 {
 	unLkActionT unlock_action = UNLK_NEITHER;
 
-#ifdef ADVFS_DEBUG
-	if (TrFlags & trLock) {
-		trace_lkcall(SET_STATE, &lk->cv, NULL, ln, fn, lk);
-	}
-#endif				/* ADVFS_DEBUG */
-
 	lk->state = newState;
 
 	if (lk->waiters > 0) {
@@ -682,9 +657,6 @@ _lk_wait_for(
 	if (!lk_mutex->locked) {
 		printf("_lk_wait_for: ln = %d, fn = %s\n", ln, fn);
 		ADVFS_SAD0("_lk_wait_for: mutex not locked");
-	}
-	if (TrFlags & trLock) {
-		trace_lkcall(WAIT_FOR, &lk->cv, lk_mutex, ln, fn, lk);
 	}
 	lk->hdr.try_line_num = ln;
 	lk->hdr.try_file_name = fn;
@@ -749,9 +721,6 @@ _lk_wait_for2(
 		printf("_lk_wait_for2: ln = %d, fn = %s\n", ln, fn);
 		ADVFS_SAD0("_lk_wait_for2: mutex not locked");
 	}
-	if (TrFlags & trLock) {
-		trace_lkcall(WAIT_FOR, &lk->cv, lk_mutex, ln, fn, lk);
-	}
 	lk->hdr.try_line_num = ln;
 	lk->hdr.try_file_name = fn;
 #endif				/* ADVFS_DEBUG */
@@ -812,9 +781,6 @@ _lk_wait_while(
 	if (!lk_mutex->locked) {
 		printf("_lk_wait_while ln = %d, fn = %s\n", ln, fn);
 		ADVFS_SAD0("_lk_wait_while: mutex not locked");
-	}
-	if (TrFlags & trLock) {
-		trace_lkcall(WAIT_WHILE, &lk->cv, lk_mutex, ln, fn, lk);
 	}
 	lk->hdr.try_line_num = ln;
 	lk->hdr.try_file_name = fn;
