@@ -4632,7 +4632,6 @@ msfs_syscall_op_ss_set_params(libParamsT * libBufp)
 	dmnP->ssDmnInfo.ssDmnDefragment = ssDmnParamsp->ssDmnDefragment;
 	dmnP->ssDmnInfo.ssDmnSmartPlace = ssDmnParamsp->ssDmnSmartPlace;
 	dmnP->ssDmnInfo.ssDmnBalance = ssDmnParamsp->ssDmnBalance;
-	dmnP->ssDmnInfo.ssDmnVerbosity = ssDmnParamsp->ssDmnVerbosity;
 	dmnP->ssDmnInfo.ssDmnDirectIo = ssDmnParamsp->ssDmnDirectIo;
 	dmnP->ssDmnInfo.ssMaxPercentOfIoWhenBusy = ssDmnParamsp->ssMaxPercentOfIoWhenBusy;
 	if (dmnP->ssDmnInfo.ssMaxPercentOfIoWhenBusy)
@@ -4705,8 +4704,6 @@ msfs_syscall_op_ss_get_params(libParamsT * libBufp)
 	    dmnP->ssDmnInfo.ssDmnSmartPlace;
 	libBufp->ssGetParams.ssDmnParams.ssDmnBalance =
 	    dmnP->ssDmnInfo.ssDmnBalance;
-	libBufp->ssGetParams.ssDmnParams.ssDmnVerbosity =
-	    dmnP->ssDmnInfo.ssDmnVerbosity;
 	libBufp->ssGetParams.ssDmnParams.ssDmnDirectIo =
 	    dmnP->ssDmnInfo.ssDmnDirectIo;
 	libBufp->ssGetParams.ssDmnParams.ssMaxPercentOfIoWhenBusy =
