@@ -269,7 +269,7 @@ struct ftx_dyn_alloc {
  */
 
 ftxStateT *
-          newftx();
+          newftx(void);
 
 void 
 ftx_free(
