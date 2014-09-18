@@ -5823,19 +5823,6 @@ bs_inherit(
 		if (sts != EOK) {
 			ADVFS_SAD1("bs_inherit - set child attr failed", sts);
 		}
-#ifdef ADVFS_SMP_ASSERT
-		/*
-	         * If AdvfsAllDataLogging is active, then
-	         * update the access structure dataSafety field if the
-	         * inherited dataSafety attribute is different from the
-	         * current dataSafety value in the access structure.
-	         */
-		if (AdvfsAllDataLogging) {
-			if (childAttr.cl.dataSafety != childbfap->dataSafety) {
-				childbfap->dataSafety = childAttr.cl.dataSafety;
-			}
-		}
-#endif
 	}
 	if ((inherit == BF_INHERIT_I_TO_I) || (inherit == BF_INHERIT_I_TO_IA)) {
 		/*
@@ -5867,17 +5854,7 @@ bs_inherit_init(
 	int sz;
 	bsBfClAttrT bfClientAttr = {0};
 	extern int AdvfsAllDataLogging;
-
-#ifdef ADVFS_SMP_ASSERT
-	if (AdvfsAllDataLogging) {
-		bfClientAttr.dataSafety = BFD_FTX_AGENT;
-	} else {
-		bfClientAttr.dataSafety = BFD_NIL;
-	}
-#else
 	bfClientAttr.dataSafety = BFD_NIL;
-#endif
-
 	bfClientAttr.reqServices = defServiceClass;
 
 	sts = bmtr_put_rec_n_unlk(bfap,

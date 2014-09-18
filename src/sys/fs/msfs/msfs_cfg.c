@@ -36,20 +36,6 @@
 #include <fs/msfs/bs_inmem_map.h>
 #include <fs/msfs/bs_vd.h>
 
-#ifdef ADVFS_SMP_ASSERT
-/* This var allows KASSERT() to be disabled on the fly; default is ON */
-unsigned int AdvfsEnableAsserts = 1;
-
-/*
- * This variable, when set to 1, causes all files in newly-created
- * filesets to have atomic write data logging turned on.  This is
- * for testing purposes only.
- */
-unsigned int AdvfsAllDataLogging = 0;
-
-extern int AdvfsCheckDDL;
-#endif				/* ADVFS_SMP_ASSERT */
-
 extern unsigned int AdvfsAccessMaxPercent;
 extern int NumAccess;
 extern int MaxAccess;
@@ -92,17 +78,6 @@ cfg_subsys_attr_t advfs_attributes[] = {
 	{"AdvfsSyncMmapPages", CFG_ATTR_INTTYPE,
 		CFG_OP_QUERY | CFG_OP_CONFIGURE | CFG_OP_RECONFIGURE,
 	(caddr_t) & AdvfsSyncMmapPages, 0, 1, 0},
-#ifdef ADVFS_SMP_ASSERT
-	{"AdvfsEnableAsserts", CFG_ATTR_UINTTYPE,
-		CFG_OP_QUERY | CFG_OP_CONFIGURE | CFG_OP_RECONFIGURE,
-	(caddr_t) & AdvfsEnableAsserts, 0, 1, 0},
-	{"AdvfsAllDataLogging", CFG_ATTR_UINTTYPE,
-		CFG_OP_QUERY | CFG_OP_CONFIGURE | CFG_OP_RECONFIGURE | CFG_HIDDEN_ATTR,
-	(caddr_t) & AdvfsAllDataLogging, 0, 1, 0},
-	{"AdvfsCheckDDL", CFG_ATTR_UINTTYPE,
-		CFG_OP_QUERY | CFG_OP_CONFIGURE | CFG_OP_RECONFIGURE | CFG_HIDDEN_ATTR,
-	(caddr_t) & AdvfsCheckDDL, 0, 1, 1},
-#endif				/* ADVFS_SMP_ASSERT */
 	{"AdvfsReadyQLim", CFG_ATTR_INTTYPE,
 		CFG_OP_QUERY | CFG_OP_CONFIGURE | CFG_OP_RECONFIGURE,
 	(caddr_t) & AdvfsReadyQLim, 0, 32768, 0},

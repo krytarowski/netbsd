@@ -397,14 +397,6 @@ unload_sub_xtnt_maps(
     bsInMemXtntMapT * xtntMap	/* in */
 );
 
-#ifdef ADVFS_SMP_ASSERT
-static
-int
-lock_rwholder(
-    lock_t lock			/* in */
-);
-#endif
-
 typedef struct addStgUndoRec {
 	bfSetIdT setId;
 	bfTagT tag;
@@ -8279,32 +8271,3 @@ unload_sub_xtnt_maps(
 	return;
 
 }				/* end unload_sub_xtnt_maps */
-#ifdef ADVFS_SMP_ASSERT
-/*
- * Check whether the current thread holds the given lock.
- * The lockstats part only works in lockmode = 4, so
- * don't use it if lockmode < 4.
- */
-static
-int
-lock_rwholder(
-    lock_t lock
-)
-{
-	struct thread *th;
-	int i;
-
-	if (!lock_islocked(lock))
-		return FALSE;
-
-	if (lockmode < 4)
-		return TRUE;
-
-	th = current_thread();
-	for (i = 0; i < th->lock_count; i++)
-		if (lock == th->lock_addr[i])
-			return TRUE;
-
-	return FALSE;
-}				/* end lock_rwholder */
-#endif

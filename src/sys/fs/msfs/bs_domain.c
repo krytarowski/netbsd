@@ -92,10 +92,6 @@ struct bsMPg *GRpgp = NULL;
 
 vdDescT nilVdDesc = NULL_STRUCT;
 
-#ifdef ADVFS_SMP_ASSERT
-#endif
-
-
 #define  DMNTBL_LOCK_WRITE( sLk ) \
     lock_write( sLk );
 #define DMNTBL_UNLOCK( sLk ) \
@@ -1547,44 +1543,6 @@ get_table_error:
 
 	return sts;
 }
-
-
-#ifdef ADVFS_SMP_ASSERT
-
-
-/*
- * check_closed_list
- *
- * This function searches the closed list for any remaining bfaps
- * and reports the first bfap belonging to the domain that it finds.
- * If none belong to the domain it returns NULL.
- *
- */
-bfAccessT *
-check_closed_list(
-    domainT * dmnP		/* in */
-)
-{
-	bfAccessT *badBfap = NULL;
-	bfAccessT *bfap;
-
-	mutex_lock(&BfAccessFreeLock);
-
-	bfap = ClosedAcc.freeFwd;
-	while (bfap != (bfAccessT *) (&ClosedAcc)) {
-		if (bfap->dmnP == dmnP) {
-			mutex_unlock(&BfAccessFreeLock);
-			return (bfap);
-		}
-		bfap = bfap->freeFwd;
-	}
-
-	mutex_unlock(&BfAccessFreeLock);
-	return (NULL);
-}
-#endif				/* ADVFS_SMP_ASSERT */
-
-
 
 /*****************************************************/
 /*****  Major VD, bf domain management functions *****/
@@ -3397,12 +3355,6 @@ vd_alloc(
 	vdp->smSyncQ15.queue_cnt = 0;
 
 	vdp->syncQIndx = 0;
-
-#ifdef ADVFS_SMP_ASSERT
-	vdp->rmioq_cnt = 0;
-	vdp->rmormvq_cnt = 0;
-#endif
-
 	vdp->vdRetryCount = 0;
 
 	*avdp = vdp;
@@ -5331,9 +5283,6 @@ dmn_dealloc(
 	mutex_destroy(&dmnP->lsnLock);
 	mutex_destroy(&dmnP->vdpTblLock);
 	mutex_destroy(&dmnP->dmnFreezeMutex);
-#ifdef ADVFS_SMP_ASSERT
-	lock_terminate(&dmnP->ftxSlotLock);
-#endif
 
 	if (clu_is_ready()) {
 		ulong domainId_cast;
@@ -5400,9 +5349,6 @@ dmn_alloc(
 	mutex_init(&dmnP->dmnFreezeMutex);
 
 	SC_TBL_LOCK_INIT(dmnP);
-#ifdef ADVFS_SMP_ASSERT
-	lock_setup(&dmnP->ftxSlotLock, ADVdomainT_ftxSlotLock_lk_info, TRUE);
-#endif
 	dmnP->lsnList.lsnFwd = (struct bsBuf *) & dmnP->lsnList;
 	dmnP->lsnList.lsnBwd = (struct bsBuf *) & dmnP->lsnList;
 	dmnP->writeToLsn = nilLSN;

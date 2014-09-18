@@ -58,11 +58,6 @@
 
 #include <sys/syslog.h>
 
-#ifdef ADVFS_SMP_ASSERT
-static char *smdbg1 = "bs_startio:    bsBuf 0x%lx  (blockingQ)  vd 0x%lx\n";
-static char *smdbg2 = "bs_startio:    bsBuf 0x%lx  time = %d  delta = %d  %c  vd 0x%lx\n";
-#endif				/* ADVFS_SMP_ASSERT */
-
 extern unsigned TrFlags;
 extern int prattached;
 extern char *panicstr;
@@ -740,9 +735,6 @@ bs_osf_complete(
 		iop->fwd = iop->bwd = NULL;
 		iop->consolidated = 0;
 		iop->ioQ = NONE;
-#ifdef ADVFS_SMP_ASSERT
-		iop->bsBuf->ioqLn = SET_LINE_AND_THREAD(__LINE__);
-#endif
 
 		if (sts != EOK) {
 			/*
@@ -1063,11 +1055,6 @@ retry:
 				len--;
 				goto retry;
 			}
-#ifdef ADVFS_SMP_ASSERT
-			start->bsBuf->busyLn = SET_LINE_AND_THREAD(__LINE__);
-			start->bsBuf->ioqLn = -1;
-#endif
-
 			vdp->devQ.queue_cnt++;
 			start->bsBuf->lock.state |= BUSY;
 			start->bsBuf->bufDebug &= ~BSBUF_WAITQ;
@@ -1167,10 +1154,6 @@ retry:
 					mutex_unlock(&this->bsBuf->bufLock);
 					break;
 				}
-#ifdef ADVFS_SMP_ASSERT
-				this->bsBuf->busyLn = SET_LINE_AND_THREAD(__LINE__);
-				this->bsBuf->ioqLn = -1;
-#endif
 			}
 			/* Must mark this buffer BUSY before we drop its lock
 			 * to check the next buffer. */
@@ -1780,10 +1763,6 @@ bs_startio(
 						mutex_lock(&ioList->bsBuf->bufLock);
 					goto loop;
 				}
-#ifdef ADVFS_SMP_ASSERT
-				ioList->bsBuf->busyLn = SET_LINE_AND_THREAD(__LINE__);
-				ioList->bsBuf->ioqLn = -1;
-#endif
 			}
 			/* mark buffer before dropping its lock */
 			ioList->ioQ = DEVICE;

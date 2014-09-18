@@ -73,15 +73,6 @@ uint BsLastDirPgNm = NULL;
 /* global master switch to disable dir trunc */
 int dirTruncEnabled = 1;
 
-#ifdef ADVFS_SMP_ASSERT
-/* Set this to non-zero to force remove_dir_ent() to return an error
- * this is useful for testing to force the cleanup path through
- * bs_delete_undo_opx.
- */
-int ForceRemoveDirEntFailure = 0;
-#endif				/* ADVFS_SMP_ASSERT */
-
-
 /*
  * insert_seq
  *
@@ -604,13 +595,6 @@ remove_dir_ent(
 	uint32T glom_flags = 0;
 	struct bfAccess *dir_access;
 	struct vnode *dvp = NULL;
-
-
-#ifdef ADVFS_SMP_ASSERT
-	if (ForceRemoveDirEntFailure) {
-		return (EIO);
-	}
-#endif				/* ADVFS_SMP_ASSERT */
 
 	dvp = ndp->ni_dvp;
 	dir_access = VTOA(dvp);

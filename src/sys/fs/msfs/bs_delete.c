@@ -866,11 +866,6 @@ init_bs_delete_opx(void)
 	}
 }
 
-
-#ifdef ADVFS_SMP_ASSERT
-int AdvfsCheckDDL = 1;
-#endif
-
 /*
  * Add a bitfile to the global deferred delete list.
  *
@@ -900,11 +895,6 @@ del_add_to_del_list(
 	bsMPgT *bmtp;
 	bsMCT *mcp;
 	delListRecT delListRec;
-#ifdef ADVFS_SMP_ASSERT
-	bfPageRefHT bmtPgRef;
-	bfMCIdT ddlMcellId;
-	int delFlag;
-#endif
 
 	dmnP = vdp->dmnP;
 
@@ -913,28 +903,6 @@ del_add_to_del_list(
  * The trap code will only be active if the
  * /etc/sysconfigtab variable AdvfsCheckDDL is on.
  */
-#ifdef ADVFS_SMP_ASSERT
-	if (AdvfsCheckDDL) {
-		if ((sts = bmt_refpg(&bmtPgRef, (void **) &bmtp, vdp->bmtp, mcid.page,
-			    BS_NIL)) != EOK) {
-			goto done;
-		}
-		mcp = &bmtp->bsMCA[mcid.cell];
-		sts = del_find_del_entry(dmnP, vdp->vdIndex, mcp->bfSetTag,
-		    mcp->tag, &ddlMcellId, &delFlag);
-		if ((sts == EOK) &&
-		    ((mcid.page == ddlMcellId.page) &&
-			(mcid.cell == ddlMcellId.cell))) {
-			/*
-	                 * This should never happen.  It means we're about to put an
-	                 * mcell onto the DDL that is already there.
-	                 */
-			ADVFS_SAD0("trap code: duplicate mcell on DDL!\n");
-		}
-		bs_derefpg(bmtPgRef, BS_CACHE_IT);
-	}
-#endif
-
 	if (ftxFlag) {
 		if ((sts = FTX_START_N(FTA_BS_DEL_ADD_LIST_V1, &ftxH, parentFtxH,
 			    vdp->dmnP, 0)) != EOK) {

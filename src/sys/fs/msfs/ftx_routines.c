@@ -323,28 +323,7 @@ _ftx_start_i(
 	         * a transaction.  The thread should lock it after starting the
 	         * transaction.
 	         */
-#ifdef ADVFS_SMP_ASSERT
-		lock_read(&dmnP->ftxSlotLock);
-#endif
-
 		mutex_lock(&FtxMutex);
-
-#ifdef ADVFS_SMP_ASSERT
-		if (AdvfsEnableAsserts) {
-			/*
-	                 * check for more than one root transaction for this thread
-	                 */
-			thread_t thread = current_thread();
-
-			KASSERT(ftxTDp->rrSlots == FTX_DEF_RR_SLOTS);
-			for (ftxSlot = 0; ftxSlot < ftxTDp->rrSlots; ftxSlot++) {
-				if (ftxTDp->tablep[ftxSlot].ftxp != NULL) {
-					KASSERT(ftxTDp->tablep[ftxSlot].ftxp->thd != thread);
-				}
-			}
-			KASSERT(ftxTDp->rrNextSlot < ftxTDp->rrSlots);
-		}
-#endif				/* ADVFS_SMP_ASSERT */
 
 		if (FtxStats) {
 			int slots = ftxTDp->rrNextSlot - ftxTDp->oldestSlot;
@@ -379,9 +358,6 @@ _ftx_start_i(
 			/* The caller doesn't want to wait */
 			if (flag & FTX_NOWAIT) {
 				mutex_unlock(&FtxMutex);
-#ifdef ADVFS_SMP_ASSERT
-				lock_done(&dmnP->ftxSlotLock);
-#endif
 				return EWOULDBLOCK;
 			}
 			/* The ftx slot is busy so wait for it to become
@@ -987,10 +963,6 @@ ftx_done_urdr(
 	/***** This is the root ftx completion case ********/
 	/***************************************************/
 
-#ifdef ADVFS_SMP_ASSERT
-	lock_done(&dmnP->ftxSlotLock);
-#endif
-
 	if (TrFlags & trFtx) {
 		trace_hdr();
 		ms_printf("Done R Ftx:     %8x ftx   %8X dmn\n",
@@ -1200,9 +1172,6 @@ ftx_quit(
 	if (!LSN_EQ_NIL(ftxp->lastLogRec.lsn)) {
 		ADVFS_SAD0("ftx_quit: lastLogRec not nil");
 	}
-#ifdef ADVFS_SMP_ASSERT
-	lock_done(&dmnP->ftxSlotLock);
-#endif
 
 	ftxp->undoBackLink = logEndOfRecords;
 
@@ -1299,11 +1268,6 @@ ftx_fail_2(
 	/* check if level in handle matches current level. */
 	KASSERT(ftxp->currLvl == ftxH.level);
 	lvl = ftxp->currLvl;
-
-#ifdef ADVFS_SMP_ASSERT
-	if (!lvl)
-		lock_done(&dmnP->ftxSlotLock);
-#endif
 
 	clvlp = &ftxp->cLvl[lvl];
 

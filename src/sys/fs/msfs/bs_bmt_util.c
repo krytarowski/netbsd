@@ -2665,12 +2665,6 @@ start2:
 
 	/* check to make sure there is a free mcell on this page */
 	if (bmtpgp->freeMcellCnt == 0) {
-#ifdef ADVFS_SMP_ASSERT
-		aprintf("ADVFS: alloc_mcell: next free page has no free mcells\n");
-		aprintf("ADVFS: alloc_mcell: domain = %s, vol = %s, page = %d\n",
-		    dmnP->domainName, vd->vdName, page);
-		ADVFS_SAD0("alloc_mcell: bad mcell free list");
-#endif
 		goto cleanup_corruption;
 	}
 	mcid = bmtpgp->nextfreeMCId;

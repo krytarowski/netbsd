@@ -85,10 +85,6 @@ extern TestXtntsFlg;
 extern vm_map_t kernel_map;
 extern vm_offset_t virtualZeroRangeP;
 
-#ifdef ADVFS_SMP_ASSERT
-int ForceStgAddFailure = 0;
-#endif				/* ADVFS_SMP_ASSERT */
-
 #define FIRST_BLK_IN_PG(offset)  (((offset) / ADVFS_PGSZ) * ADVFS_PGSZ_IN_BLKS)
 #define LAST_BLK_IN_PG(offset) (FIRST_BLK_IN_PG(offset)+(ADVFS_PGSZ_IN_BLKS-1))
 
@@ -2757,15 +2753,6 @@ fs_write_add_stg(
 		ret = sts == ENO_MORE_BLKS ? ENOSPC : EIO;
 		goto _error_exit;
 	}
-#ifdef ADVFS_SMP_ASSERT
-	/* This is a special failure point for forcing code through the
-	 * add_stg_undo() routine.  Used in the SMP coverage tests for
-	 * bfAccess struct manipulation. */
-	if (ForceStgAddFailure) {
-		ret = ENOSPC;
-		goto _error_exit;
-	}
-#endif				/* ADVFS_SMP_ASSERT */
 
 	/* now that we know how many pages were really allocated we need to
 	 * see if it spanned the frag before we expand it. if we spanned the

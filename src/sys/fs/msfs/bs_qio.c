@@ -67,18 +67,6 @@ unsigned long notstartiocalls[11] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
  * used to maintain statistics on the length of the ioDesc chains being moved
  * among the I/O queues.
  */
-#ifdef ADVFS_SMP_ASSERT
-
-#define HISTOGRAM_UPDATE( hist, len ) \
-{ int i; \
-  for ( i = 0; i < 15; i++ ) { \
-    if ( (len) <= 1<<i ) \
-        break; \
-  } \
-  (hist)[i]++; \
-}
-
-#endif
 
 unsigned long Rdy2ConsolSz[16];
 unsigned long Sm2RdySz[16];
@@ -104,14 +92,6 @@ unsigned long Sm2RdySz[16];
  * RdySort[12] = largest chain processed in special case code.
  */
 unsigned long RdySort[13] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-
-#ifdef ADVFS_SMP_ASSERT
-extern int AdvfsDomainPanicLevel;
-#define ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3  AdvfsDomainPanicLevel=3
-#else
-#define ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3
-#endif
 
 /*
  * Forward references
@@ -1266,7 +1246,6 @@ loop:
 				/* must drop and retake bp->bufLock for live
 				 * dump */
 				mutex_unlock(&bp->bufLock);
-				ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 				domain_panic(dmnP,
 				    "lsn_io_list: advfs_page_get(%p) returned %x",
 				    bp, sts);
@@ -1293,10 +1272,6 @@ loop:
 			}
 			bp->lock.state |= BUSY;
 			bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-			bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-			bp->ioqLn = -1;
-#endif
 
 			len += listLenPart;
 			if (ioListp == NULL) {
@@ -1503,7 +1478,6 @@ loop:
 				/* must drop and retake bp->bufLock for live
 				 * dump */
 				mutex_unlock(&bp->bufLock);
-				ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 				domain_panic(dmnP,
 				    "bs_lsnList_flush: advfs_page_get(%p) returned %x",
 				    bp, sts);
@@ -1530,10 +1504,6 @@ loop:
 			}
 			bp->lock.state |= BUSY;
 			bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-			bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-			bp->ioqLn = -1;
-#endif
 
 			len += listLenPart;
 			if (ioListp == NULL) {
@@ -1972,10 +1942,6 @@ ready_to_consolq(struct vd * vdp)
          * This updates a histogram of the # of ioDesc structs moved from
          * to ready to the consolidate queue on each pass thru this routine.
          */
-#ifdef ADVFS_SMP_ASSERT
-	HISTOGRAM_UPDATE(Rdy2ConsolSz, ioListLen);
-#endif
-
 	MS_VERIFY_IOQUEUE_INTEGRITY(&vdp->consolQ, TRUE);
 
 	mutex_unlock(&vdp->consolQ.ioQLock);
@@ -2793,7 +2759,6 @@ restart:
 			/* must drop and retake bp->bufLock for live dump */
 			mutex_unlock(&bp->bufLock);
 			mutex_unlock(&bfap->bfIoLock);
-			ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 			domain_panic(bfap->dmnP,
 			    "logflush_cont: advfs_page_get(%p) returned %x",
 			    bp, sts);
@@ -2816,10 +2781,6 @@ restart:
 		}
 		bp->lock.state |= BUSY;
 		bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-		bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-		bp->ioqLn = -1;
-#endif
 
 		first = bp->ioList.write;
 		last = bp->ioList.write + bp->ioList.writeCnt;
@@ -3263,17 +3224,12 @@ loop:
 					if (!sts) {
 						bp->lock.state |= (BUSY | KEEPDIRTY);
 						bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-						bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-						bp->ioqLn = -1;
-#endif
 					}
 				}
 				if (sts) {
 					/* must drop and retake bp->bufLock
 					 * for live dump */
 					mutex_unlock(&bp->bufLock);
-					ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 					domain_panic(bfap->dmnP,
 					    "bfflush_start: advfs_page_get(%p) returned %x",
 					    bp, sts);
@@ -3304,10 +3260,6 @@ loop:
 			} else {
 				bp->lock.state |= BUSY;
 				bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-				bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-				bp->ioqLn = -1;
-#endif
 			}
 
 			/* Setup the IO list for GETPAGE_WRITE buffers. */
@@ -4023,18 +3975,6 @@ loop:
 				rfp->outstandingIoCount++;
 				bsBufsCounted++;
 
-#ifdef ADVFS_SMP_ASSERT
-				/*
-		                 * The following assertion cannot be applied to metadata
-		                 * files or clones since their bfap->file_size field, from which
-		                 * rfp->lastPage is derived on a full-file flush, is
-		                 * not maintained consistently.
-		                 */
-				if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
-				    (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-					KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
-				}
-#endif
 				mutex_unlock(&rfp->rangeFlushLock);
 				bp->ln = SET_LINE_AND_THREAD(__LINE__);
 			}
@@ -4169,18 +4109,6 @@ loop:
 				rfp->outstandingIoCount++;
 				bsBufsCounted++;
 
-#ifdef ADVFS_SMP_ASSERT
-				/*
-		                 * The following assertion cannot be applied to metadata
-		                 * files or clones since their bfap->file_size field, from which
-		                 * rfp->lastPage is derived on a full-file flush, is
-		                 * not maintained consistently.
-		                 */
-				if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
-				    (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-					KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
-				}
-#endif
 				mutex_unlock(&rfp->rangeFlushLock);
 				bp->ln = SET_LINE_AND_THREAD(__LINE__);
 			}
@@ -4300,18 +4228,6 @@ loop:
 				rfp->outstandingIoCount++;
 				bsBufsCounted++;
 
-#ifdef ADVFS_SMP_ASSERT
-				/*
-		                 * The following assertion cannot be applied to metadata
-		                 * files or clones since their bfap->file_size field, from which
-		                 * rfp->lastPage is derived on a full-file flush, is
-		                 * not maintained consistently.
-		                 */
-				if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
-				    (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-					KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
-				}
-#endif
 				mutex_unlock(&rfp->rangeFlushLock);
 				bp->ln = SET_LINE_AND_THREAD(__LINE__);
 
@@ -4332,10 +4248,6 @@ loop:
 					if (!sts) {
 						bp->lock.state |= (BUSY | KEEPDIRTY);
 						bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-						bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-						bp->ioqLn = -1;
-#endif
 					}
 				}
 				if (sts) {
@@ -4343,7 +4255,6 @@ loop:
 					 * for live dump */
 					mutex_unlock(&bp->bufLock);
 					mutex_unlock(&bfap->bfIoLock);
-					ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 					domain_panic(bfap->dmnP,
 					    "bfflush: advfs_page_get(%p) returned %x",
 					    bp, sts);
@@ -4373,10 +4284,6 @@ loop:
 			} else {
 				bp->lock.state |= BUSY;
 				bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-				bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-				bp->ioqLn = -1;
-#endif
 			}
 
 			/* Setup the IO list for GETPAGE_WRITE buffers. */
@@ -4462,18 +4369,6 @@ loop:
 					rfp->outstandingIoCount++;
 					bsBufsCounted++;
 
-#ifdef ADVFS_SMP_ASSERT
-					/*
-		                         * The following assertion cannot be applied to metadata
-		                         * files or clones since their bfap->file_size field,
-		                         * from which rfp->lastPage is derived on a full-file flush,
-		                         * is not maintained consistently.
-		                         */
-					if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
-					    (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-						KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
-					}
-#endif
 					mutex_unlock(&rfp->rangeFlushLock);
 					bp->ln = SET_LINE_AND_THREAD(__LINE__);
 				}
@@ -4766,10 +4661,6 @@ again:
 					noq_cnt++;
 				goto again;
 			}
-#ifdef ADVFS_SMP_ASSERT
-			iop->bsBuf->ioqLn = SET_LINE_AND_THREAD(__LINE__);
-#endif
-
 			/* The casting below is needed in case we are removing
 			 * from vdp->tempQ */
 			iop->fwd->bwd = (ioDescT *) iop->bwd;
@@ -4918,9 +4809,6 @@ again:
 			iop->bwd->fwd = (ioDescT *) iop->fwd;
 			iop->fwd = iop->bwd = NULL;
 
-#ifdef ADVFS_SMP_ASSERT
-			iop->bsBuf->ioqLn = SET_LINE_AND_THREAD(__LINE__);
-#endif
 			iop->ioQ = NONE;
 
 			if (qhdr != (ioDescHdrT *) & vdp->tempQ) {
@@ -4982,9 +4870,6 @@ bs_raw_page(bfAccessT * bfap,		/* in */
 	/* No vm_page in bsbuf, raw I/O address passed via targetAddr */
 	iop->targetAddr = buf;
 	iop->bsBuf = bp;
-#ifdef ADVFS_SMP_ASSERT
-	iop->bsBuf->ioqLn = SET_LINE_AND_THREAD(__LINE__);
-#endif
 	iop->ioCount = 1;
 	bp->ioList.ioDesc = iop;
 
@@ -5723,9 +5608,6 @@ smsync_to_readyq(struct vd * vdp, int flushFlag)
 			sort_onto_readyq(vdp, iop, qlen,
 			    &smsyncq->ioQLock, tempQ_marker);
 
-#ifdef ADVFS_SMP_ASSERT
-			HISTOGRAM_UPDATE(Sm2RdySz, qlen);
-#endif
 		} else {
 			KASSERT(qlen == 0);
 			mutex_unlock(&smsyncq->ioQLock);

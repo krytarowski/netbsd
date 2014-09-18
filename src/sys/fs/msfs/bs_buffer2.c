@@ -284,12 +284,7 @@ bs_get_bsbuf(int rad_id, int wait)
 	}
 	return (bp);
 }
-#ifdef ADVFS_SMP_ASSERT
-extern int AdvfsDomainPanicLevel;
-#define ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3  AdvfsDomainPanicLevel=3
-#else
-#define ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3
-#endif
+
 
 /*
  * bs_free_bsbuf()
@@ -331,10 +326,6 @@ advfs_page_get(struct bsBuf * bp, int flags)
 	if (!pp && !(flags & ADVFS_GET_NOCACHE))
 		ADVFS_SAD2("Advfs can't find expected ubc page", result, (long) bp);
 
-#ifdef ADVFS_SMP_ASSERT
-	if (pp != bp->vmpage)
-		bp->last_vmpage = bp->vmpage;
-#endif
 	/* update in case the page was exchanged while it was not busy/held,
 	 * it is OK if this is invalid on a failure, it may be useful later. */
 	bp->vmpage = pp;
@@ -1835,10 +1826,6 @@ retry_lookup:
 				 * than taking down the domain. */
 				if ((sts = advfs_page_get(bp,
 					    UBC_GET_BUSY | UBC_GET_HAVEHOLD | UBC_GET_KEEPDIRTY))) {
-#ifdef ADVFS_SMP_ASSERT
-					ADVFS_SAD2("bs_pinpg_get: failed advfs_page_get",
-					    sts, (long) bp);
-#endif
 					clear_state(bp, IO_TRANS);
 					bp->ln = SET_LINE_AND_THREAD(__LINE__);
 					mutex_unlock(&bp->bufLock);
@@ -1847,10 +1834,6 @@ retry_lookup:
 				}
 				bp->lock.state |= (BUSY | KEEPDIRTY);
 				bp->ubc_flags = 0;	/* we keep our hold */
-#ifdef ADVFS_SMP_ASSERT
-				bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-				bp->ioqLn = -1;
-#endif
 
 				link_write_req(bp);
 				mutex_unlock(&bp->bufLock);
@@ -1941,9 +1924,6 @@ bs_pinpg_put(vm_page_t plp,	/* in */
 	ioDescT *ioList = 0, *save;
 	int listLenMaster = 0, pageCount;
 	long prevLn;
-#ifdef ADVFS_SMP_ASSERT
-	vm_object_t first_pg_object = plp->pg_object;
-#endif
 
 	for (curpg = plp, pageCount = 0;
 	    pageCount < plcnt;
@@ -2014,7 +1994,6 @@ bs_pinpg_put(vm_page_t plp,	/* in */
 				int s;
 				unsigned int dump_state = bp->lock.state;
 				mutex_unlock(&bp->bufLock);
-				ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 				domain_panic(bp->bfAccess->dmnP,
 				    "bs_pinpg_put(1): bad state %x bp %p ln %p pg %p sz %x\n",
 				    dump_state, bp, prevLn, curpg, curpg->pg_size);
@@ -2079,7 +2058,6 @@ bs_pinpg_put(vm_page_t plp,	/* in */
 				 * it */
 				unsigned int dump_state = bp->lock.state;
 				mutex_unlock(&bp->bufLock);
-				ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 				domain_panic(bp->bfAccess->dmnP,
 				    "bs_pinpg_put(2): bad state %x bp %p ln %p pg %p sz %x\n",
 				    dump_state, bp, prevLn, curpg, curpg->pg_size);
@@ -2302,18 +2280,6 @@ bs_wakeup_flush_threads(struct bsBuf * bp,	/* in - Buffer being released */
 			mutex_lock(&rfp->rangeFlushLock);
 			KASSERT(rfp->outstandingIoCount > 0);
 
-#ifdef ADVFS_SMP_ASSERT
-			/*
-	                 * The following assertion cannot be applied to metadata
-	                 * files or clones since their bfap->file_size field, from which
-	                 * rfp->lastPage is derived on a full-file flush, is
-	                 * not maintained consistently.
-	                 */
-			if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
-			    (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-				KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
-			}
-#endif
 			if (--rfp->outstandingIoCount == 0) {
 				thread_wakeup_one((vm_offset_t) & rfp->outstandingIoCount);
 			}
@@ -3439,17 +3405,12 @@ bs_unpinpg(
 				if (!sts) {
 					bp->lock.state |= (BUSY | KEEPDIRTY);
 					bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-					bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-					bp->ioqLn = -1;
-#endif
 				}
 			}
 			if (sts) {
 				/* release lock to get live dump then retake
 				 * it */
 				mutex_unlock(&bp->bufLock);
-				ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 				domain_panic(bp->bfAccess->dmnP,
 				    "bs_unpinpg: %s advfs_page_get(%p) returned %x",
 				    pgRlsMode == BS_MOD_DIRECT ? "DIRECT" : "SYNC",
@@ -3469,10 +3430,6 @@ bs_unpinpg(
 		} else {
 			bp->lock.state |= BUSY;
 			bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-			bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-			bp->ioqLn = -1;
-#endif
 		}
 
 		/*
@@ -3646,17 +3603,12 @@ bs_unpinpg(
 						if (!sts) {
 							bp->lock.state |= (BUSY | KEEPDIRTY);
 							bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-							bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-							bp->ioqLn = -1;
-#endif
 						}
 					}
 					if (sts) {
 						/* release lock to get live
 						 * dump then retake it */
 						mutex_unlock(&bp->bufLock);
-						ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 						domain_panic(bp->bfAccess->dmnP,
 						    "bs_unpinpg: %s advfs_page_get(%p) returned %x",
 						    pgRlsMode == BS_MOD_COPY ? "COPY" : "LAZY", bp, sts);
@@ -3674,10 +3626,6 @@ bs_unpinpg(
 				} else {
 					bp->lock.state |= BUSY;
 					bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-					bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-					bp->ioqLn = -1;
-#endif
 				}
 			}
 			mutex_unlock(&bp->bufLock);
@@ -3766,10 +3714,6 @@ bs_unpinpg(
 							if (!sts) {
 								bp->lock.state |= (BUSY | KEEPDIRTY);
 								bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-								bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-								bp->ioqLn = -1;
-#endif
 							}
 						}
 						if (sts) {
@@ -3777,7 +3721,6 @@ bs_unpinpg(
 							 * live dump then
 							 * retake it */
 							mutex_unlock(&bp->bufLock);
-							ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 							domain_panic(bp->bfAccess->dmnP,
 							    "bs_unpinpg: %s advfs_page_get(%p) returned %x",
 							    pgRlsMode == BS_NOMOD_DIRECT ?
@@ -3798,10 +3741,6 @@ bs_unpinpg(
 					} else {
 						bp->lock.state |= BUSY;
 						bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-						bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-						bp->ioqLn = -1;
-#endif
 					}
 				}
 				mutex_unlock(&bp->bufLock);
@@ -3837,7 +3776,6 @@ bs_unpinpg(
 						/* release lock to get live
 						 * dump then retake it */
 						mutex_unlock(&bp->bufLock);
-						ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 						domain_panic(bp->bfAccess->dmnP,
 						    "bs_unpinpg: %s CLEAN advfs_page_get(%p) returned %x",
 						    pgRlsMode == BS_NOMOD_DIRECT ? "DIO_NOMOD" : "NOMOD",
@@ -3909,7 +3847,6 @@ bs_unpinpg(
 						/* release lock to get live
 						 * dump then retake it */
 						mutex_unlock(&bp->bufLock);
-						ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 						domain_panic(bp->bfAccess->dmnP,
 						    "bs_unpinpg: LOG CLEAN advfs_page_get(%p) returned %x",
 						    bp, sts);
@@ -4003,7 +3940,6 @@ bs_unpinpg(
 				/* release lock to get live dump then retake
 				 * it */
 				mutex_unlock(&bp->bufLock);
-				ADVFS_SMP_ASSERT_FORCE_DOMAIN_PANIC_LEVEL3;
 				domain_panic(bp->bfAccess->dmnP,
 				    "bs_unpinpg: LOG advfs_page_get(%p) returned %x",
 				    bp, sts);
@@ -4019,10 +3955,7 @@ bs_unpinpg(
 			}
 			bp->lock.state |= BUSY;
 			bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-			bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-			bp->ioqLn = -1;
-#endif
+
 			mutex_unlock(&bp->bufLock);
 			bs_q_list(&bp->ioList.ioDesc[bp->ioList.write],
 			    bp->ioList.writeCnt,
@@ -5035,10 +4968,7 @@ startover:
 		if (purge_buffer) {
 			mutex_lock(&purge_buffer->bufLock);
 			KASSERT(purge_buffer->lock.state & WRITING);
-#ifdef ADVFS_SMP_ASSERT
-			purge_buffer->busyLn = SET_LINE_AND_THREAD(__LINE__);
-			purge_buffer->ioqLn = -1;
-#endif
+
 			purge_buffer->lock.state &= ~REMOVE_FROM_IOQ;
 			bs_io_complete(purge_buffer, &s);
 		}
@@ -5068,10 +4998,6 @@ startover:
 	if (purge_buffer) {
 		mutex_lock(&purge_buffer->bufLock);
 		KASSERT(purge_buffer->lock.state & WRITING);
-#ifdef ADVFS_SMP_ASSERT
-		purge_buffer->busyLn = SET_LINE_AND_THREAD(__LINE__);
-		purge_buffer->ioqLn = -1;
-#endif
 		purge_buffer->lock.state &= ~REMOVE_FROM_IOQ;
 		bs_io_complete(purge_buffer, &s);
 	}
