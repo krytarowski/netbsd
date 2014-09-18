@@ -234,8 +234,8 @@ extern bfSetT nilBfSet;
 
 #define BS_GET_FSID(_setp,_fsid) \
 { \
-    _fsid.val[0] = _setp->dev; \
-    _fsid.val[1] = MOUNT_MSFS; \
+    _fsid.__fsid_val[0] = _setp->dev; \
+    _fsid.__fsid_val[1] = MOUNT_MSFS; \
 }
 
 
@@ -289,22 +289,22 @@ extern bfSetT nilBfSet;
  * fileset's accessChainLock is held while that chain is manipulated.
  * This macros returns with the BFALOCK HELD.
  */
-#define ADD_ACC_SETLIST(bfap) \
+#define ADD_ACC_SETLIST(_bfap) \
 { \
-    bfSetT *bfSetp = bfap->bfSetp; \
-    KASSERT(BFSET_VALID(bfSetp)); \
-    mutex_lock(&bfSetp->accessChainLock); \
-    KASSERT(bfap->setFwd == NULL); \
-    KASSERT(bfap->setBwd == NULL); \
-    mutex_lock(&bfap->bfaLock); \
-    bfap->setFwd = bfSetp->accessFwd; \
-    bfap->setBwd = (bfAccessT *)(&bfSetp->accessFwd); \
-    if (bfSetp->accessBwd == (bfAccessT *)(&bfSetp->accessFwd)) \
-        bfSetp->accessBwd = bfap; \
+    bfSetT *_bfSetp = _bfap->bfSetp; \
+    KASSERT(BFSET_VALID(_bfSetp)); \
+    mutex_lock(&_bfSetp->accessChainLock); \
+    KASSERT(_bfap->setFwd == NULL); \
+    KASSERT(_bfap->setBwd == NULL); \
+    mutex_lock(&_bfap->bfaLock); \
+    _bfap->setFwd = _bfSetp->accessFwd; \
+    _bfap->setBwd = (bfAccessT *)(&_bfSetp->accessFwd); \
+    if (_bfSetp->accessBwd == (bfAccessT *)(&_bfSetp->accessFwd)) \
+        _bfSetp->accessBwd = _bfap; \
     else \
-        bfSetp->accessFwd->setBwd = bfap; \
-    bfSetp->accessFwd = bfap; \
-    mutex_unlock(&bfSetp->accessChainLock); \
+        _bfSetp->accessFwd->setBwd = _bfap; \
+    _bfSetp->accessFwd = _bfap; \
+    mutex_unlock(&_bfSetp->accessChainLock); \
 }
 
 /*
@@ -315,27 +315,27 @@ extern bfSetT nilBfSet;
  * Otherwise, it is assumed that the caller has locked the
  * chain and will unlock it.
  */
-#define RM_ACC_SETLIST(bfap, lock_list) \
+#define RM_ACC_SETLIST(_bfap, _lock_list) \
 { \
-    bfSetT *bfSetp = bfap->bfSetp; \
-    KASSERT(BFSET_VALID(bfSetp)); \
-    if (lock_list) \
-        mutex_lock(&bfSetp->accessChainLock); \
+    bfSetT *_bfSetp = _bfap->bfSetp; \
+    KASSERT(BFSET_VALID(_bfSetp)); \
+    if (_lock_list) \
+        mutex_lock(&_bfSetp->accessChainLock); \
     else \
-        KASSERT(SLOCK_HOLDER(&bfSetp->accessChainLock.mutex)); \
-    KASSERT(bfap->setFwd != NULL); \
-    KASSERT(bfap->setBwd != NULL); \
-    if (bfSetp->accessFwd == bfap) \
-        bfSetp->accessFwd = bfap->setFwd; \
+        KASSERT(SLOCK_HOLDER(&_bfSetp->accessChainLock.mutex)); \
+    KASSERT(_bfap->setFwd != NULL); \
+    KASSERT(_bfap->setBwd != NULL); \
+    if (_bfSetp->accessFwd == _bfap) \
+        _bfSetp->accessFwd = _bfap->setFwd; \
     else \
-        bfap->setBwd->setFwd = bfap->setFwd; \
-    if (bfSetp->accessBwd == bfap) \
-        bfSetp->accessBwd = bfap->setBwd; \
+        _bfap->setBwd->setFwd = _bfap->setFwd; \
+    if (_bfSetp->accessBwd == _bfap) \
+        _bfSetp->accessBwd = _bfap->setBwd; \
     else \
-        bfap->setFwd->setBwd = bfap->setBwd; \
-    bfap->setFwd = bfap->setBwd = NULL; \
-    if (lock_list) \
-        mutex_unlock(&bfSetp->accessChainLock); \
+        _bfap->setFwd->setBwd = _bfap->setBwd; \
+    _bfap->setFwd = _bfap->setBwd = NULL; \
+    if (_lock_list) \
+        mutex_unlock(&_bfSetp->accessChainLock); \
 }
 
 statusT
