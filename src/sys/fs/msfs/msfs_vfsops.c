@@ -1380,7 +1380,7 @@ cleanup:
 			for (qip = &dn->qi[0]; qip < &dn->qi[MAXQUOTAS]; qip++) {
 				lock_terminate(&qip->qiLock);
 			}
-			advfs_mutex_destroy(&dn->filesetMutex);
+			mutex_destroy(&dn->filesetMutex);
 		}
 		if (on_fileset_list) {
 
@@ -1921,7 +1921,7 @@ msfs_unmount(
 	for (qip = &fsnp->qi[0]; qip < &fsnp->qi[MAXQUOTAS]; qip++) {
 		lock_terminate(&qip->qiLock);
 	}
-	advfs_mutex_destroy(&fsnp->filesetMutex);
+	mutex_destroy(&fsnp->filesetMutex);
 
 	KASSERT(fsnp->filesetMagic == FSMAGIC);
 	fsnp->filesetMagic |= MAGIC_DEALLOC;

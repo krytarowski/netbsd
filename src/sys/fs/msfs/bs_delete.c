@@ -1657,7 +1657,7 @@ cleanup:
 		for (qip = &fsnp->qi[0]; qip < &fsnp->qi[MAXQUOTAS]; qip++) {
 			lock_terminate(&qip->qiLock);
 		}
-		advfs_mutex_destroy(&fsnp->filesetMutex);
+		mutex_destroy(&fsnp->filesetMutex);
 
 		ms_free(fsnp);
 	}

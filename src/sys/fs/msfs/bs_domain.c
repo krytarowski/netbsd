@@ -3468,32 +3468,32 @@ vd_free(
 	KASSERT(vdp->tempQ.cnt == 0);
 
 	lk_destroy(&vdp->active);
-	advfs_mutex_destroy(&vdp->vdIoLock);
-	advfs_mutex_destroy(&vdp->vdStateLock);
-	advfs_mutex_destroy(&vdp->blockingQ.ioQLock);
-	advfs_mutex_destroy(&vdp->flushQ.ioQLock);
-	advfs_mutex_destroy(&vdp->ubcReqQ.ioQLock);
-	advfs_mutex_destroy(&vdp->waitLazyQ.ioQLock);
-	advfs_mutex_destroy(&vdp->readyLazyQ.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ0.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ1.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ2.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ3.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ4.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ5.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ6.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ7.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ8.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ9.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ10.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ11.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ12.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ13.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ14.ioQLock);
-	advfs_mutex_destroy(&vdp->smSyncQ15.ioQLock);
-	advfs_mutex_destroy(&vdp->consolQ.ioQLock);
-	advfs_mutex_destroy(&vdp->devQ.ioQLock);
-	advfs_mutex_destroy(&vdp->tempQ.ioQLock);
+	mutex_destroy(&vdp->vdIoLock);
+	mutex_destroy(&vdp->vdStateLock);
+	mutex_destroy(&vdp->blockingQ.ioQLock);
+	mutex_destroy(&vdp->flushQ.ioQLock);
+	mutex_destroy(&vdp->ubcReqQ.ioQLock);
+	mutex_destroy(&vdp->waitLazyQ.ioQLock);
+	mutex_destroy(&vdp->readyLazyQ.ioQLock);
+	mutex_destroy(&vdp->smSyncQ0.ioQLock);
+	mutex_destroy(&vdp->smSyncQ1.ioQLock);
+	mutex_destroy(&vdp->smSyncQ2.ioQLock);
+	mutex_destroy(&vdp->smSyncQ3.ioQLock);
+	mutex_destroy(&vdp->smSyncQ4.ioQLock);
+	mutex_destroy(&vdp->smSyncQ5.ioQLock);
+	mutex_destroy(&vdp->smSyncQ6.ioQLock);
+	mutex_destroy(&vdp->smSyncQ7.ioQLock);
+	mutex_destroy(&vdp->smSyncQ8.ioQLock);
+	mutex_destroy(&vdp->smSyncQ9.ioQLock);
+	mutex_destroy(&vdp->smSyncQ10.ioQLock);
+	mutex_destroy(&vdp->smSyncQ11.ioQLock);
+	mutex_destroy(&vdp->smSyncQ12.ioQLock);
+	mutex_destroy(&vdp->smSyncQ13.ioQLock);
+	mutex_destroy(&vdp->smSyncQ14.ioQLock);
+	mutex_destroy(&vdp->smSyncQ15.ioQLock);
+	mutex_destroy(&vdp->consolQ.ioQLock);
+	mutex_destroy(&vdp->devQ.ioQLock);
+	mutex_destroy(&vdp->tempQ.ioQLock);
 
 
 	lock_terminate(&vdp->stgMap_lk.lock);
@@ -5332,10 +5332,10 @@ dmn_dealloc(
 	BFSETTBL_LOCK_DESTROY(dmnP);
 	SC_TBL_LOCK_DESTROY(dmnP);
 	RMVOL_TRUNC_LOCK_DESTROY(dmnP);
-	advfs_mutex_destroy(&dmnP->mutex);
-	advfs_mutex_destroy(&dmnP->lsnLock);
-	advfs_mutex_destroy(&dmnP->vdpTblLock);
-	advfs_mutex_destroy(&dmnP->dmnFreezeMutex);
+	mutex_destroy(&dmnP->mutex);
+	mutex_destroy(&dmnP->lsnLock);
+	mutex_destroy(&dmnP->vdpTblLock);
+	mutex_destroy(&dmnP->dmnFreezeMutex);
 #ifdef ADVFS_SMP_ASSERT
 	lock_terminate(&dmnP->ftxSlotLock);
 #endif
