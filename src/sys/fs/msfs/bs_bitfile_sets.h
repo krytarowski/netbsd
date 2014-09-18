@@ -138,19 +138,6 @@ typedef struct slotPg {
  * bf set mgt
  ****************************************************************************/
 
-#ifdef ADVFS_BFSET_TRACE
-
-#define BFSET_TRACE_HISTORY 128
-
-typedef struct {
-	uint32T seq;
-	uint16T mod;
-	uint16T ln;
-	struct thread *thd;
-	void *val;
-}      bfsetTraceElmtT;
-#endif				/* ADVFS_BFSET_TRACE */
-
 typedef enum {
 	/* bitfile set states in bfSetT */
 	BFS_INVALID,
@@ -243,11 +230,6 @@ typedef struct bfSet {
 	uint32T bfSetFlags;	/* The high-order 16-bits of this field holds */
 	/* in-memory attributes and the low-order */
 	/* 16-bits holds on-disk flags */
-
-#ifdef ADVFS_BFSET_TRACE
-	uint32T trace_ptr;
-	bfsetTraceElmtT trace_buf[BFSET_TRACE_HISTORY];
-#endif				/* ADVFS_BFSET_TRACE */
 }     bfSetT;
 #endif				/* _KERNEL */
 
@@ -295,23 +277,6 @@ extern bfSetT nilBfSet;
 #define BFSET_HASH_INSERT( _bfSetp, _lock_action ) \
     (void)dyn_hash_insert( BfSetHashTbl, _bfSetp, _lock_action )
 
-
-#ifdef ADVFS_BFSET_TRACE
-
-#define BFSET_TRACE( bfsetp, n1 ) \
-    bfset_trace((bfsetp), (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void*)(n1))
-
-void
-bfset_trace(bfSetT * bfsetp,
-    uint16T module,
-    uint16T line,
-    void *value);
-
-#else				/* ADVFS_BFSET_TRACE */
-
-#define BFSET_TRACE( bfsetp, n1 )
-
-#endif				/* ADVFS_BFSET_TRACE */
 
 #define BS_MAX_CLONES 1
 

@@ -73,32 +73,6 @@
             ftxHT parentFtx,	/* in */
             uint32T * allocPageCnt);	/* out */
 
-#ifdef ADVFS_BFSET_TRACE
-	void
-	     bfset_trace(bfSetT * bfsetp,
-         uint16T module,
-         uint16T line,
-         void *value)
-{
-	register bfsetTraceElmtT *te;
-	extern kmutex_t TraceLock;
-	extern int TraceSequence;
-
-	simple_lock(&TraceLock);
-
-	bfsetp->trace_ptr = (bfsetp->trace_ptr + 1) % BFSET_TRACE_HISTORY;
-	te = &bfsetp->trace_buf[bfsetp->trace_ptr];
-	te->thd = (struct thread *) (((long) current_cpu() << 36) |
-	    (long) current_thread() & 0xffffffff);
-	te->seq = TraceSequence++;
-	te->mod = module;
-	te->ln = line;
-	te->val = value;
-
-	simple_unlock(&TraceLock);
-}
-#endif				/* ADVFS_BFSET_TRACE */
-
 /****************************************************************************
  * frag mgt
  ****************************************************************************/
@@ -2060,8 +2034,6 @@ bfs_alloc(
 	         * Set the dmnP to the current domain
 	         */
 		KASSERT(bfSetp->dmnP == dmnP);
-
-		BFSET_TRACE(bfSetp, 0);
 
 		/*
 	         * This set's descriptor is already cached in the table so
