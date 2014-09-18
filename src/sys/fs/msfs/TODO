@@ -4,25 +4,25 @@
 Tru64 ubc -> NetBSD UVM
 - ubc_load
 - CURRENT_UC()
-- CURRENT_UC()->ubc_pages
-- CURRENT_UC()->ubc_maxpages
-- CURRENT_UC()->vm_free_count
+- CURRENT_UC()->ubc_pages -> uvmexp.npages ?
+- CURRENT_UC()->ubc_maxpages  -> uvmexp.wiredmax ?
+- CURRENT_UC()->vm_free_count -> uvmexp.free ?
 - vm_ubc_object_t
 - ubc_fs_page_get
 - ubc_page_release
-- ubc_object_allocate
-- ubc_object_free
-- ubc_page_wait
+- ubc_object_allocate -> uvm_obj_init ?
+- ubc_object_free -> uvm_obj_destroy ?
+- ubc_page_wait -> uvm_wait ?
 - ubc_flags
 - ubc_load
-- ubc_lookup
+- ubc_lookup -> uvn_findpages ?
 - ubc_invalidate
 - ubc_flush_dirty
 - vm_policy_t
 - vm_offset_t
 - vm_size_t
 - vm_map_t
-- vm_map_pageable
+- vm_map_pageable -> uvm_map_pageable ?
 - vm_object_type
 - vm_object_lock
 - vm_object_unlock
