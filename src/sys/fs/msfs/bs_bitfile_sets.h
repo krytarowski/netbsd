@@ -26,11 +26,6 @@
 #ifndef _BS_BITFILE_SETS_
 #define _BS_BITFILE_SETS_
 
-#ifdef _KERNEL
-#if 0 /* XXX: missing */
-#endif
-#endif				/* _KERNEL */
-
 struct domain;
 
 /****************************************************************************
