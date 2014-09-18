@@ -2625,33 +2625,6 @@ fs_write_add_stg(
 	                 */
 			pgs_prealloc = MIN(pg_to_write / 4, AdvfsMaxPreallocPages);
 
-#if 0
-			/* CFS objected to any large preallocation increase,
-			 * because it might tickle a problem in CFS that would
-			 * be a standards violation, so the max preallocation
-			 * value was left at 16 and the following code is
-			 * currently commented out. We may revisit it later so
-			 * I am leaving it in here. */
-			/*
-	                 * CFS objected that the increased preallocation (from a
-	                 * max of 16 pages to a max of 256 pages) might lead to
-	                 * spurious ENOSPC conditions much more often. So we take
-	                 * some pains to reduce that possibility: if the domain is
-	                 * more than 90% full, reduce the preallocation to a max
-	                 * of 256 / 16 = 16 pages; if more than 80% full, reduce it
-	                 * to 256 / 8 = 32 pages, etc. In no case should the max preallocation
-	                 * fall below the AdvfsNotPickyBlkCnt (= 32 pages = 512 blocks).
-	                 */
-
-			if (dmnP->freeBlks < dmnP->totalBlks / 10)	/* less than 10% free */
-				pgs_prealloc = MIN(pgs_prealloc, AdvfsMaxPreallocPages / 16);
-			else if (dmnP->freeBlks < dmnP->totalBlks * 2 / 10)	/* less than 20 % free */
-				pgs_prealloc = MIN(pgs_prealloc, AdvfsMaxPreallocPages / 8);
-			else if (dmnP->freeBlks < dmnP->totalBlks * 3 / 10)	/* less than 30 % free */
-				pgs_prealloc = MIN(pgs_prealloc, AdvfsMaxPreallocPages / 4);
-			else if (dmnP->freeBlks < dmnP->totalBlks * 4 / 10)	/* less than 40 % free */
-				pgs_prealloc = MIN(pgs_prealloc, AdvfsMaxPreallocPages / 2);
-#endif
 			if (pgs_prealloc > pgs_to_add) {
 				pgs_to_add = pgs_prealloc;
 			}

@@ -1826,13 +1826,7 @@ msfs_ioctl(struct vnode * vp, int cmd, caddr_t data,
 			/* assess check specified for special customer release
 			 * is not used for test kernel so we can stress test
 			 * quotas */
-#if 0
-			if (suser(cred, NULL)) {	/* only root permitted
-							 * to read any block */
-				retval = EACCES;
-				break;
-			}
-#endif
+
 			if (!stg || stg->stgReserved != 0) {
 				retval = EINVAL;
 				break;

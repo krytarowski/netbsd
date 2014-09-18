@@ -45,12 +45,8 @@
 #include <fs/msfs/bs_stripe.h>
 #include <fs/msfs/bs_extents.h>
 #include <sys/syslog.h>
-#if 0 /* XXX: missing */
-#endif
 #include <fs/msfs/bs_stripe.h>
 #include <fs/msfs/bs_extents.h>
-#if 0 /* XXX: missing */
-#endif
 #include <fs/msfs/bs_msg_queue.h>
 
 #include <sys/stat.h>
@@ -4576,12 +4572,6 @@ HANDLE_EXCEPTION:
 
 		BFSETTBL_LOCK_WRITE(dmnP)
 		    lkLocked = TRUE;
-
-#if 0
-		if ((dmnP->freeBlks / (dmnP->totalBlks / 100)) < 5) {
-			RAISE_EXCEPTION(E_AVAIL_BLKS_TOO_LOW);
-		}
-#endif
 
 		sts = bs_get_bf_params(origSetp->dirBfAp, origDirParamsp, 0);
 		if (sts != EOK) {

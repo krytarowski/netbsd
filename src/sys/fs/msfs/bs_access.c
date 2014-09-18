@@ -26,16 +26,12 @@
 #endif
 #include <sys/param.h>
 #include <sys/mount.h>
-#if 0 /* XXX: MISSING */
-#endif
 
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/bs_delete.h>
 #include <fs/msfs/bs_extents.h>
 #include <fs/msfs/bs_stg.h>
-#if 0 /* XXX: missing */
-#endif
 #include <fs/msfs/fs_dir_routines.h>
 #include <fs/msfs/fs_file_sets.h>
 #include <fs/msfs/bs_index.h>
