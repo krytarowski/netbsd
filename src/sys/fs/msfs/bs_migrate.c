@@ -4533,30 +4533,6 @@ mig_pack_vd_range(
 
 		}		/* end while more files to get */
 	}			/* end if bits */
-#ifdef SS_DEBUG
-	/* now re-check and see if all bits are free */
-	sbm_bit_cnt = 0;
-	sts2 = sbm_scan(vdp, dstBlkOffset, cRangeEndBlk, &sbm_bit_cnt);
-	if (sts2 != EOK) {
-		goto _cleanup;
-	}
-	if (sbm_bit_cnt) {
-		if (vdp->freeMigRsvdStg.start_clust == 0) {
-			/* space used by system when out of space. - ok */
-			ms_printf("mig_pack_vd_range:: sbm_scan 2 vdIndex(%d) start(%ld) \
-end(%ld), inuse  sbm_bit_cnt==%d) sts==E_STOLEN_BY_SYSTEM\n",
-			    vdp->vdIndex, dstBlkOffset, cRangeEndBlk, sbm_bit_cnt);
-		} else {
-			/* The bmt may have been updated after vfast scan in
-			 * bmt_get_vd_bf_inway. - ok */
-			ms_printf("mig_pack_vd_range:: sbm_scan 2 vdIndex(%d) start(%ld) \
-end(%ld), inuse  sbm_bit_cnt==%d) sts==E_STOLEN_BY_SYSTEM\n",
-			    vdp->vdIndex, dstBlkOffset, cRangeEndBlk, sbm_bit_cnt);
-		}
-		sts = E_RANGE_NOT_CLEARED;
-		goto _cleanup;
-	}
-#endif
 
 	*newcRangeBeginBlk = dstBlkOffset;
 	SS_TRACE(vdp, 0, 0, 0, dstBlkOffset);

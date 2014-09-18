@@ -3136,9 +3136,6 @@ err_deref:
 	*outbfap = NULL;
 	return sts;
 }
-#ifdef DEBUG
-int xxx_vnode_cnt = 0;
-#endif
 
 /******************************************************************
 ***************** internal utility routines **********************
@@ -3164,17 +3161,6 @@ get_n_setup_new_vnode(
 	bfSetIdT bfSetId;
 
 	KASSERT(lk_get_state(bfap->stateLk) == ACC_INIT_TRANS);
-
-#ifdef DEBUG
-	if (xxx_vnode_cnt) {
-		if (xxx_vnode_cnt == 1) {
-			*nvp = 0;
-			return ENFILE;
-		} else {
-			xxx_vnode_cnt--;
-		}
-	}
-#endif
 
 	vp = *nvp;
 	if (!vp) {

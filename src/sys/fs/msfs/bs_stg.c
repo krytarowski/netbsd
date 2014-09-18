@@ -1192,10 +1192,6 @@ rbf_add_stg(
  * FIX - how does this function interact with shadow and migrate??
  */
 
-#ifdef DEBUG
-static int stg_verbose = 0;
-#endif
-
 statusT
 stg_add_stg(
     ftxHT parentFtx,		/* in */
@@ -1278,13 +1274,6 @@ stg_add_stg_no_cow(
 	addStgUndoRecT undoRec;
 	bsInMemXtntT *xtnts;
 	int xtntMap_locked = 0;
-
-#ifdef DEBUG
-	if (stg_verbose) {
-		printf("stg_add_stg: bfPageOffset=0x%x bfPageCnt=0x%x\n",
-		    bfPageOffset, bfPageCnt);
-	}
-#endif
 
 	if (bfPageCnt == 0) {
 		/*

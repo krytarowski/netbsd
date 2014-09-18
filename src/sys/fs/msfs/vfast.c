@@ -182,12 +182,6 @@ void
 void
 ss_dealloc_pack_list(vdT * vdp);
 
-#ifdef SS_DEBUG
-void
-print_pack_list(ssPackHdrT * php,
-    vdT * vdp);
-#endif
-
 statusT
 ss_block_and_wait(vdT * vdp);
 
@@ -293,11 +287,6 @@ ss_insert_frag_onto_list(vdIndexT vdi,
     uint64T fragRatio,		/* primary sort in list */
     uint32T xtntCnt);		/* secondary sort in list */
 
-#ifdef SS_DEBUG
-static void
-print_frag_list(vdT * vdp);
-#endif
-
 static void
 ss_dealloc_frag_list(vdT * vdp);
 
@@ -316,14 +305,6 @@ static void
 static void
 ss_insert_hot_list(ssListMsgTypeT msgType,
     ssHotLLT * hp);
-
-#ifdef SS_DEBUG
-static void
-ss_sleep(int retry);
-
-static void
-print_hot_list(ssHotHdrT * hhp);
-#endif
 
 static void
      ss_del_from_hot_list(ssHotLLT * hp);
@@ -2031,22 +2012,6 @@ ss_trace(vdT * vdp,
 #endif				/* ADVFS_SS_TRACE */
 
 
-#ifdef SS_DEBUG
-void
-ss_sleep(int retry)
-{
-	printf("ss_xxx_thd_pool: thd 0x%x going to sleep\n",
-	    (int) (current_thread()->thread_self));
-	while (retry) {
-		timeout((void (*) (void *)) wakeup, &retry, 1 * hz);
-		(void) mpsleep(&retry, PZERO, (char *) NULL, 0, (void *) NULL, 0);
-		retry--;
-	}
-	printf("ss_xxx_thd_pool: thd 0x%x waking from sleep\n",
-	    (int) (current_thread()->thread_self));
-}
-#endif
-
 /*********** end of debug routines  ****************/
 
 /********   start of frag list routines  *******/
@@ -2245,9 +2210,6 @@ ss_chk_fragratio(
 	}
 	mutex_lock(&bfap->dmnP->ssDmnInfo.ssDmnLk);
 	bfap->dmnP->ssDmnInfo.ssDmnListMsgSendCnt++;
-#ifdef DEBUG
-	bfap->dmnP->ssDmnInfo.ssDmnMsgSendAttmptCntFrag++;
-#endif
 	mutex_unlock(&bfap->dmnP->ssDmnInfo.ssDmnLk);
 
 HANDLE_EXCEPTION:
@@ -2535,56 +2497,6 @@ ss_dealloc_frag_list(vdT * vdp)
 	mutex_unlock(&vdp->ssVolInfo.ssFragLk);
 	return;
 }
-#ifdef SS_DEBUG
-/* DEBUG
- * important - hold lock while calling or can end up in infinite loop
- */
-void
-print_frag_list(vdT * vdp)
-{				/* in  */
-	ssFragLLT *fp;		/* entry pointer */
-	ssFragHdrT *fhp;
-
-	KASSERT(vdp);
-	fhp = &vdp->ssVolInfo.ssFragHdr;
-	KASSERT(fhp);
-
-	/* check for a null list first! */
-	if (fhp->ssFragListCnt == 0) {
-		printf("FRAG LIST: dmn(%d) vdIndex(%d) count(%d) fhp(0x%x) EMPTY!\n",
-		    vdp->dmnP->domainName, vdp->vdIndex, fhp->ssFragListCnt, fhp);
-		return;
-	}
-	/* test forward */
-	fp = fhp->ssFragRatFwd;
-	printf("FRAG LIST: dmn(%d) vdIndex(%d) count(%d) fhp(0x%x)\n",
-	    vdp->dmnP->domainName, vdp->vdIndex, fhp->ssFragListCnt, fhp);
-	while (fp != (ssFragLLT *) fhp) {
-		printf("ENTRY: ssFragTag(0x%x)(0x%x) set(0x%x)(0x%x) ssFragRatio(%ld) ssXtntCnt(%d), fp(0x%x) Fwd(0x%x) Bwd(0x%x)\n",
-		    (int) fp->ssFragTag.num,
-		    (int) fp->ssFragTag.seq,
-		    fp->ssFragBfSetId.dirTag.num,
-		    fp->ssFragBfSetId.dirTag.seq,
-		    fp->ssFragRatio,
-		    fp->ssXtntCnt,
-		    fp,
-		    fp->ssFragRatFwd,
-		    fp->ssFragRatBwd);
-		if (fp->ssFragRatFwd == NULL)
-			break;
-		fp = fp->ssFragRatFwd;
-	}
-	/* test backward */
-	fp = fhp->ssFragRatBwd;
-	while (fp != (ssFragLLT *) fhp) {
-		if (fp->ssFragRatBwd == NULL)
-			break;
-		fp = fp->ssFragRatBwd;
-	}
-	printf("FRAG LIST: done\n");
-	return;
-}
-#endif
 
 /********   end of frag list routines  *******/
 
@@ -2628,44 +2540,6 @@ ss_dealloc_pack_list(vdT * vdp)
 	    (struct ssPackEntry *) (&vdp->ssVolInfo.ssPackHdr));
 	return;
 }
-#ifdef SS_DEBUG
-void
-print_pack_list(ssPackHdrT * php,	/* list head */
-    vdT * vdp)
-{				/* in  */
-	ssPackLLT *p;		/* entry pointer */
-
-	KASSERT(vdp);
-	KASSERT(php);
-
-	/* check for a null list first! */
-	if (php->ssPackListCnt == 0) {
-		printf("PACK LIST: dmn(%d) vdIndex(%d) count(%d) EMPTY!\n",
-		    vdp->dmnP->domainName, vdp->vdIndex, php->ssPackListCnt);
-		return;
-	}
-	p = php->ssPackFwd;
-	printf("PACK LIST: dmn(%d) vdIndex(%d) count(%d)\n",
-	    vdp->dmnP->domainName, vdp->vdIndex, php->ssPackListCnt);
-	while (p != (ssPackLLT *) php) {
-
-		printf("ENTRY: Tag(0x%x)(0x%x) Set(0x%x)(0x%x) pageOff(%d) \
-pageCnt(%d) BlkStart(%ld) BlkEnd(%ld)\n",
-		    (int) p->ssPackTag.num,
-		    (int) p->ssPackTag.seq,
-		    p->ssPackBfSetId.dirTag.num,
-		    p->ssPackBfSetId.dirTag.seq,
-		    p->ssPackPageOffset,
-		    p->ssPackPageCnt,
-		    p->ssPackStartXtBlock,
-		    p->ssPackEndXtBlock);
-		if (p->ssPackFwd == NULL)
-			break;
-		p = p->ssPackFwd;
-	}
-	printf("PACK LIST: done\n");
-}
-#endif
 
 /********   end of pack list routines  *******/
 
@@ -3273,50 +3147,6 @@ ss_chk_hot_list(domainT * dmnP,	/* in */
 	mutex_unlock(&dmnP->ssDmnInfo.ssDmnHotLk);
 	return (-1);
 }
-#ifdef SS_DEBUG
-/* DEBUG ONLY */
-void
-print_hot_list(ssHotHdrT * hhp)
-{
-	ssHotLLT *hp;		/* entry pointer */
-
-	if (hhp->ssHotListCnt == 0) {
-		printf("HOT LIST: hhp(0x%x) list is EMPTY!\n", hhp);
-		return;
-	}
-	printf("HOT LIST: Cnt(%d)\n", hhp->ssHotListCnt);
-
-	hp = hhp->ssHotFwd;
-	while (hp != (ssHotLLT *) hhp) {
-
-		printf("ENTRY:(%d) tag(0x%x) set(0x%x):: IOCnts(%d)(%d)(%d)(%d)(%d)(%d)(%d))\n",
-		    hp->ssHotVdi,
-		    (int) hp->ssHotTag.num,
-		    hp->ssHotBfSetId.dirTag.num,
-		    hp->ssHotIOCnt[0],
-		    hp->ssHotIOCnt[1],
-		    hp->ssHotIOCnt[2],
-		    hp->ssHotIOCnt[3],
-		    hp->ssHotIOCnt[4],
-		    hp->ssHotIOCnt[5],
-		    hp->ssHotIOCnt[6]);
-
-		printf("         updtim(%d) enttim(%d) errtim(%d) hp(0x%x) Fwd(0x%x) Bwd(0x%x)\n",
-		    hp->ssHotLastUpdTime,
-		    hp->ssHotEntryTime,
-		    hp->ssHotErrTime,
-		    hp,
-		    hp->ssHotFwd,
-		    hp->ssHotBwd);
-
-		if (hp->ssHotFwd == NULL)
-			break;
-		hp = hp->ssHotFwd;
-	}
-	printf("HOT LIST: done\n");
-}
-#endif
-
 
 /*********************************************************************
  *
@@ -3699,10 +3529,6 @@ ss_move_file(vdIndexT vdi,	/* in */
 		    msgType,
 		    BS_ALLOC_MIG_SINGLEXTNT
 		    );
-#ifdef SS_DEBUG
-		printf("ss_vd_migrate:(hotfile) vd(%d) tag(%d.%d) returns sts=%d\n",
-		    svdp->vdIndex, bfSetId.dirTag.num, filetag.num, sts);
-#endif
 		/* ENO_SUCH_TAG indicates file was deleted E_NO_SUCH_BF_SET
 		 * indicates fileset is being deleted by another thread
 		 * ENO_MORE_BLKS indicates not enough space to finish migrate
@@ -3784,10 +3610,7 @@ ss_move_file(vdIndexT vdi,	/* in */
 		    msgType,
 		    alloc_hint
 		    );
-#ifdef SS_DEBUG
-		printf("ss_vd_migrate: vd(%d) tag(%d.%d) returns sts=%d\n",
-		    svdp->vdIndex, bfSetId.dirTag.num, filetag.num, sts);
-#endif
+
 		/* ENO_SUCH_TAG indicates file was deleted E_NO_SUCH_BF_SET
 		 * indicates fileset is being deleted by another thread
 		 * ENO_MORE_BLKS indicates not enough space to finish migrate
@@ -4526,11 +4349,7 @@ ss_vd_migrate(bfTagT filetag,
 	    &allocBlkOffset,
 	    &allocPageCnt,
 	    alloc_hint);
-#ifdef SS_DEBUG
-	printf("ss_get_n_lk_free_space:vd(%d) tag(%d.%d) returns reqPageCnt(%d) allocPageCnt(%d) sts=%d\n",
-	    dvdp->vdIndex, ((bfSetT *) bfap->bfSetp)->dirTag.num,
-	    bfap->tag.num, reqPageCnt, allocPageCnt, sts);
-#endif
+
 	if (sts != EOK) {
 		RAISE_EXCEPTION(sts);
 	}
@@ -4559,11 +4378,7 @@ ss_vd_migrate(bfTagT filetag,
 		    &xmTotalPageCnt,
 		    &extentCnt,
 		    SS_PARENT, 0, 0, 0);
-#ifdef SS_DEBUG
-		printf("ss_get_most_xtnts: tag(%d.%d) returns extentCnt=%d, sts=%d\n",
-		    ((bfSetT *) bfap->bfSetp)->dirTag.num,
-		    bfap->tag.num, extentCnt, sts);
-#endif
+
 		if (xtntmap_locked) {
 			XTNMAP_UNLOCK(&(bfap->xtntMap_lk));
 			xtntmap_locked = FALSE;
@@ -4626,10 +4441,6 @@ ss_vd_migrate(bfTagT filetag,
 		    BS_ALLOC_MIG_RSVD
 		    );
 		if (sts != EOK) {
-#ifdef SS_DEBUG
-			printf("bs_migrate: vd(%d) tag(%d.%d) returns sts=%d\n",
-			    dstVdIndex, bfap->bfSetp->bfSetId.dirTag.num, bfap->tag.num, sts);
-#endif
 			/*
 	                 E_PAGE_NOT_MAPPED:
 	                     if page(s) have been moved or truncd by another thread, an

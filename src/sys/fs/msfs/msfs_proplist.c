@@ -68,20 +68,6 @@ extern struct sec_prop_attrs *sec_proplist(char *);
  * MACROS
  */
 
-/*
- * debugging
- */
-#ifdef ADVFS_PROPLIST_DEBUG
-int MsfsPlTraceLevel = 0;
-#define DEBUG(level, action) \
-MACRO_BEGIN			\
-	if ((MsfsPlTraceLevel>=level))		\
-            (action);		\
-MACRO_END
-#else
-#define DEBUG(level, action)
-#endif				/* ADVFS_PROPLIST_DEBUG */
-
 
 /*
  * name/value limits
