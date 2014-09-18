@@ -251,58 +251,6 @@ static statusT check_xtnts(bsXtntT *, uint16T, bfAccessT *, vdT *);
 
 static statusT test_mcell_ptr(vdIndexT, bfMCIdT, bfTagT, domainT *);
 
-
-#ifdef ADVFS_MCELL_TRACE
-#define MCELL_TRACE_HISTORY 128
-/* MCELL_TRACE_NUM_BUCKETS must be a power of 2 */
-#define MCELL_TRACE_NUM_BUCKETS 8
-typedef struct {
-	uint32T seq;
-	uint16T mod;
-	uint16T ln;
-	struct thread *thd;
-	uint16T vdi;
-	uint32T page;
-	uint16T mcidx;
-	void *val;
-}      mcellTraceElmtT;
-
-typedef struct {
-	int mcTracePtr;
-	mcellTraceElmtT mcTraceBuf[MCELL_TRACE_HISTORY];
-}      mcellTraceT;
-
-mcellTraceT McellTrace[MCELL_TRACE_NUM_BUCKETS];
-
-void
-mcell_trace(uint16T vdi, uint32T pg, uint16T mcidx,
-    uint16T module, uint16T line, void *value)
-{
-	register mcellTraceElmtT *mtep;
-	extern kmutex_t TraceLock;
-	extern int TraceSequence;
-	mcellTraceT *mtp;
-
-	simple_lock(&TraceLock);
-
-	mtp = &McellTrace[pg & (MCELL_TRACE_NUM_BUCKETS - 1)];
-	mtp->mcTracePtr = (mtp->mcTracePtr + 1) % MCELL_TRACE_HISTORY;
-	mtep = &mtp->mcTraceBuf[mtp->mcTracePtr];
-	mtep->thd = (struct thread *) (((long) current_cpu() << 36) |
-	    (long) current_thread() & 0xffffffff);
-	mtep->seq = TraceSequence++;
-	mtep->mod = module;
-	mtep->ln = line;
-	mtep->page = pg;
-	mtep->vdi = vdi;
-	mtep->mcidx = mcidx;
-	mtep->val = value;
-
-	simple_unlock(&TraceLock);
-}
-#endif
-
-
 /*
  * init metadata bitfile page
  *

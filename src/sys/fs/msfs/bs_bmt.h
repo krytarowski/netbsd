@@ -33,7 +33,7 @@
 
 #ifdef _KERNEL
 
-struct bsMPg *get_bmt_pgptr(void);
+struct bsMPg *get_bmt_pgptr(domainT * dmnP);
 
 statusT
 bmt_set_mcell_free_list(
@@ -45,19 +45,6 @@ typedef enum {
 	RBMT_MCELL,
 	BMT_NORMAL_MCELL_PAGE
 }    mcellPoolT;
-#ifdef ADVFS_MCELL_TRACE
-
-void mcell_trace(uint16T, uint32T, uint16T, uint16T, uint16T, void *);
-
-#define MCELL_TRACE(_v, _p, _c, _value) \
-    mcell_trace((uint16T)(_v), (uint32T)(_p), (uint16T)(_c), \
-                (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void*)(_value))
-
-#else				/* ADVFS_MCELL_TRACE */
-
-#define MCELL_TRACE(_v, _p, _c, _value)
-
-#endif				/* ADVFS_MCELL_TRACE */
 
 statusT
 bmt_alloc_prim_mcell(
