@@ -97,7 +97,6 @@ extern void bs_lock_mgr_init(void);
 krwlock_t InitLock;
 event_t MsfsDbgEvent;
 
-struct lockinfo *ADVInitLock_info;
 
 #define INITLOCK_LOCK_WRITE(Lk) \
         lock_write( Lk );
@@ -366,7 +365,6 @@ bs_kernel_pre_init(void)
 	);
 #ifdef ADVFS_DEBUG
 	extern mutexT LockMgrMutex;
-	extern struct lockinfo *msfs_lockmgrmutex_lockinfo;
 	/*
          * Initialize the Lock Mgr's mutex.
          */
@@ -430,7 +428,6 @@ bs_kernel_init(int doingRoot)
 /* vnodes. They can move to vm_mem_init (earier than vfs_init) if object or */
 /* vm page tracing is added. */
 kmutex_t TraceLock;
-struct lockinfo *TraceLock_info;
 int TraceSequence;
 
 void

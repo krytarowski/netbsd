@@ -178,22 +178,11 @@ extern int vm_managed_pages;
 extern ulong access_structures_allocated;
 extern msgQHT CleanupMsgQH;
 
-struct lockinfo *ADVbfAccessT_xtntMap_lk_info;
-struct lockinfo *ADVbfAccessT_mcellList_lk_info;
-struct lockinfo *ADV_BMT_bfAccessT_mcellList_lk_info;
-struct lockinfo *ADV_BMT_bfAccessT_xtntMap_lk_info;
-struct lockinfo *ADVbfAccessT_trunc_xfer_lk_info;
-struct lockinfo *ADVbfAccessT_cow_lk_info;
-struct lockinfo *ADVbfAccessT_clu_clonextnt_lk_info;
-struct lockinfo *ADVbsInMemXtntT_migTruncLk_info;
-struct lockinfo *ADVClonebsInMemXtntT_migTruncLk_info;
-struct lockinfo *ADVbfAccessT_mss_lk_info;
 	struct bfAccessHdr FreeAcc;
 	struct bfAccessHdr ClosedAcc;
 
 /* This is the dynamic hashtable for bs access structures */
 	void *BsAccessHashTbl;
-	struct lockinfo *ADVBfAccessHashChainLock_lockinfo;
 
 	extern int wait_for_vxlock2(struct vnode *, int, int);
 

@@ -73,7 +73,6 @@ copy_frag_into_page(
     char *bufAddr		/* in */
 );
 
-struct lockinfo *ADVfsContext_file_lock_info;
 /*
  * osf_fd_to_bfap
  *

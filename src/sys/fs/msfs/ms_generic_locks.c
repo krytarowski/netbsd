@@ -307,7 +307,6 @@ mutex_init3(
     mutexT * mp,		/* in - mutex */
     int num_cvs,		/* in - number of condition variables */
     char *name,			/* in - name of mutex */
-    struct lockinfo * mp_lockinfo	/* out - the lockinfo for mp */
 )
 {
 #ifdef ADVFS_DEBUG

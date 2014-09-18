@@ -59,8 +59,6 @@
 
 #define RBF_PIN_FIELD( h, f ) rbf_pin_record( h, &(f), sizeof( f ) )
 
-	struct lockinfo *ADVbfSetT_dirLock_info;
-	struct lockinfo *ADVbfSetT_fragLock_info;
 
 /*
  * These can be patched via DBX on-the-fly.  Can go in sysconfigtab
@@ -1818,7 +1816,6 @@ static mutexT LookupMutex;	/* protects the insertion/deletion of desc */
 
 /* This is the dynamic hashtable for BfSet access structures */
 void *BfSetHashTbl;
-struct lockinfo *ADVBfSetHashChainLock_lockinfo;
 
 
 
@@ -4627,7 +4624,6 @@ HANDLE_EXCEPTION:
 		char *origPgp, *clonePgp;
 		uint32T pg;
 		bfParamsT cloneDirParams;
-		extern struct lockinfo *ADVClonebsInMemXtntT_migTruncLk_info;
 
 		         sts = bs_get_bf_params(cloneSetp->dirBfAp, &cloneDirParams, 0);
 		if       (sts != EOK) {

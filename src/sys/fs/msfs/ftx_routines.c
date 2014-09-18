@@ -2779,7 +2779,6 @@ void
 ftx_lock_init(
     ftxLkT * lk,		/* in - pointer to the lock */
     mutexT * mutex,		/* in - pointer to the lock's mutex */
-    struct lockinfo * Plinfo	/* in - the lockinfo for this lock class */
 )
 {
 	lkHdrT *lkHdr = (lkHdrT *) lk;

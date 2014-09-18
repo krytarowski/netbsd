@@ -154,8 +154,6 @@ extern void advfs_range_init(void);
  */
 
 krwlock_t FilesetLock;
-struct lockinfo *ADVFilesetLock_lockinfo;
-struct lockinfo *ADVquotaInfoT_qiLock;
 
 /*
  *  msfs_mountroot - AdvFS mount root routine
