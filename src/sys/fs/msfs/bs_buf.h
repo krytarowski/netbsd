@@ -28,19 +28,6 @@
 /* XXX: comment with bsBuf to be investigated */
 typedef struct vm_page *vm_page_t;	/*  so bsBuf stays the same size */
 
-#ifdef ADVFS_BSBUF_TRACE
-
-#define BSBUF_TRACE_HISTORY 100
-
-typedef struct {
-	uint32T seq;
-	uint16T mod;
-	uint16T ln;
-	struct thread *thd;
-	void *val;
-}      bsbufTraceElmtT;
-#endif				/* ADVFS_BSBUF_TRACE */
-
 /* This macro sets the upper 28 bits with the line number, and the lower
  * 36 bits with the thread id.
  */
@@ -120,24 +107,7 @@ struct bsBuf {
 	short ioCount;		/* number of outstanding I/O's */
 	ioListT ioList;		/* buffer's block map info */
 	ioDescT ioDesc;		/* if buf has one ioDesc, this is it */
-
-#ifdef ADVFS_BSBUF_TRACE
-	int trace_ptr;
-	bsbufTraceElmtT trace_buf[BSBUF_TRACE_HISTORY];
-#endif
 };
-#ifdef ADVFS_BSBUF_TRACE
-void
-bsbuf_trace(struct bsBuf * bp,
-    uint16T module,
-    uint16T line,
-    void *value);
-
-#define BSBUF_TRACE( bp, n1 ) \
-    bsbuf_trace((bp), (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void *)(n1))
-#else
-#define BSBUF_TRACE( bp, n1 )
-#endif
 
 #define BUFIODESC 1		/* How many ioDesc bsBuf contains */
 
