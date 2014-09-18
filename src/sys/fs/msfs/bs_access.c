@@ -188,11 +188,6 @@ struct lockinfo *ADVbfAccessT_clu_clonextnt_lk_info;
 struct lockinfo *ADVbsInMemXtntT_migTruncLk_info;
 struct lockinfo *ADVClonebsInMemXtntT_migTruncLk_info;
 struct lockinfo *ADVbfAccessT_mss_lk_info;
-decl_simple_lock_info(, ADVBfAccessTraceMutex_lockinfo)
-decl_simple_lock_info(, ADVBfAccessbfaLock_lockinfo)
-decl_simple_lock_info(, ADVBfAccessFreeLock_lockinfo)
-decl_simple_lock_info(, ADVBfAccessbfIoLock_lockinfo)
-decl_simple_lock_info(, ADVBfactRangeLock_info)
 	struct bfAccessHdr FreeAcc;
 	struct bfAccessHdr ClosedAcc;
 

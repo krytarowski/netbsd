@@ -74,7 +74,6 @@ copy_frag_into_page(
 );
 
 struct lockinfo *ADVfsContext_file_lock_info;
-decl_simple_lock_info(, ADVfsContext_mutex_lockinfo)
 /*
  * osf_fd_to_bfap
  *

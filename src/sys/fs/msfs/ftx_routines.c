@@ -90,7 +90,6 @@ ftxProfT AgentProfStats[FTX_MAX_AGENTS];
 /* Ftx stats collection can be turned on in dbx by setting FtxStats to 1. */
 int FtxStats = 0;
 
-decl_simple_lock_info(, ADVFtxMutex_lockinfo)
 /* global type to set default ftx behavior sync or async */
 
 	logWriteModeT FtxDoneMode = LW_ASYNC;

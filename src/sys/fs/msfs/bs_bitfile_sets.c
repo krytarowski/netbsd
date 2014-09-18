@@ -59,11 +59,6 @@
 
 #define RBF_PIN_FIELD( h, f ) rbf_pin_record( h, &(f), sizeof( f ) )
 
-decl_simple_lock_info(, ADVbfSetT_setMutex_lockinfo)
-decl_simple_lock_info(, ADVbfSetT_accessChainLock_lockinfo)
-decl_simple_lock_info(, ADVLookupMutex_lockinfo)
-decl_simple_lock_info(, ADVbfSetT_cloneDelStateMutex_lockinfo)
-decl_simple_lock_info(, ADVbfSetT_bfSetMutex_lockinfo)
 	struct lockinfo *ADVbfSetT_dirLock_info;
 	struct lockinfo *ADVbfSetT_fragLock_info;
 

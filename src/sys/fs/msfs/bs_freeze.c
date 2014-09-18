@@ -96,7 +96,6 @@ void
   *  AdvfsFreezeMsgs is used for communication between the AdvFS vfsop and
   *  the freezefs background thread.
   */
-decl_simple_lock_info(, ADVFreezeMsgs_lockinfo)
 	mutexT AdvfsFreezeMsgsLock;
 	advfsFreezeMsgT *AdvfsFreezeMsgs = NULL;	/* List of freeze
 							 * messages */

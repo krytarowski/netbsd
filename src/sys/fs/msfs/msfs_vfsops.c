@@ -157,8 +157,6 @@ krwlock_t FilesetLock;
 struct lockinfo *ADVFilesetLock_lockinfo;
 struct lockinfo *ADVquotaInfoT_qiLock;
 
-decl_simple_lock_info(, ADVfilesetMutex_lockinfo)
-decl_simple_lock_info(, msfs_lockmgrmutex_lockinfo)
 /*
  *  msfs_mountroot - AdvFS mount root routine
  *
