@@ -597,7 +597,7 @@ ftx_lock_write(
     ftxLkT * lk,		/* in */
     ftxHT ftxH,			/* in */
     int ln,			/* in */
-    char *fn			/* in */
+    const char *fn			/* in */
 );
 
 void
@@ -605,7 +605,7 @@ ftx_lock_read(
     ftxLkT * lk,		/* in */
     ftxHT ftxH,			/* in */
     int ln,			/* in */
-    char *fn			/* in */
+    const char *fn			/* in */
 );
 
 void
@@ -613,7 +613,7 @@ _ftx_add_lock(
     ftxLkT * lk,		/* in */
     ftxHT ftxH,			/* in */
     int ln,			/* in */
-    char *fn			/* in */
+    const char *fn			/* in */
 );
 
 #endif				/* FTX_PUBLIC */
