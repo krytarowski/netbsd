@@ -511,7 +511,6 @@ limits_of_active_range(
     if (bfap->saved_stats) { \
         ClosedAcc.saved_stats_len++; \
     } \
-    ACCMAX(ClosedAcc); \
     mutex_unlock(&BfAccessFreeLock); \
 }
 
@@ -578,7 +577,6 @@ limits_of_active_range(
     } \
     bfap->onFreeList = 1; \
     FreeAcc.len++; \
-    ACCMAX(FreeAcc); \
     if (!advfs_shutting_down && \
         ((NumAccess > MaxAccess) || \
          ((NumAccess > AdvfsMinAccess)  && \
@@ -608,14 +606,12 @@ limits_of_active_range(
         KASSERT(FreeAcc.len > 0); \
         FreeAcc.len--; \
         KASSERT(bfap->dirtyBufList.length == 0); \
-        ACCMIN(FreeAcc); \
     } else { \
         KASSERT(ClosedAcc.len > 0); \
         ClosedAcc.len--; \
         if (bfap->saved_stats) { \
             ClosedAcc.saved_stats_len--; \
         } \
-        ACCMIN(ClosedAcc); \
     } \
     bfap->onFreeList = 0; \
 }
@@ -662,8 +658,5 @@ limits_of_active_range(
     } \
     mutex_unlock(&BfAccessFreeLock); \
 }
-
-#define ACCMAX(accHdr)
-#define ACCMIN(accHdr)
 
 #endif				/* _ACCESS_H_ */
