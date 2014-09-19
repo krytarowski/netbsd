@@ -4354,7 +4354,7 @@ seq_ahead_cont(
 		 * in the file, nor the preset limit for # of buffers to use
 		 * for one read-ahead. */
 		maxPages = AdvfsReadAheadNumIOs * howmany(rdmaxio, ADVFS_PGSZ_IN_BLKS);
-		maxPages = MIN(maxPages, (CURRENT_UC()->ubc_maxpages / (100 / AdvfsReadAheadMaxBufPercent)));
+		maxPages = MIN(maxPages, (uvmexp.ubc_maxpages / (100 / AdvfsReadAheadMaxBufPercent)));
 
 		/* Don't try to read-ahead past the end of the file, and don't
 		 * read-ahead into a frag page. */
@@ -4495,7 +4495,7 @@ seq_ahead_start(
 	/* Don't allow this read-ahead to use up all the buffer-pool buffers,
 	 * particularly when the disk can do large transfers, but the buffer
 	 * pool is relatively small. */
-	maxPages = MIN(maxPages, (CURRENT_UC()->ubc_maxpages / (100 / AdvfsReadAheadMaxBufPercent)));
+	maxPages = MIN(maxPages, (uvmexp.ubc_maxpages / (100 / AdvfsReadAheadMaxBufPercent)));
 
 	/* Don't try to read-ahead past the end of the file, and don't
 	 * read-ahead into a frag page. */

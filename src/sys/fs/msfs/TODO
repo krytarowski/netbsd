@@ -3,7 +3,7 @@
 
 Tru64 ubc -> NetBSD UVM
 - ubc_load
-- CURRENT_UC()
+- CURRENT_UC() -> uvmexp (extern from uvm_extern.h)
 - CURRENT_UC()->ubc_pages -> uvmexp.npages ?
 - CURRENT_UC()->ubc_maxpages  -> uvmexp.wiredmax ?
 - CURRENT_UC()->vm_free_count -> uvmexp.free ?

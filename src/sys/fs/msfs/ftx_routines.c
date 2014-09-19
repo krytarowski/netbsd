@@ -2893,7 +2893,7 @@ ftx_init(void)
 	 * of pages pinned per transaction is defined by FTX_TOTAL_PINS, we
 	 * can use this value to scale the number of ftx structures to
 	 * allocate. The '+ 2' allows for pages not under ftx control. */
-	FtxDynAlloc.maxAllowed = CURRENT_UC()->ubc_maxpages / (FTX_TOTAL_PINS + 2);
+	FtxDynAlloc.maxAllowed = uvmexp.ubc_maxpages / (FTX_TOTAL_PINS + 2);
 
 }
 /*

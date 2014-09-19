@@ -341,9 +341,9 @@ set_block_map(
          */
 
 	maxMigrateUbcPgs = MIN(32 * (copyXferSize / 16),
-	    MIN(CURRENT_UC()->ubc_maxpages / 4,
-		MIN((CURRENT_UC()->ubc_pages +
-			CURRENT_VC()->vm_free_count) / 4, MAX_COPY_XFER_SIZE)));
+	    MIN(uvmexp.ubc_maxpages / 4,
+		MIN((uvmexp.ubc_pages +
+			uvmexp.vm_free_count) / 4, MAX_COPY_XFER_SIZE)));
 
 	for (i = bfPageOffset; i < (bfPageOffset + bfPageCnt); i++) {
 
