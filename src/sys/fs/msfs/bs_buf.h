@@ -362,19 +362,19 @@ void
 set_state(
     struct bsBuf * bp,		/* in */
     int ln,			/* in */
-    uint32T state		/* in */
+    uint32_t state		/* in */
 );
 
 void
 wait_state(
     struct bsBuf * bp,		/* in */
-    uint32T state		/* in */
+    uint32_t state		/* in */
 );
 
 void
 clear_state(
     struct bsBuf * bp,		/* in */
-    uint32T state		/* in */
+    uint32_t state		/* in */
 );
 
 void

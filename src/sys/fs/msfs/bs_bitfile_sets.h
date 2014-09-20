@@ -87,14 +87,14 @@ struct domain;
 /* per group header */
 
 typedef struct grpHdr {
-	uint32T nextFreeFrag;	/* frag index (valid only when "version == 0") */
-	uint32T lastFreeFrag;	/* frag index (valid only when "version == 0") */
+	uint32_t nextFreeFrag;	/* frag index (valid only when "version == 0") */
+	uint32_t lastFreeFrag;	/* frag index (valid only when "version == 0") */
 	/* If version is 1, value will be either */
 	/* BF_FRAG_EOF (normally) or else */
 	/* BF_FRAG_BAD_GROUP if internal free list */
 	/* corruption has been detected */
-	uint32T nextFreeGrp;	/* page number */
-	uint32T self;		/* this group's starting page number */
+	uint32_t nextFreeGrp;	/* page number */
+	uint32_t self;		/* this group's starting page number */
 	bfFragT fragType;	/* type of frags in this group */
 	int freeFrags;		/* number of free frags in the group */
 	bfSetIdT setId;		/* bitfile-set's ID */
@@ -104,7 +104,7 @@ typedef struct grpHdr {
 
 	unsigned int version;	/* metadata version pre-ADVFS v1.0 == 0, ADVFS
 				 * v3.0 == 1 */
-	uint32T firstFrag;	/* frag index */
+	uint32_t firstFrag;	/* frag index */
 
 	/*
          * the following is used a map of the free frags in the group.
@@ -116,8 +116,8 @@ typedef struct grpHdr {
 }      grpHdrT;
 
 typedef struct fragHdr {
-	uint32T nextFreeFrag;
-	uint32T self;		/* this frag's starting slot number */
+	uint32_t nextFreeFrag;
+	uint32_t self;		/* this frag's starting slot number */
 	bfFragT fragType;	/* type of frags in this group */
 }       fragHdrT;
 
@@ -169,9 +169,9 @@ typedef struct bfSet {
 
 	bfSetT *cloneSetp;	/* pointer to clone set */
 	bfSetT *origSetp;	/* for clones, this is parent set desc ptr */
-	uint32T cloneId;	/* 0 ==> orig; "> 0" ==> clone */
-	uint32T cloneCnt;	/* times orig has been cloned */
-	uint32T numClones;	/* current number of clones */
+	uint32_t cloneId;	/* 0 ==> orig; "> 0" ==> clone */
+	uint32_t cloneCnt;	/* times orig has been cloned */
+	uint32_t numClones;	/* current number of clones */
 
 	/*
          * The following state lock is used to coordinate the deletion of
@@ -185,7 +185,7 @@ typedef struct bfSet {
 	/* storage from an original file to a     */
 	/* clone file in this fileset.            */
 
-	uint32T infoLoaded;	/* true if correct tagdir info has been loaded */
+	uint32_t infoLoaded;	/* true if correct tagdir info has been loaded */
 
 	mutexT setMutex;	/* protects dirLock & fragLock lock header
 				 * fields */
@@ -214,15 +214,15 @@ typedef struct bfSet {
 
 	bfTagT fragBfTag;
 	bfAccessT *fragBfAp;
-	uint32T freeFragGrps;
+	uint32_t freeFragGrps;
 
-	uint32T truncating;	/* true if truncating fragbf */
+	uint32_t truncating;	/* true if truncating fragbf */
 
 	fragGrpT fragGrps[BF_FRAG_MAX];	/* array of frag group list heads */
 	struct fileSetNode *fsnp;	/* file set node pointer */
 
 	mutexT bfSetMutex;	/* protect bfSetFlags */
-	uint32T bfSetFlags;	/* The high-order 16-bits of this field holds */
+	uint32_t bfSetFlags;	/* The high-order 16-bits of this field holds */
 	/* in-memory attributes and the low-order */
 	/* 16-bits holds on-disk flags */
 }     bfSetT;
@@ -344,7 +344,7 @@ rbf_bfs_create(
     serviceClassT reqServ,	/* in - required service class */
     serviceClassT optServ,	/* in - optional service class */
     char *setName,		/* in - set's name */
-    uint32T fsetOptions,	/* in - fileset option flags */
+    uint32_t fsetOptions,	/* in - fileset option flags */
     ftxHT parentFtxH,		/* in - parent transaction handle */
     bfSetIdT * bfSetId		/* out - bitfile set id */
 );
@@ -368,7 +368,7 @@ statusT
 rbf_bfs_open(
     bfSetT ** retBfSetp,	/* out - pointer to open bitfile-set */
     bfSetIdT bfSetId,		/* in - bitfile-set id */
-    uint32T options,		/* in - options flags */
+    uint32_t options,		/* in - options flags */
     ftxHT ftxH			/* in - transaction handle */
 );
 
@@ -376,7 +376,7 @@ void
 bs_bfs_close(
     bfSetT * bfSetp,		/* in - pointer to open bitfile-set */
     ftxHT ftxH,			/* in - transaction handle */
-    uint32T options		/* in - options flags */
+    uint32_t options		/* in - options flags */
 );
 
 statusT

@@ -185,7 +185,7 @@ typedef struct {
 
 typedef struct {
 	bfSetIdT bfSetId;
-	uint32T unInitPage;
+	uint32_t unInitPage;
 }      tagUnInitPageRedoT;
 #define FIRST_SETTABLE_TAG 6
 
@@ -213,7 +213,7 @@ tagdir_get_info(
 	statusT sts;
 	bsTDirPgT *tdpgp;
 	bfPageRefHT pgRef;
-	uint32T pg;
+	uint32_t pg;
 
 
 	tdap = bfSetp->dirBfAp;
@@ -330,10 +330,10 @@ tagdir_remove_tag(
          * included in the assertion.
          */
 
-	KASSERT(tp->seq == (uint32T) tdmap->tmSeqNo
-	    || ((uint16T) ~ BS_TD_IN_USE & tp->seq) == (uint32T) tdmap->tmSeqNo);
+	KASSERT(tp->seq == (uint32_t) tdmap->tmSeqNo
+	    || ((uint16_t) ~ BS_TD_IN_USE & tp->seq) == (uint32_t) tdmap->tmSeqNo);
 	rbf_pin_record(pgRef, (void *) tdmap, sizeof(bsTMapT));
-	tdmap->tmSeqNo &= (uint16T) ~ BS_TD_IN_USE;
+	tdmap->tmSeqNo &= (uint16_t) ~ BS_TD_IN_USE;
 }
 
 
@@ -391,14 +391,14 @@ tagdir_tag_to_freelist(
          * would still be set so we cannot do the assertion below.
          */
 	if (set_tag_to_unused || bfSetp->dmnP->dmn_panic) {
-		tdmap->tmSeqNo &= (uint16T) ~ BS_TD_IN_USE;
+		tdmap->tmSeqNo &= (uint16_t) ~ BS_TD_IN_USE;
 	} else {
 		/*
 	         * The following assert checks to make sure the IN_USE flag is NOT
 	         * still set on the tag to be deleted if the set_tag_to_unused
 	         * flag is not set.
 	         */
-		KASSERT(tp->seq == ((uint32T) tdmap->tmSeqNo ^ BS_TD_IN_USE));
+		KASSERT(tp->seq == ((uint32_t) tdmap->tmSeqNo ^ BS_TD_IN_USE));
 	}
 
 	rbf_pin_record(pgRef, (void *) &tdpgp->tpPgHdr, sizeof(struct bsTDirPgHdr));
@@ -971,7 +971,7 @@ tagdir_set_next_tag(
 	bsTMapT *tdmap;
 	bsTMapT *prevTdmap;
 	int prevFound;
-	uint32T seq;
+	uint32_t seq;
 	bfAccessT *bfAccess;
 
 	/*
@@ -1383,7 +1383,7 @@ tagdir_write_undo_opx(
 		ADVFS_SAD1("tagdir_write_undo_opx: can't pin page", sts);
 	}
 	tdmap = &tdpgp->tMapA[slot];
-	KASSERT(rp->tag.seq == (uint32T) tdmap->tmSeqNo);
+	KASSERT(rp->tag.seq == (uint32_t) tdmap->tmSeqNo);
 
 	rbf_pin_record(pgRef, (void *) tdmap, sizeof(bsTMapT));
 	*tdmap = rp->map;
@@ -1545,7 +1545,7 @@ tagdir_lookup_next(
     bfSetT * bfSetp,		/* in - bitfile set desc pointer */
     bfTagT * tp,		/* in,out - pointer to tag */
     bfMCIdT * bfMCId,		/* out - bitfile metadata cell */
-    uint16T * vdIndex		/* out - virtual disk index */
+    uint16_t * vdIndex		/* out - virtual disk index */
 )
 {
 	unsigned long tagPg;
@@ -1673,11 +1673,11 @@ bs_switch_root_tagdir(
 	vdT *logVd;
 	bfAccessT *newBfAccessp;
 	char *newPage;
-	uint32T newPageCnt;
+	uint32_t newPageCnt;
 	bfTagT newTag;
 	vdT *newVd;
 	char *oldPage;
-	uint32T oldPageCnt;
+	uint32_t oldPageCnt;
 	vdT *oldVd;
 	bfPageRefHT pgPin;
 	bfPageRefHT pgRef;

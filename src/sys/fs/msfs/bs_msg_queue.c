@@ -49,7 +49,7 @@
 
 /* message queue private definitions */
 
-typedef uint32T msgSizeT;
+typedef uint32_t msgSizeT;
 /*
  * msgStateT
  *
@@ -70,7 +70,7 @@ typedef uint32T msgSizeT;
 		msgSizeT msgSize;	/* max bytes in user msg area */
 		msgStateT msgState;	/* msg buffer's state */
 		struct msgQEntry *nextMsg;	/* pointer to next msg */
-		/* uint32T msg[1];                  dummy debug var - where
+		/* uint32_t msg[1];                  dummy debug var - where
 		 * user         */
 		/* message starts.  The actual      */
 		/* lenght is in 'msgSize' bytes.    */
@@ -85,18 +85,18 @@ typedef uint32T msgSizeT;
 		msgQEntryT *qHead;	/* msg queue head pointer             */
 		msgQEntryT *qTail;	/* msq queue tail pointer             */
 		msgQEntryT *freeMsgLst;	/* list of free message entries       */
-		uint16T readyMsgs;	/* number of message on the queue     */
-		uint16T freeMsgs;	/* number of free messages            */
-		uint16T userMsgs;	/* number of messages held by user    */
-		uint16T waiters;/* num threads waiting for a msg      */
-		uint32T totalWaits;	/* num times thread waited for a msg  */
-		uint32T totalSends;	/* total number messages sent         */
-		uint32T totalRecvs;	/* total number messages received     */
-		uint32T maxQLen;/* most messages ever on the queue    */
-		uint16T maxMsgs;/* current max message in pool        */
-		uint16T maxMsgSize;	/* max message size in bytes          */
-		uint16T allow_q_growth;	/* TRUE: allow q size growth, FALSE no */
-		uint32T radId;	/* RAD Id that this Queue resides on  */
+		uint16_t readyMsgs;	/* number of message on the queue     */
+		uint16_t freeMsgs;	/* number of free messages            */
+		uint16_t userMsgs;	/* number of messages held by user    */
+		uint16_t waiters;/* num threads waiting for a msg      */
+		uint32_t totalWaits;	/* num times thread waited for a msg  */
+		uint32_t totalSends;	/* total number messages sent         */
+		uint32_t totalRecvs;	/* total number messages received     */
+		uint32_t maxQLen;/* most messages ever on the queue    */
+		uint16_t maxMsgs;/* current max message in pool        */
+		uint16_t maxMsgSize;	/* max message size in bytes          */
+		uint16_t allow_q_growth;	/* TRUE: allow q size growth, FALSE no */
+		uint32_t radId;	/* RAD Id that this Queue resides on  */
 	}    msgQT;
 
 	static const msgQT nilMsgQ = {0};
@@ -113,7 +113,7 @@ typedef uint32T msgSizeT;
     (roundup( MSGQ_ENTRY_HDR_SZ + (maxMsgSz), sizeof( char *) ))
 
 	static int
-	    ulmq_init_freelist(msgQT * msgQ, uint16T nmsgs);
+	    ulmq_init_freelist(msgQT * msgQ, uint16_t nmsgs);
 
 	static void
 	     ulmq_destroy_freelist(msgQT * msgQ);
@@ -406,7 +406,7 @@ ulmq_alloc_msg(
 	 * ms_malloc_no_wait() will fail if the request is for more than one
 	 * page so limit the request. */
 	if (msgQ->freeMsgLst == NULL) {
-		uint16T nmsgs = msgQ->maxMsgs / 2;	/* increase queue size
+		uint16_t nmsgs = msgQ->maxMsgs / 2;	/* increase queue size
 							 * by half */
 		/*
 	        nmsgs = MIN(nmsgs, PAGE_SIZE / MSGQ_ENTRY_SZ(msgQ->maxMsgSize));
@@ -457,7 +457,7 @@ ulmq_alloc_msg(
  */
 
 static int
-ulmq_init_freelist(msgQT * msgQ, uint16T nmsgs)
+ulmq_init_freelist(msgQT * msgQ, uint16_t nmsgs)
 {
 	msgQEntryT *msgEntp, *msgLastEntp;
 	int i;

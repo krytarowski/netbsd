@@ -28,7 +28,7 @@
 
 #include <fs/msfs/ftx_agents.h>
 
-typedef uint32T ftxIdT;
+typedef uint32_t ftxIdT;
 
 struct domain;
 
@@ -471,7 +471,7 @@ rbf_add_overlapping_stg(
     unsigned long pageOFfset,	/* in */
     unsigned long pageCnt,	/* in */
     ftxHT parentFtx,		/* in */
-    uint32T * allocPageCnt	/* out */
+    uint32_t * allocPageCnt	/* out */
 );
 
 /*

@@ -424,7 +424,7 @@ decr_link_count(
 static statusT
 bzero_frag(
     struct bfAccess * bfap,
-    uint32T start,
+    uint32_t start,
     ftxHT ftxH
 );
 
@@ -778,7 +778,7 @@ msfs_getattr(
 	bfSetT *bfSetp;
 	struct mount *mp;
 	struct timeval new_time;
-	uint32T pageCnt;
+	uint32_t pageCnt;
 	statusT sts;
 	struct fileSetNode *fsn;
 
@@ -1240,7 +1240,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 	ftxHT ftxH;
 	bfPageRefHT pageRef;
 	char *pageAddr;
-	uint32T delCnt = 0;
+	uint32_t delCnt = 0;
 	u_short mask = S_ISUID;
 	extern u_int noadd_execaccess;
 	int remove_exec_perm = 0;
@@ -1270,7 +1270,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 	if (vap->va_size) {
 		if (vap->va_size > bfap->file_size ||
 		    (vap->va_size < bfap->file_size &&
-			!page_is_mapped(bfap, (uint32T) truncationPage, NULL, FALSE))) {
+			!page_is_mapped(bfap, (uint32_t) truncationPage, NULL, FALSE))) {
 			/*
 	                 * - file growth via VOP_SETATTR()
 	                 * Instead of calling VOP_SETATTR() to grow a file, vtruncate()
@@ -1315,7 +1315,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 
 			if (oddOffset &&
 			    bfap->bfSetp->cloneSetp != NULL &&
-			    page_is_mapped(bfap, (uint32T) truncationPage, NULL, FALSE)) {
+			    page_is_mapped(bfap, (uint32_t) truncationPage, NULL, FALSE)) {
 				/* cow the new last page of this file. */
 				bs_cow(bfap, COW_PINPG, truncationPage, 1, FtxNilFtxH);
 			}
@@ -1475,7 +1475,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 		/*
 	         * Zero out the trailing segment.
 	         */
-		if (page_is_mapped(bfap, (uint32T) truncationPage, NULL, FALSE)) {
+		if (page_is_mapped(bfap, (uint32_t) truncationPage, NULL, FALSE)) {
 			/* It's on a page. */
 			/* We've already cow'ed this page so don'to cow within
 			 * pinpg. */
@@ -1540,11 +1540,11 @@ notrunc:
  * Zero the contents of a frag.
  */
 static statusT
-bzero_frag(struct bfAccess * bfap, uint32T start, ftxHT ftxH)
+bzero_frag(struct bfAccess * bfap, uint32_t start, ftxHT ftxH)
 {
 	statusT sts = EOK;
-	uint32T fragPgOffset = FRAG2PG(bfap->fragId.frag);
-	uint32T fpOffset, fpCount, fragSize, zOffset;
+	uint32_t fragPgOffset = FRAG2PG(bfap->fragId.frag);
+	uint32_t fpOffset, fpCount, fragSize, zOffset;
 	bfPageRefHT pgRef;
 	char *pgAddr;
 
@@ -3369,7 +3369,7 @@ again:
 		rbf_pin_record(
 		    page_ref,
 		    &dir_buffer->fs_dir_header.fs_dir_bs_tag_num,
-		    sizeof(uint32T)
+		    sizeof(uint32_t)
 		    );
 		dir_buffer->fs_dir_header.fs_dir_bs_tag_num =
 		    from_file_context->bf_tag.num;

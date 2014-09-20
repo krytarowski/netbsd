@@ -279,9 +279,9 @@ typedef struct bfsQueue {
 #define DOMAIN_TRACE_HISTORY 100
 
 typedef struct {
-	uint32T seq;
-	uint16T mod;
-	uint16T ln;
+	uint32_t seq;
+	uint16_t mod;
+	uint16_t ln;
 	struct thread *thd;
 	void *val;
 }      dmnTraceElmtT;
@@ -353,7 +353,7 @@ typedef struct vdDesc {
 
 typedef struct bfDmnDesc {
 	int vdCount;		/* number of vds described */
-	uint32T dmnMajor;	/* fake major number for domain */
+	uint32_t dmnMajor;	/* fake major number for domain */
 	vdDescT *vddp[BS_MAX_VDI];	/* array of vd descriptor ptrs */
 }         bfDmnDescT;
 
@@ -394,7 +394,7 @@ typedef struct domain {
 					 * directory */
 	bfTagT ftxLogTag;	/* tag of domain ftx log */
 	logDescT *ftxLogP;	/* pointer to ftx log for this domain */
-	uint32T ftxLogPgs;	/* number of pages in the log */
+	uint32_t ftxLogPgs;	/* number of pages in the log */
 	struct bfAccess *logAccessp;	/* bfAccess pointer for log */
 	ftxTblDT ftxTbld;	/* ftx table descriptor */
 #ifdef ADVFS_SMP_ASSERT		/* For debugging only, to check for lock */
@@ -404,8 +404,8 @@ typedef struct domain {
 					 * any */
 	char domainName[BS_DOMAIN_NAME_SZ];	/* temp - should be global
 						 * name */
-	uint32T majorNum;	/* domain's device major number (fabricated) */
-	uint32T dmnFlag;	/* special domain state indicator */
+	uint32_t majorNum;	/* domain's device major number (fabricated) */
+	uint32_t dmnFlag;	/* special domain state indicator */
 	uid_t uid;		/* domain's owner */
 	gid_t gid;		/* domain's group */
 	mode_t mode;		/* domain's mode */
@@ -418,7 +418,7 @@ typedef struct domain {
 	mutexT lsnLock;
 	struct bsBufHdr lsnList;/* Dirty transactional buffers to be written */
 	lsnT writeToLsn;	/* pin block until up to this lsn is written */
-	uint16T pinBlockWait;
+	uint16_t pinBlockWait;
 	cvT pinBlockCv;
 	int pinBlockRunning;	/* boolean; TRUE if lsn_io_list is running */
 	enum contBits contBits;	/* check if log flush or pinblock cont needed */
@@ -460,16 +460,16 @@ typedef struct domain {
 
 	mutexT dmnFreezeMutex;	/* protects dmnFreezeFlags, dmnFreezeWaiting
 				 * and dmnFreezeRefCnt */
-	uint32T dmnFreezeFlags;	/* freezefs status */
-	uint32T dmnFreezeWaiting;	/* Freeze thread is waiting to freeze
+	uint32_t dmnFreezeFlags;	/* freezefs status */
+	uint32_t dmnFreezeWaiting;	/* Freeze thread is waiting to freeze
 					 * this domain */
-	uint32T dmnFreezeRefCnt;/* Count of threads currently blocking the
+	uint32_t dmnFreezeRefCnt;/* Count of threads currently blocking the
 				 * start of a freeze */
 
 	ssDmnInfoT ssDmnInfo;	/* vfast elements. */
 /*>>>>>>> Maintain as last elements of domain structure <<<<<<<<*/
 #ifdef ADVFS_DOMAIN_TRACE
-	uint32T trace_ptr;
+	uint32_t trace_ptr;
 	dmnTraceElmtT trace_buf[DOMAIN_TRACE_HISTORY];
 #endif				/* ADVFS_DOMAIN_TRACE */
 }      domainT;
@@ -482,12 +482,12 @@ extern domainT *DomainTbl[];
 #ifdef ADVFS_DOMAIN_TRACE
 
 #define DOMAIN_TRACE( dmnp, n1 ) \
-    domain_trace((dmnp), (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void*)(n1))
+    domain_trace((dmnp), (uint16_t)ADVFS_MODULE, (uint16_t)__LINE__, (void*)(n1))
 
 void
 domain_trace(domainT * dmnp,
-    uint16T module,
-    uint16T line,
+    uint16_t module,
+    uint16_t line,
     void *value);
 
 #else				/* ADVFS_DOMAIN_TRACE */

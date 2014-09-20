@@ -85,7 +85,7 @@ static statusT
 sc_add_vd_to_class(
     scEntryT * scEntry,		/* in - ptr to service class' table entry */
     serviceClassT vdSvc,	/* in - vd's service class */
-    uint16T vdIndex		/* in - vd's index */
+    uint16_t vdIndex		/* in - vd's index */
 );
 
 static statusT
@@ -210,7 +210,7 @@ sc_find_alt_class(
 )
 {
 	int tblPos, curPos, bit, bits, bestEntPos = -1, bestEntBits = 0;
-	uint32T optServ;
+	uint32_t optServ;
 
 	/*
          * Scan linearly thru the service class table looking for a super class
@@ -393,7 +393,7 @@ static statusT
 sc_add_vd_to_class(
     scEntryT * scEntry,		/* in - ptr to service class' table entry */
     serviceClassT vdSvc,	/* in - vd's service class */
-    uint16T vdIndex		/* in - vd's index */
+    uint16_t vdIndex		/* in - vd's index */
 )
 {
 	int done = 0;
@@ -474,7 +474,7 @@ statusT
 sc_add_vd(
     domainT * dmnp,		/* in - ptr to domain with sc table */
     serviceClassT vdSvc,	/* in - vd's service class */
-    uint16T vdIndex		/* in - vd's index */
+    uint16_t vdIndex		/* in - vd's index */
 )
 {
 	serviceClassTblT *scTbl = dmnp->scTbl;
@@ -607,7 +607,7 @@ statusT
 sc_remove_vd(
     domainT * dmnp,		/* in - ptr to domain with sc table */
     serviceClassT vdSvc,	/* in - vd's service class */
-    uint16T vdIndex		/* in - vd's index */
+    uint16_t vdIndex		/* in - vd's index */
 )
 {
 	int tblPos;
@@ -617,7 +617,7 @@ sc_remove_vd(
 	scEntryT *scEntry;
 	vdLstSgmntT *vdLstSeg;
 	vdLstSgmntT *prevSeg;
-	uint16T *deleted_vd;
+	uint16_t *deleted_vd;
 	serviceClassTblT *scTbl = dmnp->scTbl;
 
 
@@ -822,7 +822,7 @@ sc_valid_vd(
     domainT * dmnp,		/* in - ptr to domain with sc table */
     serviceClassT reqServices,	/* in - required services */
     serviceClassT optServices,	/* in - optional services */
-    uint16T vdIndex		/* in - vd's index */
+    uint16_t vdIndex		/* in - vd's index */
 )
 {
 	int tblPos;
@@ -915,7 +915,7 @@ sc_select_vd_for_mcell(
 	scEntryT *scEntry;
 	vdT *vdp;
 	int done = FALSE;
-	uint16T vdi = 0;
+	uint16_t vdi = 0;
 	vdT *bestVdp = NULL;
 	int bestVd;
 
@@ -1061,8 +1061,8 @@ sc_select_vd_for_stg(
     serviceClassT optServices,	/* in - optional service class */
     vdIndexT preferVd,		/* in - vd to try first */
     unsigned long *vd_skip_list,/* in - list of disks to skip */
-    uint32T desiredBlks,	/* in - num disk blks needed */
-    uint32T minDesiredBlks,	/* in - minimum num disk blks needed */
+    uint32_t desiredBlks,	/* in - num disk blks needed */
+    uint32_t minDesiredBlks,	/* in - minimum num disk blks needed */
     int count_this_alloc	/* in - flag to count cluster allocation */
 )
 {

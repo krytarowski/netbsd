@@ -32,8 +32,8 @@ update_mcell_cnt(
     bfTagT bfTag,		/* in */
     vdIndexT bfVdIndex,		/* in */
     bfMCIdT bfMcellId,		/* in */
-    uint32T type,		/* in */
-    int32T mcellCnt,		/* in */
+    uint32_t type,		/* in */
+    int32_t mcellCnt,		/* in */
     ftxHT parentFtx		/* in */
 );
 
@@ -42,7 +42,7 @@ odm_remove_mcells_from_xtnt_map(
     domainT * domain,		/* in */
     bfTagT bfTag,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
-    uint32T start_index,
+    uint32_t start_index,
     ftxHT parentFtx		/* in */
 );
 
@@ -62,7 +62,7 @@ statusT x_create_inmem_xtnt_map(bfAccessT *, bsMCT *);
 statusT
 x_load_inmem_xtnt_map(
     bfAccessT * bfap,		/* in, modified */
-    uint32T lock_request	/* in */
+    uint32_t lock_request	/* in */
 );
 
 /* Possible values to pass for lock_request to x_load_inmem_xtnt_map(). */
@@ -119,14 +119,14 @@ odm_create_xtnt_rec(
 statusT
 x_page_to_iolist(
     bfAccessT * bfAccessp,
-    uint32T pageOffset,
+    uint32_t pageOffset,
     ioListT * ioList
 );
 
 statusT
 x_page_to_blkmap(
     bfAccessT * bfAccess,
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     blkMapT * blkMap		/* in */
 );
 
@@ -134,14 +134,14 @@ statusT
 x_copypage_to_blkmap(
     bfAccessT * bfap,		/* in */
     bsInMemXtntT * xtnts,	/* in */
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     blkMapT * blkMap		/* in */
 );
 
 statusT
 x_page_to_blk(
     bfAccessT * bfap,		/* in */
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     blkDescT * blkDesc		/* in */
 );

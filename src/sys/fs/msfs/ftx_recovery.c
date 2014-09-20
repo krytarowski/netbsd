@@ -380,7 +380,7 @@ ftx_bfdmn_recovery(
 	ftxDoneLRT *dlrp;
 	struct ftx *ftxp;
 	extern int MountWriteDelay;
-	uint32T *segptr;
+	uint32_t *segptr;
 	int segwordcnt;
 	ftxIdT ftxId = 0;
 	struct timeval ltime;
@@ -404,7 +404,7 @@ ftx_bfdmn_recovery(
 	/* read the last record.  should scan back if other than ftx */
 	/* records are possible in the log. */
 
-	sts = lgr_read(LR_BWD, logrh, &logaddr, (uint32T **) & dlrp,
+	sts = lgr_read(LR_BWD, logrh, &logaddr, (uint32_t **) & dlrp,
 	    &wordcnt, &totwordcnt);
 	if (sts != EOK && (sts < MSFS_FIRST_ERR)) {
 		if (sts == E_LOG_EMPTY) {
@@ -453,7 +453,7 @@ ftx_bfdmn_recovery(
 		}
 		while (logaddr.lsn.num < crashRedo.lsn.num) {
 
-			lrsts = lgr_read(LR_FWD, logrh, &logaddr, (uint32T **) & dlrp,
+			lrsts = lgr_read(LR_FWD, logrh, &logaddr, (uint32_t **) & dlrp,
 			    &wordcnt, &totwordcnt);
 
 			if ((lrsts != EOK) && (lrsts < MSFS_FIRST_ERR)) {
@@ -594,7 +594,7 @@ after_inactive:
 					/* we zero out lrdesc, V3.2 paranoia
 					 * only */
 					bzero(lrvecp, sizeof(lrDescT));
-					lrvecp->bfrvec[0].bufPtr = (uint32T *) & ftxp->lrh;
+					lrvecp->bfrvec[0].bufPtr = (uint32_t *) & ftxp->lrh;
 					lrvecp->bfrvec[0].bufWords = (sizeof(ftxDoneLRT) + 3) / 4;
 
 					do_ftx_continuations(dmnP, ftxp, ftxH, lrvecp);
@@ -728,7 +728,7 @@ ftx_recovery_pass(
 {
 	statusT sts, lrsts;
 	int segwordcnt = 0, totwordcnt = 0, cntRead = 0;
-	uint32T *lgrrecp = 0;
+	uint32_t *lgrrecp = 0;
 	struct ftx *ftxp;
 	perlvlT *clvlp;
 	int ftxSlot, redoloff, lrrtdnloff, rdwords;
@@ -754,7 +754,7 @@ ftx_recovery_pass(
 		int lvl = 0;
 		int availSlot = -1;
 
-		lrsts = lgr_read(LR_FWD, logrh, &logaddr, (uint32T **) & dlrp,
+		lrsts = lgr_read(LR_FWD, logrh, &logaddr, (uint32_t **) & dlrp,
 		    &segwordcnt, &totwordcnt);
 
 		cntRead = segwordcnt;
@@ -768,13 +768,13 @@ ftx_recovery_pass(
 			sts = E_DOMAIN_PANIC;
 			goto _exit;
 		} else if (lrsts == I_LOG_REC_SEGMENT) {
-			uint32T *segptr;
+			uint32_t *segptr;
 
 			/*
 	                 * segmented record - get the whole thing into a buffer (lgrrecp)
 	                 * freed as dlrp at end of loop
 	                 */
-			lgrrecp = (uint32T *) ms_malloc(totwordcnt * 4);
+			lgrrecp = (uint32_t *) ms_malloc(totwordcnt * 4);
 			/* TODO - if (lgrrecp == NULL) ... */
 			bcopy((char *) dlrp, (char *) lgrrecp, segwordcnt * 4);
 
@@ -966,7 +966,7 @@ ftx_recovery_pass(
 			(!RBMT_THERE(dmnP) && (recoveryPass == META_PASS)))) {
 			char *recptr = (char *) dlrp + (lrrtdnloff << 2);
 			int nextrdoff, i;
-			int32T *dp;
+			int32_t *dp;
 
 			/*
 	                 * buffer the root done record in the ftx state struct
@@ -986,7 +986,7 @@ ftx_recovery_pass(
 			((ftxRDHdrT *) dp)->bCnt = dlrp->rootDRBcnt;
 			dp += sizeof(ftxRDHdrT) / 4;
 			for (i = 0; i < rdwords; i++) {
-				dp[i] = ((uint32T *) recptr)[i];
+				dp[i] = ((uint32_t *) recptr)[i];
 			}
 			ftxp->nextRDoff = nextrdoff;
 			ftxp->rootDnCnt += 1;
@@ -1234,7 +1234,7 @@ ftx_recovery_pass(
 				bzero(lrvecp, sizeof(lrDescT));
 				lrvecp->count = 1;
 				lrvecp->dataLcnt = 0;
-				lrvecp->bfrvec[0].bufPtr = (uint32T *) & ftxp->lrh;
+				lrvecp->bfrvec[0].bufPtr = (uint32_t *) & ftxp->lrh;
 				lrvecp->bfrvec[0].bufWords = (sizeof(ftxDoneLRT) + 3) / 4;
 
 				if (contAgent != ftxp->contDesc.agentId) {
@@ -1331,7 +1331,7 @@ num_of_log_recs(
 	if (sts == E_LOG_EMPTY) {
 		goto logclose;
 	}
-	sts = lgr_read(LR_BWD, logrh, &lastlogaddr, (uint32T **) & dlrp,
+	sts = lgr_read(LR_BWD, logrh, &lastlogaddr, (uint32_t **) & dlrp,
 	    &wordcnt, &totwordcnt);
 	if (sts != EOK && (sts < MSFS_FIRST_ERR)) {
 		if (sts == E_LOG_EMPTY) {
@@ -1366,7 +1366,7 @@ num_of_log_recs(
 	ms_free(dlrp);
 
 	do {
-		sts = lgr_read(LR_FWD, logrh, &crashRedo, (uint32T **) & dlrp,
+		sts = lgr_read(LR_FWD, logrh, &crashRedo, (uint32_t **) & dlrp,
 		    &wordcnt, &totwordcnt);
 
 		if (sts == E_INVALID_REC_ADDR) {

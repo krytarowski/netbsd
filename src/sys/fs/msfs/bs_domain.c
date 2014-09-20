@@ -164,7 +164,7 @@ get_vdd(
 static int
 get_domain_major(
     char *domain,		/* in - domain name */
-    uint32T * dmnMajor		/* out - domain major number */
+    uint32_t * dmnMajor		/* out - domain major number */
 );
 
 statusT
@@ -209,9 +209,9 @@ static
 clear_bmt(
     domainT * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
-    uint32T forceFlag,		/* in */
-    uint32T startBlk,		/* in */
-    uint32T numBlks		/* in */
+    uint32_t forceFlag,		/* in */
+    uint32_t startBlk,		/* in */
+    uint32_t numBlks		/* in */
 );
 
 static
@@ -245,7 +245,7 @@ static statusT
 dmn_alloc(
     bfDomainIdT domainId,
     char *domainName,
-    uint32T domainMajor,
+    uint32_t domainMajor,
     bfTagT dirTag,
     struct bsMPg * pgp,
     domainT ** newdmnPP
@@ -278,8 +278,8 @@ void read_n_chk_last_rbmt_pg(vdT *);
 #ifdef ADVFS_DOMAIN_TRACE
 void
 domain_trace(domainT * dmnP,
-    uint16T module,
-    uint16T line,
+    uint16_t module,
+    uint16_t line,
     void *value)
 {
 	register dmnTraceElmtT *te;
@@ -304,8 +304,8 @@ domain_trace(domainT * dmnP,
 #ifdef ADVFS_VD_TRACE
 void
 vd_trace(vdT * vdp,
-    uint16T module,
-    uint16T line,
+    uint16_t module,
+    uint16_t line,
     void *value)
 {
 	register vdTraceElmtT *te;
@@ -1019,7 +1019,7 @@ bs_global_root_activate(
 	struct nameidata *ndp;
 	extern int AdvfsFixUpSBM;
 	extern dev_t global_rootdev[];
-	extern uint32T global_rootdev_count;
+	extern uint32_t global_rootdev_count;
 	extern struct vnode **GlobalRootVpp;
 	extern dev_t global_rootdev_opinprog;
 	int dmnVersion;
@@ -2055,7 +2055,7 @@ statusT
 bs_bfdmn_sweep(domainT * dmnP)
 {
 	statusT sts;
-	uint32T *pgp;
+	uint32_t *pgp;
 	bfDomainIdT domainId = dmnP->domainId;
 	int error, vdi, logVdI, tagdirVdI;
 	bfPageRefHT bmtPgRef = NilBfPageRefH;
@@ -2113,7 +2113,7 @@ bs_bfdmn_sweep(domainT * dmnP)
 	                 * This vd has the log on it. Update the domainId in each
 	                 * log page header and trailer
 	                 */
-			uint32T *logpgp;
+			uint32_t *logpgp;
 			bsDmnMAttrT *dmnMAttrp;
 			struct vnode *vp = NULL;
 			struct nameidata *ndp = &u.u_nd;
@@ -2123,7 +2123,7 @@ bs_bfdmn_sweep(domainT * dmnP)
 			bsXtntRT *primXtnt;
 			int mcell_index;
 
-			logpgp = (uint32T *) ms_malloc(ADVFS_PGSZ);
+			logpgp = (uint32_t *) ms_malloc(ADVFS_PGSZ);
 			if (logpgp == NULL) {
 				sts = ENOMEM;
 				goto err_cleanup;
@@ -2318,7 +2318,7 @@ update_bfsetid(
 {
 	statusT sts = EOK;
 	int error;
-	uint32T *pagep;
+	uint32_t *pagep;
 	vdT *vdp = VD_HTOP(vd, dmnP);
 	bsBfSetAttrT *bfsAttrp;
 	bfPageRefHT bmtPgRef;
@@ -2512,7 +2512,7 @@ get_raw_vd_attrs(
 )
 {
 	statusT sts;
-	uint32T *superBlk;
+	uint32_t *superBlk;
 	struct bsVdAttr *vdAttrp;
 	bsDmnAttrT *dmnAttrp;
 	bsDmnMAttrT *dmnMAttrp;
@@ -2591,7 +2591,7 @@ get_raw_vd_attrs(
 		sts = (statusT) EBUSY;
 		goto err_vclose;
 	}
-	superBlk = (uint32T *) ms_malloc(ADVFS_PGSZ);
+	superBlk = (uint32_t *) ms_malloc(ADVFS_PGSZ);
 	if (superBlk == NULL) {
 		sts = ENOMEM;
 		goto err_closeall;
@@ -2600,7 +2600,7 @@ get_raw_vd_attrs(
 	if (sts != 0) {
 		goto err_freesblk;
 	}
-	if (superBlk[MSFS_MAGIC_OFFSET / sizeof(uint32T)] != MSFS_MAGIC) {
+	if (superBlk[MSFS_MAGIC_OFFSET / sizeof(uint32_t)] != MSFS_MAGIC) {
 		sts = E_BAD_MAGIC;
 		goto err_freesblk;
 	}
@@ -2975,12 +2975,12 @@ bs_vd_add_active(
     char *domainName,		/* in - bitfile domain name */
     char *vdName,		/* in - block special device name */
     serviceClassT * vdSvc,	/* in/out - service class */
-    uint32T vdSize,		/* in - size of the virtual disk */
-    uint32T bmtXtntPgs,		/* in - number of pages per BMT extent */
-    uint32T bmtPreallocPgs,	/* in - num pages to preallocate for the BMT */
-    uint32T flag,		/* in - M_MSFS_MOUNT may be set */
+    uint32_t vdSize,		/* in - size of the virtual disk */
+    uint32_t bmtXtntPgs,		/* in - number of pages per BMT extent */
+    uint32_t bmtPreallocPgs,	/* in - num pages to preallocate for the BMT */
+    uint32_t flag,		/* in - M_MSFS_MOUNT may be set */
     bfDomainIdT * dmnId,	/* out - domain Id */
-    uint32T * volIndex		/* out - volume index */
+    uint32_t * volIndex		/* out - volume index */
 )
 {
 	statusT sts = 0;
@@ -3472,17 +3472,17 @@ statusT
 bs_vd_remove_active(
     domainT * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
-    uint32T forceFlag		/* in */
+    uint32_t forceFlag		/* in */
 )
 {
 	bsBfDescT bfDesc;
 	int bfDescCnt;
-	uint32T blksPerCluster;
+	uint32_t blksPerCluster;
 	int foundFlag;
-	uint32T freeClusters;
+	uint32_t freeClusters;
 	bfMCIdT nextBfDescId;
 	statusT sts;
-	uint32T totalClusters;
+	uint32_t totalClusters;
 	vdT *vdp;
 	int dmntbl_lock = 0;
 	bfTagT bfTag;
@@ -3791,9 +3791,9 @@ static
 clear_bmt(
     domainT * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
-    uint32T forceFlag,		/* in */
-    uint32T startBlk,		/* in */
-    uint32T numBlks		/* in */
+    uint32_t forceFlag,		/* in */
+    uint32_t startBlk,		/* in */
+    uint32_t numBlks		/* in */
 )
 {
 	bfAccessT *bfap;
@@ -3810,10 +3810,10 @@ clear_bmt(
 	bfMCIdT mcellId;
 	metadataTypeT metadataType;
 	int migFlag;
-	uint32T pageCnt;
+	uint32_t pageCnt;
 	statusT sts;
 	int unlockFlag = 0;
-	uint32T open_options, do_vrele;
+	uint32_t open_options, do_vrele;
 	struct vnode *nullvp;
 	struct mount *mp;
 
@@ -4830,7 +4830,7 @@ bs_fix_root_dmn(
 	dev_t dev;
 
 	extern dev_t global_rootdev[];
-	extern uint32T global_rootdev_count;
+	extern uint32_t global_rootdev_count;
 
 	struct nameidata *ndp = &u.u_nd;
 	struct bfAccess *mdap;
@@ -5319,7 +5319,7 @@ static statusT
 dmn_alloc(
     bfDomainIdT domainId,
     char *domainName,
-    uint32T domainMajor,
+    uint32_t domainMajor,
     bfTagT dirTag,
     struct bsMPg * pgp,
     domainT ** newdmnPP
@@ -5782,7 +5782,7 @@ get_domain_disks(
 	int dirbuflen = 0;
 	struct kdirent *kdp = NULL;
 	extern const char default_rootname[];
-	extern uint32T global_rootdev_count;
+	extern uint32_t global_rootdev_count;
 
 	if (doingRoot & M_LOCAL_ROOT) {
 		vddp = (vdDescT *) ms_malloc(sizeof(vdDescT));
@@ -6348,7 +6348,7 @@ bs_bfset_get_dev(
 static int
 get_domain_major(
     char *domain,		/* in - domain name */
-    uint32T * dmnMajor		/* out - domain device major number */
+    uint32_t * dmnMajor		/* out - domain device major number */
 )
 {
 	int eofflag = 0, ent, error, i, dirOpen = FALSE, done = FALSE;

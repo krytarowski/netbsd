@@ -62,18 +62,15 @@
  * constant regardless of cpu architecture.
  **********************************************************************/
 
-typedef unsigned int uint32T;	/* unsigned 32 bit int */
-typedef unsigned short uint16T;	/* unsigned 16 bit int */
-typedef short int16T;		/* signed 16 bit int */
-typedef int int32T;		/* signed 32 bit int */
-typedef unsigned int bsPageT;	/* bitfile page number, 32 bits */
-typedef unsigned int lbnT;	/* logical block number, 32 bits */
+#include <sys/stdint.h>
+typedef uint32_t bsPageT;	/* bitfile page number, 32 bits */
+typedef uint32_t lbnT;		/* logical block number, 32 bits */
 typedef struct timeval bsIdT;	/* unique identifier, 64 bits */
  /* tmp - should be real uuid */
 
 /***************** end of base "on disk" typedefs ********************/
 
-typedef uint16T vdIndexT;
+typedef uint16_t vdIndexT;
 typedef int statusT;		/* tmp */
 
 #define BS_DOMAIN_NAME_SZ     (NAME_MAX + 1)
@@ -469,8 +466,8 @@ typedef struct {
  */
 
 typedef struct logRecAddr {
-	uint16T page;		/* Log page number of the record */
-	uint16T offset;		/* Log page offset of the record */
+	uint16_t page;		/* Log page number of the record */
+	uint16_t offset;		/* Log page offset of the record */
 	lsnT lsn;		/* Logical sequence number of the record */
 }          logRecAddrT;
 #define RECADDR_EQ( rec1, rec2 ) \

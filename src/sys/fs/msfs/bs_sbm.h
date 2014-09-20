@@ -40,17 +40,17 @@ sbm_clear_cache(
 void *
 sbm_find_space(
     vdT * vdp,
-    uint32T requested_blks,
+    uint32_t requested_blks,
     uint64T dstBlkOffset,
     bsAllocHintT alloc_hint,
-    uint32T * start_blk,
-    uint32T * found_blks
+    uint32_t * start_blk,
+    uint32_t * found_blks
 );
 
 void
 sbm_howmany_blks(
-    uint32T blkOffset,
-    uint32T * blkCount,		/* in/out , might be reduced */
+    uint32_t blkOffset,
+    uint32_t * blkCount,		/* in/out , might be reduced */
     int *pinPages,		/* in/out */
     vdT * vdp,
     int pgSz
@@ -59,18 +59,18 @@ sbm_howmany_blks(
 statusT
 sbm_remove_space(
     vdT * vdp,
-    uint32T startBlk,
-    uint32T blks,
+    uint32_t startBlk,
+    uint32_t blks,
     stgDescT * stg_desc,
     ftxHT parentFtx,
-    uint32T flags
+    uint32_t flags
 );
 
 statusT
 sbm_return_space_no_sub_ftx(
     vdT * virtualDiskp,		/* in */
-    uint32T blkOffset,		/* in */
-    uint32T blkCnt,		/* in */
+    uint32_t blkOffset,		/* in */
+    uint32_t blkCnt,		/* in */
     ftxHT parentFtx		/* in */
 );
 
@@ -89,7 +89,7 @@ sbm_alloc_bits(
     ftxHT parentFtx		/* in */
 );
 
-uint32T
+uint32_t
 sbm_total_free_space(
     vdT * vdp
 );

@@ -136,10 +136,10 @@ typedef struct logRecHdr {
 	logRecAddrT prevClientRec;	/* log addr of client's previous log
 					 * record */
 	logRecAddrT firstSeg;	/* log addr of record's first segment       */
-	uint32T wordCnt;	/* log segment size count in words (inc hdr) */
-	uint32T clientWordCnt;	/* size of client's record (in words)       */
+	uint32_t wordCnt;	/* log segment size count in words (inc hdr) */
+	uint32_t clientWordCnt;	/* size of client's record (in words)       */
 	lsnT lsn;		/* log sequence number                      */
-	uint32T segment;	/* 31-bit segment number; if bit 31 is set  */
+	uint32_t segment;	/* 31-bit segment number; if bit 31 is set  */
 	/* then there are more segments in the   */
 	/* record.                               */
 }         logRecHdrT;
@@ -148,12 +148,12 @@ typedef struct logRecHdr {
 /*
  * Number words per log record header
  */
-#define REC_HDR_WORDS howmany( sizeof( logRecHdrT ), sizeof( uint32T ) )
+#define REC_HDR_WORDS howmany( sizeof( logRecHdrT ), sizeof( uint32_t ) )
 
 /*
  * Number words per ftxDoneLRT record header
  */
-#define DONE_LRT_WORDS howmany( sizeof( ftxDoneLRT ), sizeof( uint32T ) )
+#define DONE_LRT_WORDS howmany( sizeof( ftxDoneLRT ), sizeof( uint32_t ) )
 
 /* Total header words for a log record */
 #define TOT_HDR_WORDS (REC_HDR_WORDS + DONE_LRT_WORDS)
@@ -161,7 +161,7 @@ typedef struct logRecHdr {
 /*
  * Number words per log page header
  */
-#define PG_HDR_WORDS howmany( sizeof( logPgHdrT ), sizeof( uint32T ) )
+#define PG_HDR_WORDS howmany( sizeof( logPgHdrT ), sizeof( uint32_t ) )
 
 /*
  * Max number of records per log page (empty records!).
@@ -596,7 +596,7 @@ lgr_repair_pg(
     logPgT * pgp		/* in - ptr to a log page */
 )
 {
-	uint32T validEndRec, startBlk, endBlk;
+	uint32_t validEndRec, startBlk, endBlk;
 	logRecHdrT *recHdr;
 	int b, badChkBits = FALSE;
 	logPgBlksT *logPgBlks = (logPgBlksT *) pgp;
@@ -625,13 +625,13 @@ lgr_repair_pg(
 
 		startBlk = (pgp->hdr.prevLastRec + recHdr->wordCnt + PG_HDR_WORDS)
 		    /
-		    (LOG_BLKSZ / sizeof(uint32T));
+		    (LOG_BLKSZ / sizeof(uint32_t));
 
 		recHdr = (logRecHdrT *) & pgp->data[pgp->hdr.curLastRec];
 
 		endBlk = (pgp->hdr.curLastRec + recHdr->wordCnt + PG_HDR_WORDS)
 		    /
-		    (LOG_BLKSZ / sizeof(uint32T));
+		    (LOG_BLKSZ / sizeof(uint32_t));
 
 		if ((startBlk == 0) && (startBlk == endBlk)) {
 			/*
@@ -782,15 +782,15 @@ lgr_restore_pg(
 static void
 lgr_restore_rec(
     logPgT * pgp,		/* in - ptr to a log page */
-    uint32T * recp,		/* in - ptr to record. Patch this record */
-    uint32T offset,		/* in - offset into log page */
-    uint32T size		/* in - size of record in bytes */
+    uint32_t * recp,		/* in - ptr to record. Patch this record */
+    uint32_t offset,		/* in - offset into log page */
+    uint32_t size		/* in - size of record in bytes */
 )
 {
 	int idx;
-	uint32T *fix_st;	/* Start location in recp to patch */
-	uint32T *fix_ed;	/* End of the record */
-	uint32T blk_offset = offset & (LOG_BLKSZ - 1);
+	uint32_t *fix_st;	/* Start location in recp to patch */
+	uint32_t *fix_ed;	/* End of the record */
+	uint32_t blk_offset = offset & (LOG_BLKSZ - 1);
 
 	/* The log descLock protects the pgSafe field and should be held
 	 * whenever this routine is called */
@@ -808,11 +808,11 @@ lgr_restore_rec(
 			idx = (offset / LOG_BLKSZ) - 1;
 		} else {
 			/* Round up to nearest block  */
-			fix_st = (uint32T *) ((char *) recp + LOG_BLKSZ - blk_offset);
+			fix_st = (uint32_t *) ((char *) recp + LOG_BLKSZ - blk_offset);
 			idx = offset / LOG_BLKSZ;
 		}
 
-		fix_ed = (uint32T *) ((char *) recp + size);
+		fix_ed = (uint32_t *) ((char *) recp + size);
 
 		while (fix_st < fix_ed) {
 			/* lsnOverwriteVal has ADVFS_PGSZ_IN_BLKS-1 (15)
@@ -824,7 +824,7 @@ lgr_restore_rec(
 
 			*(lsnT *) fix_st = pgp->trlr.lsnOverwriteVal[idx];
 			idx++;
-			fix_st = (uint32T *) ((char *) fix_st + LOG_BLKSZ);
+			fix_st = (uint32_t *) ((char *) fix_st + LOG_BLKSZ);
 		}
 	}
 }
@@ -1046,9 +1046,9 @@ lgr_writev_ftx(
 {
 	logRecHdrT recHdr, *prevHdrP;
 	logRecAddrT prevRec, firstSeg;
-	uint32T *dataP;
-	uint32T segWdsToWrite = 0, totWdsWritten = 0, segment = 0;
-	uint32T bufWdsWritten = 0, wdsToWrite, wdsWritten;
+	uint32_t *dataP;
+	uint32_t segWdsToWrite = 0, totWdsWritten = 0, segment = 0;
+	uint32_t bufWdsWritten = 0, wdsToWrite, wdsWritten;
 	logDescT *ldP;
 	statusT sts;
 	int wd, buf = 0, bufWords = 0;
@@ -1056,8 +1056,8 @@ lgr_writev_ftx(
 	int bufCnt = lrdp->count;
 	char *log_record_addr;
 	logRecAddrT current_rec;
-	uint16T current_rec_offset;
-	uint32T current_log_page;
+	uint16_t current_rec_offset;
+	uint32_t current_log_page;
 	perlvlT *clvlp = &ftxp->cLvl[ftxp->currLvl];
 	struct bsBuf *bp;
 	int pli;
@@ -1375,13 +1375,13 @@ lgr_writev_ftx(
 
 		bcopy((char *) &recHdr + sizeof(recHdr.nextRec),
 		    (char *) log_record_addr + sizeof(recHdr.nextRec),
-		    REC_HDR_WORDS * sizeof(uint32T) - sizeof(recHdr.nextRec));
+		    REC_HDR_WORDS * sizeof(uint32_t) - sizeof(recHdr.nextRec));
 
 		/*
 	         *** Copy data to the log record.  Handle buffers in buffer vector
 	         */
 
-		log_record_addr += (REC_HDR_WORDS * sizeof(uint32T));
+		log_record_addr += (REC_HDR_WORDS * sizeof(uint32_t));
 		wdsWritten = 0;
 
 		/*
@@ -1411,15 +1411,15 @@ lgr_writev_ftx(
 				bcopy(
 				    (char *) &bufv[buf].bufPtr[bufWdsWritten],
 				    (char *) log_record_addr,
-				    wdsToWrite * sizeof(uint32T));
+				    wdsToWrite * sizeof(uint32_t));
 			} else {
-				dataP = (uint32T *) log_record_addr;
+				dataP = (uint32_t *) log_record_addr;
 				for (wd = 0; wd < wdsToWrite; wd++) {
 					dataP[wd] = bufv[buf].bufPtr[bufWdsWritten + wd];
 				}
 			}
 
-			log_record_addr += (wdsToWrite * sizeof(uint32T));
+			log_record_addr += (wdsToWrite * sizeof(uint32_t));
 			totWdsWritten += wdsToWrite;
 			bufWdsWritten += wdsToWrite;
 			wdsWritten += wdsToWrite;
@@ -2093,7 +2093,7 @@ lgr_read(
     logReadModeT rdMode,	/* in  - read mode (fwd, bwd, bwd_link, ...) */
     logRdHT logRdH,		/* in  - lgr_read handle */
     logRecAddrT * recAddr,	/* in/out  - log address of record */
-    uint32T ** buf,		/* out - ptr to record data */
+    uint32_t ** buf,		/* out - ptr to record data */
     int *bufWords,		/* out - words read */
     int *recWords		/* out - size of record (not just this
 				 * segment) */
@@ -2106,10 +2106,10 @@ lgr_read(
 
 	/* Copy recAddr fields to local variables */
 
-	uint16T rec_pg = recAddr->page;
-	uint16T rec_offset = recAddr->offset;
+	uint16_t rec_pg = recAddr->page;
+	uint16_t rec_offset = recAddr->offset;
 	lsnT rec_lsn = recAddr->lsn;
-	uint32T rec_segment;
+	uint32_t rec_segment;
 
 	DEFINE_LOCK_FLAGS;
 
@@ -2186,7 +2186,7 @@ lgr_read(
 	    sizeof(logRecHdrT));
 	/* Restore it */
 	lgr_restore_rec(rdP->pgP,
-	    (uint32T *) & recHdr,
+	    (uint32_t *) & recHdr,
 	    (long) &rdP->pgP->data[rec_offset] - (long) rdP->pgP,
 	    sizeof(logRecHdrT));
 
@@ -2208,7 +2208,7 @@ lgr_read(
 	*recWords = recHdr.clientWordCnt;
 
 	/* Return ptr to data in the log record */
-	*buf = (uint32T *) ms_malloc((*bufWords) * 4);
+	*buf = (uint32_t *) ms_malloc((*bufWords) * 4);
 
 	if (*buf == NULL) {
 		RAISE_EXCEPTION(ENOMEM);
@@ -2219,7 +2219,7 @@ lgr_read(
 
 	/* Restore it */
 	lgr_restore_rec(rdP->pgP,
-	    (uint32T *) * buf,
+	    (uint32_t *) * buf,
 	    (long) &rdP->pgP->data[rec_offset + REC_HDR_WORDS] -
 	    (long) rdP->pgP,
 	    (*bufWords) * 4);
@@ -2398,12 +2398,12 @@ HANDLE_EXCEPTION:
 static void
 get_pg_lsn(
     bfAccessT * bfap,		/* in - log's bitfile access structure */
-    uint32T pg,			/* in - log page's number */
+    uint32_t pg,			/* in - log page's number */
     lsnT * pgLsn,		/* out - log page's first record's LSN */
     int *invalidPg,		/* out - flag indicates if page is invalid */
     int *incompletePg,		/* out - flag indicates if page is incomplete */
     lsnT * prtdLsn,		/* in/out - thread of prev lsn across pg */
-    uint32T * prtdPg		/* in/out - thread of prev pg  across pg */
+    uint32_t * prtdPg		/* in/out - thread of prev pg  across pg */
 )
 {
 	statusT sts;
@@ -2488,14 +2488,14 @@ find_log_end_pg(
 )
 {
 	int i, logWrapped = 0, pgBad = 0, pg0Bad = 0, pgMaxBad = 0, searchPgs;
-	uint32T lwrPg = 0, uprPg = ldP->pgCnt - 1, midPg, endPg = 0, pg, ptrdPg = -1;
+	uint32_t lwrPg = 0, uprPg = ldP->pgCnt - 1, midPg, endPg = 0, pg, ptrdPg = -1;
 	int ignore, pgIncomplete;
 	bfPageRefHT pgRef;
 	logRecHdrT *recHdr;
 	ftxDoneLRT *dlrp;
 	logPgT *logPgP;
 	statusT sts;
-	uint32T recOffset;
+	uint32_t recOffset;
 	logRecAddrT crashRedo;
 
 	lsnT
@@ -2817,7 +2817,7 @@ setup_log_desc(
 {
 	int pgReferenced = 0;
 	logRecHdrT *recHdr;
-	uint32T recOffset;
+	uint32_t recOffset;
 	statusT sts;
 	bfPageRefHT pgRef;
 	logPgT *logPgP;
@@ -2945,7 +2945,7 @@ HANDLE_EXCEPTION:
 static statusT
 log_init(
     bfAccessT * bfap,
-    uint32T pgCnt,
+    uint32_t pgCnt,
     bfDomainIdT domainId
 )
 {
@@ -3009,7 +3009,7 @@ lgr_open(
     bfAccessT ** logbfap,	/* out - access structure of the open log */
     bfTagT logtag,		/* in - the log's tag */
     bfSetT * bfSetp,		/* in - the log's bitfile-set desc pointer */
-    uint32T flag		/* in - if set, re-init the log (forced mount) */
+    uint32_t flag		/* in - if set, re-init the log (forced mount) */
 )
 {
 	statusT sts;
@@ -3812,7 +3812,7 @@ statusT
 lgr_switch_vol(
     logDescT * ldP,		/* in - pointer to an open log */
     vdIndexT newVolIdx,		/* in - move log to this vdIndex */
-    uint32T newNumPgs,		/* in - if > 0 then change log's size */
+    uint32_t newNumPgs,		/* in - if > 0 then change log's size */
     serviceClassT logSvc,	/* in - if != 0 then change log service class */
     long xid			/* in - CFS transaction id */
 )
@@ -3822,7 +3822,7 @@ lgr_switch_vol(
 	bfAccessT *logAccP, *newAccP;
 	domainT *dmnP;
 	vdT *vdP, *newVdP;
-	uint32T logPgs;
+	uint32_t logPgs;
 	bfTagT oldTag, newTag;
 	bfAccessT *newLogBfap;
 	logRecAddrT nextLogAddr;

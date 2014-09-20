@@ -918,7 +918,7 @@ fs_update_stats(
     struct vnode * vp,		/* in - vnode of bitfile */
     struct bfAccess * bfap,	/* in - access structure */
     ftxHT ftx_handle,		/* in - ftx handle */
-    uint32T flags		/* in - flags */
+    uint32_t flags		/* in - flags */
 )
 {
 	struct fsContext *context_ptr;
@@ -1023,7 +1023,7 @@ EXIT_UPDATE:
 statusT
 fs_flush_saved_stats(
     bfAccessT * bfap,		/* in - access struct */
-    uint32T flags,		/* in - flags */
+    uint32_t flags,		/* in - flags */
     ftxHT ftxH			/* in - transaction handle */
 )
 {

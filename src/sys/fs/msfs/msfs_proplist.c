@@ -101,16 +101,16 @@ int64_t MsfsPlMaxLen = BSR_PL_MAX_LARGE;
 /* load x1 from x2; x1 must be long-word aligned; return x1 */
 #define FLAGS_READ(x1,x2)                               \
   (                                                     \
-   ((uint32T *) &(x1))[0] = ((u_int *)&(x2))[0],        \
-   ((uint32T *) &(x1))[1] = ((u_int *)&(x2))[1],        \
+   ((uint32_t *) &(x1))[0] = ((u_int *)&(x2))[0],        \
+   ((uint32_t *) &(x1))[1] = ((u_int *)&(x2))[1],        \
    (x1)                                                 \
    )
 
 /* load x1 from x2, x2 must be long */
 #define FLAGS_ASSIGN(x1,x2)                             \
   (                                                     \
-   ((uint32T *) &(x1))[0] = (u_int)((x2) & 0xffffffff), \
-   ((uint32T *) &(x1))[1] = (u_int)((x2) >> 32)         \
+   ((uint32_t *) &(x1))[0] = (u_int)((x2) & 0xffffffff), \
+   ((uint32_t *) &(x1))[1] = (u_int)((x2) >> 32)         \
    )
 
 
@@ -124,7 +124,7 @@ int64_t MsfsPlMaxLen = BSR_PL_MAX_LARGE;
 typedef struct bsRecCur {
 	vdIndexT VD;
 	bfMCIdT MC;
-	uint32T pgoff;
+	uint32_t pgoff;
 	vdIndexT prevVD;
 	bfMCIdT prevMC;
 	bfPageRefHT pgRef;
@@ -138,7 +138,7 @@ typedef struct bsRecCur {
 typedef struct bsOdRecCur {
 	vdIndexT VD;
 	bfMCIdT MC;
-	uint32T pgoff;
+	uint32_t pgoff;
 	vdIndexT prevVD;
 	bfMCIdT prevMC;
 }          bsOdRecCurT;
@@ -221,7 +221,7 @@ msfs_pl_fill_hdr_image(
     int *name_resid,		/* out    */
     int *data_resid,		/* out    */
     unsigned long flags,	/* in     */
-    uint32T pl_num
+    uint32_t pl_num
 );
 
 static statusT
@@ -252,7 +252,7 @@ msfs_pl_findhead_setdata(
     int name_resid,		/* in     */
     int data_resid,		/* in     */
     int large,			/* in     */
-    uint32T pl_num,		/* in     */
+    uint32_t pl_num,		/* in     */
     int *mcells_alloced		/* out    */
 );
 
@@ -1262,7 +1262,7 @@ msfs_pl_set_entry(
 	char *hdr_image = NULL;
 	proplist_sec_attrs_t sec_info;
 	uint64T flags;
-	uint32T largest_pl_num, pl_num;
+	uint32_t largest_pl_num, pl_num;
 	int got_name = 0, mcells_alloced = 0;
 	int clu_clxtnt_locked = FALSE, cow_read_locked = FALSE, trunc_xfer_locked = FALSE;
 
@@ -1619,7 +1619,7 @@ msfs_pl_fill_hdr_image(
     int *name_resid,		/* out    */
     int *data_resid,		/* out    */
     unsigned long flags,	/* in     */
-    uint32T pl_num		/* in     */
+    uint32_t pl_num		/* in     */
 )
 {
 	int error = 0, name_xfer, data_xfer;
@@ -1746,7 +1746,7 @@ msfs_pl_findhead_setdata(
     int name_resid,		/* in     */
     int data_resid,		/* in     */
     int large,			/* in     */
-    uint32T pl_num,		/* in     */
+    uint32_t pl_num,		/* in     */
     int *mcells_alloced		/* out    */
 )
 {

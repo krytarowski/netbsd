@@ -61,17 +61,17 @@
 	static statusT bfs_access(
             bfSetT ** retBfSetp,/* out - pointer to open bitfile-set desc */
             bfSetIdT bfSetId,	/* in - bitfile-set id */
-            uint32T options,	/* in - options flags */
+            uint32_t options,	/* in - options flags */
             ftxHT ftxH		/* in - transaction handle */
 );
 
 	statusT rbf_add_overlapping_clone_stg(
             bfAccessT * bfap,	/* in */
-            uint32T pageOffset,	/* in */
-            uint32T pageCnt,	/* in */
-            uint32T holePg,	/* in */
+            uint32_t pageOffset,	/* in */
+            uint32_t pageCnt,	/* in */
+            uint32_t holePg,	/* in */
             ftxHT parentFtx,	/* in */
-            uint32T * allocPageCnt);	/* out */
+            uint32_t * allocPageCnt);	/* out */
 
 void
 print_set_id(
@@ -85,11 +85,11 @@ frag_group_dealloc(
     bfSetT * setp,		/* in - fields modified */
     ftxHT ftxH,			/* in */
     bfFragT fragType,		/* in */
-    uint32T grpPg,		/* in */
+    uint32_t grpPg,		/* in */
     grpHdrT * grpHdrp,		/* in */
     rbfPgRefHT grpPgRef,	/* in */
-    uint32T firstGrpPg,		/* in */
-    uint32T lastGrpPg		/* in */
+    uint32_t firstGrpPg,		/* in */
+    uint32_t lastGrpPg		/* in */
 );
 
 /****************************************************************************
@@ -247,10 +247,10 @@ bs_fragbf_thread(void)
 	bsBfSetAttrT *setAttrp;
 	grpHdrT *grpHdrp;
 	bfPageRefHT grpPgRef;
-	uint32T grpPg, nextFreeGrp;
+	uint32_t grpPg, nextFreeGrp;
 	statusT sts;
 	int done;
-	uint32T delCnt;
+	uint32_t delCnt;
 	void *delListp;
 	ftxHT ftxH;
 	bfAccessT *bfap;
@@ -432,17 +432,17 @@ frag_group_dealloc(
     bfSetT * setp,		/* in - fields modified */
     ftxHT ftxH,			/* in */
     bfFragT fragType,		/* in */
-    uint32T grpPg,		/* in */
+    uint32_t grpPg,		/* in */
     grpHdrT * grpHdrp,		/* in */
     rbfPgRefHT grpPgRef,	/* in */
-    uint32T firstGrpPg,		/* in */
-    uint32T lastGrpPg		/* in */
+    uint32_t firstGrpPg,		/* in */
+    uint32_t lastGrpPg		/* in */
 )
 {
 	statusT sts;
-	uint32T pg = 0;
+	uint32_t pg = 0;
 	int found = FALSE;
-	uint32T nextFreeGrp = grpHdrp->nextFreeGrp;
+	uint32_t nextFreeGrp = grpHdrp->nextFreeGrp;
 	rbfPgRefHT pinPgH;
 	bsBfSetAttrT *setAttrp;
 
@@ -597,7 +597,7 @@ static void
 frag_group_init(
     bfSetT * setp,		/* in */
     bfFragT fragType,		/* in */
-    uint32T grpPg,		/* in */
+    uint32_t grpPg,		/* in */
     grpHdrT * grpHdrp		/* in */
 )
 {
@@ -695,7 +695,7 @@ frag_list_extend(
 	grpHdrT *grpHdrp;
 	int g;
 	ftxHT ftxH;
-	uint32T grpPg, newPg, newPgCnt, initGrps, holePg, holePgCnt;
+	uint32_t grpPg, newPg, newPgCnt, initGrps, holePg, holePgCnt;
 	bfAccessT *fragBfAp;
 	bsBfSetAttrT *setAttrp;
 	rbfPgRefHT pinPgH;
@@ -941,14 +941,14 @@ bs_frag_alloc(
 )
 {
 	statusT sts;
-	uint32T frag, grpPg, fragPg, fragSlot;
+	uint32_t frag, grpPg, fragPg, fragSlot;
 	fragHdrT *fragHdrp;
 	grpHdrT *grpHdrp;
 	slotsPgT *grpPgp, *fragPgp;
 	bsBfSetAttrT *setAttrp;
 	rbfPgRefHT pinPgH, grpPgRef, fragPgRef;
 	boolean_t have_not_found_frag = TRUE;
-	uint32T freeFrags = 0;
+	uint32_t freeFrags = 0;
 
 	if (setp->fragBfAp == NULL) {
 		ADVFS_SAD0("no frag bf");
@@ -1276,7 +1276,7 @@ bs_frag_dealloc(
 )
 {
 	statusT sts;
-	uint32T freeFrag;
+	uint32_t freeFrag;
 	int fragBfOpen = FALSE;
 	rbfPgRefHT grpPgRef, pinPgH;
 	bsBfSetAttrT *setAttrp;
@@ -1378,7 +1378,7 @@ bs_frag_dealloc(
 
 			slotsPgT *fragPgp;
 			fragHdrT *fragHdrp;
-			uint32T fragPg, fragSlot;
+			uint32_t fragPg, fragSlot;
 			rbfPgRefHT fragPgRef;
 
 			fragPg = FRAG2PG(grpHdrp->lastFreeFrag);
@@ -1409,7 +1409,7 @@ bs_frag_dealloc(
 		{
 			slotsPgT *ffragPgp;
 			fragHdrT *ffragHdrp;
-			uint32T ffragPg, ffragSlot;
+			uint32_t ffragPg, ffragSlot;
 			rbfPgRefHT ffragPgRef;
 
 			ffragPg = FRAG2PG(freeFrag);
@@ -1455,7 +1455,7 @@ bs_frag_dealloc(
 	         * Frag group has version 1 format.
 	         */
 
-		uint32T fragSlot;
+		uint32_t fragSlot;
 
 		fragSlot = freeFrag - grpPg * BF_FRAG_PG_SLOTS;
 
@@ -1678,7 +1678,7 @@ bs_fragbf_close(
  */
 
 void
-bs_frag_mark_group_header_as_bad(bfSetIdT bfSetId, uint32T groupHdrPage)
+bs_frag_mark_group_header_as_bad(bfSetIdT bfSetId, uint32_t groupHdrPage)
 {
 	bfSetT *bfSetp;
 	grpHdrT *grpHdrp;
@@ -2268,7 +2268,7 @@ bfs_create(
     serviceClassT reqServ,	/* in - required service class */
     serviceClassT optServ,	/* in - optional service class */
     char *setName,		/* in - the new set's name */
-    uint32T fsetOptions,	/* in - fileset options */
+    uint32_t fsetOptions,	/* in - fileset options */
     ftxHT parentFtxH,		/* in - parent transaction handle */
     bfSetIdT * bfSetId		/* out - bitfile set id */
 )
@@ -2463,7 +2463,7 @@ rbf_bfs_create(
     serviceClassT reqServ,	/* in - required service class */
     serviceClassT optServ,	/* in - optional service class */
     char *setName,		/* in - the new set's name */
-    uint32T fsetOptions,	/* in - fileset options */
+    uint32_t fsetOptions,	/* in - fileset options */
     ftxHT parentFtxH,		/* in - parent transaction handle */
     bfSetIdT * bfSetId		/* out - bitfile set id */
 )
@@ -2612,7 +2612,7 @@ void
 bs_bfs_close(
     bfSetT * bfSetp,		/* in - pointer to open bitfile-set */
     ftxHT ftxH,			/* in - transaction handle */
-    uint32T options		/* in - options flags */
+    uint32_t options		/* in - options flags */
 )
 {
 	bfSetT *setp;
@@ -2728,7 +2728,7 @@ static statusT
 bfs_access(
     bfSetT ** retBfSetp,	/* out - pointer to open bitfile-set desc */
     bfSetIdT bfSetId,		/* in - bitfile-set id */
-    uint32T options,		/* in - options flags */
+    uint32_t options,		/* in - options flags */
     ftxHT ftxH			/* in - transaction handle */
 )
 {
@@ -2827,7 +2827,7 @@ bfs_access(
 		/*
 	         *  setAttr.flags maps to the low 16 bits of BfSetFlags
 	         */
-		bfSetp->bfSetFlags = (uint32T) setAttr.flags;
+		bfSetp->bfSetFlags = (uint32_t) setAttr.flags;
 
 		bfSetp->freeFragGrps = setAttr.freeFragGrps;
 		for (i = 0; i < BF_FRAG_MAX; i++) {
@@ -3041,7 +3041,7 @@ static statusT
 bfs_open(
     bfSetT ** retBfSetp,	/* out - pointer to open bitfile-set */
     bfSetIdT bfSetId,		/* in - bitfile-set id */
-    uint32T options,		/* in - options flags */
+    uint32_t options,		/* in - options flags */
     ftxHT ftxH			/* in - transacton handle */
 )
 {
@@ -3186,7 +3186,7 @@ statusT
 rbf_bfs_open(
     bfSetT ** retBfSetp,	/* out - pointer to open bitfile-set */
     bfSetIdT bfSetId,		/* in - bitfile-set id */
-    uint32T options,		/* in - options flags */
+    uint32_t options,		/* in - options flags */
     ftxHT ftxH			/* in - transaction handle */
 )
 {
@@ -4385,14 +4385,14 @@ HANDLE_EXCEPTION:
 	       clone_tagdir(
 	           bfSetT * origSetp,	/* in - orig set desc */
 	           bfSetT * cloneSetp,	/* in - clone set desc */
-	           uint32T numDirPages,	/* in - num pages in orig set's tag
+	           uint32_t numDirPages,	/* in - num pages in orig set's tag
 					 * dir */
 	           ftxHT ftxH	/* in - ftx handle */
 	) {
 		statusT sts;
 		bfPageRefHT origPgRef, clonePgRef;
 		char *origPgp, *clonePgp;
-		uint32T pg;
+		uint32_t pg;
 		bfParamsT cloneDirParams;
 
 		         sts = bs_get_bf_params(cloneSetp->dirBfAp, &cloneDirParams, 0);
@@ -4926,8 +4926,8 @@ HANDLE_EXCEPTION:
 	void
 	     bs_bfs_get_clone_info(
 	         bfSetT * bfSetp,	/* in - bitfile-set desc pointer */
-	         uint32T * cloneId,	/* out - bitfile set clone id */
-	         uint32T * cloneCnt	/* out - bitfile set clone count */
+	         uint32_t * cloneId,	/* out - bitfile set clone id */
+	         uint32_t * cloneCnt	/* out - bitfile set clone count */
 	) {
 		if (!BFSET_VALID(bfSetp)) {
 			ADVFS_SAD1("bs_bfs_get_clone_info: E_BAD_BF_SET_POINTER", (long) bfSetp);
@@ -5121,10 +5121,10 @@ _error:
 
 	statusT
 	    bs_bfs_get_info(
-	    uint32T * nextSetIdx,	/* in/out - index of set */
+	    uint32_t * nextSetIdx,	/* in/out - index of set */
 	    bfSetParamsT * bfSetParams,	/* out - the bitfile-set's parameters */
 	    domainT * dmnP,	/* in - domain pointer */
-	    uint32T * userId	/* out - bfset user id */
+	    uint32_t * userId	/* out - bfset user id */
 	    ) {
 		bfTagT setTag;
 		statusT sts;
@@ -5300,9 +5300,9 @@ HANDLE_EXCEPTION:
 	    bfSetParamsT * setParams	/* out - the bitfile-set's parameters */
 	    ) {
 		statusT sts;
-		uint32T setIdx;
+		uint32_t setIdx;
 		int done = FALSE;
-		uint32T t1;	/* unused output param */
+		uint32_t t1;	/* unused output param */
 
 		setIdx = 0;
 
@@ -6304,16 +6304,16 @@ HANDLE_EXCEPTION:
 		bfAccessT *cloneap = NULL;
 		statusT sts;
 		int cowLkLocked = FALSE, ftxStarted = FALSE, cloneOp = FALSE;
-		uint32T p;
-		uint32T cnt;
+		uint32_t p;
+		uint32_t cnt;
 		ftxHT ftxH;
 		bfPageRefHT origPgRef, clonePgRef;
 		char *origPgp, *clonePgp;
-		uint32T pgsAdded = 0;
+		uint32_t pgsAdded = 0;
 		bfSetT *cloneSetp = bfSetp->cloneSetp;	/* stabilzed in bs_cow */
 		statusT orig_sts;
 		int lastpg;
-		uint32T nextpage;
+		uint32_t nextpage;
 		struct vnode *nullvp = NULL;
 		int migTruncLocked = FALSE;
 		int fileLkLocked = 0;
@@ -6321,7 +6321,7 @@ HANDLE_EXCEPTION:
 		bfPageRefHintT ref_hint;
 		int ret;
 		actRangeT *arp = NULL;
-		uint32T nextPage = 0;
+		uint32_t nextPage = 0;
 
 		        KASSERT(cloneSetp->bfsHoldCnt > 0);
 

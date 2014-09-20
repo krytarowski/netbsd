@@ -56,7 +56,7 @@ static
        statusT
 alloc_bits_page(
     bfAccessT * sbmbfap,	/* in */
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     int startBit,		/* in */
     int endBit,			/* in */
     ftxHT ftx			/* in */
@@ -66,7 +66,7 @@ static
 void
 dealloc_bits_page(
     bfAccessT * sbmbfap,	/* in */
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     int startBit,		/* in */
     int endBit,			/* in */
     ftxHT ftx			/* in */
@@ -76,9 +76,9 @@ static
 stgDescT *
 load_x_cache(
     vdT * vd,			/* in */
-    uint32T req_clust,		/* in */
-    uint32T max_clust,		/* in */
-    uint32T fillCache,		/* in */
+    uint32_t req_clust,		/* in */
+    uint32_t max_clust,		/* in */
+    uint32_t fillCache,		/* in */
     bsAllocHintT alloc_hint,	/* in */
     uint64T dstBlkOffset
 );
@@ -94,8 +94,8 @@ static
 stgDescT *
 add_cache(
     vdT * vdp,			/* in */
-    const uint32T blk,		/* in */
-    const uint32T blks,		/* in */
+    const uint32_t blk,		/* in */
+    const uint32_t blks,		/* in */
     bsAllocHintT alloc_hint	/* in */
 );
 
@@ -103,16 +103,16 @@ static
 void
 remove_cache(
     vdT * vdp,			/* in */
-    const uint32T clustOffset,	/* in */
-    const uint32T clustCnt,	/* in */
+    const uint32_t clustOffset,	/* in */
+    const uint32_t clustCnt,	/* in */
     stgDescT * stgDesc,		/* in */
-    uint32T flags		/* in */
+    uint32_t flags		/* in */
 );
 
 static statusT
        sbm_verify_xor(bsStgBmT * sbmPagep);	/* in - SBM page to verify */
 
-uint32T
+uint32_t
 find_bmt_end(
     vdT * vdp			/* in */
 );
@@ -217,8 +217,8 @@ CANT_CLEAR_TWICE(
 
 typedef struct bitmapUndoRec {
 	int type;		/* ALLOC_BITS, DEALLOC_BITS */
-	uint16T vdIndex;
-	uint32T pageOffset;
+	uint16_t vdIndex;
+	uint32_t pageOffset;
 	int startBit;
 	int endBit;
 }             bitmapUndoRecT;
@@ -246,7 +246,7 @@ bitmap_undo_opx(
 {
 
 	statusT sts;
-	uint32T clustCnt;
+	uint32_t clustCnt;
 	domainT *dmnP;
 	vdT *vdp;
 	unLkActionT unlock_action;
@@ -392,8 +392,8 @@ sbm_set_pg_bits(
 	int lastInt;
 	int wordBit;
 	int i;
-	const uint32T allSet = 0xffffffff;
-	uint32T mask;
+	const uint32_t allSet = 0xffffffff;
+	uint32_t mask;
 
 
 	endBit = bitOffset + bitCount - 1;
@@ -439,7 +439,7 @@ sbm_alloc_bits(
 )
 {
 	statusT sts;
-	uint32T sbm_pg, start_sbm_pg, end_sbm_pg;
+	uint32_t sbm_pg, start_sbm_pg, end_sbm_pg;
 	int cur_bit, endBit, bits_to_set, set_bits;
 	ftxHT ftx;
 	bitmapUndoRecT undoRec;
@@ -506,7 +506,7 @@ HANDLE_EXCEPTION:
 statusT
 alloc_bits_page(
     bfAccessT * sbmbfap,	/* in */
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     int startBit,		/* in */
     int endBit,			/* in */
     ftxHT ftx			/* in */
@@ -519,8 +519,8 @@ alloc_bits_page(
 	int firstInt;
 	int lastInt;
 	int wordBit;
-	uint32T mask;
-	const uint32T allSet = 0xffffffff;
+	uint32_t mask;
+	const uint32_t allSet = 0xffffffff;
 	int i;
 
 
@@ -599,7 +599,7 @@ dealloc_bits_no_sub_ftx(
 )
 {
 	statusT sts;
-	uint32T sbm_pg, start_sbm_pg, end_sbm_pg;
+	uint32_t sbm_pg, start_sbm_pg, end_sbm_pg;
 	int cur_bit, endBit, bits_to_clr, clr_bits;
 
 
@@ -637,7 +637,7 @@ static
 void
 dealloc_bits_page(
     bfAccessT * sbmbfap,	/* in */
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     int startBit,		/* in */
     int endBit,			/* in */
     ftxHT ftx			/* in */
@@ -650,8 +650,8 @@ dealloc_bits_page(
 	int firstInt;
 	int lastInt;
 	int wordBit;
-	uint32T mask;
-	const uint32T allSet = 0xffffffff;
+	uint32_t mask;
+	const uint32_t allSet = 0xffffffff;
 	int i;
 
 
@@ -785,23 +785,23 @@ dealloc_bits_page(
  */
 #define DEFAULT_NOT_PICKY_BLOCK_COUNT  (8 * ADVFS_PGSZ_IN_BLKS)
 
-uint32T AdvfsNotPickyBlkCnt = DEFAULT_NOT_PICKY_BLOCK_COUNT;
-uint32T AdvfsSbmFindSpace;
+uint32_t AdvfsNotPickyBlkCnt = DEFAULT_NOT_PICKY_BLOCK_COUNT;
+uint32_t AdvfsSbmFindSpace;
 
 void *
 sbm_find_space(
     vdT * vdp,			/* in */
-    uint32T requested_blks,	/* in */
+    uint32_t requested_blks,	/* in */
     uint64T dstBlkOffset,	/* in, if alloc_hint==BS_ALLOC_MIG_RSVD */
     bsAllocHintT alloc_hint,	/* in */
-    uint32T * start_blk,	/* in/out */
-    uint32T * found_blks	/* out - always is <= requested_blks */
+    uint32_t * start_blk,	/* in/out */
+    uint32_t * found_blks	/* out - always is <= requested_blks */
 )
 {
-	uint32T requested_clust = howmany(requested_blks, vdp->stgCluster);
+	uint32_t requested_clust = howmany(requested_blks, vdp->stgCluster);
 	stgDescT *cur_desc;
-	uint32T requested_start;
-	uint32T num_found_clust, start_found_clust;
+	uint32_t requested_start;
+	uint32_t num_found_clust, start_found_clust;
 	stgDescT *reserved_desc;
 	int free_rsvd, fillCache = 0;
 
@@ -1124,8 +1124,8 @@ use_cur_desc:
  */
 void
 sbm_howmany_blks(
-    uint32T blkOffset,
-    uint32T * blkCount,		/* in/out , might be reduced */
+    uint32_t blkOffset,
+    uint32_t * blkCount,		/* in/out , might be reduced */
     int *pinPages,		/* in/out */
     vdT * vdp,
     int pgSz
@@ -1208,15 +1208,15 @@ sbm_howmany_blks(
 statusT
 sbm_remove_space(
     vdT * vdp,			/* in */
-    uint32T startBlk,		/* in */
-    uint32T blks,		/* in */
+    uint32_t startBlk,		/* in */
+    uint32_t blks,		/* in */
     stgDescT * stg_desc,	/* in */
     ftxHT parentFtx,		/* in */
-    uint32T flags		/* in */
+    uint32_t flags		/* in */
 )
 {
-	uint32T clust = howmany(blks, vdp->stgCluster);
-	uint32T startClust = startBlk / vdp->stgCluster;
+	uint32_t clust = howmany(blks, vdp->stgCluster);
+	uint32_t startClust = startBlk / vdp->stgCluster;
 	stgDescT *newStgDesc;
 	domainT *domain;
 	statusT sts;
@@ -1277,13 +1277,13 @@ EXIT_SBM_REMOVE_SPACE:
 statusT
 sbm_return_space_no_sub_ftx(
     vdT * virtualDiskp,		/* in */
-    uint32T blkOffset,		/* in */
-    uint32T blkCnt,		/* in */
+    uint32_t blkOffset,		/* in */
+    uint32_t blkCnt,		/* in */
     ftxHT parentFtx		/* in */
 )
 {
-	uint32T clusterCnt;
-	uint32T clusterOffset;
+	uint32_t clusterCnt;
+	uint32_t clusterOffset;
 	domainT *domain;
 	statusT sts;
 
@@ -1472,26 +1472,26 @@ remove_desc(
  * returned.
  */
 
-uint32T AdvfsAddCache = 0;
+uint32_t AdvfsAddCache = 0;
 
 static stgDescT *
 add_cache(
     vdT * vdp,			/* in */
-    const uint32T begin_clust,	/* in */
-    const uint32T add_num_clust,/* in */
+    const uint32_t begin_clust,	/* in */
+    const uint32_t add_num_clust,/* in */
     bsAllocHintT alloc_hint	/* in */
 )
 {
 	stgDescT *new_desc;
 	stgDescT *last_desc;
-	uint32T start_clust = begin_clust, num_clust = add_num_clust;
-	uint32T start_clust2, num_clust2;
+	uint32_t start_clust = begin_clust, num_clust = add_num_clust;
+	uint32_t start_clust2, num_clust2;
 
-	uint32T rsvd_start = vdp->freeRsvdStg.start_clust;
-	uint32T rsvd_clust = vdp->freeRsvdStg.num_clust;
-	uint32T rsvd_end, cur_end, cur_start, mig_rsvd_end;
-	uint32T mig_rsvd_start = vdp->freeMigRsvdStg.start_clust;
-	uint32T mig_rsvd_clust = vdp->freeMigRsvdStg.num_clust;
+	uint32_t rsvd_start = vdp->freeRsvdStg.start_clust;
+	uint32_t rsvd_clust = vdp->freeRsvdStg.num_clust;
+	uint32_t rsvd_end, cur_end, cur_start, mig_rsvd_end;
+	uint32_t mig_rsvd_start = vdp->freeMigRsvdStg.start_clust;
+	uint32_t mig_rsvd_clust = vdp->freeMigRsvdStg.num_clust;
 	int i, chunk = 1;
 
 
@@ -1582,17 +1582,17 @@ add_cache(
  * info is removed, it simply reduces the count in the descriptor.
  */
 
-uint32T AdvfsRemoveCache;
-uint32T AdvfsUpdateCache;
+uint32_t AdvfsRemoveCache;
+uint32_t AdvfsUpdateCache;
 
 static
 void
 remove_cache(
     vdT * vdp,			/* in */
-    const uint32T clustOffset,	/* in */
-    const uint32T clustCnt,	/* in */
+    const uint32_t clustOffset,	/* in */
+    const uint32_t clustCnt,	/* in */
     stgDescT * stgDesc,		/* in */
-    uint32T flags		/* in */
+    uint32_t flags		/* in */
 )
 {
 	stgDescT *desc1, *desc2;
@@ -1780,15 +1780,15 @@ remove_cache(
  * cluster count of the largest contiguous set of free blocks is returned.
  */
 
-uint32T AdvfsLoadXCache;
+uint32_t AdvfsLoadXCache;
 
 static
 stgDescT *
 load_x_cache(
     vdT * vdp,			/* in - vd ptr */
-    uint32T req_clust,		/* in - req contig free clusters */
-    uint32T max_clust,		/* in - max contig free clusters */
-    uint32T fillCache,		/* in - flag to fill cache */
+    uint32_t req_clust,		/* in - req contig free clusters */
+    uint32_t max_clust,		/* in - max contig free clusters */
+    uint32_t fillCache,		/* in - flag to fill cache */
     bsAllocHintT alloc_hint,	/* in */
     uint64T dstBlkOffset	/* in, used if hint==BS_ALLOC_MIG_RSVD */
 )
@@ -1796,7 +1796,7 @@ load_x_cache(
 	bfPageRefHT pgref;
 	struct bsStgBm *sbmp;	/* pointer to storage bitmap page */
 	statusT sts;
-	uint32T
+	uint32_t
 	    pg,			/* current bitmap page number */
 	    wd,			/* current bitmap word number (within cur
 				 * page) */
@@ -1826,7 +1826,7 @@ load_x_cache(
 	int check_xor_fields;	/* TRUE if we should validate the xor field */
 	logDescT *ldP;
 	int in_use = 0;
-	uint32T mig_rsvdStartClust = vdp->freeMigRsvdStg.start_clust, mig_rsvdEndClust = mig_rsvdStartClust + vdp->freeMigRsvdStg.num_clust;
+	uint32_t mig_rsvdStartClust = vdp->freeMigRsvdStg.start_clust, mig_rsvdEndClust = mig_rsvdStartClust + vdp->freeMigRsvdStg.num_clust;
 
 	/*
          * fillCache:
@@ -1966,7 +1966,7 @@ load_x_cache(
 			 * be truncated by add_cache when it is found that it
 			 * overlaps the reserved migrate space. (in add_cache) */
 			for (wd = startWd; wd < wordCnt; (wd)++) {
-				uint32T curWord = sbmp->mapInt[wd];
+				uint32_t curWord = sbmp->mapInt[wd];
 				if ((startBit == 0) && (curWord == 0)
 				    && ((alloc_hint == BS_ALLOC_MIG_RSVD) ||
 					(!(MIG_RSVD_WORD(pg, wd))))) {
@@ -2033,7 +2033,7 @@ load_x_cache(
 				}
 			}
 			for (wd = startWd; wd < wordCnt; (wd)++) {
-				uint32T curWord = sbmp->mapInt[wd];
+				uint32_t curWord = sbmp->mapInt[wd];
 				if ((startBit == 0) && (curWord == 0)
 				    && (!(MIG_RSVD_WORD(pg, wd)))) {
 
@@ -2155,13 +2155,13 @@ _PAGE_FINISHED:
 statusT
 sbm_lock_range(
     vdT * vdp,			/* in */
-    uint32T blkOffset,		/* in  */
-    uint32T blkCnt		/* in */
+    uint32_t blkOffset,		/* in  */
+    uint32_t blkCnt		/* in */
 )
 {
 	statusT sts = EOK;
-	uint32T startClust = blkOffset / vdp->stgCluster;
-	uint32T numClust = blkCnt / vdp->stgCluster;
+	uint32_t startClust = blkOffset / vdp->stgCluster;
+	uint32_t numClust = blkCnt / vdp->stgCluster;
 
 	/* lock the sbm location we are migrating src extents into */
 	sts = sbm_lock_unlock_range(vdp,
@@ -2189,8 +2189,8 @@ sbm_lock_range(
 statusT
 sbm_lock_unlock_range(
     vdT * vdp,			/* in */
-    uint32T startClust,		/* in -  zero unlocks */
-    uint32T numClust		/* in -  zero unlocks */
+    uint32_t startClust,		/* in -  zero unlocks */
+    uint32_t numClust		/* in -  zero unlocks */
 )
 {
 	stgDescT *cur_desc, *next_desc;
@@ -2357,7 +2357,7 @@ sbm_clear_cache(
  * sbm_total_free_space - Returns the total number of free clusters on
  * the disk.
  */
-uint32T
+uint32_t
 sbm_total_free_space(
     vdT * vdp			/* in */
 )
@@ -2538,16 +2538,16 @@ sbm_dump(
 statusT
 sbm_scan(
     vdT * vdp,			/* in */
-    uint32T startBlk,		/* in */
-    uint32T endBlk,		/* in */
-    uint32T * cnt		/* out */
+    uint32_t startBlk,		/* in */
+    uint32_t endBlk,		/* in */
+    uint32_t * cnt		/* out */
 )
 {
 	bfPageRefHT pgref;
 	struct bsStgBm *sbmp;	/* pointer to storage bitmap page */
 	statusT sts;
 	logDescT *ldP;
-	uint32T
+	uint32_t
 	    curClust,		/* starting  cluster in range input */
 	    end_clust,		/* ending cluster in range input */
 	    pg,			/* current bitmap page number */
@@ -2651,7 +2651,7 @@ sbm_scan(
 		}
 
 		for (wd = startWd; wd < wordCnt; (wd)++) {
-			uint32T curWord = sbmp->mapInt[wd];
+			uint32_t curWord = sbmp->mapInt[wd];
 			if ((startBit == 0) && (curWord == 0xffffffff)) {
 				ADD_BITS(SBM_BITS_LONG);
 			} else {
@@ -2796,9 +2796,9 @@ statusT
 sbm_scan_v3_v4(
     vdT * vdp,			/* in */
     uint64T reqClustSize,	/* in */
-    uint32T startPg,		/* in */
-    uint32T startWd,		/* in */
-    uint32T startBit,		/* in */
+    uint32_t startPg,		/* in */
+    uint32_t startWd,		/* in */
+    uint32_t startBit,		/* in */
     uint64T * clustRunCnt,	/* out, length in clusters(currently pages)
 				 * found */
     uint64T * blkOffset,	/* out, location found */
@@ -2827,14 +2827,14 @@ sbm_scan_v3_v4(
 	    cur_clust;		/* current cluster being processed */
 	uint64T bmt_rsvd_start = vdp->freeRsvdStg.start_clust, bmt_rsvd_end = vdp->freeRsvdStg.start_clust +
 	vdp->freeRsvdStg.num_clust;
-	uint16T last_bit = 1;
+	uint16_t last_bit = 1;
 	extern REPLICATED int SS_is_running;
 	int pg_refed = FALSE;
 	int sbm_locked = FALSE;
 	int sbm_range_locked = FALSE;
 	int overlaps = FALSE;	/* flag for when child begins overlapping rsvd
 				 * storage */
-	uint32T jumpPg = 0, jumpWd = 0, jumpBit = 0;
+	uint32_t jumpPg = 0, jumpWd = 0, jumpBit = 0;
 
 	/* check to see if vd is being deactivated or smartstore is being
 	 * stopped before parking. */
@@ -3061,7 +3061,7 @@ _PAGE_FINISHED:
 static statusT
 sbm_verify_xor(bsStgBmT * sbmPagep)
 {
-	uint32T currWd,		/* Current word we are examining */
+	uint32_t currWd,		/* Current word we are examining */
 	        calcXor;	/* Calculated 'xor' value */
 
 	for (currWd = calcXor = 0;
@@ -3075,10 +3075,10 @@ sbm_verify_xor(bsStgBmT * sbmPagep)
  * cluster offset.
  */
 
-uint32T
+uint32_t
 find_bmt_end(vdT * vdp)
 {
-	uint32T vdBlk, prevpage, lastpage, blk_offset;
+	uint32_t vdBlk, prevpage, lastpage, blk_offset;
 	bsInMemXtntMapT *xMap;
 	bsInMemSubXtntMapT *subXMap;
 

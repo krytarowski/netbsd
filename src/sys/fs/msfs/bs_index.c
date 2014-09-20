@@ -63,7 +63,7 @@ idx_create_index_file_int(
     ftxHT ftxH
 );
 
-uint32T
+uint32_t
 idx_bsearch_int(
     idxNodeT * node,
     ulong search_key,
@@ -78,7 +78,7 @@ idx_hash_filename_int(
 statusT
 idx_index_get_free_pgs_int(
     bfAccessT * idx_bfap,
-    uint32T count,
+    uint32_t count,
     idxPinnedPgsT * pptr,
     ftxHT parentFtxH,
     int forceflag
@@ -97,12 +97,12 @@ idx_split_node_int(
 
 statusT
 idx_insert_filename_int(
-    uint32T node_page,
+    uint32_t node_page,
     ulong level,
     ulong * search_key,
     ulong * offset,
     bfAccessT * idx_bfap,
-    uint32T * insert,
+    uint32_t * insert,
     int *split_count,
     idxPinnedPgsT * pptr,
     ftxHT ftxH
@@ -110,7 +110,7 @@ idx_insert_filename_int(
 
 statusT
 idx_remove_filename_int(
-    uint32T page_to_search,
+    uint32_t page_to_search,
     ulong level,
     ulong search_key,
     ulong offset,
@@ -121,21 +121,21 @@ idx_remove_filename_int(
 
 statusT
 idx_lookup_node_int(
-    uint32T node_page,
-    uint32T level,
+    uint32_t node_page,
+    uint32_t level,
     ulong search_key,
     bfAccessT * idx_bfap,
     idxNodeT ** found_ptr,
     void *found_pgref,
-    uint32T * found_index,
-    uint32T pin_flag,
+    uint32_t * found_index,
+    uint32_t pin_flag,
     int *page,
     ftxHT ftxH
 );
 
 int
 idx_directory_insert_space_int(
-    uint32T node_page,
+    uint32_t node_page,
     ulong level,
     ulong * search_key,
     ulong * size,
@@ -148,8 +148,8 @@ idx_directory_insert_space_int(
 
 int
 idx_directory_get_space_int(
-    uint32T page_to_search,
-    uint32T level,
+    uint32_t page_to_search,
+    uint32_t level,
     ulong * size,
     ulong * file_offset,
     bfAccessT * idx_bfap,
@@ -159,8 +159,8 @@ idx_directory_get_space_int(
 long
 idx_setup_for_truncation_int(
     bfAccessT * idx_bfap,
-    uint32T page_to_search,
-    uint32T level,
+    uint32_t page_to_search,
+    uint32_t level,
     ulong * undo_space_start,
     int operation,
     ftxHT ftxH
@@ -173,7 +173,7 @@ idx_glom_entry_int(
     rbfPgRefHT pgref,
     ulong start_addr,
     ulong size,
-    uint32T index,
+    uint32_t index,
     ftxHT ftxH
 );
 
@@ -185,20 +185,20 @@ dir_sort_int(
 
 int
 idx_prune_btree_int(
-    uint32T page_to_search,
-    uint32T level,
+    uint32_t page_to_search,
+    uint32_t level,
     ulong * search_key,
-    uint32T * page,
-    uint32T root_level,
+    uint32_t * page,
+    uint32_t root_level,
     bfAccessT * idx_bfap,
-    uint32T tree,
+    uint32_t tree,
     ftxHT ftxH
 );
 
 statusT
 idx_remove_page_of_storage_int(
     bfAccessT * idx_bfap,
-    uint32T page,
+    uint32_t page,
     ftxHT ftxH
 );
 
@@ -788,7 +788,7 @@ idx_close_index_file(
  * Assumes that the node is either referenced or pinned.
  *********************************************************************/
 
-uint32T
+uint32_t
 idx_bsearch_int(
     idxNodeT * node,		/* Node to binary search */
     ulong search_key,		/* value to search for */
@@ -899,15 +899,15 @@ idx_hash_filename_int(
 statusT
 idx_index_get_free_pgs_int(
     bfAccessT * idx_bfap,	/* Index access structure ptr */
-    uint32T count,		/* Number of pages required */
+    uint32_t count,		/* Number of pages required */
     idxPinnedPgsT * pptr,	/* out - pages we obtained */
     ftxHT ftxH,			/* Parent transaction */
     int forceflag		/* sometimes we need to ignore quotas */
 )
 {
-	uint32T i;
-	uint32T holePg, newPg;
-	uint32T holePgCnt;
+	uint32_t i;
+	uint32_t holePg, newPg;
+	uint32_t holePgCnt;
 	statusT sts;
 
 	/* Extend the index file filling holes if possible */
@@ -1008,7 +1008,7 @@ idx_split_node_int(
     rbfPgRefHT dst_pgref	/* page ref */
 )
 {
-	uint32T idx_src, idx_dst, idx_middle;
+	uint32_t idx_src, idx_dst, idx_middle;
 
 	/* Determine if the element to be inserted lies in the first half of
 	 * the node.  */
@@ -1139,12 +1139,12 @@ idx_insert_filename(
 {
 	ulong search_key;
 	ulong root_page;
-	uint32T level;
+	uint32_t level;
 	ulong location;
 	bfAccessT *idx_bfap;
 	ftxHT ftxH;
 	int split_count;
-	uint32T insert;
+	uint32_t insert;
 	idxNodeT *new_root;
 	idxPinnedPgsT pinned_pages[IDX_MAX_BTREE_LEVELS];
 	idxUndoRecordT undorec;
@@ -1330,20 +1330,20 @@ idx_insert_filename(
 
 statusT
 idx_insert_filename_int(
-    uint32T node_page,		/* in - starting node page */
+    uint32_t node_page,		/* in - starting node page */
     ulong level,		/* caller's level in the tree */
     ulong * search_key,		/* in - key to insert out - key to insert */
     ulong * offset,		/* in - location to store in directory out -
 				 * location to store in node */
     bfAccessT * idx_bfap,	/* b-tree access structure */
-    uint32T * insert,		/* boolean indicating if an insertion to this
+    uint32_t * insert,		/* boolean indicating if an insertion to this
 				 * node needs to be done */
     int *split_count,		/* number of pages needed for split */
     idxPinnedPgsT * pptr,	/* pin page parameters */
     ftxHT ftxH			/* parent transaction */
 )
 {
-	uint32T index;
+	uint32_t index;
 	idxNodeT *node_ptr;
 	rbfPgRefHT pgref;
 	ulong temp_page;
@@ -1553,7 +1553,7 @@ idx_remove_filename(
 )
 {
 	ulong search_key;
-	uint32T level;
+	uint32_t level;
 	bfAccessT *idx_bfap;
 	ulong location, root_page;
 	ftxHT ftxH;
@@ -1687,7 +1687,7 @@ idx_remove_filename(
 
 statusT
 idx_remove_filename_int(
-    uint32T page_to_search,	/* node's page number */
+    uint32_t page_to_search,	/* node's page number */
     ulong level,		/* level of b-tree calling */
     ulong search_key,		/* value to search for */
     ulong offset,		/* Uniquifier */
@@ -1699,7 +1699,7 @@ idx_remove_filename_int(
 	idxNodeT *node_ptr;
 	rbfPgRefHT rbfpgref;
 	bfPageRefHT bfpgref;
-	uint32T index;
+	uint32_t index;
 	statusT sts;
 
 	/* If we are not at the leaf node then ref the page otherwise pin it
@@ -1892,11 +1892,11 @@ idx_lookup_filename(
 	bfPageRefHT pgref_node;
 	void *dir_ptr;
 	fs_dir_entry *dir_rec_ptr;
-	uint32T root_level, root_page;
+	uint32_t root_level, root_page;
 	int node_page;
 	char *filename;
-	uint16T filename_len;
-	uint32T found, index;
+	uint16_t filename_len;
+	uint32_t found, index;
 	bfTagT *tagp;
 	statusT status, sts;
 
@@ -2095,20 +2095,20 @@ exit_lookup:
 
 statusT
 idx_lookup_node_int(
-    uint32T node_page,		/* btree node to search */
-    uint32T level,		/* level of recursion */
+    uint32_t node_page,		/* btree node to search */
+    uint32_t level,		/* level of recursion */
     ulong search_key,		/* hash vale to find */
     bfAccessT * idx_bfap,	/* index file access pointer */
     idxNodeT ** found_ptr,	/* Leaf node */
     void *found_pgref,		/* Page ref if pin occurred */
-    uint32T * found_index,	/* offset in node */
-    uint32T pin_flag,		/* indicates if returned node should be pinned */
+    uint32_t * found_index,	/* offset in node */
+    uint32_t pin_flag,		/* indicates if returned node should be pinned */
     int *page,			/* node page containing key */
     ftxHT ftxH
 )
 {
 	rbfPgRefHT pgref_pin;
-	uint32T index;
+	uint32_t index;
 	idxNodeT *node_ptr;
 	bfPageRefHT pgref;
 	statusT sts;
@@ -2252,16 +2252,16 @@ idx_directory_insert_space(
     bfAccessT * dir_bfap,	/* Directories Access Structure */
     ulong size,			/* size of space to insert */
     int insert_page,		/* Page where space lives */
-    uint32T insert_pgoff,	/* Offset where space lives */
-    uint32T unglom_offset,	/* offset to be undone */
-    uint32T unglom_size,	/* size to be undone */
+    uint32_t insert_pgoff,	/* Offset where space lives */
+    uint32_t unglom_offset,	/* offset to be undone */
+    uint32_t unglom_size,	/* size to be undone */
     ftxHT parentFtx,		/* Parent Ftx */
     int forceflag		/* sometimes we need to ignore quotas */
 )
 {
 	ulong search_key;
-	uint32T root_page;
-	uint32T level;
+	uint32_t root_page;
+	uint32_t level;
 	ulong location;
 	bfAccessT *idx_bfap;
 	int split_count;
@@ -2467,7 +2467,7 @@ idx_directory_insert_space(
 
 int
 idx_directory_insert_space_int(
-    uint32T node_page,		/* in - starting node */
+    uint32_t node_page,		/* in - starting node */
     ulong level,		/* level in the tree */
     ulong * search_key,		/* in - key to insert */
  /* out - key to insert */
@@ -2483,8 +2483,8 @@ idx_directory_insert_space_int(
 	rbfPgRefHT pgref, right_pgref;
 	idxNodeT *right_pgptr, *node_ptr;
 	ulong temp_size;
-	uint32T index;
-	uint32T ret;
+	uint32_t index;
+	uint32_t ret;
 	statusT sts;
 
 	/* Pin the page into memory. Since we don't know at this point whether
@@ -2910,8 +2910,8 @@ idx_directory_get_space(
 
 int
 idx_directory_get_space_int(
-    uint32T page_to_search,
-    uint32T level,
+    uint32_t page_to_search,
+    uint32_t level,
     ulong * size,
     ulong * file_offset,
     bfAccessT * idx_bfap,
@@ -2923,7 +2923,7 @@ idx_directory_get_space_int(
 	idxNodeT *node_ptr;
 	long found_size;
 	int next_node;
-	uint32T index;
+	uint32_t index;
 	ulong required_size, free_size, rounded_free_size, requested_size;
 	ulong dirRec_adj;
 	ulong start_addr;
@@ -3435,8 +3435,8 @@ idx_setup_for_truncation(
 long
 idx_setup_for_truncation_int(
     bfAccessT * idx_bfap,
-    uint32T page_to_search,
-    uint32T level,
+    uint32_t page_to_search,
+    uint32_t level,
     ulong * undo_space_start,
     int operation,
     ftxHT ftxH
@@ -3447,7 +3447,7 @@ idx_setup_for_truncation_int(
 	idxNodeT *node_ptr;
 	ulong num_bytes;
 	ulong bytes_to_trunc;
-	uint32T index;
+	uint32_t index;
 	statusT sts;
 	/* If we are not at the leaf node then reff the page otherwise pin it
 	 * since we will be writing it back out.  */
@@ -3662,7 +3662,7 @@ idx_glom_entry_int(
     rbfPgRefHT pgref,		/* page ref for pinrec */
     ulong start_addr,		/* free space start    */
     ulong size,			/* free space size     */
-    uint32T index,		/* node insertion point */
+    uint32_t index,		/* node insertion point */
     ftxHT ftxH
 )
 {
@@ -3671,9 +3671,9 @@ idx_glom_entry_int(
 	idxNodeT *right_node_ptr;
 	idxNodeT *left_node_ptr;
 	rbfPgRefHT left_pgref, right_pgref;
-	uint32T right_index = -1;
-	uint32T left_index;
-	uint32T update_warning = FALSE;
+	uint32_t right_index = -1;
+	uint32_t left_index;
+	uint32_t update_warning = FALSE;
 	statusT sts;
 
 	/* Check the right and left entries to see if we can glom them
@@ -3960,13 +3960,13 @@ idx_convert_dir(
 	rbfPgRefHT file_pgref, free_pgref;
 	bfPageRefHT dir_pgref;
 	idxNodeT *filename_node, *freespace_node;
-	uint32T free_idx, file_idx;
-	uint32T last_freespace_end;
-	uint32T pg_off;
+	uint32_t free_idx, file_idx;
+	uint32_t last_freespace_end;
+	uint32_t pg_off;
 	fs_dir_entry *dir_p, *first_p, *last_p;
 	int n, offset;
 	char *p;
-	uint32T pageSz;
+	uint32_t pageSz;
 	dirRec *dirRecp;
 	unsigned int last_ent_offset;
 	statusT sts;
@@ -4088,7 +4088,7 @@ idx_convert_dir(
 		 * page 0 of the directory we will just use the offset into
 		 * the page */
 
-		pg_off = ((uint32T) dir_p) & (ADVFS_PGSZ - 1);
+		pg_off = ((uint32_t) dir_p) & (ADVFS_PGSZ - 1);
 
 		if (dir_p->fs_dir_header.fs_dir_bs_tag_num == 0) {
 			/* This goes in the free space tree. First make sure
@@ -4121,7 +4121,7 @@ idx_convert_dir(
 
 				freespace_node->data[free_idx].search_key = pg_off;
 				freespace_node->data[free_idx].loc.free_size =
-				    (uint32T) dir_p->fs_dir_header.fs_dir_size;
+				    (uint32_t) dir_p->fs_dir_header.fs_dir_size;
 				last_freespace_end = pg_off +
 				    dir_p->fs_dir_header.fs_dir_size;
 				free_idx++;
@@ -4251,10 +4251,10 @@ idx_prune_start(
 {
 	statusT sts;
 	ulong search_key;
-	uint32T levels;
-	uint32T old_root, new_root, pg_cnt;
+	uint32_t levels;
+	uint32_t old_root, new_root, pg_cnt;
 	bsIdxRecT *idx_params;
-	uint32T i;
+	uint32_t i;
 	void *msg_array;
 	ftxHT ftxH;
 
@@ -4431,24 +4431,24 @@ idx_prune_start(
 
 int
 idx_prune_btree_int(
-    uint32T node_page,
-    uint32T level,
+    uint32_t node_page,
+    uint32_t level,
     ulong * search_key,
-    uint32T * page,
-    uint32T root_level,
+    uint32_t * page,
+    uint32_t root_level,
     bfAccessT * idx_bfap,
-    uint32T tree,
+    uint32_t tree,
     ftxHT ftxH
 )
 {
 	rbfPgRefHT dst_pgref, right_pgref, right2_pgref;
-	uint32T index, index_to_remove;
-	uint32T copy_index;
+	uint32_t index, index_to_remove;
+	uint32_t copy_index;
 	idxNodeT *dst_node_ptr, *right_node_ptr, *right2_node_ptr;
-	int32T adjust_range;
-	uint32T new_root_page;
-	int32T copy_cnt;
-	uint32T status, redistribute;
+	int32_t adjust_range;
+	uint32_t new_root_page;
+	int32_t copy_cnt;
+	uint32_t status, redistribute;
 	int right_page_right, right_page_left;
 	statusT sts;
 
@@ -5019,11 +5019,11 @@ idx_prune_btree_int(
 statusT
 idx_remove_page_of_storage_int(
     bfAccessT * idx_bfap,
-    uint32T page_to_remove,
+    uint32_t page_to_remove,
     ftxHT ftxH
 )
 {
-	uint32T delCnt;
+	uint32_t delCnt;
 	void *delList;
 	idxPruneMsgsT *pmsgs;
 	statusT sts;
@@ -5147,7 +5147,7 @@ idx_undo_opx(
 	bfSetT *bfSetp;
 	bfAccessT *idx_bfap, *dir_bfap;
 	bsIdxRecT *idx_params;
-	uint32T insert;
+	uint32_t insert;
 	int found;
 	int split_count = -1;	/* this must be initialized */
 	idxPinnedPgsT pinpgs[IDX_MAX_BTREE_LEVELS];
@@ -5392,7 +5392,7 @@ idx_directory_insert_space_undo(
 	idxNodeT *right_node_ptr;
 	idxNodeT *node_ptr;
 	rbfPgRefHT pgref, right_pgref;
-	uint32T index;
+	uint32_t index;
 	ulong new_search_key;
 	ulong start_addr, entry_sa;
 	ulong size, entry_sz;

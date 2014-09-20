@@ -102,7 +102,7 @@ void
 update_xtnt_array(
     rbfPgRefHT pgPin,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */
-    uint16T * bsXACnt,		/* in */
+    uint16_t * bsXACnt,		/* in */
     bsXtntT * bsXA		/* in */
 );
 
@@ -111,7 +111,7 @@ static
 load_inmem_xtnt_map(
     bfAccessT * bfap,		/* in, modified */
     bsXtntRT * xtntRec,		/* in */
-    uint32T * retTotalPageCnt	/* out */
+    uint32_t * retTotalPageCnt	/* out */
 );
 
 static
@@ -121,7 +121,7 @@ load_from_shadow_rec(
     vdIndexT bfVdIndex,		/* in */
     bfMCIdT bfMcellId,		/* in */
     bsInMemXtntMapT ** bfXtntMap,	/* out */
-    uint32T * allocPageCnt,	/* out */
+    uint32_t * allocPageCnt,	/* out */
     vdIndexT * bfNextVdIndex,	/* out */
     bfMCIdT * bfNextMcellId	/* out */
 );
@@ -131,7 +131,7 @@ static
 load_from_xtnt_rec(
     bfAccessT * bfap,		/* in, modified */
     bsXtntRT * xtntRec,		/* in */
-    uint32T * allocPageCnt,	/* out */
+    uint32_t * allocPageCnt,	/* out */
     vdIndexT * bfNextVdIndex,	/* out */
     bfMCIdT * bfNextMcellId	/* out */
 );
@@ -141,7 +141,7 @@ static
 load_from_rbmt_xtnt_rec(
     bfAccessT * bfap,		/* in, modified */
     bsXtntRT * xtntRec,		/* in */
-    uint32T * allocPageCnt	/* out */
+    uint32_t * allocPageCnt	/* out */
 );
 
 static
@@ -151,7 +151,7 @@ load_from_xtra_xtnt_rec(
     vdIndexT vdIndex,		/* in */
     bfMCIdT mcellId,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */
-    uint32T lastPg,		/* in */
+    uint32_t lastPg,		/* in */
     vdIndexT * nextVdIndex,	/* out */
     bfMCIdT * nextMcellId	/* out */
 );
@@ -181,11 +181,11 @@ load_from_xtnt_array(
 int CheckXtnts = FALSE;
 
 typedef struct mcellCntUndoRec {
-	uint32T type;
+	uint32_t type;
 	vdIndexT vdIndex;
 	bfMCIdT mCId;
 	bfTagT bfTag;
-	uint32T mcellCnt;
+	uint32_t mcellCnt;
 }               mcellCntUndoRecT;
 /*
  * undo_mcell_cnt
@@ -291,10 +291,10 @@ undo_mcell_cnt(
 
 
 typedef struct updXtntRecUndoRec {
-	uint16T type;
-	uint16T xCnt;
-	uint16T index;
-	uint16T cnt;
+	uint16_t type;
+	uint16_t xCnt;
+	uint16_t index;
+	uint16_t cnt;
 	vdIndexT vdIndex;
 	bfMCIdT mCId;
 	bfTagT bfTag;
@@ -330,9 +330,9 @@ undo_upd_xtnt_rec(
 {
 	bsMPgT *bmt;
 	bsXtntT *bsXA;
-	uint16T *bsXACnt;
+	uint16_t *bsXACnt;
 	domainT *domain;
-	uint16T i;
+	uint16_t i;
 	bsMCT *mcell;
 	rbfPgRefHT pgPin;
 	bsShadowXtntT *shadowRec;
@@ -644,7 +644,7 @@ odm_remove_mcells_from_xtnt_map(
     domainT * domain,		/* in */
     bfTagT bfTag,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
-    uint32T start_index,
+    uint32_t start_index,
     ftxHT parentFtx		/* in */
 )
 {
@@ -716,7 +716,7 @@ odm_create_xtnt_map(
 )
 {
 	domainT *domain;
-	uint32T i;
+	uint32_t i;
 	bfMCIdT mcellId;
 	bsInMemSubXtntMapT *nextSubXtntMap;
 	statusT sts;
@@ -909,7 +909,7 @@ odm_rewrite_xtnt_map(
 	domainT *domain;
 	ftxHT ftxH;
 	int failFtxFlag = 0;
-	uint32T i;
+	uint32_t i;
 	bfMCIdT mcellId;
 	bsInMemXtntMapT *newXtntMap = NULL;
 	bfMCIdT prevMcellId;
@@ -1279,8 +1279,8 @@ x_update_ondisk_xtnt_map(
     ftxHT parentFtx		/* in */
 )
 {
-	uint32T i;
-	uint32T mcellCnt = 0;
+	uint32_t i;
+	uint32_t mcellCnt = 0;
 	statusT sts = EOK;
 	bsInMemSubXtntMapT *subXtntMap;
 	vdIndexT prevVdIndex;
@@ -1411,10 +1411,10 @@ update_xtnt_rec(
 {
 	bsMPgT *bmt;
 	bsXtntT *bsXA;
-	uint16T *bsXACnt;
+	uint16_t *bsXACnt;
 	int failFtxFlag = 0;
 	ftxHT ftx;
-	uint16T i;
+	uint16_t i;
 	bsMCT *mcell;
 	bfMCIdT mcellId;
 	rbfPgRefHT pgPin;
@@ -1537,12 +1537,12 @@ void
 update_xtnt_array(
     rbfPgRefHT pgPin,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */
-    uint16T * bsXACnt,		/* in */
+    uint16_t * bsXACnt,		/* in */
     bsXtntT * bsXA		/* in */
 )
 {
-	uint16T i;
-	uint16T xtntCnt;
+	uint16_t i;
+	uint16_t xtntCnt;
 
 	/*
          * Save the modified portion of the in-memory extent descriptor array
@@ -1593,7 +1593,7 @@ odm_create_xtnt_rec(
 {
 	bsMPgT *bmt;
 	bsXtntT *bsXA;
-	uint16T *bsXACnt;
+	uint16_t *bsXACnt;
 	ftxHT ftx;
 	bsMCT *mcell;
 	bfMCIdT mcellId;
@@ -1910,9 +1910,9 @@ x_detach_extent_chain(
 	bsXtntRT *xtntRec;
 	bsXtntT primXtntSave[2], *tempXtntp;
 	bsInMemSubXtntMapT *tempSubXtntp;
-	uint32T cntSave, updateStartSave, updateEndSave;
-	uint32T i;
-	uint32T starting_index;
+	uint32_t cntSave, updateStartSave, updateEndSave;
+	uint32_t i;
+	uint32_t starting_index;
 
 	if (BS_BFTAG_RSVD(bfap->tag)) {
 		return ENOT_SUPPORTED;
@@ -2067,15 +2067,15 @@ update_mcell_cnt(
     bfTagT bfTag,		/* in */
     vdIndexT bfVdIndex,		/* in */
     bfMCIdT bfMcellId,		/* in */
-    uint32T type,		/* in */
-    int32T mcellCnt,		/* in */
+    uint32_t type,		/* in */
+    int32_t mcellCnt,		/* in */
     ftxHT parentFtx		/* in */
 )
 {
 	bsMPgT *bmt;
 	ftxHT ftx;
 	bsMCT *mcell;
-	uint16T *mcellCntAddr;
+	uint16_t *mcellCntAddr;
 	rbfPgRefHT pgPin;
 	bsShadowXtntT *shadowRec;
 	statusT sts;
@@ -2240,7 +2240,7 @@ HANDLE_EXCEPTION:
 statusT
 x_load_inmem_xtnt_map(
     bfAccessT * bfap,		/* in, modified */
-    uint32T lock_request	/* in */
+    uint32_t lock_request	/* in */
 )
 {
 	bsMPgT *bmt;
@@ -2248,7 +2248,7 @@ x_load_inmem_xtnt_map(
 	bsMCT *mcell;
 	bfPageRefHT pgRef;
 	statusT sts;
-	uint32T totalPageCnt;
+	uint32_t totalPageCnt;
 	unLkActionT unlock_action;
 	vdT *vd;
 	bsXtntRT *xtntRec;
@@ -2411,7 +2411,7 @@ static
 load_inmem_xtnt_map(
     bfAccessT * bfap,		/* in, modified */
     bsXtntRT * xtntRec,		/* in */
-    uint32T * retTotalPageCnt	/* out */
+    uint32_t * retTotalPageCnt	/* out */
 )
 {
 	int i;
@@ -2422,7 +2422,7 @@ load_inmem_xtnt_map(
 	bsInMemXtntMapT *prevXtntMap;
 	int segmentCnt;
 	statusT sts;
-	uint32T totalPageCnt;
+	uint32_t totalPageCnt;
 	vdIndexT vdIndex;
 	bsInMemXtntMapT *xtntMap;
 	domainT *domain = bfap->dmnP;
@@ -2563,7 +2563,7 @@ load_from_shadow_rec(
     vdIndexT bfVdIndex,		/* in */
     bfMCIdT bfMcellId,		/* in */
     bsInMemXtntMapT ** bfXtntMap,	/* out */
-    uint32T * allocPageCnt,	/* out */
+    uint32_t * allocPageCnt,	/* out */
     vdIndexT * bfNextVdIndex,	/* out */
     bfMCIdT * bfNextMcellId	/* out */
 )
@@ -2574,20 +2574,20 @@ load_from_shadow_rec(
 	bsMCT *mcellp;
 	bfMCIdT nextMcellId;
 	vdIndexT nextVdIndex;
-	uint32T pageCnt;
-	uint32T pageOffset;
+	uint32_t pageCnt;
+	uint32_t pageOffset;
 	bfPageRefHT pgRef;
 	bsShadowXtntT *shadowRec;
 	statusT sts;
 	bsInMemSubXtntMapT *subXtntMap = NULL;
-	uint32T totalPageCnt;
+	uint32_t totalPageCnt;
 	vdIndexT vdIndex;
 	bsInMemXtntMapT *xtntMap = NULL;
 	vdT *vdp;
 	domainT *dmnP = bfap->dmnP;
-	uint32T blksPerPage = bfap->bfPageSz;
-	uint32T lastPg;
-	uint32T mcellCnt;
+	uint32_t blksPerPage = bfap->bfPageSz;
+	uint32_t lastPg;
+	uint32_t mcellCnt;
 
 	if ((bfVdIndex == bsNilVdIndex) &&
 	    (bfMcellId.page == bsNilMCId.page) &&
@@ -2871,31 +2871,31 @@ static
 load_from_xtnt_rec(
     bfAccessT * bfap,		/* in, modified */
     bsXtntRT * xtntRec,		/* in */
-    uint32T * allocPageCnt,	/* out */
+    uint32_t * allocPageCnt,	/* out */
     vdIndexT * bfNextVdIndex,	/* out */
     bfMCIdT * bfNextMcellId	/* out */
 )
 {
-	uint32T i;
+	uint32_t i;
 	bfMCIdT mcellId;
 	bfMCIdT nextMcellId;
 	vdIndexT nextVdIndex;
-	uint32T pageCnt;
-	uint32T pageOffset;
+	uint32_t pageCnt;
+	uint32_t pageOffset;
 	statusT sts;
 	bsInMemSubXtntMapT *subXtntMap;
-	uint32T totalPageCnt;
+	uint32_t totalPageCnt;
 	vdIndexT vdIndex;
 	bsInMemXtntMapT *xtntMap = NULL;
 	bfAccessT *mdap;
 	domainT *dmnP = bfap->dmnP;
 	vdIndexT bfVdIndex = bfap->primVdIndex;
 	bfMCIdT bfMcellId = bfap->primMCId;
-	uint32T blksPerPage = bfap->bfPageSz;
+	uint32_t blksPerPage = bfap->bfPageSz;
 	vdT *vdp;
 	lbnT nextVdBlk;
 	lbnT vdBlk;
-	uint32T lastPg;
+	uint32_t lastPg;
 
 	if (xtntRec->blksPerPage != blksPerPage) {
 		return E_BAD_PAGESIZE;
@@ -3105,7 +3105,7 @@ load_from_xtra_xtnt_rec(
     vdIndexT vdIndex,		/* in */
     bfMCIdT mcellId,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */
-    uint32T lastPg,		/* in */
+    uint32_t lastPg,		/* in */
     vdIndexT * nextVdIndex,	/* out */
     bfMCIdT * nextMcellId	/* out */
 )
@@ -3299,8 +3299,8 @@ load_from_xtnt_array(
     bsInMemSubXtntMapT * subXtntMap	/* in */
 )
 {
-	uint32T inMem;
-	uint32T onDisk;
+	uint32_t inMem;
+	uint32_t onDisk;
 	statusT sts;
 
 	/*

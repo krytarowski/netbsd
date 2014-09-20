@@ -175,12 +175,12 @@ typedef enum {
 typedef struct {
 	vdIndexT vdi;
 	uint64T fragRatio;	/* primary sort in list */
-	uint32T xtntCnt;	/* secondary sort in list */
+	uint32_t xtntCnt;	/* secondary sort in list */
 }      ssFragAddMsgT;
 
 typedef struct {
 	vdIndexT vdi;		/* primary mcell vdi */
-	uint32T cnt[SS_HOT_TRACKING_DAYS];	/* counter */
+	uint32_t cnt[SS_HOT_TRACKING_DAYS];	/* counter */
 	uint64T size;		/* file size */
 }      ssHotMsgT;
 
@@ -226,7 +226,7 @@ typedef struct ssHotEntry {
 				 * ssHotPlaced, should be same */
 	bfTagT ssHotTag;	/* tag of file */
 	bfSetIdT ssHotBfSetId;	/* settag of file */
-	uint32T ssHotIOCnt[7];	/* cnt of IOs on this file by day of week */
+	uint32_t ssHotIOCnt[7];	/* cnt of IOs on this file by day of week */
 	uint64T ssHotFileSize;	/* size of file */
 	time_t ssHotLastUpdTime;/* last time one of the Cnts above was updated */
 	time_t ssHotEntryTime;	/* time entry was placed on list */
@@ -236,15 +236,15 @@ typedef struct ssHotEntry {
 typedef struct ssHotHdr {
 	struct ssHotEntry *ssHotFwd;	/* must stay in first position */
 	struct ssHotEntry *ssHotBwd;	/* must stay in second position */
-	uint16T ssHotListCnt;	/* number of hot list entries for this dmn */
+	uint16_t ssHotListCnt;	/* number of hot list entries for this dmn */
 }        ssHotHdrT;
 
 typedef struct ssFragEntry {
 	struct ssFragEntry *ssFragRatFwd;	/* must stay in first position */
 	struct ssFragEntry *ssFragRatBwd;	/* must stay in second
 						 * position */
-	uint32T ssFragRatio;
-	uint32T ssXtntCnt;
+	uint32_t ssFragRatio;
+	uint32_t ssXtntCnt;
 	bfTagT ssFragTag;
 	bfSetIdT ssFragBfSetId;
 }           ssFragLLT;
@@ -253,7 +253,7 @@ typedef struct ssFragHdr {
 	struct ssFragEntry *ssFragRatFwd;	/* must stay in first position */
 	struct ssFragEntry *ssFragRatBwd;	/* must stay in second
 						 * position */
-	uint32T ssFragListCnt;
+	uint32_t ssFragListCnt;
 	uint64T ssFragHdrThresh;
 }         ssFragHdrT;
 
@@ -262,8 +262,8 @@ typedef struct ssPackEntry {
 	struct ssPackEntry *ssPackBwd;
 	bfTagT ssPackTag;
 	bfSetIdT ssPackBfSetId;
-	uint32T ssPackPageOffset;
-	uint32T ssPackPageCnt;
+	uint32_t ssPackPageOffset;
+	uint32_t ssPackPageCnt;
 	uint64T ssPackStartXtBlock;	/* block at ssPackPageOffset */
 	uint64T ssPackEndXtBlock;	/* block at PackPageOffset +
 					 * PackPageCnt */
@@ -272,10 +272,10 @@ typedef struct ssPackEntry {
 typedef struct ssPackHdr {
 	ssPackLLT *ssPackFwd;
 	ssPackLLT *ssPackBwd;
-	uint32T ssPackListCnt;
+	uint32_t ssPackListCnt;
 	uint64T ssPackZoneStartBlk;
 	uint64T ssPackZoneEndBlk;
-	uint32T ssPackLastBMTPage;
+	uint32_t ssPackLastBMTPage;
 }         ssPackHdrT;
 
 typedef struct ssDmnInfo {
@@ -286,8 +286,8 @@ typedef struct ssDmnInfo {
 	int ssDmnSSWaiters;	/* number of waiters on ssDmnSSThdCnt */
 	ssDmnOpT ssDmnState;	/* processing state that domain is in */
 	/* message flow rate to lists stats */
-	uint32T ssDmnListMsgSendCnt;	/* cnt of list msgs send attempts */
-	uint32T ssDmnListMsgDropCnt;	/* cnt of list msgs dropped */
+	uint32_t ssDmnListMsgSendCnt;	/* cnt of list msgs send attempts */
+	uint32_t ssDmnListMsgDropCnt;	/* cnt of list msgs dropped */
 
 	/* internal used params */
 	time_t ssFirstMountTime;/* time domain first had a WRITE mount */
@@ -304,40 +304,40 @@ typedef struct ssDmnInfo {
 				 * monitor from sending multiple hot files to
 				 * vds in the same domain, thus not getting
 				 * true balance. */
-	uint16T ssDmnHotCurrDay;/* current index into ssHotIOCnt[7] - by day
+	uint16_t ssDmnHotCurrDay;/* current index into ssHotIOCnt[7] - by day
 				 * of week */
 
 	/* UI visable configurable options */
-	uint16T ssDmnDefragment;/* defragmenting enable/disable */
-	uint16T ssDmnSmartPlace;/* IO load balance enable/disable */
-	uint16T ssDmnBalance;	/* volume free space balance enable/disable */
-	uint16T ssDmnDirectIo;	/* vfast on files with directio allowed? */
-	uint16T ssMaxPercentOfIoWhenBusy;	/* % of IO vfast is allowed to
+	uint16_t ssDmnDefragment;/* defragmenting enable/disable */
+	uint16_t ssDmnSmartPlace;/* IO load balance enable/disable */
+	uint16_t ssDmnBalance;	/* volume free space balance enable/disable */
+	uint16_t ssDmnDirectIo;	/* vfast on files with directio allowed? */
+	uint16_t ssMaxPercentOfIoWhenBusy;	/* % of IO vfast is allowed to
 						 * use when system is busy */
 	/* output variables */
-	uint32T ssFilesDefraged;/* count of files vfast has defragmented */
-	uint32T ssPagesDefraged;/* count of pages vfast has defragmented */
-	uint32T ssPagesBalanced;/* count of pages vfast has moved to other
+	uint32_t ssFilesDefraged;/* count of files vfast has defragmented */
+	uint32_t ssPagesDefraged;/* count of pages vfast has defragmented */
+	uint32_t ssPagesBalanced;/* count of pages vfast has moved to other
 				 * vols for free space balance */
-	uint32T ssFilesIOBal;	/* count of files vfast has moved to support
+	uint32_t ssFilesIOBal;	/* count of files vfast has moved to support
 				 * IO load bal */
-	uint32T ssExtentsConsol;/* count of extents vfast has combined for
+	uint32_t ssExtentsConsol;/* count of extents vfast has combined for
 				 * file defragmentation */
-	uint32T ssPagesConsol;	/* count of pages packed in support of free
+	uint32_t ssPagesConsol;	/* count of pages packed in support of free
 				 * space consolidation */
 	/* UI hidden configurable options */
-	uint16T ssAccessThreshHits;	/* count of hits required on a file
+	uint16_t ssAccessThreshHits;	/* count of hits required on a file
 					 * before the hot list enry is
 					 * updated. */
-	uint16T ssSteadyState;	/* minutes before IO is stable enough so IO
+	uint16_t ssSteadyState;	/* minutes before IO is stable enough so IO
 				 * load balancing can be performed. */
-	uint16T ssMinutesInHotList;	/* length of time file must be in hot
+	uint16_t ssMinutesInHotList;	/* length of time file must be in hot
 					 * list before moving. Also length of
 					 * time since file was last updated,
 					 * else file is cold */
-	uint16T ssReserved0;
-	uint32T ssReserved1;
-	uint32T ssReserved2;
+	uint16_t ssReserved0;
+	uint32_t ssReserved1;
+	uint32_t ssReserved2;
 }         ssDmnInfoT;
 
 typedef struct ssVolInfo {
@@ -360,7 +360,7 @@ typedef struct ssVolInfo {
 				 * support of hot files */
 	bfSetIdT ssVdHotBfSetId;/* Settag of file to move to this volume in
 				 * support of hot files. */
-	uint16T ssIOCnt;
+	uint16_t ssIOCnt;
 	uint64T ssLastIOCnt;	/* last IO value since last lull check */
 }         ssVolInfoT;
 /* UI structures */

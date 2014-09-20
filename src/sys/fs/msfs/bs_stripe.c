@@ -60,8 +60,8 @@ static
        statusT
 stripe_zero_size(
     bfAccessT * bfAccess,	/* in */
-    uint32T segmentCnt,		/* in */
-    uint32T segmentSize,	/* in */
+    uint32_t segmentCnt,		/* in */
+    uint32_t segmentSize,	/* in */
     ftxHT parentFtxH,		/* in */
     bsStripeHdrT ** newStripeHdr/* out */
 );
@@ -92,16 +92,16 @@ static
        statusT
 update_xtnt_rec_fields(
     bfAccessT * bfAccess,	/* in */
-    uint32T segmentSize,	/* in */
+    uint32_t segmentSize,	/* in */
     ftxHT parentFtxH		/* in */
 );
 
 static
        statusT
 create_bf_rel_xtnt_descs(
-    uint32T mapIndex,		/* in */
-    uint32T segmentCnt,		/* in */
-    uint32T segmentSize,	/* in */
+    uint32_t mapIndex,		/* in */
+    uint32_t segmentCnt,		/* in */
+    uint32_t segmentSize,	/* in */
     bsXtntDescT * xmXtntDesc,	/* in */
     bsXtntMapTypeT bsXtntMapType,	/* in */
     bsInMemXtntMapT * bfXtntMap	/* in, modified */
@@ -162,8 +162,8 @@ str_register_stripe_agent(void)
 statusT
 bs_stripe(
     struct bfAccess * bfap,	/* in */
-    uint32T segmentCnt,		/* in */
-    uint32T segmentSize,	/* in */
+    uint32_t segmentCnt,		/* in */
+    uint32_t segmentSize,	/* in */
     long xid			/* in - CFS transaction id */
 )
 {
@@ -218,8 +218,8 @@ bs_stripe(
 statusT
 str_stripe(
     bfAccessT * bfap,		/* in */
-    uint32T segmentCnt,		/* in */
-    uint32T segmentSize,	/* in */
+    uint32_t segmentCnt,		/* in */
+    uint32_t segmentSize,	/* in */
     long xid			/* in - CFS transaction id */
 )
 {
@@ -458,8 +458,8 @@ static
        statusT
 stripe_zero_size(
     bfAccessT * bfap,		/* in */
-    uint32T segmentCnt,		/* in */
-    uint32T segmentSize,	/* in */
+    uint32_t segmentCnt,		/* in */
+    uint32_t segmentSize,	/* in */
     ftxHT parentFtxH,		/* in */
     bsStripeHdrT ** newStripeHdr/* out */
 )
@@ -635,7 +635,7 @@ stripe_zero_size_clone(
 	bsStripeHdrT *stripeHdr = NULL;
 	statusT sts;
 	bsInMemSubXtntMapT *subXtntMap;
-	uint32T segmentCnt;
+	uint32_t segmentCnt;
 	int allDisksRefed = FALSE;
 	vdT *vdp;
 
@@ -769,7 +769,7 @@ typedef struct xtntRecUndoRec {
 	vdIndexT vdIndex;
 	bfMCIdT mCId;
 	bsXtntMapTypeT type;
-	uint32T segmentSize;
+	uint32_t segmentSize;
 }              xtntRecUndoRecT;
 /*
  * undo_xtnt_rec
@@ -843,7 +843,7 @@ static
        statusT
 update_xtnt_rec_fields(
     bfAccessT * bfap,		/* in */
-    uint32T segmentSize,	/* in */
+    uint32_t segmentSize,	/* in */
     ftxHT parentFtxH		/* in */
 )
 {
@@ -914,12 +914,12 @@ HANDLE_EXCEPTION:
 
 statusT
 str_create_stripe_hdr(
-    uint32T segmentCnt,		/* in */
-    uint32T segmentSize,	/* in */
+    uint32_t segmentCnt,		/* in */
+    uint32_t segmentSize,	/* in */
     bsStripeHdrT ** newStripeHdr/* out */
 )
 {
-	uint32T i;
+	uint32_t i;
 	bsStripeHdrT *stripeHdr;
 
 	stripeHdr = (bsStripeHdrT *) ms_malloc(sizeof(bsStripeHdrT) +
@@ -953,7 +953,7 @@ str_delete_stripe_hdr(
     bsStripeHdrT * stripeHdr	/* in */
 )
 {
-	uint32T i;
+	uint32_t i;
 
 	for (i = 0; i < stripeHdr->cnt; i++) {
 		imm_delete_xtnt_map(stripeHdr->xtntMap[i]);
@@ -975,16 +975,16 @@ str_delete_stripe_hdr(
 
 void
 str_calc_page_alloc(
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     bsStripeHdrT * stripeHdr	/* in */
 )
 {
-	uint32T i;
-	uint32T pageCnt;
+	uint32_t i;
+	uint32_t pageCnt;
 	int mapIndex;
-	uint32T totalPageCnt = 0;
-	uint32T wholeAllocUnits;
+	uint32_t totalPageCnt = 0;
+	uint32_t wholeAllocUnits;
 	bsInMemXtntMapT *xtntMap;
 
 	for (i = 0; i < stripeHdr->cnt; i++) {
@@ -1045,7 +1045,7 @@ str_calc_page_alloc(
 statusT
 str_create_bf_rel_xtnt_map(
     bsStripeHdrT * stripeHdr,	/* in */
-    uint32T mapIndex,		/* in */
+    uint32_t mapIndex,		/* in */
     bsInMemXtntMapT * xmXtntMap,/* in */
     bsXtntMapTypeT bsXtntMapType,	/* in */
     bsInMemXtntMapT ** bfXtntMap/* out */
@@ -1129,23 +1129,23 @@ HANDLE_EXCEPTION:
 static
        statusT
 create_bf_rel_xtnt_descs(
-    uint32T mapIndex,		/* in */
-    uint32T segmentCnt,		/* in */
-    uint32T segmentSize,	/* in */
+    uint32_t mapIndex,		/* in */
+    uint32_t segmentCnt,		/* in */
+    uint32_t segmentSize,	/* in */
     bsXtntDescT * xmXtntDesc,	/* in */
     bsXtntMapTypeT bsXtntMapType,	/* in */
     bsInMemXtntMapT * bfXtntMap	/* in, modified */
 )
 {
-	uint32T bfPageOffset;
-	uint32T blkIncrement;
+	uint32_t bfPageOffset;
+	uint32_t blkIncrement;
 	bsXtntT bsXA[2];
-	uint32T pageCnt;
-	uint32T startBlkOffset;
+	uint32_t pageCnt;
+	uint32_t startBlkOffset;
 	statusT sts;
-	uint32T xmEndPageOffset;
-	uint32T xmPageCnt;
-	uint32T xmPageOffset;
+	uint32_t xmEndPageOffset;
+	uint32_t xmPageCnt;
+	uint32_t xmPageOffset;
 
 	if (xmXtntDesc->blkOffset == -1) {
 		/*

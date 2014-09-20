@@ -590,9 +590,9 @@ remove_dir_ent(
 	bfTagT *tagp;
 	int page;
 	long byte_offset;
-	uint32T entry_size;
-	uint32T orig_entry_size;
-	uint32T glom_flags = 0;
+	uint32_t entry_size;
+	uint32_t orig_entry_size;
+	uint32_t glom_flags = 0;
 	struct bfAccess *dir_access;
 	struct vnode *dvp = NULL;
 
@@ -711,7 +711,7 @@ remove_dir_ent(
 				    tagp,
 				    sizeof(bfTagT));
 
-				tagp->seq = (uint32T) (-1);
+				tagp->seq = (uint32_t) (-1);
 
 				/* It should not be the case that a glom
 				 * occured and we needed space (ie a node
@@ -749,7 +749,7 @@ remove_dir_ent(
 		rbf_pin_record(
 		    page_ref,
 		    &dir_p->fs_dir_header.fs_dir_bs_tag_num,
-		    sizeof(uint32T)
+		    sizeof(uint32_t)
 		    );
 
 		dir_p->fs_dir_header.fs_dir_bs_tag_num = 0;
@@ -834,7 +834,7 @@ remove_dots(
 	rbf_pin_record(
 	    page_ref,
 	    &dir_p->fs_dir_header.fs_dir_bs_tag_num,
-	    sizeof(uint32T)
+	    sizeof(uint32_t)
 	    );
 
 	/*
@@ -859,7 +859,7 @@ remove_dots(
 	rbf_pin_record(
 	    page_ref,
 	    &dir_p->fs_dir_header.fs_dir_bs_tag_num,
-	    sizeof(uint32T)
+	    sizeof(uint32_t)
 	    );
 
 	/*
@@ -927,12 +927,12 @@ seq_search(
 	int first_time, find_slot;
 	dirRec *dirRecp;
 	bfTagT *tagp;
-	uint32T saved_page;
+	uint32_t saved_page;
 	long saved_offset = 0;
 	struct bfAccess *dir_access;
 	int numDirPasses;	/* start: 0=from begin, 1=from save, 2=rescan */
 	unsigned long last_useful_page;	/* used for determining end of entries */
-	uint16T file_name_len;
+	uint16_t file_name_len;
 	char *file_name;
 
 	return_value = I_INSERT_HERE;
@@ -1542,9 +1542,9 @@ remove_entry(
 	bfAccessT *bfap;
 	bfAccessT *idx_bfap = NULL;
 	struct nameidata *ndp;
-	uint32T entry_size;
-	uint32T orig_entry_size;
-	uint32T glom_flags = 0;
+	uint32_t entry_size;
+	uint32_t orig_entry_size;
+	uint32_t glom_flags = 0;
 	struct vnode *nullvp = NULL;
 	int type;
 	fileSetNodeT *fsnp = NULL;
@@ -1709,7 +1709,7 @@ remove_entry(
 				    sizeof(bfTagT)
 				    );
 
-				tagp->seq = (uint32T) (-1);
+				tagp->seq = (uint32_t) (-1);
 
 				/* It should not be the case that a glom
 				 * occured and we needed space (ie a node
@@ -1740,7 +1740,7 @@ remove_entry(
 		rbf_pin_record(
 		    found_page_ref,
 		    &dir_p->fs_dir_header.fs_dir_bs_tag_num,
-		    sizeof(uint32T)
+		    sizeof(uint32_t)
 		    );
 		dir_p->fs_dir_header.fs_dir_bs_tag_num = 0;
 	}
@@ -1796,8 +1796,8 @@ statusT
 setup_for_glom_dir_entries(
     char *dir_buffer,
     fs_dir_entry ** start_dir_p,
-    uint32T * entry_size,
-    uint32T * flags,
+    uint32_t * entry_size,
+    uint32_t * flags,
     bfAccessT * dir_access
 )
 {
@@ -1806,7 +1806,7 @@ setup_for_glom_dir_entries(
 	fs_dir_entry *dir_p, *dir_pp, *prev_p, *post_p;
 	char *pp;
 	bfTagT *tagp;
-	uint32T skip_glom;
+	uint32_t skip_glom;
 
 	dir_p = *start_dir_p;
 
@@ -1863,7 +1863,7 @@ setup_for_glom_dir_entries(
 	         * together
 	         */
 		if (prev_p->fs_dir_header.fs_dir_bs_tag_num == 0) {
-			uint32T prev_p_size;
+			uint32_t prev_p_size;
 			prev_p_size = prev_p->fs_dir_header.fs_dir_size;
 			skip_glom = FALSE;
 			if (IDX_INDEXING_ENABLED(dir_access)) {
@@ -1984,7 +1984,7 @@ setup_for_glom_dir_entries(
 	post_p = (fs_dir_entry *) ((char *) dir_p + *entry_size);
 	if ((((char *) post_p - dir_buffer) % DIRBLKSIZ) != 0) {
 		if (post_p->fs_dir_header.fs_dir_bs_tag_num == 0) {
-			uint32T post_p_size;
+			uint32_t post_p_size;
 			post_p_size = post_p->fs_dir_header.fs_dir_size;
 			/*
 	                 * it is, see if it can be glommed
@@ -2096,8 +2096,8 @@ setup_for_glom_dir_entries(
 void
 glom_dir_entries(char *dir_buffer,
     fs_dir_entry * dir_p,
-    uint32T entry_size,
-    uint32T flags,
+    uint32_t entry_size,
+    uint32_t flags,
     rbfPgRefHT page_ref
 )
 {
@@ -2137,12 +2137,12 @@ glom_dir_entries(char *dir_buffer,
  * routine is called.
  */
 
-uint32T
+uint32_t
 dir_trunc_start(struct vnode * dvp,
     unsigned long size_desired,
     ftxHT ftx_handle)
 {
-	uint32T delCnt = 0;
+	uint32_t delCnt = 0;
 	long file_size_in_bytes;
 	void *delList;
 	bfAccessT *bfap;

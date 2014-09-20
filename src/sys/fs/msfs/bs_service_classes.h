@@ -31,7 +31,7 @@
 typedef struct vdLstSgmnt {
 	struct vdLstSgmnt *nextSeg;	/* pointer to next segment */
 	int numVds;		/* number of vds in segment */
-	uint16T vdi[BS_MAX_LIST_SEG_VDS];	/* list of vd indices in the
+	uint16_t vdi[BS_MAX_LIST_SEG_VDS];	/* list of vd indices in the
 						 * segment */
 }          vdLstSgmntT;
 
@@ -76,14 +76,14 @@ statusT
 sc_add_vd(
     struct domain * dmnp,	/* in - ptr to domain with sc table */
     serviceClassT vdSvc,	/* in - vd's svc class */
-    uint16T vdIndex		/* in - vd's index */
+    uint16_t vdIndex		/* in - vd's index */
 );
 
 statusT
 sc_remove_vd(
     struct domain * dmnp,	/* in - ptr to domain with sc table */
     serviceClassT vdSvc,	/* in - vd's svc class */
-    uint16T vdIndex		/* in - vd's index */
+    uint16_t vdIndex		/* in - vd's index */
 );
 
 statusT
@@ -91,7 +91,7 @@ sc_valid_vd(
     struct domain * dmnp,	/* in - ptr to domain with sc table */
     serviceClassT reqServices,	/* in - required services */
     serviceClassT optServices,	/* in - optional services */
-    uint16T vdIndex		/* in - vd's index */
+    uint16_t vdIndex		/* in - vd's index */
 );
 
 statusT
@@ -111,8 +111,8 @@ sc_select_vd_for_stg(
     serviceClassT optServices,	/* in - optional service class */
     vdIndexT preferVd,		/* in - VdIndex of preferred disk */
     unsigned long *skip_vd_list,/* in - list of disks to skip */
-    uint32T desiredBlks,	/* in - num disk blks needed */
-    uint32T minDesiredBlks,	/* in - minimum num disk blks needed */
+    uint32_t desiredBlks,	/* in - num disk blks needed */
+    uint32_t minDesiredBlks,	/* in - minimum num disk blks needed */
     int count_this_alloc	/* in - flag to count cluster allocation */
 );
 

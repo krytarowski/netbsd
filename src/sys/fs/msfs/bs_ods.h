@@ -208,17 +208,17 @@ typedef enum {
  */
 
 typedef struct bsMR {
-	uint32T bCnt:16;	/* Count of bytes in record */
-	uint32T type:8;		/* Type of structure contained by record */
-	uint32T version:8;	/* Version of the record's type */
+	uint32_t bCnt:16;	/* Count of bytes in record */
+	uint32_t type:8;		/* Type of structure contained by record */
+	uint32_t version:8;	/* Version of the record's type */
 }    bsMRT;
 
 
-extern uint16T bsNilVdIndex;
+extern uint16_t bsNilVdIndex;
 extern bfMCIdT bsNilMCId;
 
 #define BSC_R_SZ \
-    (292 - sizeof(bfMCIdT) - (2*sizeof(bfTagT)) - (2*sizeof(uint16T)))
+    (292 - sizeof(bfMCIdT) - (2*sizeof(bfTagT)) - (2*sizeof(uint16_t)))
 
 #define BS_USABLE_MCELL_SPACE   (BSC_R_SZ - 2*sizeof( bsMRT ))
 
@@ -232,8 +232,8 @@ extern bfMCIdT bsNilMCId;
 
 typedef struct bsMC {
 	bfMCIdT nextMCId;	/* Link to next mcell */
-	uint16T nextVdIndex;	/* vd index of next mcell */
-	uint16T linkSegment;	/* segment in link, starts at zero */
+	uint16_t nextVdIndex;	/* vd index of next mcell */
+	uint16_t linkSegment;	/* segment in link, starts at zero */
 	bfTagT tag;		/* Tag this mcell is assigned to */
 	bfTagT bfSetTag;	/* tag of this bitfile's bf set dir */
 	char bsMR0[BSC_R_SZ];	/* Records */
@@ -241,7 +241,7 @@ typedef struct bsMC {
 /* on 12-Apr-1993 BSPG_CELLS equals 28 */
 
 #define BSPG_CELLS \
-  ((ADVFS_PGSZ - (3 * sizeof(uint32T) + sizeof(bfMCIdT))) / sizeof(struct bsMC))
+  ((ADVFS_PGSZ - (3 * sizeof(uint32_t) + sizeof(bfMCIdT))) / sizeof(struct bsMC))
 
 /* Test the validity of a mcell number. */
 /* "Return" E_RANGE if the mcell number is invalid. Else "return" EOK. */
@@ -254,15 +254,15 @@ typedef struct bsMC {
 /* on 6-Nov-1991 BSPG_FILLER equals 16 */
 
 #define BSPG_FILLER \
-  (ADVFS_PGSZ - (3 * sizeof(uint32T) + sizeof(bfMCIdT) + \
+  (ADVFS_PGSZ - (3 * sizeof(uint32_t) + sizeof(bfMCIdT) + \
    BSPG_CELLS * sizeof(struct bsMC)))
 
 typedef struct bsMPg {
 	bfMCIdT nextfreeMCId;	/* Next free MCId on the page */
-	uint32T nextFreePg;	/* Next page in the mcell free list */
-	uint32T freeMcellCnt;	/* Number of free mcells on this pg */
-	uint32T pageId:27;	/* Page number */
-	uint32T megaVersion:5;	/* Overall structure version */
+	uint32_t nextFreePg;	/* Next page in the mcell free list */
+	uint32_t freeMcellCnt;	/* Number of free mcells on this pg */
+	uint32_t pageId:27;	/* Page number */
+	uint32_t megaVersion:5;	/* Overall structure version */
 	struct bsMC bsMCA[BSPG_CELLS];	/* Array of Bs Cells */
 }     bsMPgT;
 /******************************************************************************
@@ -280,10 +280,10 @@ typedef struct bsMPg {
  */
 
 /* An extent with vdBlk set to XTNT_TERM terminates the previous descriptor. */
-#define XTNT_TERM ((uint32T)-1)
+#define XTNT_TERM ((uint32_t)-1)
 /* An extent with vdBlk set to PERM_HOLE_START starts a permanent hole */
 /* desriptor in a clone file. */
-#define PERM_HOLE_START ((uint32T)-2)
+#define PERM_HOLE_START ((uint32_t)-2)
 
 #define CREATE_PERM_HOLE(dmnp) \
     ((dmnp)->dmnVersion >= FIRST_PERM_HOLE_XTNTS_VERSION)
@@ -295,8 +295,8 @@ typedef struct bsMPg {
  */
 
 typedef struct bsXtnt {
-	uint32T bsPage;		/* Bitfile page number */
-	uint32T vdBlk;		/* Logical (disk) block number */
+	uint32_t bsPage;		/* Bitfile page number */
+	uint32_t vdBlk;		/* Logical (disk) block number */
 }      bsXtntT;
 /*
  * Definition of delete link for global deferred deleted list.
@@ -311,15 +311,15 @@ typedef struct {
 typedef struct {
 	bfMCIdT mcid;		/* first unfinished mcell in del pend chain */
 	vdIndexT vdIndex;	/* vd index of first unfinished mcell */
-	uint32T xtntIndex;	/* index of the first unfinished extent */
-	uint32T offset;		/* first unprocessed page in extent */
-	uint32T blocks;		/* quota blocks already freed */
+	uint32_t xtntIndex;	/* index of the first unfinished extent */
+	uint32_t offset;		/* first unprocessed page in extent */
+	uint32_t blocks;		/* quota blocks already freed */
 }      delRstT;
 #define BMT_XTNTS 2		/* num. xtnt descriptors per bsXtntR */
 
 typedef struct {
-	uint16T mcellCnt;	/* total number of mcells with descriptors */
-	uint16T xCnt;		/* Count of elements used in bsXA */
+	uint16_t mcellCnt;	/* total number of mcells with descriptors */
+	uint16_t xCnt;		/* Count of elements used in bsXA */
 	bsXtntT bsXA[BMT_XTNTS];/* Array of disk extent descriptors */
 }      bfPrimXT;
 /*
@@ -329,12 +329,12 @@ typedef struct {
 
 typedef struct bsXtntR {
 	bsXtntMapTypeT type;	/* The type of extent map */
-	uint32T chainVdIndex;	/* link to next extent record in the chain */
+	uint32_t chainVdIndex;	/* link to next extent record in the chain */
 	bfMCIdT chainMCId;	/* link to next extent record in the chain */
-	uint32T rsvd1;		/* pass stripe info to xfer_xtnts_to_clone */
+	uint32_t rsvd1;		/* pass stripe info to xfer_xtnts_to_clone */
 	bfMCIdT rsvd2;
-	uint32T blksPerPage;	/* Number of blocks per page */
-	uint32T segmentSize;	/* minimum number of pages that are allocated */
+	uint32_t blksPerPage;	/* Number of blocks per page */
+	uint32_t segmentSize;	/* minimum number of pages that are allocated */
 	/* to a stripe segment. */
 	delLinkT delLink;	/* doubly linked global deferred delete list */
 	delRstT delRst;		/* large bitfile deletion management */
@@ -356,14 +356,14 @@ typedef struct bsBfClAttr {
 	bfDataSafetyT dataSafety;	/* Bitfile data safety requirement */
 	serviceClassT reqServices;	/* required service class */
 	serviceClassT optServices;	/* optional service class */
-	int32T extendSize;	/* add'l extend size in blocks */
-	int32T clientArea[BS_CLIENT_AREA_SZ];	/* client-specific area */
-	int32T rsvd1;
-	int32T rsvd2;
+	int32_t extendSize;	/* add'l extend size in blocks */
+	int32_t clientArea[BS_CLIENT_AREA_SZ];	/* client-specific area */
+	int32_t rsvd1;
+	int32_t rsvd2;
 	bfTagT acl;		/* rsvd for ACL */
-	int32T rsvd_sec1;	/* rsvd for security stuff */
-	int32T rsvd_sec2;	/* rsvd for security stuff */
-	int32T rsvd_sec3;	/* rsvd for security stuff */
+	int32_t rsvd_sec1;	/* rsvd for security stuff */
+	int32_t rsvd_sec2;	/* rsvd for security stuff */
+	int32_t rsvd_sec3;	/* rsvd for security stuff */
 }          bsBfClAttrT;
 /*
  * Bitfile attributes
@@ -371,13 +371,13 @@ typedef struct bsBfClAttr {
 
 typedef struct bsBfAttr {
 	bfStatesT state;	/* bitfile state of existence */
-	uint32T bfPgSz;		/* Bitfile area page size */
+	uint32_t bfPgSz;		/* Bitfile area page size */
 	ftxIdT transitionId;	/* ftxId when ds state is ambiguous */
-	uint32T cloneId;	/* 0 ==> orig; "> 0" ==> clone */
-	uint32T cloneCnt;	/* set's clone cnt last time bf changed */
-	uint32T maxClonePgs;	/* max pages in clone */
-	int16T deleteWithClone;	/* delete bitfile when its clone is deleted */
-	int16T outOfSyncClone;	/* clone may not be accessed */
+	uint32_t cloneId;	/* 0 ==> orig; "> 0" ==> clone */
+	uint32_t cloneCnt;	/* set's clone cnt last time bf changed */
+	uint32_t maxClonePgs;	/* max pages in clone */
+	int16_t deleteWithClone;	/* delete bitfile when its clone is deleted */
+	int16_t outOfSyncClone;	/* clone may not be accessed */
 	bsBfClAttrT cl;		/* client attributes */
 }        bsBfAttrT;
 #define BSR_VD_ATTR 3		/* Vd attributes */
@@ -386,18 +386,18 @@ typedef struct bsVdAttr {
 	bsIdT vdMntId;		/* vd mount id */
 	bsVdStatesT state;	/* vd state */
 	vdIndexT vdIndex;	/* this vd's index in the domain */
-	uint16T jays_new_field;
-	uint32T vdBlkCnt;	/* block count of this vd */
-	uint32T stgCluster;	/* num blks each stg bitmap bit */
-	uint32T maxPgSz;	/* largest possible page size on vd */
-	uint32T bmtXtntPgs;	/* number of pages per BMT extent */
+	uint16_t jays_new_field;
+	uint32_t vdBlkCnt;	/* block count of this vd */
+	uint32_t stgCluster;	/* num blks each stg bitmap bit */
+	uint32_t maxPgSz;	/* largest possible page size on vd */
+	uint32_t bmtXtntPgs;	/* number of pages per BMT extent */
 	serviceClassT serviceClass;	/* service class provided by vd */
 }        bsVdAttrT;
 #define BSR_DMN_ATTR 4		/* permanent (not mutable) domain attr */
 
 typedef struct bsDmnAttr {
 	bsIdT bfDomainId;	/* id of this bitfile domain */
-	uint32T maxVds;		/* maximum vd index */
+	uint32_t maxVds;		/* maximum vd index */
 	bfTagT bfSetDirTag;	/* tag of root bitfile-set tag directory */
 }         bsDmnAttrT;
 
@@ -409,11 +409,11 @@ extern bsDmnAttrT bsNilDmnAttr;
 /* As of version 4.0B, BMT_XTRA_XTNTS equals 32. */
 
 #define BMT_XTRA_XTNTS \
-    ((BSC_R_SZ - 2*sizeof( bsMRT ) - (2 * sizeof( uint16T ))) / sizeof( bsXtntT ))
+    ((BSC_R_SZ - 2*sizeof( bsMRT ) - (2 * sizeof( uint16_t ))) / sizeof( bsXtntT ))
 
 typedef struct bsXtraXtntR {
-	uint16T blksPerPage;	/* Number of blocks per page */
-	uint16T xCnt;		/* Count of elements used in bsXA */
+	uint16_t blksPerPage;	/* Number of blocks per page */
+	uint16_t xCnt;		/* Count of elements used in bsXA */
 	bsXtntT bsXA[BMT_XTRA_XTNTS];	/* Array of disk extent descriptors */
 }           bsXtraXtntRT;
 #define BSR_SHADOW_XTNTS 6	/* bsShadowXtntT structure type */
@@ -422,20 +422,20 @@ typedef struct bsXtraXtntR {
 /* As of version 4.0B, BMT_SHADOW_XTNTS equals 31. */
 
 #define BMT_SHADOW_XTNTS \
-    ((BSC_R_SZ - 2*sizeof( bsMRT ) - sizeof (vdIndexT) - (3 * sizeof( uint16T ))) \
+    ((BSC_R_SZ - 2*sizeof( bsMRT ) - sizeof (vdIndexT) - (3 * sizeof( uint16_t ))) \
      / sizeof( bsXtntT ))
 
 typedef struct bsShadowXtnt {
 	vdIndexT allocVdIndex;	/* Disk on which to allocate storage */
-	uint16T mcellCnt;	/* total number of mcells with descriptors */
-	uint16T blksPerPage;	/* Number of blocks per page */
-	uint16T xCnt;		/* Count of elements used in bsXA */
+	uint16_t mcellCnt;	/* total number of mcells with descriptors */
+	uint16_t blksPerPage;	/* Number of blocks per page */
+	uint16_t xCnt;		/* Count of elements used in bsXA */
 	bsXtntT bsXA[BMT_SHADOW_XTNTS];	/* Array of disk extent descriptors */
 }            bsShadowXtntT;
 #define BSR_MCELL_FREE_LIST 7
 
 typedef struct {
-	uint32T headPg;		/* first page of mcell free list */
+	uint32_t headPg;		/* first page of mcell free list */
 }      bsMcellFreeListT;
 #define BSR_BFS_ATTR 8
 #define BFS_FRAG_MAX 8
@@ -465,19 +465,19 @@ typedef struct {
 	bfTagT nextCloneSetTag;	/* tag of next set in clone list */
 	bfTagT origSetTag;	/* for clones, this is parent set */
 	bfTagT nxtDelPendingBfSet;	/* next delete pending bf set */
-	uint16T state;		/* state of bitfile set */
-	uint16T flags;
-	uint32T cloneId;	/* 0 ==> orig; "> 0" ==> clone */
-	uint32T cloneCnt;	/* times orig has been cloned */
-	uint32T numClones;	/* current number of clones */
-	uint32T fsDev;		/* Unique ID */
-	uint32T freeFragGrps;
-	uint32T oldQuotaStatus;	/* not properly initialized */
+	uint16_t state;		/* state of bitfile set */
+	uint16_t flags;
+	uint32_t cloneId;	/* 0 ==> orig; "> 0" ==> clone */
+	uint32_t cloneCnt;	/* times orig has been cloned */
+	uint32_t numClones;	/* current number of clones */
+	uint32_t fsDev;		/* Unique ID */
+	uint32_t freeFragGrps;
+	uint32_t oldQuotaStatus;	/* not properly initialized */
 	uid_t uid;		/* set's owner */
 	gid_t gid;		/* set's group */
 	mode_t mode;		/* set's permissions mode */
 	char setName[BS_SET_NAME_SZ];	/* bitfile set's name */
-	uint32T fsContext[BS_FS_CONTEXT_SZ];	/* client fs's data */
+	uint32_t fsContext[BS_FS_CONTEXT_SZ];	/* client fs's data */
 	fragGrpT fragGrps[BFS_FRAG_MAX];	/* array of frag group list
 						 * heads */
 }      bsBfSetAttrT;
@@ -512,13 +512,13 @@ typedef struct vdIoParams {
 #define BSR_RSVD13 13		/* Used by HSM in DU versions prior to 4.0 */
 
 typedef struct {
-	int32T r1;
-	int32T r2;
-	int32T r3;
-	int32T r4;
-	int32T r5;
-	int32T r6;
-	uint32T r7;
+	int32_t r1;
+	int32_t r2;
+	int32_t r3;
+	int32_t r4;
+	int32_t r5;
+	int32_t r6;
+	uint32_t r7;
 }      bsrRsvd11T;
 #define BSR_DEF_DEL_MCELL_LIST 14
 typedef delLinkT delLinkRT;
@@ -532,16 +532,16 @@ typedef delLinkT delLinkRT;
  */
 
 typedef struct bsDmnMAttr {
-	uint32T seqNum;		/* sequence number of this record */
+	uint32_t seqNum;		/* sequence number of this record */
 	bfTagT delPendingBfSet;	/* head of 'bf set delete pending' list */
 	uid_t uid;		/* domain's owner */
 	gid_t gid;		/* domain's group */
 	mode_t mode;		/* domain's access permissions */
-	uint16T vdCnt;		/* number of disks in the domain */
-	uint16T recoveryFailed;	/* Recovery failed, don't activate */
+	uint16_t vdCnt;		/* number of disks in the domain */
+	uint16_t recoveryFailed;	/* Recovery failed, don't activate */
 	bfTagT bfSetDirTag;	/* tag of root bitfile-set tag directory */
 	bfTagT ftxLogTag;	/* tag of domain log */
-	uint32T ftxLogPgs;	/* number of pages in log */
+	uint32_t ftxLogPgs;	/* number of pages in log */
 }          bsDmnMAttrT;
 /*
  * Bitfile inheritable attributes.  see bs_inherit().
@@ -553,14 +553,14 @@ typedef bsBfClAttrT bsBfInheritAttrT;
 
 #define BSR_RSVD17 17
 typedef struct {
-	int32T r1;
-	int32T r2;
-	int32T r3;
-	int32T r4;
-	int32T r5;
-	int32T r6;
-	uint32T r7;
-	uint32T r8;
+	int32_t r1;
+	int32_t r2;
+	int32_t r3;
+	int32_t r4;
+	int32_t r5;
+	int32_t r6;
+	uint32_t r7;
+	uint32_t r8;
 }      bsrRsvd17T;
 extern bsrRsvd17T DefbsrRsvd17;
 
@@ -573,31 +573,31 @@ extern bsrRsvd17T DefbsrRsvd17;
 typedef struct bsQuotaAttr {
 	/* the following are really 64-bit fields (hence the 'hi', 'lo' to
 	 * designate the high 32 bits and the low 32 bits */
-	uint32T blkHLimitLo;	/* hard block limit */
-	uint32T blkHLimitHi;	/* hard block limit */
-	uint32T blkSLimitLo;	/* soft block limit */
-	uint32T blkSLimitHi;	/* soft block limit */
-	uint32T fileHLimitLo;	/* hard file limit */
-	uint32T fileHLimitHi;	/* zeros - for future use */
-	uint32T fileSLimitLo;	/* soft file limit */
-	uint32T fileSLimitHi;	/* zeros - for future use */
+	uint32_t blkHLimitLo;	/* hard block limit */
+	uint32_t blkHLimitHi;	/* hard block limit */
+	uint32_t blkSLimitLo;	/* soft block limit */
+	uint32_t blkSLimitHi;	/* soft block limit */
+	uint32_t fileHLimitLo;	/* hard file limit */
+	uint32_t fileHLimitHi;	/* zeros - for future use */
+	uint32_t fileSLimitLo;	/* soft file limit */
+	uint32_t fileSLimitHi;	/* zeros - for future use */
 	/* end of 64-bit fields */
 
 	time_t blkTLimit;	/* time limit for excessive disk blk use */
 	time_t fileTLimit;	/* time limit for excessive file use */
-	uint32T quotaStatus;	/* quota system status */
+	uint32_t quotaStatus;	/* quota system status */
 
-	uint32T unused1;	/* zeros */
-	uint32T unused2;	/* zeros */
-	uint32T unused3;	/* zeros */
-	uint32T unused4;	/* zeros */
+	uint32_t unused1;	/* zeros */
+	uint32_t unused2;	/* zeros */
+	uint32_t unused3;	/* zeros */
+	uint32_t unused4;	/* zeros */
 }           bsQuotaAttrT;
 /*
  * PROPERTY LIST HEADER RECORD
  */
 #define BSR_PROPLIST_HEAD 19
-#define BSR_PROPLIST_HEAD_SIZE (sizeof(uint64T)+4*sizeof(uint32T))
-#define BSR_PROPLIST_HEAD_SIZE_V3 (sizeof(uint64T)+2*sizeof(uint32T))
+#define BSR_PROPLIST_HEAD_SIZE (sizeof(uint64T)+4*sizeof(uint32_t))
+#define BSR_PROPLIST_HEAD_SIZE_V3 (sizeof(uint64T)+2*sizeof(uint32_t))
 
 /* flags */
 /* XXX: Verify sanity of int size 32-64 bit */
@@ -607,24 +607,24 @@ typedef struct bsQuotaAttr {
 #define BSR_PL_RESERVED 0xFF00000000000000
 typedef struct bsPropListHead {
 	uint64T flags;
-	uint32T pl_num;		/* Which pl in this tag */
-	uint32T spare;		/* currently unused field */
-	uint32T namelen;
-	uint32T valuelen;
+	uint32_t pl_num;		/* Which pl in this tag */
+	uint32_t spare;		/* currently unused field */
+	uint32_t namelen;
+	uint32_t valuelen;
 	char buffer[1];		/* var len field */
 }              bsPropListHeadT;
 
 typedef struct bsPropListHead_v3 {
 	uint64T flags;
-	uint32T namelen;
-	uint32T valuelen;
+	uint32_t namelen;
+	uint32_t valuelen;
 	char buffer[1];		/* var len field */
 }                 bsPropListHeadT_v3;
 /*
  * The size of pl_num, pl_seg within bsPropListPageT
  */
 
-#define NUM_SEG_SIZE (2*sizeof(uint32T))
+#define NUM_SEG_SIZE (2*sizeof(uint32_t))
 
 /*
  * PROPERTY LIST DATA RECORD
@@ -647,7 +647,7 @@ typedef struct bsPropListHead_v3 {
 #define BSR_PROPLIST_PAGE_SIZE ((BSPG_CELLS*sizeof(bsMCT)) - \
                                 sizeof(bfMCIdT) - \
                                 (2*sizeof(bfTagT)) - \
-                                (2*sizeof(uint16T)) - \
+                                (2*sizeof(uint16_t)) - \
                                 (2*sizeof(bsMRT)))
 
 /*
@@ -670,8 +670,8 @@ typedef struct bsPropListHead_v3 {
 #define BSR_PL_MAX_LARGE (256+1292)
 
 typedef struct bsPropListPage {
-	uint32T pl_num;		/* Which pl in this tag */
-	uint32T pl_seg;		/* Which segment for this pl_num */
+	uint32_t pl_num;		/* Which pl in this tag */
+	uint32_t pl_seg;		/* Which segment for this pl_num */
 	char buffer[BSR_PROPLIST_PAGE_SIZE];
 }              bsPropListPageT;
 
@@ -687,7 +687,7 @@ typedef enum {
 }    bsVdOpT;
 
 typedef struct bsDmnTAttr {
-	uint32T chainVdIndex;
+	uint32_t chainVdIndex;
 	bfMCIdT chainMCId;
 	bsVdOpT op;
 	dev_t dev;
@@ -726,38 +726,38 @@ typedef enum {
 typedef struct bsSSDmnAttr {
 	ssDmnOpT ssDmnState;	/* processing state that domain is in */
 	/* UI visable configurable options */
-	uint16T ssDmnDefragment;
-	uint16T ssDmnSmartPlace;
-	uint16T ssDmnBalance;
-	uint16T ssDmnDirectIo;
-	uint16T ssMaxPercentOfIoWhenBusy;
+	uint16_t ssDmnDefragment;
+	uint16_t ssDmnSmartPlace;
+	uint16_t ssDmnBalance;
+	uint16_t ssDmnDirectIo;
+	uint16_t ssMaxPercentOfIoWhenBusy;
 	/* output only variables */
-	uint32T ssFilesDefraged;
-	uint32T ssPagesDefraged;
-	uint32T ssPagesBalanced;
-	uint32T ssFilesIOBal;
-	uint32T ssExtentsConsol;
-	uint32T ssPagesConsol;
+	uint32_t ssFilesDefraged;
+	uint32_t ssPagesDefraged;
+	uint32_t ssPagesBalanced;
+	uint32_t ssFilesIOBal;
+	uint32_t ssExtentsConsol;
+	uint32_t ssPagesConsol;
 	/* UI unvisable configurable options */
-	uint16T ssAccessThreshHits;
-	uint16T ssSteadyState;
-	uint16T ssMinutesInHotList;
-	uint16T ssReserved0;
+	uint16_t ssAccessThreshHits;
+	uint16_t ssSteadyState;
+	uint16_t ssMinutesInHotList;
+	uint16_t ssReserved0;
 	/* UI unvisable configurable options */
-	uint32T ssReserved1;
-	uint32T ssReserved2;
+	uint32_t ssReserved1;
+	uint32_t ssReserved2;
 }           bsSSDmnAttrT;
 #define BSR_DMN_FREEZE_ATTR 23
 
 typedef struct bsDmnFreezeAttr {
 	time_t freezeBegin;	/* Time of last dmn freeze */
 	time_t freezeEnd;	/* Time of last dmn thaw   */
-	uint32T freezeCount;	/* Number of times domain has been frozen */
+	uint32_t freezeCount;	/* Number of times domain has been frozen */
 
-	uint32T unused1;	/* zeros */
-	uint32T unused2;	/* zeros */
-	uint32T unused3;	/* zeros */
-	uint32T unused4;	/* zeros */
+	uint32_t unused1;	/* zeros */
+	uint32_t unused2;	/* zeros */
+	uint32_t unused3;	/* zeros */
+	uint32_t unused4;	/* zeros */
 
 }               bsDmnFreezeAttrT;
 /* #define BSR_MAX 23           DEFINED IN bs_public.h */
@@ -777,8 +777,8 @@ typedef struct bsDmnFreezeAttr {
  * Pages are 8192 bytes yielding 65536 bits (minus overhead) on each page.
  */
 
-#define SBM_LONGS_PG     ((ADVFS_PGSZ - 2 * sizeof(uint32T)) / sizeof(uint32T))
-#define SBM_BITS_LONG    (sizeof( uint32T ) * 8 /* bits per byte */)
+#define SBM_LONGS_PG     ((ADVFS_PGSZ - 2 * sizeof(uint32_t)) / sizeof(uint32_t))
+#define SBM_BITS_LONG    (sizeof( uint32_t ) * 8 /* bits per byte */)
 #define SBM_BITS_PG      (SBM_LONGS_PG * SBM_BITS_LONG)
 
 /*
@@ -821,9 +821,9 @@ typedef struct bsDmnFreezeAttr {
 
 
 typedef struct bsStgBm {
-	uint32T lgSqNm;		/* log sequence number */
-	uint32T xor;		/* bit xor */
-	uint32T mapInt[SBM_LONGS_PG];	/* uint32T array (can't do bit arrays) */
+	uint32_t lgSqNm;		/* log sequence number */
+	uint32_t xor;		/* bit xor */
+	uint32_t mapInt[SBM_LONGS_PG];	/* uint32_t array (can't do bit arrays) */
 }       bsStgBmT;
 /******************************************************************************
  * Tag Directory structures.                                                  *
@@ -844,17 +844,17 @@ typedef struct bsTMap {
 	         * First tagmap struct on page zero only.
 	         */
 		struct {
-			uint32T freeList;	/* head of free list */
-			uint32T unInitPg;	/* first uninitialized page */
+			uint32_t freeList;	/* head of free list */
+			uint32_t unInitPg;	/* first uninitialized page */
 		}      tm_s1;
 
 		/*
 	         * Tagmap struct on free list.
 	         */
 		struct {
-			uint16T seqNo;	/* must overlay seqNo in tm_s3 */
-			uint16T unused;	/* padding to 4 byte boundary */
-			uint32T nextMap;	/* next free tagmap struct
+			uint16_t seqNo;	/* must overlay seqNo in tm_s3 */
+			uint16_t unused;	/* padding to 4 byte boundary */
+			uint32_t nextMap;	/* next free tagmap struct
 						 * within page */
 		}      tm_s2;
 
@@ -862,8 +862,8 @@ typedef struct bsTMap {
 	         * In use tagmap struct.
 	         */
 		struct {
-			uint16T seqNo;	/* must overlay seqNo in tm_s2 */
-			uint16T vdIndex;	/* virtual disk index */
+			uint16_t seqNo;	/* must overlay seqNo in tm_s2 */
+			uint16_t vdIndex;	/* virtual disk index */
 			bfMCIdT bfMCId;	/* bitfile mcell id */
 		}      tm_s3;
 	}     tm_u;
@@ -895,12 +895,12 @@ typedef struct bsTMap {
  * Structure defined for the convenience of pin_record.
  */
 typedef struct bsTDirPgHdr {
-	uint32T currPage;	/* page number of this page */
-	uint32T nextFreePage;	/* next page having free TMaps */
-	uint16T nextFreeMap;	/* index of next free TMap, 1 based */
-	uint16T numAllocTMaps;	/* count of allocated tmaps */
-	uint16T numDeadTMaps;	/* count of dead tmaps */
-	uint16T padding;
+	uint32_t currPage;	/* page number of this page */
+	uint32_t nextFreePage;	/* next page having free TMaps */
+	uint16_t nextFreeMap;	/* index of next free TMap, 1 based */
+	uint16_t numAllocTMaps;	/* count of allocated tmaps */
+	uint16_t numDeadTMaps;	/* count of dead tmaps */
+	uint16_t padding;
 }           bsTDirPgHdrT;
 #define BS_TD_TAGS_PG ((ADVFS_PGSZ - (sizeof(bsTDirPgHdrT))) / sizeof(bsTMapT))
 
@@ -929,10 +929,10 @@ typedef struct logPgHdr {
 	lsnT thisPageLSN;	/* LSN of first record in the page */
 	bfdBfMetaT pgType;	/* used as a page identifier */
 	bfDomainIdT dmnId;	/* used as a page identifier */
-	uint16T pgSafe;		/* TRUE if page is in safe format */
-	uint16T chkBit;
-	int16T curLastRec;	/* word offset into pg.data */
-	int16T prevLastRec;	/* word offset into pg.data */
+	uint16_t pgSafe;		/* TRUE if page is in safe format */
+	uint16_t chkBit;
+	int16_t curLastRec;	/* word offset into pg.data */
+	int16_t prevLastRec;	/* word offset into pg.data */
 	logRecAddrT firstLogRec;/* first log rec addr */
 }        logPgHdrT;
 /*
@@ -956,7 +956,7 @@ typedef struct logPgTrlr {
  */
 #define DATA_WORDS_PG \
     howmany( (ADVFS_PGSZ - sizeof(logPgHdrT) - sizeof(logPgTrlrT)), \
-             sizeof(uint32T) )
+             sizeof(uint32_t) )
 
 /*
  * logPgT -
@@ -967,7 +967,7 @@ typedef struct logPgTrlr {
  */
 typedef struct logPg {
 	logPgHdrT hdr;		/* Log page header */
-	uint32T data[DATA_WORDS_PG];	/* Log records (must type cast) */
+	uint32_t data[DATA_WORDS_PG];	/* Log records (must type cast) */
 	logPgTrlrT trlr;	/* Log page trailer */
 }     logPgT;
 

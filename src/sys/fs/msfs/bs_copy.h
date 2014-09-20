@@ -30,18 +30,18 @@
 #define MAX_COPY_XFER_SIZE 65535/* max size is 512 MB - 512 bytes */
 
 typedef struct pageRange {
-	uint32T pageOffset;
-	uint32T pageCnt;
-	int32T pageType;	/* STG, XTNT_TERM, or PERM_HOLE_START */
+	uint32_t pageOffset;
+	uint32_t pageCnt;
+	int32_t pageType;	/* STG, XTNT_TERM, or PERM_HOLE_START */
 }         pageRangeT;
 statusT
 cp_copy_page_range(
     bfAccessT * bfAccess,	/* in */
     pageRangeT * bfPageRange,	/* in */
-    uint32T bfPageRangeCnt,	/* in */
+    uint32_t bfPageRangeCnt,	/* in */
     bsInMemXtntT * copyXtnts,	/* in */
-    uint32T copyXferSize,	/* in */
-    uint32T forceFlag		/* in */
+    uint32_t copyXferSize,	/* in */
+    uint32_t forceFlag		/* in */
 );
 
 void

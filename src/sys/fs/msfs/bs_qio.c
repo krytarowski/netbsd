@@ -4987,7 +4987,7 @@ bs_io_thread(int radId)
 				 * process some more I/O. */
 
 				domainT *dmnP = msg->u_msg.dmnP;
-				uint32T vdi = msg->vdi;
+				uint32_t vdi = msg->vdi;
 				struct vd *vdp = msg->vdp;
 
 				/* Check to see if the domain and the vd are
@@ -5057,7 +5057,7 @@ bs_io_thread(int radId)
 			}
 		case RETRY_IO:
 			{
-				uint32T vdBlk;
+				uint32_t vdBlk;
 				int ioAmt;
 				struct buf *bp;
 				ioDescT *iop;
@@ -5636,8 +5636,8 @@ smsync_to_readyq(struct vd * vdp, int flushFlag)
 
 void
 iodh_trace(ioDescHdrT * ioDH,
-    uint16T module,
-    uint16T line,
+    uint16_t module,
+    uint16_t line,
     void *value)
 {
 	register ioDHTraceElmT *te;

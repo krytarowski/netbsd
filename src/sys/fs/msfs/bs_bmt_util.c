@@ -198,7 +198,7 @@ link_mcells(
     bsMCT * oldMcell,		/* in */
     rbfPgRefHT newPgPin,	/* in */
     bsMCT * newMcell,		/* in */
-    uint16T newVdIndex,		/* in */
+    uint16_t newVdIndex,		/* in */
     bfMCIdT newMcellId		/* in */
 );
 
@@ -209,7 +209,7 @@ bmtr_scan_mcells(
     vdT ** vdp,			/* in/out - vd (of mcell) pointer */
     void **bsrp,		/* out - pointer to BMT record */
     bfPageRefHT * pgRef,	/* out - pgref of BMT cell's page */
-    uint32T * recOffset,	/* out - record's mcell offset */
+    uint32_t * recOffset,	/* out - record's mcell offset */
     u_short * rSize,		/* out - record's size in bytes */
     const int rtype,		/* in - record type to find */
     const bfTagT tag		/* in - bitfile's tag */
@@ -230,7 +230,7 @@ bmtr_clone_mcell(
  * bmt_upd_mcell_free_list - update page that starts list of free mcells
  */
 
-static uint32T
+static uint32_t
 bmt_upd_mcell_free_list(
     ftxHT ftxH,			/* in - callers ftx handle */
     vdT * vdp,			/* in - current disk pointer */
@@ -244,10 +244,10 @@ bmtr_update_rec_int(
     u_short bSize,		/* in - size of buffer */
     ftxHT parentFtxH,		/* in - transaction handle */
     bmtrLkT lk,
-    uint32T flags		/* in - flags */
+    uint32_t flags		/* in - flags */
 );
 
-static statusT check_xtnts(bsXtntT *, uint16T, bfAccessT *, vdT *);
+static statusT check_xtnts(bsXtntT *, uint16_t, bfAccessT *, vdT *);
 
 static statusT test_mcell_ptr(vdIndexT, bfMCIdT, bfTagT, domainT *);
 
@@ -733,7 +733,7 @@ bmtr_scan_mcells(
     vdT ** vdp,			/* in/out - vd (of mcell) pointer */
     void **bsrp,		/* out - pointer to BMT record */
     bfPageRefHT * pgRef,	/* out - pgref of BMT cell's page */
-    uint32T * recOffset,	/* out - record's mcell offset */
+    uint32_t * recOffset,	/* out - record's mcell offset */
     u_short * rSize,		/* out - record's size in bytes */
     const int rtype,		/* in - record type to find */
     const bfTagT tag		/* in - bitfile's tag */
@@ -854,7 +854,7 @@ bmtr_scan_mcells(
 	}
 	rp = (bsMRT *) ((char *) *bsrp - sizeof(struct bsMR));
 	*rSize = rp->bCnt - sizeof(struct bsMR);
-	*recOffset = (uint32T) ((char *) *bsrp - (char *) mcp);
+	*recOffset = (uint32_t) ((char *) *bsrp - (char *) mcp);
 
 	return EOK;
 
@@ -895,7 +895,7 @@ bmtr_scan(
 )
 {
 	statusT sts;
-	uint32T recOffset;
+	uint32_t recOffset;
 	u_short recSize;
 	vdT *mcellVdp = vdp;
 
@@ -945,7 +945,7 @@ bmtr_get_rec_ptr(
 	bfPageRefHT refpgref;
 	bfMCIdT mcid;
 	char *recp = NULL;
-	uint32T recOffset;
+	uint32_t recOffset;
 	int lkLocked = FALSE;
 	u_short recSize;
 	struct bsMPg *bmtp = NULL;
@@ -1083,7 +1083,7 @@ bmtr_get_rec_n_lk(
 	bfMCIdT mcid;
 	char *recp = NULL;
 	statusT sts;
-	uint32T recOffset;
+	uint32_t recOffset;
 	u_short recSize;
 	int pgRefed = FALSE, mcellListLocked = FALSE;
 
@@ -1171,7 +1171,7 @@ typedef struct {
 	bfTagT bfTag;		/* bitfile's tag */
 	bfSetIdT bfSetId;	/* bitfile's set id */
 	bfMCIdT mcid;		/* mcell id of record's mcell */
-	uint32T recOffset;	/* record's byte offset into mcell */
+	uint32_t recOffset;	/* record's byte offset into mcell */
 	u_short vdIndex;	/* disk index of record's mcell */
 	u_short beforeImageLen;	/* bytes in 'beforeImage' */
 	char beforeImage[BS_USABLE_MCELL_SPACE];	/* before image of mcell
@@ -1354,14 +1354,14 @@ bmtr_put_rec_n_unlk_int(
 	bfMCIdT mcid;
 	char *recp = NULL;
 	statusT sts;
-	uint32T recOffset;
+	uint32_t recOffset;
 	ftxHT ftxH;
 	int lkLocked = FALSE, ftxStarted = FALSE;
 	u_short recSize;
 	struct bsMPg *bmtp = NULL;
 	struct bsMC *mcp = NULL;
 	bmtrPutRecUndoT *undoRecp = NULL;
-	uint32T undoRecSize;
+	uint32_t undoRecSize;
 	bfAccessT *mdap;
 
 	undoRecp = (bmtrPutRecUndoT *) ms_malloc(sizeof(bmtrPutRecUndoT));
@@ -1515,7 +1515,7 @@ bmtr_update_rec(
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
     ftxHT parentFtxH,		/* in - transaction handle */
-    uint32T flags)
+    uint32_t flags)
 {				/* in - flags  */
 	bfSetT *bfSetp;
 	statusT sts;
@@ -1625,7 +1625,7 @@ bmtr_update_rec_int(
     u_short bSize,		/* in - size of buffer */
     ftxHT parentFtxH,		/* in - transaction handle */
     bmtrLkT lk,
-    uint32T flags)
+    uint32_t flags)
 {				/* in - flags */
 	statusT sts;
 	vdT *vdp;
@@ -1633,7 +1633,7 @@ bmtr_update_rec_int(
 	bfPageRefHT refpgref;
 	bfMCIdT mcid;
 	char *recp = NULL;
-	uint32T recOffset;
+	uint32_t recOffset;
 	ftxHT ftxH;
 	int ftxStarted = FALSE, lkLocked = FALSE;
 	u_short recSize;
@@ -1799,7 +1799,7 @@ bmt_alloc_prim_mcell(
 
 
 typedef struct allocMcellUndoRec {
-	uint16T newVdIndex;
+	uint16_t newVdIndex;
 	bfMCIdT newMcellId;
 }                 allocMcellUndoRecT;
 /*
@@ -2011,7 +2011,7 @@ alloc_rbmt_mcell_undo(
 statusT
 bmt_alloc_mcell(
     bfAccessT * bfAccess,	/* in */
-    uint16T poolVdIndex,	/* in */
+    uint16_t poolVdIndex,	/* in */
     mcellPoolT poolType,	/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
@@ -2160,9 +2160,9 @@ deferred_free_mcell(vdT * vd,
 
 
 typedef struct allocLinkMcellUndoRec {
-	uint16T vdIndex;
+	uint16_t vdIndex;
 	bfMCIdT mcellId;
-	uint16T newVdIndex;
+	uint16_t newVdIndex;
 	bfMCIdT newMcellId;
 }                     allocLinkMcellUndoRecT;
 /*
@@ -2287,9 +2287,9 @@ alloc_link_mcell_undo(
 statusT
 bmt_alloc_link_mcell(
     domainT * dmnP,		/* in */
-    uint16T poolVdIndex,	/* in */
+    uint16_t poolVdIndex,	/* in */
     mcellPoolT poolType,	/* in */
-    uint16T oldVdIndex,		/* in */
+    uint16_t oldVdIndex,		/* in */
     bfMCIdT oldMcellId,		/* in */
     ftxHT parentFtx,		/* in */
     bfMCIdT * retMcellId	/* out */
@@ -2392,7 +2392,7 @@ bmt_extend(
 )
 {
 	struct bfAccess *bmtap;
-	uint32T pageCnt = 0;
+	uint32_t pageCnt = 0;
 	int firstNewPg, pg, numNewPgs;
 	struct bsMPg *bmtpgp;
 	bfPageRefHT pgRef;
@@ -2680,7 +2680,7 @@ start2:
 cleanup_corruption:
 	{
 		advfs_ev advfs_event;
-		uint32T new_head_of_free_list;
+		uint32_t new_head_of_free_list;
 
 		if (!AdvfsFixUpBMT) {
 			ADVFS_SAD0("alloc_mcell: bad mcell free list");
@@ -2766,7 +2766,7 @@ rbmt_extend(
 	bsMPgT *newRbmtPg;
 	struct bsMR *rp;
 	ftxHT ftxH;
-	uint32T pageCnt, newPg;
+	uint32_t pageCnt, newPg;
 	bfPageRefHT newPgPin;
 	rbfPgRefHT curPgPin;
 	bfMCIdT mcid;
@@ -3129,11 +3129,11 @@ alloc_page0_mcell(
 statusT
 bmt_find_mcell(
     domainT * dmnP,		/* in */
-    uint16T bfSearchVdIndex,	/* in */
+    uint16_t bfSearchVdIndex,	/* in */
     bfMCIdT bfSearchMCId,	/* in */
-    uint16T bfStartVdIndex,	/* in */
+    uint16_t bfStartVdIndex,	/* in */
     bfMCIdT bfStartMCId,	/* in */
-    uint16T * bfPrevVdIndex,	/* out */
+    uint16_t * bfPrevVdIndex,	/* out */
     bfMCIdT * bfPrevMCId	/* out */
 )
 {
@@ -3142,10 +3142,10 @@ bmt_find_mcell(
 	bfMCIdT mcellId;
 	bsMCT *mcellp;
 	bfMCIdT nextMcellId;
-	uint16T nextVdIndex;
+	uint16_t nextVdIndex;
 	bfPageRefHT pgRef;
 	statusT sts;
-	uint16T vdIndex;
+	uint16_t vdIndex;
 	vdT *vdp;
 
 	vdIndex = bfStartVdIndex;
@@ -3245,7 +3245,7 @@ link_mcells(
     bsMCT * oldMcell,		/* in */
     rbfPgRefHT newPgPin,	/* in */
     bsMCT * newMcell,		/* in */
-    uint16T newVdIndex,		/* in */
+    uint16_t newVdIndex,		/* in */
     bfMCIdT newMcellId		/* in */
 )
 {
@@ -3292,7 +3292,7 @@ link_mcells(
  * mcell link will *not* be undone.
  */
 
-static uint32T
+static uint32_t
 bmt_upd_mcell_free_list(
     ftxHT ftxH,			/* in - ftx handle */
     vdT * vdp,			/* in - pointer to current disk */
@@ -3304,8 +3304,8 @@ bmt_upd_mcell_free_list(
 	bsMcellFreeListT *mcellFreeListp;
 	bsMCT *mcp;
 	statusT sts;
-	uint32T oldHeadPg;
-	uint32T freeListPg;
+	uint32_t oldHeadPg;
+	uint32_t freeListPg;
 	domainT *dmnP = vdp->dmnP;
 
 	/*
@@ -4212,11 +4212,11 @@ bmt_free_mcell(
 statusT
 bmtr_clone_recs(
     bfMCIdT srcMCId,		/* in - Source bf primary mcell's id */
-    uint16T srcVdIndex,		/* in - Source bf primary mcell's disk index */
+    uint16_t srcVdIndex,		/* in - Source bf primary mcell's disk index */
     bfMCIdT destMCId,		/* in - Destination bf primary mcell's id */
-    uint16T destVdIndex,	/* in - Destination bf primary mcell's disk
+    uint16_t destVdIndex,	/* in - Destination bf primary mcell's disk
 				 * index */
-    uint16T npVdIndex,		/* in - new primary disk index */
+    uint16_t npVdIndex,		/* in - new primary disk index */
     domainT * dmnP,		/* in - ptr to domain struct */
     ftxHT parentFtxH		/* in - parent ftx handle */
 )
@@ -4229,7 +4229,7 @@ bmtr_clone_recs(
 	bsMRT *rp;
 	ftxHT ftxH;
 	int pgRefed = FALSE, ftxStarted = FALSE, first = TRUE;
-	uint16T vdIndex;
+	uint16_t vdIndex;
 	statusT sts;
 
 	mcid = srcMCId;
@@ -4469,7 +4469,7 @@ check_xtnt_in_range(
 	ssPackHdrT *plp = NULL;
 	int inserted = FALSE;
 	int retryFlg = 0;
-	uint32T pg1, pg2;
+	uint32_t pg1, pg2;
 
 	KASSERT(cRangeBeginBlk < vdp->vdSize);
 	KASSERT(cRangeEndBlk <= vdp->vdSize);
@@ -4968,7 +4968,7 @@ bmt_read(
 	statusT sts = EOK;
 	int found = FALSE;
 	struct bsMC *mcp;
-	uint32T lastPage;
+	uint32_t lastPage;
 	/*
          ** Scan the pages until a primary mcell is found.
          */
@@ -5767,7 +5767,7 @@ check_BSR_SHADOW_XTNTS_rec(bsShadowXtntT * bsShadowXtntp,
 	statusT sts = EOK;
 	int i;
 	domainT *dmnP = bfap->dmnP;
-	uint32T lastPage;
+	uint32_t lastPage;
 
 	if (bsShadowXtntp->blksPerPage != bfap->bfPageSz) {
 		domain_panic(dmnP,
@@ -5810,7 +5810,7 @@ statusT
 check_BSR_XTRA_XTNTS_rec(bsXtraXtntRT * bsXtraXtntRp,
     bfAccessT * bfap,
     vdT * vdp,
-    uint32T lastPg)
+    uint32_t lastPg)
 {
 	statusT sts;
 
@@ -5844,11 +5844,11 @@ HANDLE_EXCEPTION:
 ** Panic the domain if errors are found.
 */
 static statusT
-check_xtnts(bsXtntT bsXA[], uint16T cnt, bfAccessT * bfap, vdT * vdp)
+check_xtnts(bsXtntT bsXA[], uint16_t cnt, bfAccessT * bfap, vdT * vdp)
 {
 	statusT sts = EOK;
 	int i;
-	uint32T lastPage;
+	uint32_t lastPage;
 
 	for (i = 0; i < cnt; i++) {
 		/* Pages are monotonically increasing */

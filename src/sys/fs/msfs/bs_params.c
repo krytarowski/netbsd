@@ -63,13 +63,13 @@ static
 int
 get_stripe_next_page(
     bfAccessT * bfap,
-    uint32T pg,
+    uint32_t pg,
     int cloned,
     int *use_orig_bfap,
     int *start_pgP,		/* out */
     int *nextPageP,		/* out */
     vdIndexT * vdIndexP,	/* out */
-    uint32T * vdBlkP);		/* out */
+    uint32_t * vdBlkP);		/* out */
 
 /*
  * bs_get_bf_xtnt_map
@@ -90,9 +90,9 @@ bs_get_bf_xtnt_map(
     vdIndexT * allocVdIndex	/* out - disk on which stg is alloc'd. */
 )
 {
-	uint32T cnt;
+	uint32_t cnt;
 	int dst;
-	uint32T mapIndex;
+	uint32_t mapIndex;
 	int src;
 	statusT sts;
 	bsInMemSubXtntMapT *subXtntMap;
@@ -304,9 +304,9 @@ bs_get_clone_xtnt_map(
 	bfAccessT *orig_bfap;
 	bsInMemXtntMapT *clone_xtntMap, *orig_xtntMap;
 	bsInMemXtntMapT *newxtntmap = NULL;
-	uint32T clone_cnt, orig_cnt, cnt;
+	uint32_t clone_cnt, orig_cnt, cnt;
 	int dst;
-	uint32T mapIndex;
+	uint32_t mapIndex;
 	int src;
 	statusT sts;
 	bsInMemSubXtntMapT *subXtntMap;
@@ -634,8 +634,8 @@ bs_get_stripe_xtnt_map(
 	/* Note: bfap may be either regular striped file or clone */
 	/* if bfap is a clone, then orig_bfap points to original */
 
-	uint32T segmentCnt, segmentSize;
-	uint32T pg = 0;
+	uint32_t segmentCnt, segmentSize;
+	uint32_t pg = 0;
 	bsExtentDescT *tmp_xtntsArray = NULL;
 	statusT sts = EOK;
 	int pagecnt = 0;
@@ -644,10 +644,10 @@ bs_get_stripe_xtnt_map(
 	int use_orig_bfap = 0, idx, ret;
 	int hole_found = 0, start_hole = 0;
 	vdIndexT vdIndex;
-	uint32T vdBlk, start_pg, pgs;
+	uint32_t vdBlk, start_pg, pgs;
 	int end_stripe = 0;
 	off_t fileSize = bfap->file_size;
-	uint32T allocPageCnt = bfap->xtnts.allocPageCnt;
+	uint32_t allocPageCnt = bfap->xtnts.allocPageCnt;
 
 	if (bfap->xtnts.type != BSXMT_STRIPE) {
 		RAISE_EXCEPTION(EBAD_PARAMS);
@@ -795,9 +795,9 @@ HANDLE_EXCEPTION:
 }
 
 static int
-get_stripe_next_page(bfAccessT * bfap, uint32T pg, int cloned,
+get_stripe_next_page(bfAccessT * bfap, uint32_t pg, int cloned,
     int *use_orig_bfap, int *start_pgP, int *nextPageP,
-    vdIndexT * vdIndexP, uint32T * vdBlkP)
+    vdIndexT * vdIndexP, uint32_t * vdBlkP)
 {
 	bfAccessT *orig_bfap = bfap->origAccp;
 	int clone_nextPage = 0, ret;
@@ -1073,7 +1073,7 @@ bs_get_bkup_xtnt_map(
 statusT
 bs_get_bf_page_cnt(
     bfAccessT * bfap,		/* in */
-    uint32T * pageCnt		/* out */
+    uint32_t * pageCnt		/* out */
 )
 {
 	statusT sts = EOK;
@@ -1099,7 +1099,7 @@ bs_get_bf_page_cnt(
 		if (IDX_INDEXING_ENABLED(bfap) &&
 		    IDX_FILE_IS_DIRECTORY(bfap) &&
 		    ((bsDirIdxRecT *) bfap->idx_params)->idx_bfap) {
-			uint32T idx_pages;
+			uint32_t idx_pages;
 			idx_pages = ((bsDirIdxRecT *) bfap->idx_params)->
 			    idx_bfap->xtnts.allocPageCnt;
 			*pageCnt += idx_pages;
@@ -1118,7 +1118,7 @@ bs_get_bf_page_cnt(
 		if (!sts && IDX_INDEXING_ENABLED(bfap) &&
 		    IDX_FILE_IS_DIRECTORY(bfap) &&
 		    ((bsDirIdxRecT *) bfap->idx_params)->idx_bfap) {
-			uint32T idx_pages;
+			uint32_t idx_pages;
 			bfAccessT *idx_bfap = ((bsDirIdxRecT *) bfap->idx_params)->idx_bfap;
 
 			if (idx_bfap->cloneId == BS_BFSET_ORIG) {
@@ -1605,7 +1605,7 @@ statusT
 bs_get_dmn_vd_list(
     domainT * dmnP,		/* in - the domain pointer */
     int vdIndexArrayLen,	/* in - number of ints in array */
-    uint32T vdIndexArray[],	/* out - list of vd indices */
+    uint32_t vdIndexArray[],	/* out - list of vd indices */
     int *numVds			/* out - num vds put in array */
 )
 {
@@ -1787,7 +1787,7 @@ finished_set_dmn:
 statusT
 bs_get_vd_params(
     domainT * dmnP,		/* in - domain pointer */
-    uint32T vdIndex,		/* in - vd index */
+    uint32_t vdIndex,		/* in - vd index */
     bsVdParamsT * vdParams,	/* out - the vd parameters */
     int flag			/* in GETVOLPARAMS_NO_BMT - used to contr
 				 * GETVOLPARAMS2 - use cumulative ioq
@@ -1928,7 +1928,7 @@ bs_get_vd_params(
 statusT
 bs_set_vd_params(
     domainT * dmnP,		/* in - domain pointer */
-    uint32T vdIndex,		/* in - vd index */
+    uint32_t vdIndex,		/* in - vd index */
     bsVdParamsT * vdParams	/* in - vd parameters */
 )
 {
@@ -2078,9 +2078,9 @@ bs_get_avail_mcells(
 statusT
 bs_get_smsync_stats(
     domainT * dmnP,		/* in - domain pointer */
-    uint32T vdIndex,		/* in - vd index */
-    uint32T * smsyncQ_cnt,	/* out - cnt of bufs added to set of queues */
-    uint32T * smsync		/* out - snapshot of queue lengths */
+    uint32_t vdIndex,		/* in - vd index */
+    uint32_t * smsyncQ_cnt,	/* out - cnt of bufs added to set of queues */
+    uint32_t * smsync		/* out - snapshot of queue lengths */
 )
 {
 	struct vd *vdp;

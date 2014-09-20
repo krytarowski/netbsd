@@ -880,7 +880,7 @@ new_parent(
 	rbf_pin_record(
 	    page_ref,
 	    &dir_p->fs_dir_header.fs_dir_bs_tag_num,
-	    sizeof(uint32T)
+	    sizeof(uint32_t)
 	    );
 	dir_p->fs_dir_header.fs_dir_bs_tag_num = new_parent_tag.num;
 

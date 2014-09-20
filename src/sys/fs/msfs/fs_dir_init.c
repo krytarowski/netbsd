@@ -101,7 +101,7 @@ fs_init_directory(
     char *buffer_pointer,	/* in - ptr to buf for new entries */
     bfTagT bs_tag,		/* in - directory's tag */
     bfTagT parent_bs_tag,	/* in - parent directory's tag */
-    uint32T advfs_page_size	/* in - size of directory pages in 512-byte
+    uint32_t advfs_page_size	/* in - size of directory pages in 512-byte
 				 * blocks */
 )
 {
@@ -249,7 +249,7 @@ dir_empty(
 	fs_dir_entry *dir_p, *last_entry;
 	bfPageRefHT page_ref;
 	dirRec *dirRecp;
-	uint32T pageSz;
+	uint32_t pageSz;
 
 	pageSz = bfap->bfPageSz * BS_BLKSIZE;
 	num_pages = howmany(bfap->file_size, pageSz);
@@ -749,8 +749,8 @@ fs_insert_undo(
 	domainT *dmnP;
 	rbfPgRefHT page_ref;
 	bfTagT *tagp;
-	uint32T glom_flags;
-	uint32T entry_size;
+	uint32_t glom_flags;
+	uint32_t entry_size;
 	struct vnode *nullvp = NULL;
 
 
@@ -852,7 +852,7 @@ fs_insert_undo(
 	rbf_pin_record(
 	    page_ref,
 	    &dir_p->fs_dir_header.fs_dir_bs_tag_num,
-	    sizeof(uint32T)
+	    sizeof(uint32_t)
 	    );
 	dir_p->fs_dir_header.fs_dir_bs_tag_num = 0;
 

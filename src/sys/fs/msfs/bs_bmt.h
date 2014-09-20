@@ -58,7 +58,7 @@ bmt_alloc_prim_mcell(
 statusT
 bmt_alloc_mcell(
     bfAccessT * bfAccess,	/* in */
-    uint16T poolVdIndex,	/* in */
+    uint16_t poolVdIndex,	/* in */
     mcellPoolT poolType,	/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
@@ -76,9 +76,9 @@ deferred_free_mcell(vdT * vd,
 statusT
 bmt_alloc_link_mcell(
     domainT * dmnP,		/* in */
-    uint16T poolVdIndex,	/* in */
+    uint16_t poolVdIndex,	/* in */
     mcellPoolT poolType,	/* in */
-    uint16T oldVdIndex,		/* in */
+    uint16_t oldVdIndex,		/* in */
     bfMCIdT oldMcellId,		/* in */
     ftxHT parentFtx,		/* in */
     bfMCIdT * retMcellId	/* out */
@@ -87,11 +87,11 @@ bmt_alloc_link_mcell(
 statusT
 bmt_find_mcell(
     domainT * dmnP,		/* in */
-    uint16T bfSearchVdIndex,	/* in */
+    uint16_t bfSearchVdIndex,	/* in */
     bfMCIdT bfSearchMCId,	/* in */
-    uint16T bfStartVdIndex,	/* in */
+    uint16_t bfStartVdIndex,	/* in */
     bfMCIdT bfStartMCId,	/* in */
-    uint16T * bfPrevVdIndex,	/* out */
+    uint16_t * bfPrevVdIndex,	/* out */
     bfMCIdT * bfPrevMCId	/* out */
 );
 
@@ -150,10 +150,10 @@ bmt_init_page(
 statusT
 bmtr_clone_recs(
     bfMCIdT sMCId,
-    uint16T sVdIndex,
+    uint16_t sVdIndex,
     bfMCIdT dMCId,
-    uint16T dVdIndex,
-    uint16T npVdIndex,
+    uint16_t dVdIndex,
+    uint16_t npVdIndex,
     domainT * dmnp,
     ftxHT parentFtxH
 );
@@ -176,7 +176,7 @@ bmtr_update_rec(
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
     ftxHT parentFtxH,		/* in - transaction handle */
-    uint32T flags		/* in - flags */
+    uint32_t flags		/* in - flags */
 );
 
 statusT
@@ -288,8 +288,8 @@ bmt_get_vd_bf_descs(
  */
 typedef struct bmtH {
 	vdT *vdp;
-	uint32T curMcell;
-	uint32T curPg;
+	uint32_t curMcell;
+	uint32_t curPg;
 	bfPageRefHT pgRef;
 	bsMPgT *pgPtr;
 }    bmtHT;
@@ -337,7 +337,7 @@ statusT
 check_BSR_XTRA_XTNTS_rec(bsXtraXtntRT * bsXtraXtntRp,
     bfAccessT * bfap,
     vdT * vdp,
-    uint32T lastPg);
+    uint32_t lastPg);
 
 #endif				/* _KERNEL */
 #endif				/* _BMT_H_ */

@@ -72,7 +72,7 @@
  * this value, it indicates that the corresponding extent
  * array has had all its SBM bits cleared.
  */
-#define NORESTART ((uint32T) -1)
+#define NORESTART ((uint32_t) -1)
 
 /*
  * Returns nonzero iff two mcell IDs are equal.
@@ -96,11 +96,11 @@
 typedef struct {
 	bfTagT tag;
 	bfMCIdT mcid;
-	uint32T vdIndex;
+	uint32_t vdIndex;
 	bfSetIdT bfSetId;
 	lkStatesT prevAccState;
 	bfStatesT prevBfState;
-	uint32T setBusy;
+	uint32_t setBusy;
 }      delOpRecT;
 /*
  * defDelOpRecT
@@ -118,8 +118,8 @@ typedef struct {
  */
 typedef struct {
 	bfMCIdT mcid;
-	uint32T vdIndex;
-	uint32T type;
+	uint32_t vdIndex;
+	uint32_t type;
 }      delListRecT;
 /*
  * Structure to describe a delete ftx transaction.
@@ -127,8 +127,8 @@ typedef struct {
 typedef struct {
 	int pgSz;		/* page size of bitfile (not SBM) */
 	bsXtntRT *pxp;		/* primary extent record pointer */
-	uint32T rstIndex;	/* xtnt to start with */
-	uint32T rstOffset;	/* offset into start xtnt */
+	uint32_t rstIndex;	/* xtnt to start with */
+	uint32_t rstOffset;	/* offset into start xtnt */
 	bfMCIdT rstMCId;	/* mcell to start with */
 	vdIndexT rstVdIndex;	/* vdIndex of above mcell */
 	rbfPgRefHT pinPgH;	/* page handle */
@@ -164,14 +164,14 @@ del_part_xtnt(bfMCIdT pmcid,	/* in - mcell ID of primary mcell */
     vdT * pvdp,			/* in - pointer to virtual disk of primary */
     vdT * vdp,			/* in - virtual disk of storage to free */
     bsXtntT * fxp,		/* in - xtnt that maps storage to free */
-    uint32T startpg,		/* in - first page in xtnt to free */
-    uint32T pgstofree,		/* in - number of pages to free */
+    uint32_t startpg,		/* in - first page in xtnt to free */
+    uint32_t pgstofree,		/* in - number of pages to free */
     delFtxDescT * dscp);
 
 static statusT
 del_range(
-    uint32T start,		/* in - start of range to zero */
-    uint32T * count,		/* in/out - number of blocks to free / number
+    uint32_t start,		/* in - start of range to zero */
+    uint32_t * count,		/* in/out - number of blocks to free / number
 				 * of blocks actually freed */
     int *pinPages,		/* in/out - maximum number of pages that can
 				 * be pinned / number of pages that were
@@ -2050,12 +2050,12 @@ del_xtnt_array(
 
 	FTX_LOCKWRITE(&vdp->stgMap_lk, dsc.ftxH)
 	    for (xp = fxp + dsc.rstIndex; xp <= fxp + xCnt - 2; xp++) {
-		uint32T sp;	/* start page */
-		uint32T ep;	/* end page */
-		uint32T np;	/* number of pages */
-		uint32T sb;	/* start block */
-		uint32T nb;	/* number of blocks */
-		uint32T zb;	/* scratch variable */
+		uint32_t sp;	/* start page */
+		uint32_t ep;	/* end page */
+		uint32_t np;	/* number of pages */
+		uint32_t sb;	/* start block */
+		uint32_t nb;	/* number of blocks */
+		uint32_t zb;	/* scratch variable */
 
 		sb = xp->vdBlk;
 		if (sb == XTNT_TERM || sb == PERM_HOLE_START) {
@@ -2414,7 +2414,7 @@ xfer_xtnts_to_clone(
 	         * for each extent in the subextent
 	         */
 		for (mapi = dsc.rstIndex; mapi < xCnt - 1; mapi++) {
-			uint32T startBlk;
+			uint32_t startBlk;
 
 			/* Only clones have permanent holes. */
 			KASSERT(fxp[mapi].vdBlk != PERM_HOLE_START);
@@ -2649,15 +2649,15 @@ del_part_xtnt(bfMCIdT pmcid,	/* in - mcell ID of primary mcell */
     vdT * pvdp,			/* in - pointer to virtual disk of primary */
     vdT * vdp,			/* in - virtual disk of storage to free */
     bsXtntT * fxp,		/* in - xtnt that maps storage to free */
-    uint32T startpg,		/* in - first page in xtnt to free */
-    uint32T pgstofree,		/* in - number of pages to free */
+    uint32_t startpg,		/* in - first page in xtnt to free */
+    uint32_t pgstofree,		/* in - number of pages to free */
     delFtxDescT * dscp)
 {
 	int pinPages;
 	statusT sts;
-	uint32T startblk;
-	uint32T numblk;
-	uint32T blksfreed;
+	uint32_t startblk;
+	uint32_t numblk;
+	uint32_t blksfreed;
 
 	pinPages = DEL_MAX_PAGES - 1;	/* One page pinned by del_ftx_start */
 
@@ -2710,8 +2710,8 @@ del_part_xtnt(bfMCIdT pmcid,	/* in - mcell ID of primary mcell */
 
 static statusT
 del_range(
-    uint32T start,		/* in - start of range to zero */
-    uint32T * count,		/* in/out - number of blocks to free / number
+    uint32_t start,		/* in - start of range to zero */
+    uint32_t * count,		/* in/out - number of blocks to free / number
 				 * of blocks actually freed */
     int *pinPages,		/* in/out - maximum number of pages that can
 				 * be pinned / number of pages that were

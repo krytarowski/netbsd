@@ -195,8 +195,8 @@ typedef struct bfAccess {
 	statusT dkResult;	/* Disk error field - used in flush */
 	statusT miDkResult;	/* Disk error field - used in migrate flush */
 	struct bsBufHdr dirtyBufList;	/* List of modified buffers. */
-	uint16T flushWait;	/* Number of threads waiting for an lsn */
-	uint16T maxFlushWaiters;/* Maximum flush waiter threads counter */
+	uint16_t flushWait;	/* Number of threads waiting for an lsn */
+	uint16_t maxFlushWaiters;/* Maximum flush waiter threads counter */
 	lsnT hiFlushLsn;	/* Highest lsn written (to log) */
 	lsnT hiWaitLsn;		/* Highest LSN waited for by file flush */
 	lsnT nextFlushSeq;	/* Record seq numbers used */
@@ -230,9 +230,9 @@ typedef struct bfAccess {
 	/* times bs_cow_pg() has added storage */
 
 	/* the following are valid only if mapped == 1 */
-	uint32T cloneId;	/* 0 ==> orig; "> 0" ==> clone */
-	uint32T cloneCnt;	/* set's clone cnt last time bf changed */
-	uint32T maxClonePgs;	/* max pages in clone */
+	uint32_t cloneId;	/* 0 ==> orig; "> 0" ==> clone */
+	uint32_t cloneCnt;	/* set's clone cnt last time bf changed */
+	uint32_t maxClonePgs;	/* max pages in clone */
 	bfDataSafetyT dataSafety;	/* bitfile's data safety attribute */
 
 	/* flags */
@@ -244,7 +244,7 @@ typedef struct bfAccess {
 
 	fsFragStateT fragState;	/* the state of the file's frag */
 	bfFragIdT fragId;	/* frag size; 1K, 2K ... 7K */
-	uint32T fragPageOffset;
+	uint32_t fragPageOffset;
 
 
 	/* following fields only modified in xxx_TRANS states */
@@ -299,7 +299,7 @@ typedef struct bfAccess {
 	void *idx_params;	/* Pointer to index file parameters */
 	int idxQuotaBlks;	/* Additional quota credits at dir removal */
 
-	uint32T largest_pl_num;	/* guarded by mcellList_lk */
+	uint32_t largest_pl_num;	/* guarded by mcellList_lk */
 
 	/* Active Range structures are used to delineate 'active ranges' of
 	 * pages that are being modified by directIO or migrate.  This is used
@@ -310,9 +310,9 @@ typedef struct bfAccess {
 	struct actRangeHdr actRangeList;	/* chain of actRange structs */
 	long bfap_free_time;
 
-	uint32T ssHotCnt[SS_HOT_TRACKING_DAYS];	/* vfast count of IO on hot
+	uint32_t ssHotCnt[SS_HOT_TRACKING_DAYS];	/* vfast count of IO on hot
 						 * files */
-	uint32T ssMigrating;	/* flag to indicate vfast is migrating this
+	uint32_t ssMigrating;	/* flag to indicate vfast is migrating this
 				 * file */
 	int badDirEntry;	/* set when file is a directroy and it has an
 				 * invalid directory entry */
@@ -357,7 +357,7 @@ struct bfAccessHdr {
 statusT
 bs_map_bf(
     bfAccessT * bfAp,		/* in/out - ptr to bitfile's access struct */
-    uint32T options,		/* in - options flags (see ) */
+    uint32_t options,		/* in - options flags (see ) */
     struct mount * mp		/* in - mount point */
 );
 
@@ -396,7 +396,7 @@ bs_access_one(
     bfTagT tag,			/* in - tag of bf to access */
     bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
     ftxHT ftxH,			/* in - ftx handle */
-    uint32T options,		/* in - options flags */
+    uint32_t options,		/* in - options flags */
     struct mount * mp,		/* in - fs mount queue */
     struct vnode ** fsvp,	/* out - vnode allocated */
     bfAccessT * origBfap	/* in - Orig access (clone open) */

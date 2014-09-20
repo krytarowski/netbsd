@@ -43,8 +43,8 @@
  */
 
 typedef struct blkDesc {
-	uint16T vdIndex;
-	uint32T vdBlk;
+	uint16_t vdIndex;
+	uint32_t vdBlk;
 }       blkDescT;
 
 enum ioQueue {
@@ -81,9 +81,9 @@ typedef struct ioDesc {
 #define IODH_TRACE_HISTORY 16
 
 typedef struct {
-	uint32T seq;
-	uint16T mod;
-	uint16T ln;
+	uint32_t seq;
+	uint16_t mod;
+	uint16_t ln;
 	struct thread *thd;
 	void *val;
 }      ioDHTraceElmT;
@@ -159,20 +159,20 @@ typedef enum {
  */
 
 typedef struct bsInMemSubXtntMap {
-	uint32T pageOffset;	/* The first page described by the map */
-	uint32T pageCnt;	/* Number of pages described by the map */
+	uint32_t pageOffset;	/* The first page described by the map */
+	uint32_t pageCnt;	/* Number of pages described by the map */
 	vdIndexT vdIndex;	/* Disk where extent record is located */
 	bfMCIdT mcellId;	/* Mcell where extent record is located */
 	mcellStateT mcellState;	/* sub extent map is new */
-	uint32T type;		/* On-disk record type */
-	uint32T onDiskMaxCnt;	/* max number of entries in on-disk extent
+	uint32_t type;		/* On-disk record type */
+	uint32_t onDiskMaxCnt;	/* max number of entries in on-disk extent
 				 * record */
-	uint32T updateStart;	/* Index first entry to save in on-disk xtnt
+	uint32_t updateStart;	/* Index first entry to save in on-disk xtnt
 				 * record */
-	uint32T updateEnd;	/* Index last entry to save in on-disk xtnt
+	uint32_t updateEnd;	/* Index last entry to save in on-disk xtnt
 				 * record */
-	uint32T cnt;		/* The number of valid entries in bsXA */
-	uint32T maxCnt;		/* The number of entries in bsXA */
+	uint32_t cnt;		/* The number of valid entries in bsXA */
+	uint32_t maxCnt;		/* The number of entries in bsXA */
 	bsXtntT *bsXA;		/* Array of extent descriptors */
 }                 bsInMemSubXtntMapT;
 /*
@@ -182,32 +182,32 @@ typedef struct bsInMemSubXtntMap {
 struct bsInMemXtntMap {
 	struct bsInMemXtntMap *nextXtntMap;	/* Link to next extent map */
 	domainT *domain;	/* pointer to the domain */
-	uint32T hdrType;	/* Type of on-disk header record */
+	uint32_t hdrType;	/* Type of on-disk header record */
 	/* The header record contains the mcell count */
 	/* and a pointer to the other mcells in the list */
 	vdIndexT hdrVdIndex;	/* Pointer to header mcell */
 	bfMCIdT hdrMcellId;	/* Pointer to header mcell */
-	uint32T blksPerPage;	/* Number of blocks per page */
-	uint32T nextValidPage;	/* 1 beyond highest valid page. Used by page
+	uint32_t blksPerPage;	/* Number of blocks per page */
+	uint32_t nextValidPage;	/* 1 beyond highest valid page. Used by page
 				 * copy */
-	uint32T allocDeallocPageCnt;	/* Number of pages to alloc or
+	uint32_t allocDeallocPageCnt;	/* Number of pages to alloc or
 					 * dealloc.  */
 	/* Used for stripe bitfiles. */
 	vdIndexT allocVdIndex;	/* Disk on which the next storage is
 				 * allocated. */
-	uint32T origStart;	/* Index of the original entry that maps the */
+	uint32_t origStart;	/* Index of the original entry that maps the */
 	/* first page that is added or removed */
-	uint32T origEnd;	/* Index of the original entry that maps the */
+	uint32_t origEnd;	/* Index of the original entry that maps the */
 	/* last page that is added or removed */
-	uint32T updateStart;	/* Index of first entry that contains new
+	uint32_t updateStart;	/* Index of first entry that contains new
 				 * mapping */
 	/* information. */
-	uint32T updateEnd;	/* Index of last entry that contains new
+	uint32_t updateEnd;	/* Index of last entry that contains new
 				 * mapping */
 	/* information. */
-	uint32T validCnt;	/* Number of in-use and valid sub extent maps */
-	uint32T cnt;		/* Number of in-use sub extent maps */
-	uint32T maxCnt;		/* Number of sub extent maps */
+	uint32_t validCnt;	/* Number of in-use and valid sub extent maps */
+	uint32_t cnt;		/* Number of in-use sub extent maps */
+	uint32_t maxCnt;		/* Number of sub extent maps */
 	bsInMemSubXtntMapT *subXtntMap;	/* Array of in-memory sub extent maps */
 };
 
@@ -218,9 +218,9 @@ typedef struct bsInMemXtntMap bsInMemXtntMapT;
  */
 
 typedef struct bsStripeHdr {
-	uint32T segmentSize;	/* minimum number of pages that are allocated */
+	uint32_t segmentSize;	/* minimum number of pages that are allocated */
 	/* to a stripe segment. */
-	uint32T cnt;		/* Count of valid elements in xtntMap. This is */
+	uint32_t cnt;		/* Count of valid elements in xtntMap. This is */
 	/* the number of segments in a stripe */
 	bsInMemXtntMapT **xtntMap;	/* Array of extent map ptrs.  Stripe
 					 * segments */
@@ -240,7 +240,7 @@ typedef struct bsInMemXtnt {
 	bsInMemXtntMapT *copyXtntMap;	/* Link to copy extent maps */
 	krwlock_t migTruncLk;	/* Serialize migrate and truncate */
 	bsXtntMapTypeT type;	/* The type of extent maps */
-	uint32T allocPageCnt;	/* Number of allocated pages */
+	uint32_t allocPageCnt;	/* Number of allocated pages */
 }           bsInMemXtntT;
 
 extern bsInMemXtntT NilXtnts;
@@ -266,7 +266,7 @@ typedef struct {
 		domainT *dmnP;
 		struct buf *ioRetryBp;
 	}     u_msg;
-	uint32T vdi;
+	uint32_t vdi;
 	struct vd *vdp;
 }      ioThreadMsgT;
 #include <fs/msfs/bs_access.h>
@@ -307,8 +307,8 @@ bs_find_page(struct bfAccess * bfap,	/* in */
 void
 bs_invalidate_pages(
     bfAccessT * bfap,		/* in */
-    uint32T pageOffset,		/* in */
-    uint32T pageCnt,		/* in */
+    uint32_t pageOffset,		/* in */
+    uint32_t pageCnt,		/* in */
     int invalflag		/* in */
 );
 
@@ -394,14 +394,14 @@ statusT
 bs_set_bufstate(
     bfPageRefHT bfPageRefH,	/* in */
     int ln,			/* in */
-    uint32T stateBit,		/* in */
+    uint32_t stateBit,		/* in */
     int waitFlag		/* in */
 );
 
 statusT
 bs_clear_bufstate(
     bfPageRefHT bfPageRefH,	/* in */
-    uint32T stateBit		/* in */
+    uint32_t stateBit		/* in */
 );
 
 statusT
@@ -487,7 +487,7 @@ bs_get_bkup_xtnt_map(
              bfSetT * bfSetp,	/* in - bitfile-set descriptor pointer */
              bfTagT tag,	/* in - bitfile tag */
              int forceFlag,	/* in - passed to get_free_acc() */
-             uint32T options	/* in - options flags */
+             uint32_t options	/* in - options flags */
 );
 
 	void *

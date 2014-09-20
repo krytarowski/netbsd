@@ -58,7 +58,7 @@ bs_set_bf_iparams(
 statusT
 bs_get_bf_page_cnt(
     struct bfAccess * bfAccess,	/* in */
-    uint32T * pageCnt		/* out */
+    uint32_t * pageCnt		/* out */
 );
 
 statusT
@@ -77,7 +77,7 @@ bs_set_dmn_params(
 statusT
 bs_get_vd_params(
     struct domain * dmnP,	/* in */
-    uint32T vdIndex,		/* in */
+    uint32_t vdIndex,		/* in */
     bsVdParamsT * vdParams,	/* out */
     int lock			/* in */
 );
@@ -85,14 +85,14 @@ bs_get_vd_params(
 statusT
 bs_set_vd_params(
     struct domain * dmnP,	/* in */
-    uint32T vdIndex,		/* in */
+    uint32_t vdIndex,		/* in */
     bsVdParamsT * vdParams	/* in */
 );
 statusT
 bs_get_dmn_vd_list(
     struct domain * dmnP,	/* in - the domain handle */
     int vdIndexArrayLen,	/* in - number of ints in array */
-    uint32T vdIndexArray[],	/* out - list of vd indices */
+    uint32_t vdIndexArray[],	/* out - list of vd indices */
     int *numVds			/* out - num vds put in array */
 );
 

@@ -696,7 +696,7 @@ static void
 close_domain(
     bfDomainIdT dmnId,		/* in - domain's id */
     domainT * dmnP,		/* in - domain's pointer */
-    uint32T flag		/* in - set in cluster to designate mount path */
+    uint32_t flag		/* in - set in cluster to designate mount path */
 )
 {
 	bs_domain_close(dmnP);
@@ -2010,7 +2010,7 @@ RETRY:				/* CFS may retry ADD_VOL and REMOVE_VOL */
 		}
 
 	case ADVFS_GET_DMN_VOL_LIST:{
-			uint32T *libVolIndexArray;
+			uint32_t *libVolIndexArray;
 
 			if (parmBufLen != sizeof(libBufp->getDmnVolList)) {
 				RAISE_EXCEPTION(EBAD_PARAMS);
@@ -2037,7 +2037,7 @@ RETRY:				/* CFS may retry ADD_VOL and REMOVE_VOL */
 				error = ms_copyout(libBufp->getDmnVolList.volIndexArray,
 				    libVolIndexArray,
 				    libBufp->getDmnVolList.volIndexArrayLen *
-				    sizeof(uint32T));
+				    sizeof(uint32_t));
 			}
 			if (libBufp->getDmnVolList.volIndexArray) {
 				if (do_local)
@@ -4141,8 +4141,8 @@ msfs_syscall_op_get_dmn_vol_list(libParamsT * libBufp)
 	domainT *dmnP;
 	mlStatusT sts;
 
-	libBufp->getDmnVolList.volIndexArray = (uint32T *) ms_malloc(
-	    libBufp->getDmnVolList.volIndexArrayLen * sizeof(uint32T));
+	libBufp->getDmnVolList.volIndexArray = (uint32_t *) ms_malloc(
+	    libBufp->getDmnVolList.volIndexArrayLen * sizeof(uint32_t));
 
 	sts = open_domain(BS_ACC_READ,
 	    ANYONE,
@@ -4335,11 +4335,11 @@ msfs_syscall_op_tag_stat(libParamsT * libBufp)
 			}
 		}
 		/* Ensure the long pageCnt field is zero because the following
-		 * routine expects a uint32T size field. */
+		 * routine expects a uint32_t size field. */
 
 		pageCnt = 0;
 
-		if ((sts = bs_get_bf_page_cnt(bfap, (uint32T *) & pageCnt)) != EOK) {
+		if ((sts = bs_get_bf_page_cnt(bfap, (uint32_t *) & pageCnt)) != EOK) {
 			break;
 		}
 		bytes = (off_t) pageCnt *ADVFS_PGSZ;
@@ -4487,8 +4487,8 @@ msfs_syscall_op_rem_volume(libParamsT * libBufp, opIndexT opIndex)
 		bfSetIdT bfSetId;
 		struct fileSetNode *fsnp;
 		bfSetParamsT bfsetParams;
-		uint32T setIdx = 0;
-		uint32T userId;
+		uint32_t setIdx = 0;
+		uint32_t userId;
 		statusT sts2 = EOK;
 		struct mount *pmp = NULL;
 		bfSetT *bfSetp;
@@ -4962,8 +4962,8 @@ msfs_syscall_op_add_rem_vol_svc_class(libParamsT * libBufp)
 	if (clu_is_ready() && (libBufp->addRemVolSvcClass.action)) {
 		bfSetIdT bfSetId;
 		bfSetParamsT bfsetParams;
-		uint32T setIdx = 0;
-		uint32T userId;
+		uint32_t setIdx = 0;
+		uint32_t userId;
 		statusT sts2 = EOK;
 		struct mount *pmp = NULL;
 		bfSetT *bfSetp;
@@ -5123,7 +5123,7 @@ msfs_syscall_op_switch_log(libParamsT * libBufp, long xid)
 	}
 	sts = lgr_switch_vol(dmnP->ftxLogP,
 	    (vdIndexT) libBufp->switchLog.volIndex,
-	    (uint32T) libBufp->switchLog.logPgs,
+	    (uint32_t) libBufp->switchLog.logPgs,
 	    (serviceClassT) libBufp->switchLog.logSvc,
 	    xid);
 
@@ -5217,7 +5217,7 @@ msfs_syscall_op_reset_free_space_cache(libParamsT * libBufp)
 	    sts = sbm_clear_cache(vdp);
 
 	if (sts == EOK) {
-		uint32T temp = libBufp->resetFreeSpaceCache.scanStartCluster;
+		uint32_t temp = libBufp->resetFreeSpaceCache.scanStartCluster;
 
 		/*
 	         * Make sure scan start clust is set to a cluster
@@ -5752,7 +5752,7 @@ validate_syscall_structs(
 {
 	MS_DBG_ASSERT(BS_CLIENT_AREA_SZ == ML_CLIENT_AREA_SZ);
 	MS_DBG_ASSERT(BFM_RSVD_CELLS == ML_BFM_RSVD_CELLS);
-	MS_DBG_ASSERT(sizeof(uint32T) == sizeof(u32T));
+	MS_DBG_ASSERT(sizeof(uint32_t) == sizeof(u32T));
 	MS_DBG_ASSERT(sizeof(statusT) == sizeof(mlStatusT));
 	MS_DBG_ASSERT(sizeof(bfTagT) == sizeof(mlBfTagT));
 	MS_DBG_ASSERT(sizeof(bsIdT) == sizeof(mlIdT));

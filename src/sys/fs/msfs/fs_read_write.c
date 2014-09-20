@@ -94,8 +94,8 @@ static
        statusT
 uiomove_frag(
     bfFragIdT fragId,		/* in */
-    uint32T copyByteOffset,	/* in */
-    uint32T copyByteCnt,	/* in */
+    uint32_t copyByteOffset,	/* in */
+    uint32_t copyByteCnt,	/* in */
     struct bfAccess * bfap,	/* in */
     struct uio * uio		/* in */
 );
@@ -595,18 +595,18 @@ fs_write(
 	unsigned long nbyte;
 	enum vtype type;
 	domainT *dmnP;
-	int32T directIO = 0;
+	int32_t directIO = 0;
 	extern u_int noadd_execaccess;
 	int data_logging = FALSE, bytes_pinned = 0, ftx_started = FALSE, first_pin_page_loop = TRUE;
 	ftxHT parentftxH = FtxNilFtxH;
 	rbfPgRefHT firstPgPin, secondPgPin;
 	unsigned long first_page_write_offset, first_page_to_write, second_page_to_write, first_page_to_flush, last_page_to_flush;
-	uint32T first_page_bytes_to_write, second_page_bytes_to_write = 0;
+	uint32_t first_page_bytes_to_write, second_page_bytes_to_write = 0;
 	int migtrunc_locked = FALSE, flushed_log = FALSE;
 	off_t orig_offset = uio->uio_offset;
 	ssize_t orig_resid = uio->uio_resid;
 	struct uio saved_uio = *uio;
-	uint32T end_of_nxtpage, pg_overun;
+	uint32_t end_of_nxtpage, pg_overun;
 	int fill_hole = 0;
 	int map_lock = 0;
 	int uioerror, signal_error = 0;
@@ -723,7 +723,7 @@ _retry:
 		    (fs_trunc_test(vp))) {
 
 			ftxHT ftxH;
-			uint32T delCnt = 0;
+			uint32_t delCnt = 0;
 			void *delList;
 			ulong pages_used;
 			ulong pagesize;
@@ -1792,7 +1792,7 @@ _error:
 	                 * unused due to error.
 	                 */
 			ftxHT ftxH;
-			uint32T delCnt;
+			uint32_t delCnt;
 			void *delList;
 
 			MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
@@ -2569,7 +2569,7 @@ fs_write_add_stg(
 	ftxHT ftxH;
 	int ftx_started = FALSE, ret = EOK;
 	unsigned long pgs_to_add, pgs_added = 0, pgs_zeroed;
-	uint32T fragPage = bfap->fragPageOffset, lastPageAdded, firstPageToZero;
+	uint32_t fragPage = bfap->fragPageOffset, lastPageAdded, firstPageToZero;
 	int locked_migtrunc_here = FALSE;
 	int data_logging = add_stg_flags & WASF_LOGGING;
 	int sparse_alloc = add_stg_flags & WASF_SPARSE;
@@ -2616,7 +2616,7 @@ fs_write_add_stg(
 
 			/* checking that we are not back in the bad
 			 * interaction range with the sbm */
-			extern uint32T AdvfsNotPickyBlkCnt;
+			extern uint32_t AdvfsNotPickyBlkCnt;
 			KASSERT(AdvfsNotPickyBlkCnt < AdvfsMaxPreallocPages * ADVFS_PGSZ_IN_BLKS);
 
 			/*
@@ -2705,20 +2705,20 @@ fs_write_add_stg(
 	 * - dmnP->freeBlks if caller said > 1 page and doing an async write
 	 * 4rd - 1 page if dmnP->freeBlks > 1 page and doing an async write */
 	sts = stg_add_stg_no_cow(ftxH, bfap, first_pg_to_add, pgs_to_add,
-	    TRUE, (uint32T *) & pgs_added);
+	    TRUE, (uint32_t *) & pgs_added);
 	if (sts == ENO_MORE_BLKS) {
 		if (pgs_needed < pgs_to_add)
 			sts = stg_add_stg_no_cow(ftxH, bfap, first_pg_to_add, pgs_needed,
-			    TRUE, (uint32T *) & pgs_added);
+			    TRUE, (uint32_t *) & pgs_added);
 		if (sts == ENO_MORE_BLKS && pgs_needed > 1 && !sync_alloc) {
 			unsigned long pgs_free = dmnP->freeBlks / ADVFS_PGSZ_IN_BLKS;
 			if (pgs_free) {
 				if (pgs_needed > pgs_free)
 					sts = stg_add_stg_no_cow(ftxH, bfap, first_pg_to_add,
-					    pgs_free, TRUE, (uint32T *) & pgs_added);
+					    pgs_free, TRUE, (uint32_t *) & pgs_added);
 				if (sts == ENO_MORE_BLKS && pgs_free > 1)
 					sts = stg_add_stg_no_cow(ftxH, bfap, first_pg_to_add, 1,
-					    TRUE, (uint32T *) & pgs_added);
+					    TRUE, (uint32_t *) & pgs_added);
 			}
 		}
 	}
@@ -2970,15 +2970,15 @@ fs_read(
 	char *page_addr;
 	int fetch_pages = 0, cur_prefetch_pgs = 0;
 	int do_prefetch = 0;
-	uint32T fragPageOffset;
-	uint32T outOfRangePage;
+	uint32_t fragPageOffset;
+	uint32_t outOfRangePage;
 	bfSetT *bfSetp;
-	uint32T nextByteAfterFrag;
-	uint32T fragByteCnt;
+	uint32_t nextByteAfterFrag;
+	uint32_t fragByteCnt;
 	int ahead_mode = 0;
 	struct fsContext *contextp = VTOC(vp);
 	bfAccessT *bfap = VTOA(vp);
-	int32T directIO;
+	int32_t directIO;
 	int map_lock = 0;
 	int i;
 	vm_map_t directio_map = (vm_map_t) NULL;
@@ -3900,7 +3900,7 @@ copy_and_del_frag(
 	statusT sts;
 	char *pgAddr = NULL;
 	struct bfAccess *bfap = VTOA(vp);
-	uint32T fragPageOffset = bfap->fragPageOffset;
+	uint32_t fragPageOffset = bfap->fragPageOffset;
 	int quotas_on = VTOC(vp)->fileSetNode->quotaStatus &
 	(QSTS_USR_QUOTA_EN | QSTS_GRP_QUOTA_EN);
 
@@ -3915,7 +3915,7 @@ copy_and_del_frag(
 		if (sts != E_PAGE_NOT_MAPPED)
 			return (sts);
 		else {
-			uint32T pgs_added = 0;
+			uint32_t pgs_added = 0;
 
 			/* when quotas are on we must check the space growth
 			 * first and if we have the quota but fail to allocate
@@ -3994,12 +3994,12 @@ bcopy_frag(
     char *pgAddr
 )
 {
-	uint32T fragByteCnt;
+	uint32_t fragByteCnt;
 	bfPageRefHT pgRef;
 	statusT sts;
-	uint32T subFrag1ByteCnt;
-	uint32T subFrag1ByteOffset;
-	uint32T sizeoffset;
+	uint32_t subFrag1ByteCnt;
+	uint32_t subFrag1ByteOffset;
+	uint32_t sizeoffset;
 	bfAccessT *bfap;
 	char *subFragPage = NULL;
 	bfFragIdT fragId = (VTOA(vp))->fragId;
@@ -4085,17 +4085,17 @@ static
        statusT
 uiomove_frag(
     bfFragIdT fragId,		/* in */
-    uint32T copyByteOffset,	/* in */
-    uint32T copyByteCnt,	/* in */
+    uint32_t copyByteOffset,	/* in */
+    uint32_t copyByteCnt,	/* in */
     struct bfAccess * bfap,	/* in */
     struct uio * uio		/* in */
 )
 {
 	int err;
-	uint32T fragByteCnt;
+	uint32_t fragByteCnt;
 	statusT sts;
-	uint32T subFrag1ByteCnt;
-	uint32T subFrag1ByteOffset;
+	uint32_t subFrag1ByteCnt;
+	uint32_t subFrag1ByteOffset;
 	char *subFrag1Page = NULL;
 	bfPageRefHT subFrag1PgRef;
 	char *subFrag2Page = NULL;

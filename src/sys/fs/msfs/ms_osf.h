@@ -53,8 +53,8 @@ typedef struct quotaInfo {
 	time_t qiBlkTime;	/* block quota time limit */
 	time_t qiFileTime;	/* bitfile quota time limit */
 	char qiFlags;		/* flags, see below */
-	uint32T qiPgSz;		/* page size */
-	uint32T qiFilePgs;	/* pages allocated to quota file */
+	uint32_t qiPgSz;		/* page size */
+	uint32_t qiFilePgs;	/* pages allocated to quota file */
 	struct uucred *qiCred;	/* credentials */
 	/*
          * This lock is protected by the filesetMutex in the fileSetNode.

@@ -59,10 +59,10 @@ static
        statusT
 set_block_map(
     bfAccessT * bfAccess,	/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
-    uint32T copyXferSize,	/* in */
+    uint32_t copyXferSize,	/* in */
     int *abortFlag		/* in */
 );
 
@@ -70,8 +70,8 @@ static
        statusT
 verify_page_write(
     bfAccessT * bfAccess,	/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
     int *abortFlag		/* in */
 );
@@ -80,7 +80,7 @@ static
        statusT
 force_write(
     bfAccessT * bfAccess,	/* in */
-    uint32T bfPageOffset,	/* in */
+    uint32_t bfPageOffset,	/* in */
     unsigned char *buf,		/* in */
     bsInMemXtntT * copyXtnts	/* in */
 );
@@ -89,8 +89,8 @@ static
        statusT
 compare_copies(
     bfAccessT * bfAccess,	/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
     int *abortFlag		/* in */
 );
@@ -143,13 +143,13 @@ statusT
 cp_copy_page_range(
     bfAccessT * bfAccess,	/* in */
     pageRangeT * bfPageRange,	/* in */
-    uint32T bfPageRangeCnt,	/* in */
+    uint32_t bfPageRangeCnt,	/* in */
     bsInMemXtntT * copyXtnts,	/* in */
-    uint32T copyXferSize,	/* in */
-    uint32T forceFlag		/* in */
+    uint32_t copyXferSize,	/* in */
+    uint32_t forceFlag		/* in */
 )
 {
-	uint32T i;
+	uint32_t i;
 	statusT sts;
 	int flag = 0;
 
@@ -303,10 +303,10 @@ static
        statusT
 set_block_map(
     bfAccessT * bfAccess,	/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
-    uint32T copyXferSize,	/* in */
+    uint32_t copyXferSize,	/* in */
     int *abortFlag		/* in */
 )
 {
@@ -314,7 +314,7 @@ set_block_map(
 	blkMapT blkMap;
 	int clearIOTransFlag = 0;
 	unsigned int dirtyFlag;
-	uint32T i, maxMigrateUbcPgs;
+	uint32_t i, maxMigrateUbcPgs;
 	void *page;
 	bfPageRefHT pgPin;
 	statusT sts;
@@ -541,8 +541,8 @@ static
        statusT
 verify_page_write(
     bfAccessT * bfAccess,	/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
     int *abortFlag		/* in */
 )
@@ -550,7 +550,7 @@ verify_page_write(
 	int blkCnt;
 	unsigned char *buf = NULL;
 	unsigned int copyFlag;
-	uint32T i;
+	uint32_t i;
 	void *page;
 	bfPageRefHT pgPin;
 	statusT sts;
@@ -665,7 +665,7 @@ static
        statusT
 force_write(
     bfAccessT * bfAccess,	/* in */
-    uint32T bfPageOffset,	/* in */
+    uint32_t bfPageOffset,	/* in */
     unsigned char *buf,		/* in */
     bsInMemXtntT * copyXtnts	/* in */
 )
@@ -744,8 +744,8 @@ static
        statusT
 compare_copies(
     bfAccessT * bfAccess,	/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
     int *abortFlag		/* in */
 )

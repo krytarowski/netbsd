@@ -84,8 +84,8 @@ struct fs_stat {
 	bfTagT dir_tag;		/* tag of parent directory */
 	bfFragIdT fragId;
 	u_int st_nlink;
-	uint32T fragPageOffset;
-	uint32T st_unused_2;
+	uint32_t fragPageOffset;
+	uint32_t st_unused_2;
 };
 
 typedef struct fs_stat statT;
@@ -107,10 +107,10 @@ typedef struct fs_stat statT;
 /* record at the end of each directory page */
 
 struct dir_rec {
-	uint32T lastEntry_offset;	/* offset to last dir entry */
-	uint32T largestFreeSpace;	/* size of biggest empty spot on the
+	uint32_t lastEntry_offset;	/* offset to last dir entry */
+	uint32_t largestFreeSpace;	/* size of biggest empty spot on the
 					 * page */
-	uint32T pageType;	/* note - this should always be the last field
+	uint32_t pageType;	/* note - this should always be the last field
 				 * on the page - the type of page */
 };
 
@@ -122,9 +122,9 @@ typedef struct dir_rec dirRec;
 /* directory header - *** NOTE *** same fields (order and size) as UFS */
 
 struct dir_header {
-	uint32T fs_dir_bs_tag_num;	/* tag.num of file */
-	uint16T fs_dir_size;	/* size of directory record in bytes */
-	uint16T fs_dir_namecount;	/* length in bytes of file name */
+	uint32_t fs_dir_bs_tag_num;	/* tag.num of file */
+	uint16_t fs_dir_size;	/* size of directory record in bytes */
+	uint16_t fs_dir_namecount;	/* length in bytes of file name */
 };
 
 typedef struct dir_header directory_header;
@@ -186,8 +186,8 @@ typedef struct {
 	bfTagT dir_tag;
 	bfTagT ins_tag;
 	bfSetIdT bfSetId;
-	uint32T page;
-	uint32T byte;
+	uint32_t page;
+	uint32_t byte;
 	ulong old_size;
 }      undo_headerT;
 
@@ -343,8 +343,8 @@ extern int dirTruncEnabled;	/* master switch to disable dir trunc */
 
 /* This struct is used for storing directory truncation info. */
 typedef struct {
-	uint32T magic;		/* to check legal reuse */
-	uint32T delCnt;
+	uint32_t magic;		/* to check legal reuse */
+	uint32_t delCnt;
 	void *delList;
 	union {
 		struct domain *dmnp;	/* ptr to domain */
@@ -370,7 +370,7 @@ typedef struct {
  */
 typedef struct {
 	bfSetIdT bfSetId;
-	uint32T badGrpHdrPg;
+	uint32_t badGrpHdrPg;
 }      badFragGrpT;
 /* Next 2 structs used to support fs_cleanup_thread */
 #define FS_INIT_CLEANUP_Q_ENTRIES 128

@@ -47,7 +47,7 @@
  *    bs_ods.h constants
  ****************************************************************************/
 
-uint16T bsNilVdIndex = 0;
+uint16_t bsNilVdIndex = 0;
 bfMCIdT bsNilMCId = {0, 0};
 bsInMemXtntT NilXtnts = {0};
 bsDmnAttrT bsNilDmnAttr = {0};

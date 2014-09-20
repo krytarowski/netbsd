@@ -88,7 +88,7 @@ kill_mcell(
 statusT
 dealloc_mcells(
     domainT * dmnP,		/* in */
-    uint16T firstVdIndex,	/* in */
+    uint16_t firstVdIndex,	/* in */
     bfMCIdT firstMcellId,	/* in */
     ftxHT parentFtxH		/* in */
 );
@@ -752,7 +752,7 @@ kill_mcell(
 statusT
 dealloc_mcells(
     domainT * dmnP,		/* in */
-    uint16T firstVdIndex,	/* in */
+    uint16_t firstVdIndex,	/* in */
     bfMCIdT firstMcellId,	/* in */
     ftxHT parentFtxH		/* in */
 )

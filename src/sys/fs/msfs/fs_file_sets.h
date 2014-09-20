@@ -29,7 +29,7 @@ fs_fset_create(
     char *setName,		/* in */
     serviceClassT reqServices,	/* in */
     serviceClassT optServices,	/* in */
-    uint32T fsetOptions,	/* in */
+    uint32_t fsetOptions,	/* in */
     gid_t quotaId,		/* in */
     bfSetIdT * bfSetId,		/* out */
     long xid1,			/* in - CFS transaction id */
@@ -55,9 +55,9 @@ fs_fset_clone(
 statusT
 fs_fset_get_info(
     char *dmnTbl,		/* in - domain table */
-    uint32T * nextSetIdx,	/* in/out - index of set */
+    uint32_t * nextSetIdx,	/* in/out - index of set */
     bfSetParamsT * bfSetParams,	/* out - the bitfile-set's parameters */
-    uint32T * userId,		/* out - bfset user id */
+    uint32_t * userId,		/* out - bfset user id */
     int flag			/* in - flag for bs_bfdmn_tbl_activate() */
 );
 

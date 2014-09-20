@@ -147,7 +147,7 @@ get_n_setup_new_vnode(
     struct vnode ** nvp		/* in/out - new vnode pointer */
 );
 
-uint32T
+uint32_t
 bf_setup_truncation(
     bfAccessT * bfap,		/* in */
     ftxHT ftxH,			/* in */
@@ -1695,7 +1695,7 @@ bs_init_area()
 statusT
 bs_map_bf(
     bfAccessT * bfap,		/* in/out - ptr to bitfile's access struct */
-    uint32T options,		/* in - options flags (see bs_access.h) */
+    uint32_t options,		/* in - options flags (see bs_access.h) */
     struct mount * mp		/* in - mount point */
 )
 {
@@ -2072,7 +2072,7 @@ bs_access(
     bfTagT tag,			/* in - tag of bf to access */
     bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
     ftxHT ftxH,			/* in - ftx handle */
-    uint32T options,		/* in - options flags */
+    uint32_t options,		/* in - options flags */
     struct mount * mp,		/* in - fs mount pt */
     struct vnode ** vp		/* in/out - from bs_access_one */
 )
@@ -2127,7 +2127,7 @@ bs_access_one(
     bfTagT tag,			/* in - tag of bf to access */
     bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
     ftxHT ftxH,			/* in - ftx handle */
-    uint32T options,		/* in - options flags */
+    uint32_t options,		/* in - options flags */
     struct mount * mp,		/* in - fs mount queue */
     struct vnode ** fsvp,	/* in/out - <pre>allocated vnode */
     bfAccessT * origBfap	/* in - Orig access (clone open) */
@@ -2144,7 +2144,7 @@ bs_access_one(
 	vdT *ddlVd;
 	int delFlag;
 	domainT *dmnP;
-	uint32T flags;
+	uint32_t flags;
 	int got_clu_clone_vnode = FALSE;
 	int did_vp_vrele = FALSE;
 	extern struct vfs_ubcops msfs_ubcops;
@@ -3159,7 +3159,7 @@ grab_bsacc(
     bfSetT * bfSetp,		/* in - bitfile-set handle */
     bfTagT tag,			/* in - bitfile tag */
     int forceFlag,		/* in - passed to get_free_acc() */
-    uint32T options		/* in - options flags */
+    uint32_t options		/* in - options flags */
 )
 {
 	bfAccessT *bfap, *tbfap;
@@ -3603,7 +3603,7 @@ bs_close_one(
 	vdT *delVdp;
 	statusT sts;
 	void *delList;
-	uint32T delCnt = 0;
+	uint32_t delCnt = 0;
 	bfMCIdT delMCId;
 	domainT *dmnP;
 	boolean_t fragFlag = FALSE;
@@ -4320,7 +4320,7 @@ check_mv_bfap_to_free(bfAccessT * bfap)
  *              the lock is not strictly necessary, it IS taken (shared).
  */
 
-uint32T
+uint32_t
 bf_setup_truncation(
     bfAccessT * bfap,		/* in */
     ftxHT ftxH,			/* in */
@@ -4330,7 +4330,7 @@ bf_setup_truncation(
 {
 	statusT sts;
 	long pagesUsed;
-	uint32T delCnt;
+	uint32_t delCnt;
 
 	pagesUsed = (bfap->file_size + ADVFS_PGSZ - 1L) / ADVFS_PGSZ;
 

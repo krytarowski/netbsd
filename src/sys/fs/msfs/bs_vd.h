@@ -39,8 +39,8 @@
  */
 
 typedef struct stgDesc {
-	uint32T start_clust;	/* vd cluster number of first free cluster */
-	uint32T num_clust;	/* number of free clusters */
+	uint32_t start_clust;	/* vd cluster number of first free cluster */
+	uint32_t num_clust;	/* number of free clusters */
 	struct stgDesc *prevp;
 	struct stgDesc *nextp;
 }       stgDescT;
@@ -50,9 +50,9 @@ typedef struct stgDesc {
 #define VD_TRACE_HISTORY 100
 
 typedef struct {
-	uint32T seq;
-	uint16T mod;
-	uint16T ln;
+	uint32_t seq;
+	uint16_t mod;
+	uint16_t ln;
 	struct thread *thd;
 	void *val;
 }      vdTraceElmtT;
@@ -78,9 +78,9 @@ typedef struct tempQMarker {
 #define SS_TRACE_HISTORY 100
 
 typedef struct {
-	uint32T seq;
-	uint16T mod;
-	uint16T ln;
+	uint32_t seq;
+	uint16_t mod;
+	uint16_t ln;
 	struct thread *thd;
 	long val1;
 	long val2;
@@ -99,37 +99,37 @@ typedef struct vd {
 	/*
          ** Static fields (ie - they are set once and never changed).
          */
-	uint32T stgCluster;	/* num blks each stg bitmap bit */
+	uint32_t stgCluster;	/* num blks each stg bitmap bit */
 	struct vnode *devVp;	/* device access (temp vnode *) */
 	u_int vdMagic;		/* magic number: structure validation */
 	bfAccessT *rbmtp;	/* access structure pointer for RBMT */
 	bfAccessT *bmtp;	/* access structure pointer for BMT */
 	bfAccessT *sbmp;	/* access structure pointer for SBM */
 	domainT *dmnP;		/* domain pointer for ds */
-	uint32T vdIndex;	/* 1-based virtual disk index */
-	uint32T maxPgSz;	/* max possible page size on vd */
-	uint32T bmtXtntPgs;	/* number of pages per BMT extent */
+	uint32_t vdIndex;	/* 1-based virtual disk index */
+	uint32_t maxPgSz;	/* max possible page size on vd */
+	uint32_t bmtXtntPgs;	/* number of pages per BMT extent */
 	char vdName[BS_VD_NAME_SZ];	/* temp - should be global name */
 
 	/* The following fields are protected by the vdT.vdStateLock mutex */
 	bsVdStatesT vdState;	/* vd state */
 	struct thread *vdSetupThd;	/* Thread Id of the thread setting up
 					 * vdT */
-	uint32T vdRefCnt;	/* # threads actively using this volume */
-	uint32T vdRefWaiters;	/* # threads waiting for vdRefCnt to goto 0 */
+	uint32_t vdRefCnt;	/* # threads actively using this volume */
+	uint32_t vdRefWaiters;	/* # threads waiting for vdRefCnt to goto 0 */
 	mutexT vdStateLock;	/* lock for above 4 fields */
 
 	/* The following fields are protected by the vdScLock semaphore in the
 	 * domain structure.  This lock is protected by the domain mutex.  Use
 	 * the macros VD_SC_LOCK and VD_SC_UNLOCK. */
-	uint32T vdSize;		/* count of vdSectorSize blocks in vd */
+	uint32_t vdSize;		/* count of vdSectorSize blocks in vd */
 	int vdSectorSize;	/* Sector size, in bytes, normally 512 */
-	uint32T vdClusters;	/* num clusters in vd */
+	uint32_t vdClusters;	/* num clusters in vd */
 	serviceClassT serviceClass;	/* service class provided */
 
 	ftxLkT mcell_lk;	/* used with domain mutex */
 	int nextMcellPg;	/* next available metadata cell's page num */
-	uint32T allocClust;	/* clusters attempting to be allocated */
+	uint32_t allocClust;	/* clusters attempting to be allocated */
 	ftxLkT rbmt_mcell_lk;	/* This lock protects mcell allocation from
 				 * the rbmt mcell pool.  This pool is used to
 				 * extend reserved bitfiles. */
@@ -138,15 +138,15 @@ typedef struct vd {
 
 	ftxLkT stgMap_lk;	/* used with domain mutex */
 	stgDescT *freeStgLst;	/* ptr to list of free storage descriptors */
-	uint32T numFreeDesc;	/* number of free storage descriptors in list */
-	uint32T freeClust;	/* total number free clusters */
-	uint32T scanStartClust;	/* cluster where next bitmap scan will start */
-	uint32T bitMapPgs;	/* number of pages in bitmap */
-	uint32T spaceReturned;	/* space has been returned */
+	uint32_t numFreeDesc;	/* number of free storage descriptors in list */
+	uint32_t freeClust;	/* total number free clusters */
+	uint32_t scanStartClust;	/* cluster where next bitmap scan will start */
+	uint32_t bitMapPgs;	/* number of pages in bitmap */
+	uint32_t spaceReturned;	/* space has been returned */
 	stgDescT *fill1;	/* ptr to list of reserved storage descriptors */
 	stgDescT *fill3;	/* ptr to list of free, reserved stg
 				 * descriptors */
-	uint32T fill4;		/* # of free, reserved stg descriptors in list */
+	uint32_t fill4;		/* # of free, reserved stg descriptors in list */
 
 
 	ftxLkT del_list_lk;	/* protects global defered delete list */
@@ -233,11 +233,11 @@ typedef struct vd {
 	stgDescT freeMigRsvdStg;/* desc for free rsvd stg for migrating files */
 	ssVolInfoT ssVolInfo;	/* smartstore frag and free lists */
 #ifdef ADVFS_VD_TRACE
-	uint32T trace_ptr;
+	uint32_t trace_ptr;
 	vdTraceElmtT trace_buf[VD_TRACE_HISTORY];
 #endif
 #ifdef ADVFS_SS_TRACE
-	uint32T ss_trace_ptr;
+	uint32_t ss_trace_ptr;
 	ssTraceElmtT ss_trace_buf[SS_TRACE_HISTORY];
 #endif
 }  vdT;
@@ -259,12 +259,12 @@ typedef struct vd {
 #ifdef ADVFS_VD_TRACE
 
 #define VD_TRACE( vdp, n1 ) \
-    vd_trace((vdp), (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void*)(n1))
+    vd_trace((vdp), (uint16_t)ADVFS_MODULE, (uint16_t)__LINE__, (void*)(n1))
 
 void
 vd_trace(vdT * vdp,
-    uint16T module,
-    uint16T line,
+    uint16_t module,
+    uint16_t line,
     void *value);
 
 #else				/* ADVFS_VD_TRACE */
@@ -276,12 +276,12 @@ vd_trace(vdT * vdp,
 #ifdef ADVFS_SS_TRACE
 
 #define SS_TRACE( vdp, n1,n2,n3,n4 ) \
-    ss_trace((vdp), (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (long)(n1),(long)(n2),(long)(n3),(long)(n4))
+    ss_trace((vdp), (uint16_t)ADVFS_MODULE, (uint16_t)__LINE__, (long)(n1),(long)(n2),(long)(n3),(long)(n4))
 
 void
 ss_trace(vdT * vdp,
-    uint16T module,
-    uint16T line,
+    uint16_t module,
+    uint16_t line,
     long value1,
     long value2,
     long value3,

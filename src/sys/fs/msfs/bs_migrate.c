@@ -64,11 +64,11 @@ static
 migrate_normal_one_disk(
     bfAccessT * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
     uint64T dstBlkOffset,	/* in */
-    uint32T forceFlag,		/* in */
+    uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 );
 
@@ -76,11 +76,11 @@ static
        statusT
 migrate_normal(
     bfAccessT * bfap,		/* in */
-    uint32T srcPageOffset,	/* in */
-    uint32T srcPageCnt,		/* in */
+    uint32_t srcPageOffset,	/* in */
+    uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
     uint64T dstBlkOffset,	/* in */
-    uint32T forceFlag,		/* in */
+    uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 );
 
@@ -89,11 +89,11 @@ static
 migrate_stripe(
     bfAccessT * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
-    uint32T srcPageOffset,	/* in */
-    uint32T srcPageCnt,		/* in */
+    uint32_t srcPageOffset,	/* in */
+    uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
     uint64T dstBlkOffset,	/* in */
-    uint32T forceFlag,		/* in */
+    uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 );
 
@@ -101,10 +101,10 @@ static
        statusT
 get_xm_page_range_info(
     bsInMemXtntMapT * xtntMap,	/* in */
-    uint32T xmPageOffset,	/* in */
-    uint32T xmPageCnt,		/* in */
+    uint32_t xmPageOffset,	/* in */
+    uint32_t xmPageCnt,		/* in */
     pageRangeT ** xmPageRange,	/* out */
-    uint32T * xmPageRangeCnt,	/* out */
+    uint32_t * xmPageRangeCnt,	/* out */
     pageRangeT * xmHoleRange,	/* out */
     vdIndexT * xmHoleVdIndex	/* out */
 );
@@ -112,7 +112,7 @@ get_xm_page_range_info(
 static
        statusT
 extend_page_range_list(
-    uint32T * maxCnt,		/* in/out */
+    uint32_t * maxCnt,		/* in/out */
     pageRangeT ** pageRange	/* in/out */
 );
 
@@ -120,7 +120,7 @@ static
        statusT
 switch_stg(
     bfAccessT * bfap,		/* in */
-    uint32T stripeIndex,	/* in */
+    uint32_t stripeIndex,	/* in */
     bsInMemXtntMapT ** origXtntMapAddr,	/* in */
     vdIndexT * copyVdIndex,	/* in, modified */
     bfMCIdT * copyMcellId,	/* in, modified */
@@ -141,31 +141,31 @@ static
        statusT
 reset_block_map(
     bfAccessT * bfap,		/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt		/* in */
 );
 
 static
        statusT
 reset_block_map_special(
     bfAccessT * cloneap,	/* in - special case remapping */
-    uint32T bfPageCnt		/* in */
+    uint32_t bfPageCnt		/* in */
 );
 
 static
        statusT
 alloc_copy_stg(
     bfAccessT * bfap,		/* in */
-    uint32T startPage,		/* in */
+    uint32_t startPage,		/* in */
     pageRangeT * xmPageRange,	/* in */
-    uint32T xmPageRangeCnt,	/* in */
+    uint32_t xmPageRangeCnt,	/* in */
     vdIndexT vdIndex,		/* in */
     uint64T dstBlkOffset,	/* in */
     bsAllocHintT alloc_hint,	/* in */
     vdIndexT * copyVdIndex,	/* out */
     bfMCIdT * copyMcellId,	/* out */
     bsInMemXtntMapT ** copyXtntMap,	/* out */
-    uint32T * copyXferSize	/* out  migrate transfer size */
+    uint32_t * copyXferSize	/* out  migrate transfer size */
 );
 
 static
@@ -253,11 +253,11 @@ statusT
 bs_migrate(
     bfAccessT * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
-    uint32T srcPageOffset,	/* in */
-    uint32T srcPageCnt,		/* in */
+    uint32_t srcPageOffset,	/* in */
+    uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
     uint64T dstBlkOffset,	/* in */
-    uint32T forceFlag,		/* in */
+    uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 )
 {
@@ -328,7 +328,7 @@ bs_migrate(
 			RAISE_EXCEPTION(sts);
 		}
 	}
-	if ((uint32T) dstBlkOffset != (uint32T) (-1)) {
+	if ((uint32_t) dstBlkOffset != (uint32_t) (-1)) {
 		if ((dstBlkOffset % ADVFS_PGSZ_IN_BLKS) != 0) {
 			RAISE_EXCEPTION(E_BLKOFFSET_NOT_PAGE_ALIGNED);
 		}
@@ -369,23 +369,23 @@ HANDLE_EXCEPTION:
 statusT
 mig_verify_stripe_page_range(
     bfAccessT * bfap,		/* in */
-    uint32T srcPageOffset,	/* in */
-    uint32T srcPageCnt,		/* in */
-    uint32T srcVdIndex,		/* in */
+    uint32_t srcPageOffset,	/* in */
+    uint32_t srcPageCnt,		/* in */
+    uint32_t srcVdIndex,		/* in */
     bsStripeHdrT ** stripeHdrOut,	/* out */
-    uint32T * xmPageOffset,	/* out */
+    uint32_t * xmPageOffset,	/* out */
     pageRangeT ** xmPageRange,	/* out */
-    uint32T * xmPageRangeCnt,	/* out */
+    uint32_t * xmPageRangeCnt,	/* out */
     pageRangeT * xmHoleRange,	/* out */
     vdIndexT * xmHoleVdIndex,	/* out */
-    uint32T * xmEndPageOffset,	/* out */
-    uint32T * mapIndex		/* out */
+    uint32_t * xmEndPageOffset,	/* out */
+    uint32_t * mapIndex		/* out */
 )
 {
 	statusT sts = EOK;
 	int unlockFlag = 0;
 	bsInMemXtntMapT *xtntMap;
-	uint32T bfEndPageOffset;
+	uint32_t bfEndPageOffset;
 	bsXtntDescT xtntDesc;
 	bsInMemXtntDescIdT xtntDescId;
 	pageRangeT *xmPageRangeLocal = NULL;
@@ -515,11 +515,11 @@ statusT
 mig_migrate(
     bfAccessT * srcBfap,	/* in */
     vdIndexT srcVdIndex,	/* in */
-    uint32T srcPageOffset,	/* in */
-    uint32T srcPageCnt,		/* in */
+    uint32_t srcPageOffset,	/* in */
+    uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
     uint64T dstBlkOffset,	/* in */
-    uint32T forceFlag,		/* in */
+    uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 )
 {
@@ -643,30 +643,30 @@ static
 migrate_normal_one_disk(
     bfAccessT * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
     uint64T dstBlkOffset,	/* in */
-    uint32T forceFlag,		/* in */
+    uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 )
 {
-	uint32T endPageOffset;
+	uint32_t endPageOffset;
 	bsXtntDescT endXtntDesc;
 	bsInMemXtntMapT *newOverXtntMap = NULL;
-	uint32T nextPageOffset;
+	uint32_t nextPageOffset;
 	bsInMemXtntMapT *newXtntMap = NULL;
 	bsXtntDescT nextXtntDesc;
 	bsInMemXtntMapT *overXtntMap = NULL;
-	uint32T pageCnt;
-	uint32T pageOffset;
+	uint32_t pageCnt;
+	uint32_t pageOffset;
 	bsXtntDescT startXtntDesc;
 	statusT sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	int unlockFlag = 0;
 	bsInMemXtntDescIdT xtntDescId;
 	bsInMemXtntMapT *xtntMap;
-	uint32T newtype, newmax;
+	uint32_t newtype, newmax;
 
 	xtntMap = bfap->xtnts.xtntMap;
 
@@ -1100,7 +1100,7 @@ pre_reset_block_map_special(bfAccessT * bfap)
 	statusT sts;
 	bfAccessT *cloneap = NULL;
 	struct vnode *nullvp = NULL;
-	uint32T numPgs;
+	uint32_t numPgs;
 
 	KASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
 	cloneSetp = bfap->bfSetp->cloneSetp;
@@ -1183,11 +1183,11 @@ static
        statusT
 migrate_normal(
     bfAccessT * bfap,		/* in */
-    uint32T srcPageOffset,	/* in */
-    uint32T srcPageCnt,		/* in */
+    uint32_t srcPageOffset,	/* in */
+    uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
     uint64T dstBlkOffset,	/* in */
-    uint32T forceFlag,		/* in */
+    uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 )
 {
@@ -1195,9 +1195,9 @@ migrate_normal(
 	vdIndexT copyVdIndex;
 	bsInMemXtntMapT *copyXtntMap = NULL;
 	bsInMemXtntT copyXtnts;
-	uint32T i, copyXferSize = 16;	/* set default to 1 page of 16 blocks */
+	uint32_t i, copyXferSize = 16;	/* set default to 1 page of 16 blocks */
 	pageRangeT *pageRange = NULL;
-	uint32T pageRangeCnt = 0;
+	uint32_t pageRangeCnt = 0;
 	pageRangeT holeRange;
 	vdIndexT holeVdIndex;
 	int remCopyStgFlag = 0;
@@ -1218,7 +1218,7 @@ migrate_normal(
 	dlm_lkid_t cfs_domain_lock;
 	bfSetT *cloneSetp = NULL;
 	int setHeld = FALSE;
-	uint32T startPg;
+	uint32_t startPg;
 
 	if ((bfap->bfVp) && clu_is_ready()) {
 		sts = migrate_get_clu_locks(bfap, &cloneSetp, &setHeld,
@@ -1660,18 +1660,18 @@ static
 migrate_stripe(
     bfAccessT * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
-    uint32T srcPageOffset,	/* in */
-    uint32T srcPageCnt,		/* in */
+    uint32_t srcPageOffset,	/* in */
+    uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
     uint64T dstBlkOffset,	/* in */
-    uint32T forceFlag,		/* in */
+    uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 )
 {
-	uint32T bfEndPageOffset;
-	uint32T bfPageCnt;
-	uint32T bfPageOffset;
-	uint32T bfPageRangeCnt = 0;
+	uint32_t bfEndPageOffset;
+	uint32_t bfPageCnt;
+	uint32_t bfPageOffset;
+	uint32_t bfPageRangeCnt = 0;
 	pageRangeT *bfPageRange = NULL;
 	pageRangeT bfHoleRange;
 	vdIndexT bfHoleVdIndex;
@@ -1679,9 +1679,9 @@ migrate_stripe(
 	vdIndexT copyVdIndex;
 	bsInMemXtntMapT *bfCopyXtntMap = NULL;
 	bsInMemXtntT copyXtnts;
-	uint32T i, copyXferSize = 16;	/* set the default to one page of 16
+	uint32_t i, copyXferSize = 16;	/* set the default to one page of 16
 					 * blocks */
-	uint32T mapIndex;
+	uint32_t mapIndex;
 	int remCopyStgFlag = 0;
 	bsStripeHdrT *stripeHdr = NULL;
 	statusT sts;
@@ -1689,10 +1689,10 @@ migrate_stripe(
 	int unlockFlag = 0;
 	int unlkmigTrunc = 0;
 	bsInMemXtntMapT *xmCopyXtntMap = NULL;
-	uint32T xmEndPageOffset;
-	uint32T xmPageCnt;
-	uint32T xmPageOffset;
-	uint32T xmPageRangeCnt = 0;
+	uint32_t xmEndPageOffset;
+	uint32_t xmPageCnt;
+	uint32_t xmPageOffset;
+	uint32_t xmPageRangeCnt = 0;
 	pageRangeT *xmPageRange = NULL;
 	pageRangeT xmHoleRange;
 	vdIndexT xmHoleVdIndex;
@@ -2195,28 +2195,28 @@ static
        statusT
 get_xm_page_range_info(
     bsInMemXtntMapT * xtntMap,	/* in */
-    uint32T xmPageOffset,	/* in */
-    uint32T xmPageCnt,		/* in */
+    uint32_t xmPageOffset,	/* in */
+    uint32_t xmPageCnt,		/* in */
     pageRangeT ** xmPageRange,	/* out */
-    uint32T * xmPageRangeCnt,	/* out */
+    uint32_t * xmPageRangeCnt,	/* out */
     pageRangeT * xmHoleRange,	/* out */
     vdIndexT * xmHoleVdIndex	/* out */
 )
 {
-	uint32T cnt;
-	uint32T endPageOffset;
+	uint32_t cnt;
+	uint32_t endPageOffset;
 	bsXtntDescT endXtntDesc;
 	bsInMemXtntDescIdT endXtntDescId;
-	uint32T maxCnt;
+	uint32_t maxCnt;
 	pageRangeT *pageRange = NULL;
-	uint32T pageOffset;
+	uint32_t pageOffset;
 	statusT sts;
 	bsXtntDescT xtntDesc;
 	bsInMemXtntDescIdT xtntDescId;
-	uint32T xtntEndPageOffset;
+	uint32_t xtntEndPageOffset;
 	bsXtntDescT hXtntDesc;
 	bsInMemXtntDescIdT hXtntDescId;
-	uint32T last_extent = 0;
+	uint32_t last_extent = 0;
 
 	/*
          * Verify that the page range is mapped by the extent map.  If not, bye bye!
@@ -2537,14 +2537,14 @@ HANDLE_EXCEPTION:
 static
        statusT
 extend_page_range_list(
-    uint32T * maxCnt,		/* in/out */
+    uint32_t * maxCnt,		/* in/out */
     pageRangeT ** pageRange	/* in/out */
 )
 {
-	uint32T i;
-	uint32T newMaxCnt;
+	uint32_t i;
+	uint32_t newMaxCnt;
 	pageRangeT *newPageRange;
-	uint32T oldMaxCnt;
+	uint32_t oldMaxCnt;
 	pageRangeT *oldPageRange;
 
 	oldPageRange = *pageRange;
@@ -2589,7 +2589,7 @@ static
        statusT
 switch_stg(
     bfAccessT * bfap,		/* in */
-    uint32T stripeIndex,	/* in */
+    uint32_t stripeIndex,	/* in */
     bsInMemXtntMapT ** origXtntMapAddr,	/* in */
     vdIndexT * copyVdIndex,	/* in, modified */
     bfMCIdT * copyMcellId,	/* in, modified */
@@ -3291,15 +3291,15 @@ static
        statusT
 reset_block_map(
     bfAccessT * bfap,		/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt		/* in */
 )
 {
 	blkDescT blkDesc[BLKDESC_CNT];
 	blkMapT blkMap;
 	int clearIOTransFlag = 0;
 	int derefFlag = 0;
-	uint32T i;
+	uint32_t i;
 	void *page;
 	bfPageRefHT pgPin;
 	statusT sts;
@@ -3384,13 +3384,13 @@ static
        statusT
 reset_block_map_special(
     bfAccessT * cloneap,	/* in - special case remapping */
-    uint32T bfPageCnt		/* in */
+    uint32_t bfPageCnt		/* in */
 )
 {
 	blkDescT blkDesc[BLKDESC_CNT];
 	blkMapT blkMap;
 	int derefFlag = 0;
-	uint32T i;
+	uint32_t i;
 	void *page;
 	bfPageRefHT pgRef;
 	statusT sts;
@@ -3460,9 +3460,9 @@ static
        statusT
 alloc_copy_stg(
     bfAccessT * bfap,		/* in   get stg for this file */
-    uint32T startPage,		/* in   start map at this page */
+    uint32_t startPage,		/* in   start map at this page */
     pageRangeT * xmPageRange,	/* in   array of extents */
-    uint32T xmPageRangeCnt,	/* in   array size */
+    uint32_t xmPageRangeCnt,	/* in   array size */
     vdIndexT vdIndex,		/* in   get stg on this volume */
     uint64T dstBlkOffset,	/* in;if hint == BS_ALLOC_MIG_RSVD,make sure
 				 * we get this blk */
@@ -3470,11 +3470,11 @@ alloc_copy_stg(
     vdIndexT * copyVdIndex,	/* out  stg starts on this vol */
     bfMCIdT * copyMcellId,	/* out  starting mcell */
     bsInMemXtntMapT ** copyXtntMap,	/* out  return this map */
-    uint32T * copyXferSize	/* out  migrate transfer size */
+    uint32_t * copyXferSize	/* out  migrate transfer size */
 )
 {
-	uint32T allocPageCnt;
-	uint32T i;
+	uint32_t allocPageCnt;
+	uint32_t i;
 	statusT sts;
 	bsInMemXtntMapT *xtntMap = NULL;
 	vdT *vdp = NULL;
@@ -3509,7 +3509,7 @@ alloc_copy_stg(
 		vdp = vd_htop_already_valid(vdIndex, bfap->dmnP, TRUE);
 		*copyXferSize = vdp->wrmaxio;
 		for (i = 0; i < xmPageRangeCnt; i++) {
-			uint32T fileClust;
+			uint32_t fileClust;
 
 			if (vdp->stgCluster == BS_CLUSTSIZE) {
 				fileClust = (xmPageRange[i].pageCnt * bfap->bfPageSz) /
@@ -3582,18 +3582,18 @@ alloc_hole_stg(
     bsInMemXtntMapT ** copyXtntMap	/* out */
 )
 {
-	uint32T allocPageCnt;
+	uint32_t allocPageCnt;
 	bfTagT bfSetTag;
 	bfMCIdT delMcellId;
 	vdIndexT delVdIndex;
 	ftxHT ftxH;
 	int failFtxFlag = 0;
-	uint32T i;
+	uint32_t i;
 	bfMCIdT newMcellId;
-	uint32T pageCnt;
+	uint32_t pageCnt;
 	statusT sts;
 	bsInMemXtntMapT *xtntMap = NULL;
-	uint32T newtype, newmax;
+	uint32_t newtype, newmax;
 	int vdRefFlg = FALSE;
 	vdT *vdp;
 
@@ -3777,25 +3777,25 @@ mig_get_stripe_bfpage_list(
     bfAccessT * bfap,		/* in */
     ssPackLLT * pXtntp,		/* in */
     pageRangeT ** bfPageRange,	/* out */
-    uint32T * bfPageRangeCnt	/* out */
+    uint32_t * bfPageRangeCnt	/* out */
 )
 {
 	bsStripeHdrT *stripeHdrP = bfap->xtnts.stripeXtntMap;
 	uint segSz = stripeHdrP->segmentSize;
 	uint segCnt = stripeHdrP->cnt;
-	uint32T xtntPg = pXtntp->ssPackPageOffset;
-	uint32T blkRangeStart = pXtntp->ssPackStartXtBlock;
-	uint32T blkRangeEnd = pXtntp->ssPackEndXtBlock;
+	uint32_t xtntPg = pXtntp->ssPackPageOffset;
+	uint32_t blkRangeStart = pXtntp->ssPackStartXtBlock;
+	uint32_t blkRangeEnd = pXtntp->ssPackEndXtBlock;
 	uint mapIndex;
 	bsInMemXtntMapT *xmP;
 	bsInMemSubXtntMapT *sxmP;
 	uint xI;
 	uint sI;
 	pageRangeT *pageRange = NULL;
-	uint32T pg;
-	uint32T bfPage;
-	uint32T prevPage;
-	uint32T blk;
+	uint32_t pg;
+	uint32_t bfPage;
+	uint32_t prevPage;
+	uint32_t blk;
 	uint cnt;
 	uint maxCnt;
 	statusT sts;
@@ -3890,10 +3890,10 @@ mig_get_stripe_bfpage_list(
 statusT
 mig_pack_vd_range(
     vdT * vdp,			/* in */
-    uint32T cRangeBeginBlk,	/* in */
+    uint32_t cRangeBeginBlk,	/* in */
     uint64T cRangeEndBlk,	/* in */
-    uint32T * newcRangeBeginBlk,/* out */
-    uint32T forceFlag		/* in */
+    uint32_t * newcRangeBeginBlk,/* out */
+    uint32_t forceFlag		/* in */
 )
 {
 	statusT sts = EOK, sts2 = EOK;
@@ -3902,14 +3902,14 @@ mig_pack_vd_range(
 	bsInMemSubXtntMapT *subXtntMap = NULL;
 	int blksPerPage = ADVFS_PGSZ_IN_BLKS;
 	int closeFileFlag = FALSE, skip;
-	uint32T sbm_bit_cnt = 0;
-	uint32T bmt_bit_cnt = 0;
-	uint32T i, k;
+	uint32_t sbm_bit_cnt = 0;
+	uint32_t bmt_bit_cnt = 0;
+	uint32_t i, k;
 	bfSetT *inwayBfSetp = NULL;
 	bfSetIdT inwayBfSetId;
 	bfAccessT *inwayBfap = NULL;
 	uint64T nextcRangeBeginBlk, xmPageOffset, migPageCntSoFar, migPageCnt, thdblkMigPageCnt = 0, dstBlkOffset = 0, pgsRemaining, newBlkOffset, bfPageOffset, newPageCnt;
-	uint32T clearPageCnt;
+	uint32_t clearPageCnt;
 	ssPackHdrT *php = NULL;
 	ssPackLLT *pXtntp = NULL;
 	int another_scan_required;
@@ -3920,7 +3920,7 @@ mig_pack_vd_range(
 	extern REPLICATED int SSPageCnt;
 	struct mount *mp;
 	pageRangeT *bfPageRange = NULL;
-	uint32T bfPageRangeCnt = 0, mapIndex;
+	uint32_t bfPageRangeCnt = 0, mapIndex;
 	bfMCIdT mcellId;
 	int delFlag;
 	int fsetMounted;
@@ -4570,17 +4570,17 @@ reload_pXtntp(
 {
 	bsInMemSubXtntMapT *sxmP;
 	statusT sts;
-	uint32T xtntPageOff = pXtntp->ssPackPageOffset;
-	uint32T rangeStartBlk = pXtntp->ssPackStartXtBlock;
-	uint32T rangeEndBlk = pXtntp->ssPackEndXtBlock;
+	uint32_t xtntPageOff = pXtntp->ssPackPageOffset;
+	uint32_t rangeStartBlk = pXtntp->ssPackStartXtBlock;
+	uint32_t rangeEndBlk = pXtntp->ssPackEndXtBlock;
 	uint sI;
 	uint xI;
-	uint32T p1;
-	uint32T p2;
-	uint32T xtntStartBlk;
-	uint32T xtntEndBlk;
-	uint32T blk;
-	uint32T pg;
+	uint32_t p1;
+	uint32_t p2;
+	uint32_t xtntStartBlk;
+	uint32_t xtntEndBlk;
+	uint32_t blk;
+	uint32_t pg;
 
 	sts = imm_page_to_sub_xtnt_map(xtntPageOff, xmP, FALSE, &sI);
 	if (sts == E_PAGE_NOT_MAPPED) {

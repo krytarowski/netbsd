@@ -38,7 +38,7 @@ fs_init_directory(
     char *buffer_pointer,
     bfTagT bs_tag,
     bfTagT parent_bs_tag,
-    uint32T advfs_page_size
+    uint32_t advfs_page_size
 );
 
 statusT
@@ -122,20 +122,20 @@ statusT
 setup_for_glom_dir_entries(
     char *dir_buffer,
     fs_dir_entry ** start_dir_p,
-    uint32T * entry_size,
-    uint32T * flags,
+    uint32_t * entry_size,
+    uint32_t * flags,
     struct bfAccess * dir_access
 );
 void
 glom_dir_entries(
     char *dir_buffer,
     fs_dir_entry * dir_p,
-    uint32T entry_size,
-    uint32T flags,
+    uint32_t entry_size,
+    uint32_t flags,
     rbfPgRefHT page_ref
 );
 
-uint32T
+uint32_t
 dir_trunc_start(
     struct vnode *,
     unsigned long,
@@ -192,7 +192,7 @@ fs_update_stats(
     struct vnode * vp,		/* in - vnode of bitfile */
     struct bfAccess * bfap,	/* in - bitfile's access structure */
     ftxHT ftx_handle,		/* in - ftx handle. may be nil. */
-    uint32T flags		/* in - flags */
+    uint32_t flags		/* in - flags */
 );
 
 int

@@ -48,7 +48,7 @@ stg_add_stg(
     unsigned long bfPageOffset,	/* in */
     unsigned long bfPageCnt,	/* in */
     int allowOverlapFlag,	/* in */
-    uint32T * allocPageCnt	/* out */
+    uint32_t * allocPageCnt	/* out */
 );
 
 statusT
@@ -58,14 +58,14 @@ stg_add_stg_no_cow(
     unsigned long bfPageOffset,	/* in */
     unsigned long bfPageCnt,	/* in */
     int allowOverlapFlag,	/* in */
-    uint32T * allocPageCnt	/* out */
+    uint32_t * allocPageCnt	/* out */
 );
 
 statusT
 stg_set_alloc_disk(
     struct bfAccess * bfap,	/* in */
     vdIndexT curVdIndex,	/* in */
-    uint32T pageCntNeeded,	/* in */
+    uint32_t pageCntNeeded,	/* in */
     int forceFlag		/* in */
 );
 
@@ -76,25 +76,25 @@ stg_alloc_from_svc_class(
     serviceClassT optServices,	/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     int bfPageSize,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     bsAllocHintT * alloc_hint,	/* in/out */
     ftxHT parentFtx,		/* in */
-    uint32T * allocPageCnt	/* out */
+    uint32_t * allocPageCnt	/* out */
 );
 
 statusT
 cp_stg_alloc_from_svc_class(
     bfAccessT * bfap,		/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
-    int32T stg_type,
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
+    int32_t stg_type,
     bsInMemXtntMapT * xtntMap,	/* in */
-    uint32T startPage,		/* in */
+    uint32_t startPage,		/* in */
     bsAllocHintT alloc_hint,	/* in */
-    uint32T * copyXferSize	/* out */
+    uint32_t * copyXferSize	/* out */
 );
 
 statusT
@@ -103,25 +103,25 @@ stg_alloc_from_one_disk(
     vdIndexT bfVdIndex,		/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     int bfPageSize,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     bsAllocHintT * alloc_hint,	/* in/out */
     ftxHT parentFtx,		/* in */
-    uint32T * allocPageCnt	/* out */
+    uint32_t * allocPageCnt	/* out */
 );
 
 statusT
 cp_stg_alloc_from_one_disk(
     bfAccessT * bfap,		/* in */
     vdIndexT bfVdIndex,		/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
-    int32T stg_type,
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
+    int32_t stg_type,
     bsInMemXtntMapT * xtntMap,	/* in */
-    uint32T startPage,		/* in */
-    uint32T * allocPageCnt,	/* out */
+    uint32_t startPage,		/* in */
+    uint32_t * allocPageCnt,	/* out */
     uint64T dstBlkOffset,	/* in */
     bsAllocHintT alloc_hint	/* in */
 );
@@ -131,7 +131,7 @@ xfer_stg(
     bfAccessT * bfap,		/* file to add storage to */
     u_long bfPageOffset,	/* offset to add storage */
     u_long bfPageCnt,		/* number of pages to add */
-    uint32T startblk,		/* storage in hand to add */
+    uint32_t startblk,		/* storage in hand to add */
     vdIndexT vdIndex,		/* storage is on this disk */
     ftxHT parentFtx
 );
@@ -150,31 +150,31 @@ stg_alloc_new_mcell(
 statusT
 stg_remove_stg_start(
     bfAccessT * bfAccess,	/* in */
-    uint32T pageOffset,		/* in */
-    uint32T pageCnt,		/* in */
+    uint32_t pageOffset,		/* in */
+    uint32_t pageCnt,		/* in */
     int relQuota,		/* in */
     ftxHT parentFtx,		/* in */
-    uint32T * delCnt,		/* out */
+    uint32_t * delCnt,		/* out */
     void **delList,		/* out */
-    int32T doCow		/* in */
+    int32_t doCow		/* in */
 );
 
 void
 stg_remove_stg_finish(
     domainT * dmnp,		/* in */
-    uint32T delCnt,		/* in */
+    uint32_t delCnt,		/* in */
     void *delList		/* in */
 );
 
 int
 page_is_mapped_local(
     bfAccessT * bfap,
-    uint32T pg,
-    uint32T * nextPage,		/* out */
+    uint32_t pg,
+    uint32_t * nextPage,		/* out */
     int permHoleFlg,		/* in */
     vdIndexT * vdIndex,		/* out */
-    uint32T * vdBlk,		/* out */
-    uint32T * start_pg,		/* out */
+    uint32_t * vdBlk,		/* out */
+    uint32_t * start_pg,		/* out */
     int load_map
 );
 

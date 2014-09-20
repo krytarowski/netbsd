@@ -67,9 +67,9 @@ static
 copy_frag_into_page(
     bfAccessT * fragBfAccessp,	/* in */
     bfFragIdT fragId,		/* in */
-    uint32T copyByteOffset,	/* in */
-    uint32T copyByteCnt,	/* in */
-    uint32T bytesPerPage,	/* in */
+    uint32_t copyByteOffset,	/* in */
+    uint32_t copyByteCnt,	/* in */
+    uint32_t bytesPerPage,	/* in */
     char *bufAddr		/* in */
 );
 
@@ -344,7 +344,7 @@ bf_get_l(
 	struct vm_ubc_object *obj;
 	statusT sts = EOK;
 	struct undel_dir_rec undel_rec;
-	uint32T options;
+	uint32_t options;
 	extern struct vnodeops spec_bfnodeops;
 	extern struct vnodeops fifo_bfnodeops;
 	extern int xlate_dev(dev_t, int);
@@ -1272,17 +1272,17 @@ copy_frag_into_vm_page(
     vm_offset_t offset,		/* in */
     bfAccessT * fragBfAccessp,	/* in */
     bfFragIdT fragId,		/* in */
-    uint32T bytesPerFilePage,	/* in */
+    uint32_t bytesPerFilePage,	/* in */
     vm_page_t pp
 )
 {
 	int error;
 	int rflags = 0;
-	uint32T copyByteCnt;
-	uint32T copyByteOffset;
-	uint32T fragByteCnt;
+	uint32_t copyByteCnt;
+	uint32_t copyByteOffset;
+	uint32_t fragByteCnt;
 	vm_offset_t kernelAddr;
-	uint32T relativePageOffset;
+	uint32_t relativePageOffset;
 	statusT sts;
 
 	kernelAddr = ubc_load(pp, 0, PAGE_SIZE);
@@ -1962,16 +1962,16 @@ static
 copy_frag_into_page(
     bfAccessT * fragBfAccessp,	/* in */
     bfFragIdT fragId,		/* in */
-    uint32T copyByteOffset,	/* in */
-    uint32T copyByteCnt,	/* in */
-    uint32T bytesPerPage,	/* in */
+    uint32_t copyByteOffset,	/* in */
+    uint32_t copyByteCnt,	/* in */
+    uint32_t bytesPerPage,	/* in */
     char *bufAddr		/* in */
 )
 {
-	uint32T fragByteCnt;
+	uint32_t fragByteCnt;
 	statusT sts;
-	uint32T subFrag1ByteCnt;
-	uint32T subFrag1ByteOffset;
+	uint32_t subFrag1ByteCnt;
+	uint32_t subFrag1ByteOffset;
 	char *subFrag1Page = NULL;
 	bfPageRefHT subFrag1PgRef;
 	char *subFrag2Page = NULL;

@@ -73,7 +73,7 @@ fs_fset_create(
     char *setName,		/* in - set's name */
     serviceClassT reqServices,	/* in - set's required services */
     serviceClassT optServices,	/* in - set's optional services */
-    uint32T fsetOptions,	/* in - fileset options */
+    uint32_t fsetOptions,	/* in - fileset options */
     gid_t quotaId,		/* in - group ID for quota files */
     bfSetIdT * retBfSetId,	/* out - set's id */
     long xid1,			/* in - CFS transaction id */
@@ -690,9 +690,9 @@ HANDLE_EXCEPTION:
 statusT
 fs_fset_get_info(
     char *domain,		/* in - domain table */
-    uint32T * nextSetIdx,	/* in/out - index of set */
+    uint32_t * nextSetIdx,	/* in/out - index of set */
     bfSetParamsT * bfSetParams,	/* out - the bitfile-set's parameters */
-    uint32T * userId,		/* out - bfset user id */
+    uint32_t * userId,		/* out - bfset user id */
     int flag			/* in - 1 to set F_FMOUNT and skip recovery */
 )
 {
@@ -917,22 +917,22 @@ fs_create_frag(
     ftxHT parentFtxH		/* in */
 )
 {
-	uint32T copyByteCnt;
+	uint32_t copyByteCnt;
 	struct fileSetNode *fileSetNode;
-	uint32T fragByteCnt;
+	uint32_t fragByteCnt;
 	bfFragIdT fragId;
 	bfFragT fragType;
-	uint32T inuseByteCnt;
+	uint32_t inuseByteCnt;
 	char *lastPage = NULL;
-	uint32T lastPageOffset;
+	uint32_t lastPageOffset;
 	struct mount *mountPoint;
 	bfPageRefHT pgRef;
 	statusT sts;
-	uint32T subFrag1ByteCnt;
-	uint32T subFrag1ByteOffset;
+	uint32_t subFrag1ByteCnt;
+	uint32_t subFrag1ByteOffset;
 	char *subFrag1Page;
 	rbfPgRefHT subFrag1PgPin;
-	uint32T subFrag2ByteCnt;
+	uint32_t subFrag2ByteCnt;
 	char *subFrag2Page;
 	rbfPgRefHT subFrag2PgPin;
 	int wastedPercent;
@@ -1112,7 +1112,7 @@ fs_quick_frag_test(
 )
 {
 	struct fileSetNode *fileSetNode;
-	uint32T inuseByteCnt;
+	uint32_t inuseByteCnt;
 	struct mount *mountPoint;
 	bfSetT *bfSetp;
 	struct vnode *vnode = bfap->bfVp;

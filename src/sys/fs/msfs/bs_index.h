@@ -89,9 +89,9 @@ idx_directory_insert_space(
     bfAccessT * dir_bfap,	/* Directories Access Structure */
     ulong size,			/* size of space to insert */
     int insert_page,		/* Page where space lives */
-    uint32T insert_count,	/* Offset where space lives */
-    uint32T unglom_offset,	/* offset to be undone */
-    uint32T unglom_size,	/* size to be undone */
+    uint32_t insert_count,	/* Offset where space lives */
+    uint32_t unglom_offset,	/* offset to be undone */
+    uint32_t unglom_size,	/* size to be undone */
     ftxHT parentFtx,		/* Parent Ftx */
     int forceflag		/* sometimes we need to ignore quotas */
 );
@@ -168,10 +168,10 @@ typedef struct bsDirIdxRec {
  * structure.  */
 
 typedef struct bsIdxBmtRec {
-	uint32T fname_page;
-	uint32T ffree_page;
-	uint32T fname_levels;
-	uint32T ffree_levels;
+	uint32_t fname_page;
+	uint32_t ffree_page;
+	uint32_t fname_levels;
+	uint32_t ffree_levels;
 }           bsIdxBmtRecT;
 #ifdef _KERNEL
 
@@ -235,10 +235,10 @@ typedef struct idxNodeEntry {
 typedef struct idxNode {
 	ulong total_elements;
 	union {
-		int32T leftmost;/* boolean indicating if node is leftmost node */
-		int32T page_left;	/* Page number of left sibling node. */
+		int32_t leftmost;/* boolean indicating if node is leftmost node */
+		int32_t page_left;	/* Page number of left sibling node. */
 	}     sib;
-	int32T page_right;
+	int32_t page_right;
 	ulong reserved[2];
 	idxNodeEntryT data[1];	/* Keep compiler happy. The size will be
 				 * computed below as IDX_MAX_ELEMENTS and
@@ -260,18 +260,18 @@ typedef struct idxNode {
  * resources until the point of no failure.  */
 
 typedef struct idxPinnedPgs {
-	uint32T pgno;
+	uint32_t pgno;
 	rbfPgRefHT pgref;
 	idxNodeT *pgptr;
 }            idxPinnedPgsT;
 
 typedef struct idxClupMsg {
-	uint32T delCnt;
+	uint32_t delCnt;
 	void *delList;
 }          idxClupMsgT;
 
 typedef struct idxPruneMsgs {
-	uint32T msg_cnt;
+	uint32_t msg_cnt;
 	idxClupMsgT msgs[IDX_MAX_BTREE_LEVELS];
 }            idxPruneMsgsT;
 /* This record will be used by all undo routines. The basic

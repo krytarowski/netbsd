@@ -73,21 +73,21 @@ vd_extend_add_sbm_pgs(vdT *, bsPageT, lbnT,
 #define INIT_BMT_PGS_V3 2
 #define INIT_TAGDIR_PGS 1
 
-uint32T metaPhysLocPct = 40;	/* default physical loc for SBM, BMT, LOG */
+uint32_t metaPhysLocPct = 40;	/* default physical loc for SBM, BMT, LOG */
 
 static statusT
 init_sbm(
     struct vnode * vp,		/* in */
     struct bsMPg * bmtpg,	/* in */
     struct bsVdAttr * vdattr,	/* in */
-    uint32T blksPerPage,	/* in */
-    uint32T rbmtBlks,		/* in */
-    uint32T bmtBlks,		/* in */
-    uint32T preallocBlks,	/* in */
-    uint32T bootBlks,		/* in */
-    uint32T tagBlks,		/* in */
-    uint32T sbmFirstBlk,	/* in */
-    uint32T * freeBlks		/* out */
+    uint32_t blksPerPage,	/* in */
+    uint32_t rbmtBlks,		/* in */
+    uint32_t bmtBlks,		/* in */
+    uint32_t preallocBlks,	/* in */
+    uint32_t bootBlks,		/* in */
+    uint32_t tagBlks,		/* in */
+    uint32_t sbmFirstBlk,	/* in */
+    uint32_t * freeBlks		/* out */
 );
 
 
@@ -111,16 +111,16 @@ statusT
 bs_dmn_init(
     char *domain,		/* in - domain name */
     int maxVds,			/* in - maximum number of virtual disks */
-    uint32T logPgs,		/* in - number of pages in log */
+    uint32_t logPgs,		/* in - number of pages in log */
     serviceClassT logSvc,	/* in - log service attributes */
     serviceClassT tagSvc,	/* in - tag directory service attributes */
     char *vdName,		/* in - block special device name */
     serviceClassT vdSvc,	/* in - service class */
-    uint32T vdSize,		/* in - size of the virtual disk */
-    uint32T bmtXtntPgs,		/* in - number of pages per BMT extent */
-    uint32T bmtPreallocPgs,	/* in - number of pages to be preallocated for
+    uint32_t vdSize,		/* in - size of the virtual disk */
+    uint32_t bmtXtntPgs,		/* in - number of pages per BMT extent */
+    uint32_t bmtPreallocPgs,	/* in - number of pages to be preallocated for
 				 * the BMT */
-    uint32T domainVersion,	/* in - on-disk version for domain */
+    uint32_t domainVersion,	/* in - on-disk version for domain */
     bfDomainIdT * domainId	/* out - unique domain id */
 )
 {
@@ -241,7 +241,7 @@ bs_disk_init(
     bsVdParamsT * bsVdParams,	/* in/out - vd parameters */
     serviceClassT tagSvc,	/* in - tag service class */
     serviceClassT logSvc,	/* in - log service class */
-    uint32T bmtPreallocPgs,	/* in - number of pages to be preallocated for
+    uint32_t bmtPreallocPgs,	/* in - number of pages to be preallocated for
 				 * the BMT */
     int dmnVersion		/* in - version to store on-disk */
 )
@@ -256,11 +256,11 @@ bs_disk_init(
 	struct bsVdAttr *vdattr;
 	bfTagT ftxLogTag, bfSetDirTag;
 	bsDmnAttrT *dmnAttrp;
-	uint32T *superBlockPg = NULL, minBlks = 0, freeBlks = 0;
-	uint32T rbmtBlks, bmtBlks, preallocBlks, tagBlks, bootBlks;
-	uint32T mscFirstBlk, rbmtFirstBlk, bmtFirstBlk, tagFirstBlk, sbmFirstBlk;
-	uint32T bootFirstBlk, bmtFirstPreallocBlk;
-	uint32T sbmPgs, sbmBlks, vdBlkCnt;
+	uint32_t *superBlockPg = NULL, minBlks = 0, freeBlks = 0;
+	uint32_t rbmtBlks, bmtBlks, preallocBlks, tagBlks, bootBlks;
+	uint32_t mscFirstBlk, rbmtFirstBlk, bmtFirstBlk, tagFirstBlk, sbmFirstBlk;
+	uint32_t bootFirstBlk, bmtFirstPreallocBlk;
+	uint32_t sbmPgs, sbmBlks, vdBlkCnt;
 	struct bsMR *rp;
 
 	int error;
@@ -1004,9 +1004,9 @@ bs_disk_init(
 
 	/* Write the fake super block.  It is zero-filled and contains magic # */
 
-	superBlockPg = (uint32T *) ms_malloc(ADVFS_PGSZ);
+	superBlockPg = (uint32_t *) ms_malloc(ADVFS_PGSZ);
 	bzero((char *) superBlockPg, ADVFS_PGSZ);
-	superBlockPg[MSFS_MAGIC_OFFSET / sizeof(uint32T)] = MSFS_MAGIC;
+	superBlockPg[MSFS_MAGIC_OFFSET / sizeof(uint32_t)] = MSFS_MAGIC;
 
 	err = write_raw_page(vp,
 	    MSFS_FAKE_SB_BLK,
@@ -1061,7 +1061,7 @@ bs_disk_init(
 	}
 	if (bmtPreallocPgs) {
 		int pg, newpg = INIT_BMT_PGS;
-		uint32T startBlk = bmtFirstPreallocBlk;
+		uint32_t startBlk = bmtFirstPreallocBlk;
 
 		for (pg = 0; pg < bmtPreallocPgs; pg++) {
 			bmt_init_page(bmtpg, newpg, BFM_BMT, dmnVersion);
@@ -1129,7 +1129,7 @@ bs_disk_init_v3(
     bsVdParamsT * bsVdParams,	/* in/out - vd parameters */
     serviceClassT tagSvc,	/* in - tag service class */
     serviceClassT logSvc,	/* in - log service class */
-    uint32T bmtPreallocPgs,	/* in - number of pages to be preallocated for
+    uint32_t bmtPreallocPgs,	/* in - number of pages to be preallocated for
 				 * the BMT */
     int dmnVersion		/* in - domain version */
 )
@@ -1142,11 +1142,11 @@ bs_disk_init_v3(
 	struct bsVdAttr *vdattr;
 	bfTagT ftxLogTag, bfSetDirTag;
 	bsDmnAttrT *dmnAttrp;
-	uint32T *superBlockPg = NULL, minBlks = 0, freeBlks = 0;
-	uint32T rbmtBlks = 0, preallocBlks = 0;
-	uint32T bmtBlks, tagBlks, bootBlks;
-	uint32T mscFirstBlk, bmtFirstBlk, tagFirstBlk, sbmFirstBlk;
-	uint32T bootFirstBlk, bmtFirstPreallocBlk;
+	uint32_t *superBlockPg = NULL, minBlks = 0, freeBlks = 0;
+	uint32_t rbmtBlks = 0, preallocBlks = 0;
+	uint32_t bmtBlks, tagBlks, bootBlks;
+	uint32_t mscFirstBlk, bmtFirstBlk, tagFirstBlk, sbmFirstBlk;
+	uint32_t bootFirstBlk, bmtFirstPreallocBlk;
 	int error;
 	struct vnode *vp = NULL;
 	struct nameidata *ndp = &u.u_nd;
@@ -1479,7 +1479,7 @@ bs_disk_init_v3(
 
 	if (bmtPreallocPgs != 0) {
 		struct bsXtraXtntR *xtntp1;
-		uint32T sbmPgs, sbmBlks;
+		uint32_t sbmPgs, sbmBlks;
 
 		/* Calculate the starting block for the pre-allocation range */
 
@@ -1785,9 +1785,9 @@ bs_disk_init_v3(
 
 	/* Write the fake super block.  It is zero-filled and contains magic # */
 
-	superBlockPg = (uint32T *) ms_malloc(ADVFS_PGSZ);
+	superBlockPg = (uint32_t *) ms_malloc(ADVFS_PGSZ);
 	bzero((char *) superBlockPg, ADVFS_PGSZ);
-	superBlockPg[MSFS_MAGIC_OFFSET / sizeof(uint32T)] = MSFS_MAGIC;
+	superBlockPg[MSFS_MAGIC_OFFSET / sizeof(uint32_t)] = MSFS_MAGIC;
 
 	err = write_raw_page(vp,
 	    MSFS_FAKE_SB_BLK,
@@ -1819,7 +1819,7 @@ bs_disk_init_v3(
 
 	if (bmtPreallocPgs) {
 		int pg, newpg = INIT_BMT_PGS_V3;
-		uint32T startBlk = bmtFirstPreallocBlk;
+		uint32_t startBlk = bmtFirstPreallocBlk;
 
 		bmtpg->nextFreePg = newpg;
 
@@ -2012,24 +2012,24 @@ init_sbm(
     struct vnode * vp,		/* in */
     struct bsMPg * bmtpg,	/* in */
     struct bsVdAttr * vdattr,	/* in */
-    uint32T blksPerPage,	/* in */
-    uint32T rbmtBlks,		/* in */
-    uint32T bmtBlks,		/* in */
-    uint32T preallocBlks,	/* in */
-    uint32T bootBlks,		/* in */
-    uint32T tagBlks,		/* in */
-    uint32T sbmFirstBlk,	/* in */
-    uint32T * freeBlks		/* out */
+    uint32_t blksPerPage,	/* in */
+    uint32_t rbmtBlks,		/* in */
+    uint32_t bmtBlks,		/* in */
+    uint32_t preallocBlks,	/* in */
+    uint32_t bootBlks,		/* in */
+    uint32_t tagBlks,		/* in */
+    uint32_t sbmFirstBlk,	/* in */
+    uint32_t * freeBlks		/* out */
 )
 {
 	/*
          * Initialize the bitmap bits.
          */
 
-	uint32T sbmPgs, sbmBlks;
-	uint32T sbmFirstPage, sbmFirstBit;
-	uint32T first_setBlks, second_setBlks = 0;
-	uint32T set_bits, first_bits_to_set, second_bits_to_set = 0;
+	uint32_t sbmPgs, sbmBlks;
+	uint32_t sbmFirstPage, sbmFirstBit;
+	uint32_t first_setBlks, second_setBlks = 0;
+	uint32_t set_bits, first_bits_to_set, second_bits_to_set = 0;
 	int i, j, err;
 	statusT sts;
 	struct bsXtntR *xtntp;
@@ -2195,9 +2195,9 @@ vd_extend(struct vd * vdp)
 	lbnT blksToMapInNewSbm;
 	lbnT xtraBitsInSbm;
 	bsPageT newSbmPgs;
-	uint32T newSbmBitsToSet;
-	uint32T newFreeClusters;
-	uint32T sbmBitsToSet;
+	uint32_t newSbmBitsToSet;
+	uint32_t newFreeClusters;
+	uint32_t sbmBitsToSet;
 	int ret;
 	boolean_t xtntMapLocked = FALSE;
 	boolean_t mcellListLocked = FALSE;

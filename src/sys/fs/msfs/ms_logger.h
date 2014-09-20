@@ -47,7 +47,7 @@ static const lsnT nilLSN = {0};
 static const lsnT firstLSN = {LSN_MIN};
 static const lsnT maxLSN = {LSN_MAX};
 
-typedef uint32T logHT;		/* Handles to open logs are of this type */
+typedef uint32_t logHT;		/* Handles to open logs are of this type */
 
 /*
  * logRdHT - Handle to an open log read stream.  See lgr_read... for
@@ -55,7 +55,7 @@ typedef uint32T logHT;		/* Handles to open logs are of this type */
  */
 typedef struct logRdH {
 	struct logDesc *ldP;	/* pointer to the open log */
-	uint32T rdH;		/* Handle to the read stream descriptor */
+	uint32_t rdH;		/* Handle to the read stream descriptor */
 }      logRdHT;
 /*
  * logWriteModeT - When writing a record via lgr_writev() the following
@@ -78,7 +78,7 @@ typedef enum {
 }    logReadModeT;
 
 typedef struct {
-	uint32T *bufPtr;	/* pointer to data buffer */
+	uint32_t *bufPtr;	/* pointer to data buffer */
 	int bufWords;		/* number of words in buffer */
 }      logBufVectorT;
 /*****************************************************************************
@@ -96,7 +96,7 @@ typedef struct rdPgDesc {
 				 * referrenced */
 	bfPageRefHT refH;	/* page's ref handle */
 	struct logPg *pgP;	/* pointer to page */
-	uint32T num;		/* page's number */
+	uint32_t num;		/* page's number */
 }        rdPgDescT;
 
 static const rdPgDescT NilRdPgDesc = NULL_STRUCT;
@@ -113,9 +113,9 @@ typedef struct wtPgDesc {
 	unsigned:28;
 	bfPageRefHT refH;	/* page's ref handle */
 	struct logPg *pgP;	/* pointer to page */
-	uint32T num;		/* page's number */
-	int16T prevLastRec;	/* word offset into pg.data */
-	int16T writers;
+	uint32_t num;		/* page's number */
+	int16_t prevLastRec;	/* word offset into pg.data */
+	int16_t writers;
 	logRecAddrT lastRec;	/* Log record addr of the last record on */
 	/* on this page */
 
@@ -144,8 +144,8 @@ typedef struct logDesc {
 	logRecAddrT lastRecFirstSeg;	/* Addr of the last record's 1st
 					 * segment */
 	lsnT quadLsn[2];	/* First lsn in last two quadrants */
-	uint32T oldestPg;	/* oldest log page (meta data not written) */
-	uint32T pgCnt;		/* Number of pages in the log */
+	uint32_t oldestPg;	/* oldest log page (meta data not written) */
+	uint32_t pgCnt;		/* Number of pages in the log */
 	unsigned logWrapStateKnown:1;	/* 1 = we know log has wrapped or not */
 	unsigned logWrapped:1;	/* 1 = log has wrapped */
 	unsigned flushing:1;	/* 1 = log is being flushed */
@@ -199,7 +199,7 @@ lgr_open(
     struct bfAccess ** logbfap,	/* out - access structure of the open log */
     bfTagT logtag,		/* in - the log's tag */
     bfSetT * bfSetp,		/* in - the log's bitfile-set desc ptr */
-    uint32T flag		/* in - if set, re-init log */
+    uint32_t flag		/* in - if set, re-init log */
 );
 
 /*
@@ -250,7 +250,7 @@ statusT
 lgr_switch_vol(
     logDescT * ldP,		/* in - pointer to an open log */
     vdIndexT newVolIdx,		/* in - move log to this vdIndex */
-    uint32T newNumPgs,		/* in - if > 0 then change log's size */
+    uint32_t newNumPgs,		/* in - if > 0 then change log's size */
     serviceClassT logSvc,	/* in - if != 0 then change log service class */
     long xid			/* in - CFS transaction id */
 );
@@ -296,7 +296,7 @@ lgr_write(
     logHT logh,			/* in  - log handle */
     logRecAddrT * rec_addr,	/* out - log address of record written */
     logRecAddrT bwd_link,	/* in  - rec addr of client's prev rec */
-    uint32T * buf,		/* in  - record data buffer */
+    uint32_t * buf,		/* in  - record data buffer */
     int buf_words		/* in  - num words in buffer */
 );
 
@@ -349,7 +349,7 @@ lgr_read(
     logReadModeT rd_mode,	/* in  - read mode (fwd, bwd, bwd_link, ...) */
     logRdHT logrdh,		/* in  - lgr_read handle */
     logRecAddrT * rec_addr,	/* in/out  - log address of record */
-    uint32T ** buf,		/* out - ptr to record data */
+    uint32_t ** buf,		/* out - ptr to record data */
     int *buf_words,		/* out - words read */
     int *recWords		/* out - size of record (not just this
 				 * segment) */

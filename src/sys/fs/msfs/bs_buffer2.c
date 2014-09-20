@@ -403,7 +403,7 @@ blkmap_direct(struct bsBuf * bp,
     int nbytes,
     struct uucred * cred)
 {
-	uint32T page;
+	uint32_t page;
 	unsigned long next_block;
 	int bytes_left = nbytes;
 	int bytes_mapped;
@@ -433,7 +433,7 @@ blkmap_direct(struct bsBuf * bp,
 	/*
          * Determine the starting page.
          */
-	page = (uint32T) (starting_block / ADVFS_PGSZ_IN_BLKS);
+	page = (uint32_t) (starting_block / ADVFS_PGSZ_IN_BLKS);
 
 	/*
          * Map the first page.
@@ -532,7 +532,7 @@ blkmap_direct(struct bsBuf * bp,
 	bp->ioDesc.numBlks =
 	    min((ADVFS_PGSZ_IN_BLKS - ((int) starting_block % ADVFS_PGSZ_IN_BLKS)) *
 	    sector_size, bytes_left);
-	bp->ioDesc.blkDesc.vdBlk += (uint32T) ((int) starting_block % ADVFS_PGSZ_IN_BLKS);
+	bp->ioDesc.blkDesc.vdBlk += (uint32_t) ((int) starting_block % ADVFS_PGSZ_IN_BLKS);
 
 
 	/*
@@ -1063,7 +1063,7 @@ bs_refpg_int(
 	extern REPLICATED int SS_is_running;
 	struct timeval new_time;
 	int wday;
-	uint32T totHotCnt;
+	uint32_t totHotCnt;
 
 	KASSERT(bfap->refCnt != 0);
 
@@ -1094,7 +1094,7 @@ bs_refpg_int(
 	         * get the mapping.
 	         */
 
-		if (!page_is_mapped(bfap, (uint32T) bsPage, NULL, TRUE)) {
+		if (!page_is_mapped(bfap, (uint32_t) bsPage, NULL, TRUE)) {
 			useOrigMap = TRUE;
 		}
 	}
@@ -2341,7 +2341,7 @@ bs_pinpg_one_int(
 	extern REPLICATED int SS_is_running;
 	struct timeval new_time;
 	int wday;
-	uint32T totHotCnt;
+	uint32_t totHotCnt;
 
 	if (TrFlags & trPin)
 		bfr_trace(bfap->tag, bsPage, Pin, 0);
@@ -2596,7 +2596,7 @@ bs_pinpg_found(
 	}
 	/* On I/O error, return the status. */
 	if ((sts = bp->result) != EOK && !(sts >= MSFS_FIRST_ERR)) {
-		uint32T clear_flags = 0;
+		uint32_t clear_flags = 0;
 
 		bp->writeRef--;
 		if (flag & PINPG_SET_FLUSH) {
@@ -2960,14 +2960,14 @@ bs_pinpg_direct(void *addr,
 				 * it has been ref'd but no storage has been
 				 * associated with it yet.  So expunge its
 				 * very existence. */
-				bs_invalidate_pages(bfap, (uint32T) i, 1, 0);
+				bs_invalidate_pages(bfap, (uint32_t) i, 1, 0);
 				sts = EOK;
 				continue;
 			} else if (sts == EIO) {
 				/* A page in the cache cannot be flushed to
 				 * disk because of a real I/O error, so we
 				 * need to get rid of it and report the error. */
-				bs_invalidate_pages(bfap, (uint32T) i, 1, 0);
+				bs_invalidate_pages(bfap, (uint32_t) i, 1, 0);
 				break;
 			} else if (sts != EOK)
 				break;
@@ -3000,7 +3000,7 @@ bs_pinpg_direct(void *addr,
 						bs_unpinpg(bfPageRefH, logNilRecord,
 						    (((struct bsBuf *) bfPageRefH)->lock.state & DIRTY) ?
 						    UNPIN_DIO_DIRTY : UNPIN_DIO_CLEAN);
-						bs_invalidate_pages(bfap, (uint32T) i, 1, 0);
+						bs_invalidate_pages(bfap, (uint32_t) i, 1, 0);
 						sts = EFAULT;
 						break;
 					}
@@ -3032,7 +3032,7 @@ bs_pinpg_direct(void *addr,
 						bs_unpinpg(bfPageRefH, logNilRecord,
 						    (((struct bsBuf *) bfPageRefH)->lock.state & DIRTY) ?
 						    UNPIN_DIO_DIRTY : UNPIN_DIO_CLEAN);
-						bs_invalidate_pages(bfap, (uint32T) i, 1, 0);
+						bs_invalidate_pages(bfap, (uint32_t) i, 1, 0);
 						sts = EFAULT;
 						break;
 					}
@@ -3059,7 +3059,7 @@ bs_pinpg_direct(void *addr,
 			    logNilRecord,
 			    ((((struct bsBuf *) bfPageRefH)->lock.state & DIRTY) || flush_it) ?
 			    UNPIN_DIO_DIRTY : UNPIN_DIO_CLEAN);
-			bs_invalidate_pages(bfap, (uint32T) i, 1, 0);
+			bs_invalidate_pages(bfap, (uint32_t) i, 1, 0);
 
 			/*
 	                 * Get out if any problems.
@@ -3292,7 +3292,7 @@ bs_unpinpg(
 	extern REPLICATED int SS_is_running;
 	struct timeval new_time;
 	int wday;
-	uint32T totHotCnt;
+	uint32_t totHotCnt;
 
 	/* Convert the buffer handle. */
 	bp = (struct bsBuf *) bfPageRefH;
@@ -4063,7 +4063,7 @@ statusT
 bs_set_bufstate(
     bfPageRefHT bfPageRefH,	/* in */
     int ln,			/* in */
-    uint32T stateBit,		/* in */
+    uint32_t stateBit,		/* in */
     int waitFlag		/* in */
 )
 {
@@ -4103,7 +4103,7 @@ bs_set_bufstate(
 statusT
 bs_clear_bufstate(
     bfPageRefHT bfPageRefH,	/* in */
-    uint32T stateBit		/* in */
+    uint32_t stateBit		/* in */
 )
 {
 	struct bsBuf *bp;
@@ -4158,7 +4158,7 @@ void
 set_state(
     struct bsBuf * bp,		/* in */
     int ln,			/* in */
-    uint32T state		/* in */
+    uint32_t state		/* in */
 )
 {
 	int wait = 0;
@@ -4186,7 +4186,7 @@ set_state(
 void
 wait_state(
     struct bsBuf * bp,		/* in */
-    uint32T state		/* in */
+    uint32_t state		/* in */
 )
 {
 	int wait = 0;
@@ -4207,7 +4207,7 @@ wait_state(
 void
 clear_state(
     struct bsBuf * bp,		/* in */
-    uint32T state		/* in */
+    uint32_t state		/* in */
 )
 {
 	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
@@ -4315,7 +4315,7 @@ seq_ahead_cont(
 	int rdmaxio;
 	unsigned long startPage;
 	ioDescT *ioDescp;
-	uint32T local_vd_index;
+	uint32_t local_vd_index;
 	int listLen = 0;
 	ioDescT *ioListp;
 	long nPages;
@@ -4469,7 +4469,7 @@ seq_ahead_start(
 	struct vd *vdp;
 	int rdmaxio;
 	ioDescT *ioDescp;
-	uint32T local_vd_index;
+	uint32_t local_vd_index;
 	long nPages;
 	unsigned long endPage, maxPages, numBlocks;
 
@@ -4589,7 +4589,7 @@ seq_ahead(struct bfAccess * bfap,	/* in */
 	int flags;
 	struct timeval new_time;
 	int wday;
-	uint32T totHotCnt;
+	uint32_t totHotCnt;
 
 
 	*ioListp = NULL;
@@ -4636,7 +4636,7 @@ seq_ahead(struct bfAccess * bfap,	/* in */
 	                 * bs_refpg_int.
 	                 */
 
-			if (!page_is_mapped(bfap, (uint32T) bsPage, NULL, TRUE)) {
+			if (!page_is_mapped(bfap, (uint32_t) bsPage, NULL, TRUE)) {
 				useOrigMap = TRUE;
 			} else {
 				useOrigMap = FALSE;
@@ -4796,8 +4796,8 @@ seq_ahead(struct bfAccess * bfap,	/* in */
 void
 bs_invalidate_pages(
     bfAccessT * bfap,		/* in */
-    uint32T pageOffset,		/* in */
-    uint32T pageCnt,		/* in */
+    uint32_t pageOffset,		/* in */
+    uint32_t pageCnt,		/* in */
     int invalflag		/* in - CURRENTLY UNUSED */
 )
 {
@@ -4805,7 +4805,7 @@ bs_invalidate_pages(
 	long skipped_buffers, preempt_limit, max_cpu_ticks;
 	long *ptr_to_cpu_ticks;
 	int s;
-	uint32T found_pages = 0;
+	uint32_t found_pages = 0;
 	thread_t th;
 
 

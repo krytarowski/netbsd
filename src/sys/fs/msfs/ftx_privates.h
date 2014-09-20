@@ -86,21 +86,21 @@ typedef struct {
 	bfDomainIdT bfDmnId;	/* bitfile domain global unique id */
 	logRecAddrT crashRedo;	/* crash redo start log address */
 	ftxAgentIdT agentId;	/* ftx opx agent for this ftx node */
-	uint32T contOrUndoRBcnt;/* continuation/undo opx record byte count */
-	uint32T rootDRBcnt;	/* root done opx record byte count */
-	uint32T opRedoRBcnt;	/* redo opx record byte count */
+	uint32_t contOrUndoRBcnt;/* continuation/undo opx record byte count */
+	uint32_t rootDRBcnt;	/* root done opx record byte count */
+	uint32_t opRedoRBcnt;	/* redo opx record byte count */
 }      ftxDoneLRT;
 
 typedef struct {
 	bfTagT bfsTag;		/* bitfile set tag */
 	bfTagT tag;		/* bitfile tag */
-	uint32T page;		/* bitfile page number */
-	uint32T numXtnts;	/* number of record extents */
+	uint32_t page;		/* bitfile page number */
+	uint32_t numXtnts;	/* number of record extents */
 }      ftxRecRedoT;
 
 typedef struct {
-	uint32T pgBoff;		/* page relative extent byte offset */
-	uint32T bcnt;		/* record extent byte count */
+	uint32_t pgBoff;		/* page relative extent byte offset */
+	uint32_t bcnt;		/* record extent byte count */
 }      ftxRecXT;
 /***********************************************************
  *
@@ -240,7 +240,7 @@ typedef struct ftx {
 	perlvlT cLvl[FTX_MX_NEST];	/* per level data structures */
 	int rootDnCnt;		/* count of root done records */
 	int nextRDoff;		/* next root done record offset (long) */
-	int32T rootDoneRecs[FTX_RD_BFRSZ];	/* buffered root done records */
+	int32_t rootDoneRecs[FTX_RD_BFRSZ];	/* buffered root done records */
 	ftxContRecT contDesc;	/* continuation record descriptor */
 	lrDescT lrdesc;		/* so we don't malloc at ftx_done */
 }   ftxStateT;

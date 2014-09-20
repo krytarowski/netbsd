@@ -147,8 +147,8 @@ int FtxStats = 0;
 #ifdef ADVFS_FTX_TRACE
 	void
 	     ftx_trace(ftxStateT * ftxp,
-         uint16T module,
-         uint16T line,
+         uint16_t module,
+         uint16_t line,
          void *value)
 {
 	register ftxTraceElmtT *te;
@@ -858,7 +858,7 @@ ftx_done_urdr(
 	bzero(lrvecp, sizeof(lrDescT));
 	lrvecp->count = 1;
 	lrvecp->dataLcnt = 0;
-	lrvecp->bfrvec[0].bufPtr = (uint32T *) & ftxp->lrh;
+	lrvecp->bfrvec[0].bufPtr = (uint32_t *) & ftxp->lrh;
 	lrvecp->bfrvec[0].bufWords = (sizeof(ftxDoneLRT) + 3) / 4;
 
 	if (lvl != 0) {
@@ -1185,7 +1185,7 @@ ftx_fail_2(
 )
 {
 	int lgrreclcnt = 0;
-	uint32T *lgrrecp = 0;
+	uint32_t *lgrrecp = 0;
 	unsigned int ftxSlot;
 	ftxStateT *ftxp;
 	statusT sts, lrsts = EOK;
@@ -1288,7 +1288,7 @@ ftx_fail_2(
 		lrsts = lgr_read(LR_BWD_LINK,
 		    logrh,
 		    &ftxp->undoBackLink,
-		    (uint32T **) & ftxDLRp,
+		    (uint32_t **) & ftxDLRp,
 		    &segwordcnt,
 		    &recwordcnt);
 
@@ -1302,7 +1302,7 @@ ftx_fail_2(
 			lgr_read_close(logrh);	/* close the log read stream */
 			goto free_ftx;
 		} else if ((lrsts == I_LOG_REC_SEGMENT)) {
-			uint32T *segptr;
+			uint32_t *segptr;
 
 			/* segmented record - get the whole thing into a
 			 * buffer (lgrrecp) */
@@ -1312,7 +1312,7 @@ ftx_fail_2(
 					ms_free(lgrrecp);
 				}
 				lgrreclcnt = recwordcnt;
-				lgrrecp = (uint32T *) ms_malloc(lgrreclcnt * 4);
+				lgrrecp = (uint32_t *) ms_malloc(lgrreclcnt * 4);
 			}
 			bcopy((char *) ftxDLRp, (char *) lgrrecp, segwordcnt * 4);
 
@@ -1501,7 +1501,7 @@ ftx_fail_2(
 			bzero(lrvecp, sizeof(lrDescT));
 			lrvecp->count = 1;
 			lrvecp->dataLcnt = 0;
-			lrvecp->bfrvec[0].bufPtr = (uint32T *) & ftxp->lrh;
+			lrvecp->bfrvec[0].bufPtr = (uint32_t *) & ftxp->lrh;
 			lrvecp->bfrvec[0].bufWords = (sizeof(ftxDoneLRT) + 3) / 4;
 
 			/* buffer record image redo */
@@ -1572,7 +1572,7 @@ ftx_fail_2(
 
 		lrvecp->count = 1;
 		lrvecp->dataLcnt = 0;
-		lrvecp->bfrvec[0].bufPtr = (uint32T *) & ftxp->lrh;
+		lrvecp->bfrvec[0].bufPtr = (uint32_t *) & ftxp->lrh;
 		lrvecp->bfrvec[0].bufWords = (sizeof(ftxDoneLRT) + 3) / 4;
 
 		ftxp->undoBackLink = logEndOfRecords;
@@ -2207,7 +2207,7 @@ addone_rtdn(
 {
 	int i = lrdp->count++;
 	int words, nextrdoff;
-	int32T *dp;
+	int32_t *dp;
 
 	if (!recptr) {
 		ADVFS_SAD0("addone_rtdn: no rootdone proc record");
@@ -2233,7 +2233,7 @@ addone_rtdn(
 	((ftxRDHdrT *) dp)->bCnt = ftxp->lrh.rootDRBcnt;
 	dp += sizeof(ftxRDHdrT) / 4;
 	for (i = 0; i < words; i++) {
-		dp[i] = ((uint32T *) recptr)[i];
+		dp[i] = ((uint32_t *) recptr)[i];
 	}
 	ftxp->rootDnCnt += 1;
 	ftxp->nextRDoff = nextrdoff;
@@ -2296,13 +2296,13 @@ addone_recredo(
 		if ((veci = lrdp->count++) >= sizeof(lrdp->bfrvec) / 4) {
 			ADVFS_SAD0("addone_recredo: too many log vector elements(1)");
 		}
-		lrdp->bfrvec[veci].bufPtr = (uint32T *) & fpp->pgdesc;
+		lrdp->bfrvec[veci].bufPtr = (uint32_t *) & fpp->pgdesc;
 		lrdp->dataLcnt += (lrdp->bfrvec[veci].bufWords = sizeof(ftxRecRedoT) / 4);
 
 		if ((veci = lrdp->count++) >= sizeof(lrdp->bfrvec) / 4) {
 			ADVFS_SAD0("addone_recredo: too many log vector elements(2)");
 		}
-		lrdp->bfrvec[veci].bufPtr = (uint32T *) plpp->recX;
+		lrdp->bfrvec[veci].bufPtr = (uint32_t *) plpp->recX;
 		lrdp->dataLcnt += (lrdp->bfrvec[veci].bufWords =
 		    plpp->numXtnts * sizeof(ftxRecXT) / 4);
 
@@ -2312,7 +2312,7 @@ addone_recredo(
 			if ((veci = lrdp->count++) >= sizeof(lrdp->bfrvec) / 4) {
 				ADVFS_SAD0("addone_recredo: too many log vector elements(3)");
 			}
-			lrdp->bfrvec[veci].bufPtr = (uint32T *) fpp->pgAddr +
+			lrdp->bfrvec[veci].bufPtr = (uint32_t *) fpp->pgAddr +
 			    (mrecxp->pgBoff >> 2);
 			lrdp->dataLcnt += (lrdp->bfrvec[veci].bufWords =
 			    ((mrecxp->pgBoff & 3) + mrecxp->bcnt + 3) >> 2);

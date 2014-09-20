@@ -198,15 +198,15 @@ static statusT
 ss_find_space(
     vdT * vdp,
     uint64T requestedBlkCnt,
-    uint32T * allocBlkOffp,
-    uint32T * allocPageCnt,
+    uint32_t * allocBlkOffp,
+    uint32_t * allocPageCnt,
     int flags);
 
 static statusT
 ss_get_n_lk_free_space(vdT * vdp,
     uint64T bfPageSize,
     uint64T reqPageCnt,
-    uint32T * allocBlkOffp,
+    uint32_t * allocBlkOffp,
     uint64T * allocPageCnt,
     int alloc_hint);
 
@@ -285,7 +285,7 @@ ss_insert_frag_onto_list(vdIndexT vdi,
     bfTagT tag,
     bfSetIdT bfSetId,
     uint64T fragRatio,		/* primary sort in list */
-    uint32T xtntCnt);		/* secondary sort in list */
+    uint32_t xtntCnt);		/* secondary sort in list */
 
 static void
 ss_dealloc_frag_list(vdT * vdp);
@@ -1845,11 +1845,11 @@ ss_copy_rec_from_disk(bsSSDmnAttrT * ssAttr,	/* in */
 	dmnP->ssDmnInfo.ssFilesIOBal = ssAttr->ssFilesIOBal;
 	dmnP->ssDmnInfo.ssExtentsConsol = ssAttr->ssExtentsConsol;
 	dmnP->ssDmnInfo.ssPagesConsol = ssAttr->ssPagesConsol;
-	dmnP->ssDmnInfo.ssSteadyState = (uint32T) ssAttr->ssSteadyState;
+	dmnP->ssDmnInfo.ssSteadyState = (uint32_t) ssAttr->ssSteadyState;
 	dmnP->ssDmnInfo.ssMinutesInHotList = ssAttr->ssMinutesInHotList;
-	dmnP->ssDmnInfo.ssReserved0 = (uint32T) ssAttr->ssReserved0;
-	dmnP->ssDmnInfo.ssReserved1 = (uint32T) ssAttr->ssReserved1;
-	dmnP->ssDmnInfo.ssReserved2 = (uint32T) ssAttr->ssReserved2;
+	dmnP->ssDmnInfo.ssReserved0 = (uint32_t) ssAttr->ssReserved0;
+	dmnP->ssDmnInfo.ssReserved1 = (uint32_t) ssAttr->ssReserved1;
+	dmnP->ssDmnInfo.ssReserved2 = (uint32_t) ssAttr->ssReserved2;
 	return;
 }
 /*********************************************************************
@@ -1874,7 +1874,7 @@ ss_copy_rec_to_disk(domainT * dmnP,	/* in */
 	ssAttr->ssMaxPercentOfIoWhenBusy =
 	    dmnP->ssDmnInfo.ssMaxPercentOfIoWhenBusy;
 	ssAttr->ssAccessThreshHits = dmnP->ssDmnInfo.ssAccessThreshHits;
-	ssAttr->ssSteadyState = (uint16T) dmnP->ssDmnInfo.ssSteadyState;
+	ssAttr->ssSteadyState = (uint16_t) dmnP->ssDmnInfo.ssSteadyState;
 
 	/* statistics */
 	ssAttr->ssFilesDefraged = dmnP->ssDmnInfo.ssFilesDefraged;
@@ -1885,9 +1885,9 @@ ss_copy_rec_to_disk(domainT * dmnP,	/* in */
 	ssAttr->ssPagesConsol = dmnP->ssDmnInfo.ssPagesConsol;
 
 	/* extras on-disk */
-	ssAttr->ssReserved0 = (uint16T) dmnP->ssDmnInfo.ssReserved0;
-	ssAttr->ssReserved1 = (uint16T) dmnP->ssDmnInfo.ssReserved1;
-	ssAttr->ssReserved2 = (uint16T) dmnP->ssDmnInfo.ssReserved2;
+	ssAttr->ssReserved0 = (uint16_t) dmnP->ssDmnInfo.ssReserved0;
+	ssAttr->ssReserved1 = (uint16_t) dmnP->ssDmnInfo.ssReserved1;
+	ssAttr->ssReserved2 = (uint16_t) dmnP->ssDmnInfo.ssReserved2;
 	return;
 }
 
@@ -1981,8 +1981,8 @@ HANDLE_EXCEPTION:
 #ifdef ADVFS_SS_TRACE
 void
 ss_trace(vdT * vdp,
-    uint16T module,
-    uint16T line,
+    uint16_t module,
+    uint16_t line,
     long value1,
     long value2,
     long value3,
@@ -2032,9 +2032,9 @@ ss_xtnt_counter(bfAccessT * bfap)
 {
 	bsInMemXtntMapT *xtntMap = NULL;
 	int totXtnts = 0;
-	uint32T i, j;
+	uint32_t i, j;
 	uint64T curr_blk, prev_blk, last_valid_blk;
-	uint32T last_pageCnt = 0;
+	uint32_t last_pageCnt = 0;
 	statusT sts = EOK;
 
 	switch (bfap->xtnts.type) {
@@ -2123,10 +2123,10 @@ ss_chk_fragratio(
     bfAccessT * bfap		/* in */
 )
 {
-	uint32T totXtnts = 0;
+	uint32_t totXtnts = 0;
 	bfSetIdT bfSetId;
 	ssListMsgT *listmsg;
-	uint32T allocPageCnt = 0;
+	uint32_t allocPageCnt = 0;
 	vdT *vdp;
 	statusT sts = EOK;
 	int vd_refed = FALSE;
@@ -2238,7 +2238,7 @@ ss_insert_frag_onto_list(vdIndexT vdi,
     bfTagT tag,
     bfSetIdT bfSetId,
     uint64T fragRatio,		/* primary sort in list */
-    uint32T xtntCnt)
+    uint32_t xtntCnt)
 {				/* secondary sort in list */
 	domainT *dmnP;
 	bfSetT *bfSetp;
@@ -3676,15 +3676,15 @@ static statusT
 ss_find_space(
     vdT * vdp,			/* in - vd on which to find the free blocks */
     uint64T requestedBlkCnt,	/* in - number of pages requested */
-    uint32T * blkOffset,	/* out - ptr to new, clear sbm locked range */
-    uint32T * blkCnt,		/* out - count of pages locked */
+    uint32_t * blkOffset,	/* out - ptr to new, clear sbm locked range */
+    uint32_t * blkCnt,		/* out - count of pages locked */
     int flags)
 {
 	int sbm_locked = FALSE;
 	void *stgDesc = NULL;
 	statusT sts = EOK;
-	uint32T locblkOffset;
-	uint32T locblkCnt;
+	uint32_t locblkOffset;
+	uint32_t locblkCnt;
 
 	STGMAP_LOCK_WRITE(&vdp->stgMap_lk)
 	    sbm_locked = TRUE;
@@ -3746,7 +3746,7 @@ ss_get_n_lk_free_space(
     vdT * vdp,			/* in - vd on which to find the free blocks */
     uint64T bfPageSize,		/* in - size of one page */
     uint64T reqPageCnt,		/* in - number of pages requested */
-    uint32T * allocBlkOffp,	/* out - ptr to new, clear sbm locked range */
+    uint32_t * allocBlkOffp,	/* out - ptr to new, clear sbm locked range */
     uint64T * allocPageCnt,	/* out - count of pages locked */
     int alloc_hint)
 {				/* in - hint for type of allocation */
@@ -3755,10 +3755,10 @@ ss_get_n_lk_free_space(
 	statusT sts = EOK;
 	uint64T startClust = 0, numClust = 0, clustCnt;
 	int sbm_range_locked = FALSE;
-	uint32T scanBlkOffset = 0;
-	uint32T blkCnt;
-	uint32T blkOffset = 0;
-	uint32T newBlkOffset = 0;
+	uint32_t scanBlkOffset = 0;
+	uint32_t blkCnt;
+	uint32_t blkOffset = 0;
+	uint32_t newBlkOffset = 0;
 	uint64T totFreeBlks = 0;
 
 	/* (WITHOUT new Storage Reservation) Try to find space for the
@@ -4058,7 +4058,7 @@ ss_get_most_xtnts(bfAccessT * bfap,	/* in - file */
 	bsInMemSubXtntMapT *subXtntMap;
 	uint64T savedStartPage = 0, savedPageCnt = 0, savedXmPageCnt = 0, bestExtentCnt = 0, consecutivePageCnt = 0, consecutiveXmPageCnt = 0, consecutiveExtentCnt = 0;
 	statusT sts = EOK;
-	uint32T pageCnt = 0;
+	uint32_t pageCnt = 0;
 	bsXtntDescT startXtntDesc;
 	bsInMemXtntDescIdT xtntDescId;
 	bsXtntDescT nextXtntDesc;
@@ -4144,7 +4144,7 @@ ss_get_vd_most_free(bfAccessT * bfap,
 	int vdCnt, vdi;
 	statusT sts = EOK;
 	uint64T savedtotFreeBlks = 0, requestedBlkCnt;
-	uint32T blkCnt = 0, blkOffset;
+	uint32_t blkCnt = 0, blkOffset;
 
 	*newVdIndex = 0;
 
@@ -4233,7 +4233,7 @@ ss_vd_migrate(bfTagT filetag,
 	vdT *dvdp = NULL;
 	uint64T srcPageOffset, migPageCnt, newBlkOffset, xmEndPage, xmTotalPageCnt = 0, allocTotalPageCnt = 0, allocPagesLeft, pgsMigSoFar, extentCnt = 0;
 	uint64T consecutivePageCnt, page;
-	uint32T allocBlkOffset = 0;	/* sbm is free starting at this
+	uint32_t allocBlkOffset = 0;	/* sbm is free starting at this
 					 * location. */
 	uint64T reqPageCnt = 0,	/* number pages requested to defragment
 				 * complete file */
@@ -4241,7 +4241,7 @@ ss_vd_migrate(bfTagT filetag,
 	int pageSize;		/* size in blks of a page */
 	int nextpage;		/* next xm page in file */
 	int wholeFile = TRUE;
-	uint32T totXtnts = 0;
+	uint32_t totXtnts = 0;
 	int vdRefed = FALSE;
 	vdIndexT dstVdIndex = 0, newDstVdIndex = 0;
 	int xtntmap_locked = FALSE;
@@ -4626,7 +4626,7 @@ ss_blks_on_vd(bfAccessT * bfap,	/* in */
 )
 {
 	uint64T tot_blks_on_vd = 0;
-	uint32T i;
+	uint32_t i;
 	bsInMemXtntMapT *xtntMap = NULL;
 	bsInMemSubXtntMapT *subXtntMap = NULL;
 	statusT sts = EOK;
@@ -4955,7 +4955,7 @@ ss_find_hot_target_vd(domainT * dmnP,	/* in */
 	int i, wday, targ, targetVolumeIndex = -1, bestVolumeIndex, vdi,
 	    vdCnt, validVd;
 	volDataT *volData = NULL;
-	uint16T topHotLstCnt = 0;
+	uint16_t topHotLstCnt = 0;
 	int hot_lock_taken = FALSE;
 
 	if ((TEST_DMNP(dmnP) != EOK) ||

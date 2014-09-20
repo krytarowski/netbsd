@@ -27,10 +27,10 @@
 #define _BS_INMEM_MAP_
 
 typedef struct {
-	uint32T pageOffset;
-	uint32T pageCnt;
+	uint32_t pageOffset;
+	uint32_t pageCnt;
 	vdIndexT volIndex;
-	uint32T blkOffset;
+	uint32_t blkOffset;
 }      bsXtntDescT;
 /*
  * bsInMemXtntDescIdT - Identifies an extent descriptor in an in-memory extent
@@ -39,15 +39,15 @@ typedef struct {
  */
 
 typedef struct bsInMemXtntDescId {
-	uint32T subXtntMapIndex;
-	uint32T xtntDescIndex;
+	uint32_t subXtntMapIndex;
+	uint32_t xtntDescIndex;
 }                 bsInMemXtntDescIdT;
 statusT
 imm_create_xtnt_map(
-    uint32T blksPerPage,	/* in */
+    uint32_t blksPerPage,	/* in */
     domainT * domain,		/* in */
-    uint32T maxCnt,		/* in */
-    uint32T termPage,		/* in */
+    uint32_t maxCnt,		/* in */
+    uint32_t termPage,		/* in */
     vdIndexT termVdIndex,	/* in */
     bsInMemXtntMapT ** newXtntMap	/* out */
 );
@@ -55,10 +55,10 @@ imm_create_xtnt_map(
 statusT
 imm_init_xtnt_map(
     bsInMemXtntMapT * xtntMap,	/* in */
-    uint32T blksPerPage,	/* in */
+    uint32_t blksPerPage,	/* in */
     domainT * domain,		/* in */
-    uint32T maxCnt,		/* in */
-    uint32T termPage,		/* in */
+    uint32_t maxCnt,		/* in */
+    uint32_t termPage,		/* in */
     vdIndexT termVdIndex	/* in */
 );
 
@@ -74,8 +74,8 @@ imm_get_xtnt_map_size(
 
 statusT
 imm_compress_xtnt_map(
-    uint32T segmentSize,	/* in */
-    uint32T cnt,		/* in */
+    uint32_t segmentSize,	/* in */
+    uint32_t cnt,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     bsXtntMapTypeT bsXtntMapType,	/* in */
     bsInMemXtntMapT ** newXtntMap	/* out */
@@ -89,7 +89,7 @@ imm_get_first_xtnt_desc(
 
 void
 imm_get_xtnt_desc(
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     int updateFlg,		/* in */
     bsInMemXtntDescIdT * xtntDescId,	/* out */
@@ -124,13 +124,13 @@ imm_copy_sub_xtnt_map(
 statusT
 imm_init_sub_xtnt_map(
     bsInMemSubXtntMapT * subXtntMap,	/* in */
-    uint32T pageOffset,		/* in */
-    uint32T pageCnt,		/* in */
+    uint32_t pageOffset,		/* in */
+    uint32_t pageCnt,		/* in */
     vdIndexT vdIndex,		/* in */
     bfMCIdT mcellId,		/* in */
-    uint32T type,		/* in */
-    uint32T onDiskMaxCnt,	/* in */
-    uint32T maxCnt		/* in */
+    uint32_t type,		/* in */
+    uint32_t onDiskMaxCnt,	/* in */
+    uint32_t maxCnt		/* in */
 );
 
 statusT
@@ -154,7 +154,7 @@ statusT
 imm_copy_xtnt_descs(
     vdIndexT copyVdIndex,	/* in */
     bsXtntT * copyBsXA,		/* in */
-    uint32T copyCnt,		/* in */
+    uint32_t copyCnt,		/* in */
     int copyHoleFlag,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     bsXtntMapTypeT bsXtntMapType/* in */
@@ -162,8 +162,8 @@ imm_copy_xtnt_descs(
 
 void
 imm_split_desc(
-    uint32T pageOffset,		/* in */
-    uint32T pageSize,		/* in */
+    uint32_t pageOffset,		/* in */
+    uint32_t pageSize,		/* in */
     bsXtntT * srcDesc,		/* in */
     bsXtntT * part1Desc,	/* in/modified */
     bsXtntT * part2Desc		/* in/modified */
@@ -171,7 +171,7 @@ imm_split_desc(
 
 statusT
 imm_replace_xtnt_desc(
-    uint32T pageSize,		/* in */
+    uint32_t pageSize,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     bsInMemXtntMapT * subXtntMap/* in */
 );
@@ -179,49 +179,49 @@ imm_replace_xtnt_desc(
 statusT
 imm_get_alloc_page_cnt(
     bsInMemXtntMapT * xtntMap,	/* in */
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
-    uint32T * allocPageCnt	/* out */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
+    uint32_t * allocPageCnt	/* out */
 );
 
-uint32T
+uint32_t
 imm_get_next_page(
     bsInMemXtntT * xtnts	/* in */
 );
 
-uint32T
+uint32_t
 imm_get_hole_size(
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     bsInMemXtntT * xtnts	/* in */
 );
 
 statusT
 imm_get_page_type(
     bsInMemXtntT * xtnts,	/* in */
-    uint32T pageOffset		/* in */
+    uint32_t pageOffset		/* in */
 );
 
 void
 imm_set_next_valid_copy_page(
     bsInMemXtntT * xtnts,	/* in */
-    uint32T bfPageOffset	/* in */
+    uint32_t bfPageOffset	/* in */
 );
 
 statusT
 imm_page_to_sub_xtnt_map(
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     int updateFlg,		/* in */
-    uint32T * index		/* out */
+    uint32_t * index		/* out */
 );
 
 statusT
 imm_page_to_xtnt(
-    uint32T pageOffset,		/* in */
+    uint32_t pageOffset,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */
     int updateFlg,		/* in */
     int permHoleFlg,		/* in */
-    uint32T * index		/* out */
+    uint32_t * index		/* out */
 );
 
 statusT
@@ -235,7 +235,7 @@ imm_merge_xtnt_map(
 
 statusT
 overlay_xtnt_map(bfAccessT * bfap,	/* in */
-    uint32T stripeIndex,	/* in */
+    uint32_t stripeIndex,	/* in */
     bsInMemXtntMapT * baseXtntMap,	/* in */
     bsInMemXtntMapT * overXtntMap,	/* in */
     bsInMemXtntMapT ** retModXtntMap,	/* out */
@@ -260,12 +260,12 @@ imm_copy_xtnt_map(
 
 statusT
 imm_remove_page_map(
-    uint32T bfPageOffset,	/* in */
-    uint32T bfPageCnt,		/* in */
+    uint32_t bfPageOffset,	/* in */
+    uint32_t bfPageCnt,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     bsXtntMapTypeT bsXtntMapType,	/* in */
-    uint32T * remPageOffset,	/* out */
-    uint32T * remPageCnt	/* out */
+    uint32_t * remPageOffset,	/* out */
+    uint32_t * remPageCnt	/* out */
 );
 
 void

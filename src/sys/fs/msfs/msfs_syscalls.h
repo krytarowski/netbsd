@@ -43,9 +43,9 @@ typedef int opIndexT;
 
 typedef unsigned long u64T;
 typedef long i64T;
-typedef uint32T u32T;
-typedef int32T i32T;
-typedef uint16T u16T;
+typedef uint32_t u32T;
+typedef int32_t i32T;
+typedef uint16_t u16T;
 
 typedef int mlStatusT;
 
@@ -426,8 +426,8 @@ typedef struct mlFileSetStats {
 typedef struct mlFragDesc {
 	bfTagT ssFragTag;
 	bfSetIdT ssFragBfSetId;
-	uint32T ssFragRatio;
-	uint32T ssXtntCnt;
+	uint32_t ssFragRatio;
+	uint32_t ssXtntCnt;
 }          mlFragDescT;
 
 typedef struct mlHotDesc {
@@ -435,7 +435,7 @@ typedef struct mlHotDesc {
 	bfSetIdT ssHotBfSetId;
 	int ssHotPlaced;
 	int ssHotVdi;
-	uint32T ssHotIOCnt;
+	uint32_t ssHotIOCnt;
 	time_t ssHotLastUpdTime;
 	time_t ssHotEntryTime;
 	time_t ssHotErrTime;
@@ -444,24 +444,24 @@ typedef struct mlHotDesc {
 typedef struct mlSSDmnParams {
 	time_t ssFirstMountTime;
 	/* UI visable configurable options */
-	uint32T ssDmnDefragment;
-	uint32T ssDmnSmartPlace;
-	uint32T ssDmnBalance;
-	uint32T ssDmnDirectIo;
-	uint32T ssMaxPercentOfIoWhenBusy;
-	uint32T ssFilesDefraged;
-	uint32T ssPagesDefraged;
-	uint32T ssPagesBalanced;
-	uint32T ssFilesIOBal;
-	uint32T ssExtentsConsol;
-	uint32T ssPagesConsol;
+	uint32_t ssDmnDefragment;
+	uint32_t ssDmnSmartPlace;
+	uint32_t ssDmnBalance;
+	uint32_t ssDmnDirectIo;
+	uint32_t ssMaxPercentOfIoWhenBusy;
+	uint32_t ssFilesDefraged;
+	uint32_t ssPagesDefraged;
+	uint32_t ssPagesBalanced;
+	uint32_t ssFilesIOBal;
+	uint32_t ssExtentsConsol;
+	uint32_t ssPagesConsol;
 	/* UI hidden configurable options */
-	uint32T ssAccessThreshHits;
-	uint32T ssSteadyState;
-	uint32T ssMinutesInHotList;
-	uint32T ssReserved0;
-	uint32T ssReserved1;
-	uint32T ssReserved2;
+	uint32_t ssAccessThreshHits;
+	uint32_t ssSteadyState;
+	uint32_t ssMinutesInHotList;
+	uint32_t ssReserved0;
+	uint32_t ssReserved1;
+	uint32_t ssReserved2;
 }             mlSSDmnParamsT;
 
 typedef enum {			/* Important::keep same order as bs_ods.h;
@@ -1056,7 +1056,7 @@ msfs_fset_create(
     char *setName,		/* in - set's name */
     mlServiceClassT reqServ,	/* in - required service class */
     mlServiceClassT optServ,	/* in - optional service class */
-    uint32T fsetOptions,	/* in - fileset options */
+    uint32_t fsetOptions,	/* in - fileset options */
     gid_t quotaId,		/* in - group ID for quota files */
     mlBfSetIdT * bfSetId	/* out - bitfile set id */
 );

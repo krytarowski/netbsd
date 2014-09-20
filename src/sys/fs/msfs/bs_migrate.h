@@ -44,11 +44,11 @@ statusT
 mig_migrate(
     bfAccessT * bfAccess,	/* in */
     vdIndexT srcVdIndex,	/* in */
-    uint32T srcPageOffset,	/* in */
-    uint32T srcPageCnt,		/* in */
+    uint32_t srcPageOffset,	/* in */
+    uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
     uint64T dstBlkOffset,	/* in */
-    uint32T forceFlag,		/* in */
+    uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 );
 

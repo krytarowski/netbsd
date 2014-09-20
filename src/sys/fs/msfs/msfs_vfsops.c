@@ -167,7 +167,7 @@ krwlock_t FilesetLock;
 {
 	extern dev_t rootdev;
 	extern dev_t global_rootdev[];
-	extern uint32T global_rootdev_count;
+	extern uint32_t global_rootdev_count;
 
 	struct nstatfs *sbp;
 
@@ -1525,7 +1525,7 @@ check_vd_sizes(struct fileSetNode * fsnp)
 								 * read */
 					     clust_to_skip;	/* Off. of last in-use
 								 * cl. */
-					uint32T cur_word;	/* Curr. word in SBM
+					uint32_t cur_word;	/* Curr. word in SBM
 								 * page */
 					int done,	/* TRUE if page is found */
 					    sbm_word,	/* Current word in SBM */
