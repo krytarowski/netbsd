@@ -56,21 +56,21 @@ bsBfSetAttrT NilBfSetAttr = {0};
  *    bs_service_classes.h constants
  ****************************************************************************/
 
-vdLstSgmntT nilVdLstSgmnt = NULL_STRUCT;
+vdLstSgmntT nilVdLstSgmnt = { 0 };
 scEntryT nilScEntry = {0, 0, 0, -1, 0, 0};
-serviceClassTblT nilServiceClassTbl = NULL_STRUCT;
+serviceClassTblT nilServiceClassTbl = { 0 };
 
 /****************************************************************************
  *    bs_domain.h constants
  ****************************************************************************/
 
-domainT nilDomain = NULL_STRUCT;
+domainT nilDomain = { 0 };
 
 /****************************************************************************
  *    bs_bitfile_sets.h constants
  ****************************************************************************/
 
-bfSetT nilBfSet = NULL_STRUCT;
+bfSetT nilBfSet = { 0 };
 bsrRsvd17T DefbsrRsvd17 = {0x4, 5, 0, 5, 50, 100, 0, 0};
 
 

@@ -35,12 +35,7 @@
 #define REUSABLE_TAGS
 #endif
 
-#ifdef _KERNEL
-#endif				/* _KERNEL */
-
 #include <fs/msfs/advfs_modules.h>
-
-#define NULL_STRUCT { 0 }
 
 /*
  * Magic numbers for validation of in-memory structures.
@@ -257,6 +252,7 @@ typedef struct ftxH {
 	signed hndl:16;		/* handle into active ftx table */
 	unsigned level:8;	/* ftx level (root = 0) */
 }    ftxHT;
+
 #ifdef __arch32__
 typedef struct {
 	uint32_t low;

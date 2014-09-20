@@ -90,7 +90,7 @@ krwlock_t DmnTblLock;		/* syncs activation/deactivation */
 struct bsMPg *Dpgp = NULL;
 struct bsMPg *GRpgp = NULL;
 
-vdDescT nilVdDesc = NULL_STRUCT;
+vdDescT nilVdDesc = { 0 };
 
 #define  DMNTBL_LOCK_WRITE( sLk ) \
     lock_write( sLk );

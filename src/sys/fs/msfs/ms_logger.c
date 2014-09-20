@@ -168,8 +168,8 @@ typedef struct logRecHdr {
  */
 #define LOG_RECS_PG (DATA_WORDS_PG / TOT_HDR_WORDS)
 
-static const wtPgDescT NilWtPgDesc = NULL_STRUCT;
-static const logDescT NilLogDesc = NULL_STRUCT;
+static const wtPgDescT NilWtPgDesc = { 0 };
+static const logDescT NilLogDesc = { 0 };
 
 /*
  *** Global Variables
@@ -501,7 +501,7 @@ lgr_make_pg_safe(
          */
 
 	if (ldP->logAccP->dmnP->dmnFlag & BFD_DUAL_MOUNT_IN_PROGRESS) {
-		bfDomainIdT nilDomainId = NULL_STRUCT;
+		bfDomainIdT nilDomainId = { 0 };
 
 		if (!BS_UID_EQL(ldP->logAccP->dmnP->dualMountId, nilDomainId)) {
 			domainId = ldP->logAccP->dmnP->dualMountId;
@@ -849,7 +849,7 @@ lgr_valid_pg(
 	bfDomainIdT domainId = logAccP->dmnP->domainId;
 
 	if (logAccP->dmnP->dmnFlag & BFD_DUAL_MOUNT_IN_PROGRESS) {
-		bfDomainIdT nilDomainId = NULL_STRUCT;
+		bfDomainIdT nilDomainId = { 0 };
 
 		if (!BS_UID_EQL(logAccP->dmnP->dualMountId, nilDomainId)) {
 			domainId = logAccP->dmnP->dualMountId;

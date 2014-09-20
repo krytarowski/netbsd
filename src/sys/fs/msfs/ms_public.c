@@ -48,14 +48,14 @@
 
 bfTagT NilBfTag = {0};
 
-bfDomainIdT nilBfDomainId = NULL_STRUCT;
+bfDomainIdT nilBfDomainId = { 0 };
 
-bfSetIdT nilBfSetId = NULL_STRUCT;
+bfSetIdT nilBfSetId = { 0 };
 
 bfPageRefHT NilBfPageRefH = {0};
 
 logRecAddrT logEndOfRecords = {0xffffffff, 0xffffffff, 0};
-logRecAddrT logNilRecord = NULL_STRUCT;
+logRecAddrT logNilRecord = { 0 };
 
 bfFragIdT bsNilFragId = {0, BF_FRAG_ANY};
 
