@@ -188,7 +188,7 @@ start:
 	                 * since this thread is violating the normal hierarchy
 	                 * locking order.
 	                 */
-			if (!mutex_enter_try(&bfap->bfaLock.mutex)) {
+			if (!mutex_tryenter(&bfap->bfaLock.mutex)) {
 				mutex_exit(&bfSetp->accessChainLock);
 				goto start;
 			}

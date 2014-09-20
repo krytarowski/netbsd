@@ -1154,7 +1154,7 @@ loop:
 			bp = bp->lsnFwd;
 			continue;
 		}
-		if (!mutex_enter_try(&bp->bufLock.mutex)) {
+		if (!mutex_tryenter(&bp->bufLock.mutex)) {
 			/* try to reseize in order.  Buffers are added only at
 			 * the end of the lsnList, so we don't have to worry
 			 * about buffers having been inserted in front of this
@@ -1416,7 +1416,7 @@ loop:
 			bp = bp->lsnFwd;
 			continue;
 		}
-		if (!mutex_enter_try(&bp->bufLock.mutex)) {
+		if (!mutex_tryenter(&bp->bufLock.mutex)) {
 			nextbp = bp->lsnFwd;
 			/* Drop UBC page (pg_hold count) reference. */
 			ubc_page_release(bp->vmpage, B_WRITE);
@@ -2723,7 +2723,7 @@ restart:
 		 * simplest. If it doesn't work, we must relock in order and
 		 * check that the buffer state is still what we expect (on
 		 * dirty list, not BUSY). */
-		if (!mutex_enter_try(&bp->bufLock.mutex)) {
+		if (!mutex_tryenter(&bp->bufLock.mutex)) {
 			mutex_exit(&bfap->bfIoLock);
 			mutex_enter(&bp->bufLock);
 			mutex_enter(&bfap->bfIoLock);
@@ -3004,7 +3004,7 @@ loop:
 		/* Try to lock each buffer out of hierarchy order. If this
 		 * fails, relock in correct order, but be sure that buffer is
 		 * still on dirty list after the locks are held. */
-		if (!mutex_enter_try(&bp->bufLock.mutex)) {
+		if (!mutex_tryenter(&bp->bufLock.mutex)) {
 			mutex_exit(&bfap->bfIoLock);
 			mutex_enter(&bp->bufLock);
 			mutex_enter(&bfap->bfIoLock);
@@ -3983,7 +3983,7 @@ loop:
 		/* Try to lock each buffer out of hierarchy order. If this
 		 * fails, relock in correct order, but be sure that buffer is
 		 * still on dirty list after the locks are held. */
-		if (!mutex_enter_try(&bp->bufLock.mutex)) {
+		if (!mutex_tryenter(&bp->bufLock.mutex)) {
 			mutex_exit(&bfap->bfIoLock);
 			mutex_enter(&bp->bufLock);
 			mutex_enter(&bfap->bfIoLock);
@@ -4603,7 +4603,7 @@ again:
 
 			lockptr = &qhdr->ioQLock;
 
-			if (!mutex_enter_try(&lockptr->mutex)) {
+			if (!mutex_tryenter(&lockptr->mutex)) {
 
 				mutex_exit(&bp->bufLock);
 

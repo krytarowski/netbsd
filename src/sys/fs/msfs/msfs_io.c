@@ -1474,7 +1474,7 @@ get_locks(ioDescHdrT * qhdr, vdT * vdp, qtypeT qindex, int *locks_held)
 	errT error = OK;
 
 	KASSERT(SLOCK_HOLDER(&vdp->devQ.ioQLock.mutex));
-	if (!mutex_enter_try(&qhdr->ioQLock.mutex)) {
+	if (!mutex_tryenter(&qhdr->ioQLock.mutex)) {
 
 		mutex_exit(&vdp->devQ.ioQLock);
 		mutex_enter(&qhdr->ioQLock);
