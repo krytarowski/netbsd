@@ -469,7 +469,7 @@ blkmap_direct(struct bsBuf * bp,
 				KASSERT(contextp);	/* cannot be an internal
 								 * open */
 				/* Object safety already has lock */
-				if (!bfap->bfSetp->bfSetFlags & BFS_OD_OBJ_SAFETY) {
+				if (!(bfap->bfSetp->bfSetFlags & BFS_OD_OBJ_SAFETY)) {
 					FS_FILE_WRITE_LOCK(contextp);
 				}
 				res = fs_write_add_stg(bfap,
@@ -487,7 +487,7 @@ blkmap_direct(struct bsBuf * bp,
 					contextp->dirty_alloc = TRUE;
 				}
 				/* Object safety s on - do not release lock */
-				if (!bfap->bfSetp->bfSetFlags & BFS_OD_OBJ_SAFETY) {
+				if (!(bfap->bfSetp->bfSetFlags & BFS_OD_OBJ_SAFETY)) {
 					FS_FILE_UNLOCK(contextp);
 				}
 				if (res != EOK)
@@ -585,7 +585,7 @@ blkmap_direct(struct bsBuf * bp,
 					struct fsContext *contextp = VTOC(bfap->bfVp);
 					KASSERT(contextp);
 					/* Object safety already has lock */
-					if (!bfap->bfSetp->bfSetFlags & BFS_OD_OBJ_SAFETY) {
+					if (!(bfap->bfSetp->bfSetFlags & BFS_OD_OBJ_SAFETY)) {
 						FS_FILE_WRITE_LOCK(contextp);
 					}
 					res = fs_write_add_stg(bfap,
@@ -606,7 +606,7 @@ blkmap_direct(struct bsBuf * bp,
 					}
 					/* Object safety s on - do not release
 					 * lock */
-					if (!bfap->bfSetp->bfSetFlags & BFS_OD_OBJ_SAFETY) {
+					if (!(bfap->bfSetp->bfSetFlags & BFS_OD_OBJ_SAFETY)) {
 						FS_FILE_UNLOCK(contextp);
 					}
 					/* Try one more time to map the page

@@ -4917,7 +4917,7 @@ bmt_open(
 {
 	statusT sts = EOK;
 
-	if (bmth->vdp = vd_htop_if_valid(vdIndex, dmnP, TRUE, FALSE)) {
+	if ((bmth->vdp = vd_htop_if_valid(vdIndex, dmnP, TRUE, FALSE))) {
 		/*
 	         ** Setup state buffer and read the first page.
 	         */
