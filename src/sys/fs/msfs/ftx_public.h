@@ -577,24 +577,16 @@ rbf_set_bfset_params(
 
 #define FTX_LOCKS
 
-/*
- * Lock shortcut macros
- */
-
 void
 ftx_lock_write(
     ftxLkT * lk,		/* in */
-    ftxHT ftxH,			/* in */
-    int ln,			/* in */
-    const char *fn			/* in */
+    ftxHT ftxH			/* in */
 );
 
 void
 ftx_lock_read(
     ftxLkT * lk,		/* in */
-    ftxHT ftxH,			/* in */
-    int ln,			/* in */
-    const char *fn			/* in */
+    ftxHT ftxH			/* in */
 );
 
 void
