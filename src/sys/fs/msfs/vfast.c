@@ -1528,8 +1528,8 @@ void
 ss_dealloc_dmn(domainT * dmnP)
 {
 	ss_dealloc_hot(dmnP);
-	mutex_destroy(&dmnP->ssDmnInfo.ssDmnLk);
-	mutex_destroy(&dmnP->ssDmnInfo.ssDmnHotLk);
+	mutex_destroy(&dmnP->ssDmnInfo.ssDmnLk.mutex);
+	mutex_destroy(&dmnP->ssDmnInfo.ssDmnHotLk.mutex);
 	return;
 }
 
@@ -1546,9 +1546,9 @@ ss_dealloc_vd(vdT * vdp)
 {				/* in - pointer to header for list */
 	/* remove frag list from vd */
 	ss_dealloc_frag_list(vdp);
-	mutex_destroy(&vdp->ssVolInfo.ssVdMigLk);
-	mutex_destroy(&vdp->ssVolInfo.ssVdMsgLk);
-	mutex_destroy(&vdp->ssVolInfo.ssFragLk);
+	mutex_destroy(&vdp->ssVolInfo.ssVdMigLk.mutex);
+	mutex_destroy(&vdp->ssVolInfo.ssVdMsgLk.mutex);
+	mutex_destroy(&vdp->ssVolInfo.ssFragLk.mutex);
 	return;
 }
 

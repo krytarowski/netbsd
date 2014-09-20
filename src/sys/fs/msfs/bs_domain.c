@@ -3415,32 +3415,32 @@ vd_free(
 	KASSERT(vdp->tempQ.cnt == 0);
 
 	lk_destroy(&vdp->active);
-	mutex_destroy(&vdp->vdIoLock);
-	mutex_destroy(&vdp->vdStateLock);
-	mutex_destroy(&vdp->blockingQ.ioQLock);
-	mutex_destroy(&vdp->flushQ.ioQLock);
-	mutex_destroy(&vdp->ubcReqQ.ioQLock);
-	mutex_destroy(&vdp->waitLazyQ.ioQLock);
-	mutex_destroy(&vdp->readyLazyQ.ioQLock);
-	mutex_destroy(&vdp->smSyncQ0.ioQLock);
-	mutex_destroy(&vdp->smSyncQ1.ioQLock);
-	mutex_destroy(&vdp->smSyncQ2.ioQLock);
-	mutex_destroy(&vdp->smSyncQ3.ioQLock);
-	mutex_destroy(&vdp->smSyncQ4.ioQLock);
-	mutex_destroy(&vdp->smSyncQ5.ioQLock);
-	mutex_destroy(&vdp->smSyncQ6.ioQLock);
-	mutex_destroy(&vdp->smSyncQ7.ioQLock);
-	mutex_destroy(&vdp->smSyncQ8.ioQLock);
-	mutex_destroy(&vdp->smSyncQ9.ioQLock);
-	mutex_destroy(&vdp->smSyncQ10.ioQLock);
-	mutex_destroy(&vdp->smSyncQ11.ioQLock);
-	mutex_destroy(&vdp->smSyncQ12.ioQLock);
-	mutex_destroy(&vdp->smSyncQ13.ioQLock);
-	mutex_destroy(&vdp->smSyncQ14.ioQLock);
-	mutex_destroy(&vdp->smSyncQ15.ioQLock);
-	mutex_destroy(&vdp->consolQ.ioQLock);
-	mutex_destroy(&vdp->devQ.ioQLock);
-	mutex_destroy(&vdp->tempQ.ioQLock);
+	mutex_destroy(&vdp->vdIoLock.mutex);
+	mutex_destroy(&vdp->vdStateLock.mutex);
+	mutex_destroy(&vdp->blockingQ.ioQLock.mutex);
+	mutex_destroy(&vdp->flushQ.ioQLock.mutex);
+	mutex_destroy(&vdp->ubcReqQ.ioQLock.mutex);
+	mutex_destroy(&vdp->waitLazyQ.ioQLock.mutex);
+	mutex_destroy(&vdp->readyLazyQ.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ0.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ1.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ2.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ3.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ4.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ5.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ6.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ7.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ8.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ9.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ10.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ11.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ12.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ13.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ14.ioQLock.mutex);
+	mutex_destroy(&vdp->smSyncQ15.ioQLock.mutex);
+	mutex_destroy(&vdp->consolQ.ioQLock.mutex);
+	mutex_destroy(&vdp->devQ.ioQLock.mutex);
+	mutex_destroy(&vdp->tempQ.ioQLock.mutex);
 
 
 	lock_terminate(&vdp->stgMap_lk.lock);
@@ -5279,10 +5279,10 @@ dmn_dealloc(
 	BFSETTBL_LOCK_DESTROY(dmnP);
 	SC_TBL_LOCK_DESTROY(dmnP);
 	RMVOL_TRUNC_LOCK_DESTROY(dmnP);
-	mutex_destroy(&dmnP->mutex);
-	mutex_destroy(&dmnP->lsnLock);
-	mutex_destroy(&dmnP->vdpTblLock);
-	mutex_destroy(&dmnP->dmnFreezeMutex);
+	mutex_destroy(&dmnP->mutex.mutex);
+	mutex_destroy(&dmnP->lsnLock.mutex);
+	mutex_destroy(&dmnP->vdpTblLock.mutex);
+	mutex_destroy(&dmnP->dmnFreezeMutex.mutex);
 
 	if (clu_is_ready()) {
 		ulong domainId_cast;

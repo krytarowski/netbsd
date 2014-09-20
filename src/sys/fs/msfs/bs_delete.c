@@ -1612,7 +1612,7 @@ cleanup:
 		for (qip = &fsnp->qi[0]; qip < &fsnp->qi[MAXQUOTAS]; qip++) {
 			lock_terminate(&qip->qiLock);
 		}
-		mutex_destroy(&fsnp->filesetMutex);
+		mutex_destroy(&fsnp->filesetMutex.mutex);
 
 		ms_free(fsnp);
 	}

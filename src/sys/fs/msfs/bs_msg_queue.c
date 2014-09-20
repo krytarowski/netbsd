@@ -360,7 +360,7 @@ msgq_destroy(
 	ulmq_destroy_freelist(msgQ);
 
 	mutex_exit(&msgQ->mutex.mutex);
-	mutex_destroy(&msgQ->mutex);
+	mutex_destroy(&msgQ->mutex.mutex);
 
 	ms_free(msgQ);
 

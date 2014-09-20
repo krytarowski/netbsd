@@ -4404,7 +4404,7 @@ loop:
 	}
 	mutex_exit(&rfp->rangeFlushLock.mutex);
 
-	mutex_destroy(&rfp->rangeFlushLock);
+	mutex_destroy(&rfp->rangeFlushLock.mutex);
 	ms_free(rfp);
 
 	result = bfap->dkResult;
