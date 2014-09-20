@@ -340,14 +340,6 @@ typedef struct advfsLockStats {
 
 extern advfsLockStatsT *AdvfsLockStats;
 
-#define real_mutex_lock_io( mp, s ) \
-    s = splbio(); \
-    simple_enter( &((mp)->mutex) )
-
-#define real_mutex_unlock_io( mp, s ) \
-    mutex_exit( (mp) ); \
-    splx( (s) )
-
 #define mutex_lock_io( mp, s )      mutex_lock( mp )
 #define mutex_unlock_io( mp, s )    mutex_unlock( mp )
 
