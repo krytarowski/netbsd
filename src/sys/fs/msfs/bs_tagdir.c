@@ -1016,7 +1016,7 @@ tagdir_set_next_tag(
 		DEC_REFCNT(bfAccess);
 
 		/* grab_bsacc() seized bfap->bfaLock.  Make sure we unlock it. */
-		mutex_unlock(&bfAccess->bfaLock);
+		mutex_exit(&bfAccess->bfaLock);
 		bfAccess = NULL;
 	}
 	/*

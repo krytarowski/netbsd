@@ -1610,10 +1610,10 @@ HANDLE_EXCEPTION:
 	}
 	/* We need to remove and free the actRange struct */
 	if (arp) {
-		mutex_lock(&bfap->actRangeLock);
+		mutex_enter(&bfap->actRangeLock);
 		KASSERT(arp->arIosOutstanding == 0);
 		remove_actRange_from_list(bfap, arp);	/* also wakes waiters */
-		mutex_unlock(&bfap->actRangeLock);
+		mutex_exit(&bfap->actRangeLock);
 		ms_free(arp);
 	}
 	if (do_cluster_cleanup) {
@@ -2128,10 +2128,10 @@ HANDLE_EXCEPTION:
 	}
 	/* We need to remove and free the actRange struct */
 	if (arp) {
-		mutex_lock(&bfap->actRangeLock);
+		mutex_enter(&bfap->actRangeLock);
 		KASSERT(arp->arIosOutstanding == 0);
 		remove_actRange_from_list(bfap, arp);	/* also wakes waiters */
-		mutex_unlock(&bfap->actRangeLock);
+		mutex_exit(&bfap->actRangeLock);
 		ms_free(arp);
 	}
 	if (do_cluster_cleanup) {

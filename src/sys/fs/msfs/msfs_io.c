@@ -452,9 +452,9 @@ bs_osf_complete(
 			if (AdvfsIORetryControl > 0 &&
 			    AdvfsIORetryControl > iop->ioRetryCount) {
 
-				mutex_lock(&vdp->devQ.ioQLock);
+				mutex_enter(&vdp->devQ.ioQLock);
 				sts = sendtoiothread(vdp, RETRY_IO, bp);
-				mutex_unlock(&vdp->devQ.ioQLock);
+				mutex_exit(&vdp->devQ.ioQLock);
 
 				if (sts == 0) {
 					/*
@@ -601,7 +601,7 @@ bs_osf_complete(
 	 * is now done later down below. */
 	taddr = bp->b_un.b_addr;
 
-	mutex_lock(&vdp->devQ.ioQLock);
+	mutex_enter(&vdp->devQ.ioQLock);
 	/*
          * Check if the device is really active.
          */
@@ -717,7 +717,7 @@ bs_osf_complete(
 			vdp->ssVolInfo.ssIOCnt = 0;
 		}
 	}
-	mutex_unlock(&vdp->devQ.ioQLock);
+	mutex_exit(&vdp->devQ.ioQLock);
 
 	if (SS_is_running &&
 	    (dmnP->ssDmnInfo.ssDmnState == SS_ACTIVATED) &&
@@ -751,7 +751,7 @@ bs_osf_complete(
 		 * never reference the buffer after returning from
 		 * bs_io_complete. */
 		if (--iop->ioCount == 0) {
-			mutex_lock(&iop->bsBuf->bufLock);
+			mutex_enter(&iop->bsBuf->bufLock);
 			if (--iop->bsBuf->ioCount == 0) {
 				/* IO done integrity checking is done here
 				 * instead of bs_io_complete() since we don't
@@ -764,7 +764,7 @@ bs_osf_complete(
 					bs_io_metacheck(iop->bsBuf);
 				bs_io_complete(iop->bsBuf, &resetfirst);
 			} else {
-				mutex_unlock(&iop->bsBuf->bufLock);
+				mutex_exit(&iop->bsBuf->bufLock);
 			}
 		}
 		iop = next;
@@ -780,20 +780,20 @@ bs_osf_complete(
 	 * value, but the worst case is that they both set it to the same
 	 * value. */
 	if (resetfirst) {
-		mutex_lock(&dmnP->lsnLock);
+		mutex_enter(&dmnP->lsnLock);
 		resetfirstrec(dmnP);
-		mutex_unlock(&dmnP->lsnLock);
+		mutex_exit(&dmnP->lsnLock);
 	}
 	/* Mark the disk inactive if this completes all outstanding I/Os. Only
 	 * do this after we have finished making changes to bfap/dmnP
 	 * structures in bs_io_complete so flush waiters won't operate on or
 	 * free the structures before we are done. */
-	mutex_lock(&vdp->devQ.ioQLock);
+	mutex_enter(&vdp->devQ.ioQLock);
 	vdp->vdIoOut--;
 	if (vdp->gen_active == 0 && vdp->vdIoOut == 0) {
 		lk_signal(lk_set_state(&vdp->active, INACTIVE_DISK), &vdp->active);
 	}
-	mutex_unlock(&vdp->devQ.ioQLock);
+	mutex_exit(&vdp->devQ.ioQLock);
 
 	/* release the struct buf, only kept this long for easier debugging */
 	freeosfbuf(bp);
@@ -1031,10 +1031,10 @@ retry:
 			*ioList = NULL;
 			return;
 		} else {
-			mutex_lock(&start->bsBuf->bufLock);
+			mutex_enter(&start->bsBuf->bufLock);
 			if (start->bsBuf->lock.state & REMOVE_FROM_IOQ) {
 				/* Whoops, got set while we were locking */
-				mutex_unlock(&start->bsBuf->bufLock);
+				mutex_exit(&start->bsBuf->bufLock);
 				start = start->fwd;
 				len--;
 				goto retry;
@@ -1050,7 +1050,7 @@ retry:
 			 * consolQ. */
 			KASSERT(!(start->bsBuf->lock.state & RAWRW));
 			if (advfs_page_get(start->bsBuf, UBC_GET_BUSY)) {
-				mutex_unlock(&start->bsBuf->bufLock);
+				mutex_exit(&start->bsBuf->bufLock);
 				start = start->fwd;
 				len--;
 				goto retry;
@@ -1060,17 +1060,17 @@ retry:
 			start->bsBuf->bufDebug &= ~BSBUF_WAITQ;
 			start->bsBuf->sync_stamp = 0;
 			start->ioQ = DEVICE;
-			mutex_unlock(&start->bsBuf->bufLock);
+			mutex_exit(&start->bsBuf->bufLock);
 		}
 	} else {
 		/* Just take first one off blocking, flush, or ubcReq queue */
-		mutex_lock(&start->bsBuf->bufLock);
+		mutex_enter(&start->bsBuf->bufLock);
 		vdp->devQ.queue_cnt++;
 		start->bsBuf->lock.state |= BUSY;
 		start->bsBuf->bufDebug &= ~BSBUF_WAITQ;
 		start->bsBuf->sync_stamp = 0;
 		start->ioQ = DEVICE;
-		mutex_unlock(&start->bsBuf->bufLock);
+		mutex_exit(&start->bsBuf->bufLock);
 	}
 
 	/* Account for first ioDesc now */
@@ -1093,7 +1093,7 @@ retry:
 	    (vdp->devQ.ioQLen + count < vdp->devQ.lenLimit)) {
 
 		ioDescT *prev = this->bwd;
-		mutex_lock(&this->bsBuf->bufLock);
+		mutex_enter(&this->bsBuf->bufLock);
 
 		/*
 	         * We can consolidate I/O if:
@@ -1151,7 +1151,7 @@ retry:
 				if (advfs_page_get(this->bsBuf, UBC_GET_BUSY)) {
 					/* Next buffer will not be block
 					 * contiguous so break. */
-					mutex_unlock(&this->bsBuf->bufLock);
+					mutex_exit(&this->bsBuf->bufLock);
 					break;
 				}
 			}
@@ -1162,7 +1162,7 @@ retry:
 			this->bsBuf->bufDebug &= ~BSBUF_WAITQ;
 			this->bsBuf->sync_stamp = 0;
 			this->ioQ = DEVICE;
-			mutex_unlock(&this->bsBuf->bufLock);
+			mutex_exit(&this->bsBuf->bufLock);
 
 			count++;/* keep track of # to consol */
 			max_buffers--;
@@ -1171,7 +1171,7 @@ retry:
 			this = this->fwd;
 		} else {
 			/* can't do any more */
-			mutex_unlock(&this->bsBuf->bufLock);
+			mutex_exit(&this->bsBuf->bufLock);
 			break;
 		}
 	}
@@ -1223,12 +1223,12 @@ retry:
 			 * pins and refs will pend on the BUSY buffer
 			 * associated with each ioDescT. */
 			if (qhdr != &vdp->blockingQ) {
-				mutex_unlock(&qhdr->ioQLock);
+				mutex_exit(&qhdr->ioQLock);
 				locks_held[qindex] = 0;
-				mutex_unlock(&vdp->devQ.ioQLock);
-				mutex_lock(&vdp->blockingQ.ioQLock);
+				mutex_exit(&vdp->devQ.ioQLock);
+				mutex_enter(&vdp->blockingQ.ioQLock);
 				locks_held[BLKQ] = 1;
-				mutex_lock(&vdp->devQ.ioQLock);
+				mutex_enter(&vdp->devQ.ioQLock);
 			}
 			/* Put all except first descriptor on the blockingQ.  */
 			for (iop = start->fwd; iop != last->fwd; iop = iop->fwd) {
@@ -1244,7 +1244,7 @@ retry:
 
 			MS_VERIFY_IOQUEUE_INTEGRITY(&vdp->blockingQ, TRUE);
 			if (qhdr != &vdp->blockingQ) {
-				mutex_unlock(&vdp->blockingQ.ioQLock);
+				mutex_exit(&vdp->blockingQ.ioQLock);
 				locks_held[BLKQ] = 0;
 			}
 			/* Return any allocated virtual memory */
@@ -1474,11 +1474,11 @@ get_locks(ioDescHdrT * qhdr, vdT * vdp, qtypeT qindex, int *locks_held)
 	errT error = OK;
 
 	KASSERT(SLOCK_HOLDER(&vdp->devQ.ioQLock.mutex));
-	if (!mutex_lock_try(&qhdr->ioQLock.mutex)) {
+	if (!mutex_enter_try(&qhdr->ioQLock.mutex)) {
 
-		mutex_unlock(&vdp->devQ.ioQLock);
-		mutex_lock(&qhdr->ioQLock);
-		mutex_lock(&vdp->devQ.ioQLock);
+		mutex_exit(&vdp->devQ.ioQLock);
+		mutex_enter(&qhdr->ioQLock);
+		mutex_enter(&vdp->devQ.ioQLock);
 
 		KASSERT(vdp->devQ.lenLimit > 0);
 		if (vdp->devQ.ioQLen >= vdp->devQ.lenLimit) {	/* no room */
@@ -1488,17 +1488,17 @@ get_locks(ioDescHdrT * qhdr, vdT * vdp, qtypeT qindex, int *locks_held)
 			 * completion for the current I/O to kick off more
 			 * I/O. */
 			error = RET;
-			mutex_unlock(&qhdr->ioQLock);
+			mutex_exit(&qhdr->ioQLock);
 			vdp->gen_active--;
 			if (vdp->gen_active == 0 && vdp->vdIoOut == 0) {
 				lk_signal(lk_set_state(&vdp->active, INACTIVE_DISK), &vdp->active);
 			}
-			mutex_unlock(&vdp->devQ.ioQLock);
+			mutex_exit(&vdp->devQ.ioQLock);
 		} else if (qhdr->ioQLen <= 0) {
 			/* a negative queue length is invalid */
 			KASSERT(qhdr->ioQLen == 0);
 			error = CONT;
-			mutex_unlock(&qhdr->ioQLock);
+			mutex_exit(&qhdr->ioQLock);
 		} else {
 			locks_held[qindex] = 1;
 		}
@@ -1507,7 +1507,7 @@ get_locks(ioDescHdrT * qhdr, vdT * vdp, qtypeT qindex, int *locks_held)
 			/* a negative queue length is invalid */
 			KASSERT(qhdr->ioQLen == 0);
 			error = CONT;
-			mutex_unlock(&qhdr->ioQLock);
+			mutex_exit(&qhdr->ioQLock);
 		} else
 			locks_held[qindex] = 1;
 	}
@@ -1587,11 +1587,11 @@ bs_startio(
 	 * many as possible from the flushQ. 4. Do not worry about flushing
 	 * the lazy queues. */
 
-	mutex_lock(&vdp->devQ.ioQLock);
+	mutex_enter(&vdp->devQ.ioQLock);
 
 	devQ_room = MAX(0, vdp->devQ.lenLimit - vdp->devQ.ioQLen);
 	if (!devQ_room) {
-		mutex_unlock(&vdp->devQ.ioQLock);
+		mutex_exit(&vdp->devQ.ioQLock);
 		return;		/* no room on the device queue right now */
 	}
 	if (flushFlag == IO_FLUSH || flushFlag == IO_SOMEFLUSH) {
@@ -1657,7 +1657,7 @@ bs_startio(
 		if (!(vdp->devQ.ioQLen)) {
 			ss_startios(vdp);
 		}
-		mutex_unlock(&vdp->devQ.ioQLock);
+		mutex_exit(&vdp->devQ.ioQLock);
 		return;
 	}
 	/* Do not set this as an ACTIVE_DISK until we know that we can
@@ -1717,7 +1717,7 @@ bs_startio(
 	                 * set up to move to device queue.
 	                 */
 			ioList = qhdr->fwd;
-			mutex_lock(&ioList->bsBuf->bufLock);
+			mutex_enter(&ioList->bsBuf->bufLock);
 
 			if (qhdr == &vdp->consolQ) {
 				/* Skip the buffer if it is coming off the
@@ -1728,12 +1728,12 @@ bs_startio(
 		loop:
 				while (ioList->bsBuf->lock.state & REMOVE_FROM_IOQ) {
 					ioDescT *next = ioList->fwd;
-					mutex_unlock(&ioList->bsBuf->bufLock);
+					mutex_exit(&ioList->bsBuf->bufLock);
 					ioList = next;
 					if (ioList == (ioDescT *) qhdr)
 						break;
 					else
-						mutex_lock(&ioList->bsBuf->bufLock);
+						mutex_enter(&ioList->bsBuf->bufLock);
 				}
 
 				/* ran out of ioDesc's on this queue; no
@@ -1755,12 +1755,12 @@ bs_startio(
 					 * exchange transition, but that is ok
 					 * since eventually we will see it
 					 * again on a future pass. */
-					mutex_unlock(&ioList->bsBuf->bufLock);
+					mutex_exit(&ioList->bsBuf->bufLock);
 					ioList = ioList->fwd;
 					if (ioList == (ioDescT *) qhdr)
 						break;
 					else
-						mutex_lock(&ioList->bsBuf->bufLock);
+						mutex_enter(&ioList->bsBuf->bufLock);
 					goto loop;
 				}
 			}
@@ -1771,7 +1771,7 @@ bs_startio(
 			ioList->bsBuf->sync_stamp = 0;
 			vdp->devQ.queue_cnt++;
 
-			mutex_unlock(&ioList->bsBuf->bufLock);
+			mutex_exit(&ioList->bsBuf->bufLock);
 
 			/* Remove this descriptor from the queue */
 			ioList->fwd->bwd = (ioDescT *) ioList->bwd;
@@ -1782,7 +1782,7 @@ bs_startio(
 		}
 
 		if (locks_held[qindex]) {
-			mutex_unlock(&qhdr->ioQLock);
+			mutex_exit(&qhdr->ioQLock);
 			locks_held[qindex] = 0;
 		}
 		if (ioList->desCnt > 0) {
@@ -1906,20 +1906,20 @@ bs_startio(
 		 * AdvFS retry duration. */
 		ioList->ioRetryCount = 0;
 
-		mutex_unlock(&vdp->devQ.ioQLock);
+		mutex_exit(&vdp->devQ.ioQLock);
 		call_disk(vdp, ioAmt, vdBlk, ioList);
-		mutex_lock(&vdp->devQ.ioQLock);
+		mutex_enter(&vdp->devQ.ioQLock);
 	}
 
 	if (qhdr && locks_held[qindex]) {
-		mutex_unlock(&qhdr->ioQLock);
+		mutex_exit(&qhdr->ioQLock);
 		locks_held[qindex] = 0;
 	}
 	vdp->gen_active--;
 	if (vdp->gen_active == 0 && vdp->vdIoOut == 0) {
 		lk_signal(lk_set_state(&vdp->active, INACTIVE_DISK), &vdp->active);
 	}
-	mutex_unlock(&vdp->devQ.ioQLock);
+	mutex_exit(&vdp->devQ.ioQLock);
 }
 
 

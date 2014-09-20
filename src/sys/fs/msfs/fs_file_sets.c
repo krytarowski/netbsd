@@ -173,7 +173,7 @@ fs_fset_create(
 		/* created: root, root tag, quota.group, quota.user, .tags . */
 
 start:
-		mutex_lock(&bfSetp->accessChainLock);
+		mutex_enter(&bfSetp->accessChainLock);
 		for (bfap = bfSetp->accessFwd;
 		    bfap != (bfAccessT *) (&bfSetp->accessFwd);
 		    bfap = nextbfap) {
@@ -188,8 +188,8 @@ start:
 	                 * since this thread is violating the normal hierarchy
 	                 * locking order.
 	                 */
-			if (!mutex_lock_try(&bfap->bfaLock.mutex)) {
-				mutex_unlock(&bfSetp->accessChainLock);
+			if (!mutex_enter_try(&bfap->bfaLock.mutex)) {
+				mutex_exit(&bfSetp->accessChainLock);
 				goto start;
 			}
 			KASSERT(bfap->bfSetp == bfSetp);
@@ -202,16 +202,16 @@ start:
 	                 */
 			if (lk_get_state(bfap->stateLk) == ACC_RECYCLE) {
 				nextbfap = bfap->setFwd;
-				mutex_unlock(&bfap->bfaLock);
+				mutex_exit(&bfap->bfaLock);
 				continue;
 			}
 			bfap->bfState = BSRA_VALID;
 			lk_signal(lk_set_state(&bfap->stateLk, ACC_VALID), &bfap->stateLk);
 
 			nextbfap = bfap->setFwd;
-			mutex_unlock(&bfap->bfaLock);
+			mutex_exit(&bfap->bfaLock);
 		}
-		mutex_unlock(&bfSetp->accessChainLock);
+		mutex_exit(&bfSetp->accessChainLock);
 
 		sts = EIO;
 		goto _error;

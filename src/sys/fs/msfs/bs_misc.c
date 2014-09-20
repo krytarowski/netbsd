@@ -3571,13 +3571,13 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT * libBufp, struct bfAccess * bfap
 	/*
          * Get count of dev_t's
          */
-	mutex_lock(&bfap->dmnP->vdpTblLock);
+	mutex_enter(&bfap->dmnP->vdpTblLock);
 	vdCnt = 0;
 	for (vdi = 0; vdCnt < bfap->dmnP->vdCnt && vdi < BS_MAX_VDI; vdi++) {
 		if (bfap->dmnP->vdpTbl[vdi])
 			vdCnt++;
 	}
-	mutex_unlock(&bfap->dmnP->vdpTblLock);
+	mutex_exit(&bfap->dmnP->vdpTblLock);
 
 	libBufp->getCludioXtntMap.volMax = vdi;
 
@@ -3604,7 +3604,7 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT * libBufp, struct bfAccess * bfap
 	 * and the state of BSR_VD_MOUNTED (which can't change while we hold
 	 * the vdStateLock) insures the vdp->devVp->v_rdev deref is safe. */
 
-	mutex_lock(&bfap->dmnP->vdpTblLock);
+	mutex_enter(&bfap->dmnP->vdpTblLock);
 	vdCnt = 0;
 	for (vdi = 0; vdCnt < bfap->dmnP->vdCnt && vdi < BS_MAX_VDI; vdi++) {
 		if (bfap->dmnP->vdpTbl[vdi])
@@ -3613,17 +3613,17 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT * libBufp, struct bfAccess * bfap
 		if (VDI_IS_VALID(vdi + 1, bfap->dmnP)) {
 			vdT *vdp = bfap->dmnP->vdpTbl[vdi];
 			KASSERT(vdp->vdMagic == VDMAGIC);
-			mutex_lock(&vdp->vdStateLock);
+			mutex_enter(&vdp->vdStateLock);
 			if (vdp->vdState == BSR_VD_MOUNTED) {
 				libBufp->getCludioXtntMap.devtvec->device[vdi] =
 				    vdp->devVp->v_rdev;
 				vdCnt++;
 			} else
 				libBufp->getCludioXtntMap.devtvec->device[vdi] = 0;
-			mutex_unlock(&vdp->vdStateLock);
+			mutex_exit(&vdp->vdStateLock);
 		}
 	}
-	mutex_unlock(&bfap->dmnP->vdpTblLock);
+	mutex_exit(&bfap->dmnP->vdpTblLock);
 	libBufp->getCludioXtntMap.devtvec->devtCnt = vdCnt;
 
 _exit:
@@ -4798,7 +4798,7 @@ msfs_syscall_op_ss_get_fraglist(libParamsT * libBufp)
 	/*
          * Obtaining fraglist through vdp.
          */
-	mutex_lock(&vdp->ssVolInfo.ssFragLk);
+	mutex_enter(&vdp->ssVolInfo.ssFragLk);
 
 	fhp = &vdp->ssVolInfo.ssFragHdr;
 	fp = fhp->ssFragRatFwd;	/* entry pointer */
@@ -4816,7 +4816,7 @@ msfs_syscall_op_ss_get_fraglist(libParamsT * libBufp)
 		fp = fp->ssFragRatFwd;
 	}
 	libBufp->ssGetFraglist.ssFragCnt = i;
-	mutex_unlock(&vdp->ssVolInfo.ssFragLk);
+	mutex_exit(&vdp->ssVolInfo.ssFragLk);
 
 HANDLE_EXCEPTION:
 
@@ -4869,7 +4869,7 @@ msfs_syscall_op_ss_get_hotlist(libParamsT * libBufp)
 	}
 	dmn_ref = TRUE;
 
-	mutex_lock(&dmnP->ssDmnInfo.ssDmnHotLk);
+	mutex_enter(&dmnP->ssDmnInfo.ssDmnHotLk);
 
 	/*
          * Obtaining hotlist through dmnP.
@@ -4905,7 +4905,7 @@ msfs_syscall_op_ss_get_hotlist(libParamsT * libBufp)
 	}
 	libBufp->ssGetHotlist.ssHotCnt = i;
 
-	mutex_unlock(&dmnP->ssDmnInfo.ssDmnHotLk);
+	mutex_exit(&dmnP->ssDmnInfo.ssDmnHotLk);
 
 HANDLE_EXCEPTION:
 

@@ -247,7 +247,7 @@ DevWrite = 0x20} TraceActionT;
 { \
     KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex)); \
     if (seize_bfiolock) \
-        mutex_lock(&bp->bfAccess->bfIoLock); \
+        mutex_enter(&bp->bfAccess->bfIoLock); \
     else \
         KASSERT(SLOCK_HOLDER(&bp->bfAccess->bfIoLock.mutex)); \
     bp->accListSeq++; \
@@ -259,14 +259,14 @@ DevWrite = 0x20} TraceActionT;
     bp->bfAccess->dirtyBufList.accBwd = bp; \
     bp->bfAccess->dirtyBufList.length++; \
     if (seize_bfiolock) \
-        mutex_unlock(&bp->bfAccess->bfIoLock); \
+        mutex_exit(&bp->bfAccess->bfIoLock); \
 }
 
 #define RM_ACCESSLIST( bp, seize_bfiolock ) \
 { \
     KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex)); \
     if (seize_bfiolock) \
-        mutex_lock(&bp->bfAccess->bfIoLock); \
+        mutex_enter(&bp->bfAccess->bfIoLock); \
     else \
         KASSERT(SLOCK_HOLDER(&bp->bfAccess->bfIoLock.mutex)); \
     KASSERT(bp->lock.state & ACC_DIRTY); \
@@ -278,7 +278,7 @@ DevWrite = 0x20} TraceActionT;
     bp->accBwd->accFwd = bp->accFwd; \
     bp->accFwd = bp->accBwd = NULL; \
     if (seize_bfiolock) \
-        mutex_unlock(&bp->bfAccess->bfIoLock); \
+        mutex_exit(&bp->bfAccess->bfIoLock); \
 }
 
 #define MS_VERIFY_IOQUEUE_INTEGRITY(qhdr,callerLocked)

@@ -606,7 +606,7 @@ after_inactive:
 			                         * Compensate for artificially stuffing
 			                         * noTrimCnt to 1, as ftx_free will decrement it.
 			                         */
-						mutex_lock(&FtxMutex);
+						mutex_enter(&FtxMutex);
 						++dmnP->ftxTbld.noTrimCnt;
 
 						if (CFS_XID(ftxp->lrh.ftxId)) {
@@ -620,7 +620,7 @@ after_inactive:
 						 * allocated to the
 						 * newly-available slot. */
 						ftx_free_2(ftxp);
-						mutex_unlock(&FtxMutex);
+						mutex_exit(&FtxMutex);
 					}
 				} else {
 					domain_panic(dmnP,
@@ -672,18 +672,18 @@ logclose:
          * the activating fileset.
          */
 	BFSETTBL_LOCK_WRITE(dmnP);
-	mutex_lock(&dmnP->mutex);
+	mutex_enter(&dmnP->mutex);
 	while (dmnP->bfSetHead.bfsQfwd != &dmnP->bfSetHead) {
 		entry = dmnP->bfSetHead.bfsQfwd;
 		BFSET_DMN_REMQ(dmnP, entry);
-		mutex_unlock(&dmnP->mutex);
+		mutex_exit(&dmnP->mutex);
 		bfSetp = BFSET_QUEUE_TO_BFSETP(entry);
 		if (bfSetp->fsRefCnt == 0) {
 			bfs_dealloc(bfSetp, TRUE);
 		}
-		mutex_lock(&dmnP->mutex);
+		mutex_enter(&dmnP->mutex);
 	}
-	mutex_unlock(&dmnP->mutex);
+	mutex_exit(&dmnP->mutex);
 	BFSETTBL_UNLOCK(dmnP);
 
 freexid:
@@ -890,11 +890,11 @@ ftx_recovery_pass(
 							 * never fails */
 
 			ftxTDp->tablep[ftxSlot].ftxp = ftxp;
-			mutex_lock(&FtxMutex);
+			mutex_enter(&FtxMutex);
 			FtxDynAlloc.currAllocated++;
 			if (FtxDynAlloc.currAllocated > FtxDynAlloc.maxAllocated)
 				FtxDynAlloc.maxAllocated = FtxDynAlloc.currAllocated;
-			mutex_unlock(&FtxMutex);
+			mutex_exit(&FtxMutex);
 
 			ftxTDp->tablep[ftxSlot].state = FTX_SLOT_BUSY;
 			++ftxTDp->slotUseCnt;
@@ -1096,14 +1096,14 @@ ftx_recovery_pass(
 			}
 			/* Mark this slot available.  FtxMutex synchronizes
 			 * updates to FtxDynAlloc counters in ftx_free_2. */
-			mutex_lock(&FtxMutex);
+			mutex_enter(&FtxMutex);
 			ftx_free(ftxSlot, ftxTDp);
 
 			/* Now free the ftx struct allocated to the
 			 * newly-available slot. */
 
 			ftx_free_2(ftxp);
-			mutex_unlock(&FtxMutex);
+			mutex_exit(&FtxMutex);
 		}
 		/* Give back the memory given to us from lgr_read */
 		ms_free(dlrp);
@@ -1289,10 +1289,10 @@ ftx_recovery_pass(
 				/* FtxMutex synchronizes updates to
 				 * FtxDynAlloc counters */
 				/* in ftx_free_2. */
-				mutex_lock(&FtxMutex);
+				mutex_enter(&FtxMutex);
 				ftx_free(ftxSlot, ftxTDp);
 				ftx_free_2(ftxp);
-				mutex_unlock(&FtxMutex);
+				mutex_exit(&FtxMutex);
 			}
 		}
 	}

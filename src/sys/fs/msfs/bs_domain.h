@@ -195,9 +195,9 @@ typedef struct ftxTblD {
  *      bfsQueueT *queue = &dmnp->bfSetHead;
  *      bfsQueueT *entry = &bfSetp->bfSetList;
  *      ...
- *      mutex_lock( &dmnp->mutex );
+ *      mutex_enter( &dmnp->mutex );
  *      BFSET_DMN_INSQ( dmnp, queue, entry );
- *      mutex_unlock( &dmnp->mutex );
+ *      mutex_exit( &dmnp->mutex );
  *
  *  Insert Tail:
  *      domainT *dmnp;
@@ -205,17 +205,17 @@ typedef struct ftxTblD {
  *      bfsQueueT *queue = dmnp->bfSetHead.bfsQbck;
  *      bfsQueueT *entry = &bfSetp->bfSetList;
  *      ...
- *      mutex_lock( &dmnp->mutex );
+ *      mutex_enter( &dmnp->mutex );
  *      BFSET_DMN_INSQ( dmnp, queue, entry );
- *      mutex_unlock( &dmnp->mutex );
+ *      mutex_exit( &dmnp->mutex );
  *
  *  Remove Any:
  *      bfSetT *bfSetp;
  *      bfsQueueT *entry = &bfSetp->bfSetList;
  *      ...
- *      mutex_lock( &dmnp->mutex );
+ *      mutex_enter( &dmnp->mutex );
  *      BFSET_DMN_REMQ( dmnp, entry );
- *      mutex_unlock( &dmnp->mutex );
+ *      mutex_exit( &dmnp->mutex );
  *
  *      Note:  The design of this queue and the BFSET_DMN_REMQ() MACRO is
  *             such that if an entry that has already been removed from the
@@ -228,26 +228,26 @@ typedef struct ftxTblD {
  *      bfSetT *bfSetp;
  *      bfsQueueT *entry = dmnp->bfSetHead.bfsQfwd;
  *      ...
- *      mutex_lock( &dmnp->mutex );
+ *      mutex_enter( &dmnp->mutex );
  *      while( entry != &dmnp->bfSetHead ) {
  *          bfSetp = BFSET_QUEUE_TO_BFSETP( entry );
  *          ...do not do complex tasks holding the dmnp->mutex...
  *          entry = entry->bfsQfwd;
  *      }
- *      mutex_unlock( &dmnp->mutex );
+ *      mutex_exit( &dmnp->mutex );
  *
  *  Walk Backwards:
  *      domainT *dmnp;
  *      bfSetT *bfSetp;
  *      bfsQueueT *entry = dmnp->bfSetHead.bfsQbck;
  *      ...
- *      mutex_lock( &dmnp->mutex );
+ *      mutex_enter( &dmnp->mutex );
  *      while( entry != &dmnp->bfSetHead ) {
  *          bfSetp = BFSET_QUEUE_TO_BFSETP( entry );
  *          ...do not do complex tasks holding the dmnp->mutex...
  *          entry = entry->bfsQbck;
  *      }
- *      mutex_unlock( &dmnp->mutex );
+ *      mutex_exit( &dmnp->mutex );
  */
 
 typedef struct bfsQueue {

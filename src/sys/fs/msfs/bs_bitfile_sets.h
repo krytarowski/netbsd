@@ -293,10 +293,10 @@ extern bfSetT nilBfSet;
 { \
     bfSetT *_bfSetp = _bfap->bfSetp; \
     KASSERT(BFSET_VALID(_bfSetp)); \
-    mutex_lock(&_bfSetp->accessChainLock); \
+    mutex_enter(&_bfSetp->accessChainLock); \
     KASSERT(_bfap->setFwd == NULL); \
     KASSERT(_bfap->setBwd == NULL); \
-    mutex_lock(&_bfap->bfaLock); \
+    mutex_enter(&_bfap->bfaLock); \
     _bfap->setFwd = _bfSetp->accessFwd; \
     _bfap->setBwd = (bfAccessT *)(&_bfSetp->accessFwd); \
     if (_bfSetp->accessBwd == (bfAccessT *)(&_bfSetp->accessFwd)) \
@@ -304,7 +304,7 @@ extern bfSetT nilBfSet;
     else \
         _bfSetp->accessFwd->setBwd = _bfap; \
     _bfSetp->accessFwd = _bfap; \
-    mutex_unlock(&_bfSetp->accessChainLock); \
+    mutex_exit(&_bfSetp->accessChainLock); \
 }
 
 /*
@@ -320,7 +320,7 @@ extern bfSetT nilBfSet;
     bfSetT *_bfSetp = _bfap->bfSetp; \
     KASSERT(BFSET_VALID(_bfSetp)); \
     if (_lock_list) \
-        mutex_lock(&_bfSetp->accessChainLock); \
+        mutex_enter(&_bfSetp->accessChainLock); \
     else \
         KASSERT(SLOCK_HOLDER(&_bfSetp->accessChainLock.mutex)); \
     KASSERT(_bfap->setFwd != NULL); \
@@ -335,7 +335,7 @@ extern bfSetT nilBfSet;
         _bfap->setFwd->setBwd = _bfap->setBwd; \
     _bfap->setFwd = _bfap->setBwd = NULL; \
     if (_lock_list) \
-        mutex_unlock(&_bfSetp->accessChainLock); \
+        mutex_exit(&_bfSetp->accessChainLock); \
 }
 
 int
