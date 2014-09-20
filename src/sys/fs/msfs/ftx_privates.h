@@ -309,7 +309,7 @@ addone_recredo(
  * log_donerec - call the logger with the ftx done record, and unpin
  * dirty pages associated with it.
  */
-statusT
+int
 log_donerec_nunpin(
     ftxStateT * ftxp,		/* in/out - ftx state */
     domainT * dmnp,		/* in - domain state */
@@ -360,7 +360,7 @@ get_perlvl_p(
  * ms_logger.h.
  *
  */
-statusT
+int
 lgr_writev_ftx(
     ftxStateT * ftxp,		/* in/out - ftx state */
     domainT * dmnp,		/* in - domain state */

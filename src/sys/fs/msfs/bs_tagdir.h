@@ -60,7 +60,7 @@ tagdir_tag_to_freelist(
     int set_tag_to_unused	/* in - if TRUE, turn off in-use flag */
 );
 
-statusT
+int
 tagdir_lookup(
     bfSetT * bfSetp,		/* in - bitfile set descriptor pointer */
     bfTagT * tp,		/* in - pointer to tag to look up */
@@ -68,7 +68,7 @@ tagdir_lookup(
     vdIndexT * vdIndex		/* out - virtual disk index */
 );
 
-statusT
+int
 tagdir_get_info(
     bfSetT * bfSetp,		/* in - bitfile set desc ptr */
     unsigned long *firstUninitializedPage,	/* out - next page to use */
@@ -77,7 +77,7 @@ tagdir_get_info(
     int *bfCnt			/* out - num bitfiles in set */
 );
 
-statusT
+int
 tagdir_lookup_next(
     bfSetT * bfSetp,		/* in - bitfile set descriptor pointer */
     bfTagT * tp,		/* in,out - pointer to tag */
@@ -85,7 +85,7 @@ tagdir_lookup_next(
     vdIndexT * vdIndex		/* out - virtual disk index */
 );
 
-statusT
+int
 tagdir_alloc_tag(
     ftxHT parentFtxH,		/* in - transaction handle */
     mcellUIdT * mcellUIdp,	/* in/out - ptr mcell uid (tag rtnd) */
@@ -96,7 +96,7 @@ tagdir_alloc_tag(
     int checkmigtrunclock	/* in */
 );
 
-statusT
+int
 tagdir_insert_tag(
     ftxHT parentFtxH,
     mcellUIdT * mcellUIdp,	/* in - mcelluid ptr */
@@ -106,23 +106,23 @@ tagdir_insert_tag(
     rbfPgRefHT tdpgRef
 );
 
-statusT
+int
 tagdir_set_next_tag(
     bfSetT * bfSetp,		/* in - bitfile set desc pointer */
     bfTagT * tag		/* in - ptr to next tag value to use */
 );
 
-statusT
+int
 tagdir_reset_tagmap(
     tagInfoT * tip
 );
 
-statusT
+int
 tagdir_stuff_tagmap(
     tagInfoT * tip
 );
 
-statusT
+int
 tagdir_lookup2(
     bfSetT * bfSetp,		/* in - bitfile set descriptor pointer */
     bfTagT * tp,		/* in,out - pointer to tag */
@@ -135,7 +135,7 @@ init_tagdir_opx(
     void
 );
 
-statusT
+int
 bs_switch_root_tagdir(
     domainT * dmnP,		/* in */
     vdIndexT newVdIndex		/* in */

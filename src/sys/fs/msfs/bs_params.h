@@ -29,52 +29,52 @@
 struct bfAccess;
 struct domain;
 
-statusT
+int
 bs_get_bf_params(
     struct bfAccess * bfap,	/* in */
     bfParamsT * bfParams,	/* out */
     int lock			/* in */
 );
 
-statusT
+int
 bs_set_bf_params(
     struct bfAccess * bfap,	/* in */
     bfParamsT * bfParams	/* in */
 );
 
-statusT
+int
 bs_get_bf_iparams(
     struct bfAccess * bfap,	/* in */
     bfIParamsT * bfIParams,	/* out */
     int lock			/* in */
 );
 
-statusT
+int
 bs_set_bf_iparams(
     struct bfAccess * bfap,	/* in */
     bfIParamsT * bfIParams	/* in */
 );
 
-statusT
+int
 bs_get_bf_page_cnt(
     struct bfAccess * bfAccess,	/* in */
     uint32_t * pageCnt		/* out */
 );
 
-statusT
+int
 bs_get_dmn_params(
     struct domain * dmnP,	/* in */
     bfDmnParamsT * dmnParams,	/* out */
     int lock			/* in */
 );
 
-statusT
+int
 bs_set_dmn_params(
     struct domain * dmnP,	/* in */
     bfDmnParamsT * dmnParams	/* in */
 );
 
-statusT
+int
 bs_get_vd_params(
     struct domain * dmnP,	/* in */
     uint32_t vdIndex,		/* in */
@@ -82,13 +82,13 @@ bs_get_vd_params(
     int lock			/* in */
 );
 
-statusT
+int
 bs_set_vd_params(
     struct domain * dmnP,	/* in */
     uint32_t vdIndex,		/* in */
     bsVdParamsT * vdParams	/* in */
 );
-statusT
+int
 bs_get_dmn_vd_list(
     struct domain * dmnP,	/* in - the domain handle */
     int vdIndexArrayLen,	/* in - number of ints in array */
@@ -96,14 +96,14 @@ bs_get_dmn_vd_list(
     int *numVds			/* out - num vds put in array */
 );
 
-statusT
+int
 bs_set_bfset_params(
     bfSetT * bfSetp,		/* in - bitfile-set's descriptor pointer */
     bfSetParamsT * bfSetParams,	/* in - bitfile-set's params */
     long xid			/* in - CFS transaction id */
 );
 
-statusT
+int
 bs_get_bfset_params(
     bfSetT * bfSetp,		/* in - the bitfile-set's descriptor pointer */
     bfSetParamsT * bfSetParams,	/* out - the bitfile-set's parameters */

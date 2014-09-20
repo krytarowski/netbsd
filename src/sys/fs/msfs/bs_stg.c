@@ -72,7 +72,7 @@ typedef struct mcellPtr {
 /* Private function prototypes */
 /*******************************/
 
-statusT
+int
 stg_add_stg_no_cow(
     ftxHT ftxH,			/* in */
     bfAccessT * bfap,		/* in */
@@ -83,7 +83,7 @@ stg_add_stg_no_cow(
 );
 
 static
-       statusT
+       int
 add_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -96,7 +96,7 @@ add_stg(
 );
 
 static
-       statusT
+       int
 add_rsvd_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -107,7 +107,7 @@ add_rsvd_stg(
 );
 
 static
-       statusT
+       int
 alloc_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -121,7 +121,7 @@ alloc_stg(
 );
 
 static
-       statusT
+       int
 alloc_append_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -136,7 +136,7 @@ alloc_append_stg(
 );
 
 static
-       statusT
+       int
 get_first_mcell(
     bfTagT bfSetTag,		/* in */
     bfAccessT * bfap,		/* in */
@@ -147,7 +147,7 @@ get_first_mcell(
 );
 
 static
-       statusT
+       int
 alloc_hole_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -163,13 +163,13 @@ alloc_hole_stg(
 );
 
 static
-       statusT
+       int
 extend_skip(
     int *skipCnt,		/* in/out */
     vdIndexT ** skipVdIndex	/* in/out */
 );
 
-statusT
+int
 alloc_from_one_disk(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -183,7 +183,7 @@ alloc_from_one_disk(
     uint32_t * allocPageCnt	/* out */
 );
 
-static statusT
+static int
 xfer_stg_to_bf(
     bfAccessT * bfap,
     u_long bfPageOffset,
@@ -193,7 +193,7 @@ xfer_stg_to_bf(
     ftxHT parentFtx
 );
 
-static statusT
+static int
 xfer_stg_to_xtnts(bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
     u_long bfPageOffset,
@@ -202,7 +202,7 @@ xfer_stg_to_xtnts(bfAccessT * bfap,
     vdIndexT vdIndex,
     ftxHT parentFtx);
 
-static statusT
+static int
 xfer_append_stg(
     bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
@@ -213,7 +213,7 @@ xfer_append_stg(
     ftxHT parentFtx
 );
 
-static statusT
+static int
 xfer_hole_stg(
     bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
@@ -226,7 +226,7 @@ xfer_hole_stg(
     ftxHT parentFtx
 );
 
-static statusT
+static int
 xfer_stg_on_one_disk(
     bfAccessT * bfap,
     bfTagT bfSetTag,
@@ -239,7 +239,7 @@ xfer_stg_on_one_disk(
 );
 
 
-static statusT
+static int
 xfer_stg_in_one_subxtnt(
     bsInMemSubXtntMapT * subXtntMap,
     int bfPageSize,
@@ -249,13 +249,13 @@ xfer_stg_in_one_subxtnt(
 );
 
 static
-       statusT
+       int
 make_perm_hole(bfAccessT * cloneap,
     uint32_t page,
     ftxHT ftxH);
 
 static
-       statusT
+       int
 append_perm_hole(bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
     uint32_t holeStart,
@@ -264,7 +264,7 @@ append_perm_hole(bfAccessT * bfap,
     ftxHT ftxH);
 
 static
-       statusT
+       int
 insert_perm_hole(bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
     bsInMemXtntDescIdT xtntDescId,
@@ -274,7 +274,7 @@ insert_perm_hole(bfAccessT * bfap,
     ftxHT ftxH);
 
 static
-       statusT
+       int
 add_hole_extent(bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
     uint32_t holeStart,
@@ -283,12 +283,12 @@ add_hole_extent(bfAccessT * bfap,
     ftxHT ftxH);
 
 static
-       statusT
+       int
 new_sub(bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
     ftxHT ftxH);
 
-static statusT
+static int
 cp_stg_alloc_in_one_mcell(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -299,7 +299,7 @@ cp_stg_alloc_in_one_mcell(
     uint64_t dstBlkOffset,	/* in */
     bsAllocHintT alloc_hint);	/* in */
 
-static statusT
+static int
 cp_hole_alloc_in_one_mcell(
     uint32_t bfPageOffset,	/* in  start here */
     uint32_t bfPageCnt,		/* in  requested length */
@@ -307,7 +307,7 @@ cp_hole_alloc_in_one_mcell(
     uint32_t * allocPageCnt	/* out. this much added */
 );
 
-static statusT
+static int
 add_extent(
     bfAccessT * bfap,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in/contents modified */
@@ -319,7 +319,7 @@ add_extent(
     bsXtntT * termDescp,	/* out */
     int *pinCntp);		/* in/out */
 
-static statusT
+static int
 stg_alloc_one_xtnt(
     bfAccessT * bfap,		/* in */
     vdT * vd,			/* in */
@@ -332,7 +332,7 @@ stg_alloc_one_xtnt(
     int *pinCntp);		/* in/out */
 
 static
-       statusT
+       int
 scan_xtnt_map_list(
     bfAccessT * bfap,		/* in */
     uint32_t pageOffset,		/* in */
@@ -343,7 +343,7 @@ scan_xtnt_map_list(
 );
 
 static
-       statusT
+       int
 remove_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -356,7 +356,7 @@ remove_stg(
 );
 
 static
-       statusT
+       int
 dealloc_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -370,7 +370,7 @@ dealloc_stg(
 );
 
 static
-       statusT
+       int
 clip_del_xtnt_map(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -428,7 +428,7 @@ add_stg_undo(
 	bfAccessT *bfap;
 	bfSetT *bfSetp;
 	domainT *domain;
-	statusT sts;
+	int sts;
 	addStgUndoRecT *undoRec;
 	bsInMemXtntMapT *xtntMap;
 	bsInMemXtntT *xtnts;
@@ -621,7 +621,7 @@ remove_stg_undo(
 	bfAccessT *bfap;
 	bfSetT *bfSetp;
 	domainT *domain;
-	statusT sts;
+	int sts;
 	rmStgUndoRecT undoRec;
 	bsInMemXtntMapT *xtntMap;
 	bsInMemXtntT *xtnts;
@@ -748,7 +748,7 @@ HANDLE_EXCEPTION:
 
 init_bs_stg_opx()
 {
-	statusT sts;
+	int sts;
 
 	sts = ftx_register_agent(
 	    FTA_BS_STG_ADD_V1,
@@ -777,7 +777,7 @@ init_bs_stg_opx()
  * overlap are allocated.
  */
 
-statusT
+int
 bs_add_overlapping_stg(
     bfAccessT * bfap,		/* in */
     unsigned long pageOffset,	/* in */
@@ -785,7 +785,7 @@ bs_add_overlapping_stg(
     uint32_t * allocPageCnt	/* out */
 )
 {
-	statusT sts;
+	int sts;
 
 	MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
 	sts = rbf_add_overlapping_stg(
@@ -820,7 +820,7 @@ bs_add_overlapping_stg(
  * of the root transaction?
  */
 
-statusT
+int
 rbf_add_overlapping_stg(
     bfAccessT * bfap,		/* in */
     unsigned long pageOffset,	/* in */
@@ -829,7 +829,7 @@ rbf_add_overlapping_stg(
     uint32_t * allocPageCnt	/* out */
 )
 {
-	statusT sts;
+	int sts;
 
 	/* Make sure that we catch all the rogue add/remove stg places that
 	 * don't take the migtrunc lock. */
@@ -894,7 +894,7 @@ rbf_add_overlapping_stg(
  * updateStart-1.
  */
 
-statusT
+int
 rbf_add_overlapping_clone_stg(
     bfAccessT * bfap,		/* in */
     uint32_t pageOffset,		/* in */
@@ -907,7 +907,7 @@ rbf_add_overlapping_clone_stg(
 	int failFtxFlag = 0;
 	ftxHT ftxH;
 	uint32_t grantedPageCnt = 0;
-	statusT sts;
+	int sts;
 	addStgUndoRecT undoRec;
 	bsInMemXtntT *xtnts;
 	int xtntMap_locked = 0;
@@ -1087,14 +1087,14 @@ HANDLE_EXCEPTION:
  * returned.
  */
 
-statusT
+int
 bs_add_stg(
     bfAccessT * bfap,		/* in */
     unsigned long pageOffset,	/* in */
     unsigned long pageCnt	/* in */
 )
 {
-	statusT sts;
+	int sts;
 
 	/* Prevent races with migrate code paths */
 	MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
@@ -1124,7 +1124,7 @@ bs_add_stg(
  * of the root transaction?
  */
 
-statusT
+int
 rbf_add_stg(
     bfAccessT * bfap,		/* in */
     unsigned long pageOffset,	/* in */
@@ -1134,7 +1134,7 @@ rbf_add_stg(
 )
 {
 	uint32_t allocPageCnt;
-	statusT sts;
+	int sts;
 
 	/* Make sure that we catch all the rogue add/remove stg places that
 	 * don't take the migtrunc lock. */
@@ -1192,7 +1192,7 @@ rbf_add_stg(
  * FIX - how does this function interact with shadow and migrate??
  */
 
-statusT
+int
 stg_add_stg(
     ftxHT parentFtx,		/* in */
     bfAccessT * bfap,		/* in */
@@ -1256,7 +1256,7 @@ stg_add_stg(
  * FIX - how does this function interact with shadow and migrate??
  */
 
-statusT
+int
 stg_add_stg_no_cow(
     ftxHT parentFtx,		/* in */
     bfAccessT * bfap,		/* in */
@@ -1270,7 +1270,7 @@ stg_add_stg_no_cow(
 	ftxHT ftx;
 	uint32_t pageCnt = 0;
 	int retryFlag;
-	statusT sts;
+	int sts;
 	addStgUndoRecT undoRec;
 	bsInMemXtntT *xtnts;
 	int xtntMap_locked = 0;
@@ -1425,7 +1425,7 @@ HANDLE_EXCEPTION:
 }				/* end stg_add_stg_no_cow */
 
 
-statusT
+int
 stg_add_rbmt_stg(
     ftxHT parentFtx,		/* in */
     bfAccessT * rbmtap,		/* in */
@@ -1439,7 +1439,7 @@ stg_add_rbmt_stg(
 	bsInMemXtntMapT *xtntMap;
 	uint32_t mapIndex, i, pageCnt, temp = 0;
 	bsInMemSubXtntMapT *subXtntMap;
-	statusT sts;
+	int sts;
 	bsAllocHintT alloc_hint = BS_ALLOC_FIT;
 
 
@@ -1545,7 +1545,7 @@ stg_add_rbmt_stg(
  * or a mirrored bitfile.
  */
 
-statusT
+int
 stg_set_alloc_disk(
     bfAccessT * bfap,		/* in */
     vdIndexT curVdIndex,	/* in */
@@ -1563,7 +1563,7 @@ stg_set_alloc_disk(
 	rbfPgRefHT pgPin;
 	bsShadowXtntT *shadowRec;
 	bsStripeHdrT *stripeHdr;
-	statusT sts;
+	int sts;
 	vdT *vdp = NULL;
 	bsInMemXtntMapT *xtntMap;
 	NEW_VD_SKIP(vd_skip_list);
@@ -1714,7 +1714,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 add_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -1733,7 +1733,7 @@ add_stg(
 	uint32_t pageOffset;
 	uint32_t segmentCnt;
 	uint32_t segmentSize;
-	statusT sts;
+	int sts;
 	uint32_t totalPageCnt;
 	bsInMemXtntMapT *xtntMap;
 	vdT *vdp;
@@ -1898,7 +1898,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 add_rsvd_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -1909,7 +1909,7 @@ add_rsvd_stg(
 )
 {
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	bsInMemXtntMapT *xtntMap;
 
 	/*
@@ -1948,7 +1948,7 @@ add_rsvd_stg(
  */
 
 static
-       statusT
+       int
 alloc_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -1965,7 +1965,7 @@ alloc_stg(
 	uint32_t holePageCnt;
 	uint32_t mapIndex;
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	uint32_t totalPageCnt = 0;
 
@@ -2055,7 +2055,7 @@ alloc_stg(
  */
 
 static
-       statusT
+       int
 alloc_append_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -2072,7 +2072,7 @@ alloc_append_stg(
 	bfSetT *bfSetDesc;
 	uint32_t i;
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 
 
@@ -2235,7 +2235,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 get_first_mcell(
     bfTagT bfSetTag,		/* in */
     bfAccessT * bfap,		/* in */
@@ -2246,7 +2246,7 @@ get_first_mcell(
 )
 {
 	bfMCIdT mcellId;
-	statusT sts;
+	int sts;
 	vdIndexT vdIndex;
 	vdT *vdp;
 	NEW_VD_SKIP(vd_skip_list);
@@ -2305,7 +2305,7 @@ HANDLE_EXCEPTION:
  * Old storage is placed at the head of the new extent list in the
  * new(stg) sub extent map.  The old sub extent map's mcell is deleted.
  */
-statusT
+int
 imm_try_combine_submaps(
     bsInMemSubXtntMapT * prevOldSubXtntMap,	/* in */
     bsInMemSubXtntMapT * newSubXtntMap,	/* in/modified */
@@ -2314,7 +2314,7 @@ imm_try_combine_submaps(
 	int curr_avail_slots, tot_avail_slots, tot_free_slots;
 	bsXtntT bsXA[BMT_XTRA_XTNTS];	/* tmp array of disk extent
 					 * descriptors */
-	statusT sts;
+	int sts;
 	int i, j;
 
 	/* see if enough free slots to hold extents in prevOldSubXtntMap */
@@ -2508,7 +2508,7 @@ imm_try_combine_submaps(
 */
 
 static
-       statusT
+       int
 alloc_hole_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -2531,7 +2531,7 @@ alloc_hole_stg(
 	bsInMemSubXtntMapT *oldSubXtntMap;
 	bsInMemSubXtntMapT *prevOldSubXtntMap;
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	bfMCIdT reuseMcellId = bsNilMCId;
 
 
@@ -2933,7 +2933,7 @@ HANDLE_EXCEPTION:
  * The caller must specify a non-nil parent ftx.
  */
 
-statusT
+int
 stg_alloc_from_svc_class(
     bfAccessT * bfap,		/* in */
     serviceClassT reqServices,	/* in */
@@ -2951,7 +2951,7 @@ stg_alloc_from_svc_class(
 {
 	uint32_t pageCnt;
 	uint32_t requestedBlkCnt;
-	statusT sts;
+	int sts;
 	uint32_t totalPageCnt = 0;
 	uint32_t updateStart;
 	vdIndexT vdIndex;
@@ -3090,7 +3090,7 @@ HANDLE_EXCEPTION:
 ** by a chain of mcells on the defered delete list. The storage will be
 ** represented in memory by "xtntMap". On entry xtntMap is empty.
 */
-statusT
+int
 cp_stg_alloc_from_svc_class(
     bfAccessT * bfap,		/* in  stg for this file */
     uint32_t bfPageOffset,	/* in  start here */
@@ -3105,7 +3105,7 @@ cp_stg_alloc_from_svc_class(
 	int maxSkipCnt = 0;
 	uint32_t pageCnt = 0;
 	uint32_t requestedBlkCnt;
-	statusT sts;
+	int sts;
 	uint32_t totalPageCnt = 0;
 	vdIndexT vdIndex;
 	vdT *vdp;
@@ -3241,7 +3241,7 @@ cp_stg_alloc_from_svc_class(
  * The caller must specify a non-nil parent ftx.
  */
 
-statusT
+int
 stg_alloc_from_one_disk(
     bfAccessT * bfap,		/* in */
     vdIndexT bfVdIndex,		/* in */
@@ -3261,7 +3261,7 @@ stg_alloc_from_one_disk(
 	uint32_t pageCnt;
 	uint32_t pageOffset;
 	bsInMemSubXtntMapT *prevSubXtntMap;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	uint32_t totalPageCnt = 0;
 	uint32_t updateStart;
@@ -3486,7 +3486,7 @@ HANDLE_EXCEPTION:
 ** ftxH.hndl is used a a flag to tell if a transaction is in progress
 ** and therefore needs to finish the transaction.
 */
-statusT
+int
 cp_stg_alloc_from_one_disk(
     bfAccessT * bfap,		/* in   stg for this file */
     vdIndexT bfVdIndex,		/* in   stg in this vol */
@@ -3504,8 +3504,8 @@ cp_stg_alloc_from_one_disk(
 	uint32_t pageCnt = 0;
 	uint32_t pageOffset;
 	bsInMemSubXtntMapT *prevSubXtntMap;
-	statusT sts;
-	statusT sts2 = EOK;
+	int sts;
+	int sts2 = EOK;
 	bsInMemSubXtntMapT *subXtntMap = NULL;
 	uint32_t totalPageCnt = 0;
 	uint32_t updateStart;
@@ -3779,7 +3779,7 @@ HANDLE_EXCEPTION:
  */
 int AdvfsAllocNFS = 1;
 
-statusT
+int
 alloc_from_one_disk(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -3798,7 +3798,7 @@ alloc_from_one_disk(
 	uint32_t i, j;
 	uint32_t nextBlkOff;
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	bsXtntT termDesc;
 	uint32_t totalPageCnt = 0;
 	vdT *vd;
@@ -4115,7 +4115,7 @@ HANDLE_EXCEPTION:
 ** (on disk) must have a terminating extent map entry.
 */
 static
-       statusT
+       int
 cp_stg_alloc_in_one_mcell(
     bfAccessT * bfap,		/* in  add stg this file */
     uint32_t bfPageOffset,	/* in  start here */
@@ -4132,7 +4132,7 @@ cp_stg_alloc_in_one_mcell(
 	uint32_t xI;
 	uint32_t nextBlkOff;
 	uint32_t pageCnt = 0;
-	statusT sts = EOK;
+	int sts = EOK;
 	bsXtntT termDesc;
 	uint32_t totalPageCnt = 0;
 	vdT *vdp;
@@ -4267,7 +4267,7 @@ HANDLE_EXCEPTION:
  * let our caller get a new mcell and then call back in.
  */
 static
-       statusT
+       int
 cp_hole_alloc_in_one_mcell(
     uint32_t bfPageOffset,	/* in  start here */
     uint32_t bfPageCnt,		/* in  requested length */
@@ -4279,7 +4279,7 @@ cp_hole_alloc_in_one_mcell(
 	uint32_t xI;
 	uint32_t nextBlkOff;
 	uint32_t pageCnt;
-	statusT sts = EOK;
+	int sts = EOK;
 	uint32_t totalPageCnt = 0;
 
 	KASSERT(bfPageCnt);	/* don't call this routine w/o a
@@ -4365,7 +4365,7 @@ HANDLE_EXCEPTION:
 ** write them to disk and start a new transaction.
 */
 static
-       statusT
+       int
 add_extent(
     bfAccessT * bfap,
     bsInMemSubXtntMapT * subXtntMap,	/* add extent to this map */
@@ -4379,7 +4379,7 @@ add_extent(
 {
 	uint32_t nextBlkOff;
 	uint32_t subPgCnt;
-	statusT sts;
+	int sts;
 
 	KASSERT(pgOff <= max_page);
 	KASSERT(pgCnt <= max_page + 1);
@@ -4450,7 +4450,7 @@ HANDLE_EXCEPTION:
 ** This is a running number that is decremented and returned.
 */
 static
-       statusT
+       int
 stg_alloc_one_xtnt(
     bfAccessT * bfap,		/* in  find stg for this file */
     vdT * vdp,			/* in  in this volume */
@@ -4468,7 +4468,7 @@ stg_alloc_one_xtnt(
 	uint32_t pageCnt;
 	uint32_t requestedBlkCnt;
 	void *stgDesc;
-	statusT sts;
+	int sts;
 	int bfPageSize = bfap->bfPageSz;
 
 	KASSERT(ftxH.hndl <= FTX_MAX_FTXH && ftxH.hndl > 0);
@@ -4578,7 +4578,7 @@ EXIT_ALLOC_FROM_BITMAP:
 /* This is a wrapper for xfer_stg_to_bf. It accepts one extent of disk
 /* storage and adds it to the extent map for bfap.
 */
-statusT
+int
 xfer_stg(
     bfAccessT * bfap,		/* file to add storage to */
     u_long bfPageOffset,	/* offset to add storage */
@@ -4590,7 +4590,7 @@ xfer_stg(
 {
 	int failFtxFlag = 0;
 	ftxHT ftxH;
-	statusT sts;
+	int sts;
 	addStgUndoRecT undoRec;
 	bsInMemXtntT *xtnts;
 	int xtntMap_locked = 0;
@@ -4674,7 +4674,7 @@ HANDLE_EXCEPTION:
 
 /* Deal with striped vs append extent maps
  */
-static statusT
+static int
 xfer_stg_to_bf(
     bfAccessT * bfap,		/* add storage to this file */
     u_long bfPageOffset,	/* at this page offset */
@@ -4686,7 +4686,7 @@ xfer_stg_to_bf(
 {
 	uint32_t i;
 	int mapIndex;
-	statusT sts;
+	int sts;
 	bsInMemXtntMapT *xtntMap;
 	bsInMemXtntT *xtnts = &bfap->xtnts;
 
@@ -4737,7 +4737,7 @@ xfer_stg_to_bf(
  * xtntMap then also find the descriptor that maps the page or is before the
  * page.
  */
-static statusT
+static int
 xfer_stg_to_xtnts(
     bfAccessT * bfap,		/* Add stg to this file */
     bsInMemXtntMapT * xtntMap,	/* in this extent map */
@@ -4752,7 +4752,7 @@ xfer_stg_to_xtnts(
 	uint32_t holePageCnt;
 	uint32_t mapIndex;
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	uint32_t totalPageCnt = 0;
 
@@ -4811,7 +4811,7 @@ xfer_stg_to_xtnts(
  * subextent map (xtntMap->cnt - 1) and modifies the copied map.
  * Sets xtntMap->origStart, xtntMap->origEnd
  */
-static statusT
+static int
 xfer_append_stg(
     bfAccessT * bfap,		/* add storage to this file */
     bsInMemXtntMapT * xtntMap,	/* in this xtntMap */
@@ -4824,7 +4824,7 @@ xfer_append_stg(
 {
 	bfSetT *bfSetDesc;
 	uint32_t i;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	uint32_t mapIndex = xtntMap->validCnt - 1;
 
@@ -4914,7 +4914,7 @@ HANDLE_EXCEPTION:
 }
 
 
-static statusT
+static int
 xfer_hole_stg(
     bfAccessT * bfap,		/* add storge to this file */
     bsInMemXtntMapT * xtntMap,	/* in this xtnt map */
@@ -4934,7 +4934,7 @@ xfer_hole_stg(
 	bsInMemSubXtntMapT *newSubXtntMap;
 	bsInMemSubXtntMapT *oldSubXtntMap;
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	bfMCIdT reuseMcellId = bsNilMCId;
 	int added_perm_hole = 0;
 	int savedMapCnt;
@@ -5210,7 +5210,7 @@ HANDLE_EXCEPTION:
 /* Updates last (xtntMap->cnt - 1) subextent.
  * Changes xtntMap->updateStart, xtntMap->updateEnd, xtntMap->end
  */
-static statusT
+static int
 xfer_stg_on_one_disk(
     bfAccessT * bfap,		/* Add stg to this file */
     bfTagT bfSetTag,		/* in this file set */
@@ -5227,7 +5227,7 @@ xfer_stg_on_one_disk(
 	uint32_t pageCnt;
 	uint32_t pageOffset;
 	bsInMemSubXtntMapT *prevSubXtntMap;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	uint32_t totalPageCnt = 0;
 	uint32_t updateStart;
@@ -5360,7 +5360,7 @@ HANDLE_EXCEPTION:
 /* Add storage at the last descriptor, overwriting bsXA[subXtntMap->cnt - 1]. */
 /* Set subXtntMap->updateStart, subXtntMap->updateEnd, subXtntMap->cnt */
 /* Return EOK, ENO_MORE_MEMORY, EXTND_FAILURE */
-static statusT
+static int
 xfer_stg_in_one_subxtnt(
     bsInMemSubXtntMapT * subXtntMap,	/* in this subxtnt */
     int bfPageSize,
@@ -5372,7 +5372,7 @@ xfer_stg_in_one_subxtnt(
 	uint32_t i;
 	uint32_t nextBlkOff;
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	bsXtntT termDesc;
 
 	/*
@@ -5529,7 +5529,7 @@ HANDLE_EXCEPTION:
  * This function allocates and initializes a new mcell.
  */
 
-statusT
+int
 stg_alloc_new_mcell(
     bfAccessT * bfap,		/* in */
     bfTagT bfSetTag,		/* in */
@@ -5542,7 +5542,7 @@ stg_alloc_new_mcell(
 {
 	bfMCIdT mcellId;
 	mcellPoolT mcellType;
-	statusT sts;
+	int sts;
 
 	/*
          * Determine if we are trying to add storage to a reserved
@@ -5608,7 +5608,7 @@ stg_alloc_new_mcell(
  * Adapted from stg_add_stg_no_cow.
  */
 static
-       statusT
+       int
 make_perm_hole(bfAccessT * cloneap,
     uint32_t page,
     ftxHT ftxH)
@@ -5622,7 +5622,7 @@ make_perm_hole(bfAccessT * cloneap,
 	bsXtntDescT xtntDesc;
 	uint32_t holeStart;
 	uint32_t holeEnd;
-	statusT sts;
+	int sts;
 	uint32_t stripeIndex;
 	uint32_t segCnt;
 	uint32_t segSize;
@@ -5793,7 +5793,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 append_perm_hole(bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
     uint32_t holeStart,
@@ -5804,7 +5804,7 @@ append_perm_hole(bfAccessT * bfap,
 	bfSetT *bfSetp;
 	uint32_t lSubI;		/* last subextent index */
 	uint32_t uSubI;		/* update subextent index */
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 
 	KASSERT(bfap->origAccp);	/* this file is a clone */
@@ -5933,7 +5933,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 insert_perm_hole(bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
     bsInMemXtntDescIdT xtntDescId,
@@ -5950,7 +5950,7 @@ insert_perm_hole(bfAccessT * bfap,
 	bsInMemSubXtntMapT *oldSubXtntMap;
 	uint32_t pageCnt;
 	uint32_t updateStart;
-	statusT sts;
+	int sts;
 	bsXtntT *oldbsXA;
 
 	KASSERT(bfap->origAccp);	/* This is a clone file. */
@@ -6214,7 +6214,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 add_hole_extent(bfAccessT * bfap,
     bsInMemXtntMapT * xtntMap,
     uint32_t holeStart,
@@ -6225,7 +6225,7 @@ add_hole_extent(bfAccessT * bfap,
 	bsInMemSubXtntMapT *subXtntMap;
 	uint32_t bfPageOffset;
 	uint32_t xI;		/* extent index of last descriptor */
-	statusT sts = EOK;
+	int sts = EOK;
 	uint32_t lastPage;
 
 	subXtntMap = &xtntMap->subXtntMap[xtntMap->cnt - 1];
@@ -6358,13 +6358,13 @@ HANDLE_EXCEPTION:
  * Sets mcellState in new subXtntMap. Increments count of subextents.
  */
 static
-       statusT
+       int
 new_sub(bfAccessT * bfap, bsInMemXtntMapT * xtntMap, ftxHT ftxH)
 {
 	bfSetT *bfSetp;
 	bsInMemSubXtntMapT *subXtntMap;
 	bsInMemSubXtntMapT *prevSubXtntMap;
-	statusT sts;
+	int sts;
 
 	bfSetp = bfap->bfSetp;
 
@@ -6436,7 +6436,7 @@ HANDLE_EXCEPTION:
 
 #define BLKDESCMAX 10
 
-statusT
+int
 x_page_to_iolist(
     bfAccessT * bfap,		/* in */
     uint32_t pageOffset,		/* in */
@@ -6447,7 +6447,7 @@ x_page_to_iolist(
 	blkMapT blkMap;
 	int deallocFlag;
 	uint32_t i;
-	statusT sts;
+	int sts;
 
 	blkMap.maxCnt = ioList->maxCnt;
 	if (BLKDESCMAX >= ioList->maxCnt) {
@@ -6488,7 +6488,7 @@ x_page_to_iolist(
  * If mapped, returns W_NOT_WRIT if never written, else EOK.
  */
 
-statusT
+int
 x_page_to_blkmap(
     bfAccessT * bfap,		/* in */
     uint32_t pageOffset,		/* in */
@@ -6499,7 +6499,7 @@ x_page_to_blkmap(
 	int mapIndex;
 	uint32_t rdWrtCnt;
 	bsStripeHdrT *stripeHdr;
-	statusT sts;
+	int sts;
 	bsInMemXtntT *xtnts;
 	uint32_t stripePg;
 	int this_is_log_file;
@@ -6648,7 +6648,7 @@ HANDLE_EXCEPTION:
  * the in-memory extent map lock.
  */
 
-statusT
+int
 x_copypage_to_blkmap(
     bfAccessT * bfap,		/* in */
     bsInMemXtntT * xtnts,	/* in */
@@ -6656,7 +6656,7 @@ x_copypage_to_blkmap(
     blkMapT * blkMap		/* in */
 )
 {
-	statusT sts;
+	int sts;
 	uint32_t writeCnt;
 
 	if ((xtnts->type != BSXMT_APPEND) && (xtnts->type != BSXMT_STRIPE)) {
@@ -6693,7 +6693,7 @@ x_copypage_to_blkmap(
  */
 
 static
-       statusT
+       int
 scan_xtnt_map_list(
     bfAccessT * bfap,		/* in */
     uint32_t pageOffset,		/* in */
@@ -6705,7 +6705,7 @@ scan_xtnt_map_list(
 {
 	blkDescT blkDesc;
 	uint32_t i;
-	statusT sts;
+	int sts;
 	bsInMemXtntMapT *xtntMap;
 
 	sts = E_PAGE_NOT_MAPPED;
@@ -6760,7 +6760,7 @@ EXIT_SCAN_XTNT_MAP_LIST:
  * this function.
  */
 
-statusT
+int
 x_page_to_blk(
     bfAccessT * bfap,		/* in */
     uint32_t pageOffset,		/* in */
@@ -6769,7 +6769,7 @@ x_page_to_blk(
 )
 {
 	uint32_t i;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 
 	if (pageOffset >= xtntMap->nextValidPage) {
@@ -6825,7 +6825,7 @@ page_is_mapped(
 )
 {
 	bfSetT *bfSetp;
-	statusT sts;
+	int sts;
 	bsInMemXtntT *xtnts;
 	bsStripeHdrT *stripeHdr;
 	uint32_t i;
@@ -6965,7 +6965,7 @@ page_is_mapped_local(
     int load_map
 )
 {
-	statusT sts;
+	int sts;
 	bsStripeHdrT *stripeHdr;
 	uint32_t i;
 	int strIndex;
@@ -7067,7 +7067,7 @@ end:
  *         be locked before starting a root transaction).
  */
 
-statusT
+int
 stg_remove_stg_start(
     bfAccessT * bfap,		/* in */
     uint32_t pageOffset,		/* in */
@@ -7083,7 +7083,7 @@ stg_remove_stg_start(
 	uint32_t delPageCnt;
 	ftxHT ftx;
 	uint32_t i;
-	statusT sts;
+	int sts;
 	bsInMemXtntT *xtnts;
 	rmStgUndoRecT undoRec;
 
@@ -7227,7 +7227,7 @@ stg_remove_stg_finish(
 )
 {
 	int i;
-	statusT sts;
+	int sts;
 	mcellPtrT *dList = (mcellPtrT *) delList;
 
 	for (i = 0; i < delCnt; i++) {
@@ -7254,7 +7254,7 @@ stg_remove_stg_finish(
  */
 
 static
-       statusT
+       int
 remove_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -7275,7 +7275,7 @@ remove_stg(
 	uint32_t pageOffset;
 	uint32_t segmentCnt;
 	uint32_t segmentSize;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	uint32_t totalPageCnt;
 	uint32_t xmPageOffset;
@@ -7447,7 +7447,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 dealloc_stg(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -7470,7 +7470,7 @@ dealloc_stg(
 	uint32_t remPageCnt;
 	uint32_t remPageOffset;
 	uint32_t reuseIndex;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	bsInMemSubXtntMapT *sxm0, *sxm1, *sxmN;
 	uint32_t totalPageCnt;
@@ -7794,7 +7794,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 clip_del_xtnt_map(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -7809,7 +7809,7 @@ clip_del_xtnt_map(
 	uint32_t i;
 	bsXtntT lastDesc;
 	uint32_t moveCnt;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	int updateFlag = 0;
 

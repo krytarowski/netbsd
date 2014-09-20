@@ -103,7 +103,7 @@ int advfsstats = 0;
 );
 
 	static
-	       statusT
+	       int
 	       bs_refpg_int(
            bfPageRefHT * bfPageRefH,	/* out */
            void **bfPageAddr,	/* out - address of bf data */
@@ -120,7 +120,7 @@ int advfsstats = 0;
 );
 
 	static
-	       statusT
+	       int
 	       bs_pinpg_clone(bfPageRefHT * bfPageRefH,	/* out */
            void **bfPageAddr,	/* out - address of bf data */
            struct bfAccess * bfap,	/* in */
@@ -136,7 +136,7 @@ int advfsstats = 0;
 );
 
 	static
-	       statusT
+	       int
 	       bs_pinpg_found(bfPageRefHT * bfPageRefH,	/* out */
            void **bfPageAddr,	/* out */
            struct bfAccess * bfap,	/* in */
@@ -152,7 +152,7 @@ int advfsstats = 0;
 );
 
 	static
-	       statusT
+	       int
 	       bs_pinpg_newpage(bfPageRefHT * bfPageRefH,	/* out */
            void **bfPageAddr,	/* out */
            struct bfAccess * bfap,	/* in */
@@ -168,7 +168,7 @@ int advfsstats = 0;
 );
 
 	static
-	       statusT
+	       int
 	       bs_pinpg_one_int(bfPageRefHT * bfPageRefH,	/* out */
            void **bfPageAddr,	/* out */
            struct bfAccess * bfap,	/* in */
@@ -321,11 +321,11 @@ advfs_page_get(struct bsBuf * bp, int flags)
 #define STEPLIM 20
 
 
-static statusT
+static int
 blkMap(struct bsBuf * bp, bfAccessT * bfap)
 {
 	int step = 0;
-	statusT res;
+	int res;
 	int i;
 
 	/*
@@ -396,7 +396,7 @@ blkMap(struct bsBuf * bp, bfAccessT * bfap)
  *    struct uucred *cred            User's creditials.  Need for writes if
  *                                  storage needs to be added.
  */
-statusT
+int
 blkmap_direct(struct bsBuf * bp,
     bfAccessT * bfap,
     unsigned long starting_block,
@@ -407,7 +407,7 @@ blkmap_direct(struct bsBuf * bp,
 	unsigned long next_block;
 	int bytes_left = nbytes;
 	int bytes_mapped;
-	statusT res;
+	int res;
 	ioDescT *ioDesc_Array = (ioDescT *) NULL;
 	int ioDesc_count = 0;
 	vdIndexT vdIndex;
@@ -731,7 +731,7 @@ blkmap_direct(struct bsBuf * bp,
  * Version of bs_refpg called from msfs_getpage.
  */
 
-statusT
+int
 bs_refpg_get(
     struct bfAccess * bfap,	/* in */
     unsigned long bsPage,	/* in - bf page number */
@@ -745,7 +745,7 @@ bs_refpg_get(
 {
 	struct bsBuf *bp;
 	void *bfPageAddr;
-	statusT sts;
+	int sts;
 
 	sts = bs_refpg_int((bfPageRefHT *) & bp, &bfPageAddr,
 	    bfap, bsPage, refHint, TRUE, 0, BSBUF_CHK_NONE,
@@ -758,7 +758,7 @@ bs_refpg_get(
 
 	return (sts);
 }
-statusT
+int
 bs_refpg(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out - address of bf data */
@@ -771,7 +771,7 @@ bs_refpg(
 	    bfap, bsPage, refHint, FALSE, 0, BSBUF_CHK_NONE,
 	    NULL, 0, 0, B_READ);
 }
-statusT
+int
 bs_refpg_fetch(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out - address of bf data */
@@ -789,7 +789,7 @@ bs_refpg_fetch(
  * Wrapper for reading (R)BMT pages.  Tests page validity.
  * Can't be called during domain init when bfap is NULL. see bs_map_bf
  */
-statusT
+int
 bmt_refpg(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out - address of bf data */
@@ -798,7 +798,7 @@ bmt_refpg(
     bfPageRefHintT refHint	/* in - hint to do read ahead */
 )
 {
-	statusT sts;
+	int sts;
 
 	/* bfap, bfap->dmnP, and dmnVersion must be set up */
 	KASSERT(bfap->dmnP->dmnVersion);
@@ -827,7 +827,7 @@ bmt_refpg(
  */
 
 static
-       statusT
+       int
 bs_refpg_newpage(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out - address of bf data */
@@ -850,7 +850,7 @@ bs_refpg_newpage(
 	struct bsBuf *bp;
 	int s;
 	int listLen = 0;
-	statusT sts = EOK;
+	int sts = EOK;
 
 	/* Initialize a new buffer descriptor. Other threads are blocked on
 	 * the vm_page's pg_busy flag while this thread initializes the page. */
@@ -1034,7 +1034,7 @@ bs_refpg_newpage(
  */
 
 static
-       statusT
+       int
 bs_refpg_int(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out - address of bf data */
@@ -1055,7 +1055,7 @@ bs_refpg_int(
 	vm_page_t pp;
 	ioDescT *ioListp;
 	struct flags flag;
-	statusT sts;
+	int sts;
 	int cowLkLocked = FALSE;
 	int useOrigMap = FALSE;
 	int flags;
@@ -1258,7 +1258,7 @@ exit:
  *                                     1 if there is (out)
  */
 
-statusT
+int
 bs_refpg_direct(void *addr,	/* in */
     int number_to_read,		/* in */
     struct bfAccess * bfap,	/* in */
@@ -1271,7 +1271,7 @@ bs_refpg_direct(void *addr,	/* in */
 {				/* out */
 	struct bfAccess *origbfap = (struct bfAccess *) NULL;
 	struct bsBuf *bp;
-	statusT sts = EOK;
+	int sts = EOK;
 	unsigned long i;
 	int npages, nbytes;
 	ioDescT *desc_flink, *desc_blink;
@@ -1655,7 +1655,7 @@ on_error:
  */
 
 
-statusT
+int
 bs_derefpg(
     bfPageRefHT bfPageRefH,	/* in */
     bfPageCacheHintT cacheHint	/* in */
@@ -1696,7 +1696,7 @@ bs_derefpg(
  * counter remains unchanged.
  */
 
-statusT
+int
 bs_pinpg_get(
     struct bfAccess * bfap,	/* in */
     unsigned long bsPage,	/* in - bf page number */
@@ -1708,7 +1708,7 @@ bs_pinpg_get(
     int ubc_flags		/* in - ubc control */
 )
 {
-	statusT sts;
+	int sts;
 	struct bsBuf *bp;
 	void *bfPageAddr;
 	void (*q_fn) (ioDescT *, int);
@@ -1845,7 +1845,7 @@ retry_lookup:
 
 	return sts;
 }
-statusT
+int
 bs_pinpg(bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out */
     struct bfAccess * bfap,	/* in */
@@ -1856,7 +1856,7 @@ bs_pinpg(bfPageRefHT * bfPageRefH,	/* out */
 		bfap, bsPage, refHint, FtxNilFtxH, PINPG_NOFLAG,
 		BSBUF_CHK_NONE, NULL, 0, 0, B_WRITE));
 }
-statusT
+int
 bs_pinpg_ftx(bfPageRefHT * bfPageRefH,		/* out */
     void **bfPageAddr,		/* out */
     struct bfAccess * bfap,	/* in */
@@ -1883,13 +1883,13 @@ bs_pinpg_ftx(bfPageRefHT * bfPageRefH,		/* out */
  *     dirty to clean list.
  */
 
-statusT
+int
 bs_pinpg_put(vm_page_t plp,	/* in */
     int plcnt,			/* in */
     int ubc_flags)
 {				/* in */
 	struct bsBuf *bp;
-	statusT sts;
+	int sts;
 	void (*q_fn) (ioDescT *, int) = bs_q_lazy;
 	int listLen = 0;
 	ioDescT *ioListp;
@@ -2083,7 +2083,7 @@ bs_pinpg_put(vm_page_t plp,	/* in */
  */
 
 static
-       statusT
+       int
 bs_pinpg_clone(bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out */
     struct bfAccess * bfap,	/* in */
@@ -2098,7 +2098,7 @@ bs_pinpg_clone(bfPageRefHT * bfPageRefH,	/* out */
     int ubc_flags		/* in - ubc control */
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	bfSetT *bfSetp;
 
 	bfSetp = bfap->bfSetp;
@@ -2279,7 +2279,7 @@ bs_wakeup_flush_threads(struct bsBuf * bp,	/* in - Buffer being released */
  */
 
 /* TO DO: it would be nice to pass the check in, but too much work now! */
-statusT
+int
 bs_pinpg_int(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out */
@@ -2319,7 +2319,7 @@ bs_pinpg_int(
  */
 
 static
-       statusT
+       int
 bs_pinpg_one_int(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out */
@@ -2335,7 +2335,7 @@ bs_pinpg_one_int(
 )
 {
 	struct bsBuf *bp = NULL;
-	statusT sts = EOK;
+	int sts = EOK;
 	vm_page_t pp;
 	int uflags, directIO;
 	extern REPLICATED int SS_is_running;
@@ -2435,7 +2435,7 @@ bs_pinpg_one_int(
  * up until bs_derefpg.
  */
 static
-       statusT
+       int
 bs_pinpg_found(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out */
@@ -2454,7 +2454,7 @@ bs_pinpg_found(
 	int wait = 0;
 	int listLen = 0;
 	ioDescT *ioListp;
-	statusT sts = EOK;
+	int sts = EOK;
 	struct bsBuf *bp;
 	int noqfnd;
 
@@ -2652,7 +2652,7 @@ bs_pinpg_found(
  */
 
 static
-       statusT
+       int
 bs_pinpg_newpage(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out */
@@ -2669,7 +2669,7 @@ bs_pinpg_newpage(
 )
 {
 	struct bsBuf *bp = NULL;
-	statusT sts = EOK;
+	int sts = EOK;
 	int s, listLen = 0;
 	ioDescT *ioListp;
 
@@ -2858,7 +2858,7 @@ bs_pinpg_newpage(
  *                                     blkmap_direct().
  */
 
-statusT
+int
 bs_pinpg_direct(void *addr,
     int number_to_write,	/* in */
     struct bfAccess * bfap,	/* in */
@@ -2872,7 +2872,7 @@ bs_pinpg_direct(void *addr,
     struct uucred * cred)
 {				/* in */
 	struct bsBuf *bp;
-	statusT sts = EOK;
+	int sts = EOK;
 	unsigned long i;
 	int wait = 0;
 	bfSetT *cloneSetp = NULL;
@@ -3274,7 +3274,7 @@ bs_pinpg_direct(void *addr,
  * ( clean, dirty, or immediate ) unpin the page.
  */
 
-statusT
+int
 bs_unpinpg(
     bfPageRefHT bfPageRefH,	/* in */
     logRecAddrT wrtAhdLogAddr,	/* in - LOG case only */
@@ -3282,7 +3282,7 @@ bs_unpinpg(
 )
 {
 	struct bsBuf *bp;
-	statusT sts;
+	int sts;
 	bfPgRlsModeT pgRlsMode = modeNcache.rlsMode;
 	bfPageCacheHintT cacheHint = modeNcache.cacheHint;
 	struct bfAccess *logbfap;
@@ -4059,7 +4059,7 @@ _state_block(
  * Return a bad status if the ref handle is invalid.
  */
 
-statusT
+int
 bs_set_bufstate(
     bfPageRefHT bfPageRefH,	/* in */
     int ln,			/* in */
@@ -4100,7 +4100,7 @@ bs_set_bufstate(
  * Return a bad status if the ref handle is invalid.
  */
 
-statusT
+int
 bs_clear_bufstate(
     bfPageRefHT bfPageRefH,	/* in */
     uint32_t stateBit		/* in */
@@ -4127,7 +4127,7 @@ bs_clear_bufstate(
  * Return a bad status if the ref handle is invalid.
  */
 
-statusT
+int
 bs_get_bufstate(
     bfPageRefHT bfPageRefH,	/* in */
     unsigned whichStateBit,	/* in */
@@ -4244,7 +4244,7 @@ clear_state(
  * is pinned.
  */
 
-statusT
+int
 buf_remap(
     bfPageRefHT bfPageRefH,	/* in */
     blkMapT * blkMap)
@@ -4578,7 +4578,7 @@ seq_ahead(struct bfAccess * bfap,	/* in */
 	struct bsBuf *bp = NULL;
 	int numBlks = 0;
 	int s;
-	statusT sts;
+	int sts;
 	ioDescT *ioDescp;
 	int endPage;
 	int cowLkLocked = FALSE;

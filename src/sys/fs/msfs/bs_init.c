@@ -64,7 +64,7 @@
 static void tagdir_init_pg0(bsTDirPgT * tdpgp);
 static int del_init_mcell_list(bsMPgT * bmtp);
 static int bmt_init_mcell_free_list(bsMPgT * bmtpgp);
-static statusT 
+static int 
 vd_extend_add_sbm_pgs(vdT *, bsPageT, lbnT,
     lbnT, bsVdAttrT *, ftxHT);
 
@@ -75,7 +75,7 @@ vd_extend_add_sbm_pgs(vdT *, bsPageT, lbnT,
 
 uint32_t metaPhysLocPct = 40;	/* default physical loc for SBM, BMT, LOG */
 
-static statusT
+static int
 init_sbm(
     struct vnode * vp,		/* in */
     struct bsMPg * bmtpg,	/* in */
@@ -107,7 +107,7 @@ init_sbm(
  * domain.
  */
 
-statusT
+int
 bs_dmn_init(
     char *domain,		/* in - domain name */
     int maxVds,			/* in - maximum number of virtual disks */
@@ -127,7 +127,7 @@ bs_dmn_init(
 	int s = 0;
 	struct timeval ltime;
 	struct timezone tz;
-	statusT sts = EOK;
+	int sts = EOK;
 	bfDmnParamsT *bfdmnparamsp = NULL;
 	bsVdParamsT *vdparamsp = NULL;
 	void bs_kernel_init();
@@ -234,7 +234,7 @@ HANDLE_EXCEPTION:
  */
 
 
-statusT
+int
 bs_disk_init(
     char *diskName,		/* in - disk device name */
     bfDmnParamsT * bfDmnParams,	/* in - domain parameters */
@@ -248,7 +248,7 @@ bs_disk_init(
 {
 	struct bsMPg *rbmtpg = NULL;
 	struct bsMPg *bmtpg = NULL;
-	statusT sts;
+	int sts;
 	int fd, err, i, s, devOpen = FALSE;
 	struct bsXtntR *xtntp;
 	struct bsXtraXtntR *xtntp1;
@@ -285,11 +285,11 @@ bs_disk_init(
 	/* get device's vnode */
 
 	if (error = getvp(&vp, diskName, ndp, UIO_SYSSPACE)) {
-		RAISE_EXCEPTION((statusT) error);
+		RAISE_EXCEPTION((int) error);
 	}
 	VOP_ACCESS(vp, VREAD | VWRITE, ndp->ni_cred, error);
 	if (error) {
-		RAISE_EXCEPTION((statusT) error);
+		RAISE_EXCEPTION((int) error);
 	}
 	/* open the vnode In SVR4, driver open and close routines expect to
 	 * get the OTYP_MNT flag if the open/close was done as a result of a
@@ -301,7 +301,7 @@ bs_disk_init(
 
 	VOP_OPEN(&vp, FREAD | FWRITE | OTYP_MNT, ndp->ni_cred, error);
 	if (error) {
-		RAISE_EXCEPTION((statusT) error);
+		RAISE_EXCEPTION((int) error);
 	}
 	devOpen = TRUE;
 
@@ -1122,7 +1122,7 @@ HANDLE_EXCEPTION:
 }
 
 
-statusT
+int
 bs_disk_init_v3(
     char *diskName,		/* in - disk device name */
     bfDmnParamsT * bfDmnParams,	/* in - domain parameters */
@@ -1135,7 +1135,7 @@ bs_disk_init_v3(
 )
 {
 	struct bsMPg *bmtpg = NULL;
-	statusT sts;
+	int sts;
 	int fd, err, i, s, devOpen = FALSE;
 	struct bsXtntR *xtntp;
 	bsBfAttrT *atrp;
@@ -1158,11 +1158,11 @@ bs_disk_init_v3(
 	/* get device's vnode */
 
 	if (error = getvp(&vp, diskName, ndp, UIO_SYSSPACE)) {
-		RAISE_EXCEPTION((statusT) error);
+		RAISE_EXCEPTION((int) error);
 	}
 	VOP_ACCESS(vp, VREAD | VWRITE, ndp->ni_cred, error);
 	if (error) {
-		RAISE_EXCEPTION((statusT) error);
+		RAISE_EXCEPTION((int) error);
 	}
 	/* open the vnode In SVR4, driver open and close routines expect to
 	 * get the OTYP_MNT flag if the open/close was done as a result of a
@@ -1173,7 +1173,7 @@ bs_disk_init_v3(
 	 * spec_open()/spec_close that we are doing a mount/unmount. */
 	VOP_OPEN(&vp, FREAD | FWRITE | OTYP_MNT, ndp->ni_cred, error);
 	if (error) {
-		RAISE_EXCEPTION((statusT) error);
+		RAISE_EXCEPTION((int) error);
 	}
 	devOpen = TRUE;
 
@@ -2007,7 +2007,7 @@ tagdir_init_pg0(
  * the initial part of the BMT, TAGDIR, and the SBM itself.
  */
 
-statusT
+int
 init_sbm(
     struct vnode * vp,		/* in */
     struct bsMPg * bmtpg,	/* in */
@@ -2031,7 +2031,7 @@ init_sbm(
 	uint32_t first_setBlks, second_setBlks = 0;
 	uint32_t set_bits, first_bits_to_set, second_bits_to_set = 0;
 	int i, j, err;
-	statusT sts;
+	int sts;
 	struct bsXtntR *xtntp;
 	struct bsStgBm *sbm = NULL;
 
@@ -2206,7 +2206,7 @@ vd_extend(struct vd * vdp)
 	bfAccessT *sbmBfap = vdp->sbmp;
 	bfAccessT *mdBfap = RBMT_THERE(vdp->dmnP) ? vdp->rbmtp : vdp->bmtp;
 	ftxHT ftxH;
-	statusT sts;
+	int sts;
 	bsVdAttrT vdAttr;
 	getioinfo_t *getioinfop;
 	advfs_ev *advfs_event;
@@ -2408,7 +2408,7 @@ error:
 }
 
 
-static statusT
+static int
 vd_extend_add_sbm_pgs(vdT * vdp,
     bsPageT newSbmPgs,
     lbnT newSbmBitsToSet,
@@ -2427,7 +2427,7 @@ vd_extend_add_sbm_pgs(vdT * vdp,
 	bsInMemSubXtntMapT *origSubXtntMap;
 	bsInMemSubXtntMapT *newSubXtntMap;
 	struct vnode *vnp = vdp->devVp;
-	statusT sts;
+	int sts;
 	uint i;
 	uint j;
 

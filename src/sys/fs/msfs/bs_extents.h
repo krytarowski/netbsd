@@ -26,7 +26,7 @@
 #ifndef _BS_EXTENTS_H_
 #define _BS_EXTENTS_H_
 
-statusT
+int
 update_mcell_cnt(
     domainT * domain,		/* in */
     bfTagT bfTag,		/* in */
@@ -37,7 +37,7 @@ update_mcell_cnt(
     ftxHT parentFtx		/* in */
 );
 
-statusT
+int
 odm_remove_mcells_from_xtnt_map(
     domainT * domain,		/* in */
     bfTagT bfTag,		/* in */
@@ -46,7 +46,7 @@ odm_remove_mcells_from_xtnt_map(
     ftxHT parentFtx		/* in */
 );
 
-statusT
+int
 odm_create_xtnt_map(
     bfAccessT * bfAccess,	/* in */
     bfSetT * bfSetp,		/* in */
@@ -57,9 +57,9 @@ odm_create_xtnt_map(
     bfMCIdT * bfMcellId		/* out */
 );
 
-statusT x_create_inmem_xtnt_map(bfAccessT *, bsMCT *);
+int x_create_inmem_xtnt_map(bfAccessT *, bsMCT *);
 
-statusT
+int
 x_load_inmem_xtnt_map(
     bfAccessT * bfap,		/* in, modified */
     uint32_t lock_request	/* in */
@@ -70,7 +70,7 @@ x_load_inmem_xtnt_map(
 #define X_LOAD_UPDATE      2
 #define X_LOAD_LOCKSOWNED  3
 
-statusT
+int
 x_create_shadow_rec(
     bfAccessT * bfAccess,	/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
@@ -80,7 +80,7 @@ x_create_shadow_rec(
     int striping_file		/* in */
 );
 
-statusT
+int
 x_detach_extent_chain(
     bfAccessT * bfAccess,	/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
@@ -91,7 +91,7 @@ x_detach_extent_chain(
     bfMCIdT * retfreedMcellId	/* out */
 );
 
-statusT
+int
 odm_rewrite_xtnt_map(
     bfAccessT * bfap,		/* in */
     int xtntMapIndex,		/* in */
@@ -99,7 +99,7 @@ odm_rewrite_xtnt_map(
     long xid			/* in */
 );
 
-statusT
+int
 x_update_ondisk_xtnt_map(
     domainT * domain,		/* in */
     bfAccessT * bfAccess,	/* in */
@@ -107,7 +107,7 @@ x_update_ondisk_xtnt_map(
     ftxHT parentFtx		/* in */
 );
 
-statusT
+int
 odm_create_xtnt_rec(
     bfAccessT * bfap,		/* in */
     vdIndexT allocVdIndex,	/* in */
@@ -116,21 +116,21 @@ odm_create_xtnt_rec(
     ftxHT parentFtx		/* in */
 );
 
-statusT
+int
 x_page_to_iolist(
     bfAccessT * bfAccessp,
     uint32_t pageOffset,
     ioListT * ioList
 );
 
-statusT
+int
 x_page_to_blkmap(
     bfAccessT * bfAccess,
     uint32_t pageOffset,		/* in */
     blkMapT * blkMap		/* in */
 );
 
-statusT
+int
 x_copypage_to_blkmap(
     bfAccessT * bfap,		/* in */
     bsInMemXtntT * xtnts,	/* in */
@@ -138,7 +138,7 @@ x_copypage_to_blkmap(
     blkMapT * blkMap		/* in */
 );
 
-statusT
+int
 x_page_to_blk(
     bfAccessT * bfap,		/* in */
     uint32_t pageOffset,		/* in */
@@ -146,13 +146,13 @@ x_page_to_blk(
     blkDescT * blkDesc		/* in */
 );
 
-statusT
+int
 x_update_nwr(
     bfAccessT * bfap,		/* in - bitfile access struct */
     ftxHT ftx			/* in - ftx handle */
 );
 
-statusT
+int
 create_xtnt_map_hdr(
     bfAccessT * bfAccess,	/* in */
     vdIndexT firstVdIndex,	/* in */

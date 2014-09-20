@@ -41,7 +41,7 @@
 
 /* #define ADVFS_RBMT_STRESS */
 
-statusT
+int
 stg_add_stg(
     ftxHT ftxH,			/* in */
     struct bfAccess * bfap,	/* in */
@@ -51,7 +51,7 @@ stg_add_stg(
     uint32_t * allocPageCnt	/* out */
 );
 
-statusT
+int
 stg_add_stg_no_cow(
     ftxHT ftxH,			/* in */
     struct bfAccess * bfap,	/* in */
@@ -61,7 +61,7 @@ stg_add_stg_no_cow(
     uint32_t * allocPageCnt	/* out */
 );
 
-statusT
+int
 stg_set_alloc_disk(
     struct bfAccess * bfap,	/* in */
     vdIndexT curVdIndex,	/* in */
@@ -69,7 +69,7 @@ stg_set_alloc_disk(
     int forceFlag		/* in */
 );
 
-statusT
+int
 stg_alloc_from_svc_class(
     bfAccessT * bfAccess,	/* in */
     serviceClassT reqServices,	/* in */
@@ -85,7 +85,7 @@ stg_alloc_from_svc_class(
     uint32_t * allocPageCnt	/* out */
 );
 
-statusT
+int
 cp_stg_alloc_from_svc_class(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -97,7 +97,7 @@ cp_stg_alloc_from_svc_class(
     uint32_t * copyXferSize	/* out */
 );
 
-statusT
+int
 stg_alloc_from_one_disk(
     bfAccessT * bfAccess,	/* in */
     vdIndexT bfVdIndex,		/* in */
@@ -112,7 +112,7 @@ stg_alloc_from_one_disk(
     uint32_t * allocPageCnt	/* out */
 );
 
-statusT
+int
 cp_stg_alloc_from_one_disk(
     bfAccessT * bfap,		/* in */
     vdIndexT bfVdIndex,		/* in */
@@ -126,7 +126,7 @@ cp_stg_alloc_from_one_disk(
     bsAllocHintT alloc_hint	/* in */
 );
 
-statusT
+int
 xfer_stg(
     bfAccessT * bfap,		/* file to add storage to */
     u_long bfPageOffset,	/* offset to add storage */
@@ -136,7 +136,7 @@ xfer_stg(
     ftxHT parentFtx
 );
 
-statusT
+int
 stg_alloc_new_mcell(
     bfAccessT * bfAccess,	/* in */
     bfTagT bfSetTag,		/* in */
@@ -147,7 +147,7 @@ stg_alloc_new_mcell(
     int forceFlag		/* in */
 );
 
-statusT
+int
 stg_remove_stg_start(
     bfAccessT * bfAccess,	/* in */
     uint32_t pageOffset,		/* in */

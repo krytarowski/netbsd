@@ -192,7 +192,7 @@ int lgr_calc_num_pgs(int requestedLogPgs);
  * if flag is set, then this is a force mount (the disk can't be
  * mounted). so assume the log is hosed and re-init it.
  */
-statusT
+int
 lgr_open(
     logDescT ** ldP,		/* out - pointer to the open log */
     logRecAddrT * nextLogRec,	/* out - rec addr of next rec in log */
@@ -210,7 +210,7 @@ lgr_open(
  *    1) This routine works for the domain log only.  It needs to be
  *   revisited when common logging is implemented.
  */
-statusT
+int
 lgr_close(
     logDescT * ldP
 );
@@ -223,14 +223,14 @@ lgr_flush(
     logDescT * ldP
 );
 
-statusT
+int
 lgr_flush_start(
     logDescT * ldP,
     int noBlock,
     lsnT lsn
 );
 
-statusT
+int
 lgr_flush_sync(
     logDescT * ldP,
     lsnT lsn
@@ -246,7 +246,7 @@ lgr_flush_sync(
  * log's service class can also be changed.
  */
 
-statusT
+int
 lgr_switch_vol(
     logDescT * ldP,		/* in - pointer to an open log */
     vdIndexT newVolIdx,		/* in - move log to this vdIndex */
@@ -280,7 +280,7 @@ lgr_switch_vol(
  * improves throughput by using a write page "cache".
  *
  */
-statusT
+int
 lgr_writev(
     logWriteModeT lw_mode,	/* in  - write mode (sync, async, ...) */
     logHT logh,			/* in  - log handle */
@@ -290,7 +290,7 @@ lgr_writev(
     int bufCnt			/* in  - number of buffers in vector */
 );
 
-statusT
+int
 lgr_write(
     logWriteModeT lw_mode,	/* in  - write mode (sync, async, ...) */
     logHT logh,			/* in  - log handle */
@@ -314,7 +314,7 @@ lgr_write(
  * So, log streams are a way for the logger to keep track of with pages
  * are references by clients reading the log.
  */
-statusT
+int
 lgr_read_open(
     logDescT * ldP,		/* in  - log descriptor pointer */
     logRdHT * logrdh		/* out - lgr_read handle */
@@ -327,7 +327,7 @@ lgr_read_open(
  * This is intended for use by utility programs which need to read the
  * log.
  */
-statusT
+int
 lgr_dmn_read_open(
     struct domain * dmnP,	/* in  - domain pointer */
     logRdHT * logrdh		/* out - lgr_read handle */
@@ -344,7 +344,7 @@ lgr_dmn_read_open(
  * the comments for logReadModeT for a description of the various modes
  * and how they affect the meaning of "next record".
  */
-statusT
+int
 lgr_read(
     logReadModeT rd_mode,	/* in  - read mode (fwd, bwd, bwd_link, ...) */
     logRdHT logrdh,		/* in  - lgr_read handle */
@@ -358,7 +358,7 @@ lgr_read(
 /*
  * lgr_read_close - Closes a log "read stream".
  */
-statusT
+int
 lgr_read_close(
     logRdHT logrdh		/* in  - lgr_read handle */
 );
@@ -372,13 +372,13 @@ lgr_read_close(
  * lgr_get_last_rec - Returns the log record address of the last
  * record in the log.
  */
-statusT
+int
 lgr_get_last_rec(logDescT * ldP, logRecAddrT * rec_addr);
 
 /*
  * lgr_dmn_get_last_rec - same as lgr_end except for domain's log
  */
-statusT
+int
 lgr_dmn_get_last_rec(
     struct domain * dmnP,	/* in - domain pointer */
     logRecAddrT * rec_addr	/* out - log record address */
@@ -388,13 +388,13 @@ lgr_dmn_get_last_rec(
  * lgr_get_first_rec - Returns the log record address of the first record
  * in the log.
  */
-statusT
+int
 lgr_get_first_rec(logDescT * ldP, logRecAddrT * rec_addr);
 
 /*
  * lgr_dmn_get_first_rec - same as lgr_beg except for domain's log
  */
-statusT
+int
 lgr_dmn_get_first_rec(
     struct domain * dmnP,	/* in - domain pointer */
     logRecAddrT * rec_addr	/* out - log record address */
@@ -405,7 +405,7 @@ lgr_dmn_get_first_rec(
  * that would be the first log record if the log had not been
  * trimmed.
  */
-statusT
+int
 lgr_dmn_get_pseudo_first_rec(
     struct domain * dmnP,	/* in - domain pointer */
     logRecAddrT * rec_addr	/* out - log record address */

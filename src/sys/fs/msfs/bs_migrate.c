@@ -60,7 +60,7 @@
  */
 
 static
-       statusT
+       int
 migrate_normal_one_disk(
     bfAccessT * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
@@ -73,7 +73,7 @@ migrate_normal_one_disk(
 );
 
 static
-       statusT
+       int
 migrate_normal(
     bfAccessT * bfap,		/* in */
     uint32_t srcPageOffset,	/* in */
@@ -85,7 +85,7 @@ migrate_normal(
 );
 
 static
-       statusT
+       int
 migrate_stripe(
     bfAccessT * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
@@ -98,7 +98,7 @@ migrate_stripe(
 );
 
 static
-       statusT
+       int
 get_xm_page_range_info(
     bsInMemXtntMapT * xtntMap,	/* in */
     uint32_t xmPageOffset,	/* in */
@@ -110,14 +110,14 @@ get_xm_page_range_info(
 );
 
 static
-       statusT
+       int
 extend_page_range_list(
     uint32_t * maxCnt,		/* in/out */
     pageRangeT ** pageRange	/* in/out */
 );
 
 static
-       statusT
+       int
 switch_stg(
     bfAccessT * bfap,		/* in */
     uint32_t stripeIndex,	/* in */
@@ -129,7 +129,7 @@ switch_stg(
 );
 
 static
-       statusT
+       int
 move_metadata(
     bfAccessT * bfap,		/* in */
     bfAccessT * cloneBfap,	/* in */
@@ -138,7 +138,7 @@ move_metadata(
 );
 
 static
-       statusT
+       int
 reset_block_map(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -146,14 +146,14 @@ reset_block_map(
 );
 
 static
-       statusT
+       int
 reset_block_map_special(
     bfAccessT * cloneap,	/* in - special case remapping */
     uint32_t bfPageCnt		/* in */
 );
 
 static
-       statusT
+       int
 alloc_copy_stg(
     bfAccessT * bfap,		/* in */
     uint32_t startPage,		/* in */
@@ -169,7 +169,7 @@ alloc_copy_stg(
 );
 
 static
-       statusT
+       int
 alloc_hole_stg(
     bfAccessT * bfap,		/* in */
     pageRangeT * xmHoleRange,	/* in */
@@ -195,7 +195,7 @@ reload_pXtntp(
 void
 mig_register_migrate_agent()
 {
-	statusT sts;
+	int sts;
 
 	sts = ftx_register_agent(
 	    FTA_BS_MIG_MIGRATE_V1,
@@ -249,7 +249,7 @@ mig_register_migrate_agent()
  * FIX - What about shadowed files?
  */
 
-statusT
+int
 bs_migrate(
     bfAccessT * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
@@ -262,7 +262,7 @@ bs_migrate(
 )
 {
 	ftxHT ftxH;
-	statusT sts;
+	int sts;
 	unLkActionT unlockAction;
 	vdT *svdp, *dvdp;
 	int srcVdBumped = FALSE;
@@ -366,7 +366,7 @@ HANDLE_EXCEPTION:
  * extent descriptor map are on the same disk.
  */
 
-statusT
+int
 mig_verify_stripe_page_range(
     bfAccessT * bfap,		/* in */
     uint32_t srcPageOffset,	/* in */
@@ -382,7 +382,7 @@ mig_verify_stripe_page_range(
     uint32_t * mapIndex		/* out */
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	int unlockFlag = 0;
 	bsInMemXtntMapT *xtntMap;
 	uint32_t bfEndPageOffset;
@@ -511,7 +511,7 @@ HANDLE_EXCEPTION:
  * NOTE:  A shadowed bitfile cannot be migrated.
  */
 
-statusT
+int
 mig_migrate(
     bfAccessT * srcBfap,	/* in */
     vdIndexT srcVdIndex,	/* in */
@@ -527,7 +527,7 @@ mig_migrate(
 	int noMetadataFlag;
 	bfAccessT *origBfap;
 	bfSetT *origBfSet;
-	statusT sts = EOK;
+	int sts = EOK;
 
 	bfSet = srcBfap->bfSetp;
 	if (bfSet->cloneId != BS_BFSET_ORIG) {
@@ -639,7 +639,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 migrate_normal_one_disk(
     bfAccessT * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
@@ -661,7 +661,7 @@ migrate_normal_one_disk(
 	uint32_t pageCnt;
 	uint32_t pageOffset;
 	bsXtntDescT startXtntDesc;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	int unlockFlag = 0;
 	bsInMemXtntDescIdT xtntDescId;
@@ -868,7 +868,7 @@ HANDLE_EXCEPTION:
 ** against bs_bfs_delete. cloneSetpA tells if the clone fileset is held.
 */
 
-static statusT
+static int
 migrate_get_clu_locks(bfAccessT * bfap,
     bfSetT ** cloneSetpA,
     int *setHeldA,
@@ -880,7 +880,7 @@ migrate_get_clu_locks(bfAccessT * bfap,
 	int is_clone = (bfap->bfSetp->cloneId != BS_BFSET_ORIG) ? TRUE : FALSE;
 	int clu_cow_mode_enter = 0;
 	fsid_t fsid;
-	statusT sts;
+	int sts;
 	bfMCIdT mcid;
 	vdIndexT vdi;
 	int ret;
@@ -1093,11 +1093,11 @@ migrate_get_clu_locks(bfAccessT * bfap,
 /*
 ** Called by migrate_normal & migrate_stripe.
 */
-static statusT
+static int
 pre_reset_block_map_special(bfAccessT * bfap)
 {
 	bfSetT *cloneSetp;
-	statusT sts;
+	int sts;
 	bfAccessT *cloneap = NULL;
 	struct vnode *nullvp = NULL;
 	uint32_t numPgs;
@@ -1180,7 +1180,7 @@ int clone_migrate_retries = 0;	/* Number of collisions with bs_cow_pg() */
  */
 
 static
-       statusT
+       int
 migrate_normal(
     bfAccessT * bfap,		/* in */
     uint32_t srcPageOffset,	/* in */
@@ -1202,8 +1202,8 @@ migrate_normal(
 	vdIndexT holeVdIndex;
 	int remCopyStgFlag = 0;
 	int unlkmigTrunc = 0;
-	statusT sts;
-	statusT sts2;
+	int sts;
+	int sts2;
 	int switch_stg_ran = 0;
 	int xtnt_map_list_removed = 0;
 	struct actRange *arp = NULL;
@@ -1656,7 +1656,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 migrate_stripe(
     bfAccessT * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
@@ -1684,8 +1684,8 @@ migrate_stripe(
 	uint32_t mapIndex;
 	int remCopyStgFlag = 0;
 	bsStripeHdrT *stripeHdr = NULL;
-	statusT sts;
-	statusT sts2;
+	int sts;
+	int sts2;
 	int unlockFlag = 0;
 	int unlkmigTrunc = 0;
 	bsInMemXtntMapT *xmCopyXtntMap = NULL;
@@ -2192,7 +2192,7 @@ HANDLE_EXCEPTION:
 
 
 static
-       statusT
+       int
 get_xm_page_range_info(
     bsInMemXtntMapT * xtntMap,	/* in */
     uint32_t xmPageOffset,	/* in */
@@ -2210,7 +2210,7 @@ get_xm_page_range_info(
 	uint32_t maxCnt;
 	pageRangeT *pageRange = NULL;
 	uint32_t pageOffset;
-	statusT sts;
+	int sts;
 	bsXtntDescT xtntDesc;
 	bsInMemXtntDescIdT xtntDescId;
 	uint32_t xtntEndPageOffset;
@@ -2535,7 +2535,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 extend_page_range_list(
     uint32_t * maxCnt,		/* in/out */
     pageRangeT ** pageRange	/* in/out */
@@ -2586,7 +2586,7 @@ extend_page_range_list(
  */
 
 static
-       statusT
+       int
 switch_stg(
     bfAccessT * bfap,		/* in */
     uint32_t stripeIndex,	/* in */
@@ -2607,7 +2607,7 @@ switch_stg(
 	bfMCIdT oldCopyMcellId;
 	vdIndexT oldCopyVdIndex;
 	bsInMemXtntMapT *origXtntMap;
-	statusT sts;
+	int sts;
 
 	bfSetTag = bfap->bfSetp->dirTag;
 
@@ -2785,7 +2785,7 @@ HANDLE_EXCEPTION:
  *    set's tag directory and in its in-memory access structure.
  */
 
-statusT
+int
 bs_move_metadata(
     bfAccessT * bfap,		/* in */
     vdT * vdp			/* in - if NULL, don't care which vd */
@@ -2796,7 +2796,7 @@ bs_move_metadata(
 	int closeCloneFlag = 0;
 	int failFtxFlag = 0;
 	ftxHT ftxH;
-	statusT sts;
+	int sts;
 	struct vnode *nullvp = NULL;
 	int vdRefed = FALSE;
 
@@ -2957,7 +2957,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 move_metadata(
     bfAccessT * bfap,		/* in */
     bfAccessT * cloneBfap,	/* in */
@@ -2980,7 +2980,7 @@ move_metadata(
 	ftxHT parentFtx;
 	rbfPgRefHT pgPin;
 	bfPageRefHT pgRef;
-	statusT sts;
+	int sts;
 	tagInfoT tagInfo;
 	vdT *vd;
 	bsInMemXtntMapT *xtntMapp = NULL;
@@ -3288,7 +3288,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 reset_block_map(
     bfAccessT * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
@@ -3302,7 +3302,7 @@ reset_block_map(
 	uint32_t i;
 	void *page;
 	bfPageRefHT pgPin;
-	statusT sts;
+	int sts;
 	int unpinFlag = 0;
 	bsUnpinModeT unpinMode;
 
@@ -3381,7 +3381,7 @@ HANDLE_EXCEPTION:
 }				/* end reset_block_map */
 
 static
-       statusT
+       int
 reset_block_map_special(
     bfAccessT * cloneap,	/* in - special case remapping */
     uint32_t bfPageCnt		/* in */
@@ -3393,7 +3393,7 @@ reset_block_map_special(
 	uint32_t i;
 	void *page;
 	bfPageRefHT pgRef;
-	statusT sts;
+	int sts;
 
 	blkMap.maxCnt = BLKDESC_CNT;
 	blkMap.blkDesc = &(blkDesc[0]);
@@ -3457,7 +3457,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 alloc_copy_stg(
     bfAccessT * bfap,		/* in   get stg for this file */
     uint32_t startPage,		/* in   start map at this page */
@@ -3475,7 +3475,7 @@ alloc_copy_stg(
 {
 	uint32_t allocPageCnt;
 	uint32_t i;
-	statusT sts;
+	int sts;
 	bsInMemXtntMapT *xtntMap = NULL;
 	vdT *vdp = NULL;
 
@@ -3572,7 +3572,7 @@ HANDLE_EXCEPTION:
 
 
 static
-       statusT
+       int
 alloc_hole_stg(
     bfAccessT * bfap,		/* in */
     pageRangeT * xmHoleRange,	/* in */
@@ -3591,7 +3591,7 @@ alloc_hole_stg(
 	uint32_t i;
 	bfMCIdT newMcellId;
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	bsInMemXtntMapT *xtntMap = NULL;
 	uint32_t newtype, newmax;
 	int vdRefFlg = FALSE;
@@ -3771,7 +3771,7 @@ HANDLE_EXCEPTION:
  * value, then the array has already been freed by this routine!
  */
 
-static statusT
+static int
 mig_get_stripe_bfpage_list(
     vdT * vdp,			/* in */
     bfAccessT * bfap,		/* in */
@@ -3798,7 +3798,7 @@ mig_get_stripe_bfpage_list(
 	uint32_t blk;
 	uint cnt;
 	uint maxCnt;
-	statusT sts;
+	int sts;
 
 	*bfPageRangeCnt = 0;
 
@@ -3887,7 +3887,7 @@ mig_get_stripe_bfpage_list(
  * duplication, and increased readability and maintainability.
  */
 
-statusT
+int
 mig_pack_vd_range(
     vdT * vdp,			/* in */
     uint32_t cRangeBeginBlk,	/* in */
@@ -3896,7 +3896,7 @@ mig_pack_vd_range(
     uint32_t forceFlag		/* in */
 )
 {
-	statusT sts = EOK, sts2 = EOK;
+	int sts = EOK, sts2 = EOK;
 	domainT *domain = NULL;
 	bsInMemXtntMapT *inwayXtntMap = NULL;
 	bsInMemSubXtntMapT *subXtntMap = NULL;
@@ -4569,7 +4569,7 @@ reload_pXtntp(
 )
 {
 	bsInMemSubXtntMapT *sxmP;
-	statusT sts;
+	int sts;
 	uint32_t xtntPageOff = pXtntp->ssPackPageOffset;
 	uint32_t rangeStartBlk = pXtntp->ssPackStartXtBlock;
 	uint32_t rangeEndBlk = pXtntp->ssPackEndXtBlock;

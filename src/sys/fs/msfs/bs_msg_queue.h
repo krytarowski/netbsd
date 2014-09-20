@@ -28,7 +28,7 @@
 
 typedef char *msgQHT;		/* handle to a message queue */
 
-statusT
+int
 msgq_create(
     msgQHT * msgQH,		/* out - message queue handle */
     int maxMsgs,		/* in - initial message buffers to allocate

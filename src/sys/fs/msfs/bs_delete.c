@@ -136,7 +136,7 @@ typedef struct {
 }      delFtxDescT;
 /* Internal prototypes. */
 
-statusT
+int
 rbf_delete_int(
     bfAccessT * bfap,
     ftxHT parentFtxH
@@ -168,7 +168,7 @@ del_part_xtnt(bfMCIdT pmcid,	/* in - mcell ID of primary mcell */
     uint32_t pgstofree,		/* in - number of pages to free */
     delFtxDescT * dscp);
 
-static statusT
+static int
 del_range(
     uint32_t start,		/* in - start of range to zero */
     uint32_t * count,		/* in/out - number of blocks to free / number
@@ -181,7 +181,7 @@ del_range(
     ftxHT ftxH			/* in transaction handle */
 );
 
-static statusT
+static int
 del_xtnt_array(
     bfMCIdT pmcid,		/* in - mcell ID of primary mcell */
     bfMCIdT mcid,		/* in - mcell ID of extra or shadow xtnts
@@ -193,7 +193,7 @@ del_xtnt_array(
     bfMCIdT * nextMCId		/* out - mcell ID of next mcell */
 );
 
-static statusT
+static int
 pin_link(
     bfAccessT * bmtbfap,
     bfMCIdT mcid,
@@ -202,7 +202,7 @@ pin_link(
     ftxHT ftxH
 );
 
-static statusT
+static int
 pin_hdr(
     bfAccessT * bmtbfap,
     delLinkT ** zlp,
@@ -210,7 +210,7 @@ pin_hdr(
     ftxHT ftxH
 );
 
-static statusT
+static int
 del_ftx_start(
     bfMCIdT pcmid,
     vdT * pvdp,
@@ -286,7 +286,7 @@ bs_deferred_delete_undo_opx(
 )
 {
 	defDelOpRecT defDelOpRec = *(defDelOpRecT *) opRec;
-	statusT sts = EOK;
+	int sts = EOK;
 	bsBfAttrT bfAttr;
 	bfSetT *bfSetp = NULL;
 	bfAccessT *bfap = NULL;
@@ -365,13 +365,13 @@ HANDLE_EXCEPTION:
  * simply defers most of its work to several root done operations.
  */
 
-statusT
+int
 rbf_delete(
     bfAccessT * bfap,		/* in - bitfile's access structure */
     ftxHT parentFtxH		/* in - handle to parent transaction */
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	domainT *dmnP;
 	ftxHT ftxH;
 	defDelOpRecT defDelOpRec;
@@ -493,7 +493,7 @@ rbf_delete(
  * undo will set it to READY.
  */
 
-statusT
+int
 rbf_delete_int(
     bfAccessT * bfap,		/* in - bitfile's access structure */
     ftxHT parentFtxH		/* in - handle to parent transaction */
@@ -503,7 +503,7 @@ rbf_delete_int(
 	int ftxFlag = FALSE;
 	vdT *vdp;
 	domainT *dmnP;
-	statusT sts = EOK;
+	int sts = EOK;
 	rbfPgRefHT pgref;
 	bsMPgT *bmtpgp;
 	bsMCT *mcp;
@@ -637,7 +637,7 @@ bs_delete_undo_opx(
 )
 {
 	delOpRecT *recp = (delOpRecT *) opRec;
-	statusT sts = EOK;
+	int sts = EOK;
 	struct bfAccess *bfap = NULL;
 	domainT *dmnP = NULL;
 	bfSetT *bfSetp = NULL;
@@ -729,7 +729,7 @@ reset_ondisk_bf_state(
 	bsMPgT *bmtpgp;
 	bsMCT *mcp;
 	rbfPgRefHT pgref;
-	statusT sts;
+	int sts;
 	vdT *vdp;
 
 	vdp = VD_HTOP(vdIndex, dmnP);
@@ -766,7 +766,7 @@ bs_delete_rtdn_opx(
 )
 {
 	delOpRecT *recp = (delOpRecT *) opRec;
-	statusT sts = EOK;
+	int sts = EOK;
 	bfSetT *bfSetp;
 	domainT *dmnP;
 	int bfs_open = 0;
@@ -818,7 +818,7 @@ HANDLE_EXCEPTION:
  *
  */
 
-statusT
+int
 bs_delete(
     bfAccessT * bfap		/* in - bitfile's access structure */
 )
@@ -836,7 +836,7 @@ bs_delete(
 void
 init_bs_delete_opx(void)
 {
-	statusT sts;
+	int sts;
 
 	sts = ftx_register_agent(FTA_BS_DEL_DELETE_V1,
 	    &bs_delete_undo_opx,/* undo */
@@ -876,7 +876,7 @@ init_bs_delete_opx(void)
  * from migrating the file until the file is removed from the list.
  */
 
-statusT
+int
 del_add_to_del_list(
     bfMCIdT mcid,
     vdT * vdp,
@@ -885,7 +885,7 @@ del_add_to_del_list(
 )
 {
 	domainT *dmnP;
-	statusT sts;
+	int sts;
 	delLinkRT *hrp;		/* header */
 	delLinkT *frp;		/* first in list */
 	delLinkT *nrp;		/* new entry */
@@ -994,7 +994,7 @@ done:
  * TODO: This must be synchronized with migrate.
  */
 
-statusT
+int
 del_remove_from_del_list(
     bfMCIdT mcid,
     vdT * vdp,
@@ -1003,7 +1003,7 @@ del_remove_from_del_list(
 )
 {
 	domainT *dmnP;
-	statusT sts;
+	int sts;
 	delLinkRT *hrp;		/* header */
 	delLinkT *drp;		/* entry to be removed */
 	delLinkT *frp;		/* following entry or null */
@@ -1102,7 +1102,7 @@ del_bitfile_list_undo(
 )
 {
 	delListRecT *zrp = (delListRecT *) opRec;
-	statusT sts;
+	int sts;
 	vdT *vdp;
 	domainT *dmnP;
 
@@ -1134,7 +1134,7 @@ del_bitfile_list_undo(
  * del link.  An out parameter specifies a pointer to the del link record.
  */
 
-static statusT
+static int
 pin_link(
     bfAccessT * bmtbfap,
     bfMCIdT mcid,
@@ -1147,7 +1147,7 @@ pin_link(
 	bsXtntRT *rp;
 	bsMPgT *bmtp;
 	bsMCT *mcp;
-	statusT sts;
+	int sts;
 
 	if ((sts = rbf_pinpg(&pgRef, (void **) &bmtp, bmtbfap, mcid.page,
 		    BS_NIL, ftxH)) != EOK) {
@@ -1166,7 +1166,7 @@ pin_link(
  * given BMT.  An out parameter specifies a pointer to the del link record.
  */
 
-static statusT
+static int
 pin_hdr(
     bfAccessT * bmtbfap,
     delLinkT ** zlp,
@@ -1177,7 +1177,7 @@ pin_hdr(
 	rbfPgRefHT pgRef;
 	bsMPgT *bmtp;
 	bsMCT *mcp;
-	statusT sts;
+	int sts;
 	unsigned long pgnum;
 
 	if (RBMT_THERE(bmtbfap->dmnP)) {
@@ -1237,7 +1237,7 @@ pin_hdr(
  */
 int AdvfsCaptureBadDDL = 0;
 
-statusT
+int
 del_clean_mcell_list(
     vdT * vdp,
     u_long flag
@@ -1250,7 +1250,7 @@ del_clean_mcell_list(
 	delLinkRT *zlp;
 	bsMCT *mcellp;
 	bfPageRefHT pgRef;
-	statusT sts;
+	int sts;
 	bsXtntRT *pxp;		/* pointer to primary extent record */
 	bsBfAttrT *attrp;	/* pointer to bitfile attributes */
 	struct fs_stat *stats_ptr = NULL;	/* pointer to bmt stats record */
@@ -1419,7 +1419,7 @@ del_clean_mcell_list(
  */
 del_clean_fix_ddl(vdT * vdp, bfPageRefHT pgRef)
 {
-	statusT sts;
+	int sts;
 	ftxHT ftxH;
 	bsMPgT *bmtp;
 	bsMCT *mcellp;
@@ -1485,10 +1485,10 @@ del_clean_fix_ddl(vdT * vdp, bfPageRefHT pgRef)
  * This happens when a file that is deleted is held open (by another thread)
  * and the system crashes.
  */
-static statusT
+static int
 ddl_complete_delete(bfTagT setTag, bfTagT fileTag, vdT * vdp)
 {
-	statusT sts;
+	int sts;
 	domainT *dmnP = vdp->dmnP;
 	bfSetT *bfSetp = NULL;
 	bfSetIdT bfSetId;
@@ -1633,13 +1633,13 @@ cleanup:
 ** Returns other errors for other problems.
 */
 
-static statusT
+static int
 filesetnode_init(bfSetT * bfSetp, fileSetNodeT ** fsnpA)
 {
 	fileSetNodeT *fsnp;
 	bfSetParamsT *bfSetParamsp;
 	quotaInfoT *qip;
-	statusT sts;
+	int sts;
 	bfSetParamsT bfSetParams;
 	fileSetNodeT *fsp;
 
@@ -1734,11 +1734,11 @@ filesetnode_init(bfSetT * bfSetp, fileSetNodeT ** fsnpA)
 ** This is called from ddl_complete_delete which is not going to mount
 ** the fileset. We only need to do enough to satisfy bs_access_one & vrele.
 */
-statusT
+int
 fscontext_init(struct vnode * vp, bfAccessT * bfap, struct fsContext ** cpA)
 {
 	struct fsContext *cp;
-	statusT sts;
+	int sts;
 	uint i;
 
 	KASSERT(VTOC(vp) == NULL);
@@ -1792,7 +1792,7 @@ fscontext_init(struct vnode * vp, bfAccessT * bfap, struct fsContext ** cpA)
  * Caller must not hold any locks.
  */
 
-statusT
+int
 del_dealloc_stg(
     bfMCIdT pmcid,		/* in - primary mcell ID */
     vdT * pvdp			/* in - virtual disk of primary mcell */
@@ -1809,7 +1809,7 @@ del_dealloc_stg(
 	bsXtntRT *pxp;		/* primary xtnt ptr */
 	vdIndexT vdIndex;
 	bsXtntMapTypeT type;
-	statusT sts;
+	int sts;
 	int mutexisLocked = 0;
 	bsBfAttrT *attrp;
 
@@ -1943,7 +1943,7 @@ HANDLE_EXCEPTION:
  * extent record to be used during crash recovery.
  */
 
-static statusT
+static int
 del_xtnt_array(
     bfMCIdT pmcid,		/* in - mcell ID of primary mcell */
     bfMCIdT mcid,		/* in - mcell ID of extra or shadow xtnts
@@ -1965,7 +1965,7 @@ del_xtnt_array(
 	bsXtraXtntRT *xrp;
 	bsShadowXtntT *srp;
 	delFtxDescT dsc;
-	statusT sts;
+	int sts;
 	domainT *dmnP;
 	int pgRefed = FALSE;
 
@@ -2185,8 +2185,8 @@ xfer_xtnts_to_clone(
 )
 {
 	bfAccessT *cloneap = NULL;
-	statusT sts;
-	statusT orig_sts;
+	int sts;
+	int orig_sts;
 	bsBfAttrT *bfAttrp;
 	rbfPgRefHT attrPgH;
 	bfSetIdT bfSetId;
@@ -2654,7 +2654,7 @@ del_part_xtnt(bfMCIdT pmcid,	/* in - mcell ID of primary mcell */
     delFtxDescT * dscp)
 {
 	int pinPages;
-	statusT sts;
+	int sts;
 	uint32_t startblk;
 	uint32_t numblk;
 	uint32_t blksfreed;
@@ -2708,7 +2708,7 @@ del_part_xtnt(bfMCIdT pmcid,	/* in - mcell ID of primary mcell */
  * Zero a range of pages in the storage bit map.
  */
 
-static statusT
+static int
 del_range(
     uint32_t start,		/* in - start of range to zero */
     uint32_t * count,		/* in/out - number of blocks to free / number
@@ -2721,7 +2721,7 @@ del_range(
     ftxHT ftxH			/* in transaction handle */
 )
 {
-	statusT sts;
+	int sts;
 
 	sbm_howmany_blks(start, count, pinPages, vdp, pgSz);
 
@@ -2739,7 +2739,7 @@ del_range(
  * in the delFtxDescT structrure are initialized.
  */
 
-static statusT
+static int
 del_ftx_start(
     bfMCIdT pmcid,
     vdT * pvdp,
@@ -2749,7 +2749,7 @@ del_ftx_start(
 	bsMPgT *bmtp;
 	bsMCT *pmcp;
 	bsXtntRT *rp;
-	statusT sts;
+	int sts;
 
 	if ((sts = FTX_START_N(FTA_BS_DEL_FTX_START_V1, &ddp->ftxH, FtxNilFtxH,
 		    pvdp->dmnP, DEL_MAX_PAGES)) != EOK) {
@@ -2804,7 +2804,7 @@ del_ftx_done(
  * if not found.
  */
 
-statusT
+int
 del_find_del_entry(
     domainT * domain,		/* in */
     vdIndexT vdIndex,		/* in */
@@ -2824,7 +2824,7 @@ del_find_del_entry(
 	bfMCIdT mcellId;
 	bfMCIdT nextMcellId;
 	bfPageRefHT pgRef;
-	statusT sts;
+	int sts;
 	int unlockFlag = 0;
 	vdT *vd;
 	bsXtntRT *xtntRec;

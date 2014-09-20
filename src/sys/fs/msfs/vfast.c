@@ -113,7 +113,7 @@ _ int SS_const_data_pad_1[4] = {0};
 	}      volDataT;
 /****** global prototypes ******/
 
-statusT
+int
 ss_open_file(
     bfSetIdT bfSetId,
     bfTagT filetag,
@@ -122,7 +122,7 @@ ss_open_file(
     int *fsetMounted
 );
 
-statusT
+int
 ss_close_file(
     bfSetT * bfSetp,
     bfAccessT * bfap,
@@ -136,16 +136,16 @@ void
 ss_rmvol_from_hotlst(domainT * dmnP,
     vdIndexT delVdi);
 
-statusT
+int
 ss_change_state(char *domain_name,
     ssDmnOpT state,
     u_long * dmnState,
     int write_out_record);
 
-statusT
+int
 ss_put_rec(domainT * dmnP);
 
-statusT
+int
 ss_chk_fragratio(
     bfAccessT * bfap
 );
@@ -164,7 +164,7 @@ void
 void
      ss_kern_stop();
 
-statusT
+int
 ss_kern_start();
 
 void
@@ -182,7 +182,7 @@ void
 void
 ss_dealloc_pack_list(vdT * vdp);
 
-statusT
+int
 ss_block_and_wait(vdT * vdp);
 
 /****** local module prototypes ******/
@@ -191,10 +191,10 @@ ss_chk_hot_list(domainT * dmnP,
     bfTagT tag,
     bfSetIdT bfSetId,
     int vdIndex,
-    statusT sts,
+    int sts,
     int flag);
 
-static statusT
+static int
 ss_find_space(
     vdT * vdp,
     uint64_t requestedBlkCnt,
@@ -202,7 +202,7 @@ ss_find_space(
     uint32_t * allocPageCnt,
     int flags);
 
-static statusT
+static int
 ss_get_n_lk_free_space(vdT * vdp,
     uint64_t bfPageSize,
     uint64_t reqPageCnt,
@@ -210,19 +210,19 @@ ss_get_n_lk_free_space(vdT * vdp,
     uint64_t * allocPageCnt,
     int alloc_hint);
 
-static statusT
+static int
 ss_find_hot_target_vd(domainT * dmnP,
     vdIndexT * targVdIndex,
     bfTagT * tag,
     bfSetIdT * setId);
 
-static statusT
+static int
        ss_do_periodic_tasks(ssPeriodicMsgTypeT task);
 
 static int
     ss_find_target_vd(bfAccessT * bfap);
 
-static statusT
+static int
 ss_vd_migrate(bfTagT filetag,
     bfSetIdT bfSetId,
     vdIndexT srcVdIndex,
@@ -230,7 +230,7 @@ ss_vd_migrate(bfTagT filetag,
     int alloc_hint
 );
 
-static statusT
+static int
 ss_get_most_xtnts(bfAccessT * bfap,
     int *xtntmap_locked,
     uint64_t reqPageCnt,
@@ -243,7 +243,7 @@ ss_get_most_xtnts(bfAccessT * bfap,
     uint64_t prevPageCnt,
     uint64_t prevBlk);
 
-static statusT
+static int
 ss_get_vd_most_free(bfAccessT * bfap,
     vdIndexT * newVdIndex);
 
@@ -367,7 +367,7 @@ ss_kern_init()
  * system is booted via "../init.d/vfast restart".
  *
  ********************************************************************/
-statusT
+int
 ss_kern_start()
 {
 	if (SS_is_inited == FALSE) {
@@ -468,7 +468,7 @@ ss_kern_stop()
 void
 ss_queues_create(void)
 {
-	statusT sts;
+	int sts;
 
 	/* Create a message queue to send messages to the boss thread.  */
 	sts = msgq_create(&ssBossQH,	/* returned handle to q */
@@ -751,7 +751,7 @@ ss_monitor_thread(void)
 	int msg_rev_cnt = 0;
 	int hot_chk_rev_cnt = 0, zero_io_rev_cnt = 0;
 	int frag_chk_rev_cnt = 0;
-	statusT sts = EOK;
+	int sts = EOK;
 	int short_q_depth = (SS_pct_msgq_more_thds * SS_INIT_MSGQ_SIZE) / 100;
 
 	while (TRUE) {
@@ -843,7 +843,7 @@ static void
 ss_work_thd_pool(void)
 {
 	ssWorkMsgT *msg;
-	statusT sts;
+	int sts;
 
 	while (TRUE) {
 		/* Wait for something to do */
@@ -897,7 +897,7 @@ static void
 ss_list_thd_pool(void)
 {
 	ssListMsgT *msg;
-	statusT sts;
+	int sts;
 	ssFragLLT *fp;
 	ssHotLLT *hp;
 	ssBossMsgT *bmsg;
@@ -1167,7 +1167,7 @@ ss_adj_msgs_flow_rate()
  ********************************************************************/
 
 static
-       statusT
+       int
 ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
 {
 	extern mutexT DmnTblMutex;
@@ -1181,7 +1181,7 @@ ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
 	vdT *vdp = NULL;	/* possible vd needs vfast work */
 	int vdi, vdCnt = 0;
 	unsigned long ioBlkCnt;
-	statusT sts;
+	int sts;
 	int fsetMounted = 0;
 	bfSetT *bfSetp = NULL;
 	bfAccessT *bfap = NULL;
@@ -1403,7 +1403,7 @@ ss_dmn_activate(domainT * dmnP, u_long flag)
 {
 	vdT *logVdp = NULL;
 	bfAccessT *mdap;
-	statusT sts;
+	int sts;
 	bsSSDmnAttrT ssAttr;
 	u_long dmnState;
 
@@ -1467,7 +1467,7 @@ HANDLE_EXCEPTION:
 void
 ss_dmn_deactivate(domainT * dmnP, int flag)
 {
-	statusT sts;
+	int sts;
 	int vdi, vdCnt = 0;
 	vdT *vdp;
 
@@ -1572,13 +1572,13 @@ ss_dealloc_vd(vdT * vdp)
  *
  ********************************************************************/
 
-statusT
+int
 ss_change_state(char *domain_name,	/* in */
     ssDmnOpT state,		/* in */
     u_long * dmnState,		/* in & out */
     int write_out_record)
 {				/* in */
-	statusT sts;
+	int sts;
 	struct timeval new_time;
 	int vdi, vdCnt = 0;
 	vdT *vdp;
@@ -1900,12 +1900,12 @@ ss_copy_rec_to_disk(domainT * dmnP,	/* in */
  ********************************************************************/
 
 /* overwrite if there, creates if not there */
-statusT
+int
 ss_put_rec(domainT * dmnP)
 {
 	vdT *logVdp = NULL;
 	ftxHT ftx;
-	statusT sts;
+	int sts;
 	bsSSDmnAttrT ssAttr;
 	int ftxStarted = FALSE;
 	int vd_refed = FALSE;
@@ -2035,7 +2035,7 @@ ss_xtnt_counter(bfAccessT * bfap)
 	uint32_t i, j;
 	uint64_t curr_blk, prev_blk, last_valid_blk;
 	uint32_t last_pageCnt = 0;
-	statusT sts = EOK;
+	int sts = EOK;
 
 	switch (bfap->xtnts.type) {
 	case BSXMT_APPEND:
@@ -2118,7 +2118,7 @@ ss_xtnt_counter(bfAccessT * bfap)
  *
  ********************************************************************/
 
-statusT
+int
 ss_chk_fragratio(
     bfAccessT * bfap		/* in */
 )
@@ -2128,7 +2128,7 @@ ss_chk_fragratio(
 	ssListMsgT *listmsg;
 	uint32_t allocPageCnt = 0;
 	vdT *vdp;
-	statusT sts = EOK;
+	int sts = EOK;
 	int vd_refed = FALSE;
 
 	KASSERT(bfap);
@@ -2247,7 +2247,7 @@ ss_insert_frag_onto_list(vdIndexT vdi,
 	ssFragHdrT *fhp;
 	int inserted = FALSE;
 	int setOpen = FALSE, vd_refed = FALSE;
-	statusT sts;
+	int sts;
 	ssFragLLT *fp = NULL;
 
 	/* Now open the set */
@@ -2382,7 +2382,7 @@ ss_delete_from_frag_list(vdT * vdp,	/* in */
 {				/* in */
 	ssFragLLT *currp, *nextp;	/* curr, next entries */
 	ssFragHdrT *fhp;	/* pointer to frag list header */
-	statusT sts;
+	int sts;
 
 	KASSERT(vdp);
 	KASSERT(SLOCK_HOLDER(&vdp->ssVolInfo.ssFragLk.mutex));
@@ -2746,7 +2746,7 @@ ss_insert_hot_list(
 	int updated = FALSE, inserted = FALSE;
 	struct timeval new_time;
 	int setOpen = FALSE;
-	statusT sts;
+	int sts;
 	int wday, newday;
 	uint64_t newhpCnt, currhpCnt;
 
@@ -2942,7 +2942,7 @@ ss_rmvol_from_hotlst(domainT * dmnP,	/* in */
     vdIndexT delVdi)
 {				/* in */
 	bfSetT *bfSetp;
-	statusT sts;
+	int sts;
 	ssHotLLT *currp, *nextp;/* curr hot list entry ptr */
 	ssHotHdrT *hhp = NULL;	/* pointer to hot list header */
 	ssHotLLT *delp;		/* entry to delete */
@@ -3021,7 +3021,7 @@ ss_del_from_hot_list(ssHotLLT * hp)
 	ssHotLLT *currp, *nextp;/* curr, next entry ptrs */
 	ssHotHdrT *hhp;		/* pointer to hot list header */
 	int setOpen = FALSE;
-	statusT sts;
+	int sts;
 
 	/* open the set */
 	sts = rbf_bfs_open(&bfSetp,
@@ -3095,7 +3095,7 @@ ss_chk_hot_list(domainT * dmnP,	/* in */
     bfTagT tag,			/* in */
     bfSetIdT bfSetId,		/* in */
     int srcVdIndex,		/* in */
-    statusT err,		/* in */
+    int err,		/* in */
     int flag)
 {				/* in */
 	ssHotHdrT *hhp;
@@ -3249,7 +3249,7 @@ ss_startios(vdT * vdp)
  *
  ********************************************************************/
 
-statusT
+int
 ss_block_and_wait(vdT * vdp)
 {
 	/* allow any other threads of equal or higher priority to run */
@@ -3301,7 +3301,7 @@ ss_block_and_wait(vdT * vdp)
  *
  ********************************************************************/
 
-statusT
+int
 ss_open_file(
     bfSetIdT bfSetId,		/* in */
     bfTagT filetag,		/* in */
@@ -3310,7 +3310,7 @@ ss_open_file(
     int *retmounted		/* out */
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	struct vnode *vp;
 	int closeBfSetFlag = FALSE, closeBitfileFlag = FALSE;
 	bfAccessT *bfap = NULL;
@@ -3428,7 +3428,7 @@ HANDLE_EXCEPTION:
  *
  ********************************************************************/
 
-statusT
+int
 ss_close_file(
     bfSetT * bfSetp,		/* in */
     bfAccessT * bfap,		/* in */
@@ -3468,7 +3468,7 @@ ss_move_file(vdIndexT vdi,	/* in */
 	vdT *svdp = NULL;
 	domainT *dmnP = NULL;
 	int domain_open = FALSE, vdRefed = FALSE;
-	statusT sts = EOK;
+	int sts = EOK;
 	ssFragLLT *fp = NULL;	/* frag file ptr */
 	bfTagT filetag = NilBfTag;
 	bfSetIdT bfSetId = nilBfSetId;
@@ -3672,7 +3672,7 @@ HANDLE_EXCEPTION:
  * disk space and return.
  ********************************************************************/
 
-static statusT
+static int
 ss_find_space(
     vdT * vdp,			/* in - vd on which to find the free blocks */
     uint64_t requestedBlkCnt,	/* in - number of pages requested */
@@ -3682,7 +3682,7 @@ ss_find_space(
 {
 	int sbm_locked = FALSE;
 	void *stgDesc = NULL;
-	statusT sts = EOK;
+	int sts = EOK;
 	uint32_t locblkOffset;
 	uint32_t locblkCnt;
 
@@ -3741,7 +3741,7 @@ HANDLE_EXCEPTION:
  *
  ********************************************************************/
 
-static statusT
+static int
 ss_get_n_lk_free_space(
     vdT * vdp,			/* in - vd on which to find the free blocks */
     uint64_t bfPageSize,		/* in - size of one page */
@@ -3752,7 +3752,7 @@ ss_get_n_lk_free_space(
 {				/* in - hint for type of allocation */
 	uint64_t newBlkCnt, scanBlkCnt = 0;
 	uint64_t requestedBlkCnt;
-	statusT sts = EOK;
+	int sts = EOK;
 	uint64_t startClust = 0, numClust = 0, clustCnt;
 	int sbm_range_locked = FALSE;
 	uint32_t scanBlkOffset = 0;
@@ -4038,7 +4038,7 @@ HANDLE_EXCEPTION:
  * the smallest number of pages contained in two consecutive extents.
  ********************************************************************/
 
-static statusT
+static int
 ss_get_most_xtnts(bfAccessT * bfap,	/* in - file */
     int *xtntmap_locked,	/* in/out - xtnts locked? */
     uint64_t reqPageCnt,		/* in - requested page range size */
@@ -4057,7 +4057,7 @@ ss_get_most_xtnts(bfAccessT * bfap,	/* in - file */
 	bsInMemXtntMapT *xtntMap = NULL;
 	bsInMemSubXtntMapT *subXtntMap;
 	uint64_t savedStartPage = 0, savedPageCnt = 0, savedXmPageCnt = 0, bestExtentCnt = 0, consecutivePageCnt = 0, consecutiveXmPageCnt = 0, consecutiveExtentCnt = 0;
-	statusT sts = EOK;
+	int sts = EOK;
 	uint32_t pageCnt = 0;
 	bsXtntDescT startXtntDesc;
 	bsInMemXtntDescIdT xtntDescId;
@@ -4136,13 +4136,13 @@ _RUN_DONE:
 }
 
 static
-       statusT
+       int
 ss_get_vd_most_free(bfAccessT * bfap,
     vdIndexT * newVdIndex)
 {
 	vdT *vdp = NULL;
 	int vdCnt, vdi;
-	statusT sts = EOK;
+	int sts = EOK;
 	uint64_t savedtotFreeBlks = 0, requestedBlkCnt;
 	uint32_t blkCnt = 0, blkOffset;
 
@@ -4218,7 +4218,7 @@ HANDLE_EXCEPTION:
  *
  ********************************************************************/
 
-static statusT
+static int
 ss_vd_migrate(bfTagT filetag,
     bfSetIdT bfSetId,
     vdIndexT srcVdIndex,
@@ -4226,7 +4226,7 @@ ss_vd_migrate(bfTagT filetag,
     int alloc_hint
 )
 {
-	statusT sts = EOK, sts2;
+	int sts = EOK, sts2;
 	int closeFileFlag = FALSE;
 	bfAccessT *bfap = NULL;
 	bfSetT *bfSetp = NULL;
@@ -4629,7 +4629,7 @@ ss_blks_on_vd(bfAccessT * bfap,	/* in */
 	uint32_t i;
 	bsInMemXtntMapT *xtntMap = NULL;
 	bsInMemSubXtntMapT *subXtntMap = NULL;
-	statusT sts = EOK;
+	int sts = EOK;
 
 	sts = x_load_inmem_xtnt_map(bfap, X_LOAD_REFERENCE);
 	if (sts != EOK) {
@@ -4669,7 +4669,7 @@ static
 int
 ss_find_target_vd(bfAccessT * bfap)
 {
-	statusT sts;
+	int sts;
 	vdT *vdp = NULL;
 	uint64_t fileBlockCount, dmnSizeBlks, dmnFreeSizeBlks, newVolFreeSizeBlks;
 	uint64_t blksOnTarg,	/* file blocks on target volume */
@@ -4938,13 +4938,13 @@ ss_sim_file_on_vols(volDataT * volData,	/* in */
  ********************************************************************/
 
 static
-       statusT
+       int
 ss_find_hot_target_vd(domainT * dmnP,	/* in */
     vdIndexT * targVdIndex,	/* out - selected vd */
     bfTagT * tag,		/* out - selected file */
     bfSetIdT * setId)
 {				/* out - selected fset */
-	statusT sts = EOK;
+	int sts = EOK;
 	struct timeval curr_time;
 	ssHotHdrT *hhp;
 	ssHotLLT *currp, *hp, *new_hp = NULL;	/* entry pointer */

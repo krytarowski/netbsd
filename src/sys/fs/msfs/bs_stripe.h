@@ -67,7 +67,7 @@
 void
 str_register_stripe_agent(void);
 
-statusT
+int
 str_stripe(
     bfAccessT * bfAccess,	/* in */
     uint32_t segmentCnt,		/* in */
@@ -75,14 +75,14 @@ str_stripe(
     long xid			/* in */
 );
 
-statusT
+int
 str_stripe_clone(
     bfAccessT * bfap,		/* in - clone access */
     bsInMemXtntT * oXtntp,	/* in - original xtnt map */
     ftxHT pftxH			/* in - parent ftxH */
 );
 
-statusT
+int
 str_create_stripe_hdr(
     uint32_t segmentCnt,		/* in */
     uint32_t segmentSize,	/* in */
@@ -101,7 +101,7 @@ str_calc_page_alloc(
     bsStripeHdrT * stripeHdr	/* in */
 );
 
-statusT
+int
 str_create_bf_rel_xtnt_map(
     bsStripeHdrT * stripeHdr,	/* in */
     uint32_t mapIndex,		/* in */

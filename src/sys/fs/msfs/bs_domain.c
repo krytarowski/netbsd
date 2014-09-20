@@ -105,19 +105,19 @@ vdDescT nilVdDesc = { 0 };
  * module internal PROTOTYPES
  */
 
-statusT
+int
 bs_global_root_activate(
     char *domainName,
     u_long flag,
     bfDomainIdT * bfDomainId
 );
 
-statusT
+int
 bs_bfdmn_sweep(
     struct domain * dmnP
 );
 
-static statusT
+static int
 update_bfsetid(
     domainT * dmnP,
     int vd,
@@ -125,13 +125,13 @@ update_bfsetid(
     bfDomainIdT domainId
 );
 
-static statusT
+static int
 set_vd_mounted(
     struct domain * dmnP,	/* IN - domain struct */
     struct vd * vdp		/* IN - vd struct */
 );
 
-static statusT
+static int
 get_raw_vd_attrs(
     char *vdDiskName,		/* IN - disk device name */
     domainT * dmnP,		/* IN - Domain pointer */
@@ -145,7 +145,7 @@ get_raw_vd_attrs(
     struct bsMPg * pgp		/* OUT - RBMT page 0 */
 );
 
-static statusT
+static int
 setup_vd(
     domainT * dmnP,		/* IN - domain pointer */
     struct vnode * vnp,		/* IN - ptr to vnode */
@@ -167,7 +167,7 @@ get_domain_major(
     uint32_t * dmnMajor		/* out - domain major number */
 );
 
-statusT
+int
 get_domain_disks(
     char *domain,		/* in - domain name */
     int doingRoot,		/* in - flag */
@@ -179,7 +179,7 @@ free_vdds(
     bfDmnDescT * dmnDescp	/* in - ptr to bfdmn desc tbl */
 );
 
-static statusT
+static int
 vd_alloc(
     vdT ** vdp,
     domainT * dmnP
@@ -205,7 +205,7 @@ scan_rsvd_file_xtnt_map(
 );
 
 static
-       statusT
+       int
 clear_bmt(
     domainT * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
@@ -215,7 +215,7 @@ clear_bmt(
 );
 
 static
-       statusT
+       int
 wait_for_ddl_active_entry(
     domainT * domain,		/* in */
     vdT * vd,			/* in */
@@ -229,19 +229,19 @@ vd_remove(
 );
 
 static
-       statusT
+       int
 set_disk_attrs(
     domainT * domain,		/* in */
     bsVdOpT op,			/* in */
     dev_t rdev			/* in */
 );
-statusT
+int
 set_recovery_failed(
     domainT * domain,		/* in */
     int value			/* in */
 );
 
-static statusT
+static int
 dmn_alloc(
     bfDomainIdT domainId,
     char *domainName,
@@ -337,12 +337,12 @@ vd_trace(vdT * vdp,
  * EOK, or EIO (domain panic)
  */
 
-statusT
+int
 bs_domain_access(domainT ** dmnPP,	/* out */
     bfDomainIdT bfDomainId,	/* in */
     int deactivated_ok)
 {				/* in */
-	statusT sts;
+	int sts;
 
 	mutex_lock(&DmnTblMutex);
 
@@ -409,7 +409,7 @@ bs_domain_close(domainT * dmnP)
  * it would return E_NO_SUCH_DOMAIN.
  */
 
-statusT
+int
 bs_bfdmn_id_activate(
     bfDomainIdT bfDomainId	/* in - domain id */
 )
@@ -470,14 +470,14 @@ bs_bfdmn_id_activate(
  * advfs_mountfs, bs_bfset_activate, bs_bfdmn_tbl_activate,
  * bd_bfdmn_activate, lgr_open.
  */
-statusT
+int
 bs_bfdmn_tbl_activate(
     char *domainName,		/* in - bf domain name */
     u_long flag,		/* in - flag */
     bfDomainIdT * bfDomainId	/* out - domain id */
 )
 {
-	statusT sts;
+	int sts;
 	bfDmnDescT *dmntbl;
 	bfDomainIdT domainId;
 	bfDomainIdT dualMountId;
@@ -924,7 +924,7 @@ get_attrs_error:
 
 		/* Close volumes that were opened above */
 
-		statusT temp_sts;
+		int temp_sts;
 
 		for (vdi = 1; (vdi <= BS_MAX_VDI) && (dmnP->vdCnt > 0); vdi++)
 			if ((vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE))) {
@@ -981,14 +981,14 @@ get_table_error:
 		ms_uprintf("    To finish rmvol cleanup, type the command:\n");
 		ms_uprintf("    /sbin/disklabel -sF %s unused\n", rem_vol + 1);
 
-		if ((sts = (statusT) namei(ndp)) != EOK) {
+		if ((sts = (int) namei(ndp)) != EOK) {
 			ms_free(volPathName);
 			return sts;
 		}
 		VOP_REMOVE(ndp, error);
 		ms_free(volPathName);
 		if (error) {
-			return (statusT) error;
+			return (int) error;
 		}
 		goto start;
 	}
@@ -999,14 +999,14 @@ get_table_error:
 }				/* end bs_bfdmn_tbl_activate */
 
 
-statusT
+int
 bs_global_root_activate(
     char *domainName,		/* in - bf domain name */
     u_long flag,		/* in - flag */
     bfDomainIdT * bfDomainId	/* out - domain id */
 )
 {
-	statusT sts;
+	int sts;
 	bfDmnDescT *dmntbl;
 	bfDomainIdT domainId;
 	int closeVd, error, vdi, id, restart;
@@ -1502,7 +1502,7 @@ get_attrs_error:
 
 		/* Close volumes that were opened above */
 
-		statusT temp_sts;
+		int temp_sts;
 
 		for (vdi = 1; (vdi <= BS_MAX_VDI) && (dmnP->vdCnt > 0); vdi++)
 			if ((vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE))) {
@@ -1558,7 +1558,7 @@ get_table_error:
  * Returns ENOMEM, E_TOO_MANY_ACCESSORS, or EOK via bs_reclaim_cfs_rsvd_vn()
  */
 
-statusT
+int
 bs_bfdmn_deactivate(
     bfDomainIdT domainId,
     u_long flag
@@ -1568,7 +1568,7 @@ bs_bfdmn_deactivate(
 	domainT *dmnP;
 	vdT *vdp;
 	int rem, tblLocked = FALSE;
-	statusT sts = EOK;
+	int sts = EOK;
 	bfSetT *bfSetp;
 	int vdCnt;
 	int isMount = flag & M_MSFS_MOUNT;
@@ -1796,7 +1796,7 @@ HANDLE_EXCEPTION:
  * bs_deref_pg, or EOK
  */
 
-statusT
+int
 bs_bfdmn_activate(
     bfDomainIdT domainId,	/* in */
     u_long flag			/* in */
@@ -1808,7 +1808,7 @@ bs_bfdmn_activate(
 	int logOpen = FALSE, tagDirOpen = FALSE, setDesc = FALSE;
 	domainT *dmnP;
 	struct vd *vdp;
-	statusT sts;
+	int sts;
 	logDescT *ldP;
 	logRecAddrT nextlogaddr;
 	bfAccessT *bfSetDirAccp;
@@ -2051,10 +2051,10 @@ _error_cleanup:
  * Rewrite on disk domainid
  */
 
-statusT
+int
 bs_bfdmn_sweep(domainT * dmnP)
 {
-	statusT sts;
+	int sts;
 	uint32_t *pgp;
 	bfDomainIdT domainId = dmnP->domainId;
 	int error, vdi, logVdI, tagdirVdI;
@@ -2096,7 +2096,7 @@ bs_bfdmn_sweep(domainT * dmnP)
 			mcell_index = BFM_BMT_EXT_V3;
 		}
 		if ((error = bs_pinpg(&bmtPgRef, (void *) &pgp, mdap, 0, BS_NIL))) {
-			sts = (statusT) error;
+			sts = (int) error;
 			goto err_cleanup;
 		}
 		dmnAttrp = bmtr_find(&((bsMPgT *) pgp)->bsMCA[mcell_index],
@@ -2137,12 +2137,12 @@ bs_bfdmn_sweep(domainT * dmnP)
 			    BSR_DMN_MATTR, dmnP);
 
 			if ((error = getvp(&vp, vdp->vdName, ndp, UIO_SYSSPACE))) {
-				sts = (statusT) error;
+				sts = (int) error;
 				goto err_cleanup;
 			}
 			VOP_ACCESS(vp, VREAD | VWRITE, ndp->ni_cred, error);
 			if (error) {
-				sts = (statusT) error;
+				sts = (int) error;
 				vrele(vp);
 				goto err_cleanup;
 			}
@@ -2186,7 +2186,7 @@ bs_bfdmn_sweep(domainT * dmnP)
 			for (logpg = 0; logpg < dmnMAttrp->ftxLogPgs; logpg++) {
 				error = read_raw_page(vp, logBlk, ADVFS_PGSZ_IN_BLKS, logpgp);
 				if (error) {
-					sts = (statusT) error;
+					sts = (int) error;
 					vrele(vp);
 					ms_free(logpgp);
 					goto err_cleanup;
@@ -2196,7 +2196,7 @@ bs_bfdmn_sweep(domainT * dmnP)
 
 				error = write_raw_page(vp, logBlk, ADVFS_PGSZ_IN_BLKS, logpgp);
 				if (error) {
-					sts = (statusT) error;
+					sts = (int) error;
 					vrele(vp);
 					ms_free(logpgp);
 					goto err_cleanup;
@@ -2252,7 +2252,7 @@ bs_bfdmn_sweep(domainT * dmnP)
 
 				if ((error = bs_refpg(&rootTagPgRef, (void *) &rootTagPgP,
 					dmnP->bfSetDirAccp, rootTagPg, BS_NIL))) {
-					sts = (statusT) error;
+					sts = (int) error;
 					goto err_cleanup;
 				}
 				if (rootTagPgP->tpNumAllocTMaps != 0) {
@@ -2269,21 +2269,21 @@ bs_bfdmn_sweep(domainT * dmnP)
 								vd,
 								mcid,
 								domainId))) {
-								sts = (statusT) error;
+								sts = (int) error;
 								goto err_cleanup;
 							}
 						}
 					}
 				}
 				if ((error = bs_derefpg(rootTagPgRef, BS_NIL))) {
-					sts = (statusT) error;
+					sts = (int) error;
 					goto err_cleanup;
 				}
 				rootTagPgRef = NilBfPageRefH;
 			}
 		}
 		if ((error = bs_unpinpg(bmtPgRef, logNilRecord, BS_DIRTY))) {
-			sts = (statusT) error;
+			sts = (int) error;
 			goto err_cleanup;
 		}
 		bmtPgRef = NilBfPageRefH;
@@ -2308,7 +2308,7 @@ err_cleanup:
  * Update on disk bfset attributes with the new domainid
  */
 
-static statusT
+static int
 update_bfsetid(
     domainT * dmnP,
     int vd,
@@ -2316,7 +2316,7 @@ update_bfsetid(
     bfDomainIdT domainId
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	int error;
 	uint32_t *pagep;
 	vdT *vdp = VD_HTOP(vd, dmnP);
@@ -2345,7 +2345,7 @@ mcell_chain:
 err_cleanup:
 
 	if ((error = bs_unpinpg(bmtPgRef, logNilRecord, BS_DIRTY))) {
-		sts = (statusT) error;
+		sts = (int) error;
 	}
 	return (sts);
 }
@@ -2357,7 +2357,7 @@ err_cleanup:
  * Rewrite on disk vd attributes to set disk to mounted state.
  */
 
-static statusT
+static int
 set_vd_mounted(
     struct domain * dmnP,	/* IN - domain struct */
     struct vd * vdp		/* IN - vd struct */
@@ -2367,7 +2367,7 @@ set_vd_mounted(
 	struct bsXtntR *bsXtntrp;
 	bfPageRefHT bmtPgRef;
 	struct bsMPg *bmtpgp;
-	statusT sts;
+	int sts;
 
 	/*
          * Mark the disks and domain as mounted and active in their
@@ -2454,7 +2454,7 @@ read_n_chk_last_rbmt_pg(vdT * vdp)
 	bfPageRefHT bmtPgRef;
 	struct bsMPg *bmtpgp;
 	bfMCIdT nextfreeMCId;
-	statusT sts;
+	int sts;
 
 	sts = bmt_refpg(&bmtPgRef, (void *) &bmtpgp,
 	    vdp->rbmtp, vdp->lastRbmtPg, BS_NIL);
@@ -2497,7 +2497,7 @@ read_n_chk_last_rbmt_pg(vdT * vdp)
  * or EBUSY,EBAD_VDI, or EOK
  */
 
-static statusT
+static int
 get_raw_vd_attrs(
     char *vdDiskName,		/* IN - disk device name */
     domainT * dmnP,		/* IN - Domain pointer */
@@ -2511,7 +2511,7 @@ get_raw_vd_attrs(
     struct bsMPg * pgp		/* OUT - RBMT page 0 */
 )
 {
-	statusT sts;
+	int sts;
 	uint32_t *superBlk;
 	struct bsVdAttr *vdAttrp;
 	bsDmnAttrT *dmnAttrp;
@@ -2532,11 +2532,11 @@ get_raw_vd_attrs(
 		vp = GlobalRootVpp[vdi];
 	} else {
 		if ((error = getvp(&vp, vdDiskName, ndp, UIO_SYSSPACE))) {
-			return (statusT) error;
+			return (int) error;
 		}
 		VOP_ACCESS(vp, VREAD | VWRITE, ndp->ni_cred, error);
 		if (error) {
-			sts = (statusT) error;
+			sts = (int) error;
 			goto err_nodlmlock;
 		}
 		/*
@@ -2553,7 +2553,7 @@ get_raw_vd_attrs(
 			dev = vp->v_rdev;
 			vrele(vp);
 			if ((error = bdevvp(dev, &vp))) {
-				return (statusT) error;
+				return (int) error;
 			}
 		}
 	}
@@ -2574,21 +2574,21 @@ get_raw_vd_attrs(
 	if (clu_is_ready() && !(isMount)) {
 		error = CC_DEV_DLM_LOCK(vp->v_rdev, 1);
 		if (error) {
-			sts = (statusT) error;
+			sts = (int) error;
 			goto err_nodlmlock;
 		}
 	}
 	VOP_OPEN(&vp, FREAD | FWRITE | OTYP_MNT, ndp->ni_cred, error);
 	if (error) {
-		sts = (statusT) error;
+		sts = (int) error;
 		goto err_vrele;
 	}
 	if (vp->v_type != VBLK && vp->v_type != VCHR) {
-		sts = (statusT) E_BAD_DEV;
+		sts = (int) E_BAD_DEV;
 		goto err_vclose;
 	}
 	if (setmount(vp, SM_OPEN | SM_MOUNTED | SM_SETMOUNT)) {
-		sts = (statusT) EBUSY;
+		sts = (int) EBUSY;
 		goto err_vclose;
 	}
 	superBlk = (uint32_t *) ms_malloc(ADVFS_PGSZ);
@@ -2608,7 +2608,7 @@ get_raw_vd_attrs(
 	superBlk = NULL;
 
 	if ((error = read_raw_bmt_page(vp, MSFS_RESERVED_BLKS, pgp))) {
-		sts = (statusT) error;
+		sts = (int) error;
 		goto err_closeall;
 	}
 	/*
@@ -2646,7 +2646,7 @@ get_raw_vd_attrs(
 
 			error = write_raw_bmt_page(vp, MSFS_RESERVED_BLKS, pgp);
 			if (error) {
-				sts = (statusT) error;
+				sts = (int) error;
 				goto err_closeall;
 			}
 		}
@@ -2735,7 +2735,7 @@ int advfs_prefer_trans_threshold = (int) (64 * (1 << 20));
  * or EBUSY, EBAD_VDI, ENO_MORE_DOMAINS, EDUP_VD, E_VD_DMNATTR_DIFF, or EOK
  */
 
-static statusT
+static int
 setup_vd(
     domainT * dmnP,		/* IN - domain pointer */
     struct vnode * vnodep,	/* IN - ptr to vnode */
@@ -2748,7 +2748,7 @@ setup_vd(
 	struct bfAccess *metafileap;
 	int vdIndex;
 	struct vd *vdp;
-	statusT sts;
+	int sts;
 	bfPageRefHT bsPgRfH, bmtPgRef;
 	struct bsMPg *bmtpgp;
 	vdIoParamsT vdIoParams;
@@ -2970,7 +2970,7 @@ err_freevd:
  * Add a new virtual disk to an active domain.
  */
 
-statusT
+int
 bs_vd_add_active(
     char *domainName,		/* in - bitfile domain name */
     char *vdName,		/* in - block special device name */
@@ -2983,7 +2983,7 @@ bs_vd_add_active(
     uint32_t * volIndex		/* out - volume index */
 )
 {
-	statusT sts = 0;
+	int sts = 0;
 	bfDomainIdT domainId;
 	domainT *dmnP;
 	struct bsVdAttr *vdAttrp;
@@ -3141,7 +3141,7 @@ err_deactivate:
  * the particular disk and domain involved.
  */
 
-static statusT
+static int
 vd_alloc(
     vdT ** avdp,
     domainT * dmnP
@@ -3468,7 +3468,7 @@ vd_free(
  * error.
  */
 
-statusT
+int
 bs_vd_remove_active(
     domainT * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
@@ -3481,7 +3481,7 @@ bs_vd_remove_active(
 	int foundFlag;
 	uint32_t freeClusters;
 	bfMCIdT nextBfDescId;
-	statusT sts;
+	int sts;
 	uint32_t totalClusters;
 	vdT *vdp;
 	int dmntbl_lock = 0;
@@ -3651,14 +3651,14 @@ HANDLE_EXCEPTION:
  * /etc/fdmns.
  */
 
-statusT
+int
 bs_vd_add_rem_vol_done(
     domainT * dmnP,		/* in */
     char *volName,		/* in */
     bsVdOpT op			/* in */
 )
 {
-	statusT sts;
+	int sts;
 	vdT *vd;
 	vdIndexT vdIndex;
 	struct bfAccess *mdap;
@@ -3702,7 +3702,7 @@ bs_vd_add_rem_vol_done(
 		ndp->ni_segflg = UIO_SYSSPACE;
 		ndp->ni_dirp = volName;
 
-		if ((sts = (statusT) namei(ndp))) {
+		if ((sts = (int) namei(ndp))) {
 			bs_unpinpg(pgPin, logNilRecord, BS_DIRTY);	/* Ignore status. */
 			DMNTBL_UNLOCK(&DmnTblLock)
 			    return sts;
@@ -3787,7 +3787,7 @@ scan_rsvd_file_xtnt_map(
  */
 
 static
-       statusT
+       int
 clear_bmt(
     domainT * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
@@ -3811,7 +3811,7 @@ clear_bmt(
 	metadataTypeT metadataType;
 	int migFlag;
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	int unlockFlag = 0;
 	uint32_t open_options, do_vrele;
 	struct vnode *nullvp;
@@ -4200,7 +4200,7 @@ HANDLE_EXCEPTION:
  * with the disk's deferred-delete list active lock held (exclusive).
  */
 
-statusT
+int
 find_del_entry(
     domainT * dmnP,		/* in */
     bfTagT bfSetTag,		/* in */
@@ -4212,7 +4212,7 @@ find_del_entry(
 {
 	int dFlag;
 	bfMCIdT mcellId;
-	statusT sts;
+	int sts;
 	vdT *vd = NULL;
 	int vdCnt;
 	vdIndexT vdIndex;
@@ -4272,7 +4272,7 @@ find_del_entry(
  */
 
 static
-       statusT
+       int
 wait_for_ddl_active_entry(
     domainT * dmnP,		/* in */
     vdT * vd,			/* in */
@@ -4319,7 +4319,7 @@ vd_remove(
 {
 	bfTagT bfTag;
 	struct bsVdAttr *vdAttr;
-	statusT sts;
+	int sts;
 	bfPageRefHT pgref;
 	struct bsMPg *rbmtpgp;
 	int error;
@@ -4567,7 +4567,7 @@ vd_alloc_index(
  * The caller must hold the domain table lock before calling this function.
  */
 static
-       statusT
+       int
 set_disk_attrs(
     domainT * dmnP,		/* in */
     bsVdOpT op,			/* in */
@@ -4578,7 +4578,7 @@ set_disk_attrs(
 	bsDmnMAttrT *dmnMAttr;
 	bsDmnTAttrT *dmnTAttr;
 	bfPageRefHT pgPin;
-	statusT sts;
+	int sts;
 	vdT *vd;
 	vdIndexT vdIndex;
 	int mcell_index;
@@ -4662,7 +4662,7 @@ set_disk_attrs(
  * this volume hasn't been added to service class yet (see addvol
  * command), no new storage allocations have been done from this volume.
  */
-statusT
+int
 check_trans_attrs(
     domainT * dmnP,		/* in */
     int dmnMAttrIdx,		/* in */
@@ -4673,7 +4673,7 @@ check_trans_attrs(
 	vdT *vdp;
 	bsMPgT *bmtPage;
 	bfPageRefHT pgPin;
-	statusT sts = EOK;
+	int sts = EOK;
 	struct bfAccess *mdap;
 	bsDmnTAttrT *dmnTAttr;
 	bsDmnMAttrT *dmnMAttr;
@@ -4758,7 +4758,7 @@ check_trans_attrs(
  * This domain has reconciled all vdCnt related discrepancies, if any.
  * Clear out the transient attribute record.
  */
-statusT
+int
 clear_trans_attrs(
     domainT * dmnP,		/* in */
     int dmnMAttrIdx		/* in */
@@ -4767,7 +4767,7 @@ clear_trans_attrs(
 	vdT *vdp;
 	bsMPgT *bmtPage;
 	bfPageRefHT pgPin;
-	statusT sts = EOK;
+	int sts = EOK;
 	struct bfAccess *mdap;
 	int mcell_index;
 	bsDmnTAttrT *dmnTAttr;
@@ -4810,14 +4810,14 @@ clear_trans_attrs(
  * activated.
  */
 
-statusT
+int
 bs_fix_root_dmn(
     bfDmnDescT * dmntbl,
     domainT * dmnP,
     char *dmnName
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	vdT *vdp;
 	int error, mcell_index, vdi, idx, idx2, vdCnt = 0;
 	bfPageRefHT pgPin;
@@ -4875,7 +4875,7 @@ bs_fix_root_dmn(
 				ndp->ni_nameiop = LOOKUP | FOLLOW;
 				ndp->ni_segflg = UIO_SYSSPACE;
 				ndp->ni_dirp = dmntbl->vddp[vdi]->vdName;
-				if ((sts = (statusT) namei(ndp)) != EOK) {
+				if ((sts = (int) namei(ndp)) != EOK) {
 					goto done;
 				}
 				if (ndp->ni_vp->v_rdev == dmnTAttr->dev) {
@@ -4895,11 +4895,11 @@ bs_fix_root_dmn(
 					ndp->ni_segflg = UIO_SYSSPACE;
 					ndp->ni_dirp = volPathName;
 
-					if ((sts = (statusT) namei(ndp)) != EOK) {
+					if ((sts = (int) namei(ndp)) != EOK) {
 						goto done;
 					}
 					VOP_REMOVE(ndp, error);
-					if ((sts = (statusT) error) != EOK)
+					if ((sts = (int) error) != EOK)
 						goto done;
 
 					/*
@@ -4942,7 +4942,7 @@ bs_fix_root_dmn(
 							dmnName,
 							vdp->devVp->v_rdev)) {
 							bs_unpinpg(pgPin, logNilRecord, BS_DIRTY);
-							return (statusT) error;
+							return (int) error;
 						}
 					}
 					/*
@@ -5014,12 +5014,12 @@ done:
  * the domain's transient record, the suspect volume wasn't added to the
  * service class table. Do it now.
  */
-statusT
+int
 bs_check_root_dmn_sc(
     domainT * dmnP
 )
 {
-	statusT sts;
+	int sts;
 	vdT *vdp;
 	struct bfAccess *mdap;
 	int mcell_index, vdi, vdCnt = 0;
@@ -5085,7 +5085,7 @@ bs_check_root_dmn_sc(
  * The caller must hold the domain table lock before calling this function.
  */
 
-statusT
+int
 set_recovery_failed(
     domainT * dmnP,		/* in */
     int value			/* in */
@@ -5094,7 +5094,7 @@ set_recovery_failed(
 	bsMPgT *bmtPage;
 	bsDmnMAttrT *dmnMAttr;
 	bfPageRefHT pgPin;
-	statusT sts;
+	int sts;
 	vdT *vd;
 	vdIndexT vdIndex;
 	int mcell_index;
@@ -5315,7 +5315,7 @@ dmn_dealloc(
  * Returns a positive handle and EOK if successful.
  */
 
-static statusT
+static int
 dmn_alloc(
     bfDomainIdT domainId,
     char *domainName,
@@ -5328,7 +5328,7 @@ dmn_alloc(
 	domainT *dmnP = NULL;
 	int i, slot = 0;
 	bfSetIdT rootBfSetId;
-	statusT sts = EOK;
+	int sts = EOK;
 
 	dmnP = (struct domain *) ms_malloc(sizeof(struct domain));
 	if (!dmnP) {
@@ -5582,7 +5582,7 @@ get_bmt_pgptr(
  * Used to change the owner, group and access mode of domain.
  */
 
-statusT
+int
 bs_dmn_change(
     char *dmnTbl,		/* in - domain table file name */
     int newUid,			/* in - indicates if UID is to be changed */
@@ -5593,7 +5593,7 @@ bs_dmn_change(
     mode_t mode			/* in - new MODE */
 )
 {
-	statusT sts;
+	int sts;
 	bfDomainIdT dmnId;
 	domainT *dmnP;
 	bfDmnParamsT *dmnParamsp = NULL;
@@ -5672,13 +5672,13 @@ _error:
  * the system call interface.
  */
 
-statusT
+int
 bs_get_dmntbl_params(
     char *dmnTbl,		/* in - domain table file name */
     bfDmnParamsT * dmnParams	/* out - domains parameters */
 )
 {
-	statusT sts;
+	int sts;
 	bfDomainIdT dmnId;
 	domainT *dmnP;
 	int dmnActive = FALSE, dmnOpen = FALSE;
@@ -5763,7 +5763,7 @@ bs_domain_init(
  * and gets the names of the devices in the domain.
  */
 
-statusT
+int
 get_domain_disks(
     char *domain,		/* in - domain name */
     int doingRoot,		/* in - flag */
@@ -6179,14 +6179,14 @@ _error:
 *           returns error from get_domain_disks()
 *
 */
-statusT
+int
 advfs_enum_domain_devts(
     char *domain,		/* in */
     bsDevtListT * DevtList	/* out */
 )
 {
 	bfDmnDescT *tmpDmnTbl;	/* table for get_domain_disks */
-	statusT sts;
+	int sts;
 	int i;
 
 	tmpDmnTbl = (bfDmnDescT *) ms_malloc(sizeof(bfDmnDescT));

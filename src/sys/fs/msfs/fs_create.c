@@ -82,12 +82,12 @@ statT NilStats = {0};
  *
  */
 
-statusT
+int
 fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
     struct nameidata * ndp)
 {				/* in - nameidata pointer */
 	char *block_buffer;
-	statusT ret;
+	int ret;
 	bfTagT new_file_tag;
 	rbfPgRefHT page_ref;
 	bfAccessT *bfap;
@@ -913,7 +913,7 @@ fail_out1:
  * update the on-disk stats for a bitfile in it's BMT recd.
  * Read the system time, if necessary, to update any time fields.
  */
-statusT
+int
 fs_update_stats(
     struct vnode * vp,		/* in - vnode of bitfile */
     struct bfAccess * bfap,	/* in - access structure */
@@ -922,7 +922,7 @@ fs_update_stats(
 )
 {
 	struct fsContext *context_ptr;
-	statusT ret = EOK;
+	int ret = EOK;
 	struct timeval new_time;
 	struct mount *mp;
 	struct fileSetNode *fsNp;
@@ -1020,7 +1020,7 @@ EXIT_UPDATE:
  * progress and the bfap->bfaLock held!  The bfap->bfaLock will
  * be dropped and reseized in this routine, so beware!
  */
-statusT
+int
 fs_flush_saved_stats(
     bfAccessT * bfap,		/* in - access struct */
     uint32_t flags,		/* in - flags */
@@ -1028,7 +1028,7 @@ fs_flush_saved_stats(
 )
 {
 	saved_statsT *ssp = bfap->saved_stats;
-	statusT ret = EOK;
+	int ret = EOK;
 	struct timeval new_time;
 
 	KASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));

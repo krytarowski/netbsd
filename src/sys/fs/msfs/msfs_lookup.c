@@ -219,7 +219,7 @@ msfs_lookup(
 	bfTagT found_bs_tag, bf_tag;
 	fs_dir_entry *found_buffer;
 	rbfPgRefHT found_page_ref;
-	statusT ret;
+	int ret;
 	struct vnode *found_vp = NULL, *nvp = NULL;
 	struct mount *mp;
 	struct fileSetNode *fsn;
@@ -679,7 +679,7 @@ check_path_back(
 	struct bfNode *sbnp, *tbnp;
 	bfTagT root_tag, dir_tag, *tagp;
 	struct fsContext *t_context, *s_context;
-	statusT ret;
+	int ret;
 	bfSetT *bfSetp;
 	bfPageRefHT page_ref;
 	bfAccessT *bfap;
@@ -841,7 +841,7 @@ new_parent(
 {
 	struct bfNode *sbnp;
 	struct fsContext *s_context;
-	statusT ret;
+	int ret;
 	rbfPgRefHT page_ref;
 	struct bfAccess *bfap;
 	fs_dir_entry *dir_p;

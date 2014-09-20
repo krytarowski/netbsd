@@ -103,7 +103,7 @@ struct bsBuf {
 	int unused;		/* unused for alignment */
 
 	/* Changed under protection of state == IO_TRANS  */
-	statusT result;		/* I/O completion status */
+	int result;		/* I/O completion status */
 	short metaCheck;	/* metadata integrity check on io done */
 	short ioCount;		/* number of outstanding I/O's */
 	ioListT ioList;		/* buffer's block map info */
@@ -294,7 +294,7 @@ _state_block(
     int *wait			/* in/out - waited previously? */
 );
 
-statusT
+int
 bs_pinpg_ftx(bfPageRefHT * bfPageRefH,		/* out */
     void **bfPageAddr,		/* out */
     struct bfAccess * bfap,	/* in */
@@ -303,7 +303,7 @@ bs_pinpg_ftx(bfPageRefHT * bfPageRefH,		/* out */
     ftxHT ftxH);		/* in */
 
 #ifdef _KERNEL
-statusT
+int
 bs_refpg_get(
     struct bfAccess * bfap,	/* in */
     unsigned long bsPage,	/* in - bf page number */
@@ -315,7 +315,7 @@ bs_refpg_get(
     int ubc_flags		/* in - ubc hint */
 );
 
-statusT
+int
 bs_refpg_direct(void *bfPageAddr,	/* in */
     int number_to_read,		/* in */
     struct bfAccess * bfap,	/* in */
@@ -326,7 +326,7 @@ bs_refpg_direct(void *bfPageAddr,	/* in */
     int *number_read,		/* out */
     int *aio_flag);		/* out */
 
-statusT
+int
 bs_pinpg_get(
     struct bfAccess * bfap,	/* in */
     unsigned long bsPage,	/* in - bf page number */
@@ -338,12 +338,12 @@ bs_pinpg_get(
     int ubc_flags		/* in - ubc hint */
 );
 
-statusT
+int
 bs_pinpg_put(vm_page_t plp,	/* in */
     int plcnt,			/* in */
     int ubc_flags);		/* in */
 
-statusT
+int
 bs_pinpg_direct(void *bfPageAddr,	/* in */
     int number_to_write,	/* in */
     struct bfAccess * bfap,	/* in */

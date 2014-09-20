@@ -91,7 +91,7 @@ int dirTruncEnabled = 1;
  */
 
 
-statusT
+int
 insert_seq(
     struct vnode * dvp,		/* in - directory vnode */
     bfTagT new_bs_tag,		/* in - tag of the new entry */
@@ -113,7 +113,7 @@ insert_seq(
 	char *begin_page;
 	unsigned int entry_size, last_size, real_entry_size, actual_size;
 	char *insert_here;
-	statusT ret;
+	int ret;
 	int update_last_offset, end_flag;
 	rbfPgRefHT page_ref;
 	bfTagT found_bs_tag;
@@ -520,7 +520,7 @@ insert_entry:
 				/* A negtive value indicates and error The
 				 * returned value is actually a status code. */
 
-				return ((statusT) bytes_to_trunc);
+				return ((int) bytes_to_trunc);
 			}
 			num_useful_pages = curr_pages - howmany(bytes_to_trunc, ADVFS_PGSZ);
 		} else
@@ -541,7 +541,7 @@ insert_entry:
 				/* A negtive value indicates and error The
 				 * returned value is actually a status code. */
 
-				return ((statusT) bytes_to_trunc);
+				return ((int) bytes_to_trunc);
 			}
 		}
 		/* reset # useful pages to 'invalid' whether it was used or
@@ -576,13 +576,13 @@ error:
  */
 
 
-statusT
+int
 remove_dir_ent(
     struct nameidata * ndp,	/* in - nameidata structure pointer */
     ftxHT ftx_handle		/* in - ftx handle from msfs_remove */
 )
 {
-	statusT ret;
+	int ret;
 	fs_dir_entry *dir_p;
 	struct fsContext *dir_context, *file_context;
 	rbfPgRefHT page_ref;
@@ -797,13 +797,13 @@ remove_dir_ent(
  * deleted. This routine doesn't fail.
  */
 
-statusT
+int
 remove_dots(
     struct vnode * dvp,		/* in - dir vnode pointer */
     ftxHT ftx_handle		/* in - ftx handle from msfs_remove */
 )
 {
-	statusT ret;
+	int ret;
 	fs_dir_entry *dir_p;
 	rbfPgRefHT page_ref;
 	char *dir_buffer, *p;
@@ -900,7 +900,7 @@ struct seq_search_stats {
  */
 
 
-statusT
+int
 seq_search(
     struct vnode * dir_vp,	/* in - dir's vnode ptr */
     struct nameidata * ndp,
@@ -917,7 +917,7 @@ seq_search(
 {
 	char *p;
 	fs_dir_entry *dir_p, *last_p, *first_p, *save_buffer;
-	statusT return_value, ret;
+	int return_value, ret;
 	int n, j;
 	int last_page, entry_size, offset;
 	unsigned int last_ent_offset;
@@ -1304,14 +1304,14 @@ fs_dir_size_notice(
  *
  */
 
-statusT
+int
 remove_bf(
     ino_t ino,
     bfAccessT * tag_access,
     int just_delete_flag
 )
 {
-	statusT ret;
+	int ret;
 	struct fsContext *tag_context, *file_context, *dir_context;
 	bfSetT *bfSetp;
 	bfTagT rem_tag;
@@ -1438,7 +1438,7 @@ out:
 }
 
 
-statusT
+int
 tag_search(
     struct vnode * dir_vp,
     bfTagT bf_tag,
@@ -1451,7 +1451,7 @@ tag_search(
          *  I_FILE_EXISTS - found the the file
          *  EIO - error from refpg
          */
-	statusT sts, return_status = EOK;
+	int sts, return_status = EOK;
 	int last_page, i, n, offset;
 	bfPageRefHT page_ref;
 	char *dir_buffer, *p;
@@ -1525,13 +1525,13 @@ tag_search(
  *
  */
 
-statusT
+int
 remove_entry(
     bfAccessT * dir_access,
     char *file_name
 )
 {
-	statusT ret;
+	int ret;
 	bfTagT found_bs_tag, *tagp;
 	char *buffer;
 	fs_dir_entry *dir_p;
@@ -1792,7 +1792,7 @@ out:
 }
 
 
-statusT
+int
 setup_for_glom_dir_entries(
     char *dir_buffer,
     fs_dir_entry ** start_dir_p,

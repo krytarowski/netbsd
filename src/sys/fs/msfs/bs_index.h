@@ -36,13 +36,13 @@ typedef enum {
 }    idxCloseActionT;
 #ifdef _KERNEL
 
-statusT
+int
 idx_remove_index_file(
     bfAccessT * dir_bfap,	/* Directory access structure */
     ftxHT ftxH			/* Parent transaction */
 );
 
-statusT
+int
 idx_open_index_file(
     bfAccessT * dir_bfap,	/* directory's access structure. */
     ftxHT ftxH			/* Parent transaction */
@@ -54,7 +54,7 @@ idx_close_index_file(
     idxCloseActionT action	/* action to perform */
 );
 
-statusT
+int
 idx_insert_filename(
     bfAccessT * dir_bfap,	/* Directory's access structure */
     struct nameidata * ndp,	/* Namei struct of file to insert */
@@ -63,7 +63,7 @@ idx_insert_filename(
     ftxHT parentFtx		/* Parent Ftx */
 );
 
-statusT
+int
 idx_remove_filename(
     bfAccessT * dir_bfap,	/* Directory's access structure */
     struct nameidata * ndp,	/* Namei struct of file to remove */
@@ -72,7 +72,7 @@ idx_remove_filename(
     ftxHT parentFtx		/* Parent ftx */
 );
 
-statusT
+int
 idx_lookup_filename(
     bfAccessT * dir_bfap,	/* bfap of the directory */
     struct nameidata * ndp,	/* Namei struct of file to lookup */
@@ -84,7 +84,7 @@ idx_lookup_filename(
     ftxHT ftxH			/* parent ftx */
 );
 
-statusT
+int
 idx_directory_insert_space(
     bfAccessT * dir_bfap,	/* Directories Access Structure */
     ulong size,			/* size of space to insert */
@@ -112,14 +112,14 @@ idx_setup_for_truncation(
     ftxHT parentFtxH
 );
 
-statusT
+int
 idx_convert_dir(
     bfAccessT * dir_bfap,
     struct nameidata * ndp,
     ftxHT ftxH
 );
 
-statusT
+int
 idx_prune_start(
     bfAccessT * dir_bfap,
     ftxHT ftxH
@@ -137,7 +137,7 @@ idx_undo_opx(
 );
 
 struct bsUnkIdxRec;
-statusT
+int
 bf_idx_file_test(
     struct bsUnkIdxRec * idxrec,
     ulong flagval

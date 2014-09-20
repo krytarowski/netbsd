@@ -2468,7 +2468,7 @@ void
 call_logflush(domainT * dmnP, lsnT lsn, int wait)
 {
 	bfAccessT *bfap = dmnP->logAccessp;
-	statusT sts;
+	int sts;
 	struct bsBuf *tail;
 	lsnT logPageLsn;
 
@@ -2605,7 +2605,7 @@ bs_logpage_dirty(
  * the last log page is suspected to be within the flushing range.
  */
 
-statusT
+int
 bs_logflush_start(
     bfAccessT * bfap,		/* in */
     lsnT lsn			/* in */
@@ -3394,13 +3394,13 @@ end_of_loop:
  *      guard hiFlushLsn and flushWait.
  */
 
-statusT
+int
 bfflush_sync(
     bfAccessT * bfap,		/* in - bf access ptr */
     lsnT waitLsn		/* in - seq to wait for */
 )
 {
-	statusT sts;
+	int sts;
 	flushWaiterT *flushWaiter, *curFlushWaiter;
 	int deallocWaiter;
 	processor_t myprocessor;/* used by mark_bio_wait */
@@ -3533,7 +3533,7 @@ bfflush_sync(
  *      3. Acquires bfap->bfObj lock to wait for I/O completion.
  */
 
-statusT
+int
 bs_bf_flush_nowait(
     bfAccessT * bfap		/* in */
 )
@@ -3704,7 +3704,7 @@ bs_bflush_sync(
  *
  */
 
-statusT
+int
 bfflush(
     bfAccessT * bfap,		/* in - ptr to access struct */
     bsPageT first_page,		/* in - first page to flush */
@@ -3717,7 +3717,7 @@ bfflush(
 	int listLenPart;
 	ioDescT *ioList, *ioListPart, *save;
 	lsnT flushTerminatorLsn;
-	statusT result;
+	int result;
 	bsPageT last_page;
 	rangeFlushT *rfp = (rangeFlushT *) NULL;
 	rangeFlushLinkT *rflp;
@@ -4829,7 +4829,7 @@ again:
  * SMP: 1. No locks held on entry
  */
 
-statusT
+int
 bs_raw_page(bfAccessT * bfap,		/* in */
     unsigned vdIndex,		/* in */
     unsigned startBlk,		/* in */
@@ -4961,7 +4961,7 @@ bs_io_thread(int radId)
 		case LF_PB_CONT:
 			{
 				domainT *dmnP;
-				statusT sts;
+				int sts;
 
 				/*
 		                 * The call to bs_domain_access() is necessary
@@ -5149,7 +5149,7 @@ int
 bs_io_rad_start(int radId)
 {
 	thread_t ioThreadH;
-	statusT sts;
+	int sts;
 
 	if ((radId < 0) || (radId >= nrads)) {
 		return 1;
@@ -5195,7 +5195,7 @@ int
 bs_io_rad_stop(int radId)
 {
 	thread_t ioThreadH;
-	statusT sts;
+	int sts;
 	msgQHT qToDestroy;
 	ioThreadMsgT *msg;
 	int i;

@@ -31,7 +31,7 @@
 				 * support migration to multiple locations,
 				 * this would have to be changed. */
 
-statusT
+int
 bs_move_metadata(
     bfAccessT * bfap,		/* in */
     vdT * vdp			/* in or NULL */
@@ -40,7 +40,7 @@ bs_move_metadata(
 void
      mig_register_migrate_agent(void);
 
-statusT
+int
 mig_migrate(
     bfAccessT * bfAccess,	/* in */
     vdIndexT srcVdIndex,	/* in */

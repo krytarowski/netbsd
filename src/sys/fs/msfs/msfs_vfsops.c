@@ -173,7 +173,7 @@ krwlock_t FilesetLock;
 
 	bfAccessT *root_accessp;
 	int fs_time;
-	statusT sts;
+	int sts;
 	int error, count;
 	int now_time;
 	bsBfSetAttrT fsAttr_rec;
@@ -387,7 +387,7 @@ msfs_mount(struct mount * mp,	/* in */
 	char *setName = NULL;
 	char *dmnName = NULL;
 	char *tmp = NULL;
-	statusT sts;
+	int sts;
 	int now_time;
 	char *tempstring = NULL;
 	advfs_ev *advfs_event;
@@ -919,7 +919,7 @@ advfs_mountfs(struct mount * mp)
 	struct undel_dir_rec undel_rec;
 	quotaInfoT *qip;
 	int error;
-	statusT sts;
+	int sts;
 	bfSetT *setp = NULL;
 	advfs_ev *advfs_event;
 	bsrRsvd17T bsrRsvd17;
@@ -1721,7 +1721,7 @@ msfs_unmount(
 {
 	struct fileSetNode *fsnp, *fsp;
 	int error = 0;
-	statusT sts;
+	int sts;
 	bfSetT *setp;
 	struct fsContext *dir_context_pointer;
 	quotaInfoT *qip;
@@ -2661,7 +2661,7 @@ msfs_sync_todr(
 	int now_time;
 	extern int advfs_shutting_down;	/* global in machdep.c */
 	bfAccessT *root_accessp;
-	statusT sts = EOK;
+	int sts = EOK;
 	struct mount *pmp;
 
 	if (clu_is_ready()) {
@@ -2710,7 +2710,7 @@ msfs_fhtovp(
 )
 {
 	struct vnode *found_vp = NULL;
-	statusT ret;
+	int ret;
 	register struct msfs_fid *i_fid;
 	int flag = DONT_UNLOCK | IGNORE_DELETE;
 
@@ -2948,7 +2948,7 @@ msfs_mntflushbuf(
  * disk with the new file set device identifier.
  *
  */
-static statusT
+static int
 chk_set_fsdev(
     struct mount * mp,		/* In: mount point to perform fsdev update. */
     int fsId,			/* In: fsdev to use. Set to 0 if check_flag
@@ -2958,7 +2958,7 @@ chk_set_fsdev(
  /* FALSE, just update the fsdev to disk. */
 )
 {
-	statusT sts;
+	int sts;
 	bsBfSetAttrT fsAttr_rec;
 	bfSetT *bfSetp;
 	ftxHT ftxH;

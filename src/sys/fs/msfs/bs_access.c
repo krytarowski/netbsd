@@ -140,7 +140,7 @@ typedef struct {
 
 /* private protos */
 
-static statusT
+static int
 get_n_setup_new_vnode(
     bfAccessT * bfap,
     bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
@@ -331,7 +331,7 @@ cleanup_closed_list(clupClosedListTypeT clean_type)
 	bfAccessT *nextp;
 	struct fsContext *contextp;
 	lkStatesT state;
-	statusT ret;
+	int ret;
 	unsigned long css;
 	unsigned long cic;
 	int pass_2 = 0;
@@ -739,7 +739,7 @@ bfs_flush_dirty_stats(bfSetT * bfSetp,
 	bfAccessT *bfap;
 	bfAccessT *nextp;
 	lkStatesT state;
-	statusT ret;
+	int ret;
 	struct vnode *vp;
 
 
@@ -1409,7 +1409,7 @@ bs_invalidate_rsvd_access_struct(
 )
 {
 	bfAccessT *tbfap;
-	statusT sts;
+	int sts;
 
 	/*
          * Kick all the bitfile's buffers out of the buffer cache.
@@ -1479,12 +1479,12 @@ bs_invalidate_rsvd_access_struct(
  */
 
 
-statusT
+int
 bs_reclaim_cfs_rsvd_vn(
     bfAccessT * bfap		/* in */
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	struct vnode *vp = NULL;
 	struct fileSetNode *fsp = NULL;
 	char *fnamep = NULL;
@@ -1692,7 +1692,7 @@ bs_init_area()
  *      needed.
  */
 
-statusT
+int
 bs_map_bf(
     bfAccessT * bfap,		/* in/out - ptr to bitfile's access struct */
     uint32_t options,		/* in - options flags (see bs_access.h) */
@@ -1702,7 +1702,7 @@ bs_map_bf(
 	struct vd *vdp;
 	struct domain *dmnP;
 	bfPageRefHT pgref;
-	statusT sts;
+	int sts;
 	struct bsMPg *bmtp;
 	struct bsMC *mcp;
 	bsBfAttrT *bfattrp;
@@ -1989,7 +1989,7 @@ bs_insmntque(
  * reserved bitfiles.
  */
 
-statusT
+int
 bfm_open_ms(
     bfAccessT ** outbfap,	/* out - access structure pointer */
     domainT * dmnP,		/* in - domain pointer */
@@ -1998,7 +1998,7 @@ bfm_open_ms(
 )
 {
 	bfTagT tag;
-	statusT sts;
+	int sts;
 	struct vnode *nullvp = NULL;
 
 	BS_BFTAG_RSVD_INIT(tag, bfDDisk, bfMIndex);
@@ -2066,7 +2066,7 @@ bfm_open_ms(
  * Returns status from bs_access_one routine call.
  */
 
-statusT
+int
 bs_access(
     bfAccessT ** outbfap,	/* out - access structure pointer */
     bfTagT tag,			/* in - tag of bf to access */
@@ -2077,7 +2077,7 @@ bs_access(
     struct vnode ** vp		/* in/out - from bs_access_one */
 )
 {
-	statusT sts;
+	int sts;
 	bfAccessT *origbfap;
 	struct vnode *nullvp = NULL;
 
@@ -2121,7 +2121,7 @@ bs_access(
  * or various status returns from tagdir_lookup and mask_diskbf.
  */
 
-statusT
+int
 bs_access_one(
     bfAccessT ** outbfap,	/* out - access structure pointer */
     bfTagT tag,			/* in - tag of bf to access */
@@ -2136,7 +2136,7 @@ bs_access_one(
 	bfAccessT *bfap;
 	bfMCIdT bfMCId;
 	vdIndexT vdIndex;
-	statusT sts;
+	int sts;
 	unLkActionT unlkAction = UNLK_NEITHER;
 	struct vnode *vp = NULL, *clu_clone_vnode_to_vrele = NULL;
 	lkStatesT bfaccState;
@@ -3062,7 +3062,7 @@ err_deref:
  * Vnode not accessible (not on mount queue)
  */
 
-static statusT
+static int
 get_n_setup_new_vnode(
     bfAccessT * bfap,
     bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
@@ -3070,7 +3070,7 @@ get_n_setup_new_vnode(
 )
 {
 	struct vnode *vp = NULL;
-	statusT sts;
+	int sts;
 	struct bfNode *bnp;
 	struct fsContext *fscp;
 	bfSetIdT bfSetId;
@@ -3538,14 +3538,14 @@ found:
 ************** bitfile close routines ********************************
 **********************************************************************/
 
-statusT
+int
 bs_close(
     bfAccessT * bfAccessp,	/* in */
     int options			/* in */
 )
 {
 	bfSetT *bfSetp;
-	statusT sts;
+	int sts;
 
 	if (bfAccessp == NULL) {
 		return (EINVALID_HANDLE);
@@ -3591,7 +3591,7 @@ bs_close(
  * Returns EOK, EINVALID_HANDLE
  */
 
-statusT
+int
 bs_close_one(
     bfAccessT * bfap,		/* in/out */
     int options,		/* in */
@@ -3601,7 +3601,7 @@ bs_close_one(
 	ftxHT ftxH;
 	lkStatesT prevState;
 	vdT *delVdp;
-	statusT sts;
+	int sts;
 	void *delList;
 	uint32_t delCnt = 0;
 	bfMCIdT delMCId;
@@ -4328,7 +4328,7 @@ bf_setup_truncation(
     int made_frag
 )
 {
-	statusT sts;
+	int sts;
 	long pagesUsed;
 	uint32_t delCnt;
 
@@ -4366,13 +4366,13 @@ bf_setup_truncation(
  * the given tag's sequence number is zero.
  */
 
-statusT
+int
 bs_get_current_tag(
     bfSetT * bfSetp,		/* in */
     bfTagT * bfTag		/* in/out */
 )
 {
-	statusT sts;
+	int sts;
 	bfMCIdT bfMCId;
 	vdIndexT vdIndex;
 
@@ -4647,7 +4647,7 @@ void
 bs_init_access_alloc_thread(void)
 {
 	extern task_t first_task;
-	statusT sts;
+	int sts;
 
 	/*
          * Create a message queue which threads will use to send
@@ -5098,7 +5098,7 @@ page_to_active_range(
  * given page. The active range may contain the page in its entirety,
  * but it may also only partially overlap it.
  */
-statusT
+int
 limits_of_active_range(
     bfAccessT * bfap,
     bsPageT pg,

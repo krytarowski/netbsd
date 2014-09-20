@@ -58,14 +58,14 @@
 /*
  * Private prototypes
  */
-	static statusT bfs_access(
+	static int bfs_access(
             bfSetT ** retBfSetp,/* out - pointer to open bitfile-set desc */
             bfSetIdT bfSetId,	/* in - bitfile-set id */
             uint32_t options,	/* in - options flags */
             ftxHT ftxH		/* in - transaction handle */
 );
 
-	statusT rbf_add_overlapping_clone_stg(
+	int rbf_add_overlapping_clone_stg(
             bfAccessT * bfap,	/* in */
             uint32_t pageOffset,	/* in */
             uint32_t pageCnt,	/* in */
@@ -80,7 +80,7 @@ print_set_id(
 
 void bs_fragbf_thread(void);
 
-statusT
+int
 frag_group_dealloc(
     bfSetT * setp,		/* in - fields modified */
     ftxHT ftxH,			/* in */
@@ -248,7 +248,7 @@ bs_fragbf_thread(void)
 	grpHdrT *grpHdrp;
 	bfPageRefHT grpPgRef;
 	uint32_t grpPg, nextFreeGrp;
-	statusT sts;
+	int sts;
 	int done;
 	uint32_t delCnt;
 	void *delListp;
@@ -427,7 +427,7 @@ close_bfs:
  * Assumes that the fragLock in the set descriptor is locked.
  */
 
-statusT
+int
 frag_group_dealloc(
     bfSetT * setp,		/* in - fields modified */
     ftxHT ftxH,			/* in */
@@ -439,7 +439,7 @@ frag_group_dealloc(
     uint32_t lastGrpPg		/* in */
 )
 {
-	statusT sts;
+	int sts;
 	uint32_t pg = 0;
 	int found = FALSE;
 	uint32_t nextFreeGrp = grpHdrp->nextFreeGrp;
@@ -683,7 +683,7 @@ frag_group_init(
 
 #define INIT_GRPS 3
 
-static statusT
+static int
 frag_list_extend(
     bfSetT * setp,		/* in */
     bfFragT fragType,		/* in */
@@ -691,7 +691,7 @@ frag_list_extend(
 )
 {
 	rbfPgRefHT grpPgRef;
-	statusT sts;
+	int sts;
 	grpHdrT *grpHdrp;
 	int g;
 	ftxHT ftxH;
@@ -932,7 +932,7 @@ EXIT_FRAG_LIST_EXTEND:
  * Note: this routine returns with the fragLocked locked (always!).
  */
 
-statusT
+int
 bs_frag_alloc(
     bfSetT * setp,		/* in */
     bfFragT fragType,		/* in */
@@ -940,7 +940,7 @@ bs_frag_alloc(
     bfFragIdT * fragId		/* out */
 )
 {
-	statusT sts;
+	int sts;
 	uint32_t frag, grpPg, fragPg, fragSlot;
 	fragHdrT *fragHdrp;
 	grpHdrT *grpHdrp;
@@ -1275,7 +1275,7 @@ bs_frag_dealloc(
     bfFragIdT fragId		/* in */
 )
 {
-	statusT sts;
+	int sts;
 	uint32_t freeFrag;
 	int fragBfOpen = FALSE;
 	rbfPgRefHT grpPgRef, pinPgH;
@@ -1618,12 +1618,12 @@ bs_bfs_create_undo(
  * Opens the frag bitfile.
  */
 
-statusT
+int
 bs_fragbf_open(
     bfSetT * bfSetp		/* in */
 )
 {
-	statusT sts;
+	int sts;
 	struct vnode *nullvp = NULL;
 
 	KASSERT(BFSET_VALID(bfSetp));
@@ -1648,12 +1648,12 @@ bs_fragbf_open(
  * Closes the frag bitfile.
  */
 
-statusT
+int
 bs_fragbf_close(
     bfSetT * bfSetp		/* in */
 )
 {
-	statusT sts;
+	int sts;
 
 	KASSERT(BFSET_VALID(bfSetp));
 	KASSERT(bfSetp->fsRefCnt != 0);
@@ -1751,7 +1751,7 @@ bs_bfs_init(
 {
 	extern task_t first_task;
 	thread_t fragBfThreadH;
-	statusT sts;
+	int sts;
 	int e;
 	void unlink_clone_undo(ftxHT ftxH, int opRecSz, void *opRec);
 	void del_list_remove_undo(ftxHT ftxH, int opRecSz, void *opRec);
@@ -2032,7 +2032,7 @@ start:
  * Returns EOK, ENO_MORE_MEMORY or E_TOO_MANY_BF_SETS;
  */
 
-static statusT
+static int
 bfs_alloc(
     bfSetIdT bfSetId,		/* in - bitfile-set id */
     domainT * dmnP,		/* in - BF-set's domain's struct pointer */
@@ -2040,7 +2040,7 @@ bfs_alloc(
 )
 {
 	bfSetT *bfSetp;
-	statusT sts;
+	int sts;
 
 	mutex_lock(&LookupMutex);	/* bfs_lookup synchronization */
 	bfSetp = bfs_lookup(bfSetId);
@@ -2156,7 +2156,7 @@ bfs_dealloc(
 )
 {
 
-	statusT sts;
+	int sts;
 
 	KASSERT(BFSET_VALID(bfSetp));
 	KASSERT(bfSetp->fsRefCnt == 0);
@@ -2262,7 +2262,7 @@ bs_bfs_lookup_desc(
  * Returns EOK, EBAD_DOMAIN_POINTER, and errors from bs_create().
  */
 
-static statusT
+static int
 bfs_create(
     domainT * dmnP,		/* in - domain pointer */
     serviceClassT reqServ,	/* in - required service class */
@@ -2275,7 +2275,7 @@ bfs_create(
 {
 	bfParamsT *tagDirParamsp = NULL;
 	bfTagT dirTag;
-	statusT sts;
+	int sts;
 	bfMCIdT tagDirMCId;
 	int ftxStarted = FALSE, tagDirOpen = FALSE;
 	bsBfSetAttrT *bfsAttrp = NULL;
@@ -2457,7 +2457,7 @@ HANDLE_EXCEPTION:
  * the bitfile set's frag bitfile.
  */
 
-statusT
+int
 rbf_bfs_create(
     domainT * dmnP,		/* in - domain pointer */
     serviceClassT reqServ,	/* in - required service class */
@@ -2472,7 +2472,7 @@ rbf_bfs_create(
 	bfSetT *bfSetp;
 	bfTagT fragBfTag;
 	bsBfSetAttrT *setAttrp;
-	statusT sts;
+	int sts;
 	int ftxStarted = FALSE, lkLocked = FALSE;
 	ftxHT ftxH;
 	rbfPgRefHT pinPgH;
@@ -2724,7 +2724,7 @@ bs_bfs_close(
  * from bs_domain_access();
  */
 
-static statusT
+static int
 bfs_access(
     bfSetT ** retBfSetp,	/* out - pointer to open bitfile-set desc */
     bfSetIdT bfSetId,		/* in - bitfile-set id */
@@ -2733,7 +2733,7 @@ bfs_access(
 )
 {
 	domainT *dmnP;
-	statusT sts;
+	int sts;
 	bfSetT *bfSetp;
 	bfAccessT *tagDirBfap;
 	int i;
@@ -3037,7 +3037,7 @@ HANDLE_EXCEPTION:
  * from bs_domain_access();
  */
 
-static statusT
+static int
 bfs_open(
     bfSetT ** retBfSetp,	/* out - pointer to open bitfile-set */
     bfSetIdT bfSetId,		/* in - bitfile-set id */
@@ -3046,7 +3046,7 @@ bfs_open(
 )
 {
 	int tblLocked = FALSE;
-	statusT sts;
+	int sts;
 	bfSetT *bfSetp, *setp, *prevSetp;
 	bfSetIdT setId;
 	bfSetT *origSetp;
@@ -3182,7 +3182,7 @@ HANDLE_EXCEPTION:
 }
 
 
-statusT
+int
 rbf_bfs_open(
     bfSetT ** retBfSetp,	/* out - pointer to open bitfile-set */
     bfSetIdT bfSetId,		/* in - bitfile-set id */
@@ -3192,7 +3192,7 @@ rbf_bfs_open(
 {
 	return bfs_open(retBfSetp, bfSetId, options, ftxH);
 }
-statusT
+int
 rbf_bfs_access(
     bfSetT ** retBfSetp,	/* out - pointer to open bitfile-set */
     bfSetIdT bfSetId,		/* in - bitfile-set id */
@@ -3216,7 +3216,7 @@ delete_orig_set_tags(
 )
 {
 	bfTagT tag;
-	statusT sts;
+	int sts;
 	bfAccessT *bfap;
 	bfMCIdT mcid;
 	vdIndexT vdi;
@@ -3285,7 +3285,7 @@ delete_clone_set_tags(
 )
 {
 	bfTagT tag, delTag;
-	statusT sts;
+	int sts;
 	bfAccessT *bfap, *origap;
 	bfMCIdT mcid;
 	vdIndexT vdi;
@@ -3295,7 +3295,7 @@ delete_clone_set_tags(
 	struct vnode *nullvp;
 	thread_t th = current_thread();
 
-	statusT
+	int
 	    rbf_delete_int(
 	    bfAccessT * bfap,	/* in - bitfile's access structure */
 	    ftxHT parentFtxH	/* in - handle to parent transaction */
@@ -3496,7 +3496,7 @@ HANDLE_EXCEPTION:
 	) {
 		bsBfSetAttrT *setAttrp;
 		bsDmnMAttrT *dmnMAttrp;
-		statusT sts;
+		int sts;
 		vdT *logVdp = NULL;
 		rbfPgRefHT fsetPgH, dmnPgH;
 		bfAccessT *mdap;
@@ -3578,7 +3578,7 @@ HANDLE_EXCEPTION:
 		delPendUndoRecT undoRec = *(delPendUndoRecT *) opRec;
 		bfAccessT *tagDirBfap;
 		domainT *dmnP;
-		statusT sts;
+		int sts;
 		struct vnode *nullvp = NULL;
 
 		      dmnP = ftxH.dmnP;
@@ -3617,7 +3617,7 @@ HANDLE_EXCEPTION:
 		ftxHT ftxH;
 		bsBfSetAttrT *setAttrp, *nextSetAttrp;
 		bsDmnMAttrT *dmnMAttrp;
-		statusT sts;
+		int sts;
 		domainT *dmnP;
 		vdT *logVdp = NULL;
 		delPendUndoRecT undoRec;
@@ -3762,7 +3762,7 @@ HANDLE_EXCEPTION:
 	         domainT * dmnP,/* in */
 	         u_long flag	/* in */
 	) {
-		statusT sts;
+		int sts;
 		bfSetIdT setId;
 		bsDmnMAttrT dmnMAttr;
 		bfTagT nextTag;
@@ -3863,7 +3863,7 @@ HANDLE_EXCEPTION:
 		unlinkCloneUndoRecT undoRec = *(unlinkCloneUndoRecT *) opRec;
 		domainT *dmnP;
 		bfAccessT *tagDirBfap;
-		statusT sts;
+		int sts;
 		bsBfSetAttrT *origSetAttrp;
 		rbfPgRefHT fsetPgH;
 		struct vnode *nullvp = NULL;
@@ -3925,7 +3925,7 @@ HANDLE_EXCEPTION:
 	) {
 		bsBfSetAttrT *origSetAttrp;
 		ftxHT ftxH;
-		statusT sts;
+		int sts;
 		unlinkCloneUndoRecT undoRec;
 		rbfPgRefHT fsetPgH;
 
@@ -3996,7 +3996,7 @@ HANDLE_EXCEPTION:
  */
 
 
-	statusT
+	int
 	    bs_bfs_delete(
 	    bfSetIdT bfSetId,	/* in - bitfile set id */
 	    domainT * dmnP,	/* in - set's domain pointer */
@@ -4008,7 +4008,7 @@ HANDLE_EXCEPTION:
 		int deletingClone = FALSE, ftxStarted = FALSE;
 		int restoreCloneDelState = FALSE;
 		bfSetT *setp, *origSetp = NULL;
-		statusT sts;
+		int sts;
 		bfAccessT *dirBfAp;
 		ftxHT ftxH = FtxNilFtxH;
 		lkStatesT currentCloneDelState;
@@ -4381,7 +4381,7 @@ HANDLE_EXCEPTION:
  * Returns status of the routines it calls.
  */
 
-	static statusT
+	static int
 	       clone_tagdir(
 	           bfSetT * origSetp,	/* in - orig set desc */
 	           bfSetT * cloneSetp,	/* in - clone set desc */
@@ -4389,7 +4389,7 @@ HANDLE_EXCEPTION:
 					 * dir */
 	           ftxHT ftxH	/* in - ftx handle */
 	) {
-		statusT sts;
+		int sts;
 		bfPageRefHT origPgRef, clonePgRef;
 		char *origPgp, *clonePgp;
 		uint32_t pg;
@@ -4484,7 +4484,7 @@ HANDLE_EXCEPTION:
  * bs_get_bf_params(), and clone_tagdir().
  */
 
-	statusT
+	int
 	    bs_bfs_clone(
 	    bfSetIdT origSetId,	/* in - activated orig set's id */
 	    char *cloneSetName,	/* in - clone set's name */
@@ -4492,7 +4492,7 @@ HANDLE_EXCEPTION:
 	    domainT * dmnP,	/* in - set's domain pointer */
 	    long xid		/* in - CFS transaction id */
 	    ) {
-		statusT sts;
+		int sts;
 		int ftxStarted = FALSE, lkLocked = FALSE;
 		bfSetT *origSetp = NULL, *cloneSetp = NULL;
 		bsBfSetAttrT *origSetAttrp = NULL, *cloneSetAttrp = NULL;
@@ -4796,7 +4796,7 @@ HANDLE_EXCEPTION:
 		bsBfAttrT *bfAttrp;
 		rbfPgRefHT attrPgH;
 		ftxHT ftxH;
-		statusT sts;
+		int sts;
 
 		        KASSERT(cloneap->bfSetp->cloneId != BS_BFSET_ORIG);
 
@@ -4864,7 +4864,7 @@ HANDLE_EXCEPTION:
 	) {
 		bsBfSetAttrT *setAttrp;
 		rbfPgRefHT fsetPgH;
-		statusT sts;
+		int sts;
 
 		if      (!BFSET_VALID(bfSetp)) {
 			ADVFS_SAD1("bs_bfs_out_of_sync: E_BAD_BF_SET_POINTER", (long) bfSetp);
@@ -4947,14 +4947,14 @@ HANDLE_EXCEPTION:
  * Returns status of bfs_alloc().
  */
 
-	     statusT
+	     int
 	     bs_bfs_add_root(
 	         bfSetIdT bfSetDirId,	/* in - bitfile-set id */
 	         domainT * dmnP,/* in - BF-set's domain's pointer */
 	         bfSetT ** retBfSetDirp	/* out - pointer to BF-set's
 					 * descriptor */
 	) {
-		statusT sts;
+		int sts;
 		bfSetT *bfSetp;
 
 		BFSETTBL_LOCK_WRITE(dmnP)
@@ -4984,7 +4984,7 @@ HANDLE_EXCEPTION:
 	         bfTagT newTag	/* in */
 	) {
 		bfSetT *bfSetp;
-		statusT sts;
+		int sts;
 		bfAccessT *dirbfap;
 
 		          bfSetp = domain->bfSetDirp;
@@ -5015,7 +5015,7 @@ HANDLE_EXCEPTION:
  * called subroutines.
  */
 
-	statusT
+	int
 	    bs_bfset_activate(
 	    char *bfDmnName,	/* in - bitfile-set's domain file name */
 	    char *bfSetName,	/* in - bitfile-set name */
@@ -5027,7 +5027,7 @@ HANDLE_EXCEPTION:
 		domainT *dmnP;
 		bfSetParamsT setParams;
 		int dmnActive = FALSE, dmnOpen = FALSE;
-		statusT sts;
+		int sts;
 		bfsQueueT *entry;
 		bfSetT *bfSetP, *temp;
 
@@ -5119,7 +5119,7 @@ _error:
  * sets in the domain.
  */
 
-	statusT
+	int
 	    bs_bfs_get_info(
 	    uint32_t * nextSetIdx,	/* in/out - index of set */
 	    bfSetParamsT * bfSetParams,	/* out - the bitfile-set's parameters */
@@ -5127,7 +5127,7 @@ _error:
 	    uint32_t * userId	/* out - bfset user id */
 	    ) {
 		bfTagT setTag;
-		statusT sts;
+		int sts;
 		bfMCIdT mcid;
 		vdIndexT vdi;
 		bfSetT *setp;
@@ -5292,14 +5292,14 @@ HANDLE_EXCEPTION:
  * set by that name exists in the domain.
  */
 
-	statusT
+	int
 	    bs_bfs_find_set(
 	    char *setName,	/* in - name of set to find */
 	    domainT * dmnP,	/* in - domain pointer */
 	    u_long doingRoot,	/* in - flag */
 	    bfSetParamsT * setParams	/* out - the bitfile-set's parameters */
 	    ) {
-		statusT sts;
+		int sts;
 		uint32_t setIdx;
 		int done = FALSE;
 		uint32_t t1;	/* unused output param */
@@ -5330,7 +5330,7 @@ HANDLE_EXCEPTION:
 /*
  * new_clone_mcell - for use by clone code.  This is undoable.
  */
-	statusT
+	int
 	    new_clone_mcell(
 	    bfMCIdT * bfMCIdp,	/* out - ptr to mcell id */
 	    domainT * dmnP,	/* in - domain ptr */
@@ -5341,7 +5341,7 @@ HANDLE_EXCEPTION:
 	    bfTagT newtag,	/* in - tag of new bitfile */
 	    bsInMemXtntT * oxtntp	/* in - ptr to orig extent map */
 	    ) {
-		statusT sts;
+		int sts;
 		ftxHT ftx;
 		mcellUIdT mcelluid;
 
@@ -5384,7 +5384,7 @@ HANDLE_EXCEPTION:
 		vdT *vdp;
 		rbfPgRefHT pgref;
 		bsMPgT *bmtpgp;
-		statusT sts;
+		int sts;
 		bsMCT *mcp;
 		bsBfAttrT *odattrp;
 
@@ -5437,7 +5437,7 @@ HANDLE_EXCEPTION:
  */
 
 	init_crmcell_opx() {
-		statusT sts;
+		int sts;
 
 		sts = ftx_register_agent_n(FTA_BS_CRE_MCELL_V1,
 		    &new_clone_mcell_undo_opx,
@@ -5464,7 +5464,7 @@ HANDLE_EXCEPTION:
  * and not a general function.
  */
 
-	static statusT
+	static int
 	       clone(
 	           bfAccessT * origBfAp,	/* in - ptr to orig bitfile's
 						 * access struct */
@@ -5475,7 +5475,7 @@ HANDLE_EXCEPTION:
 		domainT *dmnP;
 		vdIndexT vdIndex;
 		bfMCIdT newMCId;
-		statusT sts;
+		int sts;
 		ftxHT ftxH;
 		int initState = FALSE;
 		bfSetT *origSetp, *cloneSetp;
@@ -5731,11 +5731,11 @@ HANDLE_EXCEPTION:
 	     print_out_of_sync_msg(
 	         bfAccessT * bfap,	/* in - bitfile access struct */
 	         bfSetT * bfSetp,	/* in - bitfile set descriptor */
-	         statusT insts
+	         int insts
 	) {
 		bsBfSetAttrT setAttr;
 		bfSetT *cloneSetp;
-		statusT sts;
+		int sts;
 
 		        ms_uaprintf("\n\nWARNING: AdvFS cannot copy-on-write data to a clone file.\n");
 		        ms_uaprintf("WARNING: encountered the following error: %s\n",
@@ -5955,7 +5955,7 @@ HANDLE_EXCEPTION:
 		bfAccessT *bfap = cloneap->origAccp;
 		int token_taken = 0;
 		int ftxStarted = FALSE;
-		statusT sts;
+		int sts;
 
 		        KASSERT(*arp == NULL);
 
@@ -6127,7 +6127,7 @@ HANDLE_EXCEPTION:
 		bsPageT nextPg;
 		bsPageT lastPg;
 		bfAccessT *bfap = cloneap->origAccp;
-		statusT sts;
+		int sts;
 
 		/*
 	         * We need to copy the page to the clone.  Instead of copying
@@ -6302,7 +6302,7 @@ HANDLE_EXCEPTION:
 	) {
 		bfSetT *bfSetp = bfap->bfSetp;
 		bfAccessT *cloneap = NULL;
-		statusT sts;
+		int sts;
 		int cowLkLocked = FALSE, ftxStarted = FALSE, cloneOp = FALSE;
 		uint32_t p;
 		uint32_t cnt;
@@ -6311,7 +6311,7 @@ HANDLE_EXCEPTION:
 		char *origPgp, *clonePgp;
 		uint32_t pgsAdded = 0;
 		bfSetT *cloneSetp = bfSetp->cloneSetp;	/* stabilzed in bs_cow */
-		statusT orig_sts;
+		int orig_sts;
 		int lastpg;
 		uint32_t nextpage;
 		struct vnode *nullvp = NULL;
@@ -6669,7 +6669,7 @@ error_exit:
 	) {
 		bfSetT *bfSetp = bfap->bfSetp;
 		bfAccessT *cloneap;
-		statusT sts;
+		int sts;
 		int cloneOp = FALSE, ftxStarted = FALSE, lkLocked = FALSE;
 		ftxHT ftxH = {0};
 		bfSetT *cloneSetp;
@@ -6874,13 +6874,13 @@ error_exit:
  * from bmtr_scan or bs_derefpg
  */
 
-	statusT
+	int
 	    bs_get_bfset_params(
 	    bfSetT * bfSetp,	/* in - the bitfile-set's desc pointer */
 	    bfSetParamsT * bfSetParams,	/* out - the bitfile-set's parameters */
 	    int lock		/* in - not used */
 	    ) {
-		statusT sts = EOK;
+		int sts = EOK;
 		bsBfSetAttrT bfsAttr;
 		bsQuotaAttrT quotaAttr;
 
@@ -6973,7 +6973,7 @@ HANDLE_EXCEPTION:
 	}
 
 
-	statusT
+	int
 	    bs_set_bfset_params(
 	    bfSetT * bfSetp,	/* in - bitfile-set's desc pointer */
 	    bfSetParamsT * bfSetParams,	/* in - bitfile-set's params */
@@ -6999,14 +6999,14 @@ HANDLE_EXCEPTION:
  * bmtr_scan, bs_deref_pg, bs_pinpg, or bs_unpinpg.
  */
 
-	statusT
+	int
 	    rbf_set_bfset_params(
 	    bfSetT * bfSetp,	/* in - bitfile-set's desc pointer */
 	    bfSetParamsT * bfSetParams,	/* in - bitfile-set's params */
 	    ftxHT parentFtxH,
 	    long xid		/* in - CFS transaction id */
 	    ) {
-		statusT sts = EOK;
+		int sts = EOK;
 		bsBfSetAttrT bfsAttr;
 		bsQuotaAttrT quotaAttr;
 		int ftxStarted = FALSE, bfSetTblLocked = FALSE, mcellListLocked = FALSE, exclusiveFtx = FALSE;
@@ -7235,7 +7235,7 @@ HANDLE_EXCEPTION:
 
 	set_bfset_flag(bfAccessT * bfap) {
 		bsBfSetAttrT *setAttrp;
-		statusT sts = 0;
+		int sts = 0;
 		ftxHT ftxH;
 		rbfPgRefHT fsetPgH;
 		bfSetT *bfSetp;
@@ -7313,7 +7313,7 @@ HANDLE_EXCEPTION:
 		int release_clone_token = FALSE;
 		fsid_t fsid;
 		bfAccessT *cloneap;
-		statusT sts;
+		int sts;
 
 		        KASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
 

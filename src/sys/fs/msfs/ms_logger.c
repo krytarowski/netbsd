@@ -373,8 +373,8 @@ lsn_lt(
 /*
  * Function prototypes for forward references
  */
-static statusT release_dirty_pg(logDescT * ldP);
-static statusT get_clean_pg(logDescT * ldP);
+static int release_dirty_pg(logDescT * ldP);
+static int get_clean_pg(logDescT * ldP);
 static void log_flush(logDescT * ldP);
 static void log_flush_sync(logDescT * ldP, lsnT lsn);
 
@@ -891,7 +891,7 @@ check_safe:
  * is valid.  It also restores log page from the 'safe' format.
  */
 
-static statusT
+static int
 lgr_refpg(
     bfPageRefHT * refH,		/* out - log page ref handle */
     logPgT ** pgP,		/* out - ptr to log page */
@@ -900,7 +900,7 @@ lgr_refpg(
     bfPageRefHintT refHint	/* in - cache hint */
 )
 {
-	statusT sts;
+	int sts;
 
 	sts = bs_refpg(refH, (void *) pgP, bfap, pg, refHint);
 	if (sts != EOK) {
@@ -929,7 +929,7 @@ lgr_refpg(
  * page is put into it's safe format before it is unpinned (dirty).
  */
 
-static statusT
+static int
 lgr_unpinpg(
     logDescT * ldP,
     bfPageRefHT refH,		/* in - log page ref handle */
@@ -937,7 +937,7 @@ lgr_unpinpg(
     wtPgDescT * logPg		/* in - ptr to log page write descriptor */
 )
 {
-	statusT sts;
+	int sts;
 	static const bsUnpinModeT bsLogNoMod = {BS_LOG_NOMOD, BS_LOG_PAGE};
 
 
@@ -1036,7 +1036,7 @@ add_lsn_list(
  * Slightly specialized interface for writing ftx log records, the
  * only user of the logger in version 1.
  */
-statusT
+int
 lgr_writev_ftx(
     ftxStateT * ftxp,		/* in/out - ftx state */
     domainT * dmnP,		/* in - domain state */
@@ -1050,7 +1050,7 @@ lgr_writev_ftx(
 	uint32_t segWdsToWrite = 0, totWdsWritten = 0, segment = 0;
 	uint32_t bufWdsWritten = 0, wdsToWrite, wdsWritten;
 	logDescT *ldP;
-	statusT sts;
+	int sts;
 	int wd, buf = 0, bufWords = 0;
 	logBufVectorT *bufv = lrdp->bfrvec;
 	int bufCnt = lrdp->count;
@@ -1573,12 +1573,12 @@ HANDLE_EXCEPTION:
  * Used by lgr_writev() to pin a new log page (current end page).
  */
 
-static statusT
+static int
 get_clean_pg(
     logDescT * ldP
 )
 {
-	statusT sts;
+	int sts;
 	int b;
 	logPgHdrT *pghdrp;
 
@@ -1666,7 +1666,7 @@ lgr_retest_firstrec(
 void
 resetfirstrec(domainT * dmnP)
 {
-	statusT sts;
+	int sts;
 	logDescT *ldP;
 	int logpages;
 	logRecAddrT firstRec;
@@ -1710,10 +1710,10 @@ resetfirstrec(domainT * dmnP)
  * SMP: dmnP->lsnLock is used to guard resetting of dmnP->logStat.maxLogPgs
  *      and minLogPgs.
  */
-statusT
+int
 getLogStats(domainT * dmnP, logStatT * logStatp)
 {
-	statusT sts;
+	int sts;
 	logDescT *ldP;
 	int logpages;
 	int slots;
@@ -1797,13 +1797,13 @@ getLogStats(domainT * dmnP, logStatT * logStatp)
  * next page.  get_clean_pg() can be used to actually pin the page.
  */
 
-static statusT
+static int
 release_dirty_pg(
     logDescT * ldP
 )
 {
 	int quadrant;
-	statusT sts;
+	int sts;
 	domainT *dmnP = ldP->dmnP;
 
 
@@ -1929,14 +1929,14 @@ HANDLE_EXCEPTION:
  * are references by clients reading the log.
  */
 
-statusT
+int
 lgr_read_open(
     logDescT * ldP,		/* in  - logDesc pointer */
     logRdHT * logRdH		/* out - lgr_read handle */
 )
 {
 	int rddesc, newRdDesc = 0;
-	statusT sts;
+	int sts;
 	rdPgDescT *rdP;
 	DEFINE_LOCK_FLAGS;
 
@@ -2005,7 +2005,7 @@ HANDLE_EXCEPTION:
  * This is intended for use by utility programs which need to read the
  * log.
  */
-statusT
+int
 lgr_dmn_read_open(
     domainT * dmnP,		/* in  - domain pointer */
     logRdHT * logrdh		/* out - lgr_read handle */
@@ -2023,14 +2023,14 @@ lgr_dmn_read_open(
  *
  * Closes a log "read stream".
  */
-statusT
+int
 lgr_read_close(
     logRdHT logRdH		/* in  - lgr_read handle */
 )
 {
 	logDescT *ldP = logRdH.ldP;
 	rdPgDescT *rdP;		/* read_page descriptor pointer */
-	statusT sts;
+	int sts;
 	DEFINE_LOCK_FLAGS;
 
 
@@ -2088,7 +2088,7 @@ HANDLE_EXCEPTION:
  *       passed back by this routine.
  *
  */
-statusT
+int
 lgr_read(
     logReadModeT rdMode,	/* in  - read mode (fwd, bwd, bwd_link, ...) */
     logRdHT logRdH,		/* in  - lgr_read handle */
@@ -2101,7 +2101,7 @@ lgr_read(
 {
 	logRecHdrT recHdr;
 	logDescT *ldP;
-	statusT sts, lsts;
+	int sts, lsts;
 	rdPgDescT *rdP;		/* read_page descriptor pointer */
 
 	/* Copy recAddr fields to local variables */
@@ -2406,7 +2406,7 @@ get_pg_lsn(
     uint32_t * prtdPg		/* in/out - thread of prev pg  across pg */
 )
 {
-	statusT sts;
+	int sts;
 	bfPageRefHT pgRef;
 	logPgT *pgP;
 	logRecHdrT *recHdr;
@@ -2494,7 +2494,7 @@ find_log_end_pg(
 	logRecHdrT *recHdr;
 	ftxDoneLRT *dlrp;
 	logPgT *logPgP;
-	statusT sts;
+	int sts;
 	uint32_t recOffset;
 	logRecAddrT crashRedo;
 
@@ -2808,7 +2808,7 @@ _finish:
  * a log is opened for the first time.  The main things it sets up
  * include:  the log's first, last and next record pointers.
  */
-static statusT
+static int
 setup_log_desc(
     logDescT * ldP,		/* in - log descriptor ptr */
     int endPg,			/* in - log end page */
@@ -2818,7 +2818,7 @@ setup_log_desc(
 	int pgReferenced = 0;
 	logRecHdrT *recHdr;
 	uint32_t recOffset;
-	statusT sts;
+	int sts;
 	bfPageRefHT pgRef;
 	logPgT *logPgP;
 
@@ -2942,14 +2942,14 @@ HANDLE_EXCEPTION:
  * Initializes log pages.
  */
 
-static statusT
+static int
 log_init(
     bfAccessT * bfap,
     uint32_t pgCnt,
     bfDomainIdT domainId
 )
 {
-	statusT sts;
+	int sts;
 	bfPageRefHT pgRef;
 	logPgT *logPgP;
 	int pg;
@@ -3002,7 +3002,7 @@ log_init(
  * accordingly.
  */
 
-statusT
+int
 lgr_open(
     logDescT ** ldP,		/* out - pointer to open logDesc Pointer */
     logRecAddrT * nextLogRec,	/* out - rec addr of next rec in log */
@@ -3012,7 +3012,7 @@ lgr_open(
     uint32_t flag		/* in - if set, re-init the log (forced mount) */
 )
 {
-	statusT sts;
+	int sts;
 	bfAccessT *logAccP;
 	int desc;
 	int newDesc = 0;
@@ -3172,12 +3172,12 @@ HANDLE_EXCEPTION:
  *       methodically dealt with.
  */
 
-statusT
+int
 lgr_close(
     logDescT * ldP		/* in - pointer to an open log */
 )
 {
-	statusT sts;
+	int sts;
 	int rdDesc;
 	DEFINE_LOCK_FLAGS;
 
@@ -3271,14 +3271,14 @@ lgr_flush(
  * with the pages being flushed a thread must call lgr_flush_sync().
  */
 
-statusT
+int
 lgr_flush_start(
     logDescT * ldP,		/* in - pointer to an open log */
     int noBlock,		/* in - if true don't block if log is locked */
     lsnT lsn			/* in - flush log upto and including this LSN */
 )
 {
-	statusT sts;
+	int sts;
 	lsnT flush_lsn = lsn;
 	DEFINE_LOCK_FLAGS;
 
@@ -3373,7 +3373,7 @@ lgr_flush_start(
  * for log_flush_sync().
  */
 
-statusT
+int
 lgr_flush_sync(
     logDescT * ldP,
     lsnT lsn
@@ -3408,7 +3408,7 @@ log_flush(
     logDescT * ldP
 )
 {
-	statusT sts;
+	int sts;
 	DEFINE_LOCK_FLAGS;
 
 	FLUSH_WRITE_LOCK;
@@ -3473,7 +3473,7 @@ log_flush_sync(
     lsnT lsn			/* in - lsn to sync to */
 )
 {
-	statusT sts;
+	int sts;
 	DEFINE_LOCK_FLAGS;
 
 
@@ -3535,13 +3535,13 @@ log_flush_sync(
  * last record in the log.
  */
 
-statusT
+int
 lgr_get_last_rec(
     logDescT * ldP,		/* in - pointer to an open log */
     logRecAddrT * recAddr	/* out - rec addr of last log rec */
 )
 {
-	statusT sts;
+	int sts;
 	DEFINE_LOCK_FLAGS;
 
 
@@ -3577,7 +3577,7 @@ HANDLE_EXCEPTION:
  * same as lgr_last_rec except for domain's log
  */
 
-statusT
+int
 lgr_dmn_get_last_rec(
     domainT * dmnP,		/* in - domain pointer */
     logRecAddrT * recAddr	/* out - rec addr of last log rec */
@@ -3596,13 +3596,13 @@ lgr_dmn_get_last_rec(
  * Returns the log record address of the first record
  * in the log.
  */
-statusT
+int
 lgr_get_first_rec(
     logDescT * ldP,		/* in - pointer to an open log */
     logRecAddrT * recAddr	/* out - rec addr of first log rec */
 )
 {
-	statusT sts;
+	int sts;
 	DEFINE_LOCK_FLAGS;
 
 
@@ -3629,7 +3629,7 @@ lgr_get_first_rec(
  * same as lgr_first_rec except for domain's log
  */
 
-statusT
+int
 lgr_dmn_get_first_rec(
     domainT * dmnP,		/* in - domain pointer */
     logRecAddrT * recAddr	/* out - rec addr of first log rec */
@@ -3648,14 +3648,14 @@ lgr_dmn_get_first_rec(
  * trimmed.
  */
 
-statusT
+int
 lgr_dmn_get_pseudo_first_rec(
     domainT * dmnP,		/* in - domain pointer */
     logRecAddrT * recAddr	/* out - log record address */
 )
 {
 	logDescT *ldP;
-	statusT sts;
+	int sts;
 	int nextPg;
 	int pgReferenced = 0;
 	bfPageRefHT pgRef;
@@ -3776,7 +3776,7 @@ lgr_checkpoint_log(
 )
 {
 	ftxHT ftxH;
-	statusT sts;
+	int sts;
 
 	sts = FTX_START_EXC(FTA_NULL, &ftxH, dmnP, 0);
 	if (sts != EOK) {
@@ -3808,7 +3808,7 @@ lgr_checkpoint_log(
  * NOTE: The caller must not hold any locks before calling this function.
  */
 
-statusT
+int
 lgr_switch_vol(
     logDescT * ldP,		/* in - pointer to an open log */
     vdIndexT newVolIdx,		/* in - move log to this vdIndex */
@@ -3817,7 +3817,7 @@ lgr_switch_vol(
     long xid			/* in - CFS transaction id */
 )
 {
-	statusT sts;
+	int sts;
 	logDescT *newldP, *newLogP;
 	bfAccessT *logAccP, *newAccP;
 	domainT *dmnP;
@@ -4221,7 +4221,7 @@ lgr_calc_num_pgs(
  * AND THE DOMAIN LOG IS CREATED BY DISK_INIT().
  */
 
-statusT
+int
 lgr_create(void /* ???? */ )
 {
 	return ENOT_SUPPORTED;

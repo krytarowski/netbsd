@@ -361,7 +361,7 @@ bs_osf_complete(
 	ioDescT *next;
 	ioDescT *first_iop, *last_iop;
 	struct vd *vdp;
-	statusT sts = EOK;
+	int sts = EOK;
 	int pages = 0;
 	int len;
 	int i;
@@ -394,7 +394,7 @@ bs_osf_complete(
          * Set up the I/O result field
          */
 	if ((bp->b_flags & B_ERROR) == 0) {
-		sts = (statusT) EOK;
+		sts = (int) EOK;
 	} else {
 		/*
 	         * Retry I/O that returns any of the following b_eei errors
@@ -557,9 +557,9 @@ bs_osf_complete(
 			    AdvfsIORetryControl);
 		}
 		if (bp->b_error) {
-			sts = (statusT) bp->b_error;
+			sts = (int) bp->b_error;
 		} else {
-			sts = (statusT) EIO;
+			sts = (int) EIO;
 		}
 	}
 

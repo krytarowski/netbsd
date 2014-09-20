@@ -53,7 +53,7 @@ extern unsigned TrFlags;
  * private prototypes.
  */
 
-statusT
+int
 new_mcell(
     ftxHT parFtx,		/* in - parent ftx */
     mcellUIdT * mcellUId,	/* in/out - ptr to global mcell id */
@@ -62,7 +62,7 @@ new_mcell(
     bsInMemXtntT * oxtntp	/* in - ptr to orig extent map */
 );
 
-static statusT
+static int
 rbf_int_create(
     bfTagT * tag,		/* in or out */
     bfSetT * bfSetp,		/* in */
@@ -85,7 +85,7 @@ kill_mcell(
     ftxHT ftxH
 );
 
-statusT
+int
 dealloc_mcells(
     domainT * dmnP,		/* in */
     uint16_t firstVdIndex,	/* in */
@@ -105,7 +105,7 @@ dealloc_mcells(
  * Returns status passed from rbf_int_create call.
  */
 
-statusT
+int
 rbf_create(
     bfTagT * tag,		/* out */
     bfSetT * bfSetp,		/* in */
@@ -114,7 +114,7 @@ rbf_create(
     int checkmigtrunclock	/* in */
 )
 {
-	statusT sts;
+	int sts;
 
 	*tag = NilBfTag;
 
@@ -131,7 +131,7 @@ rbf_create(
  * and tagdir_insert_tag. Or returns EOK.
  */
 
-static statusT
+static int
 rbf_int_create(
     bfTagT * tag,		/* in or out */
     bfSetT * bfSetp,		/* in */
@@ -142,7 +142,7 @@ rbf_int_create(
 {
 	struct domain *dmnP;
 	bsBfAttrT bfAttr;
-	statusT sts;
+	int sts;
 	ftxHT ftxH;
 	mcellUIdT mcellUId;
 	bsTDirPgT *tdpgp;
@@ -321,7 +321,7 @@ create_rtdn_opx(ftxHT ftxH,	/* in - ftx handle */
 )
 {
 	mcellUIdT rtdnR = *(mcellUIdT *) opRec;
-	statusT sts;
+	int sts;
 	bfSetT *bfSetp;
 	domainT *dmnP;
 	int bfs_opened = 0;
@@ -383,7 +383,7 @@ make_mcell_valid(
 	struct vd *vdp;
 	struct domain *dmnP;
 	rbfPgRefHT pgref;
-	statusT sts;
+	int sts;
 
 	dmnP = ftxH.dmnP;
 
@@ -449,7 +449,7 @@ create_undo_opx(ftxHT ftxH,	/* in - ftx handle */
 )
 {
 	mcellUIdT *undoRp = (mcellUIdT *) opRec;
-	statusT sts;
+	int sts;
 	bfSetT *bfSetp;
 	domainT *dmnP = ftxH.dmnP;
 
@@ -500,7 +500,7 @@ HANDLE_EXCEPTION:
 void
 init_bscreate_opx(void)
 {
-	statusT sts;
+	int sts;
 
 	sts = ftx_register_agent_n(FTA_BS_BF_CREATE_V1,
 	    &create_undo_opx,
@@ -522,7 +522,7 @@ init_bscreate_opx(void)
  * Returns ENO_MORE_BLKS, EBAD_PARAMS, errors from vd select or EOK
  */
 
-statusT
+int
 new_mcell(
     ftxHT parFtx,		/* in - parent ftx */
     mcellUIdT * mcellUIdp,	/* in/out - ptr to global mcell id */
@@ -531,7 +531,7 @@ new_mcell(
     bsInMemXtntT * oxtntp	/* in - ptr to orig extent map */
 )
 {
-	statusT sts;
+	int sts;
 	bsBfAttrT *odattrp;
 	struct bsXtntR *xtntp;
 	struct vd *vdp;
@@ -655,7 +655,7 @@ kill_mcell(
 	vdT *vdp;
 	rbfPgRefHT pgref;
 	bsMPgT *bmtpgp;
-	statusT sts;
+	int sts;
 	bsMCT *mcp;
 	bsBfAttrT *odattrp;
 
@@ -749,7 +749,7 @@ kill_mcell(
  * NOTE:  This function assumes that the number of mcells to deallocate is small.
  */
 
-statusT
+int
 dealloc_mcells(
     domainT * dmnP,		/* in */
     uint16_t firstVdIndex,	/* in */
@@ -763,7 +763,7 @@ dealloc_mcells(
 	bfMCIdT nextMcellId;
 	vdIndexT nextVdIndex;
 	rbfPgRefHT pgPin;
-	statusT sts;
+	int sts;
 	vdIndexT vdIndex;
 	vdT *vdp;
 

@@ -27,12 +27,12 @@
 
 #include <fs/msfs/bs_stg.h>
 
-statusT
+int
 sbm_init(
     vdT * vdp
 );
 
-statusT
+int
 sbm_clear_cache(
     vdT * vdp
 );
@@ -56,7 +56,7 @@ sbm_howmany_blks(
     int pgSz
 );
 
-statusT
+int
 sbm_remove_space(
     vdT * vdp,
     uint32_t startBlk,
@@ -66,7 +66,7 @@ sbm_remove_space(
     uint32_t flags
 );
 
-statusT
+int
 sbm_return_space_no_sub_ftx(
     vdT * virtualDiskp,		/* in */
     uint32_t blkOffset,		/* in */
@@ -81,7 +81,7 @@ sbm_set_pg_bits(
     struct bsStgBm * sbmPg	/* ptr to sbm buffer */
 );
 
-statusT
+int
 sbm_alloc_bits(
     vdT * vdp,			/* in */
     int bitOffset,		/* in */

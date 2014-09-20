@@ -56,7 +56,7 @@
  */
 
 static
-       statusT
+       int
 set_block_map(
     bfAccessT * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
@@ -67,7 +67,7 @@ set_block_map(
 );
 
 static
-       statusT
+       int
 verify_page_write(
     bfAccessT * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
@@ -77,7 +77,7 @@ verify_page_write(
 );
 
 static
-       statusT
+       int
 force_write(
     bfAccessT * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
@@ -86,7 +86,7 @@ force_write(
 );
 
 static
-       statusT
+       int
 compare_copies(
     bfAccessT * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
@@ -139,7 +139,7 @@ static int cp_debug = 0;
  * (i.e. force) with the copy or to abort it.
  */
 
-statusT
+int
 cp_copy_page_range(
     bfAccessT * bfAccess,	/* in */
     pageRangeT * bfPageRange,	/* in */
@@ -150,7 +150,7 @@ cp_copy_page_range(
 )
 {
 	uint32_t i;
-	statusT sts;
+	int sts;
 	int flag = 0;
 
 	/* FIX - if log, can't do */
@@ -300,7 +300,7 @@ cp_copy_page_range(
  */
 
 static
-       statusT
+       int
 set_block_map(
     bfAccessT * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
@@ -317,7 +317,7 @@ set_block_map(
 	uint32_t i, maxMigrateUbcPgs;
 	void *page;
 	bfPageRefHT pgPin;
-	statusT sts;
+	int sts;
 	int unpinFlag = 0;
 	bsUnpinModeT unpinMode;
 
@@ -538,7 +538,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 verify_page_write(
     bfAccessT * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
@@ -553,7 +553,7 @@ verify_page_write(
 	uint32_t i;
 	void *page;
 	bfPageRefHT pgPin;
-	statusT sts;
+	int sts;
 	int unpinFlag = 0;
 	bsUnpinModeT unpinMode;
 
@@ -662,7 +662,7 @@ HANDLE_EXCEPTION:
  */
 
 static
-       statusT
+       int
 force_write(
     bfAccessT * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
@@ -673,7 +673,7 @@ force_write(
 	blkDescT blkDesc[BLKDESC_CNT];
 	blkMapT blkMap;
 	int i;
-	statusT sts;
+	int sts;
 	int bfBlkCnt = bfAccess->bfPageSz;
 
 	blkMap.maxCnt = BLKDESC_CNT;
@@ -741,7 +741,7 @@ force_write(
  */
 
 static
-       statusT
+       int
 compare_copies(
     bfAccessT * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
@@ -764,7 +764,7 @@ compare_copies(
 	int longwordCnt;
 	void *page;
 	bfPageRefHT pgRef;
-	statusT sts;
+	int sts;
 	int unblockUnpinsFlag = 0;
 	int unpinFlag = 0;
 	bsUnpinModeT unpinMode;
@@ -802,7 +802,7 @@ cp_insert_onto_xtnt_map_list(
  * extent map list.
  */
 
-statusT
+int
 cp_remove_from_xtnt_map_list(
     bsInMemXtntMapT ** xtntMapListhead,	/* in */
     bsInMemXtntMapT * targetXtntMap	/* in */

@@ -66,7 +66,6 @@ typedef struct timeval bsIdT;	/* unique identifier, 64 bits */
 /***************** end of base "on disk" typedefs ********************/
 
 typedef uint16_t vdIndexT;
-typedef int statusT;		/* tmp */
 
 #define BS_DOMAIN_NAME_SZ     (NAME_MAX + 1)
 #define BS_SET_NAME_SZ        32
@@ -832,7 +831,7 @@ typedef enum {
 
 struct bfAccess;
 
-statusT
+int
 bs_inherit(
     struct bfAccess * parentbfap,
     struct bfAccess * childbfap,
@@ -840,7 +839,7 @@ bs_inherit(
     ftxHT ftxH
 );
 
-statusT
+int
 bs_domain_access(
     struct domain ** dmnPP,
     bfDomainIdT bfDomainId,	/* in */
@@ -850,7 +849,7 @@ bs_domain_access(
 void
      bs_domain_close(struct domain * dmnP);
 
-statusT
+int
 bs_access(
     struct bfAccess ** outbfap,	/* out - access structure pointer */
     bfTagT tag,			/* in - tag of bf to access */
@@ -861,18 +860,18 @@ bs_access(
     struct vnode ** vp		/* out - vnode pointer */
 );
 
-statusT
+int
 bs_close(
     struct bfAccess * bfAccessp,/* in */
     int options			/* in */
 );
 
-statusT
+int
 bs_delete(
     struct bfAccess * bfap	/* in */
 );
 
-statusT
+int
 bs_migrate(
     struct bfAccess * bfap,	/* in */
     vdIndexT srcVdIndex,	/* in */
@@ -884,7 +883,7 @@ bs_migrate(
     bsAllocHintT alloc_hint	/* in */
 );
 
-statusT
+int
 bs_stripe(
     struct bfAccess * bfap,	/* in */
     uint32_t segmentCnt,		/* in */
@@ -892,14 +891,14 @@ bs_stripe(
     long xid			/* in */
 );
 
-statusT
+int
 bs_add_stg(
     struct bfAccess * bfap,	/* in */
     unsigned long bsPage,	/* in */
     unsigned long bsPageCnt	/* in */
 );
 
-statusT
+int
 bs_add_overlapping_stg(
     struct bfAccess * bfap,	/* in */
     unsigned long bsPage,	/* in */
@@ -921,7 +920,7 @@ typedef enum {
 	BS_BLOCK_UNPINS		/* block unpins of this page */
 	/* currently used by migrate/shadow copy */
 }    bfPageRefHintT;
-statusT
+int
 bs_refpg(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out */
@@ -941,7 +940,7 @@ bs_refpg(
 					 * cache. (Set with PINPG_DIRECTIO
 					 * only). */
 
-statusT
+int
 bs_pinpg(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out */
@@ -950,7 +949,7 @@ bs_pinpg(
     bfPageRefHintT refHint	/* in */
 );
 
-statusT
+int
 bs_pinpg_int(
     bfPageRefHT * bfPageRefH,	/* out */
     void **bfPageAddr,		/* out */
@@ -966,7 +965,7 @@ typedef enum {
 	BS_CACHE_IT,		/* normal cache value to page */
 	BS_RECYCLE_IT		/* unlikely to revisit soon */
 }    bfPageCacheHintT;
-statusT
+int
 bs_derefpg(
     bfPageRefHT bfPageRefH,	/* in */
     bfPageCacheHintT cacheHint	/* in */
@@ -992,7 +991,7 @@ extern bsUnpinModeT BS_WRITETHRU;
 extern bsUnpinModeT BS_CLEAN;
 extern bsUnpinModeT BS_LOG;
 
-statusT
+int
 bs_unpinpg(
     bfPageRefHT bfPageRefH,	/* in */
     logRecAddrT wrtAhdLogAddr,	/* in */
@@ -1010,7 +1009,7 @@ typedef enum {
 /****  Virtual disk and Bitfile Domain management  ****/
 /******************************************************/
 
-statusT
+int
 bs_disk_init(
     char *diskName,		/* in - disk device name */
     bfDmnParamsT * bfDmnParams,	/* in - domain parameters */
@@ -1021,14 +1020,14 @@ bs_disk_init(
     int dmnVersion		/* in - on-disk version number */
 );
 
-statusT
+int
 bs_vd_remove_active(
     struct domain * dmnP,
     vdIndexT vdIndex,		/* in */
     uint32_t forceFlag		/* in */
 );
 
-statusT
+int
 bs_vd_add_active(
     char *domain,		/* in - path to domain table */
     char *vdName,		/* in - block special device name */
@@ -1041,7 +1040,7 @@ bs_vd_add_active(
     uint32_t * volIndex		/* out - volume index */
 );
 
-statusT
+int
 bs_dmn_init(
     char *domain,		/* in - domain name */
     int maxVds,			/* in - maximum number of virtual disks */
@@ -1057,12 +1056,12 @@ bs_dmn_init(
     bfDomainIdT * domainId	/* out - unique domain id */
 );
 
-statusT
+int
 bs_bfdmn_id_activate(
     bfDomainIdT bfDomainId	/* in - domain id */
 );
 
-statusT
+int
 bs_bfdmn_tbl_activate(
     char *bfDmnName,		/* in - bf domain name */
     u_long flag,		/* in - flag */
@@ -1073,19 +1072,19 @@ typedef enum {
 	ANORM,			/* normal whatever */
 	ATEST			/* abnormal whatever */
 }    bfDmnModeT;
-statusT
+int
 bs_bfdmn_activate(
     bfDomainIdT domainId,
     u_long flag
 );
 
-statusT
+int
 bs_bfdmn_deactivate(
     bfDomainIdT domainId,
     u_long flag
 );
 
-statusT
+int
 bfflush(
     struct bfAccess * bfap,	/* In - access structure */
     bsPageT first_page,		/* In - first page to flush */
@@ -1253,7 +1252,7 @@ void
  * public bitfile set routines
  */
 
-statusT
+int
 bs_bfs_find_set(
     char *setName,		/* in - name of set to find */
     struct domain * dmnP,
@@ -1261,7 +1260,7 @@ bs_bfs_find_set(
     bfSetParamsT * SetParams	/* out - the bitfile-set's parameters */
 );
 
-statusT
+int
 bs_bfs_get_info(
     uint32_t * nextSetIdx,	/* in/out - index of set */
     bfSetParamsT * bfSetParams,	/* out - the bitfile-set's parameters */
@@ -1282,7 +1281,7 @@ bs_bfs_get_clone_info(
     uint32_t * cloneCnt		/* out - bitfile set clone count */
 );
 
-statusT
+int
 bs_bfset_activate(
     char *bfDmnTbl,		/* in - bitfile-set's domain table file name */
     char *bfSetName,		/* in - bitfile-set name */
@@ -1290,7 +1289,7 @@ bs_bfset_activate(
     bfSetIdT * bfSetId		/* out - bitfile-set's ID */
 );
 
-statusT
+int
 bs_bfset_deactivate(
     bfSetIdT bfSetId,		/* in - bitfile-set's ID */
     u_long flag			/* in - advfs mount flags */
@@ -1328,13 +1327,13 @@ bs_owner(
     uid_t ouid			/* in - object's user id */
 );
 
-statusT
+int
 bs_get_dmntbl_params(
     char *dmnTbl,		/* in - domain table file name */
     bfDmnParamsT * dmnParams
 );
 
-statusT
+int
 bs_dmn_change(
     char *dmnTbl,		/* in - domain table file name */
     int newUid,
@@ -1345,7 +1344,7 @@ bs_dmn_change(
     mode_t mode
 );
 
-statusT
+int
 bs_get_current_tag(
     bfSetT * bfSetp,		/* in */
     bfTagT * bfTag		/* in/out */

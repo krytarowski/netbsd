@@ -79,7 +79,7 @@ get_stripe_next_page(
  * Returns EINVALID_HANDLE, EBAD_PARAMS, or EOK
  */
 
-statusT
+int
 bs_get_bf_xtnt_map(
     bfAccessT * bfap,		/* in - access structure */
     int startXtntMap,		/* in - extent map at which to start */
@@ -94,7 +94,7 @@ bs_get_bf_xtnt_map(
 	int dst;
 	uint32_t mapIndex;
 	int src;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	int unloadFlag = 0;
 	bsInMemXtntMapT *xtntMap;
@@ -288,7 +288,7 @@ HANDLE_EXCEPTION:
  * Returns EINVALID_HANDLE, EBAD_PARAMS, E_NOT_ENOUGH_XTNTS or EOK
  */
 
-statusT
+int
 bs_get_clone_xtnt_map(
     bfAccessT * clone_bfap,	/* in - clone access structure */
     int startXtntMap,		/* in - clone extent map at which to start */
@@ -308,7 +308,7 @@ bs_get_clone_xtnt_map(
 	int dst;
 	uint32_t mapIndex;
 	int src;
-	statusT sts;
+	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	int pagecnt = 0;
 	int clonextnt_locked = 0;
@@ -618,7 +618,7 @@ HANDLE_EXCEPTION:
  * Returns EINVALID_HANDLE, EBAD_PARAMS, ENOT_ENOUGH_XTNTS, or EOK
  */
 
-statusT
+int
 bs_get_stripe_xtnt_map(
     bfAccessT * bfap,		/* in - stripe access structure */
     int startXtntMap,		/* in - xtntmap at which to start */
@@ -637,7 +637,7 @@ bs_get_stripe_xtnt_map(
 	uint32_t segmentCnt, segmentSize;
 	uint32_t pg = 0;
 	bsExtentDescT *tmp_xtntsArray = NULL;
-	statusT sts = EOK;
+	int sts = EOK;
 	int pagecnt = 0;
 	int count = 0, size = 0;
 	int nextPage = 0;
@@ -894,7 +894,7 @@ get_stripe_next_page(bfAccessT * bfap, uint32_t pg, int cloned,
  *         ENOT_SUPPORTED(yet) or EOK
  */
 
-statusT
+int
 bs_get_bkup_xtnt_map(
     bfAccessT * bfap,		/* in - clone access structure */
     int startXtntMap,		/* in - clone extent map at which to start */
@@ -907,7 +907,7 @@ bs_get_bkup_xtnt_map(
     int *pageCnt		/* out - count of pages for merged map */
 )
 {
-	statusT sts;
+	int sts;
 	int cloned;
 	bfAccessT *fromBfap = bfap;
 	int do_clonextnt_unlock = 0;
@@ -1070,13 +1070,13 @@ bs_get_bkup_xtnt_map(
  * to the bitfile.
  */
 
-statusT
+int
 bs_get_bf_page_cnt(
     bfAccessT * bfap,		/* in */
     uint32_t * pageCnt		/* out */
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	bfSetT *bfSetp;
 	vdIndexT vdindex;
 	int xtntCnt;
@@ -1153,14 +1153,14 @@ bs_get_bf_page_cnt(
  * Returns EINVALID_HANDLE, or status frem bmtr_scan
  */
 
-statusT
+int
 bs_get_bf_params(
     bfAccessT * bfap,		/* in - bfaccess structure */
     bfParamsT * bfParams,	/* out - parameters for the bf */
     int lock			/* in */
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	bsBfAttrT bfattr;
 
 	/*
@@ -1236,13 +1236,13 @@ bs_get_bf_params(
  * E_READ_ONLY, and possible error return from bs_pinpg
  */
 
-statusT
+int
 bs_set_bf_params(
     bfAccessT * bfap,		/* in - access structure for bitfile */
     bfParamsT * bfParams	/* in - parameter list */
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	bsBfAttrT bfattr;
 	bfSetT *bfSetp;
 	ftxHT ftxH;
@@ -1454,14 +1454,14 @@ HANDLE_EXCEPTION:
  * Returns EINVALID_HANDLE, or status frem bmtr_scan
  */
 
-statusT
+int
 bs_get_bf_iparams(
     bfAccessT * bfap,		/* in - bf access structure */
     bfIParamsT * bfIParams,	/* out - parameters for the bf */
     int lock			/* in */
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	bsBfInheritAttrT bfiattr;
 
 	/*
@@ -1506,13 +1506,13 @@ bs_get_bf_iparams(
  * E_READ_ONOY, and possible error return from bs_pinpg
  */
 
-statusT
+int
 bs_set_bf_iparams(
     bfAccessT * bfap,		/* in - access structure for bitfile */
     bfIParamsT * bfIParams	/* in - parameter list */
 )
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	bsBfInheritAttrT bfiattr;
 	bfSetT *bfSetp;
 	int ftxStarted = FALSE;
@@ -1601,7 +1601,7 @@ HANDLE_EXCEPTION:
  * all the vds in the domain.
  */
 
-statusT
+int
 bs_get_dmn_vd_list(
     domainT * dmnP,		/* in - the domain pointer */
     int vdIndexArrayLen,	/* in - number of ints in array */
@@ -1655,7 +1655,7 @@ bs_get_dmn_vd_list(
  * from bmtr_scan
  */
 
-statusT
+int
 bs_get_dmn_params(
     domainT * dmnP,		/* in - the domain pointer */
     bfDmnParamsT * dmnParams,	/* out - the domain parameters */
@@ -1704,7 +1704,7 @@ bs_get_dmn_params(
  * bmtr_scan, bs_pinpg, or bs_unpinpg.
  */
 
-statusT
+int
 bs_set_dmn_params(
     domainT * dmnP,		/* in - domain pointer */
     bfDmnParamsT * dmnParams	/* in - domain params */
@@ -1712,7 +1712,7 @@ bs_set_dmn_params(
 {
 	bfAccessT *mdap;
 	bfPageRefHT pgref;
-	statusT sts;
+	int sts;
 	struct bsMPg *bmtpg;
 	bsDmnMAttrT *dmnmattrp;
 	struct vd *logvdp;
@@ -1784,7 +1784,7 @@ finished_set_dmn:
  * return from bmtr_scan.
  */
 
-statusT
+int
 bs_get_vd_params(
     domainT * dmnP,		/* in - domain pointer */
     uint32_t vdIndex,		/* in - vd index */
@@ -1796,7 +1796,7 @@ bs_get_vd_params(
 {
 	bfAccessT *mdap;
 	bfPageRefHT pgref;
-	statusT sts;
+	int sts;
 	struct bsVdAttr *vdattrp;
 	struct vd *vdp;
 	bfMCIdT mcid;
@@ -1925,14 +1925,14 @@ bs_get_vd_params(
  * bmtr_scan, bs_pinpg, bs_unpinpg
  */
 
-statusT
+int
 bs_set_vd_params(
     domainT * dmnP,		/* in - domain pointer */
     uint32_t vdIndex,		/* in - vd index */
     bsVdParamsT * vdParams	/* in - vd parameters */
 )
 {
-	statusT sts;
+	int sts;
 	struct vd *vdp;
 	vdIoParamsT vdIoParams;
 	ftxHT ftx;
@@ -2075,7 +2075,7 @@ bs_get_avail_mcells(
  * Returns EBAD_DOMAIN_POINTER, EBAD_VDI.
  */
 
-statusT
+int
 bs_get_smsync_stats(
     domainT * dmnP,		/* in - domain pointer */
     uint32_t vdIndex,		/* in - vd index */

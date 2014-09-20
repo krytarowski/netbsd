@@ -283,7 +283,7 @@ typedef struct {
 
 #define RAISE_EXCEPTION( err_code ) {sts = err_code; goto HANDLE_EXCEPTION;}
 
-statusT
+int
 bfm_open_ms(
     bfAccessT ** outbfap,	/* out */
     domainT * dmnp,		/* in - domain pointer */
@@ -351,7 +351,7 @@ bs_q_lazy(
     int len			/* in */
 );
 
-statusT
+int
 bs_raw_page(bfAccessT * bfap,		/* in */
     unsigned vdIndex,		/* in */
     unsigned startBlk,		/* in */
@@ -364,7 +364,7 @@ void
 bs_bflush(struct vd * vdp	/* in */
 );
 
-statusT
+int
 bfflush_sync(bfAccessT * bfap,		/* in */
     lsnT waitLsn		/* in */
 );
@@ -390,7 +390,7 @@ bs_lsnList_flush(
     domainT * dmnP		/* in */
 );
 
-statusT
+int
 bs_set_bufstate(
     bfPageRefHT bfPageRefH,	/* in */
     int ln,			/* in */
@@ -398,20 +398,20 @@ bs_set_bufstate(
     int waitFlag		/* in */
 );
 
-statusT
+int
 bs_clear_bufstate(
     bfPageRefHT bfPageRefH,	/* in */
     uint32_t stateBit		/* in */
 );
 
-statusT
+int
 bs_get_bufstate(
     bfPageRefHT bfPageRefH,	/* in */
     unsigned whichStateBit,	/* in */
     unsigned *stateBitValue	/* out */
 );
 
-statusT
+int
 buf_remap(
     bfPageRefHT bfPageRefH,	/* in */
     blkMapT * blkMap);		/* in */
@@ -420,12 +420,12 @@ int
 bs_bflush_sync(struct vd * vdp	/* in */
 );
 
-statusT
+int
 bs_bf_flush_nowait(
     bfAccessT * bfap
 );
 
-statusT
+int
 bs_get_bf_xtnt_map(
     bfAccessT * bfap,		/* in */
     int startXtntMap,		/* in */
@@ -443,7 +443,7 @@ bs_get_bf_xtnt_map(
 #define XTNT_XTNTCNT_ONLY  2	/* Get the extent count */
 #define XTNT_PAGECNT_ONLY  4	/* Get the page count */
 
-statusT
+int
 bs_get_clone_xtnt_map(
     bfAccessT * clon_bfap,	/* in */
     int startXtntMap,		/* in */
@@ -456,7 +456,7 @@ bs_get_clone_xtnt_map(
     int *pageCnt		/* out */
 );
 
-statusT
+int
 bs_get_stripe_xtnt_map(
     bfAccessT * in_bfap,	/* in */
     int startXtntMap,		/* in */
@@ -469,7 +469,7 @@ bs_get_stripe_xtnt_map(
     int cloned			/* in */
 );
 
-statusT
+int
 bs_get_bkup_xtnt_map(
     bfAccessT * in_bfp,		/* in */
     int startXtntMap,		/* in */
@@ -507,7 +507,7 @@ bs_get_bkup_xtnt_map(
 	void init_bs_delete_opx(void);
 	void init_bs_bmt_util_opx(void);
 
-statusT
+int
 bs_logflush_start(
     bfAccessT * ap,		/* in */
     lsnT lsn			/* in */
@@ -581,7 +581,7 @@ ftx_init_recovery_logaddr(
 /*
  * ftx_bfdmn_recovery - recover domain consistency
  */
-statusT
+int
 ftx_bfdmn_recovery(
     domainT * dmnp
 );

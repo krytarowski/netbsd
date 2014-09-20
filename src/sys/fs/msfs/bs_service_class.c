@@ -47,7 +47,7 @@
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 
-static statusT sc_add_class(serviceClassTblT * scTbl, serviceClassT serviceClass, int *tblPos);
+static int sc_add_class(serviceClassTblT * scTbl, serviceClassT serviceClass, int *tblPos);
 static int best_vd(domainT * dmnP, int vd, vdIndexT * vdi);
 
 #define ADVFS_MODULE BS_SERVICE_CLASS
@@ -74,21 +74,21 @@ sc_binSearchForClass(
     serviceClassT serviceClass	/* in - service class to find in table */
 );
 
-static statusT
+static int
 sc_add_class(
     serviceClassTblT * scTbl,	/* in - ptr to service class table */
     serviceClassT serviceClass,	/* in - service class to add to table */
     int *tblPos			/* in - table position for new class */
 );
 
-static statusT
+static int
 sc_add_vd_to_class(
     scEntryT * scEntry,		/* in - ptr to service class' table entry */
     serviceClassT vdSvc,	/* in - vd's service class */
     uint16_t vdIndex		/* in - vd's index */
 );
 
-static statusT
+static int
 sc_remove_class(
     serviceClassTblT * scTbl,	/* in - ptr to service class table */
     serviceClassT serviceClass	/* in - service class to remove */
@@ -328,7 +328,7 @@ sc_binSearchForClass(
  * proper position.
  */
 
-static statusT
+static int
 sc_add_class(
     serviceClassTblT * scTbl,	/* in - ptr to service class table */
     serviceClassT serviceClass,	/* in - service class to add to table */
@@ -389,7 +389,7 @@ sc_add_class(
  * sc_add_vd_to_class - adds a virtual disk to a class' vd list
  */
 
-static statusT
+static int
 sc_add_vd_to_class(
     scEntryT * scEntry,		/* in - ptr to service class' table entry */
     serviceClassT vdSvc,	/* in - vd's service class */
@@ -470,7 +470,7 @@ sc_add_vd_to_class(
  * sc_add_vd - adds a virtual disk to the service class table
  */
 
-statusT
+int
 sc_add_vd(
     domainT * dmnp,		/* in - ptr to domain with sc table */
     serviceClassT vdSvc,	/* in - vd's service class */
@@ -479,7 +479,7 @@ sc_add_vd(
 {
 	serviceClassTblT *scTbl = dmnp->scTbl;
 	int tblPos;
-	statusT sts;
+	int sts;
 
 
 	if (scTbl->numClasses == BS_SC_ENTRIES) {
@@ -518,7 +518,7 @@ sc_add_vd(
  * that use the requested class as an alternate are removed.
  */
 
-static statusT
+static int
 sc_remove_class(
     serviceClassTblT * scTbl,	/* in - ptr to service class table */
     serviceClassT serviceClass	/* in - service class to remove */
@@ -603,7 +603,7 @@ sc_remove_class(
  * sc_remove_vd - Removes a virtual disk from service class table.
  */
 
-statusT
+int
 sc_remove_vd(
     domainT * dmnp,		/* in - ptr to domain with sc table */
     serviceClassT vdSvc,	/* in - vd's service class */
@@ -613,7 +613,7 @@ sc_remove_vd(
 	int tblPos;
 	int done = 0;
 	int i, j;
-	statusT sts;
+	int sts;
 	scEntryT *scEntry;
 	vdLstSgmntT *vdLstSeg;
 	vdLstSgmntT *prevSeg;
@@ -743,7 +743,7 @@ sc_select_class(
 {
 	int tblPos;		/* scTbl entry number for "serviceClass" */
 	int altPos;
-	statusT sts;
+	int sts;
 
 
 	if (scTbl->numClasses == 0) {
@@ -817,7 +817,7 @@ sc_select_class(
  *    ESERVICE_CLASS_NOT_FOUND - service class does not exist.
  */
 
-statusT
+int
 sc_valid_vd(
     domainT * dmnp,		/* in - ptr to domain with sc table */
     serviceClassT reqServices,	/* in - required services */
@@ -828,7 +828,7 @@ sc_valid_vd(
 	int tblPos;
 	int done = 0;
 	int i, j;
-	statusT sts;
+	int sts;
 	scEntryT *scEntry;
 	vdLstSgmntT *vdLstSeg;
 	vdLstSgmntT *prevSeg;
@@ -898,7 +898,7 @@ sc_valid_vd(
  * Bumps vdRefCnt if vd is found.
  */
 
-statusT
+int
 sc_select_vd_for_mcell(
     vdT ** vdpa,		/* out - selected vd */
     domainT * dmnP,		/* in - domain pointer */
@@ -910,7 +910,7 @@ sc_select_vd_for_mcell(
 	int i;			/* general index */
 	int vd;			/* used to determine if scan has gone full
 				 * circle */
-	statusT sts;
+	int sts;
 	vdLstSgmntT *vdLstSeg;
 	scEntryT *scEntry;
 	vdT *vdp;
@@ -1053,7 +1053,7 @@ sc_select_vd_for_mcell(
  * Caller must hold the domain's scLock locked.
  */
 
-statusT
+int
 sc_select_vd_for_stg(
     vdT ** vdpa,		/* out - selected volume */
     domainT * dmnP,		/* in - domain pointer */
@@ -1073,7 +1073,7 @@ sc_select_vd_for_stg(
 	unsigned long bestVdBlks = 0;
 	unsigned long preferVdBlks = 0;
 	vdIndexT bestVd = 0;
-	statusT sts;
+	int sts;
 	vdLstSgmntT *vdLstSeg;
 	scEntryT *scEntry;
 	vdT *vdp = NULL;

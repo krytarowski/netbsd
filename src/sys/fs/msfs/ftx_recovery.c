@@ -76,7 +76,7 @@ extern struct ftx_dyn_alloc FtxDynAlloc;
 /*
  * TODO - function/arg comments
  */
-static statusT
+static int
 ftx_metameta_rec_redo(
     domainT * dmnP,
     pageredoT * pgredop
@@ -85,7 +85,7 @@ ftx_metameta_rec_redo(
 	char *srcRecp;
 	char *dstRecp;
 	bfAccessT *bfap;
-	statusT sts;
+	int sts;
 	bfPageRefHT pgH;
 	unsigned ptag = -(signed) pgredop->pgdesc.tag.num;
 	int rbmtidx, recxi, vdi;
@@ -157,7 +157,7 @@ ftx_metameta_rec_redo(
 /*
  * TODO - function/arg comments
  */
-static statusT
+static int
 ftx_bfmeta_rec_redo(
     domainT * dmnP,
     pageredoT * pgredop
@@ -166,7 +166,7 @@ ftx_bfmeta_rec_redo(
 	char *srcRecp;
 	char *dstRecp;
 	bfAccessT *bfap;
-	statusT sts;
+	int sts;
 	bfPageRefHT pgH;
 	void *bpp;
 	unsigned ptag = -(signed) pgredop->pgdesc.tag.num;
@@ -266,7 +266,7 @@ ftx_bfmeta_rec_redo(
 /*
  * TODO - function/arg comments
  */
-static statusT
+static int
 ftx_bfdata_rec_redo(
     ftxHT ftxH,
     bfSetIdT bfSetId,
@@ -276,8 +276,8 @@ ftx_bfdata_rec_redo(
 	char *srcRecp;
 	char *dstRecp;
 	bfAccessT *bfap;
-	statusT sts;
-	statusT retsts = EOK;
+	int sts;
+	int retsts = EOK;
 	bfPageRefHT pgH;
 	void *bpp;
 	bfSetT *bfSetp;
@@ -357,7 +357,7 @@ close_bfs:
  ********  Bitfile domain crash recovery  ***********
  ***************************************************/
 
-static statusT
+static int
 ftx_recovery_pass(
     domainT * dmnP,
     int recoveryPass,
@@ -368,12 +368,12 @@ ftx_recovery_pass(
 /*
  * ftx_bfdmn_recovery - recover domain consistency
  */
-statusT
+int
 ftx_bfdmn_recovery(
     domainT * dmnP
 )
 {
-	statusT sts, lrsts = 0;
+	int sts, lrsts = 0;
 	int wordcnt, totwordcnt, ftxSlot, incomplete;
 	logRdHT logrh;
 	logRecAddrT logaddr, crashRedo;
@@ -718,7 +718,7 @@ freexid:
 /*
  * ftx_bfdmn_recovery - recover domain consistency
  */
-static statusT
+static int
 ftx_recovery_pass(
     domainT * dmnP,
     int recoveryPass,		/* TODO - arg comments */
@@ -726,7 +726,7 @@ ftx_recovery_pass(
     logRecAddrT logaddr
 )
 {
-	statusT sts, lrsts;
+	int sts, lrsts;
 	int segwordcnt = 0, totwordcnt = 0, cntRead = 0;
 	uint32_t *lgrrecp = 0;
 	struct ftx *ftxp;
@@ -1315,7 +1315,7 @@ num_of_log_recs(
     struct domain * dmnP,
     int limit)
 {
-	statusT sts;
+	int sts;
 	logRdHT logrh;
 	logRecAddrT lastlogaddr, crashRedo;
 	ftxDoneLRT *dlrp = NULL;
@@ -1603,7 +1603,7 @@ cfs_xid_free_memory(char *arg)
 	bfDomainIdT domainId;
 	domainT *dmnP;
 	struct timeval ltime;
-	statusT sts;
+	int sts;
 
 	/* arg is really not a pointer. It is the actual value */
 

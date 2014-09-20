@@ -421,7 +421,7 @@ decr_link_count(
  *
  * zero out a frag's contents.  Analogous to bcopy_frag in fs_read_write.c
  */
-static statusT
+static int
 bzero_frag(
     struct bfAccess * bfap,
     uint32_t start,
@@ -457,7 +457,7 @@ msfs_create(
     struct vattr * vap		/* in - vnode attributes for create */
 )
 {
-	statusT ret;
+	int ret;
 
 	FILESETSTAT(ndp->ni_dvp, msfs_create);
 
@@ -779,7 +779,7 @@ msfs_getattr(
 	struct mount *mp;
 	struct timeval new_time;
 	uint32_t pageCnt;
-	statusT sts;
+	int sts;
 	struct fileSetNode *fsn;
 
 
@@ -969,7 +969,7 @@ msfs_setattr(
     register struct uucred * cred/* in - callers credentials */
 )
 {
-	statusT sts = 0;
+	int sts = 0;
 
 
 	NFS_FREEZE_LOCK(vp);
@@ -989,7 +989,7 @@ fs_setattr(
     register struct uucred * cred)
 {				/* in - callers credentials */
 	int error = 0;
-	statusT sts;
+	int sts;
 	bfAccessT *bfap;
 	struct fsContext *context_ptr;
 	uid_t iuid;
@@ -1245,7 +1245,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 	extern u_int noadd_execaccess;
 	int remove_exec_perm = 0;
 	actRangeT *arp;
-	statusT sts;
+	int sts;
 
 	error = chk_quota_write(cp);
 	if (error != 0) {
@@ -1539,10 +1539,10 @@ notrunc:
  *
  * Zero the contents of a frag.
  */
-static statusT
+static int
 bzero_frag(struct bfAccess * bfap, uint32_t start, ftxHT ftxH)
 {
-	statusT sts = EOK;
+	int sts = EOK;
 	uint32_t fragPgOffset = FRAG2PG(bfap->fragId.frag);
 	uint32_t fpOffset, fpCount, fragSize, zOffset;
 	bfPageRefHT pgRef;
@@ -1875,7 +1875,7 @@ msfs_fsync(
     int waitfor			/* in - wait flag */
 )
 {
-	statusT sts = 0;
+	int sts = 0;
 
 	FILESETSTAT(vp, msfs_fsync);
 
@@ -1894,7 +1894,7 @@ fs_fsync(
 )
 {
 	struct mount *mp;
-	statusT saved_dkResult, ret;
+	int saved_dkResult, ret;
 	struct fsContext *file_context;
 	bfAccessT *bfap;
 	domainT *dmnP;
@@ -2000,7 +2000,7 @@ msfs_remove(
     struct nameidata * ndp	/* in - nameidata structure pointer */
 )
 {
-	statusT sts;
+	int sts;
 	struct bfNode *bnp, *dir_bnp, *undel_bnp;
 	struct vnode *dvp = NULL, *undel_dir_vp = NULL, *rvp = NULL;
 	struct fsContext *rem_context, *dir_context, *undel_context;
@@ -2477,7 +2477,7 @@ msfs_link(
 	struct fsContext *file_context, *dir_context;
 	struct bfNode *bnp, *dbnp;
 	struct vnode *dvp = NULL;
-	statusT ret;
+	int ret;
 	struct mount *mp;
 	bfSetT *bfSetp;
 	domainT *dmnP;
@@ -2723,7 +2723,7 @@ msfs_rename(
 	struct mount *mp, *from_mp;
 	ftxHT ftx_handle;
 	domainT *dmnP;
-	statusT ret, sts;
+	int ret, sts;
 	int stripslash = 0;
 	int error;
 	fs_dir_entry *dir_buffer;
@@ -3669,7 +3669,7 @@ msfs_mkdir(
     struct vattr * vap		/* in - vnode attributes structure */
 )
 {
-	statusT ret;
+	int ret;
 
 	FILESETSTAT(ndp->ni_dvp, msfs_mkdir);
 
@@ -3696,7 +3696,7 @@ msfs_rmdir(
 	bfAccessT *idx_bfap = NULL;
 	struct fsContext *rem_context, *par_context;
 	struct bfNode *bnp;
-	statusT ret, dirempty_ret;
+	int ret, dirempty_ret;
 	ftxHT ftx_handle;
 	bfSetT *bfSetp;
 	struct mount *mp;
@@ -3997,7 +3997,7 @@ msfs_symlink(
     char *target
 )
 {
-	statusT ret;
+	int ret;
 
 	FILESETSTAT(ndp->ni_dvp, msfs_symlink);
 
@@ -4066,7 +4066,7 @@ msfs_readlink(
 	ulong isize;
 	int error;
 	char *buffer = NULL;
-	statusT sts;
+	int sts;
 
 	FILESETSTAT(vp, msfs_readlink);
 
@@ -4440,7 +4440,7 @@ msfs_page_read(
 					 * read */
 		int bytes_to_read;	/* # bytes within the page to read */
 		bfPageRefHT page_ref;
-		statusT ret;
+		int ret;
 		char *page_addr;
 
 		/* the page # to read */
@@ -4613,7 +4613,7 @@ msfsspec_close(
     struct uucred * cred)
 {
 	struct fsContext *cp;
-	statusT ret;
+	int ret;
 
 
 	NFS_FREEZE_LOCK(vp);
@@ -4811,7 +4811,7 @@ msfsfifo_close(
 )
 {
 	struct fsContext *cp;
-	statusT ret;
+	int ret;
 
 
 	NFS_FREEZE_LOCK(vp);
@@ -4996,13 +4996,13 @@ msfs_chmod(
 /*
  * attach an undelete directory to a directory
  */
-statusT
+int
 attach_undel_dir(
     char *dir_path,
     char *undel_dir_path
 )
 {
-	statusT sts, ret;
+	int sts, ret;
 	register struct nameidata *ndp = &u.u_nd;
 	struct nameidata *undel_ndp = NULL;
 	struct utask_nd undel_utnd;
@@ -5160,13 +5160,13 @@ _exit1:
 /*
  * detach an undelete directory from a directory
  */
-statusT
+int
 detach_undel_dir(
     char *dir_path,
     long xid
 )
 {
-	statusT sts;
+	int sts;
 	int error;
 	register struct nameidata *ndp = &u.u_nd;
 	register struct vnode *dir_vp = NULL;
@@ -5249,7 +5249,7 @@ HANDLE_EXCEPTION:
 /*
  * get a directory's undelete dir tag
  */
-statusT
+int
 get_undel_dir(
     char *dir_path,
     bfTagT * undelDirTag
@@ -5318,7 +5318,7 @@ get_undel_dir(
  * anything else funny happens (can't find the dir entry or whatever)
  * returns ENO_NAME.
  */
-statusT
+int
 get_name(
     struct mount * mp,		/* in - mount structure pointer */
     bfTagT bf_tag,		/* in - tag of file */
@@ -5327,7 +5327,7 @@ get_name(
     bfTagT * parent_tag		/* out - tag of parent diirectory */
 )
 {
-	statusT sts, return_status;
+	int sts, return_status;
 	int i;
 	int last_page;
 	bfAccessT *bfap = NULL, *dir_bfap = NULL;
@@ -5411,7 +5411,7 @@ get_name(
          */
 	dir_contextp = VTOC(dir_bfap->bfVp);
 	if (!dir_contextp) {
-		statusT sts = EOK;
+		int sts = EOK;
 
 		/* bs_access() can return an access structure with a vnode
 		 * that has just been allocated.  If this is the case, the
@@ -5485,7 +5485,7 @@ HANDLE_EXCEPTION:
 }
 
 
-statusT
+int
 get_name2(
     char *name,			/* in - name of file/dir in same fileset */
     bfTagT bf_tag,		/* in - tag of file */
@@ -5494,7 +5494,7 @@ get_name2(
     bfTagT * parent_tag		/* out - tag of parent diirectory */
 )
 {
-	statusT sts;
+	int sts;
 	int error;
 	register struct nameidata *ndp = &u.u_nd;
 	register struct vnode *dir_vp = NULL;
@@ -5656,7 +5656,7 @@ msfs_syncdata(
     struct uucred * cred		/* in - credentials of caller */
 )
 {
-	statusT ret;
+	int ret;
 	struct fsContext *file_context;
 	bfAccessT *bfap = VTOA(vp);
 	bsPageT first_page_to_flush, last_page_to_flush;

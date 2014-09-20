@@ -23,7 +23,7 @@
  * @(#)$RCSfile: fs_file_sets.h,v $ $Revision: 1.1.12.1 $ (DEC) $Date: 2000/09/19 18:08:13 $
  */
 
-statusT
+int
 fs_fset_create(
     char *dmnTbl,		/* in */
     char *setName,		/* in */
@@ -36,14 +36,14 @@ fs_fset_create(
     long xid2			/* in - CFS transaction id */
 );
 
-statusT
+int
 fs_fset_delete(
     char *dmnTbl,		/* in - name of set's domain table */
     char *setName,		/* in - name of set to delete */
     long xid			/* in - CFS transaction id */
 );
 
-statusT
+int
 fs_fset_clone(
     char *dmnTbl,		/* in */
     char *origSetName,		/* in */
@@ -52,7 +52,7 @@ fs_fset_clone(
     long xid			/* in - CFS transaction id */
 );
 
-statusT
+int
 fs_fset_get_info(
     char *dmnTbl,		/* in - domain table */
     uint32_t * nextSetIdx,	/* in/out - index of set */
@@ -61,14 +61,14 @@ fs_fset_get_info(
     int flag			/* in - flag for bs_bfdmn_tbl_activate() */
 );
 
-statusT
+int
 fs_fset_get_id(
     char *dmnTbl,		/* in - name of set's domain table */
     char *setName,		/* in - name of set to delete */
     bfSetIdT * bfSetId		/* out */
 );
 
-statusT
+int
 fs_create_frag(
     bfSetT * bfSetp,		/* in */
     bfAccessT * bfap,		/* in */

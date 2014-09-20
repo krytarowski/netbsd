@@ -34,7 +34,7 @@ typedef struct pageRange {
 	uint32_t pageCnt;
 	int32_t pageType;	/* STG, XTNT_TERM, or PERM_HOLE_START */
 }         pageRangeT;
-statusT
+int
 cp_copy_page_range(
     bfAccessT * bfAccess,	/* in */
     pageRangeT * bfPageRange,	/* in */
@@ -50,7 +50,7 @@ cp_insert_onto_xtnt_map_list(
     bsInMemXtntMapT * targetXtntMap	/* in */
 );
 
-statusT
+int
 cp_remove_from_xtnt_map_list(
     bsInMemXtntMapT ** xtntMapListhead,	/* in */
     bsInMemXtntMapT * targetXtntMap	/* in */

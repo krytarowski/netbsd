@@ -279,7 +279,7 @@ void
 freeze_domain(advfsFreezeMsgT * msg)
 {
 
-	statusT sts;
+	int sts;
 	struct timeval tv;
 	domainT *dmnP = NULL;
 	advfsFreezeInfoT *freezeInfoP = NULL;
@@ -452,7 +452,7 @@ static
 void
 thaw_domain(advfsFreezeInfoT * freezeInfoP, int forced)
 {
-	statusT sts;
+	int sts;
 	struct timeval tv;
 	domainT *dmnP = NULL;
 	bsDmnFreezeAttrT dmnFreezeAttr;

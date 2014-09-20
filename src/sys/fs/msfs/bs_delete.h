@@ -34,19 +34,19 @@
 #define MCELL_LIST_PAGE_V3 1
 #define MCELL_LIST_CELL 0
 
-statusT
+int
 del_clean_mcell_list(
     vdT * vdp,			/* virtual disk */
     u_long flag
 );
 
-statusT
+int
 del_dealloc_stg(
     bfMCIdT pmcid,		/* in - primary mcell ID */
     vdT * pvdp			/* in - virtual disk of primary mcell */
 );
 
-statusT
+int
 del_add_to_del_list(
     bfMCIdT mcid,		/* in - mcell ID */
     vdT * vdp,			/* in - virtual disk ptr */
@@ -54,7 +54,7 @@ del_add_to_del_list(
     ftxHT parentFtxH		/* in - transaction handle */
 );
 
-statusT
+int
 del_remove_from_del_list(
     bfMCIdT mcid,		/* in - mcell ID */
     vdT * vdp,			/* in - virtual disk */
@@ -62,7 +62,7 @@ del_remove_from_del_list(
     ftxHT ftxH			/* in - transaction handle */
 );
 
-statusT
+int
 del_find_del_entry(
     domainT * domain,		/* in */
     vdIndexT vdIndex,		/* in */

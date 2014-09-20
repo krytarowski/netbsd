@@ -57,7 +57,7 @@
 #define FNAME 0
 #define FFREE 1
 
-statusT
+int
 idx_create_index_file_int(
     bfAccessT * dir_bfap,
     ftxHT ftxH
@@ -75,7 +75,7 @@ idx_hash_filename_int(
     char *filename
 );
 
-statusT
+int
 idx_index_get_free_pgs_int(
     bfAccessT * idx_bfap,
     uint32_t count,
@@ -95,7 +95,7 @@ idx_split_node_int(
     rbfPgRefHT dst_pgref
 );
 
-statusT
+int
 idx_insert_filename_int(
     uint32_t node_page,
     ulong level,
@@ -108,7 +108,7 @@ idx_insert_filename_int(
     ftxHT ftxH
 );
 
-statusT
+int
 idx_remove_filename_int(
     uint32_t page_to_search,
     ulong level,
@@ -119,7 +119,7 @@ idx_remove_filename_int(
     ftxHT ftxH
 );
 
-statusT
+int
 idx_lookup_node_int(
     uint32_t node_page,
     uint32_t level,
@@ -195,14 +195,14 @@ idx_prune_btree_int(
     ftxHT ftxH
 );
 
-statusT
+int
 idx_remove_page_of_storage_int(
     bfAccessT * idx_bfap,
     uint32_t page,
     ftxHT ftxH
 );
 
-statusT
+int
 idx_directory_insert_space_undo(
     idxUndoRecordT * recp,
     bfAccessT * idx_bfap,
@@ -241,10 +241,10 @@ struct {
 }      idxStats;
 
 
-statusT
+int
 bf_idx_file_test(bsUnkIdxRecT * idxrec, ulong flagval)
 {
-	statusT retval = FALSE;
+	int retval = FALSE;
 	if (idxrec && (idxrec != (bsUnkIdxRecT *) - 1)) {
 		if ((idxrec->flags & IDX_INDEX_FILE) == flagval) {
 			retval = TRUE;
@@ -262,7 +262,7 @@ bf_idx_file_test(bsUnkIdxRecT * idxrec, ulong flagval)
 
 init_idx_index_opx(void)
 {
-	statusT sts;
+	int sts;
 
 	sts = ftx_register_agent(FTA_IDX_UNDO_V1,
 	    &idx_undo_opx,	/* undo */
@@ -293,7 +293,7 @@ init_idx_index_opx(void)
  *
  ********************************************************************/
 
-statusT
+int
 idx_create_index_file_int(
     bfAccessT * dir_bfap,	/* directory access structure */
     ftxHT parentFtxH		/* parent's transaction Handle */
@@ -304,7 +304,7 @@ idx_create_index_file_int(
 	bfParamsT bfParams;
 	bsDirIdxRecT *dir_idx_params = NULL;
 	bsIdxRecT *idx_params;
-	statusT sts;
+	int sts;
 	idxUndoRecordT undorec;
 	ftxHT create_ftxH;
 	struct vnode *nullvp = NULL;
@@ -482,7 +482,7 @@ idx_create_error:
  * will actually not take palce until the last close.
  *********************************************************************/
 
-statusT
+int
 idx_remove_index_file
 (
     bfAccessT * dir_bfap,	/* Directory access structure */
@@ -490,7 +490,7 @@ idx_remove_index_file
 ) {
 	bfAccessT *idx_bfap;
 	bfTagT index_tag;
-	statusT sts;
+	int sts;
 
 	/* Get the index file's access pointer from the directory */
 
@@ -531,7 +531,7 @@ idx_remove_index_file
  * access strucutre is recyled or released.
  *********************************************************************/
 
-statusT
+int
 idx_open_index_file(
     bfAccessT * dir_bfap,	/* directory's access structure. */
     ftxHT ftxH			/* Parent transaction */
@@ -541,7 +541,7 @@ idx_open_index_file(
 	bfAccessT *idx_bfap;
 	bsIdxRecT *idx_params;
 	bsDirIdxRecT *dir_idx_params;
-	statusT sts = EOK;
+	int sts = EOK;
 	struct vnode *nullvp = NULL;
 
 	/* Check to see if the directory access structure passed in still has
@@ -699,7 +699,7 @@ idx_close_index_file(
 )
 {
 	bfAccessT *idx_bfap;
-	statusT sts;
+	int sts;
 
 	idx_bfap = ((bsDirIdxRecT *) dir_bfap->idx_params)->idx_bfap;
 
@@ -896,7 +896,7 @@ idx_hash_filename_int(
  *
  *********************************************************************/
 
-statusT
+int
 idx_index_get_free_pgs_int(
     bfAccessT * idx_bfap,	/* Index access structure ptr */
     uint32_t count,		/* Number of pages required */
@@ -908,7 +908,7 @@ idx_index_get_free_pgs_int(
 	uint32_t i;
 	uint32_t holePg, newPg;
 	uint32_t holePgCnt;
-	statusT sts;
+	int sts;
 
 	/* Extend the index file filling holes if possible */
 
@@ -1128,7 +1128,7 @@ idx_split_node_int(
  *      it split.
  *********************************************************************/
 
-statusT
+int
 idx_insert_filename(
     bfAccessT * dir_bfap,	/* Directory's access structure */
     struct nameidata * ndp,	/* pointer to nameidata */
@@ -1148,7 +1148,7 @@ idx_insert_filename(
 	idxNodeT *new_root;
 	idxPinnedPgsT pinned_pages[IDX_MAX_BTREE_LEVELS];
 	idxUndoRecordT undorec;
-	statusT sts;
+	int sts;
 
 	/* Hash the filename to get the search key to insert into the index
 	 * b-tree.  */
@@ -1328,7 +1328,7 @@ idx_insert_filename(
  *
  ******************************************************************/
 
-statusT
+int
 idx_insert_filename_int(
     uint32_t node_page,		/* in - starting node page */
     ulong level,		/* caller's level in the tree */
@@ -1347,7 +1347,7 @@ idx_insert_filename_int(
 	idxNodeT *node_ptr;
 	rbfPgRefHT pgref;
 	ulong temp_page;
-	statusT sts;
+	int sts;
 
 	/* Pin the page into memory. Since we don't know at this point whether
 	 * the page is going to be modified due to a split, just pin it
@@ -1543,7 +1543,7 @@ idx_insert_filename_int(
  * will start a sub-transaction.
  *******************************************************************/
 
-statusT
+int
 idx_remove_filename(
     bfAccessT * dir_bfap,	/* Directory's access structure */
     struct nameidata * ndp,
@@ -1558,7 +1558,7 @@ idx_remove_filename(
 	ulong location, root_page;
 	ftxHT ftxH;
 	idxUndoRecordT undorec;
-	statusT sts;
+	int sts;
 	int using_hint = 0, found = 0;
 
 	/* Hash the filename to get the search key to remove from the index
@@ -1685,7 +1685,7 @@ idx_remove_filename(
  * would not occur as well.
  *******************************************************************/
 
-statusT
+int
 idx_remove_filename_int(
     uint32_t page_to_search,	/* node's page number */
     ulong level,		/* level of b-tree calling */
@@ -1700,7 +1700,7 @@ idx_remove_filename_int(
 	rbfPgRefHT rbfpgref;
 	bfPageRefHT bfpgref;
 	uint32_t index;
-	statusT sts;
+	int sts;
 
 	/* If we are not at the leaf node then ref the page otherwise pin it
 	 * since we will be writing it back out.  */
@@ -1871,7 +1871,7 @@ idx_remove_filename_int(
  *  I_FILE_EXITS - a match was found.
  *******************************************************************/
 
-statusT
+int
 idx_lookup_filename(
     bfAccessT * dir_bfap,	/* bfap of the directory */
     struct nameidata * ndp,
@@ -1898,7 +1898,7 @@ idx_lookup_filename(
 	uint16_t filename_len;
 	uint32_t found, index;
 	bfTagT *tagp;
-	statusT status, sts;
+	int status, sts;
 
 	status = I_INSERT_HERE;
 	filename = ndp->ni_dent.d_name;
@@ -2093,7 +2093,7 @@ exit_lookup:
  *
  *******************************************************************/
 
-statusT
+int
 idx_lookup_node_int(
     uint32_t node_page,		/* btree node to search */
     uint32_t level,		/* level of recursion */
@@ -2111,7 +2111,7 @@ idx_lookup_node_int(
 	uint32_t index;
 	idxNodeT *node_ptr;
 	bfPageRefHT pgref;
-	statusT sts;
+	int sts;
 	/* Pin the passed in page */
 
 	sts = bs_refpg(&pgref, (void *) &node_ptr, idx_bfap, node_page, BS_NIL);
@@ -2247,7 +2247,7 @@ idx_lookup_node_int(
  *      it split.
  *******************************************************************/
 
-statusT
+int
 idx_directory_insert_space(
     bfAccessT * dir_bfap,	/* Directories Access Structure */
     ulong size,			/* size of space to insert */
@@ -2266,7 +2266,7 @@ idx_directory_insert_space(
 	bfAccessT *idx_bfap;
 	int split_count;
 	idxNodeT *new_root;
-	statusT sts;
+	int sts;
 	idxPinnedPgsT pinned_pages[IDX_MAX_BTREE_LEVELS];
 	ftxHT ftxH, truncFtxH;
 	idxUndoRecordT undorec;
@@ -2485,7 +2485,7 @@ idx_directory_insert_space_int(
 	ulong temp_size;
 	uint32_t index;
 	uint32_t ret;
-	statusT sts;
+	int sts;
 
 	/* Pin the page into memory. Since we don't know at this point whether
 	 * the page is going to be modified due to a split, just pin it
@@ -2772,7 +2772,7 @@ idx_directory_get_space(
 	ftxHT ftxH;
 	long found_size;
 	idxUndoRecordT undorec;
-	statusT sts;
+	int sts;
 
 	/* Get the idx_file's access structure and setup for recursive call.  */
 
@@ -2927,7 +2927,7 @@ idx_directory_get_space_int(
 	ulong required_size, free_size, rounded_free_size, requested_size;
 	ulong dirRec_adj;
 	ulong start_addr;
-	statusT sts;
+	int sts;
 
 	/* If we are not at the leaf node then reff the page otherwise pin it
 	 * since we will be writing it back out.  */
@@ -3315,7 +3315,7 @@ idx_setup_for_truncation(
 	long bytes_to_trunc;
 	bfAccessT *idx_bfap;
 	ulong undo_space_start;
-	statusT sts;
+	int sts;
 	idxUndoRecordT undorec;
 	ftxHT ftxH;
 
@@ -3448,7 +3448,7 @@ idx_setup_for_truncation_int(
 	ulong num_bytes;
 	ulong bytes_to_trunc;
 	uint32_t index;
-	statusT sts;
+	int sts;
 	/* If we are not at the leaf node then reff the page otherwise pin it
 	 * since we will be writing it back out.  */
 
@@ -3674,7 +3674,7 @@ idx_glom_entry_int(
 	uint32_t right_index = -1;
 	uint32_t left_index;
 	uint32_t update_warning = FALSE;
-	statusT sts;
+	int sts;
 
 	/* Check the right and left entries to see if we can glom them
 	 * together with the passed in entry. */
@@ -3949,7 +3949,7 @@ idx_glom_entry_int(
  * that the directory not exceed a page in size.
  *******************************************************************/
 
-statusT
+int
 idx_convert_dir(
     bfAccessT * dir_bfap,
     struct nameidata * ndp,
@@ -3969,7 +3969,7 @@ idx_convert_dir(
 	uint32_t pageSz;
 	dirRec *dirRecp;
 	unsigned int last_ent_offset;
-	statusT sts;
+	int sts;
 
 	/* Create the index file */
 
@@ -4243,13 +4243,13 @@ dir_sort_int(
  * will be updated to reflect this.
  *******************************************************************/
 
-statusT
+int
 idx_prune_start(
     bfAccessT * idx_bfap,
     ftxHT parentFtxH
 )
 {
-	statusT sts;
+	int sts;
 	ulong search_key;
 	uint32_t levels;
 	uint32_t old_root, new_root, pg_cnt;
@@ -4450,7 +4450,7 @@ idx_prune_btree_int(
 	int32_t copy_cnt;
 	uint32_t status, redistribute;
 	int right_page_right, right_page_left;
-	statusT sts;
+	int sts;
 
 	/* We can pin each node as we traverse down the tree since all
 	 * compression will be into the left node from the right node, except
@@ -5016,7 +5016,7 @@ idx_prune_btree_int(
  * to the cleanup thread to finish removing the storage.
  *******************************************************************/
 
-statusT
+int
 idx_remove_page_of_storage_int(
     bfAccessT * idx_bfap,
     uint32_t page_to_remove,
@@ -5026,7 +5026,7 @@ idx_remove_page_of_storage_int(
 	uint32_t delCnt;
 	void *delList;
 	idxPruneMsgsT *pmsgs;
-	statusT sts;
+	int sts;
 
 	pmsgs = (idxPruneMsgsT *) idx_bfap->dirTruncp;
 
@@ -5143,7 +5143,7 @@ idx_undo_opx(
 )
 {
 	idxUndoRecordT recp;
-	statusT sts;
+	int sts;
 	bfSetT *bfSetp;
 	bfAccessT *idx_bfap, *dir_bfap;
 	bsIdxRecT *idx_params;
@@ -5382,7 +5382,7 @@ idx_undo_exit:
  * subtransaction was completed the b-tree will remain consistent.
  ********************************************************************/
 
-statusT
+int
 idx_directory_insert_space_undo(
     idxUndoRecordT * recp,
     bfAccessT * idx_bfap,
@@ -5397,7 +5397,7 @@ idx_directory_insert_space_undo(
 	ulong start_addr, entry_sa;
 	ulong size, entry_sz;
 	int node_page;
-	statusT sts;
+	int sts;
 
 	/* Remove the entry from the b-tree by directly calling the internal
 	 * routine. We can not start a subtransaction. We can ignore the

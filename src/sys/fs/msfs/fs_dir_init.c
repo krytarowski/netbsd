@@ -73,7 +73,7 @@ extern int AdvfsAccessMaxPercent;
 msgQHT CleanupMsgQH;
 ulong access_structures_allocated = 0, access_structures_deallocated = 0, failed_access_structure_deallocations = 0;
 
-static statusT
+static int
 create_root_file(
     bfTagT * tagp,
     bfAccessT ** outbfap,
@@ -237,7 +237,7 @@ fs_assemble_dir(
  * "empty" state in the directories stats??
  */
 
-statusT
+int
 dir_empty(
     bfAccessT * bfap,		/* in - dir's access structure */
     struct fsContext * dir_context	/* in - ptr to dir's context area */
@@ -245,7 +245,7 @@ dir_empty(
 {
 	int j, n, num_pages;
 	unsigned int lastentoff;
-	statusT ret;
+	int ret;
 	fs_dir_entry *dir_p, *last_entry;
 	bfPageRefHT page_ref;
 	dirRec *dirRecp;
@@ -337,7 +337,7 @@ dir_error:
  * Creates the root and .tags directories in a new file set.
  */
 
-statusT
+int
 fs_create_file_set(
     bfSetT * bfSetp,		/* in - file set's bitfile set desc pointer */
     gid_t quotaId,		/* in - group ID for quota files */
@@ -346,7 +346,7 @@ fs_create_file_set(
 {
 	unsigned char *buffer;
 	char *p;
-	statusT sts;
+	int sts;
 	rbfPgRefHT rootPg, tagsPg;
 	fs_dir_entry *dir_p;
 	bfParamsT *bfParamsp = NULL;
@@ -581,7 +581,7 @@ _error:
  * but this is OK, since we really don't care if that is undone.
  */
 
-static statusT
+static int
 create_root_file(
     bfTagT * tagp,		/* out - tag of created bitfile */
     bfAccessT ** outbfap,	/* out - access structure of created bitfile */
@@ -597,7 +597,7 @@ create_root_file(
     ftxHT parentFtxH		/* in - transaction handle */
 )
 {
-	statusT sts;
+	int sts;
 	bfAccessT *bfap;
 	struct timeval createTime;
 	ftxHT ftxH;
@@ -606,7 +606,7 @@ create_root_file(
 	statT *dir_stats;
 	struct vnode *nullvp = NULL;
 
-	statusT bs_inherit_init(bfAccessT * bfap, ftxHT ftxH);
+	int bs_inherit_init(bfAccessT * bfap, ftxHT ftxH);
 
 	dir_stats = (statT *) ms_malloc(sizeof(statT));
 	if (dir_stats == NULL) {
@@ -710,7 +710,7 @@ fs_init_ftx(void)
  */
 
 {
-	statusT retval;
+	int retval;
 
 	retval = ftx_register_agent(
 	    FTA_FS_UPDATE_V1,
@@ -739,7 +739,7 @@ fs_insert_undo(
     void *opRec
 )
 {
-	statusT sts;
+	int sts;
 	fs_dir_entry *dir_p;
 	bfAccessT *dir_accessp;
 	struct fsContext *context_ptr;
@@ -933,7 +933,7 @@ void
 fs_init_cleanup_thread(void)
 {
 	extern task_t first_task;
-	statusT sts;
+	int sts;
 
 
 	/* Create a message queue to send messages to the cleanup thread.  */
@@ -969,7 +969,7 @@ fs_cleanup_thread(void)
 {
 	clupThreadMsgT *msg;
 	domainT *dmnP = NULL;
-	statusT sts;
+	int sts;
 	extern cleanup_closed_list(clupClosedListTypeT);
 	bfAccessT *bfap;
 

@@ -63,7 +63,7 @@ spec_page_write(void)
 }
 
 static
-       statusT
+       int
 copy_frag_into_page(
     bfAccessT * fragBfAccessp,	/* in */
     bfFragIdT fragId,		/* in */
@@ -279,7 +279,7 @@ vnode_fscontext_deallocate(
  *
  * Access a bitfile. Analagous to iget operations in other file systems.
  */
-statusT
+int
 bf_get(
     bfTagT bf_tag,		/* in - tag of bitfile to access */
     struct fsContext * dir_context,	/* in - parent dir context pointer */
@@ -325,7 +325,7 @@ unsigned long Bf_get_restored_stats = 0;
  * Note that the dir_context lock is ALWAYS released in this routine unless
  * the DONT_UNLOCK flag is passed.
  */
-statusT
+int
 bf_get_l(
     bfTagT bf_tag,		/* in - tag of bitfile to access */
     struct fsContext * dir_context,	/* in - parent dir context pointer */
@@ -342,7 +342,7 @@ bf_get_l(
 	struct fsContext *file_context;
 	bfAccessT *bfap;
 	struct vm_ubc_object *obj;
-	statusT sts = EOK;
+	int sts = EOK;
 	struct undel_dir_rec undel_rec;
 	uint32_t options;
 	extern struct vnodeops spec_bfnodeops;
@@ -760,7 +760,7 @@ finish_setup:
 			}
 		}
 		if (error = specalloc(nvp, file_context->dir_stats.st_rdev)) {
-			RAISE_EXCEPTION((statusT) error);
+			RAISE_EXCEPTION((int) error);
 		}
 		nvp->v_op = &spec_bfnodeops;
 		break;
@@ -1283,7 +1283,7 @@ copy_frag_into_vm_page(
 	uint32_t fragByteCnt;
 	vm_offset_t kernelAddr;
 	uint32_t relativePageOffset;
-	statusT sts;
+	int sts;
 
 	kernelAddr = ubc_load(pp, 0, PAGE_SIZE);
 
@@ -1431,7 +1431,7 @@ msfs_putpage(
 	void *page_addr;
 	int page;
 	vm_offset_t start, offset;
-	statusT res;
+	int res;
 	int i;
 	int pushCnt = 0;
 	int error = 0;
@@ -1958,7 +1958,7 @@ msfs_write_check(vm_ubc_object_t vop, vm_page_t pp)
  */
 
 static
-       statusT
+       int
 copy_frag_into_page(
     bfAccessT * fragBfAccessp,	/* in */
     bfFragIdT fragId,		/* in */
@@ -1969,7 +1969,7 @@ copy_frag_into_page(
 )
 {
 	uint32_t fragByteCnt;
-	statusT sts;
+	int sts;
 	uint32_t subFrag1ByteCnt;
 	uint32_t subFrag1ByteOffset;
 	char *subFrag1Page = NULL;
@@ -2107,7 +2107,7 @@ msfs_mmap(register struct vnode * vp,
 	struct fsContext *contextp;
 	bfAccessT *bfap;
 	int locked;
-	statusT sts;
+	int sts;
 
 	FILESETSTAT(vp, msfs_mmap);
 
