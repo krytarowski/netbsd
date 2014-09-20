@@ -203,9 +203,9 @@ init_access(bfAccessT * bfap)
 	int wkday;
 
 
-	mutex_init(&bfap->bfIoLock.mutex);
-	mutex_init(&bfap->bfaLock.mutex);
-	mutex_init(&bfap->actRangeLock.mutex);
+	mutex_init(&bfap->bfIoLock.mutex, MUTEX_DEFAULT, IPL_NONE);
+	mutex_init(&bfap->bfaLock.mutex, MUTEX_DEFAULT, IPL_NONE);
+	mutex_init(&bfap->actRangeLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	mutex_enter(&bfap->bfaLock.mutex);
 	lk_init(&bfap->stateLk, &bfap->bfaLock, LKT_STATE, 0, LKU_BF_STATE);
 	bfap->stateLk.state = ACC_INVALID;
@@ -1626,7 +1626,7 @@ bs_init_area()
 	int i;
 	bfAccessT *new_bfap;
 
-	mutex_init(&BfAccessFreeLock.mutex);
+	mutex_init(&BfAccessFreeLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 
 	/*
          * Initialize the free list and the closed list.

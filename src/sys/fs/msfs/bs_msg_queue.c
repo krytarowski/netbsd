@@ -170,7 +170,7 @@ msgq_create(
 		ms_free(msgQ);
 		return ENO_MORE_MEMORY;
 	}
-	mutex_init(&msgQ->mutex.mutex);
+	mutex_init(&msgQ->mutex.mutex, MUTEX_DEFAULT, IPL_NONE);
 	advfs_cv_init(&msgQ->cv);
 
 	*msgQH = (msgQHT) msgQ;

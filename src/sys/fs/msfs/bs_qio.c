@@ -3806,7 +3806,7 @@ bfflush(
 	/* Create a new rangeFlush structure. */
 	mutex_exit(&bfap->bfIoLock.mutex);
 	rfp = (rangeFlushT *) (ms_malloc(sizeof(rangeFlushT)));
-	mutex_init(&rfp->rangeFlushLock.mutex);
+	mutex_init(&rfp->rangeFlushLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	rfp->firstPage = first_page;
 	rfp->lastPage = last_page;
 	rfp->outstandingIoCount = 0;

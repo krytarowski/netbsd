@@ -349,7 +349,7 @@ ss_kern_init()
 	int false = FALSE;
 	int true = TRUE;
 
-	mutex_init(&ssStoppedMutex.mutex);
+	mutex_init(&ssStoppedMutex.mutex, MUTEX_DEFAULT, IPL_NONE);
 	advfs_cv_init(&ss_stopped_cv);
 
 	SMARTSTORE_LOCK_INIT(&SSLock);
@@ -544,8 +544,8 @@ ss_boss_init(void)
 {
 	extern task_t first_task;
 
-	mutex_init(&ssListTpool.plock.mutex);
-	mutex_init(&ssWorkTpool.plock.mutex);
+	mutex_init(&ssListTpool.plock.mutex, MUTEX_DEFAULT, IPL_NONE);
+	mutex_init(&ssWorkTpool.plock.mutex, MUTEX_DEFAULT, IPL_NONE);
 
 	/* Create and start the boss thread.  */
 	if (!kernel_thread(first_task, ss_boss_thread)) {
@@ -1725,8 +1725,8 @@ void
 ss_init_dmnInfo(domainT * dmnP)
 {
 	bzero((char *) &dmnP->ssDmnInfo, sizeof(struct ssDmnInfo));
-	mutex_init(&dmnP->ssDmnInfo.ssDmnLk.mutex);
-	mutex_init(&dmnP->ssDmnInfo.ssDmnHotLk.mutex);
+	mutex_init(&dmnP->ssDmnInfo.ssDmnLk.mutex, MUTEX_DEFAULT, IPL_NONE);
+	mutex_init(&dmnP->ssDmnInfo.ssDmnHotLk.mutex, MUTEX_DEFAULT, IPL_NONE);
 
 	dmnP->ssDmnInfo.ssDmnState = SS_DEACTIVATED;
 	dmnP->ssDmnInfo.ssFirstMountTime = 0;
@@ -1782,9 +1782,9 @@ ss_init_dmnInfo(domainT * dmnP)
 void
 ss_init_vd(vdT * vdp)
 {
-	mutex_init(&vdp->ssVolInfo.ssVdMsgLk.mutex);
-	mutex_init(&vdp->ssVolInfo.ssVdMigLk.mutex);
-	mutex_init(&vdp->ssVolInfo.ssFragLk.mutex);
+	mutex_init(&vdp->ssVolInfo.ssVdMsgLk.mutex, MUTEX_DEFAULT, IPL_NONE);
+	mutex_init(&vdp->ssVolInfo.ssVdMigLk.mutex, MUTEX_DEFAULT, IPL_NONE);
+	mutex_init(&vdp->ssVolInfo.ssFragLk.mutex, MUTEX_DEFAULT, IPL_NONE);
 	mutex_enter(&vdp->ssVolInfo.ssVdMigLk.mutex);
 	advfs_cv_init(&vdp->ssVolInfo.ssContMig_cv);
 	vdp->ssVolInfo.ssVdMigState = SS_MIG_IDLE;

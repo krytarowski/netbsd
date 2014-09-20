@@ -3159,8 +3159,8 @@ vd_alloc(
 	ftx_lock_init(&vdp->mcell_lk, &dmnP->mutex, ADVvdT_mcell_lk_info);
 	ftx_lock_init(&vdp->rbmt_mcell_lk, &dmnP->mutex, ADVvdT_rbmt_mcell_lk_info);
 	lock_setup(&vdp->ddlActiveLk, ADVvdT_ddlActiveLk_info, TRUE);
-	mutex_init(&vdp->vdIoLock.mutex);
-	mutex_init(&vdp->vdStateLock.mutex);
+	mutex_init(&vdp->vdIoLock.mutex, MUTEX_DEFAULT, IPL_NONE);
+	mutex_init(&vdp->vdStateLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 
 	ss_init_vd(vdp);
 
@@ -3178,49 +3178,49 @@ vd_alloc(
 	/*
          * Init I/O queues, minimum initialization
          */
-	mutex_init(&vdp->devQ.ioQLock.mutex);
+	mutex_init(&vdp->devQ.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->devQ.fwd = (ioDescT *) & vdp->devQ;
 	vdp->devQ.bwd = (ioDescT *) & vdp->devQ;
 	vdp->devQ.ioQLen = 0;
 	vdp->devQ.lenLimit = 0;
 	vdp->devQ.queue_cnt = 0;
 
-	mutex_init(&vdp->consolQ.ioQLock.mutex);
+	mutex_init(&vdp->consolQ.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->consolQ.fwd = (ioDescT *) & vdp->consolQ;
 	vdp->consolQ.bwd = (ioDescT *) & vdp->consolQ;
 	vdp->consolQ.ioQLen = 0;
 	vdp->consolQ.lenLimit = 0;
 	vdp->consolQ.queue_cnt = 0;
 
-	mutex_init(&vdp->blockingQ.ioQLock.mutex);
+	mutex_init(&vdp->blockingQ.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->blockingQ.fwd = (ioDescT *) & vdp->blockingQ;
 	vdp->blockingQ.bwd = (ioDescT *) & vdp->blockingQ;
 	vdp->blockingQ.ioQLen = 0;
 	vdp->blockingQ.lenLimit = 0;
 	vdp->blockingQ.queue_cnt = 0;
 
-	mutex_init(&vdp->flushQ.ioQLock.mutex);
+	mutex_init(&vdp->flushQ.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->flushQ.fwd = (ioDescT *) & vdp->flushQ;
 	vdp->flushQ.bwd = (ioDescT *) & vdp->flushQ;
 	vdp->flushQ.ioQLen = 0;
 	vdp->flushQ.lenLimit = 0;
 	vdp->flushQ.queue_cnt = 0;
 
-	mutex_init(&vdp->ubcReqQ.ioQLock.mutex);
+	mutex_init(&vdp->ubcReqQ.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->ubcReqQ.fwd = (ioDescT *) & vdp->ubcReqQ;
 	vdp->ubcReqQ.bwd = (ioDescT *) & vdp->ubcReqQ;
 	vdp->ubcReqQ.ioQLen = 0;
 	vdp->ubcReqQ.lenLimit = 0;
 	vdp->ubcReqQ.queue_cnt = 0;
 
-	mutex_init(&vdp->waitLazyQ.ioQLock.mutex);
+	mutex_init(&vdp->waitLazyQ.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->waitLazyQ.fwd = (ioDescT *) & vdp->waitLazyQ;
 	vdp->waitLazyQ.bwd = (ioDescT *) & vdp->waitLazyQ;
 	vdp->waitLazyQ.ioQLen = 0;
 	vdp->waitLazyQ.lenLimit = 0;
 	vdp->waitLazyQ.queue_cnt = 0;
 
-	mutex_init(&vdp->readyLazyQ.ioQLock.mutex);
+	mutex_init(&vdp->readyLazyQ.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->readyLazyQ.fwd = (ioDescT *) & vdp->readyLazyQ;
 	vdp->readyLazyQ.bwd = (ioDescT *) & vdp->readyLazyQ;
 	vdp->readyLazyQ.ioQLen = 0;
@@ -3228,7 +3228,7 @@ vd_alloc(
 	vdp->readyLazyQ.lenLimit = AdvfsReadyQLim / 16;
 	vdp->readyLazyQ.queue_cnt = 0;
 
-	mutex_init(&vdp->tempQ.ioQLock.mutex);
+	mutex_init(&vdp->tempQ.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->tempQ.fwd = (ioDescT *) & vdp->tempQ;
 	vdp->tempQ.bwd = (ioDescT *) & vdp->tempQ;
 	vdp->tempQ.mfwd = &vdp->tempQ;
@@ -3258,97 +3258,97 @@ vd_alloc(
 
 	bzero((char *) &vdp->dStat, sizeof(struct dStat));
 
-	mutex_init(&vdp->smSyncQ0.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ0.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ0.fwd = (ioDescT *) & vdp->smSyncQ0;
 	vdp->smSyncQ0.bwd = (ioDescT *) & vdp->smSyncQ0;
 	vdp->smSyncQ0.ioQLen = 0;
 	vdp->smSyncQ0.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ1.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ1.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ1.fwd = (ioDescT *) & vdp->smSyncQ1;
 	vdp->smSyncQ1.bwd = (ioDescT *) & vdp->smSyncQ1;
 	vdp->smSyncQ1.ioQLen = 0;
 	vdp->smSyncQ1.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ2.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ2.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ2.fwd = (ioDescT *) & vdp->smSyncQ2;
 	vdp->smSyncQ2.bwd = (ioDescT *) & vdp->smSyncQ2;
 	vdp->smSyncQ2.ioQLen = 0;
 	vdp->smSyncQ2.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ3.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ3.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ3.fwd = (ioDescT *) & vdp->smSyncQ3;
 	vdp->smSyncQ3.bwd = (ioDescT *) & vdp->smSyncQ3;
 	vdp->smSyncQ3.ioQLen = 0;
 	vdp->smSyncQ3.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ4.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ4.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ4.fwd = (ioDescT *) & vdp->smSyncQ4;
 	vdp->smSyncQ4.bwd = (ioDescT *) & vdp->smSyncQ4;
 	vdp->smSyncQ4.ioQLen = 0;
 	vdp->smSyncQ4.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ5.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ5.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ5.fwd = (ioDescT *) & vdp->smSyncQ5;
 	vdp->smSyncQ5.bwd = (ioDescT *) & vdp->smSyncQ5;
 	vdp->smSyncQ5.ioQLen = 0;
 	vdp->smSyncQ5.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ6.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ6.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ6.fwd = (ioDescT *) & vdp->smSyncQ6;
 	vdp->smSyncQ6.bwd = (ioDescT *) & vdp->smSyncQ6;
 	vdp->smSyncQ6.ioQLen = 0;
 	vdp->smSyncQ6.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ7.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ7.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ7.fwd = (ioDescT *) & vdp->smSyncQ7;
 	vdp->smSyncQ7.bwd = (ioDescT *) & vdp->smSyncQ7;
 	vdp->smSyncQ7.ioQLen = 0;
 	vdp->smSyncQ7.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ8.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ8.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ8.fwd = (ioDescT *) & vdp->smSyncQ8;
 	vdp->smSyncQ8.bwd = (ioDescT *) & vdp->smSyncQ8;
 	vdp->smSyncQ8.ioQLen = 0;
 	vdp->smSyncQ8.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ9.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ9.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ9.fwd = (ioDescT *) & vdp->smSyncQ9;
 	vdp->smSyncQ9.bwd = (ioDescT *) & vdp->smSyncQ9;
 	vdp->smSyncQ9.ioQLen = 0;
 	vdp->smSyncQ9.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ10.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ10.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ10.fwd = (ioDescT *) & vdp->smSyncQ10;
 	vdp->smSyncQ10.bwd = (ioDescT *) & vdp->smSyncQ10;
 	vdp->smSyncQ10.ioQLen = 0;
 	vdp->smSyncQ10.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ11.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ11.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ11.fwd = (ioDescT *) & vdp->smSyncQ11;
 	vdp->smSyncQ11.bwd = (ioDescT *) & vdp->smSyncQ11;
 	vdp->smSyncQ11.ioQLen = 0;
 	vdp->smSyncQ11.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ12.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ12.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ12.fwd = (ioDescT *) & vdp->smSyncQ12;
 	vdp->smSyncQ12.bwd = (ioDescT *) & vdp->smSyncQ12;
 	vdp->smSyncQ12.ioQLen = 0;
 	vdp->smSyncQ12.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ13.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ13.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ13.fwd = (ioDescT *) & vdp->smSyncQ13;
 	vdp->smSyncQ13.bwd = (ioDescT *) & vdp->smSyncQ13;
 	vdp->smSyncQ13.ioQLen = 0;
 	vdp->smSyncQ13.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ14.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ14.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ14.fwd = (ioDescT *) & vdp->smSyncQ14;
 	vdp->smSyncQ14.bwd = (ioDescT *) & vdp->smSyncQ14;
 	vdp->smSyncQ14.ioQLen = 0;
 	vdp->smSyncQ14.queue_cnt = 0;
 
-	mutex_init(&vdp->smSyncQ15.ioQLock.mutex);
+	mutex_init(&vdp->smSyncQ15.ioQLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 	vdp->smSyncQ15.fwd = (ioDescT *) & vdp->smSyncQ15;
 	vdp->smSyncQ15.bwd = (ioDescT *) & vdp->smSyncQ15;
 	vdp->smSyncQ15.ioQLen = 0;
@@ -5343,10 +5343,10 @@ dmn_alloc(
 	*dmnP = nilDomain;
 
 	RMVOL_TRUNC_LOCK_INIT(dmnP);
-	mutex_init(&dmnP->mutex.mutex);
-	mutex_init(&dmnP->lsnLock.mutex);
-	mutex_init(&dmnP->vdpTblLock.mutex);
-	mutex_init(&dmnP->dmnFreezeMutex.mutex);
+	mutex_init(&dmnP->mutex.mutex, MUTEX_DEFAULT, IPL_NONE);
+	mutex_init(&dmnP->lsnLock.mutex, MUTEX_DEFAULT, IPL_NONE);
+	mutex_init(&dmnP->vdpTblLock.mutex, MUTEX_DEFAULT, IPL_NONE);
+	mutex_init(&dmnP->dmnFreezeMutex.mutex, MUTEX_DEFAULT, IPL_NONE);
 
 	SC_TBL_LOCK_INIT(dmnP);
 	dmnP->lsnList.lsnFwd = (struct bsBuf *) & dmnP->lsnList;
@@ -5725,7 +5725,7 @@ bs_domain_init(
     void
 )
 {
-	mutex_init(&DmnTblMutex.mutex);
+	mutex_init(&DmnTblMutex.mutex, MUTEX_DEFAULT, IPL_NONE);
 	lock_setup(&DmnTblLock, ADVDmnTblLock_info, TRUE);
 
 	/* create and init dynamic hash table */
