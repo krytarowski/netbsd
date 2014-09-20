@@ -1467,7 +1467,7 @@ msfs_putpage(
 	                 */
 
 			mutex_enter(&bfap->bfaLock);
-			KASSERT(lk_get_state(bfap->stateLk) != ACC_INVALID);
+			KASSERT(lk_get_state(&bfap->stateLk) != ACC_INVALID);
 			KASSERT(bfap->bfState != BSRA_INVALID);
 			decr_access = 1;
 			RM_ACC_LIST_COND(bfap);

@@ -2226,8 +2226,8 @@ xfer_xtnts_to_clone(
 	    if (sts == EOK) {
 		KASSERT(bfSetp->cloneId > 0);
 		KASSERT(
-		    (lk_get_state(bfSetp->cloneDelState) == CLONE_DEL_XFER_STG) ||
-		    (lk_get_state(bfSetp->cloneDelState) == CLONE_DEL_PENDING));
+		    (lk_get_state(&bfSetp->cloneDelState) == CLONE_DEL_XFER_STG) ||
+		    (lk_get_state(&bfSetp->cloneDelState) == CLONE_DEL_PENDING));
 
 		/* open the clone file that storage will be added to */
 		nullvp = NULL;

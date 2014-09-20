@@ -200,7 +200,7 @@ start:
 	                 * since the recycling process will take it off
 	                 * this fileset's list.
 	                 */
-			if (lk_get_state(bfap->stateLk) == ACC_RECYCLE) {
+			if (lk_get_state(&bfap->stateLk) == ACC_RECYCLE) {
 				nextbfap = bfap->setFwd;
 				mutex_exit(&bfap->bfaLock);
 				continue;

@@ -340,8 +340,15 @@ typedef struct advfsLockStats {
 
 extern advfsLockStatsT *AdvfsLockStats;
 
-#define lk_waiters( lk )          ((lk).waiters)
-#define lk_get_state( lk )        ((lk).state)
+static inline u_short lk_waiters(const stateLkT *lk)
+{
+	return lk->waiters;
+}
+
+static inline lkStatesT lk_get_state(const stateLkT *lk)
+{
+	return lk->state;
+}
 
 /*
  ** Prototypes.

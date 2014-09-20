@@ -593,7 +593,7 @@ init_next_tag_page(
 		bfSetp->tagUnMpPg += BS_TD_XPND_PGS;
 
 		if (BS_BFTAG_RSVD(bfap->tag) ||
-		    (lk_get_state(bfap->stateLk) != ACC_FTX_TRANS)) {
+		    (lk_get_state(&bfap->stateLk) != ACC_FTX_TRANS)) {
 			/*
 	                 * Set done mode to skip undo for sub ftxs, in this case,
 	                 * the rbf_add_stg, so it will not be undone after the
@@ -999,7 +999,7 @@ tagdir_set_next_tag(
 	                 *  Chris says just fail if we find one in some state other than
 	                 *  ACC_INVALID.
 	                 */
-			if (lk_get_state(bfAccess->stateLk) != ACC_INVALID) {
+			if (lk_get_state(&bfAccess->stateLk) != ACC_INVALID) {
 				sts = E_TAG_EXISTS;
 			}
 		} else {

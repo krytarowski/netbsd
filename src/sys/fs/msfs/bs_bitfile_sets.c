@@ -1944,7 +1944,7 @@ start:
 	         * because an image redo was done at recovery time,
 	         * but the delete transaction was redone successfully.
 	         */
-		accState = lk_get_state(currbfap->stateLk);
+		accState = lk_get_state(&currbfap->stateLk);
 		if (((accState == ACC_INVALID) &&
 			(currbfap->bfState != BSRA_DELETING)) ||
 		    (accState == ACC_RECYCLE) ||
@@ -2681,7 +2681,7 @@ bs_bfs_close(
 	if (options & BFS_OP_XFER_XTNTS_TO_CLONE) {
 		mutex_enter(&bfSetp->cloneDelStateMutex);
 
-		currentCloneDelState = lk_get_state(bfSetp->cloneDelState);
+		currentCloneDelState = lk_get_state(&bfSetp->cloneDelState);
 		KASSERT(currentCloneDelState == CLONE_DEL_XFER_STG ||
 		    currentCloneDelState == CLONE_DEL_PENDING);
 		KASSERT(bfSetp->xferThreads > 0);
@@ -2869,7 +2869,7 @@ bfs_access(
 		if (options & BFS_OP_XFER_XTNTS_TO_CLONE) {
 			mutex_enter(&bfSetp->cloneDelStateMutex);
 
-			KASSERT(lk_get_state(bfSetp->cloneDelState) == CLONE_DEL_NORMAL);
+			KASSERT(lk_get_state(&bfSetp->cloneDelState) == CLONE_DEL_NORMAL);
 			KASSERT(bfSetp->xferThreads == 0);
 
 			(void) lk_set_state(&bfSetp->cloneDelState, CLONE_DEL_XFER_STG);
@@ -2884,7 +2884,7 @@ bfs_access(
 
 		if (options & BFS_OP_XFER_XTNTS_TO_CLONE) {
 			mutex_enter(&bfSetp->cloneDelStateMutex);
-			currentCloneDelState = lk_get_state(bfSetp->cloneDelState);
+			currentCloneDelState = lk_get_state(&bfSetp->cloneDelState);
 
 			KASSERT(currentCloneDelState == CLONE_DEL_NORMAL ||
 			    currentCloneDelState == CLONE_DEL_DELETING);
@@ -2943,7 +2943,7 @@ bfs_access(
          */
 	else if (options & BFS_OP_XFER_XTNTS_TO_CLONE) {
 		mutex_enter(&bfSetp->cloneDelStateMutex);
-		currentCloneDelState = lk_get_state(bfSetp->cloneDelState);
+		currentCloneDelState = lk_get_state(&bfSetp->cloneDelState);
 
 		KASSERT(currentCloneDelState == CLONE_DEL_NORMAL ||
 		    currentCloneDelState == CLONE_DEL_XFER_STG ||
@@ -2961,7 +2961,7 @@ bfs_access(
 		    (currentCloneDelState == CLONE_DEL_DELETING)) {
 
 			KASSERT((currentCloneDelState != CLONE_DEL_PENDING) ||
-			    (lk_waiters(bfSetp->cloneDelState) > 0));
+			    (lk_waiters(&bfSetp->cloneDelState) > 0));
 
 			mutex_exit(&bfSetp->cloneDelStateMutex);
 			RAISE_EXCEPTION(E_NO_SUCH_BF_SET);
@@ -4072,7 +4072,7 @@ HANDLE_EXCEPTION:
 		if (bfSetp->cloneId != BS_BFSET_ORIG) {
 			mutex_enter(&bfSetp->cloneDelStateMutex);
 
-			currentCloneDelState = lk_get_state(bfSetp->cloneDelState);
+			currentCloneDelState = lk_get_state(&bfSetp->cloneDelState);
 
 			KASSERT(currentCloneDelState == CLONE_DEL_NORMAL ||
 			    currentCloneDelState == CLONE_DEL_XFER_STG);

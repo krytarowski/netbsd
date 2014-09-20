@@ -368,7 +368,7 @@ _retry:
 			cleanup_structs_skipped++;
 			continue;
 		}
-		state = lk_get_state(bfap->stateLk);
+		state = lk_get_state(&bfap->stateLk);
 		if (state != ACC_VALID && state != ACC_FTX_TRANS)
 			cleanup_acc_unexpected_state_cnt++;	/* Just a sanity check */
 
@@ -746,7 +746,7 @@ restart:
 			continue;
 		}
 		mutex_enter(&bfap->bfaLock);
-		state = lk_get_state(bfap->stateLk);
+		state = lk_get_state(&bfap->stateLk);
 
 		KASSERT(state != ACC_INIT_TRANS);
 
@@ -1150,13 +1150,13 @@ restart:
 				mutex_enter(&findBfap->bfaLock);
 				KASSERT((BS_BFTAG_EQL(findBfap->tag, tag)) &&
 				    findBfap->bfSetp == bfSetp);
-				if (lk_get_state(findBfap->stateLk) == ACC_RECYCLE) {
+				if (lk_get_state(&findBfap->stateLk) == ACC_RECYCLE) {
 					BS_BFAH_UNLOCK(hash_key);
 					lk_wait_while(&findBfap->stateLk, &findBfap->bfaLock,
 					    ACC_RECYCLE);
 					mutex_exit(&findBfap->bfaLock);
 					goto restart;
-				} else if (lk_get_state(findBfap->stateLk) == ACC_DEALLOC) {
+				} else if (lk_get_state(&findBfap->stateLk) == ACC_DEALLOC) {
 
 					/*
 		                         * The fs_cleanup_thread() is deallocating this access
@@ -1191,13 +1191,13 @@ restart:
 					mutex_enter(&findBfap->bfaLock);
 					KASSERT((BS_BFTAG_EQL(findBfap->tag, tag)) &&
 					    findBfap->bfSetp == bfSetp);
-					if (lk_get_state(findBfap->stateLk) == ACC_RECYCLE) {
+					if (lk_get_state(&findBfap->stateLk) == ACC_RECYCLE) {
 						BS_BFAH_UNLOCK(hash_key);
 						lk_wait_while(&findBfap->stateLk, &findBfap->bfaLock,
 						    ACC_RECYCLE);
 						mutex_exit(&findBfap->bfaLock);
 						goto restart;
-					} else if (lk_get_state(findBfap->stateLk) == ACC_DEALLOC) {
+					} else if (lk_get_state(&findBfap->stateLk) == ACC_DEALLOC) {
 
 						/*
 			                         * The fs_cleanup_thread() is deallocating this access
@@ -1224,7 +1224,7 @@ restart:
 
 return_it:
 	KASSERT(findBfap ? SLOCK_HOLDER(&findBfap->bfaLock.mutex) : 1);
-	KASSERT(findBfap ? lk_get_state(findBfap->stateLk) != ACC_RECYCLE : 1);
+	KASSERT(findBfap ? lk_get_state(&findBfap->stateLk) != ACC_RECYCLE : 1);
 	if (!hold_hashlock)
 		BS_BFAH_UNLOCK(hash_key);
 	return (findBfap);
@@ -1269,7 +1269,7 @@ start:
 	         * getting the accessChainLock, hitting this access structure,
 	         * and relooping.
 	         */
-		if (lk_get_state(bfap->stateLk) == ACC_DEALLOC) {
+		if (lk_get_state(&bfap->stateLk) == ACC_DEALLOC) {
 			mutex_exit(&bfap->bfaLock);
 			mutex_exit(&bfSetp->accessChainLock);
 			assert_wait_mesg_timo(NULL, FALSE, "AdvFS delay", 1);
@@ -1285,7 +1285,7 @@ start:
 		 * It should be safe to just start over. We will be starting
 		 * where we left off, since we have been removing access
 		 * structures. */
-		if (lk_get_state(bfap->stateLk) == ACC_RECYCLE) {
+		if (lk_get_state(&bfap->stateLk) == ACC_RECYCLE) {
 			mutex_exit(&bfSetp->accessChainLock);
 			lk_wait_while(&bfap->stateLk, &bfap->bfaLock, ACC_RECYCLE);
 			mutex_exit(&bfap->bfaLock);
@@ -1431,7 +1431,7 @@ bs_invalidate_rsvd_access_struct(
 	if (bfap != NULL) {
 		KASSERT(bfap->refCnt == 1);
 		if ((tbfap == bfap) &&
-		    (lk_get_state(bfap->stateLk) == ACC_VALID)) {
+		    (lk_get_state(&bfap->stateLk) == ACC_VALID)) {
 			KASSERT(bfap->dirtyBufList.length == 0);
 			bfap->stateLk.state = ACC_INVALID;
 		}
@@ -1697,7 +1697,7 @@ bs_map_bf(
 
 	/*-----------------------------------------------------------------------*/
 
-/*    KASSERT(lk_get_state(bfap->stateLk) == ACC_INIT_TRANS);
+/*    KASSERT(lk_get_state(&bfap->stateLk) == ACC_INIT_TRANS);
       will not work when called by extend_bmt_redo_opx during recovery... */
 
 	dmnP = bfap->dmnP;
@@ -1942,11 +1942,11 @@ bs_insmntque(
 			do {
 				lk_wait_while(&bfap->stateLk, &bfap->bfaLock, ACC_FTX_TRANS);
 				lk_wait_while(&bfap->stateLk, &bfap->bfaLock, ACC_INIT_TRANS);
-			} while ((lk_get_state(bfap->stateLk) == ACC_FTX_TRANS) ||
-			    (lk_get_state(bfap->stateLk) == ACC_INIT_TRANS));
+			} while ((lk_get_state(&bfap->stateLk) == ACC_FTX_TRANS) ||
+			    (lk_get_state(&bfap->stateLk) == ACC_INIT_TRANS));
 		}
 
-		bfaccState = lk_get_state(bfap->stateLk);
+		bfaccState = lk_get_state(&bfap->stateLk);
 		(void) lk_set_state(&bfap->stateLk, ACC_INIT_TRANS);
 		mutex_exit(&bfap->bfaLock);
 
@@ -1962,7 +1962,7 @@ bs_insmntque(
 	         * Restore previous state
 	         */
 		mutex_enter(&bfap->bfaLock);
-		if (bfaccState != lk_get_state(bfap->stateLk)) {
+		if (bfaccState != lk_get_state(&bfap->stateLk)) {
 			unlkAction = lk_set_state(&bfap->stateLk, bfaccState);
 			lk_signal(unlkAction, &bfap->stateLk);
 		}
@@ -2179,14 +2179,14 @@ retry_access:
 		/* This else case ensures we only return ACC_VALID bfaps via
 		 * the BF_OP_INMEM_ONLY option. */
 	} else if ((options & BF_OP_INMEM_ONLY) &&
-	    (lk_get_state(bfap->stateLk) != ACC_VALID)) {
+	    (lk_get_state(&bfap->stateLk) != ACC_VALID)) {
 		return EINVALID_HANDLE;
 	}
 	vp = NULL;		/* assume we don't get a new one */
 
 retry_clu_clone_access:
 
-	bfaccState = lk_get_state(bfap->stateLk);
+	bfaccState = lk_get_state(&bfap->stateLk);
 
 	if ((bfaccState == ACC_INIT_TRANS) ||
 	    (bfap->hashlinks.dh_links.dh_next == NULL)) {
@@ -2657,10 +2657,10 @@ retry_clu_clone_access:
 				lk_wait_while(&bfap->stateLk, &bfap->bfaLock, ACC_FTX_TRANS);
 				lk_wait_while(&bfap->stateLk, &bfap->bfaLock, ACC_INIT_TRANS);
 
-			} while (lk_get_state(bfap->stateLk) == ACC_FTX_TRANS ||
-			    lk_get_state(bfap->stateLk) == ACC_INIT_TRANS);
+			} while (lk_get_state(&bfap->stateLk) == ACC_FTX_TRANS ||
+			    lk_get_state(&bfap->stateLk) == ACC_INIT_TRANS);
 
-			if (lk_get_state(bfap->stateLk) == ACC_INVALID) {
+			if (lk_get_state(&bfap->stateLk) == ACC_INVALID) {
 				sts = E_TAG_EXISTS;
 				if (vp) {
 					/*
@@ -2673,7 +2673,7 @@ retry_clu_clone_access:
 					goto err_deref;
 				}
 
-			} else if (lk_get_state(bfap->stateLk) != ACC_VALID) {
+			} else if (lk_get_state(&bfap->stateLk) != ACC_VALID) {
 				ADVFS_SAD1("ftbs_access: invalid state", bfaccState);
 			}
 			bfaccState = ACC_VALID;
@@ -2765,7 +2765,7 @@ retry_clu_clone_access:
 
 					DEC_REFCNT(bfap);
 
-					if (bfaccState != lk_get_state(bfap->stateLk)) {
+					if (bfaccState != lk_get_state(&bfap->stateLk)) {
 						unlkAction = lk_set_state(&bfap->stateLk, bfaccState);
 						lk_signal(unlkAction, &bfap->stateLk);
 					}
@@ -2929,7 +2929,7 @@ retry_clu_clone_access:
 		bfap->accessCnt++;
 	}
 
-	if (bfaccState != lk_get_state(bfap->stateLk)) {
+	if (bfaccState != lk_get_state(&bfap->stateLk)) {
 		unlkAction = lk_set_state(&bfap->stateLk, bfaccState);
 		lk_signal(unlkAction, &bfap->stateLk);
 	}
@@ -3062,7 +3062,7 @@ get_n_setup_new_vnode(
 	struct fsContext *fscp;
 	bfSetIdT bfSetId;
 
-	KASSERT(lk_get_state(bfap->stateLk) == ACC_INIT_TRANS);
+	KASSERT(lk_get_state(&bfap->stateLk) == ACC_INIT_TRANS);
 
 	vp = *nvp;
 	if (!vp) {
@@ -3168,7 +3168,7 @@ lookup:
 
 found:
 		/* Found it in the hash table. */
-		if ((lk_get_state(bfap->stateLk) == ACC_INVALID) &&
+		if ((lk_get_state(&bfap->stateLk) == ACC_INVALID) &&
 		    (bfap->refCnt > 0)) {
 
 			if (bfSetp->cloneId == BS_BFSET_ORIG) {
@@ -3195,7 +3195,7 @@ found:
 			KASSERT(bfSetp->cloneId != BS_BFSET_ORIG);
 			bfap->refCnt++;
 			return bfap;
-		} else if (lk_get_state(bfap->stateLk) != ACC_INVALID) {
+		} else if (lk_get_state(&bfap->stateLk) != ACC_INVALID) {
 
 			/* If this bitfile is in transition, then we have to
 			 * wait */
@@ -3206,7 +3206,7 @@ found:
 			 * is detected or the entry's tag or setid is not as
 			 * requested by the caller. This prevents a race that
 			 * can cause the entry's refCnt to go negative. */
-			switch (lk_get_state(bfap->stateLk)) {
+			switch (lk_get_state(&bfap->stateLk)) {
 			case ACC_INVALID:
 			case ACC_INIT_TRANS:
 			case ACC_RECYCLE:
@@ -3659,7 +3659,7 @@ bs_close_one(
 	 * prior to the last internal close. See comment in clear_bmt() about
 	 * access used to serialize with the moving of the bitfile. */
 
-	if (lk_get_state(bfap->stateLk) != ACC_INIT_TRANS) {
+	if (lk_get_state(&bfap->stateLk) != ACC_INIT_TRANS) {
 		if ((!((options & MSFS_INACTIVE_CALL) && ((fragFlag) ||
 				(bfap->trunc) || (bfap->bfState == BSRA_DELETING)))
 			&& ((bfap->accessCnt > 1) ||
@@ -3779,7 +3779,7 @@ bs_close_one(
          * frags, truncation or deletion will need to block for some
          * reason.
          */
-	prevState = lk_get_state(bfap->stateLk);
+	prevState = lk_get_state(&bfap->stateLk);
 	(void) lk_set_state(&(bfap->stateLk), ACC_INIT_TRANS);
 
 	mutex_exit(&bfap->bfaLock);
@@ -4194,7 +4194,7 @@ free_acc_struct(
 	}
 
 	if (!added_bfap_to_list) {
-		if (lk_get_state(bfap->stateLk) == ACC_FTX_TRANS) {
+		if (lk_get_state(&bfap->stateLk) == ACC_FTX_TRANS) {
 			ADD_ACC_CLOSEDLIST(bfap);
 		} else if (bfap->bfVp && VTOC(bfap->bfVp) &&
 		    VTOC(bfap->bfVp)->dirty_stats) {

@@ -226,7 +226,7 @@ rbf_int_create(
 	if (bfap == NULL) {
 		RAISE_EXCEPTION(EHANDLE_OVF);
 	}
-	if (lk_get_state(bfap->stateLk) != ACC_INVALID) {
+	if (lk_get_state(&bfap->stateLk) != ACC_INVALID) {
 		ADVFS_SAD0("rbf_int_create: impossible bfAccess state");
 	}
 	/*
@@ -393,7 +393,7 @@ make_mcell_valid(
 	if (bfap == NULL) {
 		ADVFS_SAD0("create_rtdn_opx: grab_bsacc failed");
 	}
-	if (lk_get_state(bfap->stateLk) == ACC_VALID) {
+	if (lk_get_state(&bfap->stateLk) == ACC_VALID) {
 
 		/* How could it have gotten to be VALID??? */
 
@@ -428,7 +428,7 @@ make_mcell_valid(
 		rbf_pin_record(pgref, &odattr->state, sizeof(bfStatesT));
 		odattr->state = BSRA_VALID;
 
-		if (lk_get_state(bfap->stateLk) == ACC_FTX_TRANS) {
+		if (lk_get_state(&bfap->stateLk) == ACC_FTX_TRANS) {
 
 			bfap->bfState = BSRA_VALID;
 			ftx_set_state(&bfap->stateLk, &bfap->bfaLock, ACC_VALID, ftxH);
@@ -693,7 +693,7 @@ kill_mcell(
 		domain_panic(dmnP, "kill_mcell: grab_bsacc failed");
 		return;
 	}
-	if (lk_get_state(bfap->stateLk) == ACC_VALID) {
+	if (lk_get_state(&bfap->stateLk) == ACC_VALID) {
 
 		/* How could it have gotten to be VALID??? */
 
@@ -702,7 +702,7 @@ kill_mcell(
 		domain_panic(dmnP, "kill_mcell: VALID bfAccess state is invalid!!");
 		return;
 	}
-	if (lk_get_state(bfap->stateLk) == ACC_FTX_TRANS) {
+	if (lk_get_state(&bfap->stateLk) == ACC_FTX_TRANS) {
 		/*
 	         * We need to invalidate all dirty pages for this bitfile (this
 	         * prevents them from being written out later to a different
