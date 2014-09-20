@@ -3715,7 +3715,7 @@ bs_close_one(
 	        ** (and finish) a root transaction. We can't start a second root
 	        ** transaction when we already have a transaction active.
 	        */
-		KASSERT(FTX_EQ(parentFtxH, FtxNilFtxH));
+		KASSERT(FTX_EQ(&parentFtxH, &FtxNilFtxH));
 		if (clu_is_ready() && bfap->bfSetp->cloneId == BS_BFSET_ORIG) {
 			token_flg = get_clu_clone_locks(bfap, NULL, &cloneSetp, &cloneap);
 			setHeld = TRUE;
@@ -3725,7 +3725,7 @@ bs_close_one(
 		TRUNC_XFER_LOCK_WRITE(&bfap->trunc_xfer_lk);
 		trunc_xfer_lock = TRUE;
 	}
-	if (FTX_EQ(parentFtxH, FtxNilFtxH) && !is_clone) {
+	if (FTX_EQ(&parentFtxH, &FtxNilFtxH) && !is_clone) {
 		/* Prevent races with migrate code paths */
 
 		/* Need to take the bfap lock because of the call chain

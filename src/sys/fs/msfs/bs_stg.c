@@ -2961,7 +2961,7 @@ stg_alloc_from_svc_class(
 
 	updateStart = xtntMap->cnt - 1;
 
-	if (FTX_EQ(parentFtx, FtxNilFtxH)) {
+	if (FTX_EQ(&parentFtx, &FtxNilFtxH)) {
 		RAISE_EXCEPTION(EBAD_PAR_FTXH);
 	}
 	/* start looking on last vd stg was allocated from otherwise, if this
@@ -3270,7 +3270,7 @@ stg_alloc_from_one_disk(
 
 	updateStart = xtntMap->cnt - 1;
 
-	if (FTX_EQ(parentFtx, FtxNilFtxH)) {
+	if (FTX_EQ(&parentFtx, &FtxNilFtxH)) {
 		RAISE_EXCEPTION(EBAD_PAR_FTXH);
 	}
 	subXtntMap = &(xtntMap->subXtntMap[updateStart]);

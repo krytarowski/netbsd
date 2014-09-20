@@ -66,9 +66,12 @@ int cfs_check_for_pfs_commit(fsid_t fsid, ftxIdT xid);
 
 extern ftxHT FtxNilFtxH;	/* Nil ftx for use as root parent */
 
-#define FTX_EQ(ftxA, ftxB) ((ftxA).dmnP == (ftxB).dmnP && \
-                            (ftxA).hndl == (ftxB).hndl && \
-                            (ftxA).level == (ftxB).level)
+static inline int FTX_EQ(const ftxHT *ftxA, const ftxHT *ftxB)
+{
+        return (ftxA->dmnP == ftxB->dmnP && \
+                ftxA->hndl == ftxB->hndl && \
+                ftxA->level == ftxB->level);
+}
 
 /* crash redo log address structure */
 
