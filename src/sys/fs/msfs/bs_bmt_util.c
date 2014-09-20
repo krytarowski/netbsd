@@ -602,7 +602,7 @@ bmtr_create_rec(
 		 * needs to allocate another cell it cannot fill cell 27
 		 * because the extent chain for the rbmt MUST go there. */
 		if ((file_is_rbmt) && (newcell == RBMT_RSVD_CELL)) {
-			KASSERT(rType == BSR_XTRA_XTNTS)
+			KASSERT(rType == BSR_XTRA_XTNTS);
 		}
 	}
 
@@ -686,7 +686,7 @@ bmtr_create_rec(
 		 * this ever occurs, fix up this code path to not chain to
 		 * cell 27 but instead allocate a non-cell 27 mcell. */
 		if ((file_is_rbmt) && (mcid->cell == RBMT_RSVD_CELL)) {
-			KASSERT(rType == BSR_XTRA_XTNTS)
+			KASSERT(rType == BSR_XTRA_XTNTS);
 		}
 		rPtr = bmtr_assign_rec(rType, rSize, mcp, pgref);
 		if (rPtr == NULL) {
