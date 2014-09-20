@@ -169,11 +169,9 @@ mutex_init2(
  * cond_wait
  */
 void
-_cond_wait(
+cond_wait(
     cvT * cvp,			/* in - condition variable */
-    mutexT * mp,		/* in - mutex */
-    int ln,			/* in */
-    char *fn			/* in */
+    mutexT * mp		/* in - mutex */
 )
 {
 	if (AdvfsLockStats) {
@@ -193,10 +191,8 @@ _cond_wait(
  * cond_signel
  */
 void
-_cond_signal(
-    cvT * cvp,			/* in - condition variable */
-    int ln,			/* in */
-    char *fn			/* in */
+cond_signal(
+    cvT * cvp			/* in - condition variable */
 )
 {
 	if (AdvfsLockStats) {
@@ -212,10 +208,8 @@ _cond_signal(
  * cond_broadcast
  */
 void
-_cond_broadcast(
-    cvT * cvp,			/* in - condition variable */
-    int ln,			/* in */
-    char *fn			/* in */
+cond_broadcast(
+    cvT * cvp			/* in - condition variable */
 )
 {
 	if (AdvfsLockStats) {
@@ -330,13 +324,13 @@ _lk_signal(
 				AdvfsLockStats->usageStats[lkHdr->lkUsage].signal++;
 				AdvfsLockStats->stateSignal++;
 			}
-			_cond_signal(&slk->cv, ln, fn);
+			cond_signal(&slk->cv);
 		} else if (action == UNLK_BROADCAST) {
 			if (AdvfsLockStats) {
 				AdvfsLockStats->usageStats[lkHdr->lkUsage].broadcast++;
 				AdvfsLockStats->stateBroadcast++;
 			}
-			_cond_broadcast(&slk->cv, ln, fn);
+			cond_broadcast(&slk->cv);
 		}
 	}
 }
@@ -425,7 +419,7 @@ _lk_wait_for(
 		lk->waiters++;
 
 		while (lk->state != waitState) {
-			_cond_wait(&lk->cv, lk_mutex, ln, fn);
+			cond_wait(&lk->cv, lk_mutex);
 		}
 
 		lk->waiters--;
@@ -473,7 +467,7 @@ _lk_wait_for2(
 		}
 		lk->waiters++;
 
-		_cond_wait(&lk->cv, lk_mutex, ln, fn);
+		cond_wait(&lk->cv, lk_mutex, ln, fn);
 
 		lk->waiters--;
 	}
@@ -520,7 +514,7 @@ _lk_wait_while(
 		lk->waiters++;
 
 		while (lk->state == waitState) {
-			_cond_wait(&lk->cv, lk_mutex, ln, fn);
+			cond_wait(&lk->cv, lk_mutex, ln, fn);
 		}
 
 		lk->waiters--;

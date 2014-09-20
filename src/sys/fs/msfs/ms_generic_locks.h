@@ -343,10 +343,6 @@ extern advfsLockStatsT *AdvfsLockStats;
 #define lk_waiters( lk )          ((lk).waiters)
 #define lk_get_state( lk )        ((lk).state)
 
-#define cond_wait( cvp, mp )  _cond_wait( cvp, mp, __LINE__, NULL )
-#define cond_signal( cvp )    _cond_signal( cvp, __LINE__, NULL )
-#define cond_broadcast( cvp ) _cond_broadcast( cvp, __LINE__, NULL )
-
 #define lk_signal( act, lkp ) _lk_signal( act, lkp, __LINE__, NULL )
 #define lk_set_state( lkp, state ) \
         _lk_set_state( lkp, state , __LINE__, NULL )
@@ -363,9 +359,9 @@ extern advfsLockStatsT *AdvfsLockStats;
 
 void 
 mutex_init2(mutexT * mp, int num_cvs, char *name);
-void _cond_wait(cvT * cvp, mutexT * mp, int line_num, char *file_name);
-void _cond_broadcast(cvT * cvp, int ln, char *fn);
-void _cond_signal(cvT * cvp, int ln, char *fn);
+void cond_wait(cvT * cvp, mutexT * mp);
+void cond_broadcast(cvT * cvp);
+void cond_signal(cvT * cvp);
 void _lk_signal(unLkActionT action, void *lk, int ln, char *fn);
 int lk_is_locked(void *lock);
 void trace_hdr(void);
