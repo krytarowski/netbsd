@@ -308,11 +308,9 @@ lk_destroy(
  * caller.
  */
 void
-_lk_signal(
+lk_signal(
     unLkActionT action,		/* in */
-    void *lk,			/* in */
-    int ln,			/* in */
-    char *fn			/* in */
+    void *lk			/* in */
 )
 {
 	lkHdrT *lkHdr = (lkHdrT *) lk;
