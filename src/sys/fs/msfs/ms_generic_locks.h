@@ -340,8 +340,6 @@ typedef struct advfsLockStats {
 
 extern advfsLockStatsT *AdvfsLockStats;
 
-#define lk_locked( lk )           (lk_is_locked(&(lk)))
-
 #define lk_waiters( lk )          ((lk).waiters)
 #define lk_get_state( lk )        ((lk).state)
 
