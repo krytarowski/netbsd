@@ -77,11 +77,7 @@ uint32T metaPhysLocPct = 40;	/* default physical loc for SBM, BMT, LOG */
 
 static statusT
 init_sbm(
-#ifdef _KERNEL
     struct vnode * vp,		/* in */
-#else
-    int fd,			/* in */
-#endif
     struct bsMPg * bmtpg,	/* in */
     struct bsVdAttr * vdattr,	/* in */
     uint32T blksPerPage,	/* in */
@@ -267,11 +263,9 @@ bs_disk_init(
 	uint32T sbmPgs, sbmBlks, vdBlkCnt;
 	struct bsMR *rp;
 
-#ifdef _KERNEL
 	int error;
 	struct vnode *vp = NULL;
 	struct nameidata *ndp = &u.u_nd;
-#endif
 
 	KASSERT(bsVdParams->vdIndex > 0);
 
@@ -288,7 +282,6 @@ bs_disk_init(
 	}
 	/* "Create" the virtual disk */
 
-#ifdef _KERNEL
 	/* get device's vnode */
 
 	if (error = getvp(&vp, diskName, ndp, UIO_SYSSPACE)) {
@@ -315,22 +308,6 @@ bs_disk_init(
 	if (vp->v_type != VBLK && vp->v_type != VCHR) {
 		RAISE_EXCEPTION(E_BAD_DEV);
 	}
-#else				/* _KERNEL */
-
-#ifndef _XOPEN_SOURCE
-	fd = open(diskName, O_RDWR | O_CREAT | O_TRUNC | O_FSYNC,	/* O_EXCL| */
-	    S_IRWXU | S_IRWXG | S_IRWXO);
-#else
-	fd = open(diskName, O_RDWR | O_CREAT | O_TRUNC | O_SYNC,	/* O_EXCL| */
-	    S_IRWXU | S_IRWXG | S_IRWXO);
-#endif
-	if (fd <= 0) {
-		ms_uprintf("bs_disk_init: can't create virtual disk file; [%d] %s",
-		    errno, sys_errlist[errno]);
-		RAISE_EXCEPTION((statusT) E_BAD_DEV);
-	}
-	devOpen = TRUE;
-#endif				/* _KERNEL */
 
 	/*
          *    For AdvFS on-disk version = 4 (and probably greater), this
@@ -600,13 +577,8 @@ bs_disk_init(
 		dmnMAttrp->vdCnt = 1;
 		dmnMAttrp->recoveryFailed = 0;
 		dmnMAttrp->mode = S_IRWXU | S_IRGRP | S_IROTH;
-#ifdef _KERNEL
 		dmnMAttrp->uid = u.u_nd.ni_cred->cr_uid;
 		dmnMAttrp->gid = u.u_nd.ni_cred->cr_gid;
-#else
-		dmnMAttrp->uid = 0;
-		dmnMAttrp->gid = 0;
-#endif
 
 		dmnTAttrp = bmtr_assign(BSR_DMN_TRANS_ATTR,
 		    sizeof(bsDmnTAttrT),
@@ -797,11 +769,7 @@ bs_disk_init(
 	atrp->state = BSRA_VALID;
 	atrp->cl.dataSafety = BFD_FTX_AGENT;
 
-#ifdef _KERNEL
 	sts = init_sbm(vp,
-#else
-	sts = init_sbm(fd,
-#endif
 	    rbmtpg,
 	    vdattr,
 	    atrp->bfPgSz,
@@ -1040,11 +1008,7 @@ bs_disk_init(
 	bzero((char *) superBlockPg, ADVFS_PGSZ);
 	superBlockPg[MSFS_MAGIC_OFFSET / sizeof(uint32T)] = MSFS_MAGIC;
 
-#ifdef _KERNEL
 	err = write_raw_page(vp,
-#else
-	err = write_raw_page(fd,
-#endif
 	    MSFS_FAKE_SB_BLK,
 	    ADVFS_PGSZ_IN_BLKS,
 	    superBlockPg);
@@ -1061,11 +1025,7 @@ bs_disk_init(
          * tagdir page 0.
          */
 
-#ifdef _KERNEL
 	err = write_raw_bmt_page(vp,
-#else				/* _KERNEL */
-	err = write_raw_bmt_page(fd,
-#endif
 	    MSFS_RESERVED_BLKS,
 	    rbmtpg);
 	if (err != 0) {
@@ -1091,11 +1051,7 @@ bs_disk_init(
 		bmtpg->nextFreePg = -1;
 	}
 
-#ifdef _KERNEL
 	err = write_raw_bmt_page(vp,
-#else				/* _KERNEL */
-	err = write_raw_bmt_page(fd,
-#endif				/* _KERNEL */
 	    bmtFirstBlk,
 	    bmtpg);
 
@@ -1114,11 +1070,7 @@ bs_disk_init(
 			} else {
 				bmtpg->nextFreePg = -1;
 			}
-#ifdef _KERNEL
 			err = write_raw_bmt_page(vp,
-#else				/* _KERNEL */
-			err = write_raw_bmt_page(fd,
-#endif				/* _KERNEL */
 			    startBlk,
 			    bmtpg);
 			if (err != 0) {
@@ -1136,11 +1088,7 @@ bs_disk_init(
 
 		tagdir_init_pg0(tdpgp);
 
-#ifdef _KERNEL
 		err = write_raw_page(vp,
-#else				/* _KERNEL */
-		err = write_raw_page(fd,
-#endif				/* _KERNEL */
 		    tagFirstBlk,
 		    ADVFS_PGSZ_IN_BLKS,
 		    tdpgp);
@@ -1150,25 +1098,15 @@ bs_disk_init(
 		}
 		ms_free(tdpgp);
 	}
-#ifdef _KERNEL
 	VOP_CLOSE(vp, FREAD | FWRITE | OTYP_MNT, ndp->ni_cred, i);
 	vrele(vp);
-#else				/* _KERNEL */
-	if (close(fd) != 0)
-		perror("init CLOSE failed");
-#endif
 
 	return err;
 
 HANDLE_EXCEPTION:
 
 	if (devOpen) {
-#ifdef _KERNEL
 		VOP_CLOSE(vp, FREAD | FWRITE | OTYP_MNT, ndp->ni_cred, i);
-#else				/* _KERNEL */
-		if (close(fd) != 0)
-			perror("init CLOSE failed");
-#endif				/* _KERNEL */
 	}
 	if (superBlockPg != NULL) {
 		ms_free(superBlockPg);
@@ -2071,11 +2009,7 @@ tagdir_init_pg0(
 
 statusT
 init_sbm(
-#ifdef _KERNEL
     struct vnode * vp,		/* in */
-#else
-    int fd,			/* in */
-#endif
     struct bsMPg * bmtpg,	/* in */
     struct bsVdAttr * vdattr,	/* in */
     uint32T blksPerPage,	/* in */
@@ -2157,11 +2091,7 @@ init_sbm(
 			}
 			second_bits_to_set -= set_bits;
 		}
-#ifdef _KERNEL
 		err = write_raw_sbm_page(vp,
-#else
-		err = write_raw_sbm_page(fd,
-#endif
 		    sbmFirstBlk + (i * ADVFS_PGSZ_IN_BLKS),
 		    sbm);
 
