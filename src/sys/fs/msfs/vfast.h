@@ -174,14 +174,14 @@ typedef enum {
 
 typedef struct {
 	vdIndexT vdi;
-	uint64T fragRatio;	/* primary sort in list */
+	uint64_t fragRatio;	/* primary sort in list */
 	uint32_t xtntCnt;	/* secondary sort in list */
 }      ssFragAddMsgT;
 
 typedef struct {
 	vdIndexT vdi;		/* primary mcell vdi */
 	uint32_t cnt[SS_HOT_TRACKING_DAYS];	/* counter */
-	uint64T size;		/* file size */
+	uint64_t size;		/* file size */
 }      ssHotMsgT;
 
 typedef struct {
@@ -227,7 +227,7 @@ typedef struct ssHotEntry {
 	bfTagT ssHotTag;	/* tag of file */
 	bfSetIdT ssHotBfSetId;	/* settag of file */
 	uint32_t ssHotIOCnt[7];	/* cnt of IOs on this file by day of week */
-	uint64T ssHotFileSize;	/* size of file */
+	uint64_t ssHotFileSize;	/* size of file */
 	time_t ssHotLastUpdTime;/* last time one of the Cnts above was updated */
 	time_t ssHotEntryTime;	/* time entry was placed on list */
 	time_t ssHotErrTime;	/* time entry tried and failed to place */
@@ -254,7 +254,7 @@ typedef struct ssFragHdr {
 	struct ssFragEntry *ssFragRatBwd;	/* must stay in second
 						 * position */
 	uint32_t ssFragListCnt;
-	uint64T ssFragHdrThresh;
+	uint64_t ssFragHdrThresh;
 }         ssFragHdrT;
 
 typedef struct ssPackEntry {
@@ -264,8 +264,8 @@ typedef struct ssPackEntry {
 	bfSetIdT ssPackBfSetId;
 	uint32_t ssPackPageOffset;
 	uint32_t ssPackPageCnt;
-	uint64T ssPackStartXtBlock;	/* block at ssPackPageOffset */
-	uint64T ssPackEndXtBlock;	/* block at PackPageOffset +
+	uint64_t ssPackStartXtBlock;	/* block at ssPackPageOffset */
+	uint64_t ssPackEndXtBlock;	/* block at PackPageOffset +
 					 * PackPageCnt */
 }           ssPackLLT;
 
@@ -273,8 +273,8 @@ typedef struct ssPackHdr {
 	ssPackLLT *ssPackFwd;
 	ssPackLLT *ssPackBwd;
 	uint32_t ssPackListCnt;
-	uint64T ssPackZoneStartBlk;
-	uint64T ssPackZoneEndBlk;
+	uint64_t ssPackZoneStartBlk;
+	uint64_t ssPackZoneEndBlk;
 	uint32_t ssPackLastBMTPage;
 }         ssPackHdrT;
 
@@ -361,7 +361,7 @@ typedef struct ssVolInfo {
 	bfSetIdT ssVdHotBfSetId;/* Settag of file to move to this volume in
 				 * support of hot files. */
 	uint16_t ssIOCnt;
-	uint64T ssLastIOCnt;	/* last IO value since last lull check */
+	uint64_t ssLastIOCnt;	/* last IO value since last lull check */
 }         ssVolInfoT;
 /* UI structures */
 typedef enum {

@@ -2438,8 +2438,8 @@ set_vd_mounted(
          * Add this vd's free blocks to domain totals.
          */
 	mutex_lock(&(dmnP->mutex));
-	UINT64T_ADD(dmnP->totalBlks, vdp->vdClusters * vdp->stgCluster);
-	UINT64T_ADD(dmnP->freeBlks, vdp->freeClust * vdp->stgCluster);
+	dmnP->totalBlks += vdp->vdClusters * vdp->stgCluster;
+	dmnP->freeBlks += vdp->freeClust * vdp->stgCluster;
 	mutex_unlock(&(dmnP->mutex));
 
 	if (RBMT_THERE(dmnP)) {
@@ -3610,8 +3610,8 @@ bs_vd_remove_active(
 	/*
          * Subtract this vd's free blocks from the domain totals.
          */
-	UINT64T_SUB(dmnP->totalBlks, totalClusters * blksPerCluster);
-	UINT64T_SUB(dmnP->freeBlks, freeClusters * blksPerCluster);
+	dmnP->totalBlks -= totalClusters * blksPerCluster;
+	dmnP->freeBlks -= freeClusters * blksPerCluster;
 
 	dmnP->dmnFlag &= ~BFD_RMVOL_IN_PROGRESS;
 

@@ -296,7 +296,7 @@ cp_stg_alloc_in_one_mcell(
     bsInMemSubXtntMapT * subXtntMap,	/* in */
     ftxHT * ftxHp,		/* in */
     uint32_t * allocPageCnt,	/* out */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     bsAllocHintT alloc_hint);	/* in */
 
 static statusT
@@ -324,7 +324,7 @@ stg_alloc_one_xtnt(
     bfAccessT * bfap,		/* in */
     vdT * vd,			/* in */
     uint32_t bfPageCnt,		/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     bsAllocHintT alloc_hint,	/* in */
     ftxHT parentFtx,		/* in */
     uint32_t * allocPageCntp,	/* out */
@@ -3496,7 +3496,7 @@ cp_stg_alloc_from_one_disk(
     bsInMemXtntMapT * xtntMap,	/* in   put in this map */
     uint32_t startPage,		/* in  first xtnt page */
     uint32_t * allocPageCnt,	/* out  got this many pgs */
-    uint64T dstBlkOffset,	/* in, chkd if hint == BS_ALLOC_MIG_RSVD */
+    uint64_t dstBlkOffset,	/* in, chkd if hint == BS_ALLOC_MIG_RSVD */
     bsAllocHintT alloc_hint	/* in */
 )
 {
@@ -4123,7 +4123,7 @@ cp_stg_alloc_in_one_mcell(
     bsInMemSubXtntMapT * subXtntMap,	/* in  use this map */
     ftxHT * ftxHp,		/* in */
     uint32_t * allocPageCnt,	/* out. this much added */
-    uint64T dstBlkOffset,	/* in, chkd if hint == BS_ALLOC_MIG_RSVD */
+    uint64_t dstBlkOffset,	/* in, chkd if hint == BS_ALLOC_MIG_RSVD */
     bsAllocHintT alloc_hint
 )
 {
@@ -4455,7 +4455,7 @@ stg_alloc_one_xtnt(
     bfAccessT * bfap,		/* in  find stg for this file */
     vdT * vdp,			/* in  in this volume */
     uint32_t bfPageCnt,		/* in  Requested length */
-    uint64T dstBlkOffset,	/* in, chkd if hint == BS_ALLOC_MIG_RSVD */
+    uint64_t dstBlkOffset,	/* in, chkd if hint == BS_ALLOC_MIG_RSVD */
     bsAllocHintT alloc_hint,	/* in */
     ftxHT ftxH,			/* in */
     uint32_t * allocPageCntp,	/* out  Got this much stg. */

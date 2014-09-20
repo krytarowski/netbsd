@@ -1261,7 +1261,7 @@ msfs_pl_set_entry(
 	bsPropListHeadT *hdr_rec;
 	char *hdr_image = NULL;
 	proplist_sec_attrs_t sec_info;
-	uint64T flags;
+	uint64_t flags;
 	uint32_t largest_pl_num, pl_num;
 	int got_name = 0, mcells_alloced = 0;
 	int clu_clxtnt_locked = FALSE, cow_read_locked = FALSE, trunc_xfer_locked = FALSE;
@@ -1760,7 +1760,7 @@ msfs_pl_findhead_setdata(
 	int name_xfer, data_xfer;
 	bsRecCurT dat;
 	ushort n_mcell_alloc;
-	uint64T flags;
+	uint64_t flags;
 	statusT sts = EOK;
 	caddr_t recp;
 
@@ -2291,7 +2291,7 @@ msfs_getproplist_int(
 	int just_sizing, total_bytes;
 	bsRecCurT hdr;
 	proplist_sec_attrs_t sec_info;
-	uint64T flags;
+	uint64_t flags;
 	struct uio uioLcl;
 	struct iovec iovLcl;
 	char *bbuf = NULL;
@@ -2476,7 +2476,7 @@ msfs_pl_get_entry(
 	int entry_size, flags, namelen, valuelen;
 	bsPropListHeadT *hdr_rec;
 	int error = 0, name_resid, cell_size;
-	uint64T rdflags;
+	uint64_t rdflags;
 	statusT sts = EOK;
 	bfAccessT *bfAccess = VTOA(vp);
 
@@ -2918,7 +2918,7 @@ msfs_delproplist_int(
 	delPropRootDoneT rdr;
 	bsPropListHeadT *hdr_rec;
 	int entry_size, large, page, cell_size;
-	uint64T flags, rdflags;
+	uint64_t flags, rdflags;
 	proplist_sec_attrs_t sec_info;
 	struct bfNode *bnp;
 	struct fsContext *rem_context;
@@ -3192,7 +3192,7 @@ msfs_pl_del_root_done_int(
 	delPropRootDoneT rdr;
 	bsRecCurT hdr;
 	bsOdRecCurT *hdrp;
-	uint64T flags, rdflags;
+	uint64_t flags, rdflags;
 	ftxLkT *mcellList_lk;
 	int large;
 	domainT *domain = ftx.dmnP;
@@ -3457,7 +3457,7 @@ msfs_pl_set_entry_v3(
 	bsPropListHeadT_v3 *hdr_rec;
 	char *hdr_image = NULL;
 	proplist_sec_attrs_t sec_info;
-	uint64T flags;
+	uint64_t flags;
 	int mcells_alloced = 0;
 	int clu_clxtnt_locked = FALSE, cow_read_locked = FALSE, trunc_xfer_locked = FALSE;
 
@@ -3817,7 +3817,7 @@ msfs_pl_findhead_setdata_v3(
 	int name_xfer, data_xfer;
 	bsRecCurT dat;
 	ushort n_mcell_alloc;
-	uint64T flags;
+	uint64_t flags;
 	int alloced = 0, i;
 	statusT sts = EOK;
 
@@ -4149,7 +4149,7 @@ msfs_getproplist_int_v3(
 	int just_sizing, total_bytes;
 	bsRecCurT hdr;
 	proplist_sec_attrs_t sec_info;
-	uint64T flags;
+	uint64_t flags;
 	struct uio uioLcl;
 	struct iovec iovLcl;
 	char *bbuf = NULL;
@@ -4310,7 +4310,7 @@ msfs_pl_get_entry_v3(
 	int entry_size, flags, namelen, valuelen;
 	bsPropListHeadT_v3 *hdr_rec;
 	int error = 0, name_resid, cell_size;
-	uint64T rdflags;
+	uint64_t rdflags;
 	statusT sts;
 
 	DEBUG(1,
@@ -4690,7 +4690,7 @@ msfs_delproplist_int_v3(
 	delPropRootDoneT rdr;
 	bsPropListHeadT_v3 *hdr_rec;
 	int entry_size, large, page, cell_size;
-	uint64T flags, rdflags;
+	uint64_t flags, rdflags;
 	proplist_sec_attrs_t sec_info;
 	struct bfNode *bnp;
 	struct fsContext *rem_context;
@@ -4924,7 +4924,7 @@ msfs_pl_del_root_done_int_v3(
 	delPropRootDoneT rdr;
 	bsRecCurT hdr;
 	bsOdRecCurT *hdrp;
-	uint64T flags, rdflags;
+	uint64_t flags, rdflags;
 	ftxLkT *mcellList_lk;
 	int large;
 	statusT sts;

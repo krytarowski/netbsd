@@ -448,8 +448,8 @@ typedef struct domain {
 	/*
          * These fields are protected by the domain mutex.
          */
-	uint64T totalBlks;	/* total # of BS_BLKSIZE blocks in domain */
-	uint64T freeBlks;	/* total # of free BS_BLKSIZE blocks in dmn */
+	uint64_t totalBlks;	/* total # of BS_BLKSIZE blocks in domain */
+	uint64_t freeBlks;	/* total # of free BS_BLKSIZE blocks in dmn */
 	int dmn_panic;		/* a boolean for implimenting domain panic */
 	xidRecoveryT xidRecovery;	/* Holds CFS xid recovery status
 					 * information */

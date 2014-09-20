@@ -596,8 +596,8 @@ typedef struct bsQuotaAttr {
  * PROPERTY LIST HEADER RECORD
  */
 #define BSR_PROPLIST_HEAD 19
-#define BSR_PROPLIST_HEAD_SIZE (sizeof(uint64T)+4*sizeof(uint32_t))
-#define BSR_PROPLIST_HEAD_SIZE_V3 (sizeof(uint64T)+2*sizeof(uint32_t))
+#define BSR_PROPLIST_HEAD_SIZE (sizeof(uint64_t)+4*sizeof(uint32_t))
+#define BSR_PROPLIST_HEAD_SIZE_V3 (sizeof(uint64_t)+2*sizeof(uint32_t))
 
 /* flags */
 /* XXX: Verify sanity of int size 32-64 bit */
@@ -606,7 +606,7 @@ typedef struct bsQuotaAttr {
 #define BSR_PL_PAGE     0x0400000000000000
 #define BSR_PL_RESERVED 0xFF00000000000000
 typedef struct bsPropListHead {
-	uint64T flags;
+	uint64_t flags;
 	uint32_t pl_num;		/* Which pl in this tag */
 	uint32_t spare;		/* currently unused field */
 	uint32_t namelen;
@@ -615,7 +615,7 @@ typedef struct bsPropListHead {
 }              bsPropListHeadT;
 
 typedef struct bsPropListHead_v3 {
-	uint64T flags;
+	uint64_t flags;
 	uint32_t namelen;
 	uint32_t valuelen;
 	char buffer[1];		/* var len field */

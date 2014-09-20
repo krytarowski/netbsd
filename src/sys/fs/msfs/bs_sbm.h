@@ -41,7 +41,7 @@ void *
 sbm_find_space(
     vdT * vdp,
     uint32_t requested_blks,
-    uint64T dstBlkOffset,
+    uint64_t dstBlkOffset,
     bsAllocHintT alloc_hint,
     uint32_t * start_blk,
     uint32_t * found_blks

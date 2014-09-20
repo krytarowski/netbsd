@@ -122,7 +122,7 @@ cp_stg_alloc_from_one_disk(
     bsInMemXtntMapT * xtntMap,	/* in */
     uint32_t startPage,		/* in */
     uint32_t * allocPageCnt,	/* out */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     bsAllocHintT alloc_hint	/* in */
 );
 

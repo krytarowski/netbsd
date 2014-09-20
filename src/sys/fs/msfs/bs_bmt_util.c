@@ -4450,8 +4450,8 @@ static statusT
 check_xtnt_in_range(
     vdT * vdp,			/* in */
     struct bsMC * mcp,		/* in */
-    uint64T cRangeBeginBlk,	/* in */
-    uint64T cRangeEndBlk,	/* in */
+    uint64_t cRangeBeginBlk,	/* in */
+    uint64_t cRangeEndBlk,	/* in */
     int *list_too_big,		/* out - call back required? */
     int *bmt_cnt		/* out */
 )
@@ -4463,8 +4463,8 @@ check_xtnt_in_range(
 	bsShadowXtntT *srp;
 	bsXtntRT *xp;
 	int j;
-	uint64T extentEndBlk, extentBeginBlk;
-	uint64T migStartBlk, migEndBlk, xmPageOffset, xmPageCnt;
+	uint64_t extentEndBlk, extentBeginBlk;
+	uint64_t migStartBlk, migEndBlk, xmPageOffset, xmPageCnt;
 	ssPackLLT *currp = NULL, *xtntp = NULL;
 	ssPackHdrT *plp = NULL;
 	int inserted = FALSE;
@@ -4686,8 +4686,8 @@ HANDLE_EXCEPTION:
 statusT
 bmt_get_vd_bf_inway(
     vdT * vdp,			/* in */
-    uint64T cRangeBeginBlk,	/* in */
-    uint64T cRangeEndBlk,	/* in */
+    uint64_t cRangeBeginBlk,	/* in */
+    uint64_t cRangeEndBlk,	/* in */
     int *another_scan_required,	/* out */
     int *bmt_cnt		/* out - cnt of allocated pages in range */
 )

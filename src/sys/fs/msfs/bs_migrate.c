@@ -67,7 +67,7 @@ migrate_normal_one_disk(
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 );
@@ -79,7 +79,7 @@ migrate_normal(
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 );
@@ -92,7 +92,7 @@ migrate_stripe(
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 );
@@ -160,7 +160,7 @@ alloc_copy_stg(
     pageRangeT * xmPageRange,	/* in */
     uint32_t xmPageRangeCnt,	/* in */
     vdIndexT vdIndex,		/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     bsAllocHintT alloc_hint,	/* in */
     vdIndexT * copyVdIndex,	/* out */
     bfMCIdT * copyMcellId,	/* out */
@@ -256,7 +256,7 @@ bs_migrate(
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 )
@@ -518,7 +518,7 @@ mig_migrate(
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 )
@@ -646,7 +646,7 @@ migrate_normal_one_disk(
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 )
@@ -1186,7 +1186,7 @@ migrate_normal(
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 )
@@ -1663,7 +1663,7 @@ migrate_stripe(
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 )
@@ -3464,7 +3464,7 @@ alloc_copy_stg(
     pageRangeT * xmPageRange,	/* in   array of extents */
     uint32_t xmPageRangeCnt,	/* in   array size */
     vdIndexT vdIndex,		/* in   get stg on this volume */
-    uint64T dstBlkOffset,	/* in;if hint == BS_ALLOC_MIG_RSVD,make sure
+    uint64_t dstBlkOffset,	/* in;if hint == BS_ALLOC_MIG_RSVD,make sure
 				 * we get this blk */
     bsAllocHintT alloc_hint,	/* in */
     vdIndexT * copyVdIndex,	/* out  stg starts on this vol */
@@ -3891,7 +3891,7 @@ statusT
 mig_pack_vd_range(
     vdT * vdp,			/* in */
     uint32_t cRangeBeginBlk,	/* in */
-    uint64T cRangeEndBlk,	/* in */
+    uint64_t cRangeEndBlk,	/* in */
     uint32_t * newcRangeBeginBlk,/* out */
     uint32_t forceFlag		/* in */
 )
@@ -3908,7 +3908,7 @@ mig_pack_vd_range(
 	bfSetT *inwayBfSetp = NULL;
 	bfSetIdT inwayBfSetId;
 	bfAccessT *inwayBfap = NULL;
-	uint64T nextcRangeBeginBlk, xmPageOffset, migPageCntSoFar, migPageCnt, thdblkMigPageCnt = 0, dstBlkOffset = 0, pgsRemaining, newBlkOffset, bfPageOffset, newPageCnt;
+	uint64_t nextcRangeBeginBlk, xmPageOffset, migPageCntSoFar, migPageCnt, thdblkMigPageCnt = 0, dstBlkOffset = 0, pgsRemaining, newBlkOffset, bfPageOffset, newPageCnt;
 	uint32_t clearPageCnt;
 	ssPackHdrT *php = NULL;
 	ssPackLLT *pXtntp = NULL;

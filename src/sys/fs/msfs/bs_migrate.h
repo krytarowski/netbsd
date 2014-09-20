@@ -47,7 +47,7 @@ mig_migrate(
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
-    uint64T dstBlkOffset,	/* in */
+    uint64_t dstBlkOffset,	/* in */
     uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 );

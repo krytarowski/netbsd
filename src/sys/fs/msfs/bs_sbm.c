@@ -80,7 +80,7 @@ load_x_cache(
     uint32_t max_clust,		/* in */
     uint32_t fillCache,		/* in */
     bsAllocHintT alloc_hint,	/* in */
-    uint64T dstBlkOffset
+    uint64_t dstBlkOffset
 );
 
 static
@@ -285,7 +285,7 @@ bitmap_undo_opx(
 		vdp->freeClust = vdp->freeClust + clustCnt;
 
 		mutex_lock(&dmnP->mutex);
-		UINT64T_ADD(dmnP->freeBlks, clustCnt * vdp->stgCluster);
+		dmnP->freeBlks += clustCnt * vdp->stgCluster;
 		mutex_unlock(&dmnP->mutex);
 
 		break;
@@ -306,7 +306,7 @@ bitmap_undo_opx(
 		vdp->freeClust = vdp->freeClust - clustCnt;
 
 		mutex_lock(&dmnP->mutex);
-		UINT64T_SUB(dmnP->freeBlks, clustCnt * vdp->stgCluster);
+		dmnP->freeBlks -= clustCnt * vdp->stgCluster;
 		mutex_unlock(&dmnP->mutex);
 
 		break;
@@ -792,7 +792,7 @@ void *
 sbm_find_space(
     vdT * vdp,			/* in */
     uint32_t requested_blks,	/* in */
-    uint64T dstBlkOffset,	/* in, if alloc_hint==BS_ALLOC_MIG_RSVD */
+    uint64_t dstBlkOffset,	/* in, if alloc_hint==BS_ALLOC_MIG_RSVD */
     bsAllocHintT alloc_hint,	/* in */
     uint32_t * start_blk,	/* in/out */
     uint32_t * found_blks	/* out - always is <= requested_blks */
@@ -1249,7 +1249,7 @@ sbm_remove_space(
 
 	domain = vdp->dmnP;
 	mutex_lock(&(domain->mutex));
-	UINT64T_SUB(domain->freeBlks, clust * vdp->stgCluster);
+	domain->freeBlks -= clust * vdp->stgCluster;
 	mutex_unlock(&(domain->mutex));
 
 	remove_cache(
@@ -1311,7 +1311,7 @@ sbm_return_space_no_sub_ftx(
 
 	domain = virtualDiskp->dmnP;
 	mutex_lock(&(domain->mutex));
-	UINT64T_ADD(domain->freeBlks, clusterCnt * virtualDiskp->stgCluster);
+	domain->freeBlks += clusterCnt * virtualDiskp->stgCluster;
 	mutex_unlock(&(domain->mutex));
 
 	return EOK;
@@ -1790,7 +1790,7 @@ load_x_cache(
     uint32_t max_clust,		/* in - max contig free clusters */
     uint32_t fillCache,		/* in - flag to fill cache */
     bsAllocHintT alloc_hint,	/* in */
-    uint64T dstBlkOffset	/* in, used if hint==BS_ALLOC_MIG_RSVD */
+    uint64_t dstBlkOffset	/* in, used if hint==BS_ALLOC_MIG_RSVD */
 )
 {
 	bfPageRefHT pgref;
@@ -2194,8 +2194,8 @@ sbm_lock_unlock_range(
 )
 {
 	stgDescT *cur_desc, *next_desc;
-	uint64T cur_desc_start = 0, cur_desc_end = 0;
-	uint64T end_clust = startClust + numClust;
+	uint64_t cur_desc_start = 0, cur_desc_end = 0;
+	uint64_t end_clust = startClust + numClust;
 
 	/* lock/unlock(0,0) the migrate reserved range */
 
@@ -2795,13 +2795,13 @@ _PAGE_FINISHED:
 statusT
 sbm_scan_v3_v4(
     vdT * vdp,			/* in */
-    uint64T reqClustSize,	/* in */
+    uint64_t reqClustSize,	/* in */
     uint32_t startPg,		/* in */
     uint32_t startWd,		/* in */
     uint32_t startBit,		/* in */
-    uint64T * clustRunCnt,	/* out, length in clusters(currently pages)
+    uint64_t * clustRunCnt,	/* out, length in clusters(currently pages)
 				 * found */
-    uint64T * blkOffset,	/* out, location found */
+    uint64_t * blkOffset,	/* out, location found */
     int whoami			/* in , parent, child */
 )
 {
@@ -2809,7 +2809,7 @@ sbm_scan_v3_v4(
 	struct bsStgBm *sbmp;	/* pointer to storage bitmap page */
 	statusT sts;
 	logDescT *ldP;
-	uint64T
+	uint64_t
 	    curr_clust_cnt = 0,	/* running number of clusters processed */
 	    free_clust = 0,	/* count of the free bits for the
 				 * curr_clust_cnt */
@@ -2825,7 +2825,7 @@ sbm_scan_v3_v4(
 	    bestClustCnt = 0,	/* current least clustRunCnt */
 	    savedStartClust,	/* current location of bestClustCnt */
 	    cur_clust;		/* current cluster being processed */
-	uint64T bmt_rsvd_start = vdp->freeRsvdStg.start_clust, bmt_rsvd_end = vdp->freeRsvdStg.start_clust +
+	uint64_t bmt_rsvd_start = vdp->freeRsvdStg.start_clust, bmt_rsvd_end = vdp->freeRsvdStg.start_clust +
 	vdp->freeRsvdStg.num_clust;
 	uint16_t last_bit = 1;
 	extern REPLICATED int SS_is_running;
