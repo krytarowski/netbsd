@@ -1246,7 +1246,7 @@ bs_frag_alloc(
 		}
 	}			/* while (have_not_found_frag)
 				 * 
-				/* return allocated frag's fragId */
+				 * return allocated frag's fragId */
 	fragId->frag = frag;
 	fragId->type = fragType;
 	return EOK;
