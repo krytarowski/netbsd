@@ -142,29 +142,6 @@ bs_lock_mgr_init(void)
 	}
 }
 
-
-/*
- * mutex_init2
- *
- * This routine initializes a file system mutex and it
- * preallocates the specified number of condition variables; these are
- * placed on the mutex's free list.
- */
-
-void
-mutex_init2(
-    mutexT * mp,		/* in - mutex */
-    int num_cvs,		/* in - number of condition variables */
-    char *name			/* in - name of mutex */
-)
-{
-	/*
-         * Initialize the mutex.
-         */
-
-	simple_lock_setup(&mp->mutex, msfs_mp_mutex_enterinfo);
-}
-
 /*
  * cond_wait
  */

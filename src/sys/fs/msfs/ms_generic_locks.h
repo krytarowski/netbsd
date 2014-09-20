@@ -354,8 +354,6 @@ static inline lkStatesT lk_get_state(const stateLkT *lk)
  ** Prototypes.
  */
 
-void 
-mutex_init2(mutexT * mp, int num_cvs, char *name);
 void cond_wait(cvT * cvp, mutexT * mp);
 void cond_broadcast(cvT * cvp);
 void cond_signal(cvT * cvp);
