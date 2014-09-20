@@ -296,19 +296,6 @@ init_access(bfAccessT * bfap)
 }
 #define CHECK_ACC_CLEAN(bfap) \
 { \
-    MS_DBG_ASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex)); \
-    MS_DBG_ASSERT(bfap->dirtyBufList.length == 0); \
-    MS_DBG_ASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_dirtypl == NULL); \
-    MS_DBG_ASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_dirtywpl == NULL); \
-    MS_DBG_ASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_putpages == 0); \
-    MS_DBG_ASSERT(lk_get_state(bfap->stateLk) != ACC_INIT_TRANS); \
-    MS_DBG_ASSERT(lk_get_state(bfap->stateLk) != ACC_FTX_TRANS); \
-    MS_DBG_ASSERT( !lock_readers( &(bfap->cow_lk) ) ); \
-    MS_DBG_ASSERT( !lock_locked( &(bfap->cow_lk) ) ); \
-    MS_DBG_ASSERT(!lk_locked(bfap->mcellList_lk)); \
-    MS_DBG_ASSERT(!lk_locked(bfap->xtntMap_lk)); \
-    MS_DBG_ASSERT(bfap->refCnt == 0); \
-    MS_DBG_ASSERT(bfap->saved_stats == NULL); \
 }
 
 /*

@@ -5750,17 +5750,6 @@ validate_syscall_structs(
     void
 )
 {
-	MS_DBG_ASSERT(BS_CLIENT_AREA_SZ == ML_CLIENT_AREA_SZ);
-	MS_DBG_ASSERT(BFM_RSVD_CELLS == ML_BFM_RSVD_CELLS);
-	MS_DBG_ASSERT(sizeof(uint32_t) == sizeof(u32T));
-	MS_DBG_ASSERT(sizeof(int) == sizeof(mlStatusT));
-	MS_DBG_ASSERT(sizeof(bfTagT) == sizeof(mlBfTagT));
-	MS_DBG_ASSERT(sizeof(bsIdT) == sizeof(mlIdT));
-	MS_DBG_ASSERT(sizeof(bfDomainIdT) == sizeof(mlBfDomainIdT));
-	MS_DBG_ASSERT(sizeof(serviceClassT) == sizeof(mlServiceClassT));
-	MS_DBG_ASSERT(sizeof(struct dStat) == sizeof(mlVolCountersT));
-	MS_DBG_ASSERT(BS_FS_CONTEXT_SZ == ML_FS_CONTEXT_SZ);
-	MS_DBG_ASSERT(sizeof(bsExtentDescT) == sizeof(mlExtentDescT));
 }
 
 
