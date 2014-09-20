@@ -1014,8 +1014,8 @@ consecutive_list_io(
 
 	MS_VERIFY_IOQUEUE_INTEGRITY(qhdr, TRUE);
 
-	KASSERT(mutex_owned(&vdp->devQ.ioQLock));
-	KASSERT(mutex_owned(&qhdr->ioQLock));
+	KASSERT(mutex_owned(&vdp->devQ.ioQLock.mutex));
+	KASSERT(mutex_owned(&qhdr->ioQLock.mutex));
 	KASSERT(locks_held[qindex] != 0);
 
 	/* Position ourselves to point to first ioDesc that can have IO done. */
@@ -1473,7 +1473,7 @@ get_locks(ioDescHdrT * qhdr, vdT * vdp, qtypeT qindex, int *locks_held)
 {
 	errT error = OK;
 
-	KASSERT(mutex_owned(&vdp->devQ.ioQLock));
+	KASSERT(mutex_owned(&vdp->devQ.ioQLock.mutex));
 	if (!mutex_tryenter(&qhdr->ioQLock.mutex)) {
 
 		mutex_exit(&vdp->devQ.ioQLock.mutex);

@@ -3277,7 +3277,7 @@ reset_oldest_lsn(
 	ftxTblDT *ftxTDp = &dmnP->ftxTbld;
 	ftxCRLAT *oldftxlap = &ftxTDp->oldestFtxLa;
 
-	KASSERT(mutex_owned(&FtxMutex));
+	KASSERT(mutex_owned(&FtxMutex.mutex));
 	if ((dmnP->state < BFD_RECOVER_CONTINUATIONS) &&
 	    (!(dmnP->dmnFlag & BFD_DEACTIVATE_IN_PROGRESS))) {
 		return;

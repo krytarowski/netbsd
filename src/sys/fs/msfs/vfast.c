@@ -2385,7 +2385,7 @@ ss_delete_from_frag_list(vdT * vdp,	/* in */
 	int sts;
 
 	KASSERT(vdp);
-	KASSERT(mutex_owned(&vdp->ssVolInfo.ssFragLk));
+	KASSERT(mutex_owned(&vdp->ssVolInfo.ssFragLk.mutex));
 	fhp = &vdp->ssVolInfo.ssFragHdr;
 
 	/* check for a null list first! */

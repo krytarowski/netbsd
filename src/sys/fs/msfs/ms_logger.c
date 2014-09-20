@@ -981,7 +981,7 @@ add_lsn_list(
 {
 	struct bsBufHdr *hp;
 
-	KASSERT(mutex_owned(&dmnP->lsnLock));
+	KASSERT(mutex_owned(&dmnP->lsnLock.mutex));
 
 	hp = &dmnP->lsnList;
 
@@ -1671,7 +1671,7 @@ resetfirstrec(domainT * dmnP)
 	int logpages;
 	logRecAddrT firstRec;
 
-	KASSERT(mutex_owned(&dmnP->lsnLock));
+	KASSERT(mutex_owned(&dmnP->lsnLock.mutex));
 
 	ldP = dmnP->ftxLogP;
 

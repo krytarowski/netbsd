@@ -245,11 +245,11 @@ DevWrite = 0x20} TraceActionT;
 
 #define ADD_DIRTYACCESSLIST( bp, seize_bfiolock ) \
 { \
-    KASSERT(mutex_owned(&bp->bufLock)); \
+    KASSERT(mutex_owned(&bp->bufLock.mutex)); \
     if (seize_bfiolock) \
         mutex_enter(&bp->bfAccess->bfIoLock.mutex); \
     else \
-        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock)); \
+        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex)); \
     bp->accListSeq++; \
     KASSERT(!(bp->lock.state & ACC_DIRTY)); \
     bp->lock.state |= ACC_DIRTY; \
@@ -264,11 +264,11 @@ DevWrite = 0x20} TraceActionT;
 
 #define RM_ACCESSLIST( bp, seize_bfiolock ) \
 { \
-    KASSERT(mutex_owned(&bp->bufLock)); \
+    KASSERT(mutex_owned(&bp->bufLock.mutex)); \
     if (seize_bfiolock) \
         mutex_enter(&bp->bfAccess->bfIoLock.mutex); \
     else \
-        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock)); \
+        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex)); \
     KASSERT(bp->lock.state & ACC_DIRTY); \
     bp->bfAccess->dirtyBufList.length--; \
     KASSERT(bp->bfAccess->dirtyBufList.length >= 0); \

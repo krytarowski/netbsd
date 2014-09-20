@@ -90,7 +90,7 @@ struct bfSet;
 
 #define BS_BFAH_INSERT( _bfap, _laction)                \
 {                                                       \
-    KASSERT(mutex_owned(&_bfap->bfaLock)); \
+    KASSERT(mutex_owned(&_bfap->bfaLock.mutex)); \
     dyn_hash_insert( BsAccessHashTbl, _bfap, _laction); \
 }
 
@@ -636,7 +636,7 @@ limits_of_active_range(
  */
 #define RM_ACC_LIST_NOLOCK( bfap ) \
 { \
-    KASSERT(mutex_owned(&BfAccessFreeLock)); \
+    KASSERT(mutex_owned(&BfAccessFreeLock.mutex)); \
     KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
     KASSERT(bfap->freeFwd); \
     KASSERT(bfap->freeBwd); \
