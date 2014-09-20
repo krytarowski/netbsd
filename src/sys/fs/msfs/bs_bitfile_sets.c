@@ -1087,8 +1087,6 @@ bs_frag_alloc(
 				if (freeFrags != grpHdrp->freeFrags) {
 
 					advfs_ev advfs_event;
-					bfPageRefHT badPgRef;
-					grpHdrT *badGroupHdrp;
 					clupThreadMsgT *msg;
 					extern msgQHT CleanupMsgQH;
 
