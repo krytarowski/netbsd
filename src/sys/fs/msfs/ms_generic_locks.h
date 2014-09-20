@@ -51,6 +51,7 @@ typedef short cvT;
  *
  * INITIALIZATION:
  *
+ *    XXX: Fix it:
  *    You must call mutex_init2() before using a mutexT variable.
  */
 
