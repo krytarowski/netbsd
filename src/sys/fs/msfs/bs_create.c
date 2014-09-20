@@ -222,7 +222,7 @@ rbf_int_create(
 	}
 	/* access the bfAccess object.  this bumps the ref count. */
 
-	bfap = grab_bsacc(bfSetp, mcellUId.ut.tag, FALSE, NULL);	/* locks bfap->bfaLock */
+	bfap = grab_bsacc(bfSetp, mcellUId.ut.tag, FALSE, 0);	/* locks bfap->bfaLock */
 	if (bfap == NULL) {
 		RAISE_EXCEPTION(EHANDLE_OVF);
 	}
@@ -389,7 +389,7 @@ make_mcell_valid(
 
 	vdp = VD_HTOP(mcelluid.vdIndex, dmnP);
 
-	bfap = grab_bsacc(bfSetp, mcelluid.ut.tag, TRUE, NULL);
+	bfap = grab_bsacc(bfSetp, mcelluid.ut.tag, TRUE, 0);
 	if (bfap == NULL) {
 		ADVFS_SAD0("create_rtdn_opx: grab_bsacc failed");
 	}
@@ -688,7 +688,7 @@ kill_mcell(
 	rbf_pin_record(pgref, &odattrp->state, sizeof(odattrp->state));
 	odattrp->state = BSRA_INVALID;
 
-	bfap = grab_bsacc(bfSetp, mcp->tag, TRUE, NULL);
+	bfap = grab_bsacc(bfSetp, mcp->tag, TRUE, 0);
 	if (bfap == NULL) {
 		domain_panic(dmnP, "kill_mcell: grab_bsacc failed");
 		return;

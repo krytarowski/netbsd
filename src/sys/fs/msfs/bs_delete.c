@@ -664,7 +664,7 @@ bs_delete_undo_opx(
 	         * during crash recovery then the access struct will typically
 	         * be in the INVALID state so we can't use the struct.
 	         */
-		bfap = grab_bsacc(bfSetp, recp->tag, TRUE, NULL);	/* locks bfap->bfaLock */
+		bfap = grab_bsacc(bfSetp, recp->tag, TRUE, 0);	/* locks bfap->bfaLock */
 		if (bfap == NULL) {
 			ADVFS_SAD0("bs_delete_undo: grab_bsacc() failed");
 		}
