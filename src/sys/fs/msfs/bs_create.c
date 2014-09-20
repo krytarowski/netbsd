@@ -566,7 +566,7 @@ new_mcell(
 			    &pgref,
 			    &mcp)) != ENO_MORE_MCELLS) {
 			vd_dec_refcnt(vdp);
-			FTX_ADD_LOCK(&(vdp->mcell_lk), parFtx)
+			ftx_add_lock(&(vdp->mcell_lk), parFtx);
 			    break;
 		}
 		/*

@@ -318,7 +318,7 @@ bs_fragbf_thread(void)
 			if (sts != EOK) {
 				goto close_fragbf;
 			}
-			FTX_LOCKWRITE(&bfSetp->fragLock, ftxH)
+			ftx_lock_write(&bfSetp->fragLock, ftxH);
 			    grpPg = bfSetp->fragGrps[BF_FRAG_FREE_GRPS].firstFreeGrp;
 
 			/*
@@ -959,7 +959,7 @@ bs_frag_alloc(
 	if ((fragType < BF_FRAG_1K) || (fragType >= BF_FRAG_MAX)) {
 		ADVFS_SAD0("invalid frag type");
 	}
-	FTX_LOCKWRITE(&setp->fragLock, ftxH)
+	ftx_lock_write(&setp->fragLock, ftxH);
 	    while (have_not_found_frag) {
 
 		if (setp->fragGrps[fragType].firstFreeGrp == BF_FRAG_EOG) {
@@ -1295,7 +1295,7 @@ bs_frag_dealloc(
 		ADVFS_SAD0("no parent ftx");
 	}
 	if (!lock_holder(&setp->fragLock.lock)) {
-		FTX_LOCKWRITE(&setp->fragLock, ftxH)
+		ftx_lock_write(&setp->fragLock, ftxH);
 	}
 	if (setp->fragBfAp == NULL) {
 		/* fileset is not mounted so we need to open the fragbf
@@ -3592,7 +3592,7 @@ HANDLE_EXCEPTION:
 		if    (sts != EOK) {
 			ADVFS_SAD1("del_list_remove_undo: bs_access failed", sts);
 		}
-		     FTX_LOCKWRITE(&dmnP->BfSetTblLock, ftxH)
+		     ftx_lock_write(&dmnP->BfSetTblLock, ftxH);
 		     bfs_delete_pending_list_add(tagDirBfap, dmnP, ftxH);
 
 		bs_close(tagDirBfap, 0);
@@ -3634,7 +3634,7 @@ HANDLE_EXCEPTION:
 		if    (sts != EOK) {
 			ADVFS_SAD1("bfs_delete_pending_list_remove: ftx_start failed", sts);
 		}
-		     FTX_LOCKWRITE(&dmnP->BfSetTblLock, ftxH)
+		     ftx_lock_write(&dmnP->BfSetTblLock, ftxH);
 		     sts = bmtr_get_rec_ptr(dirBfAp,
 		         ftxH,
 		         BSR_BFS_ATTR,
@@ -3884,7 +3884,7 @@ HANDLE_EXCEPTION:
 		if    (sts != EOK) {
 			ADVFS_SAD1("unlink_clone_undo: bs_access failed", sts);
 		}
-		     FTX_LOCKWRITE(&dmnP->BfSetTblLock, ftxH)
+		     ftx_lock_write(&dmnP->BfSetTblLock, ftxH);
 		     sts = bmtr_get_rec_ptr(tagDirBfap,
 		         ftxH,
 		         BSR_BFS_ATTR,
@@ -4110,7 +4110,7 @@ HANDLE_EXCEPTION:
 		ftxStarted = TRUE;
 
 
-		FTX_LOCKWRITE(&dmnP->BfSetTblLock, ftxH)
+		ftx_lock_write(&dmnP->BfSetTblLock, ftxH);
 		    if (bfSetp->fsRefCnt > ((bfSetp->cloneId != BS_BFSET_ORIG) ? bfSetp->origSetp->fsRefCnt + 1 : 1)) {
 			/*
 		         * Can't delete set if someone else is accessing it.
@@ -5555,7 +5555,7 @@ HANDLE_EXCEPTION:
 
 		bfAttr.maxClonePgs = origBfAp->nextPage;
 
-		FTX_LOCKWRITE(&cloneBfAp->mcellList_lk, ftxH)
+		ftx_lock_write(&cloneBfAp->mcellList_lk, ftxH);
 		/* Get a new primary mcell for the clone and init it */
 
 		    sts = new_clone_mcell(&newMCId,

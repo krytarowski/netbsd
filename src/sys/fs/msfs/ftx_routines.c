@@ -2793,22 +2793,20 @@ _ftx_add_lock(
 *********************************************************************/
 
 void
-_ftx_set_state(
+ftx_set_state(
     stateLkT * lk,
     mutexT * lk_mutex,
     lkStatesT newState,
-    ftxHT ftxH,
-    int ln,
-    char *fn
+    ftxHT ftxH
 )
 {
 	perlvlT *clvlp;
 
 	if ((clvlp = get_perlvl_p(ftxH)) == NULL) {
-		ADVFS_SAD0("_ftx_set_state: bad ftx handle");
+		ADVFS_SAD0("ftx_set_state: bad ftx handle");
 	}
 	if (lk->pendingState != LKW_NONE) {
-		ADVFS_SAD0("_ftx_set_state: pending state already set");
+		ADVFS_SAD0("ftx_set_state: pending state already set");
 	}
 	lk->pendingState = newState;
 

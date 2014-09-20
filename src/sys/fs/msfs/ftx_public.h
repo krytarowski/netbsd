@@ -577,23 +577,9 @@ rbf_set_bfset_params(
 
 #define FTX_LOCKS
 
-#define ftx_set_state( lkp, mp, s, ftxh ) \
-       _ftx_set_state( lkp, mp, s, ftxh, __LINE__, __FILE__ )
-
 /*
  * Lock shortcut macros
  */
-
-#define FTX_LOCKREAD( lkp, ftxh ) { \
-    ftx_lock_read( (lkp), (ftxh), __LINE__, __FILE__ ); \
-}
-#define FTX_LOCKWRITE( lkp, ftxh ) { \
-    ftx_lock_write( (lkp), (ftxh), __LINE__, __FILE__ ); \
-}
-
-#define FTX_ADD_LOCK( lkp, ftxh ) {\
-       _ftx_add_lock( lkp, ftxh, __LINE__, __FILE__ ); \
-}
 
 void
 ftx_lock_write(
@@ -612,11 +598,9 @@ ftx_lock_read(
 );
 
 void
-_ftx_add_lock(
+ftx_add_lock(
     ftxLkT * lk,		/* in */
-    ftxHT ftxH,			/* in */
-    int ln,			/* in */
-    const char *fn			/* in */
+    ftxHT ftxH			/* in */
 );
 
 #endif				/* FTX_PUBLIC */

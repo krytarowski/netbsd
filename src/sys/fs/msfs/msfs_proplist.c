@@ -3220,7 +3220,7 @@ msfs_pl_del_root_done_int(
 	if (domain->state == BFD_ACTIVATED) {
 		mcellList_lk = (ftxLkT *) FLAGS_READ(rdflags, rdr.mcellList_lk);
 		if (mcellList_lk != NULL) {
-			FTX_ADD_LOCK(mcellList_lk, ftx)
+			ftx_add_lock(mcellList_lk, ftx);
 		}
 	}
 	sts = msfs_pl_init_cur(&hdr, rdr.hdr.VD, rdr.hdr.MC);
@@ -4949,7 +4949,7 @@ msfs_pl_del_root_done_int_v3(
 	if (domain->state == BFD_ACTIVATED) {
 		mcellList_lk = (ftxLkT *) FLAGS_READ(rdflags, rdr.mcellList_lk);
 		if (mcellList_lk != NULL) {
-			FTX_ADD_LOCK(mcellList_lk, ftx)
+			ftx_add_lock(mcellList_lk, ftx);
 		}
 	}
 	sts = msfs_pl_init_cur(&hdr, rdr.hdr.VD, rdr.hdr.MC);

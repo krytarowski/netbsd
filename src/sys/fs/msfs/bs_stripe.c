@@ -278,7 +278,7 @@ noclone:
 		RAISE_EXCEPTION(sts);
 	}
 	/* Put this lock on list to be released when transaction completes. */
-	FTX_ADD_LOCK(&bfap->mcellList_lk, ftxH)
+	ftx_add_lock(&bfap->mcellList_lk, ftxH);
 	/* Recheck under the protection of the mcellList_lk that the file has
 	 * not already been stripped NOTE mcellList_lk gives us read access to
 	 * the xtnt map. we'll let the ftx_fail release the lock. */
@@ -327,7 +327,7 @@ noclone:
 	/*
          * Update the in-memory extent map.
          */
-	FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH)
+	ftx_lock_write(&(bfap->xtntMap_lk), ftxH);
 	    bfap->xtnts.type = BSXMT_STRIPE;
 	imm_delete_xtnt_map(bfap->xtnts.xtntMap);
 	bfap->xtnts.xtntMap = NULL;
@@ -424,7 +424,7 @@ str_stripe_clone(
 	/*
          * Update the in-memory extent map.
          */
-	FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH)
+	ftx_lock_write(&(bfap->xtntMap_lk), ftxH);
 	    bfap->xtnts.type = BSXMT_STRIPE;
 	imm_delete_xtnt_map(bfap->xtnts.xtntMap);
 	bfap->xtnts.xtntMap = NULL;

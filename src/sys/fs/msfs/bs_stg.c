@@ -947,7 +947,7 @@ retry:
 		/* bs_cow_pg opened the clone and loaded the extent map. */
 		KASSERT(xtnts->validFlag != 0);
 
-		FTX_LOCKWRITE(&bfap->mcellList_lk, ftxH)
+		ftx_lock_write(&bfap->mcellList_lk, ftxH);
 		/* Need to lock this here; add_stg() can extend the subXtntMap
 		 * array which involves reallocating the subXtntMap array,
 		 * copying the old data to the new array,  and then swapping
@@ -986,7 +986,7 @@ retry:
 			RAISE_EXCEPTION(sts);
 		}
 		failFtxFlag = 1;
-		FTX_LOCKWRITE(&bfap->mcellList_lk, ftxH)
+		ftx_lock_write(&bfap->mcellList_lk, ftxH);
 		    XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk)
 		    xtntMap_locked = 1;
 	}
@@ -1335,7 +1335,7 @@ stg_add_stg_no_cow(
 		}
 		/* Add this lock to our transaction list so it can be released
 		 * when the transaction completes. */
-		FTX_ADD_LOCK(&(bfap->mcellList_lk), ftx)
+		ftx_add_lock(&(bfap->mcellList_lk), ftx);
 		/* Need to lock this before we modify any of the extents or
 		 * subextents for this file in add_stg(). */
 		    XTNMAP_LOCK_WRITE(&(bfap->xtntMap_lk))
@@ -1589,7 +1589,7 @@ stg_set_alloc_disk(
 	if (sts != EOK) {
 		RAISE_EXCEPTION(sts);
 	}
-	FTX_ADD_LOCK(&(bfap->mcellList_lk), ftxH)
+	ftx_add_lock(&(bfap->mcellList_lk), ftxH);
 	/*
          * Find the extent map that matches the caller's specified vdIndex.
          * While we are add it, build the vdIndex skip list.
@@ -4618,7 +4618,7 @@ xfer_stg(
 	}
 	/* Add this lock to our transaction list so it can be released when
 	 * the transaction completes. */
-	FTX_ADD_LOCK(&(bfap->mcellList_lk), ftxH)
+	ftx_add_lock(&(bfap->mcellList_lk), ftxH);
 	/* Need to lock this before we modify any of the extents or subextents
 	 * for this file in merge_xtnt_maps(). */
 	    XTNMAP_LOCK_WRITE(&(bfap->xtntMap_lk))
@@ -7138,7 +7138,7 @@ stg_remove_stg_start(
 		RAISE_EXCEPTION(sts);
 	}
 	/* Add to list of locks to be released when transaction completes. */
-	FTX_ADD_LOCK(&(bfap->mcellList_lk), ftx);
+	ftx_add_lock(&(bfap->mcellList_lk), ftx);
 
 	/* We need to exclusively lock the xtntmaps across this call since we
 	 * modify the update ranges of the subxtnt maps and this could cause a
@@ -7181,7 +7181,7 @@ stg_remove_stg_start(
 		}
 		(void) change_quotas(bfap->bfVp, 0, quota_change, NULL, NOCRED, 0, ftx);
 	}
-	FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftx);
+	ftx_lock_write(&(bfap->xtntMap_lk), ftx);
 
 	merge_xtnt_maps(xtnts);
 

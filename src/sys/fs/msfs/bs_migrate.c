@@ -2620,7 +2620,7 @@ switch_stg(
 	}
 	failFtxFlag = 1;
 
-	FTX_LOCKWRITE(&(bfap->mcellList_lk), ftxH)
+	ftx_lock_write(&(bfap->mcellList_lk), ftxH);
 	/*
          * Get the original extent map's address from the location that points
          * to the extent map.  Passing the extent map address in this manner
@@ -2700,7 +2700,7 @@ switch_stg(
 	if (sts != EOK) {
 		RAISE_EXCEPTION(sts);
 	}
-	FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH)
+	ftx_lock_write(&(bfap->xtntMap_lk), ftxH);
 	/*
          * Update the original's and copy's in-memory maps so they map the
          * switched storage allocation information.  New pages brought into
@@ -2841,7 +2841,7 @@ bs_move_metadata(
 	                 * clone did not have its own metadata and the clone was deleted.
 	                 */
 
-			FTX_LOCKWRITE(&(bfap->mcellList_lk), ftxH)
+			ftx_lock_write(&(bfap->mcellList_lk), ftxH);
 			    sts = move_metadata(bfap, NULL, vdp->vdIndex, ftxH);
 			if (sts != EOK) {
 				RAISE_EXCEPTION(sts);
@@ -2865,8 +2865,8 @@ bs_move_metadata(
 			}
 			closeCloneFlag = 1;
 
-			FTX_LOCKWRITE(&(bfap->mcellList_lk), ftxH)
-			    FTX_LOCKWRITE(&(cloneBfap->mcellList_lk), ftxH)
+			ftx_lock_write(&(bfap->mcellList_lk), ftxH);
+			    ftx_lock_write(&(cloneBfap->mcellList_lk), ftxH);
 			    sts = move_metadata(bfap, cloneBfap, vdp->vdIndex, ftxH);
 			if (sts != EOK) {
 				RAISE_EXCEPTION(sts);
@@ -2896,7 +2896,7 @@ bs_move_metadata(
 	                 * The clone has its own metadata.
 	                 */
 
-			FTX_LOCKWRITE(&(cloneBfap->mcellList_lk), ftxH)
+			ftx_lock_write(&(cloneBfap->mcellList_lk), ftxH);
 			    sts = move_metadata(cloneBfap, NULL, vdp->vdIndex, ftxH);
 			if (sts != EOK) {
 				RAISE_EXCEPTION(sts);

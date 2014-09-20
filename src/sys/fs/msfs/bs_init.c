@@ -2263,7 +2263,7 @@ vd_extend(struct vd * vdp)
          *  Add the mcell list lock to the transaction
          *  and lock the extent map
          */
-	FTX_ADD_LOCK(&sbmBfap->mcellList_lk, ftxH);
+	ftx_add_lock(&sbmBfap->mcellList_lk, ftxH);
 	XTNMAP_LOCK_WRITE(&sbmBfap->xtntMap_lk);
 	xtntMapLocked = TRUE;
 
