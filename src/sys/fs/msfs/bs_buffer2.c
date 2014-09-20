@@ -66,7 +66,7 @@ int advfsstats = 0;
 /*
  * Tracing vars
  */
-	char *PrintAction[] = {
+	const char *PrintAction[] = {
 		"Ref     ",
 		"Deref   ",
 		"Pin     ",
@@ -74,7 +74,7 @@ int advfsstats = 0;
 		"Devread ",
 	"Devwrite"};
 
-	char *UnpinAction[] = {
+	const char *UnpinAction[] = {
 		"Immed",
 		"Clean",
 		"Dirty",
