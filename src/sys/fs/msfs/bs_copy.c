@@ -500,13 +500,13 @@ set_block_map(
 	         */
 
 		if (bfAccess->migPagesPending >= maxMigrateUbcPgs) {
-			mutex_enter(&bfAccess->bfIoLock);
+			mutex_enter(&bfAccess->bfIoLock.mutex);
 			if (bfAccess->migPagesPending >= maxMigrateUbcPgs) {
 				KASSERT(maxMigrateUbcPgs / 2 <= 0x7fff);
 				bfAccess->migWait = maxMigrateUbcPgs / 2;
 				cond_wait(&bfAccess->migWait, &bfAccess->bfIoLock);
 			}
-			mutex_exit(&bfAccess->bfIoLock);
+			mutex_exit(&bfAccess->bfIoLock.mutex);
 		}
 		PREEMPT_CHECK(current_thread());
 

@@ -544,7 +544,7 @@ rbf_delete_int(
          * Put the state lock into the ACC_INIT_TRANS state.  This state will
          * become ACC_VALID when the transaction commits.
          */
-	mutex_enter(&bfap->bfaLock);
+	mutex_enter(&bfap->bfaLock.mutex);
 
 	lk_wait_for(&(bfap->stateLk), &bfap->bfaLock, ACC_VALID);
 	delOpRec.prevAccState = ACC_VALID;
@@ -553,7 +553,7 @@ rbf_delete_int(
 	delOpRec.prevBfState = bfap->bfState;
 	bfap->bfState = BSRA_DELETING;
 
-	mutex_exit(&bfap->bfaLock);
+	mutex_exit(&bfap->bfaLock.mutex);
 
 	sts = FTX_START_N(FTA_BS_DEL_DELETE_V1, &subFtxH, ftxH,
 	    bfap->dmnP, 1);
@@ -675,7 +675,7 @@ bs_delete_undo_opx(
 		 * temporarily to INIT_TRANS so no one else tries to mess with
 		 * the access struct until we get back and reset the bfState. */
 		(void) lk_set_state(&bfap->stateLk, ACC_INIT_TRANS);
-		mutex_exit(&bfap->bfaLock);
+		mutex_exit(&bfap->bfaLock.mutex);
 
 		reset_ondisk_bf_state(
 		    dmnP,
@@ -684,14 +684,14 @@ bs_delete_undo_opx(
 		    recp->prevBfState,
 		    ftxH
 		    );
-		mutex_enter(&bfap->bfaLock);
+		mutex_enter(&bfap->bfaLock.mutex);
 		(void) lk_set_state(&bfap->stateLk, ACC_VALID);
 		bfap->bfState = recp->prevBfState;
 
 		/* This decrement is for the grab_bsacc */
 		DEC_REFCNT(bfap);
 
-		mutex_exit(&bfap->bfaLock);
+		mutex_exit(&bfap->bfaLock.mutex);
 	} else {
 		/*
 	         * Crash/recovery.
@@ -1320,9 +1320,9 @@ del_clean_mcell_list(
 					 * failover does not do a clean
 					 * umount. */
 					delete_this_mcell = TRUE;
-					mutex_exit(&bfap->bfaLock);
+					mutex_exit(&bfap->bfaLock.mutex);
 				} else {
-					mutex_exit(&bfap->bfaLock);
+					mutex_exit(&bfap->bfaLock.mutex);
 				}
 			}
 		} else
@@ -1910,18 +1910,18 @@ done:
          */
 
 
-	    mutex_enter(&(dmnP->mutex));
+	    mutex_enter(&(dmnP->mutex.mutex));
 	mutexisLocked = 1;
 
 	if ((pmcid.page == pvdp->ddlActiveWaitMCId.page) &&
 	    (pmcid.cell == pvdp->ddlActiveWaitMCId.cell)) {
 
 		cond_signal(&pvdp->ddlActiveWaitCv);
-		mutex_exit(&(dmnP->mutex));
+		mutex_exit(&(dmnP->mutex.mutex));
 		mutexisLocked = 0;
 	}
 	if (mutexisLocked)
-		mutex_exit(&(dmnP->mutex));
+		mutex_exit(&(dmnP->mutex.mutex));
 
 	return (EOK);
 

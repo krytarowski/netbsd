@@ -771,11 +771,11 @@ remove_dir_ent(
 	/*
          * update the mtime for the directory,
          * incr dirstamp to signal that the dir has changed */
-	mutex_enter(&dir_context->fsContext_mutex);
+	mutex_enter(&dir_context->fsContext_mutex.mutex);
 	dir_context->fs_flag |= (MOD_MTIME | MOD_CTIME);
 	dir_context->dirty_stats = TRUE;
 	dir_context->dirstamp++;
-	mutex_exit(&dir_context->fsContext_mutex);
+	mutex_exit(&dir_context->fsContext_mutex.mutex);
 
 	/*
          * update the dirs stats, release the dir vnode.

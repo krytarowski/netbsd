@@ -284,9 +284,9 @@ bitmap_undo_opx(
 	         */
 		vdp->freeClust = vdp->freeClust + clustCnt;
 
-		mutex_enter(&dmnP->mutex);
+		mutex_enter(&dmnP->mutex.mutex);
 		dmnP->freeBlks += clustCnt * vdp->stgCluster;
-		mutex_exit(&dmnP->mutex);
+		mutex_exit(&dmnP->mutex.mutex);
 
 		break;
 
@@ -305,9 +305,9 @@ bitmap_undo_opx(
 	         */
 		vdp->freeClust = vdp->freeClust - clustCnt;
 
-		mutex_enter(&dmnP->mutex);
+		mutex_enter(&dmnP->mutex.mutex);
 		dmnP->freeBlks -= clustCnt * vdp->stgCluster;
-		mutex_exit(&dmnP->mutex);
+		mutex_exit(&dmnP->mutex.mutex);
 
 		break;
 
@@ -1244,9 +1244,9 @@ sbm_remove_space(
 	vdp->freeClust -= clust;
 
 	domain = vdp->dmnP;
-	mutex_enter(&(domain->mutex));
+	mutex_enter(&(domain->mutex.mutex));
 	domain->freeBlks -= clust * vdp->stgCluster;
-	mutex_exit(&(domain->mutex));
+	mutex_exit(&(domain->mutex.mutex));
 
 	remove_cache(
 	    vdp,
@@ -1306,9 +1306,9 @@ sbm_return_space_no_sub_ftx(
 	virtualDiskp->freeClust = virtualDiskp->freeClust + clusterCnt;
 
 	domain = virtualDiskp->dmnP;
-	mutex_enter(&(domain->mutex));
+	mutex_enter(&(domain->mutex.mutex));
 	domain->freeBlks += clusterCnt * virtualDiskp->stgCluster;
-	mutex_exit(&(domain->mutex));
+	mutex_exit(&(domain->mutex.mutex));
 
 	return EOK;
 

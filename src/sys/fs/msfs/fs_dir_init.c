@@ -1018,7 +1018,7 @@ fs_cleanup_thread(void)
 	                 * comes in to try again.
 	                 */
 			bfap = NULL;
-			mutex_enter(&BfAccessFreeLock);
+			mutex_enter(&BfAccessFreeLock.mutex);
 			if (((FreeAcc.len > 0) && (NumAccess > MaxAccess)) ||
 			    ((FreeAcc.len > 2 * AdvfsMinFreeAccess) &&
 				((FreeAcc.len > (NumAccess * ADVFSMAXFREEACCESSPERCENT) / 100) ||
@@ -1034,14 +1034,14 @@ fs_cleanup_thread(void)
 						}
 						access_structures_deallocated++;
 					} else {
-						mutex_exit(&(FreeAcc.freeFwd->bfaLock));
+						mutex_exit(&(FreeAcc.freeFwd->bfaLock.mutex));
 						failed_access_structure_deallocations++;
 					}
 				} else {
 					failed_access_structure_deallocations++;
 				}
 			}
-			mutex_exit(&BfAccessFreeLock);
+			mutex_exit(&BfAccessFreeLock.mutex);
 			if (bfap) {
 				bs_dealloc_access(bfap);
 			}

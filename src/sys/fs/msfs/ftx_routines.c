@@ -304,7 +304,7 @@ _ftx_start_i(
 	         * a transaction.  The thread should lock it after starting the
 	         * transaction.
 	         */
-		mutex_enter(&FtxMutex);
+		mutex_enter(&FtxMutex.mutex);
 
 		if (FtxStats) {
 			int slots = ftxTDp->rrNextSlot - ftxTDp->oldestSlot;
@@ -338,7 +338,7 @@ _ftx_start_i(
 
 			/* The caller doesn't want to wait */
 			if (flag & FTX_NOWAIT) {
-				mutex_exit(&FtxMutex);
+				mutex_exit(&FtxMutex.mutex);
 				return EWOULDBLOCK;
 			}
 			/* The ftx slot is busy so wait for it to become
@@ -390,9 +390,9 @@ _ftx_start_i(
 			FtxDynAlloc.waiters--;
 		}
 		/* Allocate a new ftx struct */
-		mutex_exit(&FtxMutex);
+		mutex_exit(&FtxMutex.mutex);
 		ftxp = newftx();
-		mutex_enter(&FtxMutex);
+		mutex_enter(&FtxMutex.mutex);
 
 		/* Update stats for number allocated */
 		FtxDynAlloc.currAllocated++;
@@ -514,7 +514,7 @@ _ftx_start_i(
 				}
 			}
 		}
-		mutex_exit(&FtxMutex);
+		mutex_exit(&FtxMutex.mutex);
 
 		/* Initialize the new root ftx. */
 
@@ -1056,7 +1056,7 @@ ftx_done_urdr(
 		ftxp->lrh.member = 0;
 		do_ftx_continuations(dmnP, ftxp, ftxH, lrvecp);
 	}
-	mutex_enter(&FtxMutex);
+	mutex_enter(&FtxMutex.mutex);
 
 	/* Mark this ftx as available; won't get used until FtxMutex is
 	 * dropped. */
@@ -1071,7 +1071,7 @@ ftx_done_urdr(
 	/* Now free the ftx struct allocated to the newly-available slot */
 	ftx_free_2(ftxp);
 
-	mutex_exit(&FtxMutex);
+	mutex_exit(&FtxMutex.mutex);
 }
 /*
  * ftx_quit
@@ -1128,7 +1128,7 @@ ftx_quit(
 
 	/* free the ftx */
 
-	mutex_enter(&FtxMutex);
+	mutex_enter(&FtxMutex.mutex);
 
 	ftx_free(ftxSlot, ftxTDp);
 
@@ -1141,7 +1141,7 @@ ftx_quit(
 	/* Now free the ftx struct allocated to the newly-available slot */
 	ftx_free_2(ftxp);
 
-	mutex_exit(&FtxMutex);
+	mutex_exit(&FtxMutex.mutex);
 
 	return;
 }
@@ -1591,7 +1591,7 @@ free_ftx:
 	         * undo backlink chain.
 	         */
 
-		mutex_enter(&FtxMutex);
+		mutex_enter(&FtxMutex.mutex);
 
 		/* Mark this slot as available */
 		ftx_free(ftxSlot, ftxTDp);
@@ -1602,7 +1602,7 @@ free_ftx:
 		 * slot */
 		ftx_free_2(ftxp);
 
-		mutex_exit(&FtxMutex);
+		mutex_exit(&FtxMutex.mutex);
 	} else if (lvl) {
 
 		/* If the level was non-zero reduce the ftx level */
@@ -2585,7 +2585,7 @@ do_ftx_continuations(
 	         * value in the log.
 	         */
 		if (!LSN_EQ_NIL(ftxTDp->logTrimLsn)) {
-			mutex_enter(&FtxMutex);
+			mutex_enter(&FtxMutex.mutex);
 			--ftxTDp->noTrimCnt;
 
 			reset_oldest_lsn(ftxp, dmnP, TRUE);
@@ -2616,7 +2616,7 @@ do_ftx_continuations(
 			}
 
 			++ftxTDp->noTrimCnt;
-			mutex_exit(&FtxMutex);
+			mutex_exit(&FtxMutex.mutex);
 
 		}
 		if (dmnP->state == BFD_RECOVER_CONTINUATIONS) {
@@ -2754,10 +2754,10 @@ ftx_unlock(
 	switch (lkHdr->lkType) {
 
 	case LKT_STATE:
-		mutex_enter(lkHdr->mutex);
+		mutex_enter(lkHdr->mutex.mutex);
 		lk_signal(lk_set_state(sLk, sLk->pendingState), sLk);
 		sLk->pendingState = LKW_NONE;
-		mutex_exit(lkHdr->mutex);
+		mutex_exit(lkHdr->mutex.mutex);
 		break;
 
 	case LKT_FTX:
@@ -3119,13 +3119,13 @@ ftx_get_dirtybufla(
 
 		/* It's been updated, get the lock, re-read and reset */
 
-		mutex_enter(&dmnP->lsnLock);
+		mutex_enter(&dmnP->lsnLock.mutex);
 
 		thisread = dmnP->dirtyBufLa.update;
 		dmnP->dirtyBufLa.read = thisread;
 		dirtyBufLa = dmnP->dirtyBufLa.lgra[(thisread & 1)];
 
-		mutex_exit(&dmnP->lsnLock);
+		mutex_exit(&dmnP->lsnLock.mutex);
 	}
 
 	return dirtyBufLa;
@@ -3161,7 +3161,7 @@ ftx_set_oldestftxla(
 	int updindex;
 	ftxCRLAT *oldftxlap = &dmnP->ftxTbld.oldestFtxLa;
 
-	mutex_enter(&FtxMutex);
+	mutex_enter(&FtxMutex.mutex);
 
 	updindex = oldftxlap->update;
 
@@ -3170,7 +3170,7 @@ ftx_set_oldestftxla(
 	}
 	oldftxlap->lgra[(updindex & 1)] = oldftxLa;
 
-	mutex_exit(&FtxMutex);
+	mutex_exit(&FtxMutex.mutex);
 }
 /*
  * ftx_get_oldestftxla - gets the log record address for the oldest
@@ -3200,13 +3200,13 @@ ftx_get_oldestftxla(
 	}
 	/* It's been updated, get the lock, re-read and reset */
 
-	mutex_enter(&FtxMutex);
+	mutex_enter(&FtxMutex.mutex);
 
 	thisread = oldftxlap->update;
 	oldftxlap->read = thisread;
 	oldftxLa = oldftxlap->lgra[(thisread & 1)];
 
-	mutex_exit(&FtxMutex);
+	mutex_exit(&FtxMutex.mutex);
 
 	return oldftxLa;
 }
@@ -3230,7 +3230,7 @@ ftx_set_firstla(
 	logRecAddrT oldftxLa;
 	ftxCRLAT *oldftxlap = &dmnP->ftxTbld.oldestFtxLa;
 
-	mutex_enter(&FtxMutex);
+	mutex_enter(&FtxMutex.mutex);
 
 	updindex = oldftxlap->update;
 
@@ -3253,7 +3253,7 @@ ftx_set_firstla(
 		oldftxLa = oldftxlap->lgra[(updindex & 1)];
 	}
 
-	mutex_exit(&FtxMutex);
+	mutex_exit(&FtxMutex.mutex);
 
 	return oldftxLa;
 }
@@ -3351,7 +3351,7 @@ checklogtrim:
 	         * Flush the log and wait for it.
 	         */
 		dmnP->logStat.logTrims++;
-		mutex_exit(&FtxMutex);
+		mutex_exit(&FtxMutex.mutex);
 
 		lgr_flush(dmnP->ftxLogP);
 		/*
@@ -3364,7 +3364,7 @@ checklogtrim:
 
 		(void) bs_pinblock_sync(dmnP, ftxTDp->logTrimLsn, 0);
 
-		mutex_enter(&FtxMutex);
+		mutex_enter(&FtxMutex.mutex);
 
 		ftxTDp->logTrimLsn = nilLSN;
 

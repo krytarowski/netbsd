@@ -194,11 +194,11 @@ msgq_alloc_msg(
 	msgQT *msgQ = (msgQT *) msgQH;
 	void *msg;
 
-	mutex_enter(&msgQ->mutex);
+	mutex_enter(&msgQ->mutex.mutex);
 
 	msg = ulmq_alloc_msg(msgQH);
 
-	mutex_exit(&msgQ->mutex);
+	mutex_exit(&msgQ->mutex.mutex);
 
 	return msg;
 }				/* end msgq_alloc_msg */
@@ -218,11 +218,11 @@ msgq_send_msg(
 {
 	msgQT *msgQ = (msgQT *) msgQH;
 
-	mutex_enter(&msgQ->mutex);
+	mutex_enter(&msgQ->mutex.mutex);
 
 	ulmq_send_msg(msgQH, msg);
 
-	mutex_exit(&msgQ->mutex);
+	mutex_exit(&msgQ->mutex.mutex);
 }				/* end msgq_send_msg */
 
 
@@ -240,11 +240,11 @@ msgq_recv_msg(
 	msgQT *msgQ = (msgQT *) msgQH;
 	void *msg;
 
-	mutex_enter(&msgQ->mutex);
+	mutex_enter(&msgQ->mutex.mutex);
 
 	msg = ulmq_recv_msg(msgQH, &msgQ->mutex);
 
-	mutex_exit(&msgQ->mutex);
+	mutex_exit(&msgQ->mutex.mutex);
 
 	return msg;
 }				/* end msgq_recv_msg */
@@ -265,11 +265,11 @@ msgq_free_msg(
 {
 	msgQT *msgQ = (msgQT *) msgQH;
 
-	mutex_enter(&msgQ->mutex);
+	mutex_enter(&msgQ->mutex.mutex);
 
 	ulmq_free_msg(msgQH, msg);
 
-	mutex_exit(&msgQ->mutex);
+	mutex_exit(&msgQ->mutex.mutex);
 }				/* end msgq_free_msg */
 
 
@@ -289,13 +289,13 @@ msgq_purge_msgs(
 	msgQT *msgQ = (msgQT *) msgQH;
 	void *msg;
 
-	mutex_enter(&msgQ->mutex);
+	mutex_enter(&msgQ->mutex.mutex);
 
 	while (msgQ->readyMsgs > 0) {
 		msg = ulmq_recv_msg(msgQH, &msgQ->mutex);
 		ulmq_free_msg(msgQH, msg);
 	}
-	mutex_exit(&msgQ->mutex);
+	mutex_exit(&msgQ->mutex.mutex);
 }				/* end msgq_purge_msgs */
 
 
@@ -337,29 +337,29 @@ msgq_destroy(
 {
 	msgQT *msgQ = (msgQT *) msgQH;
 
-	mutex_enter(&msgQ->mutex);
+	mutex_enter(&msgQ->mutex.mutex);
 
 	if ((msgQ->userMsgs != 0)) {
-		mutex_exit(&msgQ->mutex);
+		mutex_exit(&msgQ->mutex.mutex);
 		return 1;
 	}
 	if ((msgQ->readyMsgs != 0)) {
-		mutex_exit(&msgQ->mutex);
+		mutex_exit(&msgQ->mutex.mutex);
 		return 2;
 	}
 	if ((msgQ->waiters != 0)) {
-		mutex_exit(&msgQ->mutex);
+		mutex_exit(&msgQ->mutex.mutex);
 		return 3;
 	}
 	if ((msgQ->freeMsgs != msgQ->maxMsgs)) {
 		/* the list is corrupt!!! */
 		KASSERT(msgQ->freeMsgs == msgQ->maxMsgs);
-		mutex_exit(&msgQ->mutex);
+		mutex_exit(&msgQ->mutex.mutex);
 		return 4;
 	}
 	ulmq_destroy_freelist(msgQ);
 
-	mutex_exit(&msgQ->mutex);
+	mutex_exit(&msgQ->mutex.mutex);
 	mutex_destroy(&msgQ->mutex);
 
 	ms_free(msgQ);

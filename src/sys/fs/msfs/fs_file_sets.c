@@ -173,7 +173,7 @@ fs_fset_create(
 		/* created: root, root tag, quota.group, quota.user, .tags . */
 
 start:
-		mutex_enter(&bfSetp->accessChainLock);
+		mutex_enter(&bfSetp->accessChainLock.mutex);
 		for (bfap = bfSetp->accessFwd;
 		    bfap != (bfAccessT *) (&bfSetp->accessFwd);
 		    bfap = nextbfap) {
@@ -189,7 +189,7 @@ start:
 	                 * locking order.
 	                 */
 			if (!mutex_tryenter(&bfap->bfaLock.mutex)) {
-				mutex_exit(&bfSetp->accessChainLock);
+				mutex_exit(&bfSetp->accessChainLock.mutex);
 				goto start;
 			}
 			KASSERT(bfap->bfSetp == bfSetp);
@@ -202,16 +202,16 @@ start:
 	                 */
 			if (lk_get_state(&bfap->stateLk) == ACC_RECYCLE) {
 				nextbfap = bfap->setFwd;
-				mutex_exit(&bfap->bfaLock);
+				mutex_exit(&bfap->bfaLock.mutex);
 				continue;
 			}
 			bfap->bfState = BSRA_VALID;
 			lk_signal(lk_set_state(&bfap->stateLk, ACC_VALID), &bfap->stateLk);
 
 			nextbfap = bfap->setFwd;
-			mutex_exit(&bfap->bfaLock);
+			mutex_exit(&bfap->bfaLock.mutex);
 		}
-		mutex_exit(&bfSetp->accessChainLock);
+		mutex_exit(&bfSetp->accessChainLock.mutex);
 
 		sts = EIO;
 		goto _error;

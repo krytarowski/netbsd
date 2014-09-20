@@ -424,13 +424,13 @@ fs_post_no_storage_msg(struct vnode * vp,
          * Post EVM event and write to syslog/console only
          * once every fs_full_threshold.
          */
-	mutex_enter(&(bfap->dmnP->mutex));
+	mutex_enter(&(bfap->dmnP->mutex.mutex));
 	if ((bfap->dmnP->fs_full_time == 0) ||
 	    (time.tv_sec - bfap->dmnP->fs_full_time >= fs_full_threshold)) {
 		bfap->dmnP->fs_full_time = time.tv_sec;
 		set = 1;
 	}
-	mutex_exit(&(bfap->dmnP->mutex));
+	mutex_exit(&(bfap->dmnP->mutex.mutex));
 
 	if (set) {
 		log(LOG_ERR, "%s: file system full\n",
@@ -648,13 +648,13 @@ fs_write(
 	 * and cause that flush to stall.  So block this write from starting
 	 * until the flush has finished. */
 	if (bfap->dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS) {
-		mutex_enter(&bfap->dmnP->mutex);
+		mutex_enter(&bfap->dmnP->mutex.mutex);
 		if (bfap->dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS) {
 			assert_wait((vm_offset_t) (&bfap->dmnP->dmnFlag), FALSE);
-			mutex_exit(&bfap->dmnP->mutex);
+			mutex_exit(&bfap->dmnP->mutex.mutex);
 			thread_block();
 		} else {
-			mutex_exit(&bfap->dmnP->mutex);
+			mutex_exit(&bfap->dmnP->mutex.mutex);
 		}
 	}
 	if (bfap->bfSetp->cloneSetp != NULL) {
@@ -800,10 +800,10 @@ _retry:
 
 			if (arp) {
 				/* Remove active range */
-				mutex_enter(&bfap->actRangeLock);
+				mutex_enter(&bfap->actRangeLock.mutex);
 				KASSERT(arp->arIosOutstanding == 0);
 				remove_actRange_from_list(bfap, arp);
-				mutex_exit(&bfap->actRangeLock);
+				mutex_exit(&bfap->actRangeLock.mutex);
 				ms_free(arp);
 				arp = (struct actRange *) NULL;
 			}
@@ -884,9 +884,9 @@ _retry:
 			 * were waiting for the range.  If it did, then we
 			 * need to re-get the range. */
 			if (bfap->file_size < old_size) {
-				mutex_enter(&bfap->actRangeLock);
+				mutex_enter(&bfap->actRangeLock.mutex);
 				remove_actRange_from_list(bfap, arp);
-				mutex_exit(&bfap->actRangeLock);
+				mutex_exit(&bfap->actRangeLock.mutex);
 				goto _retry_append_range;
 			}
 		} else {
@@ -1061,9 +1061,9 @@ _retry:
 				VM_MAP_LOCK_READ_DONE_RECURSIVE();
 			}
 			if (arp) {
-				mutex_enter(&bfap->actRangeLock);
+				mutex_enter(&bfap->actRangeLock.mutex);
 				remove_actRange_from_list(bfap, arp);
-				mutex_exit(&bfap->actRangeLock);
+				mutex_exit(&bfap->actRangeLock.mutex);
 				ms_free(arp);
 			}
 			return (EOK);
@@ -1492,9 +1492,9 @@ _retry:
 	 * the I/O completion path. */
 	if (directIO && arp &&
 	    (uio->uio_rw != UIO_AIORW || uio->uio_iov[2].iov_len == 0)) {
-		mutex_enter(&bfap->actRangeLock);
+		mutex_enter(&bfap->actRangeLock.mutex);
 		remove_actRange_from_list(bfap, arp);
-		mutex_exit(&bfap->actRangeLock);
+		mutex_exit(&bfap->actRangeLock.mutex);
 		ms_free(arp);
 		arp = NULL;
 	}
@@ -1514,7 +1514,7 @@ _retry:
          */
 	vp->v_lastr = page_to_write;
 
-	mutex_enter(&contextp->fsContext_mutex);
+	mutex_enter(&contextp->fsContext_mutex.mutex);
 
 	/*
          * update st_size and st_mtime in the file's stat structure
@@ -1559,7 +1559,7 @@ _retry:
 
 		contextp->dir_stats.st_mode &= ~mask;
 	}
-	mutex_exit(&contextp->fsContext_mutex);
+	mutex_exit(&contextp->fsContext_mutex.mutex);
 
 	if (noadd_execaccess &&
 #if SEC_PRIV
@@ -1774,9 +1774,9 @@ _error:
 
 	/* release active range unless AIO has already begun */
 	if (arp && (uio->uio_rw != UIO_AIORW || uio->uio_iov[2].iov_len == 0)) {
-		mutex_enter(&bfap->actRangeLock);
+		mutex_enter(&bfap->actRangeLock.mutex);
 		remove_actRange_from_list(bfap, arp);
-		mutex_exit(&bfap->actRangeLock);
+		mutex_exit(&bfap->actRangeLock.mutex);
 		ms_free(arp);
 	}
 	if (ftx_started) {
@@ -1882,7 +1882,7 @@ fs_update_times(struct vnode * vp, int attr_flags)
 	struct fsContext *contextp;
 	contextp = VTOC(vp);
 
-	mutex_enter(&contextp->fsContext_mutex);
+	mutex_enter(&contextp->fsContext_mutex.mutex);
 	if (attr_flags & AT_MTIME)
 		contextp->fs_flag |= MOD_MTIME;
 	if (attr_flags & AT_ATIME)
@@ -1900,7 +1900,7 @@ fs_update_times(struct vnode * vp, int attr_flags)
 	} else {
 		contextp->dirty_stats = TRUE;
 	}
-	mutex_exit(&contextp->fsContext_mutex);
+	mutex_exit(&contextp->fsContext_mutex.mutex);
 }
 
 
@@ -2490,10 +2490,10 @@ EXIT:
 	 * did all synchronous I/O; asynchronous I/O will release the active
 	 * range when the I/O completes. */
 	if (!arp_passed_in && !asynch_io_started) {
-		mutex_enter(&bfap->actRangeLock);
+		mutex_enter(&bfap->actRangeLock.mutex);
 		KASSERT(arp->arIosOutstanding == 0);
 		remove_actRange_from_list(bfap, arp);	/* also wakes waiters */
-		mutex_exit(&bfap->actRangeLock);
+		mutex_exit(&bfap->actRangeLock.mutex);
 		ms_free(arp);
 	}
 	/* If anything was written, update number_to_write. */
@@ -3016,13 +3016,13 @@ fs_read(
 	 * and cause that flush to stall.  So block this read from starting
 	 * until the flush has finished. */
 	if (bfap->dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS) {
-		mutex_enter(&bfap->dmnP->mutex);
+		mutex_enter(&bfap->dmnP->mutex.mutex);
 		if (bfap->dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS) {
 			assert_wait((vm_offset_t) (&bfap->dmnP->dmnFlag), FALSE);
-			mutex_exit(&bfap->dmnP->mutex);
+			mutex_exit(&bfap->dmnP->mutex.mutex);
 			thread_block();
 		} else {
-			mutex_exit(&bfap->dmnP->mutex);
+			mutex_exit(&bfap->dmnP->mutex.mutex);
 		}
 	}
 _retry_map:
@@ -3075,11 +3075,11 @@ _retry_map:
 	         */
 
 		if (!(ioflag & IO_NOSTATUPDATE)) {
-			mutex_enter(&contextp->fsContext_mutex);
+			mutex_enter(&contextp->fsContext_mutex.mutex);
 			contextp->fs_flag |= MOD_ATIME;
 			if (!(vp->v_mount->m_flag & M_NOATIMES))
 				contextp->dirty_stats = TRUE;
-			mutex_exit(&contextp->fsContext_mutex);
+			mutex_exit(&contextp->fsContext_mutex.mutex);
 		}
 		error = 0;
 
@@ -3486,12 +3486,12 @@ _retry_map:
          * update st_atime in the file's stat structure
          */
 	if (!(ioflag & IO_NOSTATUPDATE)) {
-		mutex_enter(&contextp->fsContext_mutex);
+		mutex_enter(&contextp->fsContext_mutex.mutex);
 		contextp->fs_flag |= MOD_ATIME;
 		if (!(vp->v_mount->m_flag & M_NOATIMES)) {
 			contextp->dirty_stats = TRUE;
 		}
-		mutex_exit(&contextp->fsContext_mutex);
+		mutex_exit(&contextp->fsContext_mutex.mutex);
 	}
 	/*
          * For POSIX 1003.1b synchronized i/o file integrity, if ioflag contains
@@ -3878,10 +3878,10 @@ EXIT:
 	 * completed. */
 	if (!asynch_io_started || ret != EOK) {
 		/* cleanup if error or synchronous I/O */
-		mutex_enter(&bfap->actRangeLock);
+		mutex_enter(&bfap->actRangeLock.mutex);
 		KASSERT(arp->arIosOutstanding == 0);
 		remove_actRange_from_list(bfap, arp);	/* also wakes waiters */
-		mutex_exit(&bfap->actRangeLock);
+		mutex_exit(&bfap->actRangeLock.mutex);
 		ms_free(arp);
 	}
 	return (ret);

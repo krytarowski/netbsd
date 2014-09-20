@@ -499,7 +499,7 @@ limits_of_active_range(
  */
 #define ADD_ACC_CLOSEDLIST( bfap ) \
 { \
-    mutex_enter(&BfAccessFreeLock); \
+    mutex_enter(&BfAccessFreeLock.mutex); \
     KASSERT(bfap->onFreeList == 0); \
     KASSERT(ClosedAcc.freeBwd); \
     bfap->freeBwd = ClosedAcc.freeBwd; \
@@ -511,7 +511,7 @@ limits_of_active_range(
     if (bfap->saved_stats) { \
         ClosedAcc.saved_stats_len++; \
     } \
-    mutex_exit(&BfAccessFreeLock); \
+    mutex_exit(&BfAccessFreeLock.mutex); \
 }
 
 /* ADD_ACC_FREELIST adds access structures to the free list.
@@ -553,7 +553,7 @@ limits_of_active_range(
     extern msgQHT CleanupMsgQH; \
     extern int advfs_shutting_down; \
                                 \
-    mutex_enter(&BfAccessFreeLock); \
+    mutex_enter(&BfAccessFreeLock.mutex); \
     KASSERT(bfap->onFreeList == 0); \
     KASSERT(bfap->dirtyBufList.length == 0); \
     if ( bfap->stateLk.state == ACC_INVALID ) { \
@@ -590,7 +590,7 @@ limits_of_active_range(
             msgq_send_msg(CleanupMsgQH, msg); \
         } \
     } \
-    mutex_exit(&BfAccessFreeLock); \
+    mutex_exit(&BfAccessFreeLock.mutex); \
 }
 
 /* This does the underlying work for the RM_ACC_LIST macros. Do not
@@ -622,12 +622,12 @@ limits_of_active_range(
  */
 #define RM_ACC_LIST( bfap ) \
 { \
-    mutex_enter(&BfAccessFreeLock); \
+    mutex_enter(&BfAccessFreeLock.mutex); \
     KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
     KASSERT(bfap->freeFwd); \
     KASSERT(bfap->freeBwd); \
     RM_ACC_LIST_REAL_WORK( bfap ); \
-    mutex_exit(&BfAccessFreeLock); \
+    mutex_exit(&BfAccessFreeLock.mutex); \
 }
 
 /* RM_ACC_LIST_NOLOCK is like RM_ACC_LIST, except that the BfAccessFreeLock
@@ -650,13 +650,13 @@ limits_of_active_range(
  */
 #define RM_ACC_LIST_COND( bfap ) \
 { \
-    mutex_enter(&BfAccessFreeLock); \
+    mutex_enter(&BfAccessFreeLock.mutex); \
     if (bfap->freeFwd) { \
         KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
         KASSERT(bfap->freeBwd);  \
         RM_ACC_LIST_REAL_WORK( bfap ); \
     } \
-    mutex_exit(&BfAccessFreeLock); \
+    mutex_exit(&BfAccessFreeLock.mutex); \
 }
 
 #endif				/* _ACCESS_H_ */

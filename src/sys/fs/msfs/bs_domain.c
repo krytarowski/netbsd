@@ -344,10 +344,10 @@ bs_domain_access(domainT ** dmnPP,	/* out */
 {				/* in */
 	int sts;
 
-	mutex_enter(&DmnTblMutex);
+	mutex_enter(&DmnTblMutex.mutex);
 
 	if ((*dmnPP = domain_lookup(bfDomainId, 0)) == 0) {
-		mutex_exit(&DmnTblMutex);
+		mutex_exit(&DmnTblMutex.mutex);
 		return (ENO_SUCH_DOMAIN);
 	}
 	/*
@@ -363,7 +363,7 @@ bs_domain_access(domainT ** dmnPP,	/* out */
 		sts = ENO_SUCH_DOMAIN;
 	}
 
-	mutex_exit(&DmnTblMutex);
+	mutex_exit(&DmnTblMutex.mutex);
 	return sts;
 }
 /*
@@ -381,7 +381,7 @@ bs_domain_close(domainT * dmnP)
 
 	KASSERT(TEST_DMNP(dmnP) == EOK);
 
-	mutex_enter(&DmnTblMutex);
+	mutex_enter(&DmnTblMutex.mutex);
 
 	dmnP->dmnAccCnt--;
 
@@ -389,7 +389,7 @@ bs_domain_close(domainT * dmnP)
 		dmnP->dmnRefWaiters = 0;
 		thread_wakeup((vm_offset_t) & dmnP->dmnRefWaiters);
 	}
-	mutex_exit(&DmnTblMutex);
+	mutex_exit(&DmnTblMutex.mutex);
 
 	return;
 }
@@ -1608,27 +1608,27 @@ bs_bfdmn_deactivate(
          * which may be needed later in deactivation processing.
          */
 
-	mutex_enter(&DmnTblMutex);
+	mutex_enter(&DmnTblMutex.mutex);
 	dmnP->dmnFlag |= BFD_DEACTIVATE_PENDING;
 	/* Drop and reaquire lock across ss_dmn_deactivate, as function can
 	 * block waiting for vfast threads to complete. */
-	mutex_exit(&DmnTblMutex);
+	mutex_exit(&DmnTblMutex.mutex);
 	/* Also forces any pending migrates to abort.  The dmnAccCnt is held
 	 * by vfast migrate thd and is released when the thread aborts. The
 	 * deactivation thread in this routine will block and wait for vfast
 	 * to perform a domain_close and force vfast's portion of the
 	 * dmnAccCnt to go to 0. */
 	ss_dmn_deactivate(dmnP, TRUE);
-	mutex_enter(&DmnTblMutex);
+	mutex_enter(&DmnTblMutex.mutex);
 	dmnP->state = BFD_DEACTIVATED;
 	if (dmnP->dmnAccCnt > 0) {
 		dmnP->dmnRefWaiters++;
 		assert_wait_mesg((vm_offset_t) & dmnP->dmnRefWaiters, FALSE,
 		    "dmnAccCnt");
-		mutex_exit(&DmnTblMutex);
+		mutex_exit(&DmnTblMutex.mutex);
 		thread_block();
 	} else {
-		mutex_exit(&DmnTblMutex);
+		mutex_exit(&DmnTblMutex.mutex);
 	}
 
 	/*
@@ -1863,10 +1863,10 @@ bs_bfdmn_activate(
 	/* assert that the log has valid in-mem structures */
 	KASSERT(dmnP->logAccessp->xtnts.validFlag);
 	/* then proceed to figure out which RAD the log's vd struct is on */
-	mutex_enter(&dmnP->vdpTblLock);
+	mutex_enter(&dmnP->vdpTblLock.mutex);
 	dmnP->logVdRadId = PA_TO_MID(vtop(current_processor(),
 		dmnP->vdpTbl[dmnP->logAccessp->xtnts.xtntMap->subXtntMap->vdIndex - 1]));
-	mutex_exit(&dmnP->vdpTblLock);
+	mutex_exit(&dmnP->vdpTblLock.mutex);
 
 	/*
          * Access the reserved tag directory tag.
@@ -2411,10 +2411,10 @@ set_vd_mounted(
 
 	/* After the vdState is set to BSR_VD_MOUNTED and the vdStateLock is
 	 * dropped, other threads can see this disk as a valid volume. */
-	mutex_enter(&vdp->vdStateLock);
+	mutex_enter(&vdp->vdStateLock.mutex);
 	vdp->vdState = BSR_VD_MOUNTED;
 	vdp->vdSetupThd = NULL;
-	mutex_exit(&vdp->vdStateLock);
+	mutex_exit(&vdp->vdStateLock.mutex);
 
 	sts = bs_unpinpg(bmtPgRef, logNilRecord, BS_WRITETHRU);
 	if (sts != EOK) {
@@ -2437,10 +2437,10 @@ set_vd_mounted(
 	/*
          * Add this vd's free blocks to domain totals.
          */
-	mutex_enter(&(dmnP->mutex));
+	mutex_enter(&(dmnP->mutex.mutex));
 	dmnP->totalBlks += vdp->vdClusters * vdp->stgCluster;
 	dmnP->freeBlks += vdp->freeClust * vdp->stgCluster;
-	mutex_exit(&(dmnP->mutex));
+	mutex_exit(&(dmnP->mutex.mutex));
 
 	if (RBMT_THERE(dmnP)) {
 		read_n_chk_last_rbmt_pg(vdp);
@@ -2952,9 +2952,9 @@ err_freevd:
 		/*
 	         * Wait for device to become quiescent.
 	         */
-		mutex_enter(&vdp->devQ.ioQLock);
+		mutex_enter(&vdp->devQ.ioQLock.mutex);
 		lk_wait_for(&vdp->active, &vdp->devQ.ioQLock, INACTIVE_DISK);
-		mutex_exit(&vdp->devQ.ioQLock);
+		mutex_exit(&vdp->devQ.ioQLock.mutex);
 	}
 
 	dmnP->vdpTbl[vdIndex - 1] = NULL;
@@ -3251,10 +3251,10 @@ vd_alloc(
 	vdp->vdRefCnt = 0;
 	vdp->vdRefWaiters = 0;
 
-	mutex_enter(&vdp->devQ.ioQLock);
+	mutex_enter(&vdp->devQ.ioQLock.mutex);
 	lk_init(&vdp->active, &vdp->devQ.ioQLock, LKT_STATE, 0, LKU_VD_ACTIVE);
 	(void) lk_set_state(&vdp->active, INACTIVE_DISK);
-	mutex_exit(&vdp->devQ.ioQLock);
+	mutex_exit(&vdp->devQ.ioQLock.mutex);
 
 	bzero((char *) &vdp->dStat, sizeof(struct dStat));
 
@@ -3373,14 +3373,14 @@ vd_free(
 
 	KASSERT(vdp->vdMagic == VDMAGIC);
 
-	mutex_enter(&vdp->vdStateLock);
+	mutex_enter(&vdp->vdStateLock.mutex);
 	KASSERT(vdp->vdState == BSR_VD_ZOMBIE ||
 	    vdp->vdState == BSR_VD_VIRGIN ||	/* error path state */
 	    vdp->vdState == BSR_VD_DMNT_INPROG);	/* error path state */
 	KASSERT(vdp->vdRefCnt == 0);
 	KASSERT(vdp->vdRefWaiters == 0);
 
-	mutex_exit(&vdp->vdStateLock);
+	mutex_exit(&vdp->vdStateLock.mutex);
 
 	sbm_clear_cache(vdp);
 
@@ -3489,12 +3489,12 @@ bs_vd_remove_active(
 	int ss_was_activated = FALSE;
 	u_long dmnState;
 
-	mutex_enter(&(dmnP->mutex));
+	mutex_enter(&(dmnP->mutex.mutex));
 	if (!(dmnP->dmnFlag & BFD_RMVOL_IN_PROGRESS)) {
 		dmnP->dmnFlag |= BFD_RMVOL_IN_PROGRESS;
-		mutex_exit(&(dmnP->mutex));
+		mutex_exit(&(dmnP->mutex.mutex));
 	} else {
-		mutex_exit(&(dmnP->mutex));
+		mutex_exit(&(dmnP->mutex.mutex));
 		return E_RMVOL_ALREADY_INPROG;
 	}
 
@@ -3605,7 +3605,7 @@ bs_vd_remove_active(
 		ss_change_state(dmnP->domainName, SS_ACTIVATED, &dmnState, 0);
 		ss_was_activated = FALSE;
 	}
-	mutex_enter(&(dmnP->mutex));
+	mutex_enter(&(dmnP->mutex.mutex));
 
 	/*
          * Subtract this vd's free blocks from the domain totals.
@@ -3615,15 +3615,15 @@ bs_vd_remove_active(
 
 	dmnP->dmnFlag &= ~BFD_RMVOL_IN_PROGRESS;
 
-	mutex_exit(&(dmnP->mutex));
+	mutex_exit(&(dmnP->mutex.mutex));
 
 	return sts;
 
 HANDLE_EXCEPTION:
 
-	mutex_enter(&(dmnP->mutex));
+	mutex_enter(&(dmnP->mutex.mutex));
 	dmnP->dmnFlag &= ~BFD_RMVOL_IN_PROGRESS;
-	mutex_exit(&(dmnP->mutex));
+	mutex_exit(&(dmnP->mutex.mutex));
 
 	if (dmntbl_lock == 1) {
 		RMVOL_TRUNC_UNLOCK(dmnP);
@@ -4279,7 +4279,7 @@ wait_for_ddl_active_entry(
     bfMCIdT mcellId		/* in */
 )
 {
-	mutex_enter(&(dmnP->mutex));
+	mutex_enter(&(dmnP->mutex.mutex));
 	DDLACTIVE_UNLOCK(&(vd->ddlActiveLk));
 
 	/*
@@ -4294,7 +4294,7 @@ wait_for_ddl_active_entry(
 	cond_wait(&vd->ddlActiveWaitCv, &(dmnP->mutex));
 
 	vd->ddlActiveWaitMCId = bsNilMCId;
-	mutex_exit(&(dmnP->mutex));
+	mutex_exit(&(dmnP->mutex.mutex));
 
 	return EOK;
 }				/* end wait_for_ddl_active_entry */
@@ -4330,16 +4330,16 @@ vd_remove(
 	 * vdRefCnt can continue until they drop their refcnt.  If there are
 	 * any other threads with access to this vdp, we must wait for them to
 	 * finish. */
-	mutex_enter(&vdp->vdStateLock);
+	mutex_enter(&vdp->vdStateLock.mutex);
 	vdp->vdState = BSR_VD_ZOMBIE;
 	vdp->vdSetupThd = current_thread();
 	if (vdp->vdRefCnt) {
 		vdp->vdRefWaiters++;
 		assert_wait_mesg((vm_offset_t) & vdp->vdRefWaiters, FALSE, "vdRefCnt");
-		mutex_exit(&vdp->vdStateLock);
+		mutex_exit(&vdp->vdStateLock.mutex);
 		thread_block();
 	} else
-		mutex_exit(&vdp->vdStateLock);
+		mutex_exit(&vdp->vdStateLock.mutex);
 
 	/* Remove vd from the service class table; this will fail on the rmvol
 	 * case since there was a system call to explicitly remove this volume
@@ -4455,9 +4455,9 @@ vd_remove(
 		bs_startio(vdp, IO_FLUSH);
 
 		/* Wait for device to become quiescent.  */
-		mutex_enter(&vdp->devQ.ioQLock);
+		mutex_enter(&vdp->devQ.ioQLock.mutex);
 		lk_wait_for(&vdp->active, &vdp->devQ.ioQLock, INACTIVE_DISK);
-		mutex_exit(&vdp->devQ.ioQLock);
+		mutex_exit(&vdp->devQ.ioQLock.mutex);
 	}
 
 	/*
@@ -4467,37 +4467,37 @@ vd_remove(
          * threads from trying to get a ref on this vd.
          */
 
-	mutex_enter(&dmnP->vdpTblLock);
+	mutex_enter(&dmnP->vdpTblLock.mutex);
 	dmnP->vdCnt--;
 	KASSERT(TEST_VDI_RANGE(vdp->vdIndex) == EOK);
 	dmnP->vdpTbl[vdp->vdIndex - 1] = NULL;
-	mutex_exit(&dmnP->vdpTblLock);
+	mutex_exit(&dmnP->vdpTblLock.mutex);
 
 	/*
          * Wait for bs_io_thread() vd_dec_refcnt()
          */
-	mutex_enter(&vdp->vdStateLock);
+	mutex_enter(&vdp->vdStateLock.mutex);
 	vdp->vdSetupThd = current_thread();
 	if (vdp->vdRefCnt) {
 		vdp->vdRefWaiters++;
 		assert_wait_mesg((vm_offset_t) & vdp->vdRefWaiters, FALSE, "vdRefCnt");
-		mutex_exit(&vdp->vdStateLock);
+		mutex_exit(&vdp->vdStateLock.mutex);
 		thread_block();
 	} else {
-		mutex_exit(&vdp->vdStateLock);
+		mutex_exit(&vdp->vdStateLock.mutex);
 	}
 
 	/*
          *  Check and wait for start_io_posted to clear
          */
-	mutex_enter(&vdp->devQ.ioQLock);
+	mutex_enter(&vdp->devQ.ioQLock.mutex);
 	if (vdp->start_io_posted) {
 		vdp->start_io_posted_waiter = 1;
 		assert_wait_mesg((vm_offset_t) & vdp->start_io_posted_waiter, FALSE, "start_io_posted_waiter");
-		mutex_exit(&vdp->devQ.ioQLock);
+		mutex_exit(&vdp->devQ.ioQLock.mutex);
 		thread_block();
 	} else {
-		mutex_exit(&vdp->devQ.ioQLock);
+		mutex_exit(&vdp->devQ.ioQLock.mutex);
 	}
 
 	(void) setmount(vdp->devVp, SM_CLEARMOUNT);
@@ -4537,17 +4537,17 @@ vd_alloc_index(
 {
 	int vdi;
 
-	mutex_enter(&dmnP->vdpTblLock);
+	mutex_enter(&dmnP->vdpTblLock.mutex);
 
 	for (vdi = 1; vdi <= BS_MAX_VDI; vdi++) {
 		if (TEST_VDI_RANGE(vdi) == EOK &&
 		    TEST_VDI_SLOT(vdi, dmnP) != EOK) {
-			mutex_exit(&dmnP->vdpTblLock);
+			mutex_exit(&dmnP->vdpTblLock.mutex);
 			return (vdi);
 		}
 	}
 
-	mutex_exit(&dmnP->vdpTblLock);
+	mutex_exit(&dmnP->vdpTblLock.mutex);
 	return (0);
 }
 
@@ -5230,7 +5230,7 @@ dmn_dealloc(
 	KASSERT(TEST_DMNP(dmnP) == EOK);
 	KASSERT(DmnSentinelP != NULL);
 
-	mutex_enter(&DmnTblMutex);
+	mutex_enter(&DmnTblMutex.mutex);
 
 	KASSERT(dmnP->activateCnt == 0);
 
@@ -5250,10 +5250,10 @@ dmn_dealloc(
 		dmnP->dmnRefWaiters++;
 		assert_wait_mesg((vm_offset_t) & dmnP->dmnRefWaiters, FALSE,
 		    "dmnAccCnt");
-		mutex_exit(&DmnTblMutex);
+		mutex_exit(&DmnTblMutex.mutex);
 		thread_block();
 	} else {
-		mutex_exit(&DmnTblMutex);
+		mutex_exit(&DmnTblMutex.mutex);
 	}
 
 	KASSERT(BFSET_VALID(dmnP->bfSetDirp))
@@ -5433,7 +5433,7 @@ dmn_alloc(
 	dmnP->metaPagep = pgp;
 
 	/* Add domain to dynamic hash table */
-	mutex_enter(&DmnTblMutex);
+	mutex_enter(&DmnTblMutex.mutex);
 	dmnP->domainId = domainId;
 	dmnP->majorNum = domainMajor;
 	strncpy(dmnP->domainName, domainName, BS_DOMAIN_NAME_SZ - 1);
@@ -5459,7 +5459,7 @@ dmn_alloc(
 	DomainCnt++;
 	dmnP->dmnAccCnt = 0;
 	dmnP->dmnRefWaiters = 0;
-	mutex_exit(&DmnTblMutex);
+	mutex_exit(&DmnTblMutex.mutex);
 
 	*newdmnPP = dmnP;
 	return EOK;
@@ -6550,13 +6550,13 @@ vd_htop_if_valid(vdIndexT vdi,	/* vdIndex to check */
     int bump_refcnt,		/* if !FALSE, bump vdRefCnt */
     int zombie_ok)
 {				/* if TRUE, BSR_VD_ZOMBIE is OK */
-	mutex_enter(&dmnP->vdpTblLock);
+	mutex_enter(&dmnP->vdpTblLock.mutex);
 	if (VDI_IS_VALID(vdi, dmnP)) {
 
 		vdT *vdp = dmnP->vdpTbl[vdi - 1];
 		KASSERT(vdp->vdMagic == VDMAGIC);
-		mutex_enter(&vdp->vdStateLock);
-		mutex_exit(&dmnP->vdpTblLock);
+		mutex_enter(&vdp->vdStateLock.mutex);
+		mutex_exit(&dmnP->vdpTblLock.mutex);
 
 		/* vdp is considered valid if and only if one of the following
 		 * is true: 1. the state is BSR_VD_MOUNTED 2. the state is
@@ -6574,15 +6574,15 @@ vd_htop_if_valid(vdIndexT vdi,	/* vdIndex to check */
 			 * to it. */
 			if (bump_refcnt)
 				vdp->vdRefCnt++;
-			mutex_exit(&vdp->vdStateLock);
+			mutex_exit(&vdp->vdStateLock.mutex);
 			return vdp;
 		} else {
 			/* This is not a valid vdp, so return NULL.  */
-			mutex_exit(&vdp->vdStateLock);
+			mutex_exit(&vdp->vdStateLock.mutex);
 			return (vdT *) (NULL);
 		}
 	} else {
-		mutex_exit(&dmnP->vdpTblLock);
+		mutex_exit(&dmnP->vdpTblLock.mutex);
 		return (vdT *) (NULL);
 	}
 }
@@ -6607,9 +6607,9 @@ vd_htop_already_valid(vdIndexT vdi,	/* vdIndex to retrieve */
 	KASSERT(vdp->vdMagic == VDMAGIC);
 
 	if (bump_refcnt) {
-		mutex_enter(&vdp->vdStateLock);
+		mutex_enter(&vdp->vdStateLock.mutex);
 		vdp->vdRefCnt++;
-		mutex_exit(&vdp->vdStateLock);
+		mutex_exit(&vdp->vdStateLock.mutex);
 	}
 	return vdp;
 }
@@ -6627,7 +6627,7 @@ void
 vd_dec_refcnt(vdT * vdp)
 {
 
-	mutex_enter(&vdp->vdStateLock);
+	mutex_enter(&vdp->vdStateLock.mutex);
 	KASSERT(vdp->vdRefCnt > 0);
 	vdp->vdRefCnt--;
 
@@ -6637,7 +6637,7 @@ vd_dec_refcnt(vdT * vdp)
 		vdp->vdRefWaiters = 0;
 		thread_wakeup((vm_offset_t) & vdp->vdRefWaiters);
 	}
-	mutex_exit(&vdp->vdStateLock);
+	mutex_exit(&vdp->vdStateLock.mutex);
 
 	return;
 }
