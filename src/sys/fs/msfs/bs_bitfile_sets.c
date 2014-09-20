@@ -78,6 +78,20 @@ print_set_id(
     bfSetT * setp
 );
 
+void bs_fragbf_thread(void);
+
+statusT
+frag_group_dealloc(
+    bfSetT * setp,		/* in - fields modified */
+    ftxHT ftxH,			/* in */
+    bfFragT fragType,		/* in */
+    uint32T grpPg,		/* in */
+    grpHdrT * grpHdrp,		/* in */
+    rbfPgRefHT grpPgRef,	/* in */
+    uint32T firstGrpPg,		/* in */
+    uint32T lastGrpPg		/* in */
+);
+
 /****************************************************************************
  * frag mgt
  ****************************************************************************/
