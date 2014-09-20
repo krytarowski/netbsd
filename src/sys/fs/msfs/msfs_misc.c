@@ -150,7 +150,7 @@ _error:
 void
 fscontext_lock_init(struct fsContext * fscp)
 {
-	mutex_init(&fscp->fsContext_mutex);
+	mutex_init(&fscp->fsContext_mutex.mutex);
 	lock_setup(&fscp->file_lock, ADVfsContext_file_lock_info, TRUE);
 }
 /*

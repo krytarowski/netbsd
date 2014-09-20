@@ -1050,7 +1050,7 @@ advfs_mountfs(struct mount * mp)
          * Initialize the locks and mutexes in the fileSetNode structure.
          */
 
-	mutex_init(&dn->filesetMutex);
+	mutex_init(&dn->filesetMutex.mutex);
 	for (qip = &dn->qi[0]; qip < &dn->qi[MAXQUOTAS]; qip++) {
 		lock_setup(&(qip->qiLock), ADVquotaInfoT_qiLock, TRUE);
 	}

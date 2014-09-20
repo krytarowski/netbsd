@@ -1756,7 +1756,7 @@ bs_bfs_init(
 	void unlink_clone_undo(ftxHT ftxH, int opRecSz, void *opRec);
 	void del_list_remove_undo(ftxHT ftxH, int opRecSz, void *opRec);
 
-	mutex_init(&LookupMutex);
+	mutex_init(&LookupMutex.mutex);
 
 	sts = ftx_register_agent(FTA_BS_BFS_CREATE_V1, &bs_bfs_create_undo, NIL);
 	if (sts != EOK) {
@@ -2099,11 +2099,11 @@ bfs_alloc(
 	bfSetp->accessFwd =
 	    bfSetp->accessBwd = (bfAccessT *) (&bfSetp->accessFwd);
 
-	mutex_init(&bfSetp->setMutex);
-	mutex_init(&bfSetp->accessChainLock);
+	mutex_init(&bfSetp->setMutex.mutex);
+	mutex_init(&bfSetp->accessChainLock.mutex);
 	ftx_lock_init(&bfSetp->dirLock, &bfSetp->setMutex, ADVbfSetT_dirLock_info);
 	ftx_lock_init(&bfSetp->fragLock, &bfSetp->setMutex, ADVbfSetT_fragLock_info);
-	mutex_init(&bfSetp->cloneDelStateMutex);
+	mutex_init(&bfSetp->cloneDelStateMutex.mutex);
 	mutex_enter(&bfSetp->cloneDelStateMutex.mutex);
 	lk_init(&bfSetp->cloneDelState, &bfSetp->cloneDelStateMutex,
 	    LKT_STATE, 0, LKU_CLONE_DEL);
@@ -2111,7 +2111,7 @@ bfs_alloc(
 	bfSetp->xferThreads = 0;
 	mutex_exit(&bfSetp->cloneDelStateMutex.mutex);
 
-	mutex_init(&bfSetp->bfSetMutex);
+	mutex_init(&bfSetp->bfSetMutex.mutex);
 
 
 	/*

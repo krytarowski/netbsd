@@ -2880,7 +2880,7 @@ ftx_init(void)
 	int f;
 	struct ftx *ftxp;
 
-	mutex_init(&FtxMutex);
+	mutex_init(&FtxMutex.mutex);
 	advfs_cv_init(&FtxDynAlloc.cv);
 	FtxDynAlloc.waiters = 0;
 	FtxDynAlloc.currAllocated = 0;
