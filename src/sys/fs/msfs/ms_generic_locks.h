@@ -340,9 +340,6 @@ typedef struct advfsLockStats {
 
 extern advfsLockStatsT *AdvfsLockStats;
 
-#define mutex_lock_io( mp, s )      mutex_lock( mp )
-#define mutex_unlock_io( mp, s )    mutex_unlock( mp )
-
 #define lk_locked( lk )           (lk_is_locked(&(lk)))
 
 #define lk_waiters( lk )          ((lk).waiters)
