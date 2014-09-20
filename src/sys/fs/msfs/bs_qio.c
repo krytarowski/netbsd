@@ -638,7 +638,7 @@ bs_io_complete(
 	int radId = 0;
 	int ubc_flags;
 
-	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(mutex_owned(&bp->bufLock));
 
 	/*
          * Raw I/O's that do not have UBC pages come through this
@@ -1078,7 +1078,7 @@ lsn_io_list(struct domain * dmnP)
 	lsnT origLsn;
 	int noqfnd, couldnt_hold;
 
-	KASSERT(SLOCK_HOLDER(&dmnP->lsnLock.mutex));
+	KASSERT(mutex_owned(&dmnP->lsnLock));
 
 	/* we only run one lsn_io_list at a time - before this check was in
 	 * bs_pinblock, but there was a window where lsn_io_list could end
@@ -2472,7 +2472,7 @@ call_logflush(domainT * dmnP, lsnT lsn, int wait)
 	struct bsBuf *tail;
 	lsnT logPageLsn;
 
-	KASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+	KASSERT(mutex_owned(&bfap->bfIoLock));
 	/*
          * Since pinned pages do not have valid lsns (flushSeq)
          * we can only look at unpinned pages (the flushSeq is
@@ -2662,7 +2662,7 @@ logflush_cont(struct bfAccess * bfap)
 	bufCnt = 0;
 
 restart:
-	KASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+	KASSERT(mutex_owned(&bfap->bfIoLock));
 
 	head = bfap->dirtyBufList.accFwd;
 	tail = bfap->dirtyBufList.accBwd;
@@ -3943,7 +3943,7 @@ loop:
 	                 *        disappear, so it's critical at this place that
 	                 *        the bfap->bfIoLock is held by this thread.
 	                 */
-			KASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+			KASSERT(mutex_owned(&bfap->bfIoLock));
 
 			for (rflp = bp->rflList;
 			    rflp && rflp->rfp != rfp;
@@ -4569,7 +4569,7 @@ rm_from_lazyq(struct bsBuf * bp,
 	KASSERT(bp->lock.state & ACC_DIRTY);
 
 	/* The ioList is protected by bufLock. */
-	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(mutex_owned(&bp->bufLock));
 	first = bp->ioList.write;
 	last = bp->ioList.write + bp->ioList.writeCnt;
 

@@ -1858,7 +1858,7 @@ bfs_lookup(
 	bfSetT *bfSetp_start;
 	ulong key;
 
-	KASSERT(SLOCK_HOLDER(&LookupMutex.mutex));
+	KASSERT(mutex_owned(&LookupMutex));
 
 	/*
          * calculate the hash key using the bitfile-set ID as input to the hash

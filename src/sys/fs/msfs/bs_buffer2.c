@@ -2137,8 +2137,8 @@ bs_wakeup_flush_threads(struct bsBuf * bp,	/* in - Buffer being released */
 	flushWaiterT *curFlushWaiter, *nextFlushWaiter;
 	struct bsBuf *prevbp;
 
-	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
-	KASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+	KASSERT(mutex_owned(&bp->bufLock));
+	KASSERT(mutex_owned(&bfap->bfIoLock));
 
 	if (recordDiskError) {
 		if (bfap->dkResult == EOK) {
@@ -4028,7 +4028,7 @@ _state_block(
     int *wait			/* in/out - waited previously? */
 )
 {
-	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(mutex_owned(&bp->bufLock));
 	if (AdvfsLockStats) {
 		if (*wait) {
 			AdvfsLockStats->usageStats[bp->lock.hdr.lkUsage].reWait++;
@@ -4167,7 +4167,7 @@ set_state(
          * First wait until the buffer is
          * not in the specified state.
          */
-	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(mutex_owned(&bp->bufLock));
 	while (bp->lock.state & state) {
 		state_block(bp, &wait);
 	}
@@ -4191,7 +4191,7 @@ wait_state(
 {
 	int wait = 0;
 
-	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(mutex_owned(&bp->bufLock));
 	while (bp->lock.state & state) {
 		state_block(bp, &wait);
 	}
@@ -4210,7 +4210,7 @@ clear_state(
     uint32_t state		/* in */
 )
 {
-	KASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
+	KASSERT(mutex_owned(&bp->bufLock));
 	if (bp->lock.state & state) {
 		bp->lock.state &= ~state;
 

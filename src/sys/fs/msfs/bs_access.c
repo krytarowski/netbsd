@@ -1223,7 +1223,7 @@ restart:
 	findBfap = NULL;
 
 return_it:
-	KASSERT(findBfap ? SLOCK_HOLDER(&findBfap->bfaLock.mutex) : 1);
+	KASSERT(findBfap ? mutex_owned(&findBfap->bfaLock) : 1);
 	KASSERT(findBfap ? lk_get_state(&findBfap->stateLk) != ACC_RECYCLE : 1);
 	if (!hold_hashlock)
 		BS_BFAH_UNLOCK(hash_key);
@@ -4158,7 +4158,7 @@ free_acc_struct(
 {
 	int added_bfap_to_list = FALSE;
 
-	KASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
+	KASSERT(mutex_owned(&bfap->bfaLock));
 
 	KASSERT(bfap->accessCnt == 0);
 	if (bfap->refCnt < 0) {
@@ -4246,8 +4246,8 @@ check_mv_bfap_to_free(bfAccessT * bfap)
 	struct vnode *vp = bfap->bfVp;
 	struct vm_ubc_object *obj = bfap->bfObj;
 
-	KASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
-	KASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+	KASSERT(mutex_owned(&bfap->bfaLock));
+	KASSERT(mutex_owned(&bfap->bfIoLock));
 
 	/* Check following conditions; if any prevail, then do not move to
 	 * free list. 1. Not on closed list. 2. There are still buffers
@@ -4424,7 +4424,7 @@ bs_dealloc_access(bfAccessT * bfap)
          * Sanity checks.
          */
 	KASSERT(bfap->accMagic == ACCMAGIC);
-	KASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
+	KASSERT(mutex_owned(&bfap->bfaLock));
 	KASSERT(!bfap->onFreeList);
 
 	/*

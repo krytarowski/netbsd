@@ -322,7 +322,7 @@ extern bfSetT nilBfSet;
     if (_lock_list) \
         mutex_enter(&_bfSetp->accessChainLock.mutex); \
     else \
-        KASSERT(SLOCK_HOLDER(&_bfSetp->accessChainLock.mutex)); \
+        KASSERT(mutex_owned(&_bfSetp->accessChainLock)); \
     KASSERT(_bfap->setFwd != NULL); \
     KASSERT(_bfap->setBwd != NULL); \
     if (_bfSetp->accessFwd == _bfap) \

@@ -5492,7 +5492,7 @@ domain_lookup(
 	domainT *dmnP_start, *dmnP;
 
 	KASSERT((flag & M_GLOBAL_ROOT) ? 1 :
-	    SLOCK_HOLDER(&DmnTblMutex.mutex) || lock_holder(&DmnTblLock));
+	    mutex_owned(&DmnTblMutex) || lock_holder(&DmnTblLock));
 
 	key = DOMAIN_GET_HASH_KEY(bfDomainId);
 	dmnP_start = DOMAIN_HASH_LOCK(key, NULL);	/* get bucket */

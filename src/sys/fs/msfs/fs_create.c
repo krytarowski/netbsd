@@ -1031,7 +1031,7 @@ fs_flush_saved_stats(
 	int ret = EOK;
 	struct timeval new_time;
 
-	KASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
+	KASSERT(mutex_owned(&bfap->bfaLock));
 
 	/*
          * if any time fields need to be updated, do it now...
