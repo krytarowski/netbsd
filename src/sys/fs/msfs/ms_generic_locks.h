@@ -343,15 +343,6 @@ extern advfsLockStatsT *AdvfsLockStats;
 #define lk_waiters( lk )          ((lk).waiters)
 #define lk_get_state( lk )        ((lk).state)
 
-#define lk_set_state( lkp, state ) \
-        _lk_set_state( lkp, state , __LINE__, NULL )
-#define lk_wait_for( lkp, mp, state ) \
-       _lk_wait_for( lkp, mp, state , __LINE__, NULL )
-#define lk_wait_for2( lkp, mp, state1, state2 ) \
-       _lk_wait_for2( lkp, mp, state1, state2 , __LINE__, NULL )
-#define lk_wait_while( lkp, mp, state ) \
-       _lk_wait_while( lkp, mp, state , __LINE__, NULL )
-
 /*
  ** Prototypes.
  */
@@ -371,39 +362,31 @@ void lk_destroy(void *lk);
 void advfs_cv_init(cvT * cvp);
 
 void
-_lk_wait_while(
+lk_wait_while(
     stateLkT * lk,
     mutexT * lk_mutex,
-    lkStatesT waitState,
-    int ln,
-    char *fn
+    lkStatesT waitState
 );
 
 void
-_lk_wait_for(
+lk_wait_for(
     stateLkT * lk,
     mutexT * lk_mutex,
-    lkStatesT waitState,
-    int ln,
-    char *fn
+    lkStatesT waitState
 );
 
 void
-_lk_wait_for2(
+lk_wait_for2(
     stateLkT * lk,
     mutexT * lk_mutex,
     lkStatesT waitState1,
-    lkStatesT waitState2,
-    int ln,
-    char *fn
+    lkStatesT waitState2
 );
 
 unLkActionT
-_lk_set_state(
+lk_set_state(
     stateLkT * lk,
-    lkStatesT newState,
-    int ln,
-    char *fn
+    lkStatesT newState
 );
 
 #endif				/* _GENERIC_LOCKS_ */

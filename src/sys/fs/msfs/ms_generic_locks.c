@@ -347,11 +347,9 @@ lk_signal(
  */
 
 unLkActionT
-_lk_set_state(
+lk_set_state(
     stateLkT * lk,
-    lkStatesT newState,
-    int ln,
-    char *fn
+    lkStatesT newState
 )
 {
 	unLkActionT unlock_action = UNLK_NEITHER;
@@ -388,12 +386,10 @@ _lk_set_state(
  */
 
 void
-_lk_wait_for(
+lk_wait_for(
     stateLkT * lk,
     mutexT * lk_mutex,
-    lkStatesT waitState,
-    int ln,
-    char *fn
+    lkStatesT waitState
 )
 {
 	int wait = 0;
@@ -436,13 +432,11 @@ _lk_wait_for(
  */
 
 void
-_lk_wait_for2(
+lk_wait_for2(
     stateLkT * lk,
     mutexT * lk_mutex,
     lkStatesT waitState1,
-    lkStatesT waitState2,
-    int ln,
-    char *fn
+    lkStatesT waitState2
 )
 {
 	int wait = 0;
@@ -483,12 +477,10 @@ _lk_wait_for2(
  */
 
 void
-_lk_wait_while(
+lk_wait_while(
     stateLkT * lk,
     mutexT * lk_mutex,
-    lkStatesT waitState,
-    int ln,
-    char *fn
+    lkStatesT waitState
 )
 {
 	int wait = 0;
