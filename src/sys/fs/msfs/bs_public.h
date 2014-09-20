@@ -235,8 +235,8 @@ typedef enum {
 }    bfSetStateT;
 
 typedef struct fragGrp {
-	uint32T firstFreeGrp;
-	uint32T lastFreeGrp;
+	uint32_t firstFreeGrp;
+	uint32_t lastFreeGrp;
 }       fragGrpT;
 
 typedef enum {
@@ -259,8 +259,8 @@ typedef struct ftxH {
 }    ftxHT;
 #ifdef __arch32__
 typedef struct {
-	uint32T low;
-	uint32T high;
+	uint32_t low;
+	uint32_t high;
 }      uint64T;
 #define UINT64T_ADD(uint64t_field, addend) \
   if (((uint64t_field).low + (addend)) < (uint64t_field).low) { \
@@ -297,8 +297,8 @@ typedef unsigned long uint64T;
 #define BFM_RSVD_TAGS  6	/* must agree with value in bs_ods.h */
 
 typedef struct {
-	uint32T num;		/* tag number, 1 based */
-	uint32T seq;		/* sequence number */
+	uint32_t num;		/* tag number, 1 based */
+	uint32_t seq;		/* sequence number */
 }      bfTagT;
 
 extern bfTagT NilBfTag;
@@ -326,7 +326,7 @@ extern bfTagT NilBfTag;
 #define BS_BFTAG_VDI(tag) (-((signed)((tag).num)) / BFM_RSVD_TAGS)
 #define BS_BFTAG_CELL(tag) (-((signed)((tag).num)) % BFM_RSVD_TAGS)
 #define BS_BFTAG_RSVD_INIT(tag, vdi, bmtidx) \
-    (tag).num = (uint32T) -(((vdi) * BFM_RSVD_TAGS) + (bmtidx)); \
+    (tag).num = (uint32_t) -(((vdi) * BFM_RSVD_TAGS) + (bmtidx)); \
     (tag).seq = 0
 #define BS_BFTAG_RBMT(tag) (BS_BFTAG_CELL(tag) == BFM_RBMT)
 
@@ -383,8 +383,8 @@ extern bfDomainIdT nilBfDomainId;
  */
 
 typedef struct bfMCId {
-	uint32T cell:5;		/* Cell number within page */
-	uint32T page:27;	/* Page number */
+	uint32_t cell:5;		/* Cell number within page */
+	uint32_t page:27;	/* Page number */
 }      bfMCIdT;
 /*
  * bfSetIdT - bitfile set id
@@ -428,7 +428,7 @@ extern bfSetIdT nilBfSetId;
  */
 
 typedef struct {
-	uint32T num;
+	uint32_t num;
 }      lsnT;
 /* Increment LSNs by 2, effective LSN is 31 bits */
 #define LSN_INCR_AMT                    2
@@ -509,7 +509,7 @@ typedef enum {
  */
 
 typedef struct bfFragId {
-	uint32T frag;		/* internally this is simply the starting slot
+	uint32_t frag;		/* internally this is simply the starting slot
 				 * # */
 	bfFragT type;		/* frag type */
 }        bfFragIdT;
@@ -520,7 +520,7 @@ extern bfFragIdT bsNilFragId;
  * Service Class stuff
  */
 
-typedef uint32T serviceClassT;
+typedef uint32_t serviceClassT;
 
 /*
  * service class constants
@@ -549,7 +549,7 @@ typedef struct {
 	int total_calls;
 }      ftxProfT;
 
-typedef uint32T bsLogSeqT;
+typedef uint32_t bsLogSeqT;
 
 #ifndef _VD_STATES_T_
 #define _VD_STATES_T_
@@ -591,13 +591,13 @@ typedef struct dStat {
 typedef struct bsVdParams {
 	bsIdT vdMntId;		/* last mount id */
 	bsVdStatesT vdState;	/* virtual disk state */
-	uint32T vdIndex;	/* vd index within file system */
-	uint32T vdSize;		/* size in blocks */
-	uint32T stgCluster;	/* number of blocks each bit represents */
-	uint32T freeClusters;	/* total number of free clusters */
-	uint32T totalClusters;	/* total number of clusters */
-	uint32T maxPgSz;	/* largest possible page size on vd */
-	uint32T bmtXtntPgs;	/* number of pages per BMT extent */
+	uint32_t vdIndex;	/* vd index within file system */
+	uint32_t vdSize;		/* size in blocks */
+	uint32_t stgCluster;	/* number of blocks each bit represents */
+	uint32_t freeClusters;	/* total number of free clusters */
+	uint32_t totalClusters;	/* total number of clusters */
+	uint32_t maxPgSz;	/* largest possible page size on vd */
+	uint32_t bmtXtntPgs;	/* number of pages per BMT extent */
 	serviceClassT serviceClass;	/* service class provided */
 	char vdName[BS_VD_NAME_SZ];
 	struct dStat dStat;	/* device statistics */
@@ -641,9 +641,9 @@ typedef enum {
 
 typedef struct {
 	bsPageT bfPage;		/* Bitfile page number */
-	uint32T bfPageCnt;	/* Extent page count */
-	uint32T volIndex;	/* Disk volume where blocks are stored */
-	uint32T volBlk;		/* Disk volume block number */
+	uint32_t bfPageCnt;	/* Extent page count */
+	uint32_t volIndex;	/* Disk volume where blocks are stored */
+	uint32_t volBlk;		/* Disk volume block number */
 }      bsExtentDescT;
 #define BS_CLIENT_AREA_SZ 4
 
@@ -657,10 +657,10 @@ typedef struct bfCParams {
 	bfDataSafetyT dataSafety;	/* bitfile data safety requirements */
 	serviceClassT reqServices;	/* required service class */
 	serviceClassT optServices;	/* optional service class */
-	int32T extendSize;	/* add'l extend size in blocks */
-	int32T clientArea[BS_CLIENT_AREA_SZ];	/* user/client-specific area */
-	int32T rsvd1;
-	int32T rsvd2;
+	int32_t extendSize;	/* add'l extend size in blocks */
+	int32_t clientArea[BS_CLIENT_AREA_SZ];	/* user/client-specific area */
+	int32_t rsvd1;
+	int32_t rsvd2;
 }         bfCParamsT;
 /*
  * bfIParamsT
@@ -679,17 +679,17 @@ typedef bfCParamsT bfIParamsT;
 typedef struct bfParams {
 	/* the following are NOT settable by clients/users */
 	bfTagT tag;		/* bitfile tag */
-	uint32T pageSize;	/* page size in 512 byte blocks */
-	uint32T numPages;	/* number of pages allocated */
+	uint32_t pageSize;	/* page size in 512 byte blocks */
+	uint32_t numPages;	/* number of pages allocated */
 	bsPageT nextPage;	/* next page to allocate */
-	uint32T vdIndex;	/* primary mcell vd */
+	uint32_t vdIndex;	/* primary mcell vd */
 	bsXtntMapTypeT type;	/* Type of extent map */
-	uint32T cloneId;	/* 0 ==> orig; "> 0" ==> clone */
-	uint32T cloneCnt;	/* set's clone cnt last time bf changed */
+	uint32_t cloneId;	/* 0 ==> orig; "> 0" ==> clone */
+	uint32_t cloneCnt;	/* set's clone cnt last time bf changed */
 	bfFragIdT fragId;	/* frag id */
-	uint32T fragPageOffset;	/* Page where frag is */
-	uint32T segmentCnt;	/* Number of segments per stripe. */
-	uint32T segmentSize;	/* The minnumber of pages that are allocated */
+	uint32_t fragPageOffset;	/* Page where frag is */
+	uint32_t segmentCnt;	/* Number of segments per stripe. */
+	uint32_t segmentSize;	/* The minnumber of pages that are allocated */
 	/* to a stripe segment. */
 
 	/* the following are settable by clients/users */
@@ -704,26 +704,26 @@ extern bfParamsT bsNilBfParams;
  */
 
 typedef struct bcStat {
-	uint32T pinHit;
-	uint32T pinHitWait;
-	uint32T pinRead;
-	uint32T refHit;
-	uint32T refHitWait;
-	uint32T raBuf;		/* read ahead buffers queued */
-	uint32T ubcHit;
+	uint32_t pinHit;
+	uint32_t pinHitWait;
+	uint32_t pinRead;
+	uint32_t refHit;
+	uint32_t refHitWait;
+	uint32_t raBuf;		/* read ahead buffers queued */
+	uint32_t ubcHit;
 
 	struct {
-		uint32T lazy;
-		uint32T blocking;
-		uint32T clean;
-		uint32T log;
+		uint32_t lazy;
+		uint32_t blocking;
+		uint32_t clean;
+		uint32_t log;
 	}      unpinCnt;
 
-	uint32T derefCnt;
-	uint32T devRead;
-	uint32T devWrite;
-	uint32T unconsolidate;
-	uint32T consolAbort;
+	uint32_t derefCnt;
+	uint32_t devRead;
+	uint32_t devWrite;
+	uint32_t unconsolidate;
+	uint32_t consolAbort;
 
 	struct {
 		unsigned long meta;
@@ -767,11 +767,11 @@ typedef struct logStat {
 
 typedef struct bfDmnParams {
 	bfDomainIdT bfDomainId;	/* domain id */
-	uint32T maxVds;		/* maximum vd index */
+	uint32_t maxVds;		/* maximum vd index */
 	bfTagT bfSetDirTag;	/* tag of tag directory */
 	bfTagT ftxLogTag;	/* tag of domain log */
-	uint32T ftxLogPgs;	/* number of pages in log */
-	uint32T curNumVds;	/* current number of VDs */
+	uint32_t ftxLogPgs;	/* number of pages in log */
+	uint32_t curNumVds;	/* current number of VDs */
 	uid_t uid;		/* domain's owner */
 	gid_t gid;		/* domain's group */
 	mode_t mode;		/* domain's access permissions */
@@ -788,18 +788,18 @@ typedef struct {
 	bfSetIdT bfSetId;
 	bfTagT nextCloneSetTag;	/* tag of next set in clone list */
 	bfTagT origSetTag;	/* for clones, this is parent set */
-	uint32T cloneId;	/* 0 ==> orig; "> 0" ==> clone */
-	uint32T cloneCnt;	/* times orig has been cloned */
-	uint32T numClones;	/* current number of clones */
-	uint32T quotaBlks;	/* maximum size of fileset */
-	uint32T quotaFiles;	/* maximum bitfiles in fileset */
-	uint32T quotaStatus;	/* same as in fileSetNode struct */
+	uint32_t cloneId;	/* 0 ==> orig; "> 0" ==> clone */
+	uint32_t cloneCnt;	/* times orig has been cloned */
+	uint32_t numClones;	/* current number of clones */
+	uint32_t quotaBlks;	/* maximum size of fileset */
+	uint32_t quotaFiles;	/* maximum bitfiles in fileset */
+	uint32_t quotaStatus;	/* same as in fileSetNode struct */
 	uid_t uid;		/* set's owner */
 	gid_t gid;		/* set's group */
 	mode_t mode;		/* set's permissions mode */
-	uint32T numBitFiles;	/* number of bitfiles */
+	uint32_t numBitFiles;	/* number of bitfiles */
 	char setName[BS_SET_NAME_SZ];	/* bitfile set's name */
-	uint32T fsContext[BS_FS_CONTEXT_SZ];	/* fs's context */
+	uint32_t fsContext[BS_FS_CONTEXT_SZ];	/* fs's context */
 }      bfSetParamsV1T;
 
 typedef struct {
@@ -815,27 +815,27 @@ typedef struct {
 	time_t blkTLimit;	/* time limit for excessive disk blk use */
 	time_t fileTLimit;	/* time limit for excessive file use */
 
-	uint32T unused1;
-	uint32T unused2;
-	uint32T unused3;
-	uint32T bfSetFlags;	/* flags for the fileset */
-	/* uint32T is used as the datatype */
+	uint32_t unused1;
+	uint32_t unused2;
+	uint32_t unused3;
+	uint32_t bfSetFlags;	/* flags for the fileset */
+	/* uint32_t is used as the datatype */
 	/* to be compatible with bfSetFlags */
 	/* field in bfSetT */
 
-	uint32T quotaStatus;	/* quota status */
+	uint32_t quotaStatus;	/* quota status */
 
 	bfSetIdT bfSetId;
 	bfTagT nextCloneSetTag;	/* tag of next set in clone list */
 	bfTagT origSetTag;	/* for clones, this is parent set */
-	uint32T cloneId;	/* 0 ==> orig; "> 0" ==> clone */
-	uint32T cloneCnt;	/* times orig has been cloned */
-	uint32T numClones;	/* current number of clones */
+	uint32_t cloneId;	/* 0 ==> orig; "> 0" ==> clone */
+	uint32_t cloneCnt;	/* times orig has been cloned */
+	uint32_t numClones;	/* current number of clones */
 	uid_t uid;		/* set's owner */
 	gid_t gid;		/* set's group */
 	mode_t mode;		/* set's permissions mode */
 	char setName[BS_SET_NAME_SZ];	/* bitfile set's name */
-	uint32T fsContext[BS_FS_CONTEXT_SZ];	/* fs's context */
+	uint32_t fsContext[BS_FS_CONTEXT_SZ];	/* fs's context */
 	fragGrpT fragGrps[BF_FRAG_MAX];	/* frag list heads */
 }      bfSetParamsT;
 
@@ -888,7 +888,7 @@ bs_access(
     bfTagT tag,			/* in - tag of bf to access */
     bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
     ftxHT ftxH,			/* in - ftx handle */
-    uint32T options,		/* in - options flags */
+    uint32_t options,		/* in - options flags */
     struct mount * mp,		/* in - fs mount pt */
     struct vnode ** vp		/* out - vnode pointer */
 );
@@ -909,18 +909,18 @@ bs_migrate(
     struct bfAccess * bfap,	/* in */
     vdIndexT srcVdIndex,	/* in */
     bsPageT srcPageOffset,	/* in */
-    uint32T srcPageCnt,		/* in */
+    uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
     uint64T dstBlkOffset,	/* in */
-    uint32T forceFlag,		/* in */
+    uint32_t forceFlag,		/* in */
     bsAllocHintT alloc_hint	/* in */
 );
 
 statusT
 bs_stripe(
     struct bfAccess * bfap,	/* in */
-    uint32T segmentCnt,		/* in */
-    uint32T segmentSize,	/* in */
+    uint32_t segmentCnt,		/* in */
+    uint32_t segmentSize,	/* in */
     long xid			/* in */
 );
 
@@ -936,7 +936,7 @@ bs_add_overlapping_stg(
     struct bfAccess * bfap,	/* in */
     unsigned long bsPage,	/* in */
     unsigned long bsPageCnt,	/* in */
-    uint32T * allocPageCnt	/* out */
+    uint32_t * allocPageCnt	/* out */
 );
 
 struct extentmap;
@@ -1049,7 +1049,7 @@ bs_disk_init(
     bsVdParamsT * bsVdParams,	/* in/out - vd parameters */
     serviceClassT tagSvc,	/* in - tag service class */
     serviceClassT logSvc,	/* in - log service class */
-    uint32T bmtPreallocPgs,	/* in - num pgs to preallocate for BMT */
+    uint32_t bmtPreallocPgs,	/* in - num pgs to preallocate for BMT */
     int dmnVersion		/* in - on-disk version number */
 );
 
@@ -1057,7 +1057,7 @@ statusT
 bs_vd_remove_active(
     struct domain * dmnP,
     vdIndexT vdIndex,		/* in */
-    uint32T forceFlag		/* in */
+    uint32_t forceFlag		/* in */
 );
 
 statusT
@@ -1065,27 +1065,27 @@ bs_vd_add_active(
     char *domain,		/* in - path to domain table */
     char *vdName,		/* in - block special device name */
     serviceClassT * vdSvc,	/* in/out - service class */
-    uint32T vdSize,		/* in - size of the virtual disk */
-    uint32T bmtXtntPgs,		/* in - number of pages per BMT extent */
-    uint32T bmtPreallocPgs,	/* in - number pages to preallocate for BMT */
-    uint32T flag,		/* in - M_MSFS_MOUNT may be set */
+    uint32_t vdSize,		/* in - size of the virtual disk */
+    uint32_t bmtXtntPgs,		/* in - number of pages per BMT extent */
+    uint32_t bmtPreallocPgs,	/* in - number pages to preallocate for BMT */
+    uint32_t flag,		/* in - M_MSFS_MOUNT may be set */
     bfDomainIdT * dmnId,	/* out - domain Id */
-    uint32T * volIndex		/* out - volume index */
+    uint32_t * volIndex		/* out - volume index */
 );
 
 statusT
 bs_dmn_init(
     char *domain,		/* in - domain name */
     int maxVds,			/* in - maximum number of virtual disks */
-    uint32T logPgs,		/* in - number of pages in log */
+    uint32_t logPgs,		/* in - number of pages in log */
     serviceClassT logSvc,	/* in - log service attributes */
     serviceClassT tagSvc,	/* in - tag directory service attributes */
     char *vdName,		/* in - block special device name */
     serviceClassT vdSvc,	/* in - service class */
-    uint32T vdSize,		/* in - size of the virtual disk */
-    uint32T bmtXtntPgs,		/* in - number of pages per BMT extent */
-    uint32T bmtPreallocPgs,	/* in - number pages to preallocate for BMT */
-    uint32T domainVersion,	/* in - on-disk version for domain */
+    uint32_t vdSize,		/* in - size of the virtual disk */
+    uint32_t bmtXtntPgs,		/* in - number of pages per BMT extent */
+    uint32_t bmtPreallocPgs,	/* in - number pages to preallocate for BMT */
+    uint32_t domainVersion,	/* in - on-disk version for domain */
     bfDomainIdT * domainId	/* out - unique domain id */
 );
 
@@ -1295,10 +1295,10 @@ bs_bfs_find_set(
 
 statusT
 bs_bfs_get_info(
-    uint32T * nextSetIdx,	/* in/out - index of set */
+    uint32_t * nextSetIdx,	/* in/out - index of set */
     bfSetParamsT * bfSetParams,	/* out - the bitfile-set's parameters */
     struct domain * dmnP,
-    uint32T * userId		/* out - bfset user id */
+    uint32_t * userId		/* out - bfset user id */
 );
 
 void
@@ -1310,8 +1310,8 @@ bs_bfs_get_set_id(
 void
 bs_bfs_get_clone_info(
     bfSetT * bfSetp,		/* in - bitfile-set descriptor pointer */
-    uint32T * cloneId,		/* out - bitfile set clone id */
-    uint32T * cloneCnt		/* out - bitfile set clone count */
+    uint32_t * cloneId,		/* out - bitfile set clone id */
+    uint32_t * cloneCnt		/* out - bitfile set clone count */
 );
 
 statusT
