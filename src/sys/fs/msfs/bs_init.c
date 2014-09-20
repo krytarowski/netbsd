@@ -47,15 +47,7 @@
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/bs_migrate.h>
 #include <fs/msfs/bs_delete.h>
-#ifndef _KERNEL
-#include <stdio.h>
-#include <sys/errno.h>
-#include <sys/stat.h>
-#include <sys/param.h>
-#include <strings.h>
-extern int errno;
-extern char *sys_errlist[];
-#else				/* _KERNEL */
+
 #include <sys/kernel.h>
 #include <sys/mount.h>
 #include <sys/buf.h>
@@ -66,9 +58,6 @@ extern char *sys_errlist[];
 #include <sys/disklabel.h>
 #include <fs/msfs/bs_vd.h>
 #include <fs/msfs/bs_extents.h>
-
-
-#endif				/* _KERNEL */
 
 #define ADVFS_MODULE BS_INIT
 
