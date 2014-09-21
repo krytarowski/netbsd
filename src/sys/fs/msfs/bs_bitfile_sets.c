@@ -190,7 +190,7 @@ print_set_id(
 )
 {
 	printf("0x%08x.%05x.%x.%04x",
-	    setp->bfSetId.domainId.tv_sec,
+	    (u_int)setp->bfSetId.domainId.tv_sec, /* XXX: is it right cast? */
 	    setp->bfSetId.domainId.tv_usec,
 	    setp->bfSetId.dirTag.num,
 	    setp->bfSetId.dirTag.seq);
