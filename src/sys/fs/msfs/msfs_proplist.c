@@ -1594,7 +1594,7 @@ out:
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
-		CLU_CLXTNT_UNLOCK_RECURSIVE(&bfAccess->clu_clonextnt_lk);
+		lock_read_done_recursive(&bfAccess->clu_clonextnt_lk);
 		clu_clxtnt_locked = FALSE;
 	}
 	return error;
@@ -2360,7 +2360,7 @@ msfs_getproplist_int(
 			    trunc_xfer_locked = FALSE;
 		}
 		if (clu_clxtnt_locked == TRUE) {
-			CLU_CLXTNT_UNLOCK_RECURSIVE(&bfAccess->clu_clonextnt_lk);
+			lock_read_done_recursive(&bfAccess->clu_clonextnt_lk);
 			clu_clxtnt_locked = FALSE;
 		}
 		if (bbuf != NULL) {
@@ -2429,7 +2429,7 @@ msfs_getproplist_int(
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
-		CLU_CLXTNT_UNLOCK_RECURSIVE(&bfAccess->clu_clonextnt_lk);
+		lock_read_done_recursive(&bfAccess->clu_clonextnt_lk);
 		clu_clxtnt_locked = FALSE;
 	}
 	if (just_sizing && !error) {
@@ -3101,7 +3101,7 @@ start:
 				    trunc_xfer_locked = FALSE;
 			}
 			if (clu_clxtnt_locked == TRUE) {
-				CLU_CLXTNT_UNLOCK_RECURSIVE(&bfAccess->clu_clonextnt_lk);
+				lock_read_done_recursive(&bfAccess->clu_clonextnt_lk);
 				clu_clxtnt_locked = FALSE;
 			}
 			goto start;
@@ -3142,7 +3142,7 @@ out:
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
-		CLU_CLXTNT_UNLOCK_RECURSIVE(&bfAccess->clu_clonextnt_lk);
+		lock_read_done_recursive(&bfAccess->clu_clonextnt_lk);
 		clu_clxtnt_locked = FALSE;
 	}
 	ms_free(name_buf);
@@ -3722,7 +3722,7 @@ out:
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
-		CLU_CLXTNT_UNLOCK_RECURSIVE(&bfAccess->clu_clonextnt_lk);
+		lock_read_done_recursive(&bfAccess->clu_clonextnt_lk);
 		clu_clxtnt_locked = FALSE;
 	}
 	ms_free(name_buf);
@@ -4209,7 +4209,7 @@ msfs_getproplist_int_v3(
 			    trunc_xfer_locked = FALSE;
 		}
 		if (clu_clxtnt_locked == TRUE) {
-			CLU_CLXTNT_UNLOCK_RECURSIVE(&bfAccess->clu_clonextnt_lk);
+			lock_read_done_recursive(&bfAccess->clu_clonextnt_lk);
 			clu_clxtnt_locked = FALSE;
 		}
 		if (bbuf != NULL) {
@@ -4270,7 +4270,7 @@ msfs_getproplist_int_v3(
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
-		CLU_CLXTNT_UNLOCK_RECURSIVE(&bfAccess->clu_clonextnt_lk);
+		lock_read_done_recursive(&bfAccess->clu_clonextnt_lk);
 		clu_clxtnt_locked = FALSE;
 	}
 	if (just_sizing && !error) {
@@ -4868,7 +4868,7 @@ start:
 				    trunc_xfer_locked = FALSE;
 			}
 			if (clu_clxtnt_locked == TRUE) {
-				CLU_CLXTNT_UNLOCK_RECURSIVE(&bfAccess->clu_clonextnt_lk);
+				lock_read_done_recursive(&bfAccess->clu_clonextnt_lk);
 				clu_clxtnt_locked = FALSE;
 			}
 			goto start;
@@ -4899,7 +4899,7 @@ out:
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
-		CLU_CLXTNT_UNLOCK_RECURSIVE(&bfAccess->clu_clonextnt_lk);
+		lock_read_done_recursive(&bfAccess->clu_clonextnt_lk);
 		clu_clxtnt_locked = FALSE;
 	}
 	ms_free(name_buf);
