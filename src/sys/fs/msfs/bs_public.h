@@ -156,8 +156,10 @@ typedef uint16_t vdIndexT;
  * E_RANGE if the vdi is out of range.  This is a test of the
  * validity of the parameters passed in, and should never fail.
  */
-#define TEST_VDI_RANGE(vdi) \
-    ( ((vdIndexT)(vdi)) == 0 || ((vdIndexT)(vdi)) > BS_MAX_VDI ? E_RANGE : EOK )
+static inline int TEST_VDI_RANGE(const vdIndexT vdi)
+{
+    return (vdi == 0) || (vdi > BS_MAX_VDI ? E_RANGE : EOK );
+}
 
 
 /* Test the domainT.vdpTbl[] slot indexed by vdi; return EOK if it
