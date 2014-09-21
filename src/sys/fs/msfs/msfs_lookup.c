@@ -712,7 +712,7 @@ check_path_back(
 	dir_tag = tbnp->tag;
 	first_time = TRUE;
 
-	for (;;) {
+	for (; ;) {
 		/*
 	         * read dir's page 0
 	         */

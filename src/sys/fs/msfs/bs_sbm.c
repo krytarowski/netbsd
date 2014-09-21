@@ -2288,7 +2288,7 @@ sbm_init(
          * If the SBM is invalid, the domain may now be panic'ed.
          */
 	if (vdp->dmnP->dmn_panic) {
-		STGMAP_UNLOCK(&vdp->stgMap_lk);
+		lock_done(&vdp->stgMap_lk);
 		return (E_DOMAIN_PANIC);
 	}
 	if (reserved_desc != NULL) {
@@ -2324,7 +2324,7 @@ sbm_init(
 		vdp->scanStartClust = 0;
 		sbm_clear_cache(vdp);
 	}
-	STGMAP_UNLOCK(&vdp->stgMap_lk);
+	lock_done(&vdp->stgMap_lk);
 
 	return EOK;
 }
@@ -2864,7 +2864,7 @@ sbm_scan_v3_v4(
 	for (pg = startPg; pg <= sbmLastPg;) {
 
 		if ((whoami == SS_PARENT) && (sbm_locked == TRUE)) {
-			STGMAP_UNLOCK(&vdp->stgMap_lk)
+			lock_done(&vdp->stgMap_lk);
 			    sbm_locked = FALSE;
 		}
 		thread_block();	/* another thread can take away stg at this
@@ -2888,7 +2888,7 @@ sbm_scan_v3_v4(
 		sts = bs_refpg(&pgref, (void *) &sbmp, vdp->sbmp, pg, BS_SEQ_AHEAD);
 		if (sts != EOK) {
 			if ((whoami == SS_PARENT) && (sbm_locked == TRUE)) {
-				STGMAP_UNLOCK(&vdp->stgMap_lk)
+				lock_done(&vdp->stgMap_lk);
 				    sbm_locked = FALSE;
 			}
 			domain_panic(vdp->dmnP,
@@ -2984,7 +2984,7 @@ sbm_scan_v3_v4(
 _PAGE_FINISHED:
 
 		if ((whoami == SS_PARENT) && (sbm_locked == TRUE)) {
-			STGMAP_UNLOCK(&vdp->stgMap_lk)
+			lock_done(&vdp->stgMap_lk);
 			    sbm_locked = FALSE;
 		}
 		if (pg_refed == TRUE) {

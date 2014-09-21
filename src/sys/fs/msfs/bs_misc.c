@@ -5227,7 +5227,7 @@ msfs_syscall_op_reset_free_space_cache(libParamsT * libBufp)
 		temp = (temp * vdp->stgCluster) & ~0x0f;	/* blocks */
 		vdp->scanStartClust = temp / vdp->stgCluster;
 	}
-	STGMAP_UNLOCK(&vdp->stgMap_lk)
+	lock_done(&vdp->stgMap_lk);
 	/* Decrement the vdRefCnt on the vdT struct */
 	    vd_dec_refcnt(vdp);
 	vdRefBumped = 0;

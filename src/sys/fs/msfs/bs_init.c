@@ -2372,7 +2372,7 @@ vd_extend(struct vd * vdp)
 		XTNMAP_UNLOCK(&vdp->bmtp->xtntMap_lk);
 		lock_done(&vdp->rbmt_mcell_lk.lock);
 	}
-	STGMAP_UNLOCK(&vdp->stgMap_lk);
+	lock_done(&vdp->stgMap_lk);
 	XTNMAP_UNLOCK(&sbmBfap->xtntMap_lk);
 
 	advfs_event = (advfs_ev *) ms_malloc(sizeof(advfs_ev));
@@ -2397,7 +2397,7 @@ error:
 		lock_done(&vdp->rbmt_mcell_lk.lock);
 	}
 	if (stgMapLocked) {
-		STGMAP_UNLOCK(&vdp->stgMap_lk);
+		lock_done(&vdp->stgMap_lk);
 	}
 	if (mcellListLocked) {
 		MCELLIST_UNLOCK(&mdBfap->mcellList_lk);

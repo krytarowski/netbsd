@@ -159,7 +159,7 @@ atol(char *nptr)
 
 	n = 0;
 	sign = 1;
-	for (;; nptr++) {
+	for (; ; nptr++) {
 		switch (*nptr) {
 		case ' ':	/* check for whitespace */
 		case '\t':

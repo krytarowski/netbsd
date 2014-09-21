@@ -1517,7 +1517,7 @@ msfs_putpage(
 		}
 		return (error);
 	}
-	for (;;) {
+	for (; ;) {
 
 		if (pushCnt == pcnt) {
 			break;

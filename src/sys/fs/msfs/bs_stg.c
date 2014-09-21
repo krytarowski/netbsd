@@ -4522,7 +4522,7 @@ retry:
 		/*
 	         * The disk does not have 'requestedBlkCnt' free blks.
 	         */
-		STGMAP_UNLOCK(&vdp->stgMap_lk)
+		lock_done(&vdp->stgMap_lk);
 		    SS_TRACE(vdp, stgDesc, alloc_hint, blkCnt, requestedBlkCnt);
 		sts = ENO_MORE_BLKS;
 		goto EXIT_ALLOC_FROM_BITMAP;
@@ -4546,7 +4546,7 @@ retry:
 	                 * The largest contiguous set of free blks is less than
 	                 * the number of blks per bitfile page.  Disk VERY fragmented.
 	                 */
-			STGMAP_UNLOCK(&vdp->stgMap_lk)
+			lock_done(&vdp->stgMap_lk);
 			    sts = ENO_MORE_BLKS;
 			goto EXIT_ALLOC_FROM_BITMAP;
 		}
@@ -4563,7 +4563,7 @@ retry:
 		}
 		sts = EIO;
 	}
-	STGMAP_UNLOCK(&vdp->stgMap_lk)
+	lock_done(&vdp->stgMap_lk);
 	    if (bfap->xtnts.type == BSXMT_APPEND)
 		bfap->xtnts.xtntMap->allocVdIndex = vdp->vdIndex;
 

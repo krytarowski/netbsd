@@ -3710,7 +3710,7 @@ ss_find_space(
 			RAISE_EXCEPTION(sts);
 		}
 	}
-	STGMAP_UNLOCK(&vdp->stgMap_lk)
+	lock_done(&vdp->stgMap_lk);
 	    sbm_locked = FALSE;
 
 	*blkOffset = locblkOffset;
@@ -3720,7 +3720,7 @@ ss_find_space(
 HANDLE_EXCEPTION:
 
 	if (sbm_locked) {
-		STGMAP_UNLOCK(&vdp->stgMap_lk)
+		lock_done(&vdp->stgMap_lk);
 		    sbm_locked = FALSE;
 	}
 	return sts;
@@ -3894,10 +3894,10 @@ ss_get_n_lk_free_space(
 			    newBlkOffset,
 			    newBlkCnt);
 			if (sts != EOK) {
-				STGMAP_UNLOCK(&vdp->stgMap_lk)
+				lock_done(&vdp->stgMap_lk);
 				    RAISE_EXCEPTION(sts);
 			}
-			STGMAP_UNLOCK(&vdp->stgMap_lk)
+			lock_done(&vdp->stgMap_lk);
 			    sbm_range_locked = TRUE;
 
 			blkOffset = newBlkOffset;

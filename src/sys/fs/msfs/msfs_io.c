@@ -886,7 +886,7 @@ msfs_async_iodone_lwc(void)
 	struct processor *pr;
 
 	pr = current_processor();
-	for (;;) {
+	for (; ;) {
 		sj = splbio();
 		/*
 	         * Only exit when we're out of buffers.
