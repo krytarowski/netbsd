@@ -1590,7 +1590,7 @@ out:
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
-		TRUNC_XFER_UNLOCK_RECURSIVE(&(bfAccess->origAccp->trunc_xfer_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->trunc_xfer_lk));
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
@@ -2356,7 +2356,7 @@ msfs_getproplist_int(
 			    cow_read_locked = FALSE;
 		}
 		if (trunc_xfer_locked == TRUE) {
-			TRUNC_XFER_UNLOCK_RECURSIVE(&(bfAccess->origAccp->trunc_xfer_lk))
+			lock_read_done_recursive(&(bfAccess->origAccp->trunc_xfer_lk));
 			    trunc_xfer_locked = FALSE;
 		}
 		if (clu_clxtnt_locked == TRUE) {
@@ -2425,7 +2425,7 @@ msfs_getproplist_int(
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
-		TRUNC_XFER_UNLOCK_RECURSIVE(&(bfAccess->origAccp->trunc_xfer_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->trunc_xfer_lk));
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
@@ -3097,7 +3097,7 @@ start:
 				    cow_read_locked = FALSE;
 			}
 			if (trunc_xfer_locked == TRUE) {
-				TRUNC_XFER_UNLOCK_RECURSIVE(&(bfAccess->origAccp->trunc_xfer_lk))
+				lock_read_done_recursive(&(bfAccess->origAccp->trunc_xfer_lk));
 				    trunc_xfer_locked = FALSE;
 			}
 			if (clu_clxtnt_locked == TRUE) {
@@ -3138,7 +3138,7 @@ out:
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
-		TRUNC_XFER_UNLOCK_RECURSIVE(&(bfAccess->origAccp->trunc_xfer_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->trunc_xfer_lk));
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
@@ -3718,7 +3718,7 @@ out:
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
-		TRUNC_XFER_UNLOCK_RECURSIVE(&(bfAccess->origAccp->trunc_xfer_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->trunc_xfer_lk));
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
@@ -4205,7 +4205,7 @@ msfs_getproplist_int_v3(
 			    cow_read_locked = FALSE;
 		}
 		if (trunc_xfer_locked == TRUE) {
-			TRUNC_XFER_UNLOCK_RECURSIVE(&(bfAccess->origAccp->trunc_xfer_lk))
+			lock_read_done_recursive(&(bfAccess->origAccp->trunc_xfer_lk));
 			    trunc_xfer_locked = FALSE;
 		}
 		if (clu_clxtnt_locked == TRUE) {
@@ -4266,7 +4266,7 @@ msfs_getproplist_int_v3(
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
-		TRUNC_XFER_UNLOCK_RECURSIVE(&(bfAccess->origAccp->trunc_xfer_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->trunc_xfer_lk));
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {
@@ -4864,7 +4864,7 @@ start:
 				    cow_read_locked = FALSE;
 			}
 			if (trunc_xfer_locked == TRUE) {
-				TRUNC_XFER_UNLOCK_RECURSIVE(&(bfAccess->origAccp->trunc_xfer_lk))
+				lock_read_done_recursive(&(bfAccess->origAccp->trunc_xfer_lk));
 				    trunc_xfer_locked = FALSE;
 			}
 			if (clu_clxtnt_locked == TRUE) {
@@ -4895,7 +4895,7 @@ out:
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
-		TRUNC_XFER_UNLOCK_RECURSIVE(&(bfAccess->origAccp->trunc_xfer_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->trunc_xfer_lk));
 		    trunc_xfer_locked = FALSE;
 	}
 	if (clu_clxtnt_locked == TRUE) {

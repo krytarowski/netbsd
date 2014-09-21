@@ -26,8 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define TRUNC_XFER_UNLOCK_RECURSIVE(sLk) \
-    lock_read_done_recursive(sLk);
 #define TRUNC_XFER_LOCK_READ( sLk ) \
     lock_read( sLk );
 #define  TRUNC_XFER_LOCK_WRITE( sLk ) \
