@@ -1629,7 +1629,7 @@ bs_fragbf_open(
 	KASSERT(BFSET_VALID(bfSetp));
 	KASSERT(bfSetp->fsRefCnt != 0);
 
-	FRAG_LOCK_WRITE(&bfSetp->fragLock)
+	lock_write(&bfSetp->fragLock);
 	    sts = bs_access(&bfSetp->fragBfAp, bfSetp->fragBfTag, bfSetp,
 	    FtxNilFtxH, 0, NULLMT, &nullvp);
 	if (sts != EOK) {
@@ -1658,7 +1658,7 @@ bs_fragbf_close(
 	KASSERT(BFSET_VALID(bfSetp));
 	KASSERT(bfSetp->fsRefCnt != 0);
 
-	FRAG_LOCK_WRITE(&bfSetp->fragLock)
+	lock_write(&bfSetp->fragLock);
 	    sts = bs_close(bfSetp->fragBfAp, 0);
 	bfSetp->fragBfAp = NULL;
 

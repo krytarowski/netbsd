@@ -26,8 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define FRAG_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
 #define FRAG_LOCK_READ( sLk ) \
     lock_read( sLk.lock );
 #define FRAG_UNLOCK( sLk ) \
