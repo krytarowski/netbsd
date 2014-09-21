@@ -545,7 +545,7 @@ msfs_pl_get_locks(
 		}
 		/* block access to the clone's extent maps if truncating the
 		 * original */
-		TRUNC_XFER_READ_LOCK_RECURSIVE(&orig_bfap->trunc_xfer_lk);
+		lock_read_recursive(&orig_bfap->trunc_xfer_lk);
 		*trunc_xfer_locked = TRUE;
 
 		lock_read_recursive(&(orig_bfap->cow_lk));
