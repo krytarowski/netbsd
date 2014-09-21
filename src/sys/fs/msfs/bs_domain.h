@@ -254,13 +254,6 @@ typedef struct bfsQueue {
 	struct bfsQueue *bfsQfwd;
 	struct bfsQueue *bfsQbck;
 }        bfsQueueT;
-#define BFSET_DMN_INSQ( _dmnp, _queue, _entry ) {               \
-    KASSERT(SLOCK_HOLDER(&((_dmnp)->mutex.mutex)));       \
-    (_entry)->bfsQfwd = (_queue)->bfsQfwd;                      \
-    (_entry)->bfsQbck = (_queue);                               \
-    (_queue)->bfsQfwd->bfsQbck = (_entry);                      \
-    (_queue)->bfsQfwd = (_entry);                               \
-}
 
 #define BFSET_DMN_REMQ( _dmnp, _entry ) {                       \
     KASSERT(SLOCK_HOLDER(&((_dmnp)->mutex.mutex)));       \
@@ -461,6 +454,15 @@ extern domainT nilDomain;
 
 extern int DomainCnt;
 extern domainT *DomainTbl[];
+
+static inline void BFSET_DMN_INSQ(domainT *dmnp, bfsQueueT *queue, bfsQueueT *entry)
+{
+    KASSERT(mutex_owned(&dmnp->mutex.mutex));
+    entry->bfsQfwd = queue->bfsQfwd;
+    entry->bfsQbck = queue;
+    queue->bfsQfwd->bfsQbck = entry;
+    queue->bfsQfwd = entry;
+}
 
 /*
  * Macros for the xidRecoveryLk
