@@ -1075,7 +1075,7 @@ migrate_get_clu_locks(bfAccessT * bfap,
 
 			if (cloneap->cloneXtntsRetrieved) {
 				cloneap->cloneXtntsRetrieved = 0;
-				CLU_CLXTNT_UNLOCK(&cloneap->clu_clonextnt_lk);
+				lock_done(&cloneap->clu_clonextnt_lk);
 				*clu_xtntlk_flgA = 0;
 			}
 		}
@@ -1603,7 +1603,7 @@ HANDLE_EXCEPTION:
 			cloneap = bfap;
 		else
 			cloneap = bfap->nextCloneAccp;
-		CLU_CLXTNT_UNLOCK(&(cloneap->clu_clonextnt_lk));
+		lock_done(&(cloneap->clu_clonextnt_lk));
 		if (!is_clone)
 			bs_close_one(cloneap, 0, FtxNilFtxH);
 		do_clxtnt_unlock = 0;
@@ -2121,7 +2121,7 @@ HANDLE_EXCEPTION:
 			cloneap = bfap;
 		else
 			cloneap = bfap->nextCloneAccp;
-		CLU_CLXTNT_UNLOCK(&(cloneap->clu_clonextnt_lk));
+		lock_done(&(cloneap->clu_clonextnt_lk));
 		if (!is_clone)
 			bs_close_one(cloneap, 0, FtxNilFtxH);
 		do_clxtnt_unlock = 0;

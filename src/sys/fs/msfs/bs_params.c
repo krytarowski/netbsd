@@ -342,7 +342,7 @@ bs_get_clone_xtnt_map(
 		lock_done(&(orig_bfap->cow_lk));
 		    TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
 		if (clonextnt_locked)
-			CLU_CLXTNT_UNLOCK(&clone_bfap->clu_clonextnt_lk);
+			lock_done(&clone_bfap->clu_clonextnt_lk);
 		return sts;
 	}
 	/* Get the clone map next. This returns with the
@@ -353,7 +353,7 @@ bs_get_clone_xtnt_map(
 		lock_done(&(orig_bfap->cow_lk));
 		    TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
 		if (clonextnt_locked)
-			CLU_CLXTNT_UNLOCK(&clone_bfap->clu_clonextnt_lk);
+			lock_done(&clone_bfap->clu_clonextnt_lk);
 		return sts;
 	}
 	if (clone_bfap->xtnts.type == BSXMT_APPEND) {
@@ -437,7 +437,7 @@ bs_get_clone_xtnt_map(
 		    lock_done(&(orig_bfap->cow_lk));
 		    TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
 		if (clonextnt_locked)
-			CLU_CLXTNT_UNLOCK(&clone_bfap->clu_clonextnt_lk);
+			lock_done(&clone_bfap->clu_clonextnt_lk);
 		if (newxtntmap != NULL)
 			imm_delete_xtnt_map(newxtntmap);
 		return sts;
@@ -560,7 +560,7 @@ bs_get_clone_xtnt_map(
 		/* bs_cow_pg uses cow_lk. get_clu_clone_locks uses
 		 * clu_clonextnt_lk. */
 		clone_bfap->cloneXtntsRetrieved = 1;
-		CLU_CLXTNT_UNLOCK(&clone_bfap->clu_clonextnt_lk);
+		lock_done(&clone_bfap->clu_clonextnt_lk);
 	}
 	lock_done(&(orig_bfap->xtntMap_lk));
 	    lock_done(&(clone_bfap->xtntMap_lk));
@@ -581,7 +581,7 @@ HANDLE_EXCEPTION:
 	    lock_done(&(orig_bfap->cow_lk));
 	    TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
 	if (clonextnt_locked)
-		CLU_CLXTNT_UNLOCK(&clone_bfap->clu_clonextnt_lk);
+		lock_done(&clone_bfap->clu_clonextnt_lk);
 	if (newxtntmap != NULL)
 		imm_delete_xtnt_map(newxtntmap);
 
@@ -1056,7 +1056,7 @@ bs_get_bkup_xtnt_map(
 			bfap->cloneXtntsRetrieved = 1;
 		}
 		lock_done(&fromBfap->cow_lk);	/* orig */
-		CLU_CLXTNT_UNLOCK(&bfap->clu_clonextnt_lk);
+		lock_done(&bfap->clu_clonextnt_lk);
 	}
 	return sts;
 

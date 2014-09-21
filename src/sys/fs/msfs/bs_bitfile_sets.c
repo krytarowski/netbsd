@@ -7412,7 +7412,7 @@ HANDLE_EXCEPTION:
 		                ** the token. This time CC_CFS_COW_MODE_ENTER will not fail.
 		                */
 				cloneap->cloneXtntsRetrieved = 0;
-				CLU_CLXTNT_UNLOCK(&cloneap->clu_clonextnt_lk);
+				lock_done(&cloneap->clu_clonextnt_lk);
 				do_clxtnt_unlock = 0;
 				if (cp != NULL) {
 					FS_FILE_UNLOCK(cp);
@@ -7449,7 +7449,7 @@ lock:
 		fsid_t fsid;
 
 		if     (cloneap != NULL) {
-			CLU_CLXTNT_UNLOCK(&cloneap->clu_clonextnt_lk);
+			lock_done(&cloneap->clu_clonextnt_lk);
 			if (token_flg) {
 				BS_GET_FSID(cloneSetp, fsid);
 				CC_CFS_COW_MODE_LEAVE(fsid, cloneap->tag);

@@ -26,9 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define CLU_CLXTNT_UNLOCK( sLk) \
-    lock_done( sLk );
-
 #define RAWBUFREE_LOCK_WRITE( sLk ) \
     lock_write( sLk );
 #define RAWBUFREE_UNLOCK( sLk ) \
