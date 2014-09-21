@@ -26,9 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define MIGTRUNC_UNLOCK( sLk ) \
-    lock_done( sLk );
-
 #define  DDLACTIVE_LOCK_READ( sLk ) \
     lock_read( sLk );
 #define  DDLACTIVE_LOCK_WRITE( sLk ) \

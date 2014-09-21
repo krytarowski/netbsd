@@ -807,15 +807,15 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 	ftx_done_fs(ftx_handle, FTA_FS_CREATE_1,
 	    (nvp->v_mount->m_flag & M_FSPART));
 
-	MIGTRUNC_UNLOCK(&(dir_bfap->xtnts.migTruncLk));
-	MIGTRUNC_UNLOCK(&(bfSetp->dirBfAp->xtnts.migTruncLk));
+	lock_done(&(dir_bfap->xtnts.migTruncLk));
+	lock_done(&(bfSetp->dirBfAp->xtnts.migTruncLk));
 	if (idx_bfap != NULL) {
-		MIGTRUNC_UNLOCK(&(idx_bfap->xtnts.migTruncLk));
+		lock_done(&(idx_bfap->xtnts.migTruncLk));
 	}
 	/* Unlock the quota files */
 	for (qtype = 0; qtype < MAXQUOTAS; qtype++) {
 		if (quota_mig_trunc_lock[qtype]) {
-			MIGTRUNC_UNLOCK(&(fsNp->qi[qtype].qiAccessp->xtnts.migTruncLk));
+			lock_done(&(fsNp->qi[qtype].qiAccessp->xtnts.migTruncLk));
 			quota_mig_trunc_lock[qtype] = FALSE;
 		}
 	}
@@ -885,14 +885,14 @@ fail_out_no_ftx_fail_needed:
 	vrele(nvp);		/* will also close new bitfile */
 	nvp = NULL;
 
-	MIGTRUNC_UNLOCK(&(dir_bfap->xtnts.migTruncLk));
-	MIGTRUNC_UNLOCK(&(bfSetp->dirBfAp->xtnts.migTruncLk));
+	lock_done(&(dir_bfap->xtnts.migTruncLk));
+	lock_done(&(bfSetp->dirBfAp->xtnts.migTruncLk));
 	if (idx_bfap != NULL) {
-		MIGTRUNC_UNLOCK(&(idx_bfap->xtnts.migTruncLk));
+		lock_done(&(idx_bfap->xtnts.migTruncLk));
 	}
 	for (qtype = 0; qtype < MAXQUOTAS; qtype++) {
 		if (quota_mig_trunc_lock[qtype]) {
-			MIGTRUNC_UNLOCK(&(fsNp->qi[qtype].qiAccessp->xtnts.migTruncLk));
+			lock_done(&(fsNp->qi[qtype].qiAccessp->xtnts.migTruncLk));
 			quota_mig_trunc_lock[qtype] = FALSE;
 		}
 	}

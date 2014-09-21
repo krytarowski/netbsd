@@ -384,7 +384,7 @@ bs_fragbf_thread(void)
 
 			ftx_done_n(ftxH, FTA_FRAG_GRP_DEALLOC);
 
-			MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+			lock_done(&(bfap->xtnts.migTruncLk));
 			migtrunc_locked = FALSE;
 
 			stg_remove_stg_finish(bfap->dmnP, delCnt, delListp);
@@ -392,7 +392,7 @@ bs_fragbf_thread(void)
 
 close_fragbf:
 		if (migtrunc_locked) {
-			MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+			lock_done(&(bfap->xtnts.migTruncLk));
 			migtrunc_locked = FALSE;
 		}
 		bs_close(bfap, 0);
@@ -6083,7 +6083,7 @@ HANDLE_EXCEPTION:
 				return token_taken;
 			}
 			lock_done(&bfap->cow_lk);
-			MIGTRUNC_UNLOCK(&cloneap->xtnts.migTruncLk);
+			lock_done(&cloneap->xtnts.migTruncLk);
 
 			if (token_taken & FILE_LOCK_TAKEN) {
 				FS_FILE_UNLOCK_RECURSIVE(VTOC(bfap->bfVp));
@@ -6410,7 +6410,7 @@ HANDLE_EXCEPTION:
 	         */
 		if (cloneSetp->bfSetFlags & BFS_OD_OUT_OF_SYNC) {
 			/* clone bfset exists but is out of sync with the orig */
-			MIGTRUNC_UNLOCK(&(cloneap->xtnts.migTruncLk));
+			lock_done(&(cloneap->xtnts.migTruncLk));
 			migTruncLocked = FALSE;
 			bfap->noClone = TRUE;
 			bs_bf_out_of_sync(cloneap, parentFtxH);
@@ -6426,7 +6426,7 @@ HANDLE_EXCEPTION:
 		 * of pages being modified in this path. */
 		ret = cow_get_page_range(cloneap, pg, &pg, &cnt, &p);
 		if (ret) {
-			MIGTRUNC_UNLOCK(&cloneap->xtnts.migTruncLk);
+			lock_done(&cloneap->xtnts.migTruncLk);
 			migTruncLocked = FALSE;
 			bfap->noClone = TRUE;
 			bs_bf_out_of_sync(cloneap, ftxH);
@@ -6443,7 +6443,7 @@ HANDLE_EXCEPTION:
 		if (sts == EOK) {
 			cloneap->cowPgCount++;
 		}
-		MIGTRUNC_UNLOCK(&(cloneap->xtnts.migTruncLk));
+		lock_done(&(cloneap->xtnts.migTruncLk));
 		migTruncLocked = FALSE;
 
 		if (sts != EOK) {
@@ -6557,7 +6557,7 @@ HANDLE_EXCEPTION:
 cow_done:
 
 		if (migTruncLocked) {
-			MIGTRUNC_UNLOCK(&(cloneap->xtnts.migTruncLk));
+			lock_done(&(cloneap->xtnts.migTruncLk));
 		}
 		if (arp) {
 			mutex_enter(&bfap->actRangeLock.mutex);

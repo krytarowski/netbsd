@@ -1035,12 +1035,12 @@ tagdir_set_next_tag(
 		sts = FTX_START_N(FTA_BS_SET_NEXT_TAG_V1, &ftxH, FtxNilFtxH,
 		    bfSetp->dmnP, 2);
 		if (sts != EOK) {
-			MIGTRUNC_UNLOCK(&(bfSetp->dirBfAp->xtnts.migTruncLk));
+			lock_done(&(bfSetp->dirBfAp->xtnts.migTruncLk));
 			return sts;
 		}
 		TAG_DIR_LOCK(bfSetp, ftxH)
 		    sts = init_next_tag_page(pg, bfSetp, bfSetp->dirBfAp, ftxH, 1);
-		MIGTRUNC_UNLOCK(&(bfSetp->dirBfAp->xtnts.migTruncLk));
+		lock_done(&(bfSetp->dirBfAp->xtnts.migTruncLk));
 
 		ftx_done_n(ftxH, FTA_BS_SET_NEXT_TAG_V1);
 		if (sts != EOK) {

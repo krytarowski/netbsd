@@ -1449,7 +1449,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 			domain_panic(bfap->dmnP,
 			    "msfs_setattr: fs_delete_frag error, return code = %d", sts);
 			ftx_done_fs(ftxH, FTA_OSF_SETATTR_1, 0);
-			MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk))
+			lock_done(&(bfap->xtnts.migTruncLk));
 			    error = EIO;	/* E_DOMAIN_PANIC */
 			goto notrunc;
 		}
@@ -1499,7 +1499,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 		domain_panic(bfap->dmnP,
 		    "msfs_setattr: fs_update_stats (1) error, return code = %d", sts);
 		ftx_done_fs(ftxH, FTA_OSF_SETATTR_1, 0);
-		MIGTRUNC_UNLOCK(&bfap->xtnts.migTruncLk)
+		lock_done(&bfap->xtnts.migTruncLk);
 		    error = EIO;/* E_DOMAIN_PANIC */
 		goto notrunc;
 	}
@@ -1512,7 +1512,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 		release_clu_clone_locks(bfap, cloneSetp, cloneap, tokenFlg);
 		setHeld = FALSE;
 	}
-	MIGTRUNC_UNLOCK(&bfap->xtnts.migTruncLk);
+	lock_done(&bfap->xtnts.migTruncLk);
 
 	if (delCnt) {
 		stg_remove_stg_finish(bfap->dmnP, delCnt, delList);
@@ -2220,7 +2220,7 @@ remove_it_1:
 	ftx_done_fs(ftx_handle, FTA_OSF_REMOVE_V1, 0);
 
 	if (idx_bfap != NULL) {
-		MIGTRUNC_UNLOCK(&(idx_bfap->xtnts.migTruncLk));
+		lock_done(&(idx_bfap->xtnts.migTruncLk));
 	}
 	/*
          * unlock the file and dir
@@ -2253,7 +2253,7 @@ _error_out:
 	ftx_fail(ftx_handle);
 
 	if (idx_bfap != NULL) {
-		MIGTRUNC_UNLOCK(&(idx_bfap->xtnts.migTruncLk));
+		lock_done(&(idx_bfap->xtnts.migTruncLk));
 	}
 	FS_FILE_UNLOCK(rem_context);
 	FS_FILE_UNLOCK(dir_context);
@@ -2625,10 +2625,10 @@ msfs_link(
 		FS_FILE_UNLOCK(dir_context);
 
 		if (idx_bfap != NULL) {
-			MIGTRUNC_UNLOCK(&(idx_bfap->xtnts.migTruncLk));
+			lock_done(&(idx_bfap->xtnts.migTruncLk));
 		}
-		MIGTRUNC_UNLOCK(&(dir_bfap->bfSetp->dirBfAp->xtnts.migTruncLk));
-		MIGTRUNC_UNLOCK(&(dir_bfap->xtnts.migTruncLk));
+		lock_done(&(dir_bfap->bfSetp->dirBfAp->xtnts.migTruncLk));
+		lock_done(&(dir_bfap->xtnts.migTruncLk));
 
 		vrele(dvp);
 
@@ -2665,10 +2665,10 @@ msfs_link(
 	ftx_done_fs(ftx_handle, FTA_OSF_LINK_V1, 0);
 
 	if (idx_bfap != NULL) {
-		MIGTRUNC_UNLOCK(&(idx_bfap->xtnts.migTruncLk));
+		lock_done(&(idx_bfap->xtnts.migTruncLk));
 	}
-	MIGTRUNC_UNLOCK(&(dir_bfap->bfSetp->dirBfAp->xtnts.migTruncLk));
-	MIGTRUNC_UNLOCK(&(dir_bfap->xtnts.migTruncLk));
+	lock_done(&(dir_bfap->bfSetp->dirBfAp->xtnts.migTruncLk));
+	lock_done(&(dir_bfap->xtnts.migTruncLk));
 
 	/* finish any directory truncation that might have started in
 	 * insert_seq */
@@ -3467,14 +3467,14 @@ again:
 	ftx_done_fs(ftx_handle, FTA_OSF_RENAME_V1, 0);
 
 	if (from_dir_mig_trunc_lock) {
-		MIGTRUNC_UNLOCK(&(from_idx_bfap->xtnts.migTruncLk));
+		lock_done(&(from_idx_bfap->xtnts.migTruncLk));
 	}
 	if (to_dir_mig_trunc_lock) {
-		MIGTRUNC_UNLOCK(&(to_dir_accessp->xtnts.migTruncLk));
+		lock_done(&(to_dir_accessp->xtnts.migTruncLk));
 		MIGTRUNC_UNLOCK(&(to_dir_accessp->bfSetp->dirBfAp->
 			xtnts.migTruncLk));
 		if (to_idx_bfap != NULL) {
-			MIGTRUNC_UNLOCK(&(to_idx_bfap->xtnts.migTruncLk));
+			lock_done(&(to_idx_bfap->xtnts.migTruncLk));
 		}
 		to_dir_mig_trunc_lock = FALSE;
 	}
@@ -3554,14 +3554,14 @@ err_fail_ftx:
 	FS_FILE_UNLOCK(from_file_context);
 
 	if (from_dir_mig_trunc_lock) {
-		MIGTRUNC_UNLOCK(&(from_idx_bfap->xtnts.migTruncLk));
+		lock_done(&(from_idx_bfap->xtnts.migTruncLk));
 	}
 	if (to_dir_mig_trunc_lock) {
-		MIGTRUNC_UNLOCK(&(to_dir_accessp->xtnts.migTruncLk));
+		lock_done(&(to_dir_accessp->xtnts.migTruncLk));
 		MIGTRUNC_UNLOCK(&(to_dir_accessp->bfSetp->dirBfAp->
 			xtnts.migTruncLk));
 		if (to_idx_bfap != NULL) {
-			MIGTRUNC_UNLOCK(&(to_idx_bfap->xtnts.migTruncLk));
+			lock_done(&(to_idx_bfap->xtnts.migTruncLk));
 		}
 		to_dir_mig_trunc_lock = FALSE;
 	}
@@ -3936,7 +3936,7 @@ msfs_rmdir(
 		idx_close_index_file(VTOA(rvp), IDX_REMOVING_DIR);
 	}
 	if (idx_bfap != NULL) {
-		MIGTRUNC_UNLOCK(&(idx_bfap->xtnts.migTruncLk));
+		lock_done(&(idx_bfap->xtnts.migTruncLk));
 	}
 	ndp->ni_dvp = NULL;
 
@@ -3971,7 +3971,7 @@ _error_cleanup:
 
 	if (idx_mig_trunc_lock) {
 		if (idx_bfap != NULL) {
-			MIGTRUNC_UNLOCK(&(idx_bfap->xtnts.migTruncLk));
+			lock_done(&(idx_bfap->xtnts.migTruncLk));
 		}
 	}
 	FS_FILE_UNLOCK(rem_context);

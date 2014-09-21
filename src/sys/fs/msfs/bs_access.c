@@ -3982,10 +3982,10 @@ bs_close_one(
 
 	if (mig_trunc_lock) {
 		if (frag_mig_trunc_lock) {
-			MIGTRUNC_UNLOCK(&(bfap->bfSetp->fragBfAp->xtnts.migTruncLk));
+			lock_done(&(bfap->bfSetp->fragBfAp->xtnts.migTruncLk));
 			frag_mig_trunc_lock = FALSE;
 		}
-		MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+		lock_done(&(bfap->xtnts.migTruncLk));
 		mig_trunc_lock = FALSE;
 	}
 	mutex_enter(&bfap->bfaLock.mutex);
@@ -4057,10 +4057,10 @@ _close_it:
 	}
 	if (mig_trunc_lock) {
 		if (frag_mig_trunc_lock) {
-			MIGTRUNC_UNLOCK(&(bfap->bfSetp->fragBfAp->xtnts.migTruncLk));
+			lock_done(&(bfap->bfSetp->fragBfAp->xtnts.migTruncLk));
 			frag_mig_trunc_lock = FALSE;
 		}
-		MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+		lock_done(&(bfap->xtnts.migTruncLk));
 		mig_trunc_lock = FALSE;
 	}
 	vp = bfap->bfVp;

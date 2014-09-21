@@ -3912,7 +3912,7 @@ lgr_switch_vol(
 		lock_read(&(newAccP->xtnts.migTruncLk));
 		sts = FTX_START_N(FTA_NULL, &ftxH, FtxNilFtxH, newAccP->dmnP, 0);
 		if (sts != EOK) {
-			MIGTRUNC_UNLOCK(&(newAccP->xtnts.migTruncLk));
+			lock_done(&(newAccP->xtnts.migTruncLk));
 			RAISE_EXCEPTION(sts);
 		}
 		ftxStarted = TRUE;
@@ -3921,7 +3921,7 @@ lgr_switch_vol(
 		    newAccP->nextPage,
 		    logPgs - newAccP->nextPage,
 		    ftxH, 1);
-		MIGTRUNC_UNLOCK(&(newAccP->xtnts.migTruncLk));
+		lock_done(&(newAccP->xtnts.migTruncLk));
 		if (sts != EOK) {
 			RAISE_EXCEPTION(sts);
 		}

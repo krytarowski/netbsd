@@ -1311,7 +1311,7 @@ get_copy_storage:
          */
 	if (is_clone) {
 		savedCowPgCount = bfap->cowPgCount;
-		MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk))
+		lock_done(&(bfap->xtnts.migTruncLk));
 		    unlkmigTrunc = 0;
 	}
 	if (pageRange != NULL) {
@@ -1382,7 +1382,7 @@ get_copy_storage:
 		    unlkmigTrunc = 1;
 		if (savedCowPgCount != bfap->cowPgCount) {
 			KASSERT(bfap->cowPgCount > savedCowPgCount);
-			MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk))
+			lock_done(&(bfap->xtnts.migTruncLk));
 			    unlkmigTrunc = 0;
 			startedFtxFlag = 0;
 			ftx_fail(ftxH);
@@ -1563,7 +1563,7 @@ HANDLE_EXCEPTION:
 		imm_delete_xtnt_map(copyXtntMap);
 	}
 	if (unlkmigTrunc) {
-		MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk))
+		lock_done(&(bfap->xtnts.migTruncLk));
 	}
 	if (truncXferFlg) {
 		KASSERT(bfap->origAccp != NULL);
@@ -1801,7 +1801,7 @@ get_copy_storage:
          */
 	if (is_clone) {
 		savedCowPgCount = bfap->cowPgCount;
-		MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk))
+		lock_done(&(bfap->xtnts.migTruncLk));
 		    unlkmigTrunc = 0;
 	}
 	/*
@@ -1859,7 +1859,7 @@ get_copy_storage:
 		    unlkmigTrunc = 1;
 		if (savedCowPgCount != bfap->cowPgCount) {
 			KASSERT(bfap->cowPgCount > savedCowPgCount);
-			MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk))
+			lock_done(&(bfap->xtnts.migTruncLk));
 			    unlkmigTrunc = 0;
 			ftx_fail(ftxH);
 			startedFtxFlag = 0;
@@ -2092,7 +2092,7 @@ HANDLE_EXCEPTION:
 		imm_delete_xtnt_map(bfCopyXtntMap);
 	}
 	if (unlkmigTrunc) {
-		MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk))
+		lock_done(&(bfap->xtnts.migTruncLk));
 	}
 	if (truncXferFlg) {
 		KASSERT(bfap->origAccp != NULL);

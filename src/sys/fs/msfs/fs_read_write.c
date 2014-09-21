@@ -796,7 +796,7 @@ _retry:
 
 			ftx_done_fs(ftxH, FTA_FS_WRITE_TRUNC, 0);
 
-			MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+			lock_done(&(bfap->xtnts.migTruncLk));
 
 			if (arp) {
 				/* Remove active range */
@@ -1806,7 +1806,7 @@ _error:
 			bfap->trunc = FALSE;
 
 			ftx_done_fs(ftxH, FTA_FS_WRITE_TRUNC, 0);
-			MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+			lock_done(&(bfap->xtnts.migTruncLk));
 			FS_FILE_UNLOCK(contextp);
 
 			if (delCnt) {
@@ -2912,7 +2912,7 @@ fs_write_add_stg(
 		ftx_done_n(ftxH, FTA_FS_WRITE_ADD_STG_V1);
 	}
 	if (locked_migtrunc_here) {
-		MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+		lock_done(&(bfap->xtnts.migTruncLk));
 	}
 	if (pgs_allocated)
 		*pgs_allocated = pgs_added;
@@ -2925,7 +2925,7 @@ _error_exit:
 		ftx_fail(ftxH);
 	}
 	if (locked_migtrunc_here) {
-		MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+		lock_done(&(bfap->xtnts.migTruncLk));
 	}
 	if (pgs_allocated)
 		*pgs_allocated = 0;

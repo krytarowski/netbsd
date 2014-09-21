@@ -1767,11 +1767,11 @@ remove_entry(
 	    );
 
 	for (type = 0; type < MAXQUOTAS; type++) {
-		MIGTRUNC_UNLOCK(&(fsnp->qi[type].qiAccessp->xtnts.migTruncLk));
+		lock_done(&(fsnp->qi[type].qiAccessp->xtnts.migTruncLk));
 	}
 
 	if (idx_bfap != NULL) {
-		MIGTRUNC_UNLOCK(&(idx_bfap->xtnts.migTruncLk));
+		lock_done(&(idx_bfap->xtnts.migTruncLk));
 	}
 	ms_free(ndp);
 
@@ -1780,10 +1780,10 @@ remove_entry(
 
 out:
 	for (type = 0; type < MAXQUOTAS; type++) {
-		MIGTRUNC_UNLOCK(&(fsnp->qi[type].qiAccessp->xtnts.migTruncLk));
+		lock_done(&(fsnp->qi[type].qiAccessp->xtnts.migTruncLk));
 	}
 	if (idx_bfap != NULL) {
-		MIGTRUNC_UNLOCK(&(idx_bfap->xtnts.migTruncLk));
+		lock_done(&(idx_bfap->xtnts.migTruncLk));
 	}
 	ms_free(ndp);
 	ftx_fail(ftx_handle);
