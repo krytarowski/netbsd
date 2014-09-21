@@ -546,7 +546,7 @@ mig_migrate(
 		if (origBfap->cloneCnt != origBfSet->cloneCnt) {
 			noMetadataFlag = 1;
 		}
-		COW_UNLOCK(&(srcBfap->cow_lk))
+		lock_done(&(srcBfap->cow_lk));
 		    if (noMetadataFlag != 0) {
 			return E_NO_CLONE_STG;
 		}
@@ -965,7 +965,7 @@ migrate_get_clu_locks(bfAccessT * bfap,
 			/* There doesn't appear to be a clone any more so do
 			 * nothing. */
 			bfap->noClone = TRUE;
-			COW_UNLOCK(&bfap->cow_lk);
+			lock_done(&bfap->cow_lk);
 			return sts;
 		}
 		bfap->nextCloneAccp = cloneap;
@@ -991,7 +991,7 @@ migrate_get_clu_locks(bfAccessT * bfap,
 			bs_close_one(cloneap, 0, FtxNilFtxH);
 		}
 	}
-	COW_UNLOCK(&bfap->cow_lk);
+	lock_done(&bfap->cow_lk);
 
 	if (clu_cow_mode_enter) {
 		bfAccessT *cloneap;
@@ -1133,7 +1133,7 @@ pre_reset_block_map_special(bfAccessT * bfap)
 	if (sts != EOK) {
 		/* There doesn't appear to be a clone in memory so do nothing. */
 		bfap->noClone = TRUE;
-		COW_UNLOCK(&bfap->cow_lk);
+		lock_done(&bfap->cow_lk);
 
 		return EOK;
 	}
@@ -1145,7 +1145,7 @@ pre_reset_block_map_special(bfAccessT * bfap)
          */
 	numPgs = (cloneap->cloneId) ? cloneap->maxClonePgs : bfap->nextPage;
 
-	COW_UNLOCK(&bfap->cow_lk);
+	lock_done(&bfap->cow_lk);
 
 	/* This sts is returned to the caller. */
 	sts = reset_block_map_special(cloneap, numPgs);

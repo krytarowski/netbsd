@@ -350,7 +350,7 @@ noclone:
 			    sts == ENO_MORE_BLKS);
 		}
 		bs_close_one(cloneap, 0, ftxH);
-		COW_UNLOCK(&bfap->cow_lk)
+		lock_done(&bfap->cow_lk);
 	}
 	ftx_done_u(ftxH, FTA_BS_STR_STRIPE_V1, 0, NULL);
 

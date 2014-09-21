@@ -26,9 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define COW_UNLOCK( sLk ) \
-    lock_done( sLk );
-
 #define CLU_CLXTNT_READ_LOCK_RECURSIVE(sLk) \
     lock_read_recursive(sLk);
 #define CLU_CLXTNT_UNLOCK_RECURSIVE(sLk) \

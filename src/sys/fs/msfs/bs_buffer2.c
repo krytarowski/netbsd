@@ -1202,7 +1202,7 @@ bs_refpg_int(
 	}
 exit:
 	if (cowLkLocked) {
-		COW_UNLOCK(&(origBfAp->cow_lk))
+		lock_done(&(origBfAp->cow_lk));
 	}
 	if (sts) {
 		/* Return values */
@@ -1455,7 +1455,7 @@ bs_refpg_direct(void *addr,	/* in */
          */
 	if ((number_to_read == *number_read) || (sts != EOK)) {
 		if (origbfap)
-			COW_UNLOCK(&(origbfap->cow_lk));
+			lock_done(&(origbfap->cow_lk));
 		return (sts);
 	}
 	/*
@@ -1469,7 +1469,7 @@ bs_refpg_direct(void *addr,	/* in */
 	bp = bs_get_bsbuf(CURRENT_MID(), FALSE);
 	if (bp == NULL) {
 		if (origbfap)
-			COW_UNLOCK(&(origbfap->cow_lk));
+			lock_done(&(origbfap->cow_lk));
 		return (ENO_MORE_MEMORY);
 	}
 	/*
@@ -1498,7 +1498,7 @@ on_error:
 		/* Release the buffer. */
 		bs_free_bsbuf(bp);
 		if (origbfap)
-			COW_UNLOCK(&(origbfap->cow_lk));
+			lock_done(&(origbfap->cow_lk));
 		return (sts);
 	}
 	/* Wire the users's pages if we are reading into user space and this
@@ -1615,7 +1615,7 @@ on_error:
 			KASSERT(!mymap);	/* We should NOT have wired a
 						 * page. */
 			if (origbfap)
-				COW_UNLOCK(&(origbfap->cow_lk));
+				lock_done(&(origbfap->cow_lk));
 			*aio_flag = 1;
 			return (sts);
 		}
@@ -1633,7 +1633,7 @@ on_error:
 		sts = bp->result;	/* pass I/O return code to caller */
 	}
 	if (origbfap)
-		COW_UNLOCK(&(origbfap->cow_lk));
+		lock_done(&(origbfap->cow_lk));
 
 	/* Unwire the user's buffer.  */
 	if (mymap != (vm_map_t) NULL) {
