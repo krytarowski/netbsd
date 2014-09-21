@@ -275,12 +275,12 @@ extern bfTagT NilBfTag;
 /* Macros for tags. */
 
 #define BS_BFTAG_EQL(tag1, tag2) \
-    (((tag1).num == (tag2).num) && ((tag1).seq == (tag2).seq))
-#define BS_BFTAG_IDX(tag) ((tag).num)	/* used for hashing on tags */
-#define BS_BFTAG_RSVD(tag) ((signed)((tag).num) < 0)
-#define BS_BFTAG_REG(tag) ((signed)((tag).num) > 0)
-#define BS_BFTAG_SEQ(tag) ((tag).seq)
-#define BS_BFTAG_NULL(tag) ((tag.num) == 0)
+    (((tag1)->num == (tag2)->num) && ((tag1)->seq == (tag2)->seq))
+#define BS_BFTAG_IDX(tag) ((tag)->num)	/* used for hashing on tags */
+#define BS_BFTAG_RSVD(tag) ((signed)((tag)->num) < 0)
+#define BS_BFTAG_REG(tag) ((signed)((tag)->num) > 0)
+#define BS_BFTAG_SEQ(tag) ((tag)->seq)
+#define BS_BFTAG_NULL(tag) ((tag->num) == 0)
 
 /*
  * Bit in tag.seq indicating it is a pseudo-tag which exists only in-core.

@@ -4720,7 +4720,7 @@ msfsspec_revoke(
 		                 * locked the hash bucket for us.  We need to unlock it
 		                 * before we return.
 		                 */
-				hash_key = BS_BFAH_GET_KEY(bfSetp, bnp->tag);
+				hash_key = BS_BFAH_GET_KEY(bfSetp, &bnp->tag);
 				BS_BFAH_UNLOCK(hash_key);
 			}
 		}

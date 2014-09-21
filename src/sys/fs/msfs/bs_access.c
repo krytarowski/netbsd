@@ -1104,11 +1104,11 @@ find_bfap(
 	 * It is ok for find_bfap to search the hashtable, since it will not find
 	 * the bfap and msfs_reclaim will deal with that */
 
-	hash_key = BS_BFAH_GET_KEY(bfSetp, tag);
+	hash_key = BS_BFAH_GET_KEY(bfSetp, &tag);
 
 restart:
 
-	last_bfap = (bfAccessT *) BS_BFAH_LOCK(hash_key, insert_count);
+	last_bfap = BS_BFAH_LOCK(hash_key, insert_count);
 	if (last_bfap == NULL)
 		findBfap = NULL;
 	else {
@@ -3396,7 +3396,7 @@ found:
 	/*
          * Get our new hash key and make sure its not already in the hashtable.
          */
-	hash_key = BS_BFAH_GET_KEY(bfSetp, tag);
+	hash_key = BS_BFAH_GET_KEY(bfSetp, &tag);
 	tbfap = BS_BFAH_LOCK(hash_key, &insert_count_after);
 
 	/* We didn't find any access structure on the chain from the last find

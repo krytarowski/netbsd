@@ -67,32 +67,12 @@ extern mutexT BfAccessFreeLock;	/* guards access free & closed lists */
 
 struct bfSet;
 
-/* Dynamic Hashtable Macros for accessing the BfAccessHashTbl */
+/* Dynamic Hashtable Utilities for accessing the BfAccessHashTbl */
 
 #define BS_BFAH_INITIAL_SIZE 128
 #define BS_BFAH_HASH_CHAIN_LENGTH 30
 #define BS_BFAH_ELEMENTS_TO_BUCKETS 5
 #define BS_BFAH_USECS_BETWEEN_SPLITS 1000000
-
-#define BS_BFAH_GET_KEY( _s, _t ) \
-   ((BFSET_GET_HASH_INPUT(_s)) * (BS_BFTAG_IDX(_t)) + (BS_BFTAG_SEQ(_t)))
-
-#define BS_BFAH_LOCK( _key, _cnt) \
-   ( (bfAccessT *) dyn_hash_obtain_chain( BsAccessHashTbl, _key, _cnt) )
-
-#define BS_BFAH_UNLOCK( _key) \
-   ( dyn_hash_release_chain( BsAccessHashTbl, _key) )
-
-#define BS_BFAH_REMOVE( _bfap, _laction)                \
-{                                                       \
-    dyn_hash_remove( BsAccessHashTbl, _bfap, _laction); \
-}
-
-#define BS_BFAH_INSERT( _bfap, _laction)                \
-{                                                       \
-    KASSERT(mutex_owned(&_bfap->bfaLock.mutex)); \
-    dyn_hash_insert( BsAccessHashTbl, _bfap, _laction); \
-}
 
 /*
  * flushWaiterT - describes a flush synchronization structure including
@@ -321,6 +301,32 @@ typedef struct bfAccess {
 				 * yet */
 	cvT migWait;		/* will sleep until queue reduced to this size */
 }        bfAccessT;
+
+static inline u_long BS_BFAH_GET_KEY(bfSetT *s, bfTagT *t)
+{
+   return ((BFSET_GET_HASH_INPUT(s)) * (BS_BFTAG_IDX(t)) + (BS_BFTAG_SEQ(t)));
+}
+
+static inline bfAccessT *BS_BFAH_LOCK(const u_long key, u_long *cnt)
+{
+   return (bfAccessT*)dyn_hash_obtain_chain(BsAccessHashTbl, key, cnt);
+}
+
+static inline bfAccessT *BS_BFAH_UNLOCK(const u_long key)
+{
+   return dyn_hash_release_chain(BsAccessHashTbl, key);
+}
+
+static inline void BS_BFAH_REMOVE(bfAccessT *bfap, int laction)
+{
+    dyn_hash_remove(BsAccessHashTbl, bfap, laction);
+}
+
+static inline void BS_BFAH_INSERT(bfAccessT *bfap, int laction)
+{
+    KASSERT(mutex_owned(&bfap->bfaLock.mutex));
+    dyn_hash_insert(BsAccessHashTbl, bfap, laction);
+}
 
 /* Test the validity of a page number in a file. */
 /* "Returns" E_BAD_PAGE_RANGE if the page is beyond the end of the file. */
