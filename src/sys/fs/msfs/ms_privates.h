@@ -26,8 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define  DDLACTIVE_LOCK_READ( sLk ) \
-    lock_read( sLk );
 #define  DDLACTIVE_LOCK_WRITE( sLk ) \
     lock_write( sLk );
 #define DDLACTIVE_UNLOCK( sLk ) \

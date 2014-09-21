@@ -1818,7 +1818,7 @@ del_dealloc_stg(
 	/*
          * Indicate one more entry is actively being processed.
          */
-	DDLACTIVE_LOCK_READ(&(pvdp->ddlActiveLk))
+	lock_read(&(pvdp->ddlActiveLk));
 	    if ((sts = bmt_refpg(&pgref, (void **) &bmtp, pvdp->bmtp,
 		    pmcid.page, BS_NIL)) != EOK) {
 		domain_panic(dmnP,
