@@ -26,11 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define RAWBUFREE_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define RAWBUFREE_UNLOCK( sLk ) \
-    lock_done( sLk );
-
 #define MIGTRUNC_LOCK_READ( sLk ) \
     lock_read( sLk );
 #define MIGTRUNC_LOCK_WRITE( sLk ) \
