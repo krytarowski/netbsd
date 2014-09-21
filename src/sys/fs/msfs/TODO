@@ -26,3 +26,7 @@ Tru64 ubc -> NetBSD UVM
 - vm_object_type
 - vm_object_lock -> uvm_obj_setlock ?
 - vm_object_unlock -> uvm_obj_destroy ?
+
+Unknown:
+- PREEMPT_CHECK() ?
+- l_wait_writers ?
