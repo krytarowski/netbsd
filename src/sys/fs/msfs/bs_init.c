@@ -2312,7 +2312,7 @@ vd_extend(struct vd * vdp)
 
 	if (newSbmPgs == 0) {
 		/* No additional SBM pages needed, just update the vd's size. */
-		STGMAP_LOCK_WRITE(&vdp->stgMap_lk);	/* protect vd_size,
+		lock_write(&vdp->stgMap_lk);	/* protect vd_size,
 							 * vd_Clusters */
 		stgMapLocked = TRUE;
 	} else {
@@ -2323,7 +2323,7 @@ vd_extend(struct vd * vdp)
 		XTNMAP_LOCK_WRITE(&vdp->bmtp->xtntMap_lk);	/* for hierarchy */
 		lock_write(&vdp->rbmt_mcell_lk.lock);
 		otherLksLocked = TRUE;
-		STGMAP_LOCK_WRITE(&vdp->stgMap_lk);	/* protect vd_size,
+		lock_write(&vdp->stgMap_lk);	/* protect vd_size,
 							 * vd_Clusters */
 		stgMapLocked = TRUE;
 

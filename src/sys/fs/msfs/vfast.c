@@ -3686,7 +3686,7 @@ ss_find_space(
 	uint32_t locblkOffset;
 	uint32_t locblkCnt;
 
-	STGMAP_LOCK_WRITE(&vdp->stgMap_lk)
+	lock_write(&vdp->stgMap_lk);
 	    sbm_locked = TRUE;
 
 	stgDesc = sbm_find_space(vdp,
@@ -3889,7 +3889,7 @@ ss_get_n_lk_free_space(
 			if (newBlkCnt == 0) {
 				RAISE_EXCEPTION(ENOSPC);
 			}
-			STGMAP_LOCK_WRITE(&vdp->stgMap_lk)
+			lock_write(&vdp->stgMap_lk);
 			    sts = sbm_lock_range(vdp,
 			    newBlkOffset,
 			    newBlkCnt);

@@ -4428,7 +4428,7 @@ add_extent(
 		if (subPgCnt > subXtntMap->pageCnt) {
 			subXtntMap->pageCnt = subPgCnt;
 		}
-		*pinCntp = FTX_MX_PINP - 1;;
+		*pinCntp = FTX_MX_PINP - 1;
 		ftxHp->hndl = 0;
 		sts = FTX_START_N(FTA_NULL, ftxHp, FtxNilFtxH, bfap->dmnP, 0);
 		if (sts != EOK) {
@@ -4486,7 +4486,7 @@ stg_alloc_one_xtnt(
          * to satisfy the request.
          */
 
-	STGMAP_LOCK_WRITE(&vdp->stgMap_lk)
+	lock_write(&vdp->stgMap_lk);
 	    pageCnt = bfPageCnt;
 	requestedBlkCnt = pageCnt * bfPageSize;
 

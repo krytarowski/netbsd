@@ -3170,7 +3170,7 @@ msfs_pl_del_root_done(
 )
 {
 
-	domainT *domain = ftx.dmnP;;
+	domainT *domain = ftx.dmnP;
 
 
 	if (domain->dmnVersion >= FIRST_NUMBERED_PROPLIST_VERSION) {

@@ -2247,7 +2247,7 @@ sbm_init(
 
 	/* Not needed since no one races this. Used for assert in
 	 * load_x_cache. */
-	STGMAP_LOCK_WRITE(&vdp->stgMap_lk);
+	lock_write(&vdp->stgMap_lk);
 
 	vdp->freeStgLst = NULL;
 	vdp->freeClust = 0;
@@ -2843,7 +2843,7 @@ sbm_scan_v3_v4(
 	 * is v5.  Return ENOSPC if not enough space because of them. */
 
 	if (whoami == SS_PARENT) {
-		STGMAP_LOCK_WRITE(&vdp->stgMap_lk)	/* protects vdClusters */
+		lock_write(&vdp->stgMap_lk);	/* protects vdClusters */
 		    sbm_locked = TRUE;
 	}
 	/* get the sbm last page dimensions */
@@ -2871,7 +2871,7 @@ sbm_scan_v3_v4(
 				 * point */
 
 		if (whoami == SS_PARENT) {
-			STGMAP_LOCK_WRITE(&vdp->stgMap_lk)
+			lock_write(&vdp->stgMap_lk);
 			    sbm_locked = TRUE;
 		}
 		/* Need to recompute after dropping the lock. vdClusters may

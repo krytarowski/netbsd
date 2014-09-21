@@ -5213,7 +5213,7 @@ msfs_syscall_op_reset_free_space_cache(libParamsT * libBufp)
 			vdRefBumped = 1;
 	}
 
-	STGMAP_LOCK_WRITE(&(vdp->stgMap_lk))
+	lock_write(&(vdp->stgMap_lk));
 	    sts = sbm_clear_cache(vdp);
 
 	if (sts == EOK) {
