@@ -807,7 +807,7 @@ bs_delete_rtdn_opx(
 	if (bfs_open) {
 		bs_bfs_close(bfSetp, ftxH, BFS_OP_DEF);
 	}
-HANDLE_EXCEPTION:
+HANDLE_EXCEPTION: ;
 }
 
 

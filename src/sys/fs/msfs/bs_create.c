@@ -358,7 +358,7 @@ create_rtdn_opx(ftxHT ftxH,	/* in - ftx handle */
 	if (bfs_opened) {
 		bs_bfs_close(bfSetp, ftxH, BFS_OP_DEF);
 	}
-HANDLE_EXCEPTION:
+HANDLE_EXCEPTION: ;
 }
 
 
@@ -485,7 +485,7 @@ create_undo_opx(ftxHT ftxH,	/* in - ftx handle */
 
 	bs_bfs_close(bfSetp, ftxH, BFS_OP_DEF);
 
-HANDLE_EXCEPTION:
+HANDLE_EXCEPTION: ;
 }
 
 
