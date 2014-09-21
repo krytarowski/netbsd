@@ -1294,7 +1294,7 @@ msfs_pl_set_entry(
 	    &cow_read_locked,
 	    &trunc_xfer_locked);
 
-	MCELLIST_LOCK_WRITE(&(bfAccess->mcellList_lk))
+	lock_write(&(bfAccess->mcellList_lk));
 	/* indicates to root-done code routine that cell_size is based on hdr
 	 * flag */
 	    rdr.cellsize = 0;
@@ -2334,7 +2334,7 @@ msfs_getproplist_int(
 	    &cow_read_locked,
 	    &trunc_xfer_locked);
 
-	MCELLIST_LOCK_READ(&(bfAccess->mcellList_lk))
+	lock_read(&(bfAccess->mcellList_lk));
 	/*
 	 * search mcell chain for name
 	 */
@@ -2973,7 +2973,7 @@ start:
 	    &cow_read_locked,
 	    &trunc_xfer_locked);
 
-	MCELLIST_LOCK_WRITE(&(bfAccess->mcellList_lk))
+	lock_write(&(bfAccess->mcellList_lk));
 	/*
          * search mcell chain for name
          */
@@ -3488,7 +3488,7 @@ msfs_pl_set_entry_v3(
 	    &cow_read_locked,
 	    &trunc_xfer_locked);
 
-	MCELLIST_LOCK_WRITE(&(bfAccess->mcellList_lk))
+	lock_write(&(bfAccess->mcellList_lk));
 	/* indicates to root-done code routine that cell_size is based on hdr
 	 * flag */
 	    rdr.cellsize = 0;
@@ -4192,7 +4192,7 @@ msfs_getproplist_int_v3(
 	    &cow_read_locked,
 	    &trunc_xfer_locked);
 
-	MCELLIST_LOCK_READ(&(bfAccess->mcellList_lk))
+	lock_read(&(bfAccess->mcellList_lk));
 	/*
 	 * search mcell chain for name
 	 */
@@ -4744,7 +4744,7 @@ start:
 	    &cow_read_locked,
 	    &trunc_xfer_locked);
 
-	MCELLIST_LOCK_WRITE(&(bfAccess->mcellList_lk))
+	lock_write(&(bfAccess->mcellList_lk));
 	/*
          * search mcell chain for name
          */
