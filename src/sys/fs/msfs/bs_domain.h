@@ -274,19 +274,6 @@ typedef struct bfsQueue {
     ((bfSetT *)((char *)(_link) - offsetof(bfSetT,bfSetList)))
 
 
-#ifdef ADVFS_DOMAIN_TRACE
-
-#define DOMAIN_TRACE_HISTORY 100
-
-typedef struct {
-	uint32_t seq;
-	uint16_t mod;
-	uint16_t ln;
-	struct thread *thd;
-	void *val;
-}      dmnTraceElmtT;
-#endif				/* ADVFS_DOMAIN_TRACE */
-
 typedef enum {
 	BFD_UNKNOWN,		/* domain is in unknown state */
 	BFD_VIRGIN,		/* domain has never been activated */
@@ -468,33 +455,12 @@ typedef struct domain {
 
 	ssDmnInfoT ssDmnInfo;	/* vfast elements. */
 /*>>>>>>> Maintain as last elements of domain structure <<<<<<<<*/
-#ifdef ADVFS_DOMAIN_TRACE
-	uint32_t trace_ptr;
-	dmnTraceElmtT trace_buf[DOMAIN_TRACE_HISTORY];
-#endif				/* ADVFS_DOMAIN_TRACE */
 }      domainT;
 
 extern domainT nilDomain;
 
 extern int DomainCnt;
 extern domainT *DomainTbl[];
-
-#ifdef ADVFS_DOMAIN_TRACE
-
-#define DOMAIN_TRACE( dmnp, n1 ) \
-    domain_trace((dmnp), (uint16_t)ADVFS_MODULE, (uint16_t)__LINE__, (void*)(n1))
-
-void
-domain_trace(domainT * dmnp,
-    uint16_t module,
-    uint16_t line,
-    void *value);
-
-#else				/* ADVFS_DOMAIN_TRACE */
-
-#define DOMAIN_TRACE( dmnp, n1 )
-
-#endif				/* ADVFS_DOMAIN_TRACE */
 
 /*
  * Macros for the xidRecoveryLk

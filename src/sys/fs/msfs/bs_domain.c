@@ -275,32 +275,6 @@ void read_n_chk_last_rbmt_pg(vdT *);
 /*****  Bitfile Domain access/close functions  *****/
 /***************************************************/
 
-#ifdef ADVFS_DOMAIN_TRACE
-void
-domain_trace(domainT * dmnP,
-    uint16_t module,
-    uint16_t line,
-    void *value)
-{
-	register dmnTraceElmtT *te;
-	extern kmutex_t TraceLock;
-	extern int TraceSequence;
-
-	simple_lock(&TraceLock);
-
-	dmnP->trace_ptr = (dmnP->trace_ptr + 1) % DOMAIN_TRACE_HISTORY;
-	te = &dmnP->trace_buf[dmnP->trace_ptr];
-	te->thd = (struct thread *) (((long) current_cpu() << 36) |
-	    (long) current_thread() & 0xffffffff);
-	te->seq = TraceSequence++;
-	te->mod = module;
-	te->ln = line;
-	te->val = value;
-
-	simple_unlock(&TraceLock);
-}
-#endif				/* ADVFS_DOMAIN_TRACE */
-
 #ifdef ADVFS_VD_TRACE
 void
 vd_trace(vdT * vdp,
@@ -661,7 +635,6 @@ start:
 					goto vd_add_error;
 				}
 			}
-			DOMAIN_TRACE(dmnP, 0);
 
 			if ((dmnP->state != BFD_UNKNOWN) &&
 			    (dmnP->state != BFD_DEACTIVATED)) {
@@ -1163,7 +1136,6 @@ start:
 				sts = E_DOMAIN_ALREADY_EXISTS;
 				goto vd_add_error;
 			}
-			DOMAIN_TRACE(dmnP, 0);
 
 			if ((dmnP->state != BFD_UNKNOWN) &&
 			    (dmnP->state != BFD_DEACTIVATED)) {
