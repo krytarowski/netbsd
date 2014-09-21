@@ -3203,7 +3203,6 @@ loop:
  */
 u_int smsync_period = 0;	/* period between smoothsync_thread passes */
 u_int smsync_step = 0;
-u_int smsync_debug = 0;
 
 int
 msfs_smoothsync(mp, sync_age, smsync_flag)
