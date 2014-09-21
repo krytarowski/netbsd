@@ -255,14 +255,6 @@ typedef struct bfsQueue {
 	struct bfsQueue *bfsQbck;
 }        bfsQueueT;
 
-#define BFSET_DMN_REMQ( _dmnp, _entry ) {                       \
-    KASSERT(SLOCK_HOLDER(&((_dmnp)->mutex.mutex)));       \
-    (_entry)->bfsQfwd->bfsQbck = (_entry)->bfsQbck;             \
-    (_entry)->bfsQbck->bfsQfwd = (_entry)->bfsQfwd;             \
-    (_entry)->bfsQfwd = (_entry);                               \
-    (_entry)->bfsQbck = (_entry);                               \
-}
-
 #define BFSET_QUEUE_TO_BFSETP( _link ) \
     ((bfSetT *)((char *)(_link) - offsetof(bfSetT,bfSetList)))
 
@@ -462,6 +454,15 @@ static inline void BFSET_DMN_INSQ(domainT *dmnp, bfsQueueT *queue, bfsQueueT *en
     entry->bfsQbck = queue;
     queue->bfsQfwd->bfsQbck = entry;
     queue->bfsQfwd = entry;
+}
+
+static inline void BFSET_DMN_REMQ(domainT *dmnp, bfsQueueT *entry)
+{
+    KASSERT(mutex_owned(&dmnp->mutex.mutex));
+    entry->bfsQfwd->bfsQbck = entry->bfsQbck;
+    entry->bfsQbck->bfsQfwd = entry->bfsQfwd;
+    entry->bfsQfwd = entry;
+    entry->bfsQbck = entry;
 }
 
 /*
