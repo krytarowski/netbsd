@@ -369,9 +369,6 @@ typedef struct domain {
 	uint32_t ftxLogPgs;	/* number of pages in the log */
 	struct bfAccess *logAccessp;	/* bfAccess pointer for log */
 	ftxTblDT ftxTbld;	/* ftx table descriptor */
-#ifdef ADVFS_SMP_ASSERT		/* For debugging only, to check for lock */
-	krwlock_t ftxSlotLock;/* hierarchy violations between locks    */
-#endif				/* and starting a root transaction       */
 	struct bsBuf *pinBlockBuf;	/* the current pin block buffer, if
 					 * any */
 	char domainName[BS_DOMAIN_NAME_SZ];	/* temp - should be global
