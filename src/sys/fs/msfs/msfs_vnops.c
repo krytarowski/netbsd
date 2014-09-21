@@ -1347,7 +1347,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 	RMVOL_TRUNC_LOCK_READ(bfap->dmnP);
 
 	/* Prevent access to clone while we truncate original. */
-	TRUNC_XFER_LOCK_WRITE(&bfap->trunc_xfer_lk);
+	lock_write(&bfap->trunc_xfer_lk);
 
 	/*
          *  File size and the magnetic extent map must change 'atomically'

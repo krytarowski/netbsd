@@ -3722,7 +3722,7 @@ bs_close_one(
 		}
 		RMVOL_TRUNC_LOCK_READ(bfap->dmnP);
 
-		TRUNC_XFER_LOCK_WRITE(&bfap->trunc_xfer_lk);
+		lock_write(&bfap->trunc_xfer_lk);
 		trunc_xfer_lock = TRUE;
 	}
 	if (FTX_EQ(&parentFtxH, &FtxNilFtxH) && !is_clone) {

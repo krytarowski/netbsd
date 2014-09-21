@@ -3258,7 +3258,7 @@ _retry_map:
 						}
 					}
 				}
-				lock_read(&bfap->origAccp->trunc_xfer_lk);;
+				lock_read(&bfap->origAccp->trunc_xfer_lk);
 			}
 			/*
 	                 * If doing direct I/O, use page_addr to pass in the
