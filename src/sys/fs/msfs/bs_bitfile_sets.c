@@ -7399,7 +7399,7 @@ HANDLE_EXCEPTION:
 			if (cp != NULL) {
 				FS_FILE_WRITE_LOCK(cp);
 			}
-			CLU_CLXTNT_WRITE(&cloneap->clu_clonextnt_lk);
+			lock_write(&cloneap->clu_clonextnt_lk);
 			do_clxtnt_unlock = 1;
 
 			if (cloneap->cloneXtntsRetrieved && !release_clone_token) {

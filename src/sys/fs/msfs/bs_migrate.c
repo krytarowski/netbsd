@@ -1051,7 +1051,7 @@ migrate_get_clu_locks(bfAccessT * bfap,
 	                 * trigger an msfs_reclaim)
 	                 */
 
-			CLU_CLXTNT_WRITE(&cloneap->clu_clonextnt_lk);
+			lock_write(&cloneap->clu_clonextnt_lk);
 			*clu_xtntlk_flgA = 1;
 
 			/*
