@@ -85,20 +85,9 @@
 
 #endif
 
-/*
- * smoothsync support
- */
-#ifdef  _KERNEL
-#ifdef ADVFS_SMP_ASSERT
-/* only enable smoothsync_debug support if the rest of the AdvFS assert
- * package has been enabled.
- */
-#define SMOOTHSYNC_DEBUG 1
-#endif				/* ADVFS_SMP_ASSERT */
-#endif				/* _KERNEL */
-
 #include <fs/msfs/bs_ods.h>
 #include <fs/msfs/bs_ims.h>
 enum msfs_setproplist_enum {
 NO_SET_CTIME = 0, SET_CTIME = 1};
+
 #endif				/* MS_PRIVATES */
