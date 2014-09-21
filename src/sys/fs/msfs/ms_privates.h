@@ -26,8 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define COW_LOCK_READ( sLk ) \
-    lock_read( sLk );
 #define COW_UNLOCK( sLk ) \
     lock_done( sLk );
 

@@ -332,7 +332,7 @@ bs_get_clone_xtnt_map(
 	/* block access to the clone's extent maps if truncating the original */
 	TRUNC_XFER_LOCK_READ(&orig_bfap->trunc_xfer_lk);
 	/* make sure the clone extents don't change */
-	COW_LOCK_READ(&(orig_bfap->cow_lk))
+	lock_read(&(orig_bfap->cow_lk));
 	/* Lock the orig map first. Make sure that the in-memory extent maps
 	 * are valid. This only retrieves xtnt map into memory if changes
 	 * occur, they occur on the mem copy only This returns with the
@@ -951,7 +951,7 @@ bs_get_bkup_xtnt_map(
 
 
 					CLU_CLXTNT_READ(&bfap->clu_clonextnt_lk);
-					COW_LOCK_READ(&(bfap->origAccp->cow_lk))
+					lock_read(&(bfap->origAccp->cow_lk));
 					    do_clonextnt_unlock = 1;
 
 				}
@@ -1018,7 +1018,7 @@ bs_get_bkup_xtnt_map(
 					 * when cloned is TRUE. */
 
 					CLU_CLXTNT_READ(&bfap->clu_clonextnt_lk);
-					COW_LOCK_READ(&(bfap->origAccp->cow_lk))
+					lock_read(&(bfap->origAccp->cow_lk));
 					    do_clonextnt_unlock = 1;
 				}
 				fromBfap = bfap->origAccp;

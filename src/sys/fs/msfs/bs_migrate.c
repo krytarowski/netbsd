@@ -541,7 +541,7 @@ mig_migrate(
 		/*
 	         * Synchronize with the "create metadata" portion of cow.
 	         */
-		COW_LOCK_READ(&(srcBfap->cow_lk))
+		lock_read(&(srcBfap->cow_lk));
 		    noMetadataFlag = 0;
 		if (origBfap->cloneCnt != origBfSet->cloneCnt) {
 			noMetadataFlag = 1;

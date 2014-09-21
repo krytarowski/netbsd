@@ -1085,7 +1085,7 @@ bs_refpg_int(
 	         * is typically released by derefpg().
 	         */
 
-		COW_LOCK_READ(&(origBfAp->cow_lk))
+		lock_read(&(origBfAp->cow_lk));
 		    cowLkLocked = TRUE;
 
 		/*
@@ -1342,7 +1342,7 @@ bs_refpg_direct(void *addr,	/* in */
 	         * other threads modifying the original bitfile.
 	         */
 		origbfap = bfap->origAccp;
-		COW_LOCK_READ(&(origbfap->cow_lk))
+		lock_read(&(origbfap->cow_lk));
 	}
 	/*
          * Are any needed pages in the cache?   If the request spans
