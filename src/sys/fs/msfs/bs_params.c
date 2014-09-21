@@ -330,7 +330,7 @@ bs_get_clone_xtnt_map(
 		clonextnt_locked = 1;
 	}
 	/* block access to the clone's extent maps if truncating the original */
-	TRUNC_XFER_LOCK_READ(&orig_bfap->trunc_xfer_lk);
+	lock_read(&orig_bfap->trunc_xfer_lk);;
 	/* make sure the clone extents don't change */
 	lock_read(&(orig_bfap->cow_lk));
 	/* Lock the orig map first. Make sure that the in-memory extent maps

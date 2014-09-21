@@ -1246,7 +1246,7 @@ migrate_normal(
 
 	/* Coordinate with xfer_xtnts_to_clone which does not bump cowPgCount */
 	if (bfap->origAccp) {
-		TRUNC_XFER_LOCK_READ(&bfap->origAccp->trunc_xfer_lk);
+		lock_read(&bfap->origAccp->trunc_xfer_lk);;
 		truncXferFlg = 1;
 	}
 get_copy_storage:
@@ -1746,7 +1746,7 @@ migrate_stripe(
 
 	/* Coordinate with xfer_xtnts_to_clone which does not bump cowPgCount */
 	if (bfap->origAccp) {
-		TRUNC_XFER_LOCK_READ(&bfap->origAccp->trunc_xfer_lk);
+		lock_read(&bfap->origAccp->trunc_xfer_lk);;
 		truncXferFlg = 1;
 	}
 get_copy_storage:

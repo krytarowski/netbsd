@@ -1695,7 +1695,7 @@ msfs_getpage(
 			error = KERN_INVALID_ARGUMENT;
 			goto _error;
 		}
-		TRUNC_XFER_LOCK_READ(&bfap->origAccp->trunc_xfer_lk);
+		lock_read(&bfap->origAccp->trunc_xfer_lk);;
 		trunc_xfer_lock = 1;
 	}
 	prior_read_count = u.u_tru.tru_inblock;
