@@ -326,7 +326,7 @@ bs_get_clone_xtnt_map(
 	if (clu_is_ready()) {
 		/* If this is a cluster then we need to block from getting the
 		 * clone xtnt map during migration. */
-		CLU_CLXTNT_READ(&clone_bfap->clu_clonextnt_lk);
+		lock_read(&clone_bfap->clu_clonextnt_lk);
 		clonextnt_locked = 1;
 	}
 	/* block access to the clone's extent maps if truncating the original */
@@ -950,7 +950,7 @@ bs_get_bkup_xtnt_map(
 					 * lock. So this will protect us here. */
 
 
-					CLU_CLXTNT_READ(&bfap->clu_clonextnt_lk);
+					lock_read(&bfap->clu_clonextnt_lk);
 					lock_read(&(bfap->origAccp->cow_lk));
 					    do_clonextnt_unlock = 1;
 
@@ -1017,7 +1017,7 @@ bs_get_bkup_xtnt_map(
 					 * bs_get_stripe_xtnt_map but only
 					 * when cloned is TRUE. */
 
-					CLU_CLXTNT_READ(&bfap->clu_clonextnt_lk);
+					lock_read(&bfap->clu_clonextnt_lk);
 					lock_read(&(bfap->origAccp->cow_lk));
 					    do_clonextnt_unlock = 1;
 				}
