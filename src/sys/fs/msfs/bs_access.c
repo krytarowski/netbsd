@@ -2508,7 +2508,7 @@ retry_clu_clone_access:
 					    );
 				}
 				if (sts == EOK) {
-					DDLACTIVE_UNLOCK(&(ddlVd->ddlActiveLk))
+					lock_done(&(ddlVd->ddlActiveLk));
 				} else
 					goto err_vrele;	/* typically "not found" */
 				vdIndex = ddlVd->vdIndex;

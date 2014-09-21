@@ -3993,7 +3993,7 @@ mig_pack_vd_range(
 					    pXtntp->ssPackTag,
 					    &mcellId,
 					    &delFlag);
-					DDLACTIVE_UNLOCK(&(vdp->ddlActiveLk))
+					lock_done(&(vdp->ddlActiveLk));
 					    if (sts == EOK) {
 						/* found on ddl, may be there
 						 * a long time, abort */
@@ -4089,7 +4089,7 @@ mig_pack_vd_range(
 								    pXtntp->ssPackTag,
 								    &mcellId,
 								    &delFlag);
-								DDLACTIVE_UNLOCK(&(vdp->ddlActiveLk))
+								lock_done(&(vdp->ddlActiveLk));
 								    if (sts == EOK) {
 									/* on
 									 * ddl,
@@ -4313,7 +4313,7 @@ mig_pack_vd_range(
 									    pXtntp->ssPackTag,
 									    &mcellId,
 									    &delFlag);
-									DDLACTIVE_UNLOCK(&(vdp->ddlActiveLk))
+									lock_done(&(vdp->ddlActiveLk));
 									    if (sts == EOK) {
 										/* O
 										 * n

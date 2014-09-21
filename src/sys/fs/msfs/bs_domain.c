@@ -4000,7 +4000,7 @@ clear_bmt(
 			                         * deferred-delete list.
 			                         */
 						unlockFlag = 0;
-						DDLACTIVE_UNLOCK(&(ddlVd->ddlActiveLk))
+						lock_done(&(ddlVd->ddlActiveLk));
 						    migFlag = 1;
 					} else {
 						/*
@@ -4173,7 +4173,7 @@ clear_bmt(
 
 HANDLE_EXCEPTION:
 	if (unlockFlag != 0) {
-		DDLACTIVE_UNLOCK(&(ddlVd->ddlActiveLk))
+		lock_done(&(ddlVd->ddlActiveLk));
 	}
 	if (closeBitfileFlag != 0) {
 		if (do_vrele) {
@@ -4241,7 +4241,7 @@ find_del_entry(
 			}
 		}
 
-		DDLACTIVE_UNLOCK(&(vd->ddlActiveLk))
+		lock_done(&(vd->ddlActiveLk));
 		    vdCnt++;
 		vd = NULL;
 		vdIndex++;
@@ -4280,7 +4280,7 @@ wait_for_ddl_active_entry(
 )
 {
 	mutex_enter(&(dmnP->mutex.mutex));
-	DDLACTIVE_UNLOCK(&(vd->ddlActiveLk));
+	lock_done(&(vd->ddlActiveLk));
 
 	/*
          * Set the mcellId so that this entry's processing thread wakes up this

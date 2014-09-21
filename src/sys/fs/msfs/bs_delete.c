@@ -1904,7 +1904,7 @@ del_dealloc_stg(
 done:
 	bmt_free_bf_mcells(pvdp, pmcid, FtxNilFtxH, TRUE);
 
-	DDLACTIVE_UNLOCK(&(pvdp->ddlActiveLk))
+	lock_done(&(pvdp->ddlActiveLk));
 	/*
          * If a thread is waiting on the completion of this entry, wake it.
          */
@@ -1927,7 +1927,7 @@ done:
 
 HANDLE_EXCEPTION:
 
-	DDLACTIVE_UNLOCK(&(pvdp->ddlActiveLk));
+	lock_done(&(pvdp->ddlActiveLk));
 	return (sts);
 }
 
