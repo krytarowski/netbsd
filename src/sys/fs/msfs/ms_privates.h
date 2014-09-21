@@ -26,9 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define TRUNC_XFER_UNLOCK( sLk ) \
-    lock_done( sLk );
-
 /*
  * Some private definitions
  */

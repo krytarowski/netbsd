@@ -340,7 +340,7 @@ bs_get_clone_xtnt_map(
 	    sts = x_load_inmem_xtnt_map(orig_bfap, X_LOAD_REFERENCE);
 	if (sts != EOK) {
 		lock_done(&(orig_bfap->cow_lk));
-		    TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
+		    lock_done(&orig_bfap->trunc_xfer_lk);;
 		if (clonextnt_locked)
 			lock_done(&clone_bfap->clu_clonextnt_lk);
 		return sts;
@@ -351,7 +351,7 @@ bs_get_clone_xtnt_map(
 	if (sts != EOK) {
 		lock_done(&(orig_bfap->xtntMap_lk));
 		lock_done(&(orig_bfap->cow_lk));
-		    TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
+		    lock_done(&orig_bfap->trunc_xfer_lk);;
 		if (clonextnt_locked)
 			lock_done(&clone_bfap->clu_clonextnt_lk);
 		return sts;
@@ -435,7 +435,7 @@ bs_get_clone_xtnt_map(
 		lock_done(&(orig_bfap->xtntMap_lk));
 		    lock_done(&(clone_bfap->xtntMap_lk));
 		    lock_done(&(orig_bfap->cow_lk));
-		    TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
+		    lock_done(&orig_bfap->trunc_xfer_lk);;
 		if (clonextnt_locked)
 			lock_done(&clone_bfap->clu_clonextnt_lk);
 		if (newxtntmap != NULL)
@@ -565,7 +565,7 @@ bs_get_clone_xtnt_map(
 	lock_done(&(orig_bfap->xtntMap_lk));
 	    lock_done(&(clone_bfap->xtntMap_lk));
 	    lock_done(&(orig_bfap->cow_lk));
-	    TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
+	    lock_done(&orig_bfap->trunc_xfer_lk);;
 
 	/* if the newxtntmap was not set to the clone(fragment only) then we
 	 * need to clean up the alloced xtnt map from the merge routine above. */
@@ -579,7 +579,7 @@ HANDLE_EXCEPTION:
 	lock_done(&(orig_bfap->xtntMap_lk));
 	    lock_done(&(clone_bfap->xtntMap_lk));
 	    lock_done(&(orig_bfap->cow_lk));
-	    TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
+	    lock_done(&orig_bfap->trunc_xfer_lk);;
 	if (clonextnt_locked)
 		lock_done(&clone_bfap->clu_clonextnt_lk);
 	if (newxtntmap != NULL)

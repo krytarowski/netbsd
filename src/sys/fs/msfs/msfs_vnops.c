@@ -1524,7 +1524,7 @@ notrunc:
 	mutex_exit(&bfap->actRangeLock.mutex);
 	ms_free(arp);
 
-	TRUNC_XFER_UNLOCK(&bfap->trunc_xfer_lk);
+	lock_done(&bfap->trunc_xfer_lk);;
 
 	if (setHeld) {
 		release_clu_clone_locks(bfap, cloneSetp, cloneap, tokenFlg);

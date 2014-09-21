@@ -1821,7 +1821,7 @@ msfs_getpage(
 _error:
 
 	if (trunc_xfer_lock)
-		TRUNC_XFER_UNLOCK(&bfap->origAccp->trunc_xfer_lk);
+		lock_done(&bfap->origAccp->trunc_xfer_lk);;
 
 	if (unlock_file_lock)
 		FS_FILE_UNLOCK(contextp);

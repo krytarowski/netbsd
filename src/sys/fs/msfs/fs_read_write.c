@@ -3318,7 +3318,7 @@ _retry_map:
 
 			/* Undo some stuff for clone files */
 			if (bfap->origAccp) {
-				TRUNC_XFER_UNLOCK(&bfap->origAccp->trunc_xfer_lk);
+				lock_done(&bfap->origAccp->trunc_xfer_lk);;
 
 				/* If we protected these pages above, undo
 				 * that now. Also deallocate any storage added

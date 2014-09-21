@@ -4052,7 +4052,7 @@ _close_it:
 			release_clu_clone_locks(bfap, cloneSetp, cloneap, token_flg);
 			mutex_enter(&bfap->bfaLock.mutex);
 		}
-		TRUNC_XFER_UNLOCK(&bfap->trunc_xfer_lk);
+		lock_done(&bfap->trunc_xfer_lk);;
 		RMVOL_TRUNC_UNLOCK(bfap->dmnP);
 	}
 	if (mig_trunc_lock) {

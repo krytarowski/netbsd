@@ -1567,7 +1567,7 @@ HANDLE_EXCEPTION:
 	}
 	if (truncXferFlg) {
 		KASSERT(bfap->origAccp != NULL);
-		TRUNC_XFER_UNLOCK(&bfap->origAccp->trunc_xfer_lk);
+		lock_done(&bfap->origAccp->trunc_xfer_lk);;
 	}
 	if (do_cluster_cleanup) {
 		/* Files open for direct IO need to invalidate the UBC pages
@@ -2096,7 +2096,7 @@ HANDLE_EXCEPTION:
 	}
 	if (truncXferFlg) {
 		KASSERT(bfap->origAccp != NULL);
-		TRUNC_XFER_UNLOCK(&bfap->origAccp->trunc_xfer_lk);
+		lock_done(&bfap->origAccp->trunc_xfer_lk);;
 	}
 	if (do_cluster_cleanup) {
 		/* Files open for direct IO need to invalidate the UBC pages
