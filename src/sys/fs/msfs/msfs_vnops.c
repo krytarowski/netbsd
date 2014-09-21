@@ -2057,7 +2057,7 @@ msfs_remove(
 	         * and there should be a way to remove that link.  As long as there is
 	         * one reference to the actual tag file, then everything should be fine
 	         */
-		if (BS_BFTAG_EQL(bnp->tag, fsnp->qi[type].qiTag) &&
+		if (BS_BFTAG_EQL(&bnp->tag, &fsnp->qi[type].qiTag) &&
 		    rem_context->dir_stats.st_nlink < 2) {
 			FS_FILE_UNLOCK(rem_context);
 			vrele(ndp->ni_vp);
@@ -2106,7 +2106,7 @@ remove_it_1:
 	                 * refers to our bitfile
 	                 */
 
-			if (!BS_BFTAG_EQL(rem_context->bf_tag, found_bs_tag)) {
+			if (!BS_BFTAG_EQL(&rem_context->bf_tag, &found_bs_tag)) {
 				/*
 		                 * the file was deleted and recreated so the file name now
 		                 * refers to a new/different bitfile
@@ -2783,10 +2783,10 @@ msfs_rename(
          * don't allow .tags to be moved
          */
 
-	if (BS_BFTAG_EQL(from_file_context->bf_tag,
-		from_fsnp->tagsTag)) {
-		if (BS_BFTAG_EQL(from_dir_context->bf_tag,
-			from_fsnp->rootTag)) {
+	if (BS_BFTAG_EQL(&from_file_context->bf_tag,
+		&from_fsnp->tagsTag)) {
+		if (BS_BFTAG_EQL(&from_dir_context->bf_tag,
+			&from_fsnp->rootTag)) {
 			REL_VNODES(fndp, tndp, EACCES);
 		}
 	}
@@ -2795,7 +2795,7 @@ msfs_rename(
 		to_tag = ((struct bfNode *) & tndp->ni_vp->v_data[0])->tag;
 
 		/* Don't allow .tags to be overwritten. */
-		if (BS_BFTAG_EQL(to_tag, from_fsnp->tagsTag)) {
+		if (BS_BFTAG_EQL(&to_tag, &from_fsnp->tagsTag)) {
 			REL_VNODES(fndp, tndp, EACCES);
 		}
 		/* Check if this is an attempt to rename on top of "." */
@@ -2809,7 +2809,7 @@ msfs_rename(
 		to_tag = ((struct bfNode *) & tndp->ni_vp->v_data[0])->tag;
 
 		for (type = 0; type < MAXQUOTAS; type++) {
-			if (BS_BFTAG_EQL(to_tag, fsnp->qi[type].qiTag)) {
+			if (BS_BFTAG_EQL(&to_tag, &fsnp->qi[type].qiTag)) {
 				REL_VNODES(fndp, tndp, EACCES);
 			}
 		}
@@ -2909,7 +2909,7 @@ again:
 			error = ENOENT;
 			goto err_unlock_ffile;
 		}
-		if (!BS_BFTAG_EQL(from_file_context->bf_tag, found_bs_tag)) {
+		if (!BS_BFTAG_EQL(&from_file_context->bf_tag, &found_bs_tag)) {
 			error = ENOENT;
 			goto err_unlock_ffile;
 		}
@@ -2943,8 +2943,8 @@ again:
          * alter it's "..".
          */
 
-	if (!BS_BFTAG_EQL(oldparent_tag,
-		to_dir_context->bf_tag)) {
+	if (!BS_BFTAG_EQL(&oldparent_tag,
+		&to_dir_context->bf_tag)) {
 		newparent_tag = to_dir_context->bf_tag;
 	}
 	if (dir_mv && !BS_BFTAG_NULL(newparent_tag)) {
@@ -2963,7 +2963,7 @@ again:
 				to_vp = tndp->ni_vp;
 			}
 			ttbnp = (struct bfNode *) & tndp->ni_dvp->v_data[0];
-		} while (!BS_BFTAG_EQL(keep_to_dir_tag, ttbnp->tag));
+		} while (!BS_BFTAG_EQL(&keep_to_dir_tag, &ttbnp->tag));
 	}
 	/*
          * check the status of the 'to' file. someone may have created or
@@ -3062,7 +3062,7 @@ again:
 		                         * then created a new one of the same name. In
 		                         * that case we need to namei the new one.)
 		                         */
-					if (!BS_BFTAG_EQL(to_file_context->bf_tag, found_bs_tag)) {
+					if (!BS_BFTAG_EQL(&to_file_context->bf_tag, &found_bs_tag)) {
 						/*
 			                         * just let go of the 'old' file, and call go
 			                         * back to call namei
@@ -3772,10 +3772,10 @@ msfs_rmdir(
          * don't allow .tags in root to be removed
          */
 
-	if (BS_BFTAG_EQL(rem_context->bf_tag,
-		fileSetNp->tagsTag)) {
-		if (BS_BFTAG_EQL(par_context->bf_tag,
-			fileSetNp->rootTag)) {
+	if (BS_BFTAG_EQL(&rem_context->bf_tag,
+		&fileSetNp->tagsTag)) {
+		if (BS_BFTAG_EQL(&par_context->bf_tag,
+			&fileSetNp->rootTag)) {
 
 			error = EACCES;
 			goto _error_cleanup;
@@ -3804,7 +3804,7 @@ msfs_rmdir(
 	                 * refers to our bitfile
 	                 */
 
-			if (!BS_BFTAG_EQL(rem_context->bf_tag, found_bs_tag)) {
+			if (!BS_BFTAG_EQL(&rem_context->bf_tag, &found_bs_tag)) {
 				/*
 		                 * the file was deleted and recreated so the file name now
 		                 * refers to a new/different bitfile
@@ -5219,7 +5219,7 @@ detach_undel_dir(
 	dir_context = bnp->fsContextp;
 	FS_FILE_WRITE_LOCK(dir_context);
 
-	if (BS_BFTAG_EQL(dir_context->undel_dir_tag, NilBfTag)) {
+	if (BS_BFTAG_EQL(&dir_context->undel_dir_tag, &NilBfTag)) {
 		FS_FILE_UNLOCK(dir_context);
 		RAISE_EXCEPTION(E_NO_UNDEL_DIR);
 	}
@@ -5345,7 +5345,7 @@ get_name(
 	bfSetp = GETBFSETP(mp);
 	root_tag = GETROOT(mp);
 
-	if (BS_BFTAG_EQL(bf_tag, root_tag)) {
+	if (BS_BFTAG_EQL(&bf_tag, &root_tag)) {
 		strncpy(buffer, root_name, NAME_MAX);
 		*parent_tag = root_tag;
 		return EOK;
@@ -5384,7 +5384,7 @@ get_name(
 	/*
          * open the directory
          */
-	if (!(BS_BFTAG_EQL(bf_stats.dir_tag, root_tag))) {
+	if (!(BS_BFTAG_EQL(&bf_stats.dir_tag, &root_tag))) {
 		nullvp = NULL;
 		if (bs_access(&dir_bfap, bf_stats.dir_tag, bfSetp, FtxNilFtxH, BF_OP_GET_VNODE, NULLMT,
 			&nullvp)) {

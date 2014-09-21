@@ -31,6 +31,8 @@
 #include <sys/types.h>
 #include <sys/malloc.h>
 
+#include <fs/msfs/bs_ods.h> /* XXX: is it the right place here? */
+
 #ifndef REUSABLE_TAGS
 #define REUSABLE_TAGS
 #endif
@@ -274,15 +276,37 @@ extern bfTagT NilBfTag;
 
 #define MAX_ADVFS_TAGS 0x7fffffff	/* maximum number of non-reserved tags */
 
-/* Macros for tags. */
+/* Utilities for tags. */
 
-#define BS_BFTAG_EQL(tag1, tag2) \
-    (((tag1)->num == (tag2)->num) && ((tag1)->seq == (tag2)->seq))
-#define BS_BFTAG_IDX(tag) ((tag)->num)	/* used for hashing on tags */
-#define BS_BFTAG_RSVD(tag) ((signed)((tag)->num) < 0)
-#define BS_BFTAG_REG(tag) ((signed)((tag)->num) > 0)
-#define BS_BFTAG_SEQ(tag) ((tag)->seq)
-#define BS_BFTAG_NULL(tag) ((tag->num) == 0)
+static inline int BS_BFTAG_EQL(const bfTagT *tag1, const bfTagT *tag2)
+{
+    return (tag1->num == tag2->num) && (tag1->seq == tag2->seq);
+}
+
+static inline uint32_t BS_BFTAG_IDX(const bfTagT *tag)
+{
+    return tag->num;	/* used for hashing on tags */
+}
+
+static inline int BS_BFTAG_RSVD(const bfTagT *tag)
+{
+    return ((signed)(tag->num) < 0); /* XXX: num is uint32_t ? */
+}
+
+static inline int BS_BFTAG_REG(const bfTagT *tag)
+{
+    return ((signed)(tag->num) > 0); /* XXX: num is uint32_t ? */
+}
+
+static inline uint32_t BS_BFTAG_SEQ(const bfTagT *tag)
+{
+    return tag->seq;
+}
+
+static inline int BS_BFTAG_NULL(const bfTagT *tag)
+{
+    return tag->num == 0;
+}
 
 /*
  * Bit in tag.seq indicating it is a pseudo-tag which exists only in-core.
@@ -292,12 +316,26 @@ extern bfTagT NilBfTag;
 #define BS_BFTAG_PSEUDO(tag) ((tag).seq & BS_PSEUDO_TAG)
 
 /* Macros for reserved tags. */
-#define BS_BFTAG_VDI(tag) (-((signed)((tag).num)) / BFM_RSVD_TAGS)
-#define BS_BFTAG_CELL(tag) (-((signed)((tag).num)) % BFM_RSVD_TAGS)
-#define BS_BFTAG_RSVD_INIT(tag, vdi, bmtidx) \
-    (tag).num = (uint32_t) -(((vdi) * BFM_RSVD_TAGS) + (bmtidx)); \
-    (tag).seq = 0
-#define BS_BFTAG_RBMT(tag) (BS_BFTAG_CELL(tag) == BFM_RBMT)
+static inline int BS_BFTAG_VDI(const bfTagT *tag)
+{
+    return -((signed)(tag->num) / BFM_RSVD_TAGS); /* XXX: signed, - ? */
+}
+
+static inline int BS_BFTAG_CELL(const bfTagT *tag)
+{
+    return -((signed)(tag->num)) % BFM_RSVD_TAGS; /* XXX: signed, - ? */
+}
+
+static inline void BS_BFTAG_RSVD_INIT(bfTagT *tag, const vdIndexT vdi, const bfdBfMetaT bmtidx)
+{
+    tag->num = (uint32_t) -(vdi * BFM_RSVD_TAGS + bmtidx); /* XXX: -, signed?, enum -> int? */
+    tag->seq = 0;
+}
+
+static inline int BS_BFTAG_RBMT(const bfTagT *tag)
+{
+    return BS_BFTAG_CELL(tag) == BFM_RBMT;
+}
 
 /* Following macro returns TRUE if tag passed in represents a metadata file
  * of the type passed in metatype.  The second parm must be from the enumerated

@@ -1243,7 +1243,7 @@ ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
 						 * already. */
 						if ((vdRefed == TRUE) &&
 						    (BS_BFTAG_EQL
-							(dvdp->ssVolInfo.ssVdHotTag, NilBfTag))) {
+							(&dvdp->ssVolInfo.ssVdHotTag, &NilBfTag))) {
 							/* save off the file
 							 * for later movement */
 							dvdp->ssVolInfo.ssVdHotTag = tag;
@@ -2399,7 +2399,7 @@ ss_delete_from_frag_list(vdT * vdp,	/* in */
 	while (currp != (ssFragLLT *) fhp) {
 		nextp = currp->ssFragRatFwd;
 		/* see if file is anywhere on list  delete it */
-		if ((BS_BFTAG_EQL(tag, currp->ssFragTag)) &&
+		if ((BS_BFTAG_EQL(&tag, &currp->ssFragTag)) &&
 		    (BS_BFS_EQL(bfSetId, currp->ssFragBfSetId))) {
 			currp->ssFragRatFwd->ssFragRatBwd = currp->ssFragRatBwd;
 			currp->ssFragRatBwd->ssFragRatFwd = currp->ssFragRatFwd;
@@ -2825,7 +2825,7 @@ ss_insert_hot_list(
 
 		/* if file is anywhere on list, remove it here and reinsert
 		 * below in its proper sorted order. */
-		if ((BS_BFTAG_EQL(hp->ssHotTag, currp->ssHotTag)) &&
+		if ((BS_BFTAG_EQL(&hp->ssHotTag, &currp->ssHotTag)) &&
 		    (BS_BFS_EQL(bfSetp->bfSetId, currp->ssHotBfSetId))) {
 
 			/* found one in list that is a match, update it */
@@ -3050,7 +3050,7 @@ ss_del_from_hot_list(ssHotLLT * hp)
 	    (currp != (ssHotLLT *) hhp)) {
 		nextp = currp->ssHotFwd;
 		/* see if file is anywhere on list  delete it */
-		if ((BS_BFTAG_EQL(hp->ssHotTag, currp->ssHotTag)) &&
+		if ((BS_BFTAG_EQL(&hp->ssHotTag, &currp->ssHotTag)) &&
 		    (BS_BFS_EQL(bfSetp->bfSetId, currp->ssHotBfSetId))) {
 
 			currp->ssHotFwd->ssHotBwd = currp->ssHotBwd;
@@ -3113,7 +3113,7 @@ ss_chk_hot_list(domainT * dmnP,	/* in */
 	}
 	hp = hhp->ssHotFwd;
 	while (hp != (ssHotLLT *) hhp) {
-		if ((BS_BFTAG_EQL(tag, hp->ssHotTag)) &&
+		if ((BS_BFTAG_EQL(&tag, &hp->ssHotTag)) &&
 		    (BS_BFS_EQL(bfSetId, hp->ssHotBfSetId))) {
 			/* found the entry */
 
@@ -3514,7 +3514,7 @@ ss_move_file(vdIndexT vdi,	/* in */
 	mutex_enter(&dmnP->ssDmnInfo.ssDmnLk.mutex);
 	if ((dmnP->ssDmnInfo.ssDmnSmartPlace) &&
 	    (dmnP->ssDmnInfo.ssDmnHotWorking == FALSE) &&
-	    (!BS_BFTAG_EQL(svdp->ssVolInfo.ssVdHotTag, NilBfTag))) {
+	    (!BS_BFTAG_EQL(&svdp->ssVolInfo.ssVdHotTag, &NilBfTag))) {
 
 		/* hot file to be moved to this volume. move it. */
 		filetag = svdp->ssVolInfo.ssVdHotTag;
@@ -3583,7 +3583,7 @@ ss_move_file(vdIndexT vdi,	/* in */
 		mutex_exit(&svdp->ssVolInfo.ssFragLk.mutex);
 
 		/* if hot file is about to be placed as a hot file, skip it */
-		if ((BS_BFTAG_EQL(svdp->ssVolInfo.ssVdHotTag, filetag)) &&
+		if ((BS_BFTAG_EQL(&svdp->ssVolInfo.ssVdHotTag, &filetag)) &&
 		    (BS_BFS_EQL(svdp->ssVolInfo.ssVdHotBfSetId, bfSetId)))
 			RAISE_EXCEPTION(EOK);
 

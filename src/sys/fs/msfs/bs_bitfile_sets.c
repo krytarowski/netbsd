@@ -1878,7 +1878,7 @@ bfs_lookup(
 	         */
 		bfSetp = bfSetp_start;
 		do {
-			if (BS_BFS_EQL(bfSetp->bfSetId, bfSetId)) {
+			if (BS_BFS_EQL(&bfSetp->bfSetId, &bfSetId)) {
 				/*
 		                 * Bitfile-set was found; return a pointer to it's descriptor.
 		                 */

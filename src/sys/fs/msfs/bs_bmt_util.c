@@ -528,8 +528,8 @@ bmtr_create_rec(
          * the BMT.
          */
 	if ((RBMT_THERE(dmnP)) &&
-	    (BS_BFTAG_RBMT(bfAccp->tag)) &&
-	    (BS_BFTAG_RSVD(bfAccp->tag))) {
+	    (BS_BFTAG_RBMT(&bfAccp->tag)) &&
+	    (BS_BFTAG_RSVD(&bfAccp->tag))) {
 		file_is_rbmt = TRUE;
 		mdap = vdp->rbmtp;
 	} else {
@@ -546,7 +546,7 @@ bmtr_create_rec(
 	}
 	mcp = &bmtp->bsMCA[mcid->cell];
 
-	if (!BS_BFTAG_EQL(mcp->tag, bfAccp->tag)) {
+	if (!BS_BFTAG_EQL(&mcp->tag, &bfAccp->tag)) {
 		RAISE_EXCEPTION(EBAD_TAG);
 	}
 	/*
@@ -588,7 +588,7 @@ bmtr_create_rec(
 		}
 		mcp = &bmtp->bsMCA[newcell];	/* get pointer to new cell */
 
-		if (!BS_BFTAG_EQL(mcp->tag, bfAccp->tag)) {
+		if (!BS_BFTAG_EQL(&mcp->tag, &bfAccp->tag)) {
 			/* something's not right */
 			RAISE_EXCEPTION(EBAD_TAG);
 		}
@@ -783,7 +783,7 @@ bmtr_scan_mcells(
 
 	mcp = &bmtp->bsMCA[mcid->cell];
 
-	if (!BS_BFTAG_EQL(mcp->tag, tag)) {
+	if (!BS_BFTAG_EQL(&mcp->tag, &tag)) {
 		RAISE_EXCEPTION(EBAD_TAG);
 	}
 	/*
@@ -840,7 +840,7 @@ bmtr_scan_mcells(
 		}
 		mcp = &bmtp->bsMCA[newcell];	/* get pointer to new cell */
 
-		if (!BS_BFTAG_EQL(mcp->tag, tag)) {
+		if (!BS_BFTAG_EQL(&mcp->tag, &tag)) {
 			/* something's not right */
 			RAISE_EXCEPTION(EBAD_TAG);
 		}
@@ -2623,8 +2623,8 @@ start2:
 	}
 	mcp = &bmtpgp->bsMCA[mcid.cell];
 
-	if (!BS_BFTAG_EQL(mcp->tag, NilBfTag) &&
-	    !BS_BFTAG_EQL(mcp->bfSetTag, NilBfTag)) {
+	if (!BS_BFTAG_EQL(&mcp->tag, &NilBfTag) &&
+	    !BS_BFTAG_EQL(&mcp->bfSetTag, &NilBfTag)) {
 		aprintf("ADVFS error: alloc_mcell: mcell (%d.%d) not really free\n", mcid.cell, mcid.page);
 		aprintf("ADVFS cont : alloc_mcell: domain = %s, vol = %s, page = %d\n", dmnP->domainName, vd->vdName, page);
 		aprintf("ADVFS cont : alloc_mcell: tag = 0x%08x.%04x, setTag = 0x%08x.%04x\n",
