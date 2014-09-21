@@ -565,7 +565,7 @@ add_stg_undo(
 	}
 	xtnts->allocPageCnt -= undoRec->pageCnt;
 	bfap->nextPage = undoRec->nextPage;
-	lock_done(&bfap->xtntMap_lk);;
+	lock_done(&bfap->xtntMap_lk);
 
 	/*
          * Migrate and this function must synchronize so that migrate does not
@@ -705,7 +705,7 @@ remove_stg_undo(
 		 * that it fixed a problem but it seems like its the wrong
 		 * thing to do ! Something to be investigated later */
 
-		lock_done(&bfap->xtntMap_lk);;
+		lock_done(&bfap->xtntMap_lk);
 
 		sts = x_load_inmem_xtnt_map(bfap, X_LOAD_REFERENCE);
 		if (sts != EOK) {
@@ -715,7 +715,7 @@ remove_stg_undo(
 			goto HANDLE_EXCEPTION;
 		}
 	}
-	lock_done(&bfap->xtntMap_lk);;
+	lock_done(&bfap->xtntMap_lk);
 
 	/*
          * Note:  It is ok to close the bitfile with locks held.  The
@@ -7158,7 +7158,7 @@ stg_remove_stg_start(
 	    delCnt,
 	    (mcellPtrT **) delList);
 
-	lock_done(&bfap->xtntMap_lk);;
+	lock_done(&bfap->xtntMap_lk);
 
 	if (sts != EOK) {
 		RAISE_EXCEPTION(sts);

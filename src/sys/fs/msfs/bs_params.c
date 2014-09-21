@@ -349,7 +349,7 @@ bs_get_clone_xtnt_map(
 	 * clone_bfap->xtntMap_lk read-locked. */
 	sts = x_load_inmem_xtnt_map(clone_bfap, X_LOAD_REFERENCE);
 	if (sts != EOK) {
-		lock_done(&(orig_bfap->xtntMap_lk));;
+		lock_done(&(orig_bfap->xtntMap_lk));
 		COW_UNLOCK(&(orig_bfap->cow_lk))
 		    TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
 		if (clonextnt_locked)

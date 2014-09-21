@@ -935,7 +935,7 @@ migrate_get_clu_locks(bfAccessT * bfap,
 		}
 	}
 	/* Protect clone fileset tag file contents & nextCloneAccp,noClone. */
-	COW_LOCK_WRITE(&bfap->cow_lk);
+	lock_write(&bfap->cow_lk);
 
 	if (cloneSetp &&
 	    tagdir_lookup(cloneSetp, &bfap->tag, &mcid, &vdi) == EOK) {
@@ -1116,7 +1116,7 @@ pre_reset_block_map_special(bfAccessT * bfap)
 	/* There is a clone fileset. Check to see if this file itself has a
 	 * clone. */
 
-	COW_LOCK_WRITE(&bfap->cow_lk);
+	lock_write(&bfap->cow_lk);
 
 	/*
          * call bs_access_one looking for an in-memory

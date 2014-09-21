@@ -6044,7 +6044,7 @@ HANDLE_EXCEPTION:
 	         * the migTruncLk because the migrate paths use this order.
 	         */
 		MIGTRUNC_LOCK_READ(&cloneap->xtnts.migTruncLk);
-		COW_LOCK_WRITE(&bfap->cow_lk)
+		lock_write(&bfap->cow_lk);
 		/* Lets do the cluster clone shuffle:
 		 * 
 		 * If we didn't get the token then a client could sneak in here
@@ -6711,7 +6711,7 @@ error_exit:
 		         * than once under the same ftx; deadlock city!
 		         */
 
-			COW_LOCK_WRITE(&(bfap->cow_lk))
+			lock_write(&(bfap->cow_lk));
 			    lkLocked = TRUE;
 
 			if (bfap->cloneCnt == bfSetp->cloneCnt) {
@@ -7330,7 +7330,7 @@ HANDLE_EXCEPTION:
 		if (bfap->noClone) {
 			goto lock;
 		}
-		COW_LOCK_WRITE(&bfap->cow_lk)
+		lock_write(&bfap->cow_lk);
 		    if (tagdir_lookup(clonesetp, &bfap->tag, &mcid, &vdi) != EOK) {
 			bfap->noClone = TRUE;
 			COW_UNLOCK(&(bfap->cow_lk))

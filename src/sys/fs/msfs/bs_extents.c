@@ -461,13 +461,13 @@ undo_upd_xtnt_rec(
 		imm_delete_xtnt_map(xtnts->xtntMap);
 		xtnts->xtntMap = NULL;
 		xtnts->validFlag = 0;
-		lock_done(&bfap->xtntMap_lk);;
+		lock_done(&bfap->xtntMap_lk);
 		x_load_inmem_xtnt_map(bfap, X_LOAD_REFERENCE);
 
 		bfap->nextPage = imm_get_next_page(xtnts);
 		imm_get_alloc_page_cnt(xtnts->xtntMap, 0, bfap->nextPage, &xtnts->allocPageCnt);
 
-		lock_done(&bfap->xtntMap_lk);;
+		lock_done(&bfap->xtntMap_lk);
 	}
 	return;
 
@@ -1984,7 +1984,7 @@ x_detach_extent_chain(
 		tempSubXtntp->cnt = cntSave;
 		tempSubXtntp->updateStart = updateStartSave;
 		tempSubXtntp->updateEnd = updateEndSave;
-		lock_done(&bfap->xtntMap_lk);;
+		lock_done(&bfap->xtntMap_lk);
 
 		/*
 	         * If there is no chain off the primary mcell, we're done.
@@ -2202,7 +2202,7 @@ x_create_inmem_xtnt_map(
 
 HANDLE_EXCEPTION:
 
-	lock_done(&(bfap->xtntMap_lk));;
+	lock_done(&(bfap->xtntMap_lk));
 	return sts;
 
 }				/* end x_create_inmem_xtnt_map */

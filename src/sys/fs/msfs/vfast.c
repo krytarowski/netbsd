@@ -4081,7 +4081,7 @@ ss_get_most_xtnts(bfAccessT * bfap,	/* in - file */
 			prevPageCnt = nextXtntDesc.pageCnt;
 			prevBlk = nextXtntDesc.blkOffset;
 		}
-		lock_done(&(bfap->xtntMap_lk));;
+		lock_done(&(bfap->xtntMap_lk));
 		*xtntmap_locked = FALSE;
 		PREEMPT_CHECK(current_thread());
 		sts = x_load_inmem_xtnt_map(bfap, X_LOAD_REFERENCE);
@@ -4380,7 +4380,7 @@ ss_vd_migrate(bfTagT filetag,
 		    SS_PARENT, 0, 0, 0);
 
 		if (xtntmap_locked) {
-			lock_done(&(bfap->xtntMap_lk));;
+			lock_done(&(bfap->xtntMap_lk));
 			xtntmap_locked = FALSE;
 		}
 		if ((extentCnt < 2) || (sts != EOK)) {
@@ -4523,7 +4523,7 @@ ss_vd_migrate(bfTagT filetag,
 HANDLE_EXCEPTION:
 
 	if (xtntmap_locked)
-		lock_done(&(bfap->xtntMap_lk));;
+		lock_done(&(bfap->xtntMap_lk));
 
 	if ((closeFileFlag == TRUE) &&
 	    (sts == EOK) &&
@@ -4545,7 +4545,7 @@ HANDLE_EXCEPTION:
 			RAISE_EXCEPTION(sts);
 		}
 		totXtnts = ss_xtnt_counter(bfap);
-		lock_done(&(bfap->xtntMap_lk));;
+		lock_done(&(bfap->xtntMap_lk));
 
 		if ((totXtnts > 1) &&	/* cant do any better than 1, eh? */
 		    (!BS_BFS_EQL(bfSetId, nilBfSetId)) &&
