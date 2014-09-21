@@ -1292,7 +1292,7 @@ bs_set_bf_params(
 	FS_FILE_WRITE_LOCK(contextp);
 	file_lock_held = TRUE;
 
-	MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+	lock_read(&(bfap->xtnts.migTruncLk));
 	migtrunc_lock_held = TRUE;
 
 	sts = FTX_START_N(FTA_NULL, &ftxH, FtxNilFtxH, bfap->dmnP, 1);

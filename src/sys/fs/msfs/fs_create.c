@@ -209,12 +209,12 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 
 	/* Need to take the directory lock because of the call chain
 	 * insert_seq --> rbf_add_stg */
-	MIGTRUNC_LOCK_READ(&(dir_bfap->xtnts.migTruncLk));
+	lock_read(&(dir_bfap->xtnts.migTruncLk));
 
 	/* Need to take the fileset tag directory lock because of the call
 	 * chain rbf_create --> rbf_int_create --> tagdir_alloc_tag -->
 	 * init_next_tag_page --> rbf_add_stg */
-	MIGTRUNC_LOCK_READ(&(bfSetp->dirBfAp->xtnts.migTruncLk));
+	lock_read(&(bfSetp->dirBfAp->xtnts.migTruncLk));
 
 	/* Need to lock the index file because of the call chain insert_seq
 	 * --> idx_directory_get_space-->idx_directory_insert_space -->
@@ -222,7 +222,7 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 	 * rbf_add_stg */
 	IDX_GET_BFAP(dir_bfap, idx_bfap);
 	if (idx_bfap != NULL) {
-		MIGTRUNC_LOCK_READ(&(idx_bfap->xtnts.migTruncLk));
+		lock_read(&(idx_bfap->xtnts.migTruncLk));
 	}
 	/* May need to take the quota locks because of the call chain
 	 * chk_{blk, bf}_quota --> dqsync --> rbf_add_stg */
@@ -242,7 +242,7 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 			(qtype == GRPQUOTA && !BSD_MODE(ndp->ni_dvp) &&
 			    !(dir_cp->dir_stats.st_mode & S_ISGID))) &&
 		    !quota_page_is_mapped(fsNp->qi[qtype].qiAccessp, ids[qtype])) {
-			MIGTRUNC_LOCK_READ(&(fsNp->qi[qtype].qiAccessp->xtnts.migTruncLk));
+			lock_read(&(fsNp->qi[qtype].qiAccessp->xtnts.migTruncLk));
 			quota_mig_trunc_lock[qtype] = TRUE;
 		}
 	}

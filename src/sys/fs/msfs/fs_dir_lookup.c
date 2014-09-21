@@ -1574,7 +1574,7 @@ remove_entry(
 	 * idx_index_get_free_pgs_int --> rbf_add_stg */
 	IDX_GET_BFAP(dir_access, idx_bfap);
 	if (idx_bfap != NULL) {
-		MIGTRUNC_LOCK_READ(&(idx_bfap->xtnts.migTruncLk));
+		lock_read(&(idx_bfap->xtnts.migTruncLk));
 	}
 	/* this is called from verify so the fileset is already mounted. */
 	fsnp = dir_access->bfSetp->fsnp;
@@ -1588,7 +1588,7 @@ remove_entry(
 	 * quota file might be broken too and not contain the appropriate
 	 * entry.  */
 	for (type = 0; type < MAXQUOTAS; type++) {
-		MIGTRUNC_LOCK_READ(&(fsnp->qi[type].qiAccessp->xtnts.migTruncLk));
+		lock_read(&(fsnp->qi[type].qiAccessp->xtnts.migTruncLk));
 	}
 
 	ret = FTX_START_N(

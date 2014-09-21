@@ -302,7 +302,7 @@ bs_fragbf_thread(void)
 	                 * lock before starting the transaction since that is the same
 	                 * order that code in the migrate path does it.
 	                 */
-			MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+			lock_read(&(bfap->xtnts.migTruncLk));
 
 			/* No need to take the quota mt locks here. Storage is
 			 * only added to the quota files at file creation,
@@ -6043,7 +6043,7 @@ HANDLE_EXCEPTION:
 	         * file's extent map.  We need to take the cow_lk after taking
 	         * the migTruncLk because the migrate paths use this order.
 	         */
-		MIGTRUNC_LOCK_READ(&cloneap->xtnts.migTruncLk);
+		lock_read(&cloneap->xtnts.migTruncLk);
 		lock_write(&bfap->cow_lk);
 		/* Lets do the cluster clone shuffle:
 		 * 

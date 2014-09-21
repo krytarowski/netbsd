@@ -787,7 +787,7 @@ bs_add_overlapping_stg(
 {
 	int sts;
 
-	MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+	lock_read(&(bfap->xtnts.migTruncLk));
 	sts = rbf_add_overlapping_stg(
 	    bfap,
 	    pageOffset,
@@ -1097,7 +1097,7 @@ bs_add_stg(
 	int sts;
 
 	/* Prevent races with migrate code paths */
-	MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+	lock_read(&(bfap->xtnts.migTruncLk));
 	sts = rbf_add_stg(bfap, pageOffset, pageCnt, FtxNilFtxH, 1);
 	MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
 	return sts;

@@ -1031,7 +1031,7 @@ tagdir_set_next_tag(
 	for (pg = bfSetp->tagUnInPg; pg <= tagPg; pg += 1) {
 
 		/* Prevent races with migrate code paths */
-		MIGTRUNC_LOCK_READ(&(bfSetp->dirBfAp->xtnts.migTruncLk));
+		lock_read(&(bfSetp->dirBfAp->xtnts.migTruncLk));
 		sts = FTX_START_N(FTA_BS_SET_NEXT_TAG_V1, &ftxH, FtxNilFtxH,
 		    bfSetp->dmnP, 2);
 		if (sts != EOK) {

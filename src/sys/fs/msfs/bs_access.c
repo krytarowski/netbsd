@@ -3731,14 +3731,14 @@ bs_close_one(
 		/* Need to take the bfap lock because of the call chain
 		 * bf_setup_truncation --> stg_remove_stg_start */
 
-		MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+		lock_read(&(bfap->xtnts.migTruncLk));
 		mig_trunc_lock = TRUE;
 
 		/* Need to take the frag file lock because of the call chain
 		 * fs_create_frag --> bs_frag_alloc --> frag_list_extend -->
 		 * rbf_add_stg */
 		if (fragFlag && (bfap->bfSetp->fragBfAp != NULL)) {
-			MIGTRUNC_LOCK_READ(&(bfap->bfSetp->fragBfAp->xtnts.migTruncLk));
+			lock_read(&(bfap->bfSetp->fragBfAp->xtnts.migTruncLk));
 			frag_mig_trunc_lock = TRUE;
 		}
 		/* No need to take the quota locks. Storage is only added to

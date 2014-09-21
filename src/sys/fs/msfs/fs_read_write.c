@@ -772,7 +772,7 @@ _retry:
 			}
 			/* Need the bfap lock because of call chain
 			 * bf_setup_truncation --> stg_remove_stg_start */
-			MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+			lock_read(&(bfap->xtnts.migTruncLk));
 
 			/* No need to take the quota locks here because the
 			 * quota entry already exists. It's only when the file
@@ -1795,7 +1795,7 @@ _error:
 			uint32_t delCnt;
 			void *delList;
 
-			MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+			lock_read(&(bfap->xtnts.migTruncLk));
 			FTX_START_N(
 			    FTA_FS_WRITE_TRUNC,
 			    &ftxH,
@@ -2650,7 +2650,7 @@ fs_write_add_stg(
          */
 
 	/* Need to lock the bfap because of call to stg_add_stg_no_cow. */
-	MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+	lock_read(&(bfap->xtnts.migTruncLk));
 
 	/* No need to lock the quota locks. Storage is only added to them at
 	 * file creation, chown and explicit quota setting.

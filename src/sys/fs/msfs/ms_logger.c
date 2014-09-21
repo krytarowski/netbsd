@@ -3909,7 +3909,7 @@ lgr_switch_vol(
 
 		/* Prevent races with migrate code paths */
 		KASSERT(newAccP->bfSetp->cloneId == BS_BFSET_ORIG);
-		MIGTRUNC_LOCK_READ(&(newAccP->xtnts.migTruncLk));
+		lock_read(&(newAccP->xtnts.migTruncLk));
 		sts = FTX_START_N(FTA_NULL, &ftxH, FtxNilFtxH, newAccP->dmnP, 0);
 		if (sts != EOK) {
 			MIGTRUNC_UNLOCK(&(newAccP->xtnts.migTruncLk));

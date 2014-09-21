@@ -1428,7 +1428,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 	 * starting a root ftx. */
 	/* can't be a clone */
 	KASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
-	MIGTRUNC_LOCK_READ(&bfap->xtnts.migTruncLk);
+	lock_read(&bfap->xtnts.migTruncLk);
 
 	/* No need to take the quota lock here. Storage is only added to the
 	 * quota files at file creation, chown and explicit quota setting. We
@@ -2145,7 +2145,7 @@ remove_it_1:
 	 * idx_index_get_free_pgs_int --> rbf_add_stg */
 	IDX_GET_BFAP(bfap, idx_bfap);
 	if (idx_bfap != NULL) {
-		MIGTRUNC_LOCK_READ(&(idx_bfap->xtnts.migTruncLk));
+		lock_read(&(idx_bfap->xtnts.migTruncLk));
 	}
 	/* No need to take the quota locks here. Storage is added to the quota
 	 * files only at file creation, chown and explicit quota setting. The
@@ -2560,7 +2560,7 @@ msfs_link(
 
 	/* Need to take the directory lock because of the call chain
 	 * insert_seq --> rbf_add_stg */
-	MIGTRUNC_LOCK_READ(&(dir_bfap->xtnts.migTruncLk));
+	lock_read(&(dir_bfap->xtnts.migTruncLk));
 
 	/* Need to take the fileset tag directory lock because of the call
 	 * chain
@@ -2568,7 +2568,7 @@ msfs_link(
 	 * insert_seq --> idx_convert_dir --> idx_create_index_file -->
 	 * idx_create_index_file_int --> rbf_create --> rbf_int_create -->
 	 * tagdir_alloc_tag --> init_next_tag_page-->rbf_add_stg */
-	MIGTRUNC_LOCK_READ(&(dir_bfap->bfSetp->dirBfAp->xtnts.migTruncLk));
+	lock_read(&(dir_bfap->bfSetp->dirBfAp->xtnts.migTruncLk));
 
 	/* Need to take the index lock because of the call chain insert_seq
 	 * --> idx_directory_get_space --> idx_directory_insert_space -->
@@ -2577,7 +2577,7 @@ msfs_link(
 
 	IDX_GET_BFAP(dir_bfap, idx_bfap);
 	if (idx_bfap != NULL) {
-		MIGTRUNC_LOCK_READ(&(idx_bfap->xtnts.migTruncLk));
+		lock_read(&(idx_bfap->xtnts.migTruncLk));
 	}
 	/* No need to take the quota locks. The link may add space to the
 	 * directory but it is owned by whoever owned the original link, so
@@ -3111,7 +3111,7 @@ again:
 		 * insert_seq --> rbf_add_stg on it. this lock is not taken in
 		 * the else branch of this if, so remember that we have taken
 		 * it, so we can unlock it at the end. */
-		MIGTRUNC_LOCK_READ(&(to_dir_accessp->xtnts.migTruncLk));
+		lock_read(&(to_dir_accessp->xtnts.migTruncLk));
 
 		/* Need to take the lock on the ``to'' fileset tag directory
 		 * because of the call chain insert_seq -->
@@ -3126,7 +3126,7 @@ again:
 		 * idx_index_get_free_pgs_int --> rbf_add_stg */
 		IDX_GET_BFAP(to_dir_accessp, to_idx_bfap);
 		if (to_idx_bfap != NULL) {
-			MIGTRUNC_LOCK_READ(&(to_idx_bfap->xtnts.migTruncLk));
+			lock_read(&(to_idx_bfap->xtnts.migTruncLk));
 		}
 		/* this flag remembers all three ``to'' mt locks */
 		to_dir_mig_trunc_lock = TRUE;
@@ -3139,7 +3139,7 @@ again:
 		 * the same read lock twice due to deadlocks. */
 		IDX_GET_BFAP(from_dir_accessp, from_idx_bfap);
 		if ((from_idx_bfap != NULL) && (from_idx_bfap != to_idx_bfap)) {
-			MIGTRUNC_LOCK_READ(&(from_idx_bfap->xtnts.migTruncLk));
+			lock_read(&(from_idx_bfap->xtnts.migTruncLk));
 			from_dir_mig_trunc_lock = TRUE;
 		}
 		/* No need to take the quota locks. Storage is only added to
@@ -3313,7 +3313,7 @@ again:
 		 * idx_index_get_free_pgs_int --> rbf_add_stg */
 		IDX_GET_BFAP(from_dir_accessp, from_idx_bfap);
 		if (from_idx_bfap != NULL) {
-			MIGTRUNC_LOCK_READ(&(from_idx_bfap->xtnts.migTruncLk));
+			lock_read(&(from_idx_bfap->xtnts.migTruncLk));
 			from_dir_mig_trunc_lock = TRUE;
 		}
 		/* No need to take the quota locks - decr_link_count cannot
@@ -3858,7 +3858,7 @@ msfs_rmdir(
 	 * idx_index_get_free_pgs_int --> rbf_add_stg */
 	IDX_GET_BFAP(par_access, idx_bfap);
 	if (idx_bfap != NULL) {
-		MIGTRUNC_LOCK_READ(&(idx_bfap->xtnts.migTruncLk));
+		lock_read(&(idx_bfap->xtnts.migTruncLk));
 	}
 	/* No need to take the quota locks. rbf_delete will NOT add storage to
 	 * the quota files. The entry already exists. */
