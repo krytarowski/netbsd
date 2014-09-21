@@ -2269,7 +2269,7 @@ x_load_inmem_xtnt_map(
 	    lock_request == X_LOAD_UPDATE ||
 	    lock_request == X_LOAD_LOCKSOWNED);
 	if (lock_request == X_LOAD_REFERENCE) {
-		XTNMAP_LOCK_READ(&(bfap->xtntMap_lk))
+		lock_read(&(bfap->xtntMap_lk));
 		    if (xtnts->validFlag) {
 			/* If extents are valid, just return with xtntMap READ
 			 * locked */

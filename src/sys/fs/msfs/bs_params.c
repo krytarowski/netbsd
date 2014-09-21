@@ -1184,7 +1184,7 @@ bs_get_bf_params(
 	bfParams->cloneId = bfap->cloneId;
 	bfParams->cloneCnt = bfap->cloneCnt;
 	bfParams->vdIndex = bfap->primVdIndex;
-	XTNMAP_LOCK_READ(&(bfap->xtntMap_lk))
+	lock_read(&(bfap->xtntMap_lk));
 	    bfParams->numPages = bfap->xtnts.allocPageCnt;
 	bfParams->nextPage = bfap->nextPage;
 	bfParams->cl.extendSize = bfap->extendSize;
@@ -2036,7 +2036,7 @@ bs_get_avail_mcells(
 			 * page) */
 			bmtap = vdp->bmtp;
 
-			XTNMAP_LOCK_READ(&(bmtap->xtntMap_lk))
+			lock_read(&(bmtap->xtntMap_lk));
 			/*
 	                 * The number of potential bitfiles is limited by the
 	                 * space available for tags and the space available for

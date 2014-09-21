@@ -670,7 +670,7 @@ migrate_normal_one_disk(
 
 	xtntMap = bfap->xtnts.xtntMap;
 
-	XTNMAP_LOCK_READ(&(bfap->xtntMap_lk))
+	lock_read(&(bfap->xtntMap_lk));
 	    unlockFlag = 1;
 
 	/*

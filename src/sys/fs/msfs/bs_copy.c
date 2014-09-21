@@ -435,7 +435,7 @@ set_block_map(
 	                 * be written to both the copy and the original.
 	                 */
 
-			XTNMAP_LOCK_READ(&(bfAccess->xtntMap_lk))
+			lock_read(&(bfAccess->xtntMap_lk));
 			/*
 	                 * NOTE: If multiple copy operations  are in-progress, the block map
 	                 * is set so that the buffer's contents is written to every copy.
