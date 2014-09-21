@@ -527,7 +527,7 @@ msfs_pl_get_locks(
 				 * are obtained in msfs_getattr() called by
 				 * the SEC_PROP_VALIDATE routine. */
 
-				CLU_CLXTNT_READ_LOCK_RECURSIVE(&bfap->clu_clonextnt_lk);
+				lock_read_recursive(&bfap->clu_clonextnt_lk);
 				*clu_clxtnt_locked = TRUE;
 			}
 			lock_read_recursive(&(orig_bfap->cow_lk));
@@ -540,7 +540,7 @@ msfs_pl_get_locks(
 		if (clu_is_ready()) {
 			/* If this is a cluster then we need to block from
 			 * getting the clone xtnt map during migration. */
-			CLU_CLXTNT_READ_LOCK_RECURSIVE(&bfap->clu_clonextnt_lk);
+			lock_read_recursive(&bfap->clu_clonextnt_lk);
 			*clu_clxtnt_locked = TRUE;
 		}
 		/* block access to the clone's extent maps if truncating the
