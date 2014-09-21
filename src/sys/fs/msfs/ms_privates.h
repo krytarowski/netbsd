@@ -26,8 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define CLU_CLXTNT_TRY_READ( sLk ) \
-    lock_try_read( sLk )
 #define CLU_CLXTNT_UNLOCK( sLk) \
     lock_done( sLk );
 
