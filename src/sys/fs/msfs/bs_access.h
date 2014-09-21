@@ -486,11 +486,11 @@ limits_of_active_range(
  * routine to add to free list.
  */
 
-#define DEC_REFCNT( bfap ) \
-{ \
-    KASSERT(SLOCK_HOLDER(&(bfap)->bfaLock.mutex)); \
-    if ( --bfap->refCnt <= 0 ) \
-        free_acc_struct( bfap ); \
+static inline void DEC_REFCNT(bfAccessT *bfap)
+{
+    KASSERT(mutex_owned(&bfap->bfaLock.mutex));
+    if (--bfap->refCnt <= 0)
+        free_acc_struct(bfap);
 }
 
 /* Move access structure to the closed list; caller typically has already
