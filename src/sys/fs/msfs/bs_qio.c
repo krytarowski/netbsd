@@ -269,9 +269,6 @@ bs_q_blocking(
 		mutex_exit(&bp->bufLock.mutex);
 
 		tmp = tmp->fwd;
-
-		SMSYNC_DBG(SMSYNC_DBG_BUF,
-		    aprintf("blockingQ:     bsBuf 0x%lx  vd 0x%lx\n", bp, vdp));
 	} while (i--);
 
 	u.u_tru.tru_inblock += read_count;
@@ -348,9 +345,6 @@ bs_q_flushq(
 
 		mutex_exit(&bp->bufLock.mutex);
 		tmp = tmp->fwd;
-
-		SMSYNC_DBG(SMSYNC_DBG_BUF,
-		    aprintf("flushQ:     bsBuf 0x%lx  vd 0x%lx\n", bp, vdp));
 	} while (i--);
 
 	u.u_tru.tru_inblock += read_count;
@@ -427,9 +421,6 @@ bs_q_ubcreq(
 
 		mutex_exit(&bp->bufLock.mutex);
 		tmp = tmp->fwd;
-
-		SMSYNC_DBG(SMSYNC_DBG_BUF,
-		    aprintf("ubcReqQ:     bsBuf 0x%lx  vd 0x%lx\n", bp, vdp));
 	} while (i--);
 
 	u.u_tru.tru_inblock += read_count;
@@ -1689,9 +1680,6 @@ bs_q_lazy(
 			for (count = len, iop = ioListp; count; count--, iop = iop->fwd) {
 				iop->ioQ = WAIT_LAZY;
 				iop->bsBuf->bufDebug |= BSBUF_WAITQ;	/* debug */
-				SMSYNC_DBG(SMSYNC_DBG_BUF,
-				    aprintf("bs_q_lazy:     bsBuf 0x%lx  added onto waitQ  vd 0x%lx\n",
-					iop->bsBuf, vdp));
 			}
 
 			vdp->waitLazyQ.bwd->fwd = ioListp;
@@ -1881,8 +1869,6 @@ ready_to_consolq(struct vd * vdp)
 		    (iop->bsBuf->ioList.writeCnt == 1)) {
 			len++;
 			iop->ioQ = CONSOL;
-			SMSYNC_DBG(SMSYNC_DBG_BUF,
-			    aprintf("readytocons:   bsBuf 0x%lx  vd 0x%lx\n", iop->bsBuf, vdp));
 			iop = iop->fwd;
 		}
 
@@ -2290,9 +2276,6 @@ sort_onto_readyq(
 		 * essence this is now a sort/merge onto the readyQ. The fake
 		 * header is added to make the sort algorithm easier. */
 		while (chain_iop) {
-			SMSYNC_DBG(SMSYNC_DBG_BUF,
-			    aprintf("sortready: bsBuf 0x%lx  added onto readyQ  vd 0x%lx\n",
-				chain_iop->bsBuf, vdp));
 			next = chain_iop->fwd;
 			sort_to_list(chain_iop, sorted_list, READY_LAZY);
 			chain_iop = next;
@@ -4667,9 +4650,6 @@ again:
 			iop->bwd->fwd = (ioDescT *) iop->fwd;
 			iop->ioQ = NONE;
 
-			SMSYNC_DBG(SMSYNC_DBG_BUF,
-			    aprintf("rm_or_mvq:     bsBuf 0x%lx  vd 0x%lx\n", bp, vdp));
-
 			if (qhdr != (ioDescHdrT *) & vdp->tempQ) {
 				KASSERT(qhdr->ioQLen > 0);
 				qhdr->ioQLen--;
@@ -4783,10 +4763,6 @@ tryagain:
 
 again:
 		if (qhdr != NULL) {
-
-			SMSYNC_DBG(SMSYNC_DBG_BUF,
-			    aprintf("rm_ioq:        bsBuf 0x%lx  vd 0x%lx\n", bp, vdp));
-
 			lockptr = &qhdr->ioQLock;
 			mutex_enter(lockptr.mutex);
 
@@ -5412,10 +5388,6 @@ add_to_smsync(
 			}
 
 			stampq = (stamp + smsync_step) % SMSYNC_NQS;
-			SMSYNC_DBG(SMSYNC_DBG_BUF,
-			    aprintf("addtosmsync:   bsBuf 0x%lx  added onto smSyncQ %d (time %d, stamp %d)  vd 0x%lx\n",
-				iop->bsBuf, stampq, sched_tick, stamp, vdp));
-
 			/* Remove iop from incoming list and put it onto the
 			 * appropriate smoothsync queue. The waitLazy queue
 			 * lock is held or the associated bsBuf is marked
@@ -5524,8 +5496,6 @@ smsync_to_readyq(struct vd * vdp, int flushFlag)
          */
 	if (flushFlag == IO_FLUSH) {
 		cnt = SMSYNC_NQS;
-		SMSYNC_DBG(SMSYNC_DBG_OP,
-		    aprintf("smsync_rdyq:   all queues  vd 0x%lx\n", vdp));
 	} else {
 		/* Avoid the cost of the division operation for the common
 		 * cases of smsync_period value of 1, 2, or 4 (i.e. smsync_age
@@ -5551,12 +5521,9 @@ smsync_to_readyq(struct vd * vdp, int flushFlag)
 			cnt = to - from;
 		else
 			cnt = SMSYNC_NQS - (from - to);
-		SMSYNC_DBG(SMSYNC_DBG_OP,
-		    aprintf("smsync_rdyq:   %d queue(s) starting at %d  vd 0x%lx\n", cnt, from, vdp));
 	}
 
 	for (; cnt--; from = (from + 1) % SMSYNC_NQS) {
-
 		smsyncq = get_smsyncq(vdp, from, &ioQ);
 		mutex_enter(&smsyncq->ioQLock.mutex);
 		iop = smsyncq->fwd;

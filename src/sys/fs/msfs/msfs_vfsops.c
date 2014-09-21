@@ -3307,10 +3307,6 @@ msfs_smoothsync(mp, sync_age, smsync_flag)
          * will set "smsync_flag" to indicate this should be done.
          */
 	if (sync_age == 0 || (smsync_flag & SMSYNC_PERIOD)) {
-
-		SMSYNC_DBG(SMSYNC_DBG_OP,
-		    aprintf("smoothsync:    lgr_flush  dmnP = 0x%lx\n", dmnP));
-
 		(void) msfs_sync_mmap(mp);
 		(void) msfs_sync_todr(mp, 0);
 

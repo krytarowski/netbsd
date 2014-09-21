@@ -125,8 +125,6 @@
 
 #ifdef _KERNEL
 
-#if 0 /* missing */
-#endif
 #define ASSERT_NO_LOCKS()     KASSERT(current_thread()->lock_count == 0)
 
 #endif
@@ -141,19 +139,6 @@
  */
 #define SMOOTHSYNC_DEBUG 1
 #endif				/* ADVFS_SMP_ASSERT */
-
-#if SMOOTHSYNC_DEBUG
-extern u_int smsync_debug;
-#define SMSYNC_DBG_Q    0x1
-#define SMSYNC_DBG_OP   0x2
-#define SMSYNC_DBG_BUF  0x4
-#define SMSYNC_DBG(flag,action) \
-{ \
-    if (smsync_debug & (flag)) (action); \
-}
-#else
-#define SMSYNC_DBG(flag,action)
-#endif				/* SMOOTHSYNC_DEBUG */
 #endif				/* _KERNEL */
 
 #include <fs/msfs/bs_ods.h>
