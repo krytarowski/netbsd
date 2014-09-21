@@ -2404,7 +2404,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		if (sts != EOK) {
 			RAISE_EXCEPTION(sts);
 		}
-		XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+		lock_done(&bfap->xtntMap_lk);;
 		extent_map_locked = FALSE;
 
 
@@ -3260,7 +3260,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 		if (sts != EOK) {
 			RAISE_EXCEPTION(sts);
 		}
-		XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+		lock_done(&bfap->xtntMap_lk);;
 		extent_map_locked = FALSE;
 
 		replXtntMap->cnt = replXtntMap->validCnt = replSXMapCnt + 1;
@@ -3373,7 +3373,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 			if (sts != EOK) {
 				RAISE_EXCEPTION(sts);
 			}
-			XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+			lock_done(&bfap->xtntMap_lk);;
 			extent_map_locked = FALSE;
 
 			replXtntMap->cnt = replXtntMap->validCnt = replSXMapCnt + 1;
@@ -3656,7 +3656,7 @@ done:
 HANDLE_EXCEPTION:
 
 	if (extent_map_locked) {
-		XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+		lock_done(&bfap->xtntMap_lk);;
 	}
 	if (modXtntMap != NULL) {
 		ms_free(modXtntMap);

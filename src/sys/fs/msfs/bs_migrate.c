@@ -764,7 +764,7 @@ migrate_normal_one_disk(
 	newOverXtntMap->validCnt = newOverXtntMap->cnt;
 
 	unlockFlag = 0;
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	    imm_get_first_xtnt_desc(newOverXtntMap, &xtntDescId, &startXtntDesc);
 
 	while (startXtntDesc.pageCnt > 0) {
@@ -843,7 +843,7 @@ migrate_normal_one_disk(
 HANDLE_EXCEPTION:
 
 	if (unlockFlag != 0) {
-		XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+		lock_done(&(bfap->xtntMap_lk));
 	}
 	if (overXtntMap != NULL) {
 		imm_delete_xtnt_map(overXtntMap);
@@ -1289,7 +1289,7 @@ get_copy_storage:
 	    &holeVdIndex
 	    );
 
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	    if (sts != EOK) {
 		RAISE_EXCEPTION(sts);
 	}
@@ -1423,7 +1423,7 @@ get_copy_storage:
 	    copyXtntMap
 	    );
 
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	/*
          * Create the copy.
          *
@@ -1512,7 +1512,7 @@ get_copy_storage:
 		xtnt_map_list_removed = 1;
 	}
 
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	/*
          * For those bitfile pages still in the buffer cache, update each
          * page's block map so that the page maps the original's storage
@@ -1944,7 +1944,7 @@ get_copy_storage:
 	    bfCopyXtntMap
 	    );
 
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	/*
          * Create the copy.
          *
@@ -2032,7 +2032,7 @@ get_copy_storage:
 		xtnt_map_list_removed = 1;
 	}
 
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	/*
          * For those bitfile pages still in the buffer cache, update each
          * page's block map so that the page maps the original's storage
@@ -3232,7 +3232,7 @@ move_metadata(
 			    xtntMapp->subXtntMap[0].mcellId.page = newMcellId.page;
 			xtntMapp->hdrMcellId.cell =
 			    xtntMapp->subXtntMap[0].mcellId.cell = newMcellId.cell;
-			XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+			lock_done(&(bfap->xtntMap_lk));
 			/* Do the same for the clone, if necessary. */
 			    if ((cloneBfap != NULL) && (delFlag == 0)) {
 				xtntMapp = cloneBfap->xtnts.xtntMap;
@@ -3249,10 +3249,10 @@ move_metadata(
 				    xtntMapp->subXtntMap[0].mcellId.page = newMcellId.page;
 				xtntMapp->hdrMcellId.cell =
 				    xtntMapp->subXtntMap[0].mcellId.cell = newMcellId.cell;
-				XTNMAP_UNLOCK(&(cloneBfap->xtntMap_lk))
+				lock_done(&(cloneBfap->xtntMap_lk));
 			}
 		} else {
-			XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+			lock_done(&(bfap->xtntMap_lk));
 		}
 	}
 	bfap->primVdIndex = localVdIndex;
@@ -4028,7 +4028,7 @@ mig_pack_vd_range(
 				switch (inwayBfap->xtnts.type) {
 				case BSXMT_APPEND:
 					reload_pXtntp(inwayBfap->xtnts.xtntMap, pXtntp);
-					XTNMAP_UNLOCK(&(inwayBfap->xtntMap_lk))
+					lock_done(&(inwayBfap->xtntMap_lk));
 					    if (pXtntp->ssPackPageCnt == 0) {
 						break;	/* out of switch, get
 							 * next pXtnt */
@@ -4228,7 +4228,7 @@ mig_pack_vd_range(
 					    &(bfPageRange),
 					    &bfPageRangeCnt);
 
-					XTNMAP_UNLOCK(&(inwayBfap->xtntMap_lk))
+					lock_done(&(inwayBfap->xtntMap_lk));
 					    if (sts != EOK) {
 						break;	/* out of switch, get
 							 * next pXtnt */
@@ -4512,7 +4512,7 @@ mig_pack_vd_range(
 					break;
 
 				default:
-					XTNMAP_UNLOCK(&(inwayBfap->xtntMap_lk))
+					lock_done(&(inwayBfap->xtntMap_lk));
 					    sts = ENOT_SUPPORTED;
 					goto _cleanup;
 

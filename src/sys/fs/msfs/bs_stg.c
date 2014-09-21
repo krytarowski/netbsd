@@ -565,7 +565,7 @@ add_stg_undo(
 	}
 	xtnts->allocPageCnt -= undoRec->pageCnt;
 	bfap->nextPage = undoRec->nextPage;
-	XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+	lock_done(&bfap->xtntMap_lk);;
 
 	/*
          * Migrate and this function must synchronize so that migrate does not
@@ -705,7 +705,7 @@ remove_stg_undo(
 		 * that it fixed a problem but it seems like its the wrong
 		 * thing to do ! Something to be investigated later */
 
-		XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+		lock_done(&bfap->xtntMap_lk);;
 
 		sts = x_load_inmem_xtnt_map(bfap, X_LOAD_REFERENCE);
 		if (sts != EOK) {
@@ -715,7 +715,7 @@ remove_stg_undo(
 			goto HANDLE_EXCEPTION;
 		}
 	}
-	XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+	lock_done(&bfap->xtntMap_lk);;
 
 	/*
          * Note:  It is ok to close the bitfile with locks held.  The
@@ -971,7 +971,7 @@ retry:
 	                 * It can happen when we a disk is removed from service
 	                 * while we are allocating storage.
 	                 */
-			XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+			lock_done(&bfap->xtntMap_lk);
 			    xtntMap_locked = 0;
 			ftx_fail(ftxH);
 			goto retry;
@@ -1052,7 +1052,7 @@ retry:
 
 	xtnts->allocPageCnt = xtnts->allocPageCnt + grantedPageCnt;
 
-	XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+	lock_done(&bfap->xtntMap_lk);
 	    xtntMap_locked = 0;
 
 	undoRec.nextPage = bfap->nextPage;
@@ -1069,7 +1069,7 @@ retry:
 
 HANDLE_EXCEPTION:
 	if (xtntMap_locked) {
-		XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+		lock_done(&bfap->xtntMap_lk);
 		    xtntMap_locked = 0;
 	}
 	if (failFtxFlag != 0) {
@@ -1360,7 +1360,7 @@ stg_add_stg_no_cow(
 		                         * It can happen when we a disk is removed from service
 		                         * while we are allocating storage.
 		                         */
-					XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+					lock_done(&(bfap->xtntMap_lk));
 					    xtntMap_locked = 0;
 					ftx_fail(ftx);
 				} else {
@@ -1394,7 +1394,7 @@ stg_add_stg_no_cow(
 
 	xtnts->allocPageCnt = xtnts->allocPageCnt + pageCnt;
 
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	    xtntMap_locked = 0;
 
 	undoRec.nextPage = bfap->nextPage;
@@ -1414,7 +1414,7 @@ stg_add_stg_no_cow(
 
 HANDLE_EXCEPTION:
 	if (xtntMap_locked) {
-		XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+		lock_done(&(bfap->xtntMap_lk));
 		    xtntMap_locked = 0;
 	}
 	if (failFtxFlag != 0) {
@@ -4643,7 +4643,7 @@ xfer_stg(
 
 	xtnts->allocPageCnt += bfPageCnt;
 
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	    xtntMap_locked = 0;
 
 	undoRec.nextPage = bfap->nextPage;
@@ -4662,7 +4662,7 @@ xfer_stg(
 HANDLE_EXCEPTION:
 
 	if (xtntMap_locked) {
-		XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+		lock_done(&(bfap->xtntMap_lk));
 		    xtntMap_locked = 0;
 	}
 	if (failFtxFlag != 0) {
@@ -6633,7 +6633,7 @@ x_page_to_blkmap(
 HANDLE_EXCEPTION:
 
 	if (unlock_xtnt_map) {
-		XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+		lock_done(&(bfap->xtntMap_lk));
 	}
 	return sts;
 
@@ -6937,13 +6937,13 @@ page_is_mapped(
 
 	default:
 		if (unlock_xtnt_map) {
-			XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+			lock_done(&bfap->xtntMap_lk);
 		}
 		ADVFS_SAD1("page_is_mapped --- bad extent map type", xtnts->type);
 	}			/* end switch */
 
 	if (unlock_xtnt_map) {
-		XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+		lock_done(&bfap->xtntMap_lk);
 	}
 	return results;
 }
@@ -7036,7 +7036,7 @@ page_is_mapped_local(
 		*start_pg = subXtntMap->bsXA[i].bsPage;
 	}
 end:
-	XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+	lock_done(&bfap->xtntMap_lk);
 	    return results;
 }
 
@@ -7158,7 +7158,7 @@ stg_remove_stg_start(
 	    delCnt,
 	    (mcellPtrT **) delList);
 
-	XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+	lock_done(&bfap->xtntMap_lk);;
 
 	if (sts != EOK) {
 		RAISE_EXCEPTION(sts);

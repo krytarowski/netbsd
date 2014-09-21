@@ -735,7 +735,7 @@ frag_list_extend(
 		sts = FTX_START_N(FTA_FRAG_ALLOC, &ftxH, parentFtxH,
 		    setp->dmnP, 3);
 		if (sts != EOK) {
-			XTNMAP_UNLOCK(&(fragBfAp->xtntMap_lk))
+			lock_done(&(fragBfAp->xtntMap_lk));
 			    goto EXIT_FRAG_LIST_EXTEND;
 		}
 		/*
@@ -765,7 +765,7 @@ frag_list_extend(
 
 		/* Unlock the extent maps here; the add storage will relock
 		 * them for modification. */
-		XTNMAP_UNLOCK(&(fragBfAp->xtntMap_lk))
+		lock_done(&(fragBfAp->xtntMap_lk));
 		    sts = rbf_add_stg(setp->fragBfAp, newPg, newPgCnt, ftxH, 1);
 		if (sts != EOK) {
 			ftx_fail(ftxH);

@@ -2173,7 +2173,7 @@ ss_chk_fragratio(
 	allocPageCnt = bfap->xtnts.allocPageCnt;
 	/* go get the number of not contiguous extents in the file */
 	totXtnts = ss_xtnt_counter(bfap);
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	    if (totXtnts <= 1) {/* cant do any better than 1, eh? */
 		RAISE_EXCEPTION(EOK);
 	}
@@ -4081,7 +4081,7 @@ ss_get_most_xtnts(bfAccessT * bfap,	/* in - file */
 			prevPageCnt = nextXtntDesc.pageCnt;
 			prevBlk = nextXtntDesc.blkOffset;
 		}
-		XTNMAP_UNLOCK(&(bfap->xtntMap_lk));
+		lock_done(&(bfap->xtntMap_lk));;
 		*xtntmap_locked = FALSE;
 		PREEMPT_CHECK(current_thread());
 		sts = x_load_inmem_xtnt_map(bfap, X_LOAD_REFERENCE);
@@ -4176,7 +4176,7 @@ ss_get_vd_most_free(bfAccessT * bfap,
 		}
 		requestedBlkCnt = bfap->xtnts.allocPageCnt * bfap->bfPageSz;
 
-		XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+		lock_done(&(bfap->xtntMap_lk));
 		    if (requestedBlkCnt < 1) {
 			vd_dec_refcnt(vdp);
 			RAISE_EXCEPTION(E_NOT_ENOUGH_XTNTS);
@@ -4336,7 +4336,7 @@ ss_vd_migrate(bfTagT filetag,
 	reqPageCnt = bfap->xtnts.allocPageCnt;
 	pageSize = bfap->bfPageSz;
 	xmTotalPageCnt = bfap->nextPage;
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	    if (!reqPageCnt) {
 		/* no pages to migrate in this file */
 		RAISE_EXCEPTION(EOK);
@@ -4380,7 +4380,7 @@ ss_vd_migrate(bfTagT filetag,
 		    SS_PARENT, 0, 0, 0);
 
 		if (xtntmap_locked) {
-			XTNMAP_UNLOCK(&(bfap->xtntMap_lk));
+			lock_done(&(bfap->xtntMap_lk));;
 			xtntmap_locked = FALSE;
 		}
 		if ((extentCnt < 2) || (sts != EOK)) {
@@ -4523,7 +4523,7 @@ ss_vd_migrate(bfTagT filetag,
 HANDLE_EXCEPTION:
 
 	if (xtntmap_locked)
-		XTNMAP_UNLOCK(&(bfap->xtntMap_lk));
+		lock_done(&(bfap->xtntMap_lk));;
 
 	if ((closeFileFlag == TRUE) &&
 	    (sts == EOK) &&
@@ -4545,7 +4545,7 @@ HANDLE_EXCEPTION:
 			RAISE_EXCEPTION(sts);
 		}
 		totXtnts = ss_xtnt_counter(bfap);
-		XTNMAP_UNLOCK(&(bfap->xtntMap_lk));
+		lock_done(&(bfap->xtntMap_lk));;
 
 		if ((totXtnts > 1) &&	/* cant do any better than 1, eh? */
 		    (!BS_BFS_EQL(bfSetId, nilBfSetId)) &&
@@ -4653,7 +4653,7 @@ ss_blks_on_vd(bfAccessT * bfap,	/* in */
 		}
 	}			/* end for */
 
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+	lock_done(&(bfap->xtntMap_lk));
 	    return (tot_blks_on_vd);
 }
 

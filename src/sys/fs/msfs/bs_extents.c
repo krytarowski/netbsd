@@ -461,13 +461,13 @@ undo_upd_xtnt_rec(
 		imm_delete_xtnt_map(xtnts->xtntMap);
 		xtnts->xtntMap = NULL;
 		xtnts->validFlag = 0;
-		XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+		lock_done(&bfap->xtntMap_lk);;
 		x_load_inmem_xtnt_map(bfap, X_LOAD_REFERENCE);
 
 		bfap->nextPage = imm_get_next_page(xtnts);
 		imm_get_alloc_page_cnt(xtnts->xtntMap, 0, bfap->nextPage, &xtnts->allocPageCnt);
 
-		XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+		lock_done(&bfap->xtntMap_lk);;
 	}
 	return;
 
@@ -1984,7 +1984,7 @@ x_detach_extent_chain(
 		tempSubXtntp->cnt = cntSave;
 		tempSubXtntp->updateStart = updateStartSave;
 		tempSubXtntp->updateEnd = updateEndSave;
-		XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+		lock_done(&bfap->xtntMap_lk);;
 
 		/*
 	         * If there is no chain off the primary mcell, we're done.
@@ -2202,7 +2202,7 @@ x_create_inmem_xtnt_map(
 
 HANDLE_EXCEPTION:
 
-	XTNMAP_UNLOCK(&(bfap->xtntMap_lk));
+	lock_done(&(bfap->xtntMap_lk));;
 	return sts;
 
 }				/* end x_create_inmem_xtnt_map */
@@ -2282,7 +2282,7 @@ x_load_inmem_xtnt_map(
 			 * modifieres, while the xtntMap lock gets
 			 * write-locked.  Check to see if we got to valid in
 			 * the meantime, however. */
-			XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+			lock_done(&(bfap->xtntMap_lk));
 			    lock_read(&(bfap->mcellList_lk.lock));
 			lock_write(&(bfap->xtntMap_lk));
 			    if (xtnts->validFlag) {
@@ -2302,7 +2302,7 @@ x_load_inmem_xtnt_map(
 		    if (xtnts->validFlag) {
 			/* If extents are valid, just return with mcellList
 			 * locked */
-			XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+			lock_done(&(bfap->xtntMap_lk));
 			    return EOK;
 		}
 		/* otherwise fall thru and reload the extent maps */
@@ -2365,7 +2365,7 @@ x_load_inmem_xtnt_map(
 		    lock_done(&(bfap->mcellList_lk));	/* was read-locked */
 	} else if (lock_request == X_LOAD_UPDATE) {
 		/* McellList_lk is already write-locked in this case */
-		XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+		lock_done(&(bfap->xtntMap_lk));
 	}
 	/* else if (lock_request == X_LOAD_LOCKSOWNED) we don't release either
 	 * lock. */
@@ -2381,7 +2381,7 @@ HANDLE_EXCEPTION:
          * the only routine that calls here with X_LOAD_LOCKSOWNED set.
          */
 	if (lock_request != X_LOAD_LOCKSOWNED) {
-		XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
+		lock_done(&(bfap->xtntMap_lk));
 		    lock_done(&(bfap->mcellList_lk));
 	}
 	if (derefFlag != 0) {

@@ -3701,7 +3701,7 @@ link_unlink_mcells_undo(
 		xtnts->validFlag = 0;
 		/* Keep the lock if keep_lock is 1. */
 		if (keep_lock == 0) {
-			XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+			lock_done(&bfap->xtntMap_lk);;
 			x_load_inmem_xtnt_map(bfap, X_LOAD_REFERENCE);
 		} else {
 			x_load_inmem_xtnt_map(bfap, X_LOAD_LOCKSOWNED);
@@ -3712,7 +3712,7 @@ link_unlink_mcells_undo(
 
 		/* Release the lock only if keep_lock is zero. */
 		if (keep_lock == 0) {
-			XTNMAP_UNLOCK(&bfap->xtntMap_lk);
+			lock_done(&bfap->xtntMap_lk);;
 		}
 	}
 	return;

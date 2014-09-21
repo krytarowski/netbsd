@@ -3767,7 +3767,7 @@ scan_rsvd_file_xtnt_map(
 
 	}			/* end while */
 
-	XTNMAP_UNLOCK(&(bfAccess->xtntMap_lk))
+	lock_done(&(bfAccess->xtntMap_lk));
 	    * retFoundFlag = foundFlag;
 
 	return;

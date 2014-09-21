@@ -2288,7 +2288,7 @@ vd_extend(struct vd * vdp)
          */
 	if ((newVdSize < oldVdSize) ||
 	    (newVdSize - oldVdSize <= (16 * ADVFS_PGSZ_IN_BLKS))) {
-		XTNMAP_UNLOCK(&sbmBfap->xtntMap_lk);
+		lock_done(&sbmBfap->xtntMap_lk);;
 		lock_done(&mdBfap->mcellList_lk);
 		ftx_fail(ftxH);
 		return -1;	/* this error return is ignored */
@@ -2369,11 +2369,11 @@ vd_extend(struct vd * vdp)
 	ftx_done_n(ftxH, FTA_BS_VD_EXTEND);
 
 	if (otherLksLocked) {
-		XTNMAP_UNLOCK(&vdp->bmtp->xtntMap_lk);
+		lock_done(&vdp->bmtp->xtntMap_lk);;
 		lock_done(&vdp->rbmt_mcell_lk.lock);
 	}
 	lock_done(&vdp->stgMap_lk);
-	XTNMAP_UNLOCK(&sbmBfap->xtntMap_lk);
+	lock_done(&sbmBfap->xtntMap_lk);;
 
 	advfs_event = (advfs_ev *) ms_malloc(sizeof(advfs_ev));
 	if (advfs_event != NULL) {
@@ -2390,10 +2390,10 @@ error:
          */
 
 	if (xtntMapLocked) {
-		XTNMAP_UNLOCK(&sbmBfap->xtntMap_lk);
+		lock_done(&sbmBfap->xtntMap_lk);;
 	}
 	if (otherLksLocked) {
-		XTNMAP_UNLOCK(&vdp->bmtp->xtntMap_lk);
+		lock_done(&vdp->bmtp->xtntMap_lk);;
 		lock_done(&vdp->rbmt_mcell_lk.lock);
 	}
 	if (stgMapLocked) {
