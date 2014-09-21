@@ -456,7 +456,7 @@ undo_upd_xtnt_rec(
 
 		xtnts = &(bfap->xtnts);
 
-		XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk);
+		lock_write(&bfap->xtntMap_lk);
 
 		imm_delete_xtnt_map(xtnts->xtntMap);
 		xtnts->xtntMap = NULL;
@@ -1957,7 +1957,7 @@ x_detach_extent_chain(
 	         * After that call, we put the extent map back to the way it
 	         * was in memory.
 	         */
-		XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk);
+		lock_write(&bfap->xtntMap_lk);
 		tempSubXtntp = &xtntMap->subXtntMap[0];
 		tempXtntp = &tempSubXtntp->bsXA[0];
 		cntSave = tempSubXtntp->cnt;
@@ -2172,7 +2172,7 @@ x_create_inmem_xtnt_map(
 	vdT *vdp;
 	bsInMemXtntT *xtnts = &bfap->xtnts;
 
-	XTNMAP_LOCK_WRITE(&(bfap->xtntMap_lk));
+	lock_write(&(bfap->xtntMap_lk));
 
 	/*
          * Clear out any old extent maps.
@@ -2284,7 +2284,7 @@ x_load_inmem_xtnt_map(
 			 * the meantime, however. */
 			XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
 			    lock_read(&(bfap->mcellList_lk.lock));
-			XTNMAP_LOCK_WRITE(&(bfap->xtntMap_lk))
+			lock_write(&(bfap->xtntMap_lk));
 			    if (xtnts->validFlag) {
 				/* If extents are now valid, release
 				 * mcellList lock, and downgrade the xtntMap
@@ -2298,7 +2298,7 @@ x_load_inmem_xtnt_map(
 	} else if (lock_request == X_LOAD_UPDATE) {
 		/* UPDATE locking was requested, so WRITE lock both locks.  */
 		lock_write(&(bfap->mcellList_lk));
-		    XTNMAP_LOCK_WRITE(&(bfap->xtntMap_lk))
+		    lock_write(&(bfap->xtntMap_lk));
 		    if (xtnts->validFlag) {
 			/* If extents are valid, just return with mcellList
 			 * locked */
@@ -2382,7 +2382,7 @@ HANDLE_EXCEPTION:
          */
 	if (lock_request != X_LOAD_LOCKSOWNED) {
 		XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
-		    lock_done(&(bfap->mcellList_lk));;
+		    lock_done(&(bfap->mcellList_lk));
 	}
 	if (derefFlag != 0) {
 		(void) bs_derefpg(pgRef, BS_CACHE_IT);	/* Ignore status */

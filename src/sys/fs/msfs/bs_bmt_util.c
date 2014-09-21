@@ -3691,7 +3691,7 @@ link_unlink_mcells_undo(
 	         * unlock it.
 	         */
 		if (!lock_holder(&bfap->xtntMap_lk.lock)) {
-			XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk);
+			lock_write(&bfap->xtntMap_lk);
 		} else {
 			keep_lock = 1;
 		}

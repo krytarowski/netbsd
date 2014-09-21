@@ -2384,7 +2384,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 	         * We want only SHADOW and XTRA extent records in the
 	         * deferred delete list code.
 	         */
-		XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk);
+		lock_write(&bfap->xtntMap_lk);
 		extent_map_locked = TRUE;
 		if (baseSubXtntMapp->type == BSR_XTNTS) {
 			baseSubXtntMapp->type = BSR_XTRA_XTNTS;
@@ -3240,7 +3240,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 	         * We want only SHADOW and XTRA extent records in the
 	         * deferred delete list code.
 	         */
-		XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk);
+		lock_write(&bfap->xtntMap_lk);
 		extent_map_locked = TRUE;
 		if (baseSubXtntMapp->type == BSR_XTNTS) {
 			baseSubXtntMapp->type = BSR_XTRA_XTNTS;
@@ -3353,7 +3353,7 @@ overlay_xtnt_map(bfAccessT * bfap,
 	                 * We want only SHADOW and XTRA extent records in the
 	                 * deferred delete list code.
 	                 */
-			XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk);
+			lock_write(&bfap->xtntMap_lk);
 			extent_map_locked = TRUE;
 			if (baseSubXtntMapp->type == BSR_XTNTS) {
 				baseSubXtntMapp->type = BSR_XTRA_XTNTS;

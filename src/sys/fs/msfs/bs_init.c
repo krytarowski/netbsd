@@ -2264,7 +2264,7 @@ vd_extend(struct vd * vdp)
          *  and lock the extent map
          */
 	ftx_add_lock(&sbmBfap->mcellList_lk, ftxH);
-	XTNMAP_LOCK_WRITE(&sbmBfap->xtntMap_lk);
+	lock_write(&sbmBfap->xtntMap_lk);
 	xtntMapLocked = TRUE;
 
 	/*
@@ -2289,7 +2289,7 @@ vd_extend(struct vd * vdp)
 	if ((newVdSize < oldVdSize) ||
 	    (newVdSize - oldVdSize <= (16 * ADVFS_PGSZ_IN_BLKS))) {
 		XTNMAP_UNLOCK(&sbmBfap->xtntMap_lk);
-		lock_done(&mdBfap->mcellList_lk);;
+		lock_done(&mdBfap->mcellList_lk);
 		ftx_fail(ftxH);
 		return -1;	/* this error return is ignored */
 	}
@@ -2320,7 +2320,7 @@ vd_extend(struct vd * vdp)
 		/* The code to grow the SBM requires locks that must be taken
 		 * here */
 		/* to preserve lock hierarchy. */
-		XTNMAP_LOCK_WRITE(&vdp->bmtp->xtntMap_lk);	/* for hierarchy */
+		lock_write(&vdp->bmtp->xtntMap_lk);	/* for hierarchy */
 		lock_write(&vdp->rbmt_mcell_lk.lock);
 		otherLksLocked = TRUE;
 		lock_write(&vdp->stgMap_lk);	/* protect vd_size,
@@ -2400,7 +2400,7 @@ error:
 		lock_done(&vdp->stgMap_lk);
 	}
 	if (mcellListLocked) {
-		lock_done(&mdBfap->mcellList_lk);;
+		lock_done(&mdBfap->mcellList_lk);
 	}
 	ftx_fail(ftxH);
 

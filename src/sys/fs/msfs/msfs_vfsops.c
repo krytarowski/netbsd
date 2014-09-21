@@ -3081,7 +3081,7 @@ chk_set_fsdev(
 		    ftxH,
 		    BMTR_UNLOCK);
 		if (sts != EOK) {
-			lock_done(&bfSetp->dirBfAp->mcellList_lk);;
+			lock_done(&bfSetp->dirBfAp->mcellList_lk);
 			ftx_fail(ftxH);
 			ms_uprintf("ADVFS: Update of file set dev record failed for %s\n",
 			    mp->m_stat.f_mntfromname);
