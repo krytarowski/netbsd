@@ -7224,7 +7224,7 @@ the_end:
 			BFSETTBL_UNLOCK(bfSetp->dmnP)
 		}
 		if (mcellListLocked) {
-			MCELLIST_UNLOCK(&(bfSetp->dirBfAp->mcellList_lk))
+			lock_done(&(bfSetp->dirBfAp->mcellList_lk));
 		}
 		if (ftxStarted) {
 			ftx_fail(ftxH);

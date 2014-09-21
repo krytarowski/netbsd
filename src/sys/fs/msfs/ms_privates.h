@@ -26,9 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define MCELLIST_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
-
 #define XTNMAP_LOCK_WRITE( sLk ) \
     lock_write( sLk.lock );
 #define XTNMAP_LOCK_READ( sLk ) \

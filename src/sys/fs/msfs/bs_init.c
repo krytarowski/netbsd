@@ -2289,7 +2289,7 @@ vd_extend(struct vd * vdp)
 	if ((newVdSize < oldVdSize) ||
 	    (newVdSize - oldVdSize <= (16 * ADVFS_PGSZ_IN_BLKS))) {
 		XTNMAP_UNLOCK(&sbmBfap->xtntMap_lk);
-		MCELLIST_UNLOCK(&mdBfap->mcellList_lk);
+		lock_done(&mdBfap->mcellList_lk);;
 		ftx_fail(ftxH);
 		return -1;	/* this error return is ignored */
 	}
@@ -2400,7 +2400,7 @@ error:
 		lock_done(&vdp->stgMap_lk);
 	}
 	if (mcellListLocked) {
-		MCELLIST_UNLOCK(&mdBfap->mcellList_lk);
+		lock_done(&mdBfap->mcellList_lk);;
 	}
 	ftx_fail(ftxH);
 

@@ -2290,7 +2290,7 @@ x_load_inmem_xtnt_map(
 				 * mcellList lock, and downgrade the xtntMap
 				 * to a READ lock. */
 				XTNMAP_LOCK_DOWNGRADE(&(bfap->xtntMap_lk))
-				    MCELLIST_UNLOCK(&(bfap->mcellList_lk))
+				    lock_done(&(bfap->mcellList_lk));
 				    return EOK;
 			}
 			/* otherwise fall thru and reload the extent maps */
@@ -2362,7 +2362,7 @@ x_load_inmem_xtnt_map(
 	 * Otherwise, return with just the mcellList lock held. */
 	if (lock_request == X_LOAD_REFERENCE) {
 		XTNMAP_LOCK_DOWNGRADE(&(bfap->xtntMap_lk))
-		    MCELLIST_UNLOCK(&(bfap->mcellList_lk))	/* was read-locked */
+		    lock_done(&(bfap->mcellList_lk));	/* was read-locked */
 	} else if (lock_request == X_LOAD_UPDATE) {
 		/* McellList_lk is already write-locked in this case */
 		XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
@@ -2382,7 +2382,7 @@ HANDLE_EXCEPTION:
          */
 	if (lock_request != X_LOAD_LOCKSOWNED) {
 		XTNMAP_UNLOCK(&(bfap->xtntMap_lk))
-		    MCELLIST_UNLOCK(&(bfap->mcellList_lk));
+		    lock_done(&(bfap->mcellList_lk));;
 	}
 	if (derefFlag != 0) {
 		(void) bs_derefpg(pgRef, BS_CACHE_IT);	/* Ignore status */

@@ -985,7 +985,7 @@ bmtr_get_rec_ptr(
 		(void) bs_derefpg(refpgref, BS_CACHE_IT);
 		RAISE_EXCEPTION(EBAD_PARAMS);
 	}
-	MCELLIST_UNLOCK(&(bfap->mcellList_lk))
+	lock_done(&(bfap->mcellList_lk));
 	    lkLocked = FALSE;
 
 	if (pinPg) {
@@ -1045,7 +1045,7 @@ bmtr_get_rec_ptr(
 HANDLE_EXCEPTION:
 
 	if (lkLocked) {
-		MCELLIST_UNLOCK(&(bfap->mcellList_lk))
+		lock_done(&(bfap->mcellList_lk));
 	}
 	return sts;
 }
@@ -1138,7 +1138,7 @@ bmtr_get_rec_n_lk(
 	(void) bs_derefpg(pgref, BS_CACHE_IT);
 
 	if (lk == BMTR_NO_LOCK) {
-		MCELLIST_UNLOCK(&(bfap->mcellList_lk))
+		lock_done(&(bfap->mcellList_lk));
 		    mcellListLocked = FALSE;
 	}
 	if (rType <= BSR_API_MAX) {
@@ -1155,7 +1155,7 @@ HANDLE_EXCEPTION:
 		(void) bs_derefpg(pgref, BS_CACHE_IT);
 	}
 	if (mcellListLocked) {
-		MCELLIST_UNLOCK(&(bfap->mcellList_lk))
+		lock_done(&(bfap->mcellList_lk));
 	}
 	return sts;
 }
@@ -1468,7 +1468,7 @@ bmtr_put_rec_n_unlk_int(
 		}
 	}
 
-	MCELLIST_UNLOCK(&(bfap->mcellList_lk))
+	lock_done(&(bfap->mcellList_lk));
 	    lkLocked = FALSE;
 
 	ms_free(undoRecp);
@@ -1480,7 +1480,7 @@ HANDLE_EXCEPTION:
 		ftx_fail(ftxH);
 	}
 	if (lkLocked) {
-		MCELLIST_UNLOCK(&(bfap->mcellList_lk))
+		lock_done(&(bfap->mcellList_lk));
 	}
 	if (undoRecp != NULL) {
 		ms_free(undoRecp);
@@ -1723,7 +1723,7 @@ bmtr_update_rec_int(
 	if (ftxStarted) {
 		ftx_done_n(ftxH, FTA_BS_BMT_UPDATE_REC_V1);
 	}
-	MCELLIST_UNLOCK(&(bfap->mcellList_lk))
+	lock_done(&(bfap->mcellList_lk));
 	    lkLocked = FALSE;
 
 	if (rType <= BSR_API_MAX) {
@@ -1737,7 +1737,7 @@ bmtr_update_rec_int(
 HANDLE_EXCEPTION:
 
 	if (lkLocked) {
-		MCELLIST_UNLOCK(&(bfap->mcellList_lk))
+		lock_done(&(bfap->mcellList_lk));
 	}
 	if (ftxStarted) {
 		ftx_fail(ftxH);
