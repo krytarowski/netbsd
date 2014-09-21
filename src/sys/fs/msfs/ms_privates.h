@@ -26,8 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define COW_READ_LOCK_RECURSIVE( sLk ) \
-    lock_read_recursive( sLk );
 #define COW_READ_UNLOCK_RECURSIVE( sLk ) \
     lock_read_done_recursive(sLk);
 #define COW_LOCK_WRITE( sLk ) \
