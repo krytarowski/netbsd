@@ -1586,7 +1586,7 @@ out:
 	SEC_PROP_DATA_FREE(sec_info);
 
 	if (cow_read_locked == TRUE) {
-		COW_READ_UNLOCK_RECURSIVE(&(bfAccess->origAccp->cow_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->cow_lk));
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
@@ -2352,7 +2352,7 @@ msfs_getproplist_int(
 		msfs_pl_deref_cur(&hdr);
 		lock_done(&(bfAccess->mcellList_lk));
 		    if (cow_read_locked == TRUE) {
-			COW_READ_UNLOCK_RECURSIVE(&(bfAccess->origAccp->cow_lk))
+			lock_read_done_recursive(&(bfAccess->origAccp->cow_lk));
 			    cow_read_locked = FALSE;
 		}
 		if (trunc_xfer_locked == TRUE) {
@@ -2421,7 +2421,7 @@ msfs_getproplist_int(
 	msfs_pl_deref_cur(&hdr);
 	lock_done(&(bfAccess->mcellList_lk));
 	    if (cow_read_locked == TRUE) {
-		COW_READ_UNLOCK_RECURSIVE(&(bfAccess->origAccp->cow_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->cow_lk));
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
@@ -3093,7 +3093,7 @@ start:
 			msfs_pl_deref_cur(&hdr);
 
 			if (cow_read_locked == TRUE) {
-				COW_READ_UNLOCK_RECURSIVE(&(bfAccess->origAccp->cow_lk))
+				lock_read_done_recursive(&(bfAccess->origAccp->cow_lk));
 				    cow_read_locked = FALSE;
 			}
 			if (trunc_xfer_locked == TRUE) {
@@ -3134,7 +3134,7 @@ out:
 	ftx_quit(ftx);
 	lock_done(&(bfAccess->mcellList_lk));
 	    if (cow_read_locked == TRUE) {
-		COW_READ_UNLOCK_RECURSIVE(&(bfAccess->origAccp->cow_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->cow_lk));
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
@@ -3714,7 +3714,7 @@ out:
 
 	}
 	if (cow_read_locked == TRUE) {
-		COW_READ_UNLOCK_RECURSIVE(&(bfAccess->origAccp->cow_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->cow_lk));
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
@@ -4201,7 +4201,7 @@ msfs_getproplist_int_v3(
 		msfs_pl_deref_cur(&hdr);
 		lock_done(&(bfAccess->mcellList_lk));
 		    if (cow_read_locked == TRUE) {
-			COW_READ_UNLOCK_RECURSIVE(&(bfAccess->origAccp->cow_lk))
+			lock_read_done_recursive(&(bfAccess->origAccp->cow_lk));
 			    cow_read_locked = FALSE;
 		}
 		if (trunc_xfer_locked == TRUE) {
@@ -4262,7 +4262,7 @@ msfs_getproplist_int_v3(
 	msfs_pl_deref_cur(&hdr);
 	lock_done(&(bfAccess->mcellList_lk));
 	    if (cow_read_locked == TRUE) {
-		COW_READ_UNLOCK_RECURSIVE(&(bfAccess->origAccp->cow_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->cow_lk));
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
@@ -4860,7 +4860,7 @@ start:
 			msfs_pl_deref_cur(&hdr);
 
 			if (cow_read_locked == TRUE) {
-				COW_READ_UNLOCK_RECURSIVE(&(bfAccess->origAccp->cow_lk))
+				lock_read_done_recursive(&(bfAccess->origAccp->cow_lk));
 				    cow_read_locked = FALSE;
 			}
 			if (trunc_xfer_locked == TRUE) {
@@ -4891,7 +4891,7 @@ out:
 	ftx_quit(ftx);
 	lock_done(&(bfAccess->mcellList_lk));
 	    if (cow_read_locked == TRUE) {
-		COW_READ_UNLOCK_RECURSIVE(&(bfAccess->origAccp->cow_lk))
+		lock_read_done_recursive(&(bfAccess->origAccp->cow_lk));
 		    cow_read_locked = FALSE;
 	}
 	if (trunc_xfer_locked == TRUE) {
