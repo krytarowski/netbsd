@@ -4724,7 +4724,7 @@ chk_bmt:
 	    (doing_bmt == FALSE) ? vdp->rbmtp : vdp->bmtp,
 	    bmth->curPg,
 	    BS_SEQ_AHEAD);
-	MCELL_UNLOCK(&vdp->mcell_lk)
+	lock_done(&vdp->mcell_lk);
 	    if (doing_bmt == FALSE)
 		closeRbmtFlag = 1;
 	else
@@ -4774,7 +4774,7 @@ chk_bmt:
 			    (doing_bmt == FALSE) ? bmth->vdp->rbmtp : bmth->vdp->bmtp,
 			    bmth->curPg,
 			    BS_SEQ_AHEAD);
-			MCELL_UNLOCK(&vdp->mcell_lk)
+			lock_done(&vdp->mcell_lk);
 			    if (sts != EOK) {
 				if (sts == E_PAGE_NOT_MAPPED) {
 					/* no more pages in bmt to process */
@@ -4928,7 +4928,7 @@ bmt_open(
 		    bmth->vdp->bmtp,
 		    bmth->curPg,
 		    BS_SEQ_AHEAD);
-		MCELL_UNLOCK(&bmth->vdp->mcell_lk)
+		lock_done(&bmth->vdp->mcell_lk);
 		    vd_dec_refcnt(bmth->vdp);
 		return sts;
 
@@ -5001,7 +5001,7 @@ bmt_read(
 			    bmth->vdp->bmtp,
 			    bmth->curPg,
 			    BS_SEQ_AHEAD);
-			MCELL_UNLOCK(&bmth->vdp->mcell_lk)
+			lock_done(&bmth->vdp->mcell_lk);
 			    if (sts != EOK) {
 				return sts;
 			}

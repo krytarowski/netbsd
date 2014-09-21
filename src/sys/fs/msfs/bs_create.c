@@ -572,7 +572,7 @@ new_mcell(
 		/*
 	         * Got ENO_MORE_MCELLS; unlock mcell_lk and try next volume
 	         */
-		MCELL_UNLOCK(&vdp->mcell_lk)
+		lock_done(&vdp->mcell_lk);
 		    vd_dec_refcnt(vdp);
 	}
 
@@ -787,7 +787,7 @@ dealloc_mcells(
 		    sts = rbf_pinpg(&pgPin, (void *) &bmtp, vdp->bmtp,
 		    mcellId.page, BS_NIL, parentFtxH);
 		if (sts != EOK) {
-			MCELL_UNLOCK(&vdp->mcell_lk)
+			lock_done(&vdp->mcell_lk);
 			    return sts;
 		}
 		mcp = &bmtp->bsMCA[mcellId.cell];
@@ -796,7 +796,7 @@ dealloc_mcells(
 
 		bmt_free_mcell(parentFtxH, vdp, mcp, mcellId, bmtp, pgPin);
 
-		MCELL_UNLOCK(&vdp->mcell_lk)
+		lock_done(&vdp->mcell_lk);
 		/*
 	         ** Go to next mcell.
 	         */
