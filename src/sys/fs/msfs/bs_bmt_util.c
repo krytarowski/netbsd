@@ -4718,7 +4718,7 @@ chk_bmt:
 	bmth = &bmtH;
 
 	bmth->vdp = vdp;
-	MCELL_LOCK_WRITE(&vdp->mcell_lk)
+	lock_write(&vdp->mcell_lk);
 	    sts = bmt_refpg(&bmth->pgRef,
 	    (void *) &bmth->pgPtr,
 	    (doing_bmt == FALSE) ? vdp->rbmtp : vdp->bmtp,
@@ -4768,7 +4768,7 @@ chk_bmt:
 			/*
 	                 ** Try and get the next (R)BMT page.
 	                 */
-			MCELL_LOCK_WRITE(&vdp->mcell_lk)
+			lock_write(&vdp->mcell_lk);
 			    sts = bmt_refpg(&bmth->pgRef,
 			    (void *) &bmth->pgPtr,
 			    (doing_bmt == FALSE) ? bmth->vdp->rbmtp : bmth->vdp->bmtp,
@@ -4922,7 +4922,7 @@ bmt_open(
 	         ** Setup state buffer and read the first page.
 	         */
 
-		MCELL_LOCK_WRITE(&bmth->vdp->mcell_lk)
+		lock_write(&bmth->vdp->mcell_lk);
 		    sts = bmt_refpg(&bmth->pgRef,
 		    (void *) &bmth->pgPtr,
 		    bmth->vdp->bmtp,
@@ -4995,7 +4995,7 @@ bmt_read(
 			/*
 	                 ** Get the next BMT page.
 	                 */
-			MCELL_LOCK_WRITE(&bmth->vdp->mcell_lk)
+			lock_write(&bmth->vdp->mcell_lk);
 			    sts = bmt_refpg(&bmth->pgRef,
 			    (void *) &bmth->pgPtr,
 			    bmth->vdp->bmtp,

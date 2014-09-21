@@ -558,7 +558,7 @@ new_mcell(
 			vd_dec_refcnt(vdp);
 			return EBAD_PARAMS;
 		}
-		MCELL_LOCK_WRITE(&vdp->mcell_lk)
+		lock_write(&vdp->mcell_lk);
 		    if ((sts = bmt_alloc_prim_mcell(
 			    parFtx,
 			    mcellUIdp,
@@ -783,7 +783,7 @@ dealloc_mcells(
 	         * and the effects of undo routines cannot be undone, we don't have to
 	         * worry about some other thread allocating the mcell.
 	         */
-		MCELL_LOCK_WRITE(&vdp->mcell_lk)
+		lock_write(&vdp->mcell_lk);
 		    sts = rbf_pinpg(&pgPin, (void *) &bmtp, vdp->bmtp,
 		    mcellId.page, BS_NIL, parentFtxH);
 		if (sts != EOK) {
