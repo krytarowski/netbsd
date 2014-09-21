@@ -4108,7 +4108,7 @@ clear_bmt(
 
 					ddlVd = VD_HTOP(vdIndex, dmnP);
 
-					DDLACTIVE_LOCK_WRITE(&(ddlVd->ddlActiveLk))
+					lock_write(&(ddlVd->ddlActiveLk));
 					    unlockFlag = 1;
 
 					sts = del_find_del_entry(
@@ -4226,7 +4226,7 @@ find_del_entry(
 			vdIndex++;
 			continue;
 		}
-		DDLACTIVE_LOCK_WRITE(&(vd->ddlActiveLk))
+		lock_write(&(vd->ddlActiveLk));
 		    sts = del_find_del_entry(dmnP,
 		    vd->vdIndex,
 		    bfSetTag,

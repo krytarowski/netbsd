@@ -3986,7 +3986,7 @@ mig_pack_vd_range(
 				if (sts == ENO_SUCH_TAG) {
 					/* File was deleted, or being deleted.
 					 * Find out which one. */
-					DDLACTIVE_LOCK_WRITE(&(vdp->ddlActiveLk))
+					lock_write(&(vdp->ddlActiveLk));
 					    sts = del_find_del_entry(vdp->dmnP,
 					    vdp->vdIndex,
 					    pXtntp->ssPackBfSetId.dirTag,
@@ -4081,7 +4081,7 @@ mig_pack_vd_range(
 								 * deleted.
 								 * Find out
 								 * which one. */
-								DDLACTIVE_LOCK_WRITE(&(vdp->ddlActiveLk))
+								lock_write(&(vdp->ddlActiveLk));
 								    sts = del_find_del_entry(
 								    vdp->dmnP,
 								    vdp->vdIndex,
@@ -4305,7 +4305,7 @@ mig_pack_vd_range(
 									 * h
 									 * one.
 									 * */
-									DDLACTIVE_LOCK_WRITE(&(vdp->ddlActiveLk))
+									lock_write(&(vdp->ddlActiveLk));
 									    sts = del_find_del_entry(
 									    vdp->dmnP,
 									    vdp->vdIndex,
