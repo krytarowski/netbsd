@@ -26,8 +26,6 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define MCELLIST_LOCK_READ( sLk ) \
-    lock_read( sLk.lock );
 #define MCELLIST_UNLOCK( sLk ) \
     lock_done( sLk.lock );
 
