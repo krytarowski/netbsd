@@ -1264,7 +1264,7 @@ get_copy_storage:
          * out-of-date.  But the code didn't detect that and at the end of the
          * migration, the pages that had been added to the hole were lost.
          */
-	MIGTRUNC_LOCK_WRITE(&(bfap->xtnts.migTruncLk))
+	lock_write(&(bfap->xtnts.migTruncLk));
 	    unlkmigTrunc = 1;
 
 	/*
@@ -1378,7 +1378,7 @@ get_copy_storage:
 			RAISE_EXCEPTION(sts);
 		}
 		startedFtxFlag = 1;
-		MIGTRUNC_LOCK_WRITE(&(bfap->xtnts.migTruncLk))
+		lock_write(&(bfap->xtnts.migTruncLk));
 		    unlkmigTrunc = 1;
 		if (savedCowPgCount != bfap->cowPgCount) {
 			KASSERT(bfap->cowPgCount > savedCowPgCount);
@@ -1763,7 +1763,7 @@ get_copy_storage:
          * out-of-date.  But the code didn't detect that and at the end of the
          * migration, the pages that had been added to the hole were lost.
          */
-	MIGTRUNC_LOCK_WRITE(&(bfap->xtnts.migTruncLk))
+	lock_write(&(bfap->xtnts.migTruncLk));
 	    unlkmigTrunc = 1;
 
 	sts = mig_verify_stripe_page_range(
@@ -1855,7 +1855,7 @@ get_copy_storage:
 			RAISE_EXCEPTION(sts);
 		}
 		startedFtxFlag = 1;
-		MIGTRUNC_LOCK_WRITE(&(bfap->xtnts.migTruncLk))
+		lock_write(&(bfap->xtnts.migTruncLk));
 		    unlkmigTrunc = 1;
 		if (savedCowPgCount != bfap->cowPgCount) {
 			KASSERT(bfap->cowPgCount > savedCowPgCount);
