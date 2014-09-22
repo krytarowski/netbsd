@@ -137,17 +137,13 @@ typedef enum TraceAction {
 	DevWrite = 0x20
 } TraceActionT;
 
-
+/* Typedefs */
+/* XXX: Go for native vm_page and vm_map */
 /* XXX: comment with bsBuf to be investigated */
 typedef struct vm_page *vm_page_t;	/*  so bsBuf stays the same size */
 typedef struct vm_map  *vm_map_t;
 
-/* This macro sets the upper 28 bits with the line number, and the lower
- * 36 bits with the thread id.
- */
-#define SET_LINE_AND_THREAD(ln) \
-    ((unsigned long)(ln) << 36) +  \
-    ((unsigned long)current_thread() & 0xfffffffff)
+/* Structs */
 
 /*
  * rangeFlushT - describes a range flush
@@ -230,13 +226,21 @@ typedef struct bsBuf {
  * we have a buffer list.  Obviously, this and
  * the bsBuf struct must match.
  */
-struct bsBufHdr {
+typedef struct bsBufHdr {
 	struct bsBuf *lsnFwd;	/* doubly linked lsn list */
 	struct bsBuf *lsnBwd;
 	struct bsBuf *accFwd;	/* doubly linked off bfAccess */
 	struct bsBuf *accBwd;
 	int length;		/* length of queue */
-};
+} bsBufHdrT;
+
+
+/* This macro sets the upper 28 bits with the line number, and the lower
+ * 36 bits with the thread id.
+ */
+#define SET_LINE_AND_THREAD(ln) \
+    ((unsigned long)(ln) << 36) +  \
+    ((unsigned long)current_thread() & 0xfffffffff)
 
 /*
  * List manipulation macros
