@@ -79,13 +79,15 @@ enum contBits {
 PB_CONT = 1, CK_WAITQ = 2};
 /* Domain dmnFlag values */
 
+/* Structures */
+
 /*
  * Some ftx types that are part of the domain structure, so must be
  * here instead of ftx_privates, which is included after this file.
  */
 
 /* slot states */
-typedef enum {
+typedef enum ftxSlotState {
 	FTX_SLOT_EXC = 1,	/* slot is in use by an exclusive ftx */
 	FTX_SLOT_BUSY = 2,	/* slot is in use by non exclusive ftx */
 	FTX_SLOT_AVAIL = 3,
@@ -93,13 +95,10 @@ typedef enum {
 	FTX_SLOT_UNUSED = 5	/* never been used (recovery may use it) */
 } ftxSlotStateT;
 
-
 typedef struct ftxSlot {
 	struct ftx *ftxp;	/* ptr to ftx struct */
 	ftxSlotStateT state;	/* slot state */
-}       ftxSlotT;
-
-/* Structures */
+} ftxSlotT;
 
 /*
  * ftxTblD - Transaction Table Descriptor
@@ -142,7 +141,8 @@ typedef struct ftxTblD {
 	int oldestSlot;		/* oldest slot whose log contents is not
 				 * written */
 	int totRoots;		/* num root ftxs */
-}       ftxTblDT;
+} ftxTblDT;
+
 /*
  * Link list queuing structures and MACROs
  *
@@ -296,12 +296,7 @@ typedef struct ftxTblD {
 typedef struct bfsQueue {
 	struct bfsQueue *bfsQfwd;
 	struct bfsQueue *bfsQbck;
-}        bfsQueueT;
-
-
-#define BFSET_QUEUE_TO_BFSETP( _link ) \
-    ((bfSetT *)((char *)(_link) - offsetof(bfSetT,bfSetList)))
-
+} bfsQueueT;
 
 /*
  * domain - this structure describes a bitfile domain, which is
@@ -316,7 +311,8 @@ typedef struct vdDesc {
 	char vdName[MAXPATHLEN + 1];	/* block special device name */
 	serviceClassT serviceClass;	/* service class */
 	dev_t device;		/* dev_t for raw device */
-}      vdDescT;
+} vdDescT;
+
 /*
  * Bitfile domain descriptor, filled in from bf domain table.
  */
@@ -435,7 +431,7 @@ typedef struct domain {
 
 	ssDmnInfoT ssDmnInfo;	/* vfast elements. */
 /*>>>>>>> Maintain as last elements of domain structure <<<<<<<<*/
-}      domainT;
+} domainT;
 
 
 /* Shared variables (externs) */
@@ -446,6 +442,9 @@ extern domainT *DomainTbl[];
 /*****************************************************************
 *******************  function prototypes *************************
 *****************************************************************/
+
+#define BFSET_QUEUE_TO_BFSETP( _link ) \
+    ((bfSetT *)((char *)(_link) - offsetof(bfSetT,bfSetList)))
 
 /* Test the validity of a domain pointer. */
 /* "Return" EBAD_DOMAIN_POINTER if the domain is NULL. */
