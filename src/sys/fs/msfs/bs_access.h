@@ -98,6 +98,9 @@
 #define MSFS_DO_VRELE      0x4
 #define MSFS_SS_NOCALL     0x8	/* force vfast to not update vfast lists */
 
+/* Forward definitions */
+struct bfSet;
+
 /* The following structure is used to cache the file stats from the
  * fsContext structure with the access structure when the vnode is
  * reclaimed and the file stats cannot be flushed to disk.  Before the
@@ -279,7 +282,7 @@ typedef struct bfAccess {
 
 	/* The bfSetp can not be modified while the strucuture is in the
 	 * hashtable */
-	bfSetT *bfSetp;		/* ptr to bf set desc */
+	struct bfSet *bfSetp;		/* ptr to bf set desc */
 
 	struct domain *dmnP;	/* ptr of domain desc */
 
@@ -372,11 +375,11 @@ bs_close_one(
     ftxHT parentFtxH		/* in */
 );
 
-void access_invalidate(bfSetT * bfSetp);
+void access_invalidate(struct bfSet * bfSetp);
 
 bfAccessT *
 find_bfap(
-    bfSetT * bfSetp,		/* in  - bitfile-set descriptor poitner */
+    struct bfSet * bfSetp,		/* in  - bitfile-set descriptor poitner */
     bfTagT tag,			/* in  - bitfile tag */
     int hold_hashlock,		/* in  - TRUE = return with HashLock held
 				 * FALSE = release HashLock on return */
@@ -404,7 +407,7 @@ int
 bs_access_one(
     bfAccessT ** bfap,		/* out - access structure pointer */
     bfTagT tag,			/* in - tag of bf to access */
-    bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
+    struct bfSet * bfSetp,		/* in - BF-set descriptor pointer */
     ftxHT ftxH,			/* in - ftx handle */
     uint32_t options,		/* in - options flags */
     struct mount * mp,		/* in - fs mount queue */
@@ -422,7 +425,7 @@ bs_map_bf(
 int
 bs_have_clone(
     bfTagT tag,			/* in - bitfile tag */
-    bfSetT * cloneSetp,		/* in - clone bitfile set desc ptr */
+    struct bfSet * cloneSetp,		/* in - clone bitfile set desc ptr */
     ftxHT ftxH			/* in - ftx handle */
 );
 
@@ -433,12 +436,12 @@ new_clone_mcell(
     ftxHT parFtx,		/* in - parent ftx */
     vdIndexT * vdIndex,		/* out - new vd index */
     bsBfAttrT * bfAttrp,	/* in - bitfile attributes ptr */
-    bfSetT * bfSetp,		/* in - bitfile's bf set desc ptr */
+    struct bfSet * bfSetp,		/* in - bitfile's bf set desc ptr */
     bfTagT newtag,		/* in - tag of new bitfile */
     bsInMemXtntT * oxtntp	/* in - ptr to orig extent map */
 );
 
-static inline u_long BS_BFAH_GET_KEY(bfSetT *s, bfTagT *t)
+static inline u_long BS_BFAH_GET_KEY(struct bfSet *s, bfTagT *t)
 {
    return ((BFSET_GET_HASH_INPUT(s)) * (BS_BFTAG_IDX(t)) + (BS_BFTAG_SEQ(t)));
 }
