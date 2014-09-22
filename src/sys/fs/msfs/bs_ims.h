@@ -105,6 +105,7 @@ typedef enum ioThreadMsgType {
 	RETRY_IO
 } ioThreadMsgTypeT;
 
+/* Structures */
 
 /*
  * Block map structures
@@ -211,11 +212,11 @@ typedef struct bsInMemSubXtntMap {
 	uint32_t cnt;		/* The number of valid entries in bsXA */
 	uint32_t maxCnt;		/* The number of entries in bsXA */
 	bsXtntT *bsXA;		/* Array of extent descriptors */
-}                 bsInMemSubXtntMapT;
+} bsInMemSubXtntMapT;
+
 /*
  * bsInMemXtntMapT - Represents cached on-disk extent information.
  */
-
 struct bsInMemXtntMap {
 	struct bsInMemXtntMap *nextXtntMap;	/* Link to next extent map */
 	domainT *domain;	/* pointer to the domain */
@@ -246,14 +247,11 @@ struct bsInMemXtntMap {
 	uint32_t cnt;		/* Number of in-use sub extent maps */
 	uint32_t maxCnt;		/* Number of sub extent maps */
 	bsInMemSubXtntMapT *subXtntMap;	/* Array of in-memory sub extent maps */
-};
-
-typedef struct bsInMemXtntMap bsInMemXtntMapT;
+} bsInMemXtntMapT;
 
 /*
  * bsStripeHdrT - The control structure for striped bitfiles.
  */
-
 typedef struct bsStripeHdr {
 	uint32_t segmentSize;	/* minimum number of pages that are allocated */
 	/* to a stripe segment. */
@@ -262,13 +260,13 @@ typedef struct bsStripeHdr {
 	bsInMemXtntMapT **xtntMap;	/* Array of extent map ptrs.  Stripe
 					 * segments */
 	/* on one disk are grouped into one extent map. */
-}           bsStripeHdrT;
+} bsStripeHdrT;
+
 /*
  * bsInMemXtntT - The in-memory extent map header.
  *
  * xtntMap/shadowXtntMap and stripeHdr are mutually exclusive.
  */
-
 typedef struct bsInMemXtnt {
 	int validFlag;		/* Non-zero if extent maps are valid */
 	bsInMemXtntMapT *xtntMap;	/* Link to primary extent map */
@@ -278,7 +276,7 @@ typedef struct bsInMemXtnt {
 	krwlock_t migTruncLk;	/* Serialize migrate and truncate */
 	bsXtntMapTypeT type;	/* The type of extent maps */
 	uint32_t allocPageCnt;	/* Number of allocated pages */
-}           bsInMemXtntT;
+} bsInMemXtntT;
 
 extern bsInMemXtntT NilXtnts;
 
@@ -286,7 +284,7 @@ extern bsInMemXtntT NilXtnts;
  * ioThreadMsgT
  */
 
-typedef struct {
+typedef struct ioThreadMsg {
 	ioThreadMsgTypeT msgType;
 	union {
 		bfDomainIdT dmnId;
@@ -295,7 +293,7 @@ typedef struct {
 	}     u_msg;
 	uint32_t vdi;
 	struct vd *vdp;
-}      ioThreadMsgT;
+} ioThreadMsgT;
 
 
 /*
