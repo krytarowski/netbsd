@@ -628,14 +628,14 @@ static inline void RM_ACC_LIST_REAL_WORK(bfAccessT *bfap)
  * The caller typically holds bfap->bfaLock. BfAccessFreeLock is
  * seized while manipulating the free or closed lists.
  */
-#define RM_ACC_LIST( bfap ) \
-{ \
-    mutex_enter(&BfAccessFreeLock.mutex); \
-    KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
-    KASSERT(bfap->freeFwd); \
-    KASSERT(bfap->freeBwd); \
-    RM_ACC_LIST_REAL_WORK( bfap ); \
-    mutex_exit(&BfAccessFreeLock.mutex); \
+static inline void RM_ACC_LIST(bfAccessT *bfap)
+{
+    mutex_enter(&BfAccessFreeLock.mutex);
+    KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1);
+    KASSERT(bfap->freeFwd);
+    KASSERT(bfap->freeBwd);
+    RM_ACC_LIST_REAL_WORK( bfap );
+    mutex_exit(&BfAccessFreeLock.mutex);
 }
 
 /* RM_ACC_LIST_NOLOCK is like RM_ACC_LIST, except that the BfAccessFreeLock
