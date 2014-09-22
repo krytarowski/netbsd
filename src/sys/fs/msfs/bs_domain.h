@@ -455,8 +455,10 @@ extern domainT *DomainTbl[];
 *******************  function prototypes *************************
 *****************************************************************/
 
-#define BFSET_QUEUE_TO_BFSETP( _link ) \
-    ((bfSetT *)((char *)(_link) - offsetof(bfSetT,bfSetList)))
+static inline bfSetT *BFSET_QUEUE_TO_BFSETP(bfsQueueT *link)
+{
+    return ((bfSetT *)((char *)(link) - offsetof(bfSetT,bfSetList)));
+}
 
 /* Test the validity of a domain pointer. */
 /* "Return" EBAD_DOMAIN_POINTER if the domain is NULL. */
