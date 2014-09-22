@@ -32,6 +32,8 @@
 #include <sys/param.h>
 #include <sys/types.h>
 
+/* Defines */
+
 /****************************************************************/
 /**** MSFS_RESERVED_BLKS defines the first block on       *******/
 /**** a disk that MegaSafe can use.  Given that the       *******/
@@ -66,9 +68,6 @@
 /****            larger quota fields ****************************/
 /****************************************************************/
 
-typedef enum {
-	BFD_ODS_LAST_VERSION = 4/* NOTE **** only 5 bits (< 32) */
-} bfdVersionT;
 /****************************************************************/
 /**** These constants define the allowable on-disk versions  ****/
 /**** for newly-created domains.                             ****/
@@ -146,6 +145,13 @@ typedef enum {
  */
 #define  FIRST_ALWAYS_RUN_RECOVERY_VERSION 4
 
+/* Enums */
+
+typedef enum bfdVersion {
+	BFD_ODS_LAST_VERSION = 4/* NOTE **** only 5 bits (< 32) */
+} bfdVersionT;
+
+
 #define RBMT_THERE(dp)  (((dp)->dmnVersion) >= FIRST_RBMT_VERSION)
 
 /******************************************************************************
@@ -191,7 +197,7 @@ typedef struct bsMR {
 	uint32_t bCnt:16;	/* Count of bytes in record */
 	uint32_t type:8;		/* Type of structure contained by record */
 	uint32_t version:8;	/* Version of the record's type */
-}    bsMRT;
+} bsMRT;
 
 
 extern uint16_t bsNilVdIndex;
