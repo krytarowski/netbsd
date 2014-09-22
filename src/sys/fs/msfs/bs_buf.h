@@ -60,7 +60,7 @@ typedef struct rangeFlushLink {
 /*
  * Bitfile buffer descriptor
  */
-struct bsBuf {
+typedef struct bsBuf {
 	struct bsBuf *lsnFwd;	/* lsn list; protected by domainT.lsnLock */
 	struct bsBuf *lsnBwd;
 	struct bsBuf *accFwd;	/* bfAccess clean and dirty page list;    */
@@ -108,7 +108,7 @@ struct bsBuf {
 	short ioCount;		/* number of outstanding I/O's */
 	ioListT ioList;		/* buffer's block map info */
 	ioDescT ioDesc;		/* if buf has one ioDesc, this is it */
-};
+} bsBufT;
 
 #define BUFIODESC 1		/* How many ioDesc bsBuf contains */
 

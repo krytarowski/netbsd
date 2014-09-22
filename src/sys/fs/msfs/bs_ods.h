@@ -244,7 +244,7 @@ typedef struct bsMPg {
 	uint32_t pageId:27;	/* Page number */
 	uint32_t megaVersion:5;	/* Overall structure version */
 	struct bsMC bsMCA[BSPG_CELLS];	/* Array of Bs Cells */
-}     bsMPgT;
+} bsMPgT;
 /******************************************************************************
  * The next section contains structure definitions for                        *
  * the typed records in the BMT.                                              *

@@ -165,7 +165,7 @@ typedef struct ftxLk {
 	lkHdrT hdr;		/* header used by ftx lock routines only */
 	krwlock_t lock;		/* shared access, exclusive writer.  */
 	cvT cv;			/* condition variable */
-}     ftxLkT;
+} ftxLkT;
 /*
  * unLkActionT
  *

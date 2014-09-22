@@ -268,7 +268,7 @@ typedef struct ftxH {
 typedef struct {
 	uint32_t num;		/* tag number, 1 based */
 	uint32_t seq;		/* sequence number */
-}      bfTagT;
+} bfTagT;
 
 extern bfTagT NilBfTag;
 
@@ -758,7 +758,7 @@ typedef struct bcStat {
 		unsigned long meta;
 		unsigned long ftx;
 	}      derefFileType;
-}      bcStatT;
+} bcStatT;
 
 typedef struct bmtStat {
 	unsigned long fStatRead;
@@ -767,7 +767,7 @@ typedef struct bmtStat {
 	unsigned long resv2;
 	unsigned long bmtRecRead[BSR_API_MAX + 1];
 	unsigned long bmtRecWrite[BSR_API_MAX + 1];
-}       bmtStatT;
+} bmtStatT;
 
 typedef struct logStat {
 	u_long logWrites;
@@ -787,7 +787,7 @@ typedef struct logStat {
 	u_long rsv2;
 	u_long rsv3;
 	u_long rsv4;
-}       logStatT;
+} logStatT;
 
 typedef struct bfDmnParams {
 	bfDomainIdT bfDomainId;	/* domain id */

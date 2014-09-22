@@ -63,7 +63,7 @@ extern scEntryT nilScEntry;
 typedef struct serviceClassTbl {
 	int numClasses;		/* number of classes */
 	scEntryT classes[BS_SC_ENTRIES];	/* service class entries */
-}               serviceClassTblT;
+} serviceClassTblT;
 
 extern serviceClassTblT nilServiceClassTbl;
 

@@ -47,14 +47,14 @@ struct domain;
 typedef struct xidInfo {
 	struct xidInfo *next;
 	ftxIdT data[NUM_XIDS];
-}       xidInfoT;
+} xidInfoT;
 
 typedef struct xidRecovery {
 	xidInfoT *head;		/* head of xidInfoT chain */
 	xidInfoT *tail;		/* last in xidInfoT chain */
 	int current_free_slot;	/* Index of next free xidInfoT.data */
 	struct timeval timestamp;	/* Time of recovery */
-}           xidRecoveryT;
+} xidRecoveryT;
 /*
  * cfs_check_for_pfs_commit() is called by CFS to
  * check for xid status.

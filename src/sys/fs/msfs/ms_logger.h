@@ -159,7 +159,7 @@ typedef struct logDesc {
 	wtPgDescT *wrtPgD;	/* Desc for current log end page */
 	rdPgDescT *rdPgD[MAX_RD_PGS];	/* Info about page being held
 					 * referenced */
-}       logDescT;
+} logDescT;
 #define get_wrtPgD_index(_log_page,_pgs_in_log) (_log_page%(_pgs_in_log/4)) + 1;
 
 

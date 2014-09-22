@@ -27,9 +27,19 @@
 #define _DOMAIN_H_
 
 #include <stddef.h>
+#include <sys/types.h>
+#include <sys/rwlock.h>
 
 #include <fs/msfs/vfast.h>
-#include <sys/rwlock.h>
+#include <fs/msfs/ftx_privates.h>
+#include <fs/msfs/ms_generic_locks.h>
+#include <fs/msfs/bs_public.h>
+#include <fs/msfs/ftx_public.h>
+#include <fs/msfs/bs_access.h>
+#include <fs/msfs/ms_logger.h>
+#include <fs/msfs/bs_vd.h>
+#include <fs/msfs/bs_ods.h>
+
 #include "dyn_hash.h"
 
 
@@ -73,13 +83,13 @@ typedef enum {
 	BFD_RECOVER_FTX,	/* recover partial ftx trees */
 	BFD_RECOVER_CONTINUATIONS,	/* finish ftx continuations */
 	BFD_ACTIVATED		/* fully activated */
-}    bfDmnStatesT;
+} bfDmnStatesT;
 
-enum contBits {
-PB_CONT = 1, CK_WAITQ = 2};
+typedef enum contBits {
+	PB_CONT = 1,
+	CK_WAITQ = 2
+} contBitsT;
 /* Domain dmnFlag values */
-
-/* Structures */
 
 /*
  * Some ftx types that are part of the domain structure, so must be
@@ -94,6 +104,8 @@ typedef enum ftxSlotState {
 	FTX_SLOT_PENDING = 4,	/* waiting for an ftx struct */
 	FTX_SLOT_UNUSED = 5	/* never been used (recovery may use it) */
 } ftxSlotStateT;
+
+/* Structures */
 
 typedef struct ftxSlot {
 	struct ftx *ftxp;	/* ptr to ftx struct */
@@ -321,7 +333,7 @@ typedef struct bfDmnDesc {
 	int vdCount;		/* number of vds described */
 	uint32_t dmnMajor;	/* fake major number for domain */
 	vdDescT *vddp[BS_MAX_VDI];	/* array of vd descriptor ptrs */
-}         bfDmnDescT;
+} bfDmnDescT;
 
 typedef struct domain {
 	mutexT mutex;		/* protects vd.mcell_lk, vd.stgMap_lk, */
@@ -354,16 +366,16 @@ typedef struct domain {
 	bfSetT *bfSetDirp;	/* root bitfile-set handle */
 	bfTagT bfSetDirTag;	/* tag of root bitfile-set's tag directory */
 	ftxLkT BfSetTblLock;	/* protects the filesets in the domain */
-	struct bfsQueue bfSetHead;	/* bitfile-sets associated with this
+	bfsQueueT bfSetHead;	/* bitfile-sets associated with this
 					 * domain */
-	struct bfAccess *bfSetDirAccp;	/* bfAccess of bitfile-set's tag
+	bfAccessT *bfSetDirAccp;	/* bfAccess of bitfile-set's tag
 					 * directory */
 	bfTagT ftxLogTag;	/* tag of domain ftx log */
 	logDescT *ftxLogP;	/* pointer to ftx log for this domain */
 	uint32_t ftxLogPgs;	/* number of pages in the log */
 	struct bfAccess *logAccessp;	/* bfAccess pointer for log */
 	ftxTblDT ftxTbld;	/* ftx table descriptor */
-	struct bsBuf *pinBlockBuf;	/* the current pin block buffer, if
+	bsBufT *pinBlockBuf;	/* the current pin block buffer, if
 					 * any */
 	char domainName[BS_DOMAIN_NAME_SZ];	/* temp - should be global
 						 * name */
@@ -379,12 +391,12 @@ typedef struct domain {
          * on this domain's lsnList.
          */
 	mutexT lsnLock;
-	struct bsBufHdr lsnList;/* Dirty transactional buffers to be written */
+	bsBufHdrT lsnList;/* Dirty transactional buffers to be written */
 	lsnT writeToLsn;	/* pin block until up to this lsn is written */
 	uint16_t pinBlockWait;
 	cvT pinBlockCv;
 	int pinBlockRunning;	/* boolean; TRUE if lsn_io_list is running */
-	enum contBits contBits;	/* check if log flush or pinblock cont needed */
+	contBitsT contBits;	/* check if log flush or pinblock cont needed */
 	int lsnListFlushing;	/* boolean: TRUE if bs_lsnList_flush running */
 	ftxCRLAT dirtyBufLa;	/* oldest dirty buffer log address */
 
@@ -401,13 +413,13 @@ typedef struct domain {
 	mutexT vdpTblLock;	/* protects next 2 fields   */
 	int maxVds;		/* Maximum allowed vds */
 	int vdCnt;		/* number of vd's in vdpTbl */
-	struct vd *vdpTbl[BS_MAX_VDI];	/* table of vd ptrs */
+	vdT *vdpTbl[BS_MAX_VDI];	/* table of vd ptrs */
 
 	krwlock_t rmvolTruncLk;	/* serializes truncation and rmvol */
 
-	struct bcStat bcStat;	/* per domain buffer cache stats */
-	struct bmtStat bmtStat;	/* per domain BMT stats */
-	struct logStat logStat;	/* per domain LOG stats */
+	bcStatT bcStat;	/* per domain buffer cache stats */
+	bmtStatT bmtStat;	/* per domain BMT stats */
+	logStatT logStat;	/* per domain LOG stats */
 	/*
          * These fields are protected by the domain mutex.
          */
@@ -418,7 +430,7 @@ typedef struct domain {
 					 * information */
 	krwlock_t xidRecoveryLk;	/* protects the xidRecovery structure */
 	u_int smsync_policy;	/* mirror of M_SMSYNC2 flag */
-	struct bsMPg *metaPagep;/* ptr to page 0 buffer */
+	bsMPgT *metaPagep;/* ptr to page 0 buffer */
 	int fs_full_time;	/* last time fs full msg logged */
 
 	mutexT dmnFreezeMutex;	/* protects dmnFreezeFlags, dmnFreezeWaiting
