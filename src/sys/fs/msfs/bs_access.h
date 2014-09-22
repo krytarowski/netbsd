@@ -505,21 +505,21 @@ static inline void DEC_REFCNT(bfAccessT *bfap)
  * locked the bfap->bfaLock.  This macro seizes the BfAccessFreeLock
  * while moving the struct onto the closed list.
  */
-#define ADD_ACC_CLOSEDLIST( bfap ) \
-{ \
-    mutex_enter(&BfAccessFreeLock.mutex); \
-    KASSERT(bfap->onFreeList == 0); \
-    KASSERT(ClosedAcc.freeBwd); \
-    bfap->freeBwd = ClosedAcc.freeBwd; \
-    bfap->freeFwd = (bfAccessT *)&ClosedAcc; \
-    ClosedAcc.freeBwd->freeFwd = bfap; \
-    ClosedAcc.freeBwd = bfap; \
-    bfap->onFreeList = -1; \
-    ClosedAcc.len++; \
-    if (bfap->saved_stats) { \
-        ClosedAcc.saved_stats_len++; \
-    } \
-    mutex_exit(&BfAccessFreeLock.mutex); \
+static inline void ADD_ACC_CLOSEDLIST(bfAccessT *bfap)
+{
+    mutex_enter(&BfAccessFreeLock.mutex);
+    KASSERT(bfap->onFreeList == 0);
+    KASSERT(ClosedAcc.freeBwd);
+    bfap->freeBwd = ClosedAcc.freeBwd;
+    bfap->freeFwd = (bfAccessT *)&ClosedAcc;
+    ClosedAcc.freeBwd->freeFwd = bfap;
+    ClosedAcc.freeBwd = bfap;
+    bfap->onFreeList = -1;
+    ClosedAcc.len++;
+    if (bfap->saved_stats) {
+        ClosedAcc.saved_stats_len++;
+    }
+    mutex_exit(&BfAccessFreeLock.mutex);
 }
 
 /* ADD_ACC_FREELIST adds access structures to the free list.
