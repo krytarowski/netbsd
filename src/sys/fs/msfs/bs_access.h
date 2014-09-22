@@ -40,6 +40,8 @@
 #include <fs/msfs/bs_domain.h>
 #include <fs/msfs/bs_ims.h>
 
+/* Defines */
+
 /*
  * min_free_vnodes: This is the minimum number of free vnodes on the free list.
  *                  If the number of vnodes on the free list is less than the
@@ -57,6 +59,46 @@
 #define ADVFSMAXFREEACCESSPERCENT 80
 #define BFAP_VALID_TIME ncache_valid_time
 
+/* Values for saved_statsT.op_flags */
+#define SS_FLUSH_IN_PROGRESS       0x0001	/* flushing saved_stats to
+						 * disk */
+#define SS_STATS_COPIED_TO_CONTEXT 0x0002	/* saved_stats have been
+						 * copied */
+
+/* Dynamic Hashtable Utilities for accessing the BfAccessHashTbl */
+
+#define BS_BFAH_INITIAL_SIZE 128
+#define BS_BFAH_HASH_CHAIN_LENGTH 30
+#define BS_BFAH_ELEMENTS_TO_BUCKETS 5
+#define BS_BFAH_USECS_BETWEEN_SPLITS 1000000
+
+/*
+ * bs_map_bf() options flags.
+ */
+#define BS_MAP_DEF     0
+#define BS_REMAP       2
+#define BS_FAILOVER    4
+#define BS_ON_DDL      8
+
+/* define values for access_int "options" arg */
+
+#define BF_OP_IGNORE_DEL  0x1
+#define BF_OP_GET_VNODE   0x2
+#define BF_OP_HAVE_VNODE  0x4
+#define BF_OP_INMEM_ONLY  0x8
+#define BF_OP_FIND_ON_DDL 0x10
+
+#define NULLMT NULL
+
+/*
+ * bs_close options
+ */
+
+#define MSFS_INACTIVE_CALL 0x1
+#define MSFS_BFSET_DEL     0x2
+#define MSFS_DO_VRELE      0x4
+#define MSFS_SS_NOCALL     0x8	/* force vfast to not update vfast lists */
+
 /* The following structure is used to cache the file stats from the
  * fsContext structure with the access structure when the vnode is
  * reclaimed and the file stats cannot be flushed to disk.  Before the
@@ -70,18 +112,7 @@ typedef struct {
 	int dirty_alloc;	/* set if stats from an allocating write */
 	/* are not on disk */
 }      saved_statsT;
-/* Values for saved_statsT.op_flags */
-#define SS_FLUSH_IN_PROGRESS       0x0001	/* flushing saved_stats to
-						 * disk */
-#define SS_STATS_COPIED_TO_CONTEXT 0x0002	/* saved_stats have been
-						 * copied */
 
-/* Dynamic Hashtable Utilities for accessing the BfAccessHashTbl */
-
-#define BS_BFAH_INITIAL_SIZE 128
-#define BS_BFAH_HASH_CHAIN_LENGTH 30
-#define BS_BFAH_ELEMENTS_TO_BUCKETS 5
-#define BS_BFAH_USECS_BETWEEN_SPLITS 1000000
 
 /*
  * flushWaiterT - describes a flush synchronization structure including
@@ -327,34 +358,6 @@ struct bfAccessHdr {
 	int len;
 	int saved_stats_len;
 };
-
-
-/*
- * bs_map_bf() options flags.
- */
-#define BS_MAP_DEF     0
-#define BS_REMAP       2
-#define BS_FAILOVER    4
-#define BS_ON_DDL      8
-
-/* define values for access_int "options" arg */
-
-#define BF_OP_IGNORE_DEL  0x1
-#define BF_OP_GET_VNODE   0x2
-#define BF_OP_HAVE_VNODE  0x4
-#define BF_OP_INMEM_ONLY  0x8
-#define BF_OP_FIND_ON_DDL 0x10
-
-#define NULLMT NULL
-
-/*
- * bs_close options
- */
-
-#define MSFS_INACTIVE_CALL 0x1
-#define MSFS_BFSET_DEL     0x2
-#define MSFS_DO_VRELE      0x4
-#define MSFS_SS_NOCALL     0x8	/* force vfast to not update vfast lists */
 
 /* Shared variables (externs) */
 extern mutexT BfAccessFreeLock;	/* guards access free & closed lists */
