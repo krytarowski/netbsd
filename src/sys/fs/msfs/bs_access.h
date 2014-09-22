@@ -656,15 +656,15 @@ static inline void RM_ACC_LIST_NOLOCK(bfAccessT *bfap)
  * if it is, then it is removed.  The caller typically has bfap->bfaLock
  * seized.
  */
-#define RM_ACC_LIST_COND( bfap ) \
-{ \
-    mutex_enter(&BfAccessFreeLock.mutex); \
-    if (bfap->freeFwd) { \
-        KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
-        KASSERT(bfap->freeBwd);  \
-        RM_ACC_LIST_REAL_WORK( bfap ); \
-    } \
-    mutex_exit(&BfAccessFreeLock.mutex); \
+static inline void RM_ACC_LIST_COND(bfAccessT *bfap)
+{
+    mutex_enter(&BfAccessFreeLock.mutex);
+    if (bfap->freeFwd) {
+        KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1);
+        KASSERT(bfap->freeBwd);
+        RM_ACC_LIST_REAL_WORK( bfap );
+    }
+    mutex_exit(&BfAccessFreeLock.mutex);
 }
 
 #endif				/* _ACCESS_H_ */
