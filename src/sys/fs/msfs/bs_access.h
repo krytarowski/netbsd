@@ -331,8 +331,10 @@ static inline void BS_BFAH_INSERT(bfAccessT *bfap, int laction)
 /* Test the validity of a page number in a file. */
 /* "Returns" E_BAD_PAGE_RANGE if the page is beyond the end of the file. */
 /* Else "returns" EOK. */
-#define TEST_PAGE(pg, bfap) \
-    ( (pg) >= (bfap)->nextPage ? E_BAD_PAGE_RANGE : EOK )
+static inline int TEST_PAGE(const uint32_t pg, const bfAccessT *bfap)
+{
+    return pg >= bfap->nextPage ? E_BAD_PAGE_RANGE : EOK;
+}
 
 /*
  * This struct saves some space when we
