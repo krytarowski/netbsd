@@ -31,8 +31,6 @@
 #include <sys/types.h>
 #include <sys/malloc.h>
 
-#include <fs/msfs/bs_ods.h> /* XXX: is it the right place here? */
-
 #ifndef REUSABLE_TAGS
 #define REUSABLE_TAGS
 #endif
@@ -307,6 +305,25 @@ static inline int BS_BFTAG_NULL(const bfTagT *tag)
 {
     return tag->num == 0;
 }
+
+typedef enum {
+	BFM_RBMT = 0,		/* Reserved Bitfile Metadata Table */
+	BFM_SBM = 1,		/* Storage BitMap */
+	BFM_BFSDIR = 2,		/* BitFileSetDirectory */
+	BFM_FTXLOG = 3,		/* FTX Log file */
+	BFM_BMT = 4,		/* Bitfile Metadata Table */
+	BFM_MISC = 5,		/* Bitfile for fake super block, etc. */
+	BFM_RBMT_EXT = 6	/* Extension mcell of BFM_RBMT */
+} bfdBfMetaT;
+
+typedef enum {
+	BFM_BMT_V3 = 0,		/* Bitfile Metadata Table */
+	BFM_SBM_V3 = 1,		/* Storage BitMap */
+	BFM_BFSDIR_V3 = 2,	/* BitFileSetDirectory */
+	BFM_FTXLOG_V3 = 3,	/* FTX Log file */
+	BFM_BMT_EXT_V3 = 4,	/* Extension mcell of BFM_BMT */
+	BFM_MISC_V3 = 5		/* Bitfile for fake super block, etc. */
+} bfdBfMetaT_v3;
 
 /*
  * Bit in tag.seq indicating it is a pseudo-tag which exists only in-core.

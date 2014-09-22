@@ -146,26 +146,6 @@ typedef enum {
  */
 #define  FIRST_ALWAYS_RUN_RECOVERY_VERSION 4
 
-typedef enum {
-	BFM_RBMT = 0,		/* Reserved Bitfile Metadata Table */
-	BFM_SBM = 1,		/* Storage BitMap */
-	BFM_BFSDIR = 2,		/* BitFileSetDirectory */
-	BFM_FTXLOG = 3,		/* FTX Log file */
-	BFM_BMT = 4,		/* Bitfile Metadata Table */
-	BFM_MISC = 5,		/* Bitfile for fake super block, etc. */
-	BFM_RBMT_EXT = 6	/* Extension mcell of BFM_RBMT */
-} bfdBfMetaT;
-
-typedef enum {
-	BFM_BMT_V3 = 0,		/* Bitfile Metadata Table */
-	BFM_SBM_V3 = 1,		/* Storage BitMap */
-	BFM_BFSDIR_V3 = 2,	/* BitFileSetDirectory */
-	BFM_FTXLOG_V3 = 3,	/* FTX Log file */
-	BFM_BMT_EXT_V3 = 4,	/* Extension mcell of BFM_BMT */
-	BFM_MISC_V3 = 5		/* Bitfile for fake super block, etc. */
-} bfdBfMetaT_v3;
-/* #define BFM_RSVD_CELLS 6 defined in  bs_public.h */
-
 #define RBMT_THERE(dp)  (((dp)->dmnVersion) >= FIRST_RBMT_VERSION)
 
 /******************************************************************************
