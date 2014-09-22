@@ -63,6 +63,22 @@
 #define DOMAIN_HASH_USECS_BETWEEN_SPLITS 5000000	/* 5 seconds */
 
 
+/* Enums */
+typedef enum {
+	BFD_UNKNOWN,		/* domain is in unknown state */
+	BFD_VIRGIN,		/* domain has never been activated */
+	BFD_DEACTIVATED,	/* domain is deactivated */
+	BFD_RECOVER_REDO,	/* recovering redo */
+/* logging can occur in the following states */
+	BFD_RECOVER_FTX,	/* recover partial ftx trees */
+	BFD_RECOVER_CONTINUATIONS,	/* finish ftx continuations */
+	BFD_ACTIVATED		/* fully activated */
+}    bfDmnStatesT;
+
+enum contBits {
+PB_CONT = 1, CK_WAITQ = 2};
+/* Domain dmnFlag values */
+
 /*
  * Some ftx types that are part of the domain structure, so must be
  * here instead of ftx_privates, which is included after this file.
@@ -77,10 +93,13 @@ typedef enum {
 	FTX_SLOT_UNUSED = 5	/* never been used (recovery may use it) */
 } ftxSlotStateT;
 
+
 typedef struct ftxSlot {
 	struct ftx *ftxp;	/* ptr to ftx struct */
 	ftxSlotStateT state;	/* slot state */
 }       ftxSlotT;
+
+/* Structures */
 
 /*
  * ftxTblD - Transaction Table Descriptor
@@ -279,33 +298,15 @@ typedef struct bfsQueue {
 	struct bfsQueue *bfsQbck;
 }        bfsQueueT;
 
+
 #define BFSET_QUEUE_TO_BFSETP( _link ) \
     ((bfSetT *)((char *)(_link) - offsetof(bfSetT,bfSetList)))
-
-
-typedef enum {
-	BFD_UNKNOWN,		/* domain is in unknown state */
-	BFD_VIRGIN,		/* domain has never been activated */
-	BFD_DEACTIVATED,	/* domain is deactivated */
-	BFD_RECOVER_REDO,	/* recovering redo */
-/* logging can occur in the following states */
-	BFD_RECOVER_FTX,	/* recover partial ftx trees */
-	BFD_RECOVER_CONTINUATIONS,	/* finish ftx continuations */
-	BFD_ACTIVATED		/* fully activated */
-}    bfDmnStatesT;
-
-enum contBits {
-PB_CONT = 1, CK_WAITQ = 2};
-/* Domain dmnFlag values */
-
 
 
 /*
  * domain - this structure describes a bitfile domain, which is
  * mostly a pointer table of all the virtual disks that belong to it.
  */
-
-struct bfAccess;
 
 /*
  * Virtual disk descriptor, filled in from a bf domain record.
@@ -436,10 +437,15 @@ typedef struct domain {
 /*>>>>>>> Maintain as last elements of domain structure <<<<<<<<*/
 }      domainT;
 
-extern domainT nilDomain;
 
+/* Shared variables (externs) */
+extern domainT nilDomain;
 extern int DomainCnt;
 extern domainT *DomainTbl[];
+
+/*****************************************************************
+*******************  function prototypes *************************
+*****************************************************************/
 
 /* Test the validity of a domain pointer. */
 /* "Return" EBAD_DOMAIN_POINTER if the domain is NULL. */
@@ -568,10 +574,6 @@ extern krwlock_t DmnTblLock;
 #define DOMAIN_HASH_INSERT( _dmnP, _lock_action ) \
     (void)dyn_hash_insert( DomainHashTbl, _dmnP, _lock_action )
 
-
-/*****************************************************************
-*******************  function prototypes *************************
-*****************************************************************/
 domainT *
 domain_name_lookup(
     char *dmnName,		/* in - domain to lookup */
