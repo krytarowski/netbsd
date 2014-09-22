@@ -5179,3 +5179,57 @@ bfr_trace(
 		    PrintAction[action], bsPage, BS_BFTAG_IDX(tag));
 	}
 }
+
+void IODESC_CLR(struct bsBuf *bp, const int i)
+{
+    bp->ioList.ioDesc[i].fwd = bp->ioList.ioDesc[i].bwd = NULL;
+    bp->ioList.ioDesc[i].ioQ = NONE;
+    bp->ioList.ioDesc[i].numBlks = 0;
+    bp->ioList.ioDesc[i].targetAddr = 0;
+    bp->ioList.ioDesc[i].bsBuf = bp;
+    bp->ioList.ioDesc[i].ioCount = 0;
+    bp->ioList.ioDesc[i].consolidated = 0;
+    bp->ioList.ioDesc[i].totalBlks = 0;
+    bp->ioList.ioDesc[i].desCnt = 0;
+    bp->ioList.ioDesc[i].data_never_written = 0;
+}
+
+void ADD_DIRTYACCESSLIST(struct bsBuf *bp, const int seize_bfiolock)
+{
+    KASSERT(mutex_owned(&bp->bufLock.mutex));
+    if (seize_bfiolock)
+        mutex_enter(&bp->bfAccess->bfIoLock.mutex);
+    else {
+        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex));
+    }
+    bp->accListSeq++;
+    KASSERT(!(bp->lock.state & ACC_DIRTY));
+    bp->lock.state |= ACC_DIRTY;
+    bp->accFwd = (struct bsBuf *)&bp->bfAccess->dirtyBufList;
+    bp->accBwd = bp->bfAccess->dirtyBufList.accBwd;
+    bp->bfAccess->dirtyBufList.accBwd->accFwd = bp;
+    bp->bfAccess->dirtyBufList.accBwd = bp;
+    bp->bfAccess->dirtyBufList.length++;
+    if (seize_bfiolock)
+        mutex_exit(&bp->bfAccess->bfIoLock.mutex);
+}
+
+void RM_ACCESSLIST(struct bsBuf *bp, const int seize_bfiolock)
+{
+    KASSERT(mutex_owned(&bp->bufLock.mutex));
+    if (seize_bfiolock)
+        mutex_enter(&bp->bfAccess->bfIoLock.mutex);
+    else {
+        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex));
+    }
+    KASSERT(bp->lock.state & ACC_DIRTY);
+    bp->bfAccess->dirtyBufList.length--;
+    KASSERT(bp->bfAccess->dirtyBufList.length >= 0);
+    bp->lock.state &= ~ACC_DIRTY;
+    bp->accListSeq++;
+    bp->accFwd->accBwd = bp->accBwd;
+    bp->accBwd->accFwd = bp->accFwd;
+    bp->accFwd = bp->accBwd = NULL;
+    if (seize_bfiolock)
+        mutex_exit(&bp->bfAccess->bfIoLock.mutex);
+}
