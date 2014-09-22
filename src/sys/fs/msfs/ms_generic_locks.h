@@ -73,12 +73,12 @@ extern mutexT *MutexList;
  * NOTE: If you change this enum then also update lkTypeNames below.
  */
 
-typedef enum {
+typedef enum lkType {
 	LKT_INVALID,
 	LKT_STATE,		/* state lock */
 	LKT_BUF,		/* buffer lock */
 	LKT_FTX			/* ftx lock */
-}    lkTypeT;
+} lkTypeT;
 
 /*
  * lkUsageT
@@ -95,7 +95,7 @@ typedef enum {
  * NOTE: If you change this enum then also update lkUsageNames below.
  */
 
-typedef enum {			/* ##, ftx_start() locking order    */
+typedef enum lkUsage {			/* ##, ftx_start() locking order    */
 	LKU_UNKNOWN,		/* 0 */
 	LKU_LOG_DESC,		/* 1, N/A                          */
 	LKU_LOG_READ_STREAM,	/* 2, N/A                          */
@@ -142,7 +142,7 @@ typedef enum {			/* ##, ftx_start() locking order    */
 	LKU_MSS_PQD,		/* 41 */
 	LKU_MSS_PQD_LOWPRI,	/* 42 */
 	LKU_num_usage_types
-}    lkUsageT;
+} lkUsageT;
 
 /*
  * lkHdrT
@@ -159,7 +159,7 @@ typedef struct lkHdr {
 	void *nxtFtxLk;
 	mutexT *mutex;
 	lkUsageT lkUsage;
-}     lkHdrT;
+} lkHdrT;
 
 typedef struct ftxLk {
 	lkHdrT hdr;		/* header used by ftx lock routines only */
@@ -174,17 +174,17 @@ typedef struct ftxLk {
  * the lock which the thread just unlocked.
  */
 
-typedef enum {
+typedef enum unLkAction {
 	UNLK_NEITHER,
 	UNLK_SIGNAL,
 	UNLK_BROADCAST
-}    unLkActionT;
+} unLkActionT;
 
-typedef enum {
+typedef enum shareExclLkState {
 	LKS_UNLOCKED,
 	LKS_SHARE,
 	LKS_EXCL
-}    shareExclLkStateT;
+} shareExclLkStateT;
 /****************************************************************************
  * STATE LOCK SUPPORT
  *
@@ -199,8 +199,7 @@ typedef enum {
  * to make it easier to debug.
  */
 
-typedef enum {
-
+typedef enum lkStates {
 	LKW_NONE,
 
 	/* bfAccessT client states */
@@ -235,12 +234,11 @@ typedef enum {
 				 * now */
 	CLONE_DEL_PENDING,	/* Deletion of clone fileset is pending */
 	CLONE_DEL_DELETING	/* Deletion of clone fileset is occurring */
+} lkStatesT;
 
-}    lkStatesT;
 /*
  * stateLkT
  */
-
 typedef struct stateLk {
 	lkHdrT hdr;		/* header used by ftx lock routines only */
 	lkStatesT state;	/* current state */
@@ -248,6 +246,7 @@ typedef struct stateLk {
 	u_short waiters;	/* num threads waiting on the cvp */
 	cvT cv;			/* condition variable */
 }       stateLkT;
+
 /*
  * buffer lock
  *
@@ -257,13 +256,12 @@ typedef struct stateLk {
  * directly.  bufLkT exists mainly so that buffer cache locks can be
  * viewed via bs_dump_locks().
  */
-
 typedef struct bufLk {
 	lkHdrT hdr;		/* header used by ftx lock routines only */
 	unsigned state;		/* define'd flags in bs_buf.h */
 	cvT bufCond;		/* condition variable */
 	u_short waiting;	/* number of threads waiting on the lock */
-}     bufLkT;
+} bufLkT;
 
 
 typedef struct advfsLockUsageStats {
@@ -272,7 +270,7 @@ typedef struct advfsLockUsageStats {
 	unsigned long reWait;
 	unsigned long signal;
 	unsigned long broadcast;
-}                   advfsLockUsageStatsT;
+} advfsLockUsageStatsT;
 
 typedef struct advfsLockStats {
 	unsigned long mutexLock;
@@ -337,7 +335,7 @@ typedef struct advfsLockStats {
 	unsigned long ftxTrimReWait;
 	unsigned long ftxTrimSignal;
 	unsigned long ftxTrimBroadcast;
-}              advfsLockStatsT;
+} advfsLockStatsT;
 
 extern advfsLockStatsT *AdvfsLockStats;
 
