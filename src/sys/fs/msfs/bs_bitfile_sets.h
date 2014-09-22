@@ -289,22 +289,22 @@ extern bfSetT nilBfSet;
  * fileset's accessChainLock is held while that chain is manipulated.
  * This macros returns with the BFALOCK HELD.
  */
-#define ADD_ACC_SETLIST(_bfap) \
-{ \
-    bfSetT *_bfSetp = _bfap->bfSetp; \
-    KASSERT(BFSET_VALID(_bfSetp)); \
-    mutex_enter(&_bfSetp->accessChainLock.mutex); \
-    KASSERT(_bfap->setFwd == NULL); \
-    KASSERT(_bfap->setBwd == NULL); \
-    mutex_enter(&_bfap->bfaLock.mutex); \
-    _bfap->setFwd = _bfSetp->accessFwd; \
-    _bfap->setBwd = (bfAccessT *)(&_bfSetp->accessFwd); \
-    if (_bfSetp->accessBwd == (bfAccessT *)(&_bfSetp->accessFwd)) \
-        _bfSetp->accessBwd = _bfap; \
-    else \
-        _bfSetp->accessFwd->setBwd = _bfap; \
-    _bfSetp->accessFwd = _bfap; \
-    mutex_exit(&_bfSetp->accessChainLock.mutex); \
+static inline void ADD_ACC_SETLIST(bfAccessT *bfap)
+{
+    bfSetT *bfSetp = bfap->bfSetp;
+    KASSERT(BFSET_VALID(bfSetp));
+    mutex_enter(&bfSetp->accessChainLock.mutex);
+    KASSERT(bfap->setFwd == NULL);
+    KASSERT(bfap->setBwd == NULL);
+    mutex_enter(&bfap->bfaLock.mutex);
+    bfap->setFwd = bfSetp->accessFwd;
+    bfap->setBwd = (bfAccessT *)(&bfSetp->accessFwd);
+    if (bfSetp->accessBwd == (bfAccessT *)(&bfSetp->accessFwd))
+        bfSetp->accessBwd = bfap;
+    else
+        bfSetp->accessFwd->setBwd = bfap;
+    bfSetp->accessFwd = bfap;
+    mutex_exit(&bfSetp->accessChainLock.mutex);
 }
 
 /*
