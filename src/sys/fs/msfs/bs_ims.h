@@ -71,7 +71,39 @@
 #define XTNT_XTNTCNT_ONLY  2	/* Get the extent count */
 #define XTNT_PAGECNT_ONLY  4	/* Get the page count */
 
+/* Enums */
+enum ioQueue {
+	NONE = 0, WAIT_LAZY, READY_LAZY, BLOCKING, DEVICE, CONSOL, SMSYNC_LAZY0,
+	SMSYNC_LAZY1, SMSYNC_LAZY2, SMSYNC_LAZY3, SMSYNC_LAZY4, SMSYNC_LAZY5,
+	SMSYNC_LAZY6, SMSYNC_LAZY7, SMSYNC_LAZY8, SMSYNC_LAZY9, SMSYNC_LAZY10,
+	SMSYNC_LAZY11, SMSYNC_LAZY12, SMSYNC_LAZY13, SMSYNC_LAZY14,
+	SMSYNC_LAZY15, FLUSHQ, TEMPORARYQ, UBCREQQ
+};
 
+/*
+ * Used when creating a subextent. Indicates the state of the
+ * corresponing Mcell.
+ *
+ *  INITIALIZED - Use old mcell as is only update it on-disk xtnt rec.
+ *  NEW_MCELL - Brand new Mcell, create on-disk xtnt rec and link mcell
+ *  USED_MCELL - Use old mcell, update on-disk xtnt rec and relink mcell
+ */
+typedef enum {
+	INITIALIZED,
+	NEW_MCELL,
+	USED_MCELL
+} mcellStateT;
+
+/*
+ * ioThreadMsgTypeT
+ */
+
+typedef enum {
+	LF_PB_CONT,
+	START_MORE_IO,
+	THREAD_GO_AWAY,
+	RETRY_IO
+} ioThreadMsgTypeT;
 
 
 /*
@@ -82,14 +114,6 @@ typedef struct blkDesc {
 	uint16_t vdIndex;
 	uint32_t vdBlk;
 }       blkDescT;
-
-enum ioQueue {
-	NONE = 0, WAIT_LAZY, READY_LAZY, BLOCKING, DEVICE, CONSOL, SMSYNC_LAZY0,
-	SMSYNC_LAZY1, SMSYNC_LAZY2, SMSYNC_LAZY3, SMSYNC_LAZY4, SMSYNC_LAZY5,
-	SMSYNC_LAZY6, SMSYNC_LAZY7, SMSYNC_LAZY8, SMSYNC_LAZY9, SMSYNC_LAZY10,
-	SMSYNC_LAZY11, SMSYNC_LAZY12, SMSYNC_LAZY13, SMSYNC_LAZY14,
-	SMSYNC_LAZY15, FLUSHQ, TEMPORARYQ, UBCREQQ
-};
 
 typedef struct ioDesc {
 	struct ioDesc *fwd;	/* doubly linked I/O queue */
@@ -163,20 +187,6 @@ typedef struct ioList {
  * In-memory extent map data structures.
  */
 
-/*
- * Used when creating a subextent. Indicates the state of the
- * corresponing Mcell.
- *
- *  INITIALIZED - Use old mcell as is only update it on-disk xtnt rec.
- *  NEW_MCELL - Brand new Mcell, create on-disk xtnt rec and link mcell
- *  USED_MCELL - Use old mcell, update on-disk xtnt rec and relink mcell
- */
-
-typedef enum {
-	INITIALIZED,
-	NEW_MCELL,
-	USED_MCELL
-}    mcellStateT;
 /*
  * bsInMemSubXtntMapT - A partial extent map that describes some or all of the
  * pages described by an on-disk extent record.  None or all of the record's
@@ -276,16 +286,6 @@ typedef struct bsInMemXtnt {
 
 extern bsInMemXtntT NilXtnts;
 
-/*
- * ioThreadMsgTypeT
- */
-
-typedef enum {
-	LF_PB_CONT,
-	START_MORE_IO,
-	THREAD_GO_AWAY,
-	RETRY_IO
-}    ioThreadMsgTypeT;
 /*
  * ioThreadMsgT
  */
