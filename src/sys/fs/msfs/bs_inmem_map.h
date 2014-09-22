@@ -45,7 +45,7 @@ typedef struct bsInMemXtntDescId {
 int
 imm_create_xtnt_map(
     uint32_t blksPerPage,	/* in */
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     uint32_t maxCnt,		/* in */
     uint32_t termPage,		/* in */
     vdIndexT termVdIndex,	/* in */
@@ -56,7 +56,7 @@ int
 imm_init_xtnt_map(
     bsInMemXtntMapT * xtntMap,	/* in */
     uint32_t blksPerPage,	/* in */
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     uint32_t maxCnt,		/* in */
     uint32_t termPage,		/* in */
     vdIndexT termVdIndex	/* in */
@@ -115,7 +115,7 @@ imm_delete_sub_xtnt_maps(
 
 int
 imm_copy_sub_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     bsInMemSubXtntMapT * oldSubXtntMap,	/* in */
     bsInMemSubXtntMapT * newSubXtntMap	/* in */
@@ -140,7 +140,7 @@ imm_extend_sub_xtnt_map(
 
 int
 imm_load_sub_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     bsInMemSubXtntMapT * subXtntMap	/* in */
 );
@@ -226,15 +226,15 @@ imm_page_to_xtnt(
 
 int
 imm_merge_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * src1XtntMap,	/* in */
-    bfAccessT * cloneBfap,	/* in */
+    struct bfAccess * cloneBfap,	/* in */
     bsInMemXtntMapT * src2XtntMap,	/* in */
     bsInMemXtntMapT ** newXtntMap	/* out */
 );
 
 int
-overlay_xtnt_map(bfAccessT * bfap,	/* in */
+overlay_xtnt_map(struct bfAccess * bfap,	/* in */
     uint32_t stripeIndex,	/* in */
     bsInMemXtntMapT * baseXtntMap,	/* in */
     bsInMemXtntMapT * overXtntMap,	/* in */
@@ -253,7 +253,7 @@ imm_overlay_xtnt_map(
 
 int
 imm_copy_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * srcXtntMap,	/* in */
     bsInMemXtntMapT ** dstXtntMap	/* out */
 );
