@@ -33,7 +33,6 @@
 #include <sys/rwlock.h>
 #include <sys/buf.h>
 
-#include <fs/msfs/bs_buf.h>
 #include <fs/msfs/ms_generic_locks.h>
 #include <fs/msfs/bs_public.h>
 
@@ -98,6 +97,14 @@ typedef enum ioThreadMsgType {
 	RETRY_IO
 } ioThreadMsgTypeT;
 
+/* Forward definitions */
+struct bsBuf;
+struct bsXtnt;
+struct domain;
+struct vd;
+struct bfAccess;
+struct bfSet;
+
 /* Structures */
 
 /*
@@ -120,7 +127,7 @@ typedef struct ioDesc {
 	/* devosfbuf buffer is only valid between I/O start and I/O completion */
 	struct buf *devosfbuf;	/* call_disk address for I/O buf struct */
 	unsigned char *targetAddr;	/* data address for I/O */
-	bsBufT *bsBuf;	/* buffer that owns this I/O */
+	struct bsBuf *bsBuf;	/* buffer that owns this I/O */
 	short ioCount;		/* how many I/O's queued for this descriptor */
 	/* Fields used for consolidated I/O */
 	short consolidated;	/* bit indicates whether consolidated */
@@ -204,7 +211,7 @@ typedef struct bsInMemSubXtntMap {
 				 * record */
 	uint32_t cnt;		/* The number of valid entries in bsXA */
 	uint32_t maxCnt;		/* The number of entries in bsXA */
-	bsXtntT *bsXA;		/* Array of extent descriptors */
+	struct bsXtnt *bsXA;		/* Array of extent descriptors */
 } bsInMemSubXtntMapT;
 
 /*
@@ -212,7 +219,7 @@ typedef struct bsInMemSubXtntMap {
  */
 struct bsInMemXtntMap {
 	struct bsInMemXtntMap *nextXtntMap;	/* Link to next extent map */
-	domainT *domain;	/* pointer to the domain */
+	struct domain *domain;	/* pointer to the domain */
 	uint32_t hdrType;	/* Type of on-disk header record */
 	/* The header record contains the mcell count */
 	/* and a pointer to the other mcells in the list */
@@ -278,11 +285,11 @@ typedef struct ioThreadMsg {
 	ioThreadMsgTypeT msgType;
 	union {
 		bfDomainIdT dmnId;
-		domainT *dmnP;
+		struct domain *dmnP;
 		struct buf *ioRetryBp;
 	} u_msg;
 	uint32_t vdi;
-	vdT *vdp;
+	struct vd *vdp;
 } ioThreadMsgT;
 
 /* Shared variables (externs) */
@@ -296,8 +303,8 @@ extern bsInMemXtntT NilXtnts;
 
 int
 bfm_open_ms(
-    bfAccessT ** outbfap,	/* out */
-    domainT * dmnp,		/* in - domain pointer */
+    struct bfAccess ** outbfap,	/* out */
+    struct domain * dmnp,		/* in - domain pointer */
     int bfDDisk,		/* in - domain disk index */
     bfdBfMetaT bfMIndex		/* in - metadata bitfile index */
 );
@@ -317,7 +324,7 @@ bs_find_page(struct bfAccess * bfap,	/* in */
 
 void
 bs_invalidate_pages(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t pageOffset,		/* in */
     uint32_t pageCnt,		/* in */
     int invalflag		/* in */
@@ -325,7 +332,7 @@ bs_invalidate_pages(
 
 void
 msfs_flush_and_invalidate(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     int fiflags			/* in */
 );
 
@@ -354,7 +361,7 @@ bs_q_lazy(
 );
 
 int
-bs_raw_page(bfAccessT * bfap,		/* in */
+bs_raw_page(struct bfAccess * bfap,		/* in */
     unsigned vdIndex,		/* in */
     unsigned startBlk,		/* in */
     unsigned blkCnt,		/* in */
@@ -367,7 +374,7 @@ bs_bflush(struct vd * vdp	/* in */
 );
 
 int
-bfflush_sync(bfAccessT * bfap,		/* in */
+bfflush_sync(struct bfAccess * bfap,		/* in */
     lsnT waitLsn		/* in */
 );
 
@@ -377,19 +384,19 @@ bfflush_sync(bfAccessT * bfap,		/* in */
  */
 int
 bs_logpage_dirty(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     u_long pageNum		/* in */
 );
 
 void
 bs_pinblock(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     lsnT lsnToWriteTo		/* in */
 );
 
 void
 bs_lsnList_flush(
-    domainT * dmnP		/* in */
+    struct domain * dmnP		/* in */
 );
 
 int
@@ -424,12 +431,12 @@ bs_bflush_sync(struct vd * vdp	/* in */
 
 int
 bs_bf_flush_nowait(
-    bfAccessT * bfap
+    struct bfAccess * bfap
 );
 
 int
 bs_get_bf_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     int startXtntMap,		/* in */
     int startXtnt,		/* in */
     int xtntArraySize,		/* in */
@@ -440,7 +447,7 @@ bs_get_bf_xtnt_map(
 
 int
 bs_get_clone_xtnt_map(
-    bfAccessT * clon_bfap,	/* in */
+    struct bfAccess * clon_bfap,	/* in */
     int startXtntMap,		/* in */
     int startXtnt,		/* in */
     int xtntArraySize,		/* in */
@@ -453,7 +460,7 @@ bs_get_clone_xtnt_map(
 
 int
 bs_get_stripe_xtnt_map(
-    bfAccessT * in_bfap,	/* in */
+    struct bfAccess * in_bfap,	/* in */
     int startXtntMap,		/* in */
     int startXtnt,		/* in */
     int xtntArraySize,		/* in */
@@ -466,7 +473,7 @@ bs_get_stripe_xtnt_map(
 
 int
 bs_get_bkup_xtnt_map(
-    bfAccessT * in_bfp,		/* in */
+    struct bfAccess * in_bfp,		/* in */
     int startXtntMap,		/* in */
     int startXtnt,		/* in */
     int xtntArraySize,		/* in */
@@ -477,9 +484,9 @@ bs_get_bkup_xtnt_map(
     int *pageCnt		/* out */
 );
 
-bfAccessT *
+struct bfAccess *
 grab_bsacc(
-    bfSetT * bfSetp,	/* in - bitfile-set descriptor pointer */
+    struct bfSet * bfSetp,	/* in - bitfile-set descriptor pointer */
     bfTagT tag,	/* in - bitfile tag */
     int forceFlag,	/* in - passed to get_free_acc() */
     uint32_t options	/* in - options flags */
@@ -503,7 +510,7 @@ void init_bs_bmt_util_opx(void);
 
 int
 bs_logflush_start(
-    bfAccessT * ap,		/* in */
+    struct bfAccess * ap,		/* in */
     lsnT lsn			/* in */
 );
 
@@ -549,7 +556,7 @@ sendtoiothread(
  */
 void
 ftx_set_dirtybufla(
-         domainT * dmnp,
+         struct domain * dmnp,
          logRecAddrT dirtyBufLa
 );
 
@@ -559,7 +566,7 @@ ftx_set_dirtybufla(
 
 logRecAddrT
 ftx_get_dirtybufla(
-    domainT * dmnp
+    struct domain * dmnp
 );
 
 /*
@@ -568,7 +575,7 @@ ftx_get_dirtybufla(
  */
 void
 ftx_init_recovery_logaddr(
-    domainT * dmnp
+    struct domain * dmnp
 );
 
 /*
@@ -576,7 +583,7 @@ ftx_init_recovery_logaddr(
  */
 int
 ftx_bfdmn_recovery(
-    domainT * dmnp
+    struct domain * dmnp
 );
 
 #endif				/* _BS_IMS_H_ */
