@@ -315,27 +315,27 @@ static inline void ADD_ACC_SETLIST(bfAccessT *bfap)
  * Otherwise, it is assumed that the caller has locked the
  * chain and will unlock it.
  */
-#define RM_ACC_SETLIST(_bfap, _lock_list) \
-{ \
-    bfSetT *_bfSetp = _bfap->bfSetp; \
-    KASSERT(BFSET_VALID(_bfSetp)); \
-    if (_lock_list) \
-        mutex_enter(&_bfSetp->accessChainLock.mutex); \
-    else \
-        KASSERT(mutex_owned(&_bfSetp->accessChainLock.mutex)); \
-    KASSERT(_bfap->setFwd != NULL); \
-    KASSERT(_bfap->setBwd != NULL); \
-    if (_bfSetp->accessFwd == _bfap) \
-        _bfSetp->accessFwd = _bfap->setFwd; \
-    else \
-        _bfap->setBwd->setFwd = _bfap->setFwd; \
-    if (_bfSetp->accessBwd == _bfap) \
-        _bfSetp->accessBwd = _bfap->setBwd; \
-    else \
-        _bfap->setFwd->setBwd = _bfap->setBwd; \
-    _bfap->setFwd = _bfap->setBwd = NULL; \
-    if (_lock_list) \
-        mutex_exit(&_bfSetp->accessChainLock.mutex); \
+static inline void RM_ACC_SETLIST(bfAccessT *bfap, int lock_list)
+{
+    bfSetT *bfSetp = bfap->bfSetp;
+    KASSERT(BFSET_VALID(bfSetp));
+    if (lock_list)
+        mutex_enter(&bfSetp->accessChainLock.mutex);
+    else
+        KASSERT(mutex_owned(&bfSetp->accessChainLock.mutex));
+    KASSERT(bfap->setFwd != NULL);
+    KASSERT(bfap->setBwd != NULL);
+    if (bfSetp->accessFwd == bfap)
+        bfSetp->accessFwd = bfap->setFwd;
+    else
+        bfap->setBwd->setFwd = bfap->setFwd;
+    if (bfSetp->accessBwd == bfap)
+        bfSetp->accessBwd = bfap->setBwd;
+    else
+        bfap->setFwd->setBwd = bfap->setBwd;
+    bfap->setFwd = bfap->setBwd = NULL;
+    if (lock_list)
+        mutex_exit(&bfSetp->accessChainLock.mutex);
 }
 
 int
