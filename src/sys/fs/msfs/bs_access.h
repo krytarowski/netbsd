@@ -105,13 +105,13 @@
  * context struct is deallocated, the flags and dir_stats are copied
  * here and later flushed.
  */
-typedef struct {
+typedef struct saved_stats {
 	long op_flags;		/* flags for state of flushing operation */
 	long fs_flag;		/* file flags - what needs to be flushed */
 	struct fs_stat dir_stats;	/* file stats */
 	int dirty_alloc;	/* set if stats from an allocating write */
 	/* are not on disk */
-}      saved_statsT;
+} saved_statsT;
 
 
 /*
@@ -123,7 +123,7 @@ typedef struct flushWaiter {
 	struct flushWaiter *bwd;/* FlushWaiter queue backward link */
 	lsnT waitLsn;		/* Highest LSN of buffer IO to wait for */
 	ulong cnt;		/* Number of waiters on this LSN */
-}           flushWaiterT;
+} flushWaiterT;
 
 
 /* actRange structure describes a range of blocks in a file that are
@@ -149,7 +149,7 @@ typedef struct actRange {
 		AR_COW		/* range in use by cow path (moo!) */
 	}    arState;
 	int arWaiters;		/* # thds waiting for this range to go away */
-}        actRangeT;
+} actRangeT;
 /* This is the header for active ranges in the access structure.  This
  * header contains two lists of ranges: the active list which includes
  * mutually-exclusive ranges associated with threads that are currently
@@ -174,7 +174,7 @@ typedef struct actRangeHdr {
 	uint arMaxLen;		/* stats: longest active chain has been */
 	uint arWaitCount;	/* # structs on wait chain */
 	uint arWaitMaxLen;	/* stats: longest wait chain has been */
-}           actRangeHdrT;
+} actRangeHdrT;
 
 typedef struct bfAccess {
 #ifdef _KERNEL
@@ -340,7 +340,7 @@ typedef struct bfAccess {
 	ulong migPagesPending;	/* unpinned migrates to flushQ but not written
 				 * yet */
 	cvT migWait;		/* will sleep until queue reduced to this size */
-}        bfAccessT;
+} bfAccessT;
 
 /*
  * This struct saves some space when we
@@ -349,7 +349,7 @@ typedef struct bfAccess {
  * of bfAccess.
  */
 
-struct bfAccessHdr {
+typedef struct bfAccessHdr {
 #ifdef _KERNEL
 	dyn_hashlinks_w_keyT hashlinks;	/* dynamic hashtable links */
 #endif				/* _KERNEL */
@@ -357,7 +357,7 @@ struct bfAccessHdr {
 	struct bfAccess *freeBwd;
 	int len;
 	int saved_stats_len;
-};
+} bfAccessHdrT;
 
 /* Shared variables (externs) */
 extern mutexT BfAccessFreeLock;	/* guards access free & closed lists */
