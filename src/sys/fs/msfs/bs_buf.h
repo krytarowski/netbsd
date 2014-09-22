@@ -229,18 +229,18 @@ DevWrite = 0x20} TraceActionT;
  * List manipulation macros
  */
 
-#define IODESC_CLR( bp, i ) \
-{ \
-    bp->ioList.ioDesc[i].fwd = bp->ioList.ioDesc[i].bwd = NULL; \
-    bp->ioList.ioDesc[i].ioQ = NONE; \
-    bp->ioList.ioDesc[i].numBlks = 0; \
-    bp->ioList.ioDesc[i].targetAddr = 0; \
-    bp->ioList.ioDesc[i].bsBuf = bp; \
-    bp->ioList.ioDesc[i].ioCount = 0; \
-    bp->ioList.ioDesc[i].consolidated = 0; \
-    bp->ioList.ioDesc[i].totalBlks = 0; \
-    bp->ioList.ioDesc[i].desCnt = 0; \
-    bp->ioList.ioDesc[i].data_never_written = 0; \
+static inline void IODESC_CLR(struct bsBuf *bp, const int i)
+{
+    bp->ioList.ioDesc[i].fwd = bp->ioList.ioDesc[i].bwd = NULL;
+    bp->ioList.ioDesc[i].ioQ = NONE;
+    bp->ioList.ioDesc[i].numBlks = 0;
+    bp->ioList.ioDesc[i].targetAddr = 0;
+    bp->ioList.ioDesc[i].bsBuf = bp;
+    bp->ioList.ioDesc[i].ioCount = 0;
+    bp->ioList.ioDesc[i].consolidated = 0;
+    bp->ioList.ioDesc[i].totalBlks = 0;
+    bp->ioList.ioDesc[i].desCnt = 0;
+    bp->ioList.ioDesc[i].data_never_written = 0;
 }
 
 #define ADD_DIRTYACCESSLIST( bp, seize_bfiolock ) \
