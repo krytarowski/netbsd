@@ -30,11 +30,12 @@
 #include <fs/msfs/ms_generic_locks.h>
 #include <fs/msfs/fs_quota.h>
 
+struct bfAccess;
+struct domain;
+
 /*
  * bfNode is the msfs structure at the end of a vnode
  */
-
-struct bfAccess;
 
 typedef struct bfNode {
 	struct bfAccess *accessp;
@@ -46,7 +47,7 @@ typedef struct bfNode {
  * Quota information that is specific to each quota type.
  */
 typedef struct quotaInfo {
-	bfAccessT *qiAccessp;	/* quota file access structure pointer */
+	struct bfAccess *qiAccessp;	/* quota file access structure pointer */
 	struct fsContext *qiContext;	/* quota file context structure
 					 * pointer */
 	bfTagT qiTag;		/* tag of quota file */
@@ -118,8 +119,8 @@ typedef struct fileSetNode {
 	bfTagT rootTag;		/* tag of root directory */
 	bfTagT tagsTag;		/* tag of ".tags */
 	u_int filesetMagic;	/* magic number: structure validation */
-	domainT *dmnP;
-	bfAccessT *rootAccessp;	/* Access structure pointer for root */
+	struct domain *dmnP;
+	struct bfAccess *rootAccessp;	/* Access structure pointer for root */
 	bfSetIdT bfSetId;
 	bfSetT *bfSetp;		/* bitfile-set descriptor pointer */
 	struct vnode *root_vp;
@@ -232,9 +233,9 @@ extern krwlock_t FilesetLock;
 #define ATOV(bfap)  ( bfap->bfVp )
 
 /*
- * Given a vnode pointer return the bfAccessT pointer.
+ * Given a vnode pointer return the struct bfAccess pointer.
  * If the vnode associates with a shadow accessp of a metadata file, get the
- * real bfAccessT pointer in the root bfSet.
+ * real struct bfAccess pointer in the root bfSet.
  */
 #define VTOA(vp) \
  ((((struct bfNode *)(&(vp)->v_data[0]))->accessp \
