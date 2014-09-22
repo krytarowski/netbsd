@@ -33,6 +33,11 @@
 #endif				/* _KERNEL */
 #include <sys/rwlock.h>
 
+#include <fs/msfs/bs_access.h>
+#include <fs/msfs/bs_buf.h>
+#include <fs/msfs/bs_service_classes.h>
+#include <fs/msfs/bs_domain.h>
+
 /*
  ** LOG_FLUSH_THRESHOLD must be a multiple of 4 **
  */
@@ -75,7 +80,8 @@ typedef struct ioDesc {
 	short data_never_written;	/* bit indicates this was never
 					 * written */
 	ushort ioRetryCount;	/* Count of AdvFS initiated I/O retries */
-}      ioDescT;
+} ioDescT;
+
 #define ADVFS_IO_RETRY_MAX  9	/* Maximum number of I/O retries allowed */
 
 #define IODH_TRACE_HISTORY 16
@@ -86,7 +92,8 @@ typedef struct {
 	uint16_t ln;
 	struct thread *thd;
 	void *val;
-}      ioDHTraceElmT;
+} ioDHTraceElmT;
+
 /* The first two fields of this structure and the ioDesc structure are
  * identical.
  */
@@ -114,7 +121,7 @@ typedef struct blkMap {
 	int writeCnt;		/* count of write entries */
 	int maxCnt;		/* number of entries in ioDesc[] */
 	blkDescT *blkDesc;
-}      blkMapT;
+} blkMapT;
 
 typedef struct ioList {
 	int read;		/* index of first read entry in ioDesc[] */
@@ -123,11 +130,7 @@ typedef struct ioList {
 	int writeCnt;		/* count of write entries */
 	int maxCnt;		/* number of entries in ioDesc[] */
 	ioDescT *ioDesc;
-}      ioListT;
-#include <fs/msfs/bs_access.h>
-#include <fs/msfs/bs_buf.h>
-#include <fs/msfs/bs_service_classes.h>
-#include <fs/msfs/bs_domain.h>
+} ioListT;
 
 /*
  * In-memory extent map data structures.

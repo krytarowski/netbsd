@@ -493,7 +493,8 @@ typedef struct logRecAddr {
 	uint16_t page;		/* Log page number of the record */
 	uint16_t offset;		/* Log page offset of the record */
 	lsnT lsn;		/* Logical sequence number of the record */
-}          logRecAddrT;
+} logRecAddrT;
+
 #define RECADDR_EQ( rec1, rec2 ) \
      (((rec1).page == (rec2).page) && \
       ((rec1).offset == (rec2).offset) && \

@@ -24,6 +24,14 @@
 
 #include <uvm/uvm.h>
 #include <sys/ucred.h>
+#include <sys/types.h>
+#include <sys/proc.h>
+#include <sys/buf.h>
+
+#include <fs/msfs/ms_generic_locks.h>
+#include <fs/msfs/bs_access.h>
+#include <fs/msfs/bs_public.h>
+#include <fs/msfs/bs_ims.h>
 
 /* Defines */
 #define BUFIODESC 1		/* How many ioDesc bsBuf contains */
@@ -186,7 +194,7 @@ typedef struct bsBuf {
 	long ln;		/* dbg: line # high 28 bits; tid in low 36 */
 	int writeRef;		/* # of refs on this buffer for writing */
 	u_int sync_stamp;	/* used for smoothsync operation */
-	struct actRange *actRangep;	/* Active range containing this
+	actRangeT *actRangep;	/* Active range containing this
 					 * buffer. */
 
 	/* note this field may be invalid when the vm_page isn't held or busy */
@@ -234,6 +242,7 @@ typedef struct bsBufHdr {
 	int length;		/* length of queue */
 } bsBufHdrT;
 
+/* Function prototypes */
 
 /* This macro sets the upper 28 bits with the line number, and the lower
  * 36 bits with the thread id.
