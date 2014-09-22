@@ -295,19 +295,6 @@ PB_CONT = 1, CK_WAITQ = 2};
  * mostly a pointer table of all the virtual disks that belong to it.
  */
 
-/* Test the validity of a domain pointer. */
-/* "Return" EBAD_DOMAIN_POINTER if the domain is NULL. */
-/* "Return" EBAD_DOMAIN_POINTER if the domain structure is corrupt. */
-/* Else "return" EOK */
-#define TEST_DMNP(_dmnP)                                    \
-(                                                           \
-        (_dmnP) == NULL ?                                   \
-            EBAD_DOMAIN_POINTER :                           \
-            (_dmnP)->dmnMagic != DMNMAGIC ?                 \
-                EBAD_DOMAIN_POINTER :                       \
-                EOK                                         \
-)
-
 struct bfAccess;
 
 /*
@@ -443,6 +430,19 @@ extern domainT nilDomain;
 
 extern int DomainCnt;
 extern domainT *DomainTbl[];
+
+/* Test the validity of a domain pointer. */
+/* "Return" EBAD_DOMAIN_POINTER if the domain is NULL. */
+/* "Return" EBAD_DOMAIN_POINTER if the domain structure is corrupt. */
+/* Else "return" EOK */
+static inline int TEST_DMNP(const domainT *dmnP)
+(
+        return (dmnP == NULL) ?
+            EBAD_DOMAIN_POINTER :
+            ((dmnP->dmnMagic != DMNMAGIC) ?
+                EBAD_DOMAIN_POINTER :
+                EOK);
+)
 
 static inline void BFSET_DMN_INSQ(domainT *dmnp, bfsQueueT *queue, bfsQueueT *entry)
 {
