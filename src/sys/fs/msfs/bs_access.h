@@ -55,7 +55,6 @@
  */
 #define ADVFS_MIN_FREE_ACCESS NVNODE
 #define ADVFSMAXFREEACCESSPERCENT 80
-extern ulong ncache_valid_time;
 #define BFAP_VALID_TIME ncache_valid_time
 
 /* The following structure is used to cache the file stats from the
@@ -76,10 +75,6 @@ typedef struct {
 						 * disk */
 #define SS_STATS_COPIED_TO_CONTEXT 0x0002	/* saved_stats have been
 						 * copied */
-
-extern mutexT BfAccessFreeLock;	/* guards access free & closed lists */
-
-struct bfSet;
 
 /* Dynamic Hashtable Utilities for accessing the BfAccessHashTbl */
 
@@ -316,6 +311,131 @@ typedef struct bfAccess {
 	cvT migWait;		/* will sleep until queue reduced to this size */
 }        bfAccessT;
 
+/*
+ * This struct saves some space when we
+ * need a bfAccess compatible list header.
+ * It must match perfectly with the start
+ * of bfAccess.
+ */
+
+struct bfAccessHdr {
+#ifdef _KERNEL
+	dyn_hashlinks_w_keyT hashlinks;	/* dynamic hashtable links */
+#endif				/* _KERNEL */
+	struct bfAccess *freeFwd;
+	struct bfAccess *freeBwd;
+	int len;
+	int saved_stats_len;
+};
+
+
+/*
+ * bs_map_bf() options flags.
+ */
+#define BS_MAP_DEF     0
+#define BS_REMAP       2
+#define BS_FAILOVER    4
+#define BS_ON_DDL      8
+
+/* define values for access_int "options" arg */
+
+#define BF_OP_IGNORE_DEL  0x1
+#define BF_OP_GET_VNODE   0x2
+#define BF_OP_HAVE_VNODE  0x4
+#define BF_OP_INMEM_ONLY  0x8
+#define BF_OP_FIND_ON_DDL 0x10
+
+#define NULLMT NULL
+
+/*
+ * bs_close options
+ */
+
+#define MSFS_INACTIVE_CALL 0x1
+#define MSFS_BFSET_DEL     0x2
+#define MSFS_DO_VRELE      0x4
+#define MSFS_SS_NOCALL     0x8	/* force vfast to not update vfast lists */
+
+/* Shared variables (externs) */
+extern mutexT BfAccessFreeLock;	/* guards access free & closed lists */
+extern ulong ncache_valid_time;
+extern struct bfAccessHdr FreeAcc;
+extern struct bfAccessHdr ClosedAcc;
+
+/* Function prototypes */
+int
+bs_close_one(
+    bfAccessT * bfap,		/* in */
+    int options,		/* in */
+    ftxHT parentFtxH		/* in */
+);
+
+void access_invalidate(bfSetT * bfSetp);
+
+bfAccessT *
+find_bfap(
+    bfSetT * bfSetp,		/* in  - bitfile-set descriptor poitner */
+    bfTagT tag,			/* in  - bitfile tag */
+    int hold_hashlock,		/* in  - TRUE = return with HashLock held
+				 * FALSE = release HashLock on return */
+    ulong * insert_count);	/* out - hint indicating an insertion since
+				 * last time chain was locked */
+
+void
+bs_invalidate_rsvd_access_struct(
+    domainT * domain,		/* in */
+    bfTagT bfTag,		/* in */
+    bfAccessT * bfap		/* in */
+);
+
+int
+bs_reclaim_cfs_rsvd_vn(
+    bfAccessT * bfap		/* in */
+);
+
+void
+free_acc_struct(
+    bfAccessT * bfap		/* in - pointer to access struct */
+);
+
+int
+bs_access_one(
+    bfAccessT ** bfap,		/* out - access structure pointer */
+    bfTagT tag,			/* in - tag of bf to access */
+    bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
+    ftxHT ftxH,			/* in - ftx handle */
+    uint32_t options,		/* in - options flags */
+    struct mount * mp,		/* in - fs mount queue */
+    struct vnode ** fsvp,	/* out - vnode allocated */
+    bfAccessT * origBfap	/* in - Orig access (clone open) */
+);
+
+int
+bs_map_bf(
+    bfAccessT * bfAp,		/* in/out - ptr to bitfile's access struct */
+    uint32_t options,		/* in - options flags (see ) */
+    struct mount * mp		/* in - mount point */
+);
+
+int
+bs_have_clone(
+    bfTagT tag,			/* in - bitfile tag */
+    bfSetT * cloneSetp,		/* in - clone bitfile set desc ptr */
+    ftxHT ftxH			/* in - ftx handle */
+);
+
+int
+new_clone_mcell(
+    bfMCIdT * bfMCIdp,		/* out - ptr to mcell id */
+    domainT * dmnp,		/* in - domain ptr */
+    ftxHT parFtx,		/* in - parent ftx */
+    vdIndexT * vdIndex,		/* out - new vd index */
+    bsBfAttrT * bfAttrp,	/* in - bitfile attributes ptr */
+    bfSetT * bfSetp,		/* in - bitfile's bf set desc ptr */
+    bfTagT newtag,		/* in - tag of new bitfile */
+    bsInMemXtntT * oxtntp	/* in - ptr to orig extent map */
+);
+
 static inline u_long BS_BFAH_GET_KEY(bfSetT *s, bfTagT *t)
 {
    return ((BFSET_GET_HASH_INPUT(s)) * (BS_BFTAG_IDX(t)) + (BS_BFTAG_SEQ(t)));
@@ -349,128 +469,6 @@ static inline int TEST_PAGE(const uint32_t pg, const bfAccessT *bfap)
 {
     return pg >= bfap->nextPage ? E_BAD_PAGE_RANGE : EOK;
 }
-
-/*
- * This struct saves some space when we
- * need a bfAccess compatible list header.
- * It must match perfectly with the start
- * of bfAccess.
- */
-
-struct bfAccessHdr {
-#ifdef _KERNEL
-	dyn_hashlinks_w_keyT hashlinks;	/* dynamic hashtable links */
-#endif				/* _KERNEL */
-	struct bfAccess *freeFwd;
-	struct bfAccess *freeBwd;
-	int len;
-	int saved_stats_len;
-};
-
-
-/*
- * bs_map_bf() options flags.
- */
-#define BS_MAP_DEF     0
-#define BS_REMAP       2
-#define BS_FAILOVER    4
-#define BS_ON_DDL      8
-
-int
-bs_map_bf(
-    bfAccessT * bfAp,		/* in/out - ptr to bitfile's access struct */
-    uint32_t options,		/* in - options flags (see ) */
-    struct mount * mp		/* in - mount point */
-);
-
-int
-bs_have_clone(
-    bfTagT tag,			/* in - bitfile tag */
-    bfSetT * cloneSetp,		/* in - clone bitfile set desc ptr */
-    ftxHT ftxH			/* in - ftx handle */
-);
-
-int
-new_clone_mcell(
-    bfMCIdT * bfMCIdp,		/* out - ptr to mcell id */
-    domainT * dmnp,		/* in - domain ptr */
-    ftxHT parFtx,		/* in - parent ftx */
-    vdIndexT * vdIndex,		/* out - new vd index */
-    bsBfAttrT * bfAttrp,	/* in - bitfile attributes ptr */
-    bfSetT * bfSetp,		/* in - bitfile's bf set desc ptr */
-    bfTagT newtag,		/* in - tag of new bitfile */
-    bsInMemXtntT * oxtntp	/* in - ptr to orig extent map */
-);
-
-/* define values for access_int "options" arg */
-
-#define BF_OP_IGNORE_DEL  0x1
-#define BF_OP_GET_VNODE   0x2
-#define BF_OP_HAVE_VNODE  0x4
-#define BF_OP_INMEM_ONLY  0x8
-#define BF_OP_FIND_ON_DDL 0x10
-
-#define NULLMT NULL
-
-int
-bs_access_one(
-    bfAccessT ** bfap,		/* out - access structure pointer */
-    bfTagT tag,			/* in - tag of bf to access */
-    bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
-    ftxHT ftxH,			/* in - ftx handle */
-    uint32_t options,		/* in - options flags */
-    struct mount * mp,		/* in - fs mount queue */
-    struct vnode ** fsvp,	/* out - vnode allocated */
-    bfAccessT * origBfap	/* in - Orig access (clone open) */
-);
-
-/*
- * bs_close options
- */
-
-#define MSFS_INACTIVE_CALL 0x1
-#define MSFS_BFSET_DEL     0x2
-#define MSFS_DO_VRELE      0x4
-#define MSFS_SS_NOCALL     0x8	/* force vfast to not update vfast lists */
-
-int
-bs_close_one(
-    bfAccessT * bfap,		/* in */
-    int options,		/* in */
-    ftxHT parentFtxH		/* in */
-);
-
-
-void access_invalidate(bfSetT * bfSetp);
-
-bfAccessT *
-find_bfap(
-    bfSetT * bfSetp,		/* in  - bitfile-set descriptor poitner */
-    bfTagT tag,			/* in  - bitfile tag */
-    int hold_hashlock,		/* in  - TRUE = return with HashLock held
-				 * FALSE = release HashLock on return */
-    ulong * insert_count);	/* out - hint indicating an insertion since
-				 * last time chain was locked */
-
-void
-bs_invalidate_rsvd_access_struct(
-    domainT * domain,		/* in */
-    bfTagT bfTag,		/* in */
-    bfAccessT * bfap		/* in */
-);
-
-int
-bs_reclaim_cfs_rsvd_vn(
-    bfAccessT * bfap		/* in */
-);
-
-void
-free_acc_struct(
-    bfAccessT * bfap		/* in - pointer to access struct */
-);
-
-extern struct bfAccessHdr FreeAcc;
-extern struct bfAccessHdr ClosedAcc;
 
 int
 bmtr_get_rec_ptr(
