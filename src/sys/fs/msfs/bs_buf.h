@@ -274,8 +274,9 @@ static inline void ADD_DIRTYACCESSLIST(struct bsBuf *bp, const int seize_bfioloc
     KASSERT(mutex_owned(&bp->bufLock.mutex));
     if (seize_bfiolock)
         mutex_enter(&bp->bfAccess->bfIoLock.mutex);
-    else
+    else {
         KASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex));
+    }
     bp->accListSeq++;
     KASSERT(!(bp->lock.state & ACC_DIRTY));
     bp->lock.state |= ACC_DIRTY;
@@ -293,8 +294,9 @@ static inline void RM_ACCESSLIST(struct bsBuf *bp, const int seize_bfiolock)
     KASSERT(mutex_owned(&bp->bufLock.mutex));
     if (seize_bfiolock)
         mutex_enter(&bp->bfAccess->bfIoLock.mutex);
-    else
+    else {
         KASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex));
+    }
     KASSERT(bp->lock.state & ACC_DIRTY);
     bp->bfAccess->dirtyBufList.length--;
     KASSERT(bp->bfAccess->dirtyBufList.length >= 0);
