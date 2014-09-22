@@ -25,91 +25,7 @@
 #include <uvm/uvm.h>
 #include <sys/ucred.h>
 
-/* XXX: comment with bsBuf to be investigated */
-typedef struct vm_page *vm_page_t;	/*  so bsBuf stays the same size */
-typedef struct vm_map  *vm_map_t;
-
-/* This macro sets the upper 28 bits with the line number, and the lower
- * 36 bits with the thread id.
- */
-#define SET_LINE_AND_THREAD(ln) \
-    ((unsigned long)(ln) << 36) +  \
-    ((unsigned long)current_thread() & 0xfffffffff)
-
-/*
- * rangeFlushT - describes a range flush
- */
-typedef struct rangeFlush {
-	unsigned long firstPage;/* First page in range (static)        */
-	unsigned long lastPage;	/* Last page in range (static)         */
-	mutexT rangeFlushLock;	/* Guards outstandingIoCount field     */
-	unsigned long outstandingIoCount;	/* # of I/O's still to be
-						 * completed    */
-}          rangeFlushT;
-/*
- * rangeFlushLinkT - links a bsBuf to a rangeFlushT
- *
- * A single bsBuf could be part of multiple range flushes.
- * Also, a range flush could encompass multiple bsBufs.
- * All fields in the rangeFlushLink are protected by bsBuf.bufLock.
- */
-typedef struct rangeFlushLink {
-	struct rangeFlushLink *rflFwd;	/* Next rangeFlushLinkT for this bsBuf */
-	rangeFlushT *rfp;	/* The rangeFlushT itself              */
-}              rangeFlushLinkT;
-/*
- * Bitfile buffer descriptor
- */
-typedef struct bsBuf {
-	struct bsBuf *lsnFwd;	/* lsn list; protected by domainT.lsnLock */
-	struct bsBuf *lsnBwd;
-	struct bsBuf *accFwd;	/* bfAccess clean and dirty page list;    */
-	struct bsBuf *accBwd;	/* protected by bfAccessT.bfIoLock    */
-	rangeFlushLinkT *rflList;	/* List of connectors to rangeFlushT's    */
-	/* that include this bsBuf in their range */
-	/* rflList is protected by bsBuf.bufLock  */
-	mutexT bufLock;
-
-	/* Next fields protected by bsBuf.bufLock */
-	bufLkT lock;		/* See state flags below for values */
-	long ln;		/* dbg: line # high 28 bits; tid in low 36 */
-	int writeRef;		/* # of refs on this buffer for writing */
-	u_int sync_stamp;	/* used for smoothsync operation */
-	struct actRange *actRangep;	/* Active range containing this
-					 * buffer. */
-
-	/* note this field may be invalid when the vm_page isn't held or busy */
-	vm_page_t vmpage;	/* pointer to vm page struct for UBC page */
-
-	u_int bufDebug;		/* see flags and note below - no locking */
-
-	u_int bufMagic;		/* magic number: structure validation */
-	u_long accListSeq;	/* bfap list history. protection = bfIoLock */
-
-	logRecAddrT origLogRec;	/* lsn of oldest log record for which  */
-	/* this buffer contains modifications. */
-	logRecAddrT currentLogRec;	/* lsn of log record for most recent   */
-	/* modification to this buffer.        */
-	lsnT flushSeq;		/* sequence number for flushing */
-
-	int directIO;		/* This buf is being used for directIO */
-	struct proc *procp;	/* Proc pointer for directIO */
-	struct buf *aio_bp;	/* Asynchronous IO buffer for directIO. */
-
-	u_long bfPgNum;		/* File's page offset. */
-	struct bfAccess *bfAccess;	/* to get to disk mapping info */
-
-	int ubc_flags;		/* UBC flags valid during IO request only */
-	int unused;		/* unused for alignment */
-
-	/* Changed under protection of state == IO_TRANS  */
-	int result;		/* I/O completion status */
-	short metaCheck;	/* metadata integrity check on io done */
-	short ioCount;		/* number of outstanding I/O's */
-	ioListT ioList;		/* buffer's block map info */
-	ioDescT ioDesc;		/* if buf has one ioDesc, this is it */
-} bsBufT;
-
+/* Defines */
 #define BUFIODESC 1		/* How many ioDesc bsBuf contains */
 
 /* flags for bs_startio */
@@ -121,18 +37,6 @@ typedef struct bsBuf {
 #define NORMALFLUSH     0	/* must have same value as IO_NOFLUSH */
 #define FORCEFLUSH      1
 
-/*
- * Use this to save some space when
- * we have a buffer list.  Obviously, this and
- * the bsBuf struct must match.
- */
-struct bsBufHdr {
-	struct bsBuf *lsnFwd;	/* doubly linked lsn list */
-	struct bsBuf *lsnBwd;
-	struct bsBuf *accFwd;	/* doubly linked off bfAccess */
-	struct bsBuf *accBwd;
-	int length;		/* length of queue */
-};
 /*
  * state bits; values for bsBuf.lock.state
  *
@@ -200,7 +104,6 @@ struct bsBufHdr {
 					 * migration failed, updates would be
 					 * lost. */
 
-
 /* debug state bit values for bsBuf.bufDebug
  *
  * NOTE:  bsBuf.bufDebug isn't being modified under a lock in all cases.
@@ -221,10 +124,120 @@ struct bsBufHdr {
 #define BSBUF_CHK_NONE      0	/* no validation (normal user data) */
 #define BSBUF_CHK_BMTPG     1	/* execute check_BMT_pg */
 
+#define ADVFS_GET_NOCACHE    0x100	/* page not in cache is ok for this
+					 * call */
 
-typedef enum {
-	Ref = 1, Deref = 2, Pin = 4, Unpin = 8, DevRead = 0x10,
-DevWrite = 0x20} TraceActionT;
+/* Enums */
+typedef enum TraceAction {
+	Ref = 1,
+	Deref = 2,
+	Pin = 4,
+	Unpin = 8,
+	DevRead = 0x10,
+	DevWrite = 0x20
+} TraceActionT;
+
+
+/* XXX: comment with bsBuf to be investigated */
+typedef struct vm_page *vm_page_t;	/*  so bsBuf stays the same size */
+typedef struct vm_map  *vm_map_t;
+
+/* This macro sets the upper 28 bits with the line number, and the lower
+ * 36 bits with the thread id.
+ */
+#define SET_LINE_AND_THREAD(ln) \
+    ((unsigned long)(ln) << 36) +  \
+    ((unsigned long)current_thread() & 0xfffffffff)
+
+/*
+ * rangeFlushT - describes a range flush
+ */
+typedef struct rangeFlush {
+	unsigned long firstPage;/* First page in range (static)        */
+	unsigned long lastPage;	/* Last page in range (static)         */
+	mutexT rangeFlushLock;	/* Guards outstandingIoCount field     */
+	unsigned long outstandingIoCount;	/* # of I/O's still to be
+						 * completed    */
+} rangeFlushT;
+
+/*
+ * rangeFlushLinkT - links a bsBuf to a rangeFlushT
+ *
+ * A single bsBuf could be part of multiple range flushes.
+ * Also, a range flush could encompass multiple bsBufs.
+ * All fields in the rangeFlushLink are protected by bsBuf.bufLock.
+ */
+typedef struct rangeFlushLink {
+	struct rangeFlushLink *rflFwd;	/* Next rangeFlushLinkT for this bsBuf */
+	rangeFlushT *rfp;	/* The rangeFlushT itself              */
+} rangeFlushLinkT;
+
+/*
+ * Bitfile buffer descriptor
+ */
+typedef struct bsBuf {
+	struct bsBuf *lsnFwd;	/* lsn list; protected by domainT.lsnLock */
+	struct bsBuf *lsnBwd;
+	struct bsBuf *accFwd;	/* bfAccess clean and dirty page list;    */
+	struct bsBuf *accBwd;	/* protected by bfAccessT.bfIoLock    */
+	rangeFlushLinkT *rflList;	/* List of connectors to rangeFlushT's    */
+	/* that include this bsBuf in their range */
+	/* rflList is protected by bsBuf.bufLock  */
+	mutexT bufLock;
+
+	/* Next fields protected by bsBuf.bufLock */
+	bufLkT lock;		/* See state flags below for values */
+	long ln;		/* dbg: line # high 28 bits; tid in low 36 */
+	int writeRef;		/* # of refs on this buffer for writing */
+	u_int sync_stamp;	/* used for smoothsync operation */
+	struct actRange *actRangep;	/* Active range containing this
+					 * buffer. */
+
+	/* note this field may be invalid when the vm_page isn't held or busy */
+	vm_page_t vmpage;	/* pointer to vm page struct for UBC page */
+
+	u_int bufDebug;		/* see flags and note below - no locking */
+
+	u_int bufMagic;		/* magic number: structure validation */
+	u_long accListSeq;	/* bfap list history. protection = bfIoLock */
+
+	logRecAddrT origLogRec;	/* lsn of oldest log record for which  */
+	/* this buffer contains modifications. */
+	logRecAddrT currentLogRec;	/* lsn of log record for most recent   */
+	/* modification to this buffer.        */
+	lsnT flushSeq;		/* sequence number for flushing */
+
+	int directIO;		/* This buf is being used for directIO */
+	struct proc *procp;	/* Proc pointer for directIO */
+	struct buf *aio_bp;	/* Asynchronous IO buffer for directIO. */
+
+	u_long bfPgNum;		/* File's page offset. */
+	struct bfAccess *bfAccess;	/* to get to disk mapping info */
+
+	int ubc_flags;		/* UBC flags valid during IO request only */
+	int unused;		/* unused for alignment */
+
+	/* Changed under protection of state == IO_TRANS  */
+	int result;		/* I/O completion status */
+	short metaCheck;	/* metadata integrity check on io done */
+	short ioCount;		/* number of outstanding I/O's */
+	ioListT ioList;		/* buffer's block map info */
+	ioDescT ioDesc;		/* if buf has one ioDesc, this is it */
+} bsBufT;
+
+/*
+ * Use this to save some space when
+ * we have a buffer list.  Obviously, this and
+ * the bsBuf struct must match.
+ */
+struct bsBufHdr {
+	struct bsBuf *lsnFwd;	/* doubly linked lsn list */
+	struct bsBuf *lsnBwd;
+	struct bsBuf *accFwd;	/* doubly linked off bfAccess */
+	struct bsBuf *accBwd;
+	int length;		/* length of queue */
+};
+
 /*
  * List manipulation macros
  */
@@ -403,8 +416,5 @@ advfs_page_get(struct bsBuf * bp,	/* in - buffer to get current vm_page
 					 * struct */
     int flags			/* in - what to do - hold, busy, etc */
 );
-
-#define ADVFS_GET_NOCACHE    0x100	/* page not in cache is ok for this
-					 * call */
 
 #endif				/* _BS_BUF_H_ */
