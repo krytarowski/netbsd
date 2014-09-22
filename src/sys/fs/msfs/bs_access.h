@@ -388,7 +388,7 @@ find_bfap(
 
 void
 bs_invalidate_rsvd_access_struct(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfTagT bfTag,		/* in */
     bfAccessT * bfap		/* in */
 );
@@ -432,7 +432,7 @@ bs_have_clone(
 int
 new_clone_mcell(
     bfMCIdT * bfMCIdp,		/* out - ptr to mcell id */
-    domainT * dmnp,		/* in - domain ptr */
+    struct domain * dmnp,		/* in - domain ptr */
     ftxHT parFtx,		/* in - parent ftx */
     vdIndexT * vdIndex,		/* out - new vd index */
     bsBfAttrT * bfAttrp,	/* in - bitfile attributes ptr */

@@ -493,7 +493,7 @@ tagdir_freetag_dellist(
 	int sts;
 	bfSetIdT bfSetId;
 	bfSetT *bfSetp = NULL;
-	domainT *dmnP = pvdp->dmnP;
+	struct domain *dmnP = pvdp->dmnP;
 	unsigned long tagPg;
 	int slot, free_slot;
 	bfPageRefHT refPgH;
@@ -688,7 +688,7 @@ tagdir_alloc_tag(
 	bsTDirPgT *tdpg0p;
 	unsigned int slot;
 	ftxHT ftxH;
-	domainT *dmnP = bfSetp->dmnP;
+	struct domain *dmnP = bfSetp->dmnP;
 
 
 	TAG_DIR_LOCK(bfSetp, parentFtxH)
@@ -845,7 +845,7 @@ extend_tagdir_redo_opx(
 	tagUnInitPageRedoT *uipp = (tagUnInitPageRedoT *) opRec;
 	int sts;
 	bfSetT *bfSetp;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 
 
 	if (!BS_UID_EQL(uipp->bfSetId.domainId, dmnP->domainId)) {
@@ -1343,7 +1343,7 @@ tagdir_write_undo_opx(
 	rbfPgRefHT pgRef;
 	unsigned long tagPg;
 	unsigned slot;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int sts;
 	int bfs_opened = 0;
 
@@ -1419,7 +1419,7 @@ tagdir_lookup(
 	bsTDirPgT *tdpgp;
 	bsTMapT *tdmap;
 	int sts;
-	domainT *domain = bfSetp->dmnP;
+	struct domain *domain = bfSetp->dmnP;
 
 	if (BS_BFTAG_RSVD(*tp)) {
 
@@ -1554,7 +1554,7 @@ tagdir_lookup_next(
 	bsTDirPgT *tdpgp;
 	bsTMapT *tdmap;
 	int isReferenced = 0;
-	domainT *domain = bfSetp->dmnP;
+	struct domain *domain = bfSetp->dmnP;
 	vdT *vdp;
 
 	tagPg = TAGTOPG(tp);
@@ -1658,7 +1658,7 @@ tagdir_lookup_next(
 
 int
 bs_switch_root_tagdir(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT newVdIndex		/* in */
 )
 {
@@ -1896,7 +1896,7 @@ switch_root_tagdir_redo_opx(
 )
 {
 	bfSetT *bfSet;
-	domainT *domain;
+	struct domain *domain;
 	bfTagT newTag;
 
 	domain = ftxH.dmnP;

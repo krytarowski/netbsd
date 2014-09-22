@@ -183,7 +183,7 @@ int advfsstats = 0;
 );
 
 	void
-	     call_logflush(domainT * dmnP,
+	     call_logflush(struct domain * dmnP,
          lsnT lsn,
          int wait);
 

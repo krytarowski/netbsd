@@ -51,7 +51,7 @@
 
 #define ADVFS_MODULE FTX_RECOVERY
 
-int cfs_list(domainT * dmnP, ftxIdT ftxId, int done_flag);
+int cfs_list(struct domain * dmnP, ftxIdT ftxId, int done_flag);
 
 /**********************************************
  *  module private typedefs ******************
@@ -78,7 +78,7 @@ extern struct ftx_dyn_alloc FtxDynAlloc;
  */
 static int
 ftx_metameta_rec_redo(
-    domainT * dmnP,
+    struct domain * dmnP,
     pageredoT * pgredop
 )
 {
@@ -159,7 +159,7 @@ ftx_metameta_rec_redo(
  */
 static int
 ftx_bfmeta_rec_redo(
-    domainT * dmnP,
+    struct domain * dmnP,
     pageredoT * pgredop
 )
 {
@@ -359,7 +359,7 @@ close_bfs:
 
 static int
 ftx_recovery_pass(
-    domainT * dmnP,
+    struct domain * dmnP,
     int recoveryPass,
     logRdHT logrh,
     logRecAddrT logaddr
@@ -370,7 +370,7 @@ ftx_recovery_pass(
  */
 int
 ftx_bfdmn_recovery(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	int sts, lrsts = 0;
@@ -720,7 +720,7 @@ freexid:
  */
 static int
 ftx_recovery_pass(
-    domainT * dmnP,
+    struct domain * dmnP,
     int recoveryPass,		/* TODO - arg comments */
     logRdHT logrh,
     logRecAddrT logaddr
@@ -734,7 +734,7 @@ ftx_recovery_pass(
 	int ftxSlot, redoloff, lrrtdnloff, rdwords;
 	ftxHT ftxH;
 	ftxDoneLRT *dlrp;
-	domainT *newdmnP;
+	struct domain *newdmnP;
 	logRecAddrT oldftxrec;
 	ftxTblDT *ftxTDp = &dmnP->ftxTbld;
 
@@ -1447,7 +1447,7 @@ logclose:
  * cfs_check_for_pfs_commit() for this xid will simply return
  * CFS_XID_NOT_FOUND.
  */
-cfs_list(domainT * dmnP,	/* in */
+cfs_list(struct domain * dmnP,	/* in */
     ftxIdT ftxId,		/* in */
     int done_flag /* in -- TRUE/FALSE [committed/rolled back] */ )
 {
@@ -1519,7 +1519,7 @@ cfs_check_for_pfs_commit(fsid_t fsid,	/* in */
     ftxIdT xid /* in */ )
 {
 	struct mount *mp, *pmp;
-	domainT *dmnP = NULL;
+	struct domain *dmnP = NULL;
 	xidInfoT *xidInfop;
 	ftxIdT xid_lo, loop_xid;
 	int slot, ret;
@@ -1601,7 +1601,7 @@ void
 cfs_xid_free_memory(char *arg)
 {
 	bfDomainIdT domainId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	struct timeval ltime;
 	int sts;
 
@@ -1659,7 +1659,7 @@ cfs_xid_free_memory(char *arg)
  * Called from cfs_xid_free_memory() and dmn_dealloc().
  */
 void
-cfs_xid_free_memory_int(domainT * dmnP)
+cfs_xid_free_memory_int(struct domain * dmnP)
 {
 	xidInfoT *xidInfop, *next;
 

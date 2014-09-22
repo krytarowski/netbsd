@@ -135,7 +135,7 @@ freeosfbuf(
 }
 
 void
-domain_panic(domainT * dmnP, char *format,...)
+domain_panic(struct domain * dmnP, char *format,...)
 {
 	va_list valist;
 	char buf[DMN_PANIC_MAX_MSG_LEN];
@@ -156,7 +156,7 @@ domain_panic(domainT * dmnP, char *format,...)
  */
 
 void
-_domain_panic(domainT * dmnP, char *msg, int flags)
+_domain_panic(struct domain * dmnP, char *msg, int flags)
 {
 	char logmsg[1024];
 	int errno;
@@ -369,9 +369,9 @@ bs_osf_complete(
 	unsigned char *taddr;
 	int fileset_is_mounted = FALSE, non_metadata_file = FALSE;
 	struct mount *mp = NULL;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int resetfirst = 0;
-	extern void resetfirstrec(domainT * dmnP);
+	extern void resetfirstrec(struct domain * dmnP);
 	void bp_map_free(vm_offset_t, int);
 	int dpanic_flags = 0;
 	int hardware_related_error = FALSE;
@@ -1302,7 +1302,7 @@ call_disk(
 {
 	struct buf *bp;
 	bfAccessT *bfAccess;
-	domainT *dmnP;
+	struct domain *dmnP;
 #ifdef CLUSTER_STATS
 	int desCnt;
 #endif

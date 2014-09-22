@@ -48,7 +48,7 @@
 #include <fs/msfs/ms_privates.h>
 
 static int sc_add_class(serviceClassTblT * scTbl, serviceClassT serviceClass, int *tblPos);
-static int best_vd(domainT * dmnP, int vd, vdIndexT * vdi);
+static int best_vd(struct domain * dmnP, int vd, vdIndexT * vdi);
 
 #define ADVFS_MODULE BS_SERVICE_CLASS
 
@@ -472,7 +472,7 @@ sc_add_vd_to_class(
 
 int
 sc_add_vd(
-    domainT * dmnp,		/* in - ptr to domain with sc table */
+    struct domain * dmnp,		/* in - ptr to domain with sc table */
     serviceClassT vdSvc,	/* in - vd's service class */
     uint16_t vdIndex		/* in - vd's index */
 )
@@ -605,7 +605,7 @@ sc_remove_class(
 
 int
 sc_remove_vd(
-    domainT * dmnp,		/* in - ptr to domain with sc table */
+    struct domain * dmnp,		/* in - ptr to domain with sc table */
     serviceClassT vdSvc,	/* in - vd's service class */
     uint16_t vdIndex		/* in - vd's index */
 )
@@ -819,7 +819,7 @@ sc_select_class(
 
 int
 sc_valid_vd(
-    domainT * dmnp,		/* in - ptr to domain with sc table */
+    struct domain * dmnp,		/* in - ptr to domain with sc table */
     serviceClassT reqServices,	/* in - required services */
     serviceClassT optServices,	/* in - optional services */
     uint16_t vdIndex		/* in - vd's index */
@@ -901,7 +901,7 @@ sc_valid_vd(
 int
 sc_select_vd_for_mcell(
     vdT ** vdpa,		/* out - selected vd */
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     serviceClassTblT * scTbl,	/* in - service class table */
     serviceClassT reqServices,	/* in - requried service class */
     serviceClassT optServices	/* in - optional service class */
@@ -1056,7 +1056,7 @@ sc_select_vd_for_mcell(
 int
 sc_select_vd_for_stg(
     vdT ** vdpa,		/* out - selected volume */
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     serviceClassT reqServices,	/* in - required service class */
     serviceClassT optServices,	/* in - optional service class */
     vdIndexT preferVd,		/* in - vd to try first */
@@ -1290,7 +1290,7 @@ found_vd:
  */
 static int
 best_vd(
-    domainT * dmnP,		/* IN - Domain pointer */
+    struct domain * dmnP,		/* IN - Domain pointer */
     int vd,			/* IN - volume index to check */
     vdIndexT * vdi		/* OUT - set to vd if good or best */
 )

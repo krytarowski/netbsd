@@ -105,7 +105,7 @@ typedef struct vd {
 	bfAccessT *rbmtp;	/* access structure pointer for RBMT */
 	bfAccessT *bmtp;	/* access structure pointer for BMT */
 	bfAccessT *sbmp;	/* access structure pointer for SBM */
-	domainT *dmnP;		/* domain pointer for ds */
+	struct domain *dmnP;		/* domain pointer for ds */
 	uint32_t vdIndex;	/* 1-based virtual disk index */
 	uint32_t maxPgSz;	/* max possible page size on vd */
 	uint32_t bmtXtntPgs;	/* number of pages per BMT extent */

@@ -2035,7 +2035,7 @@ start:
 static int
 bfs_alloc(
     bfSetIdT bfSetId,		/* in - bitfile-set id */
-    domainT * dmnP,		/* in - BF-set's domain's struct pointer */
+    struct domain * dmnP,		/* in - BF-set's domain's struct pointer */
     bfSetT ** retBfSetp		/* out - ptr to BF-set's descriptor */
 )
 {
@@ -2264,7 +2264,7 @@ bs_bfs_lookup_desc(
 
 static int
 bfs_create(
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     serviceClassT reqServ,	/* in - required service class */
     serviceClassT optServ,	/* in - optional service class */
     char *setName,		/* in - the new set's name */
@@ -2459,7 +2459,7 @@ HANDLE_EXCEPTION:
 
 int
 rbf_bfs_create(
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     serviceClassT reqServ,	/* in - required service class */
     serviceClassT optServ,	/* in - optional service class */
     char *setName,		/* in - the new set's name */
@@ -2562,7 +2562,7 @@ bfs_close(
     ftxHT ftxH			/* in - transaction handle */
 )
 {
-	domainT *dmnP = bfSetp->dmnP;
+	struct domain *dmnP = bfSetp->dmnP;
 
 	KASSERT(BFSET_VALID(bfSetp));
 	KASSERT(bfSetp->fsRefCnt != 0);
@@ -2617,7 +2617,7 @@ bs_bfs_close(
 {
 	bfSetT *setp;
 	lkStatesT currentCloneDelState;
-	domainT *dmnP = bfSetp->dmnP;
+	struct domain *dmnP = bfSetp->dmnP;
 	unLkActionT unLkAction = UNLK_NEITHER;
 
 	/*
@@ -2732,7 +2732,7 @@ bfs_access(
     ftxHT ftxH			/* in - transaction handle */
 )
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	int sts;
 	bfSetT *bfSetp;
 	bfAccessT *tagDirBfap;
@@ -3491,7 +3491,7 @@ HANDLE_EXCEPTION:
 	static int
 	    bfs_delete_pending_list_add(
 	        bfAccessT * dirBfAp,	/* in - set's tagdir bf struct */
-	        domainT * dmnP,	/* in - set's domain pointer */
+	        struct domain * dmnP,	/* in - set's domain pointer */
 	        ftxHT ftxH	/* in - transaction handle */
 	) {
 		bsBfSetAttrT *setAttrp;
@@ -3577,7 +3577,7 @@ HANDLE_EXCEPTION:
 	) {
 		delPendUndoRecT undoRec = *(delPendUndoRecT *) opRec;
 		bfAccessT *tagDirBfap;
-		domainT *dmnP;
+		struct domain *dmnP;
 		int sts;
 		struct vnode *nullvp = NULL;
 
@@ -3618,7 +3618,7 @@ HANDLE_EXCEPTION:
 		bsBfSetAttrT *setAttrp, *nextSetAttrp;
 		bsDmnMAttrT *dmnMAttrp;
 		int sts;
-		domainT *dmnP;
+		struct domain *dmnP;
 		vdT *logVdp = NULL;
 		delPendUndoRecT undoRec;
 		bfAccessT *nextTagDirBfap;
@@ -3759,7 +3759,7 @@ HANDLE_EXCEPTION:
 
 	void
 	     bfs_delete_pending_list_finish_all(
-	         domainT * dmnP,/* in */
+	         struct domain * dmnP,/* in */
 	         u_long flag	/* in */
 	) {
 		int sts;
@@ -3861,7 +3861,7 @@ HANDLE_EXCEPTION:
 	         void *opRec	/* in - ptr to opx record */
 	) {
 		unlinkCloneUndoRecT undoRec = *(unlinkCloneUndoRecT *) opRec;
-		domainT *dmnP;
+		struct domain *dmnP;
 		bfAccessT *tagDirBfap;
 		int sts;
 		bsBfSetAttrT *origSetAttrp;
@@ -3999,7 +3999,7 @@ HANDLE_EXCEPTION:
 	int
 	    bs_bfs_delete(
 	    bfSetIdT bfSetId,	/* in - bitfile set id */
-	    domainT * dmnP,	/* in - set's domain pointer */
+	    struct domain * dmnP,	/* in - set's domain pointer */
 	    long xid,		/* in - CFS transaction id */
 	    u_long flag		/* in - flag to indicate global root failover */
 	    ) {
@@ -4489,7 +4489,7 @@ HANDLE_EXCEPTION:
 	    bfSetIdT origSetId,	/* in - activated orig set's id */
 	    char *cloneSetName,	/* in - clone set's name */
 	    bfSetIdT * cloneSetId,	/* out - new clone's id */
-	    domainT * dmnP,	/* in - set's domain pointer */
+	    struct domain * dmnP,	/* in - set's domain pointer */
 	    long xid		/* in - CFS transaction id */
 	    ) {
 		int sts;
@@ -4950,7 +4950,7 @@ HANDLE_EXCEPTION:
 	     int
 	     bs_bfs_add_root(
 	         bfSetIdT bfSetDirId,	/* in - bitfile-set id */
-	         domainT * dmnP,/* in - BF-set's domain's pointer */
+	         struct domain * dmnP,/* in - BF-set's domain's pointer */
 	         bfSetT ** retBfSetDirp	/* out - pointer to BF-set's
 					 * descriptor */
 	) {
@@ -4980,7 +4980,7 @@ HANDLE_EXCEPTION:
 
 	void
 	     bs_bfs_switch_root_tagdir(
-	         domainT * domain,	/* in */
+	         struct domain * domain,	/* in */
 	         bfTagT newTag	/* in */
 	) {
 		bfSetT *bfSetp;
@@ -5024,7 +5024,7 @@ HANDLE_EXCEPTION:
 	    bfSetIdT * bfSetId	/* out - bitfile-set's ID */
 	    ) {
 		bfDomainIdT dmnId;
-		domainT *dmnP;
+		struct domain *dmnP;
 		bfSetParamsT setParams;
 		int dmnActive = FALSE, dmnOpen = FALSE;
 		int sts;
@@ -5123,7 +5123,7 @@ _error:
 	    bs_bfs_get_info(
 	    uint32_t * nextSetIdx,	/* in/out - index of set */
 	    bfSetParamsT * bfSetParams,	/* out - the bitfile-set's parameters */
-	    domainT * dmnP,	/* in - domain pointer */
+	    struct domain * dmnP,	/* in - domain pointer */
 	    uint32_t * userId	/* out - bfset user id */
 	    ) {
 		bfTagT setTag;
@@ -5295,7 +5295,7 @@ HANDLE_EXCEPTION:
 	int
 	    bs_bfs_find_set(
 	    char *setName,	/* in - name of set to find */
-	    domainT * dmnP,	/* in - domain pointer */
+	    struct domain * dmnP,	/* in - domain pointer */
 	    u_long doingRoot,	/* in - flag */
 	    bfSetParamsT * setParams	/* out - the bitfile-set's parameters */
 	    ) {
@@ -5333,7 +5333,7 @@ HANDLE_EXCEPTION:
 	int
 	    new_clone_mcell(
 	    bfMCIdT * bfMCIdp,	/* out - ptr to mcell id */
-	    domainT * dmnP,	/* in - domain ptr */
+	    struct domain * dmnP,	/* in - domain ptr */
 	    ftxHT parFtx,	/* in - parent ftx */
 	    vdIndexT * vdIndex,	/* out - new vd index */
 	    bsBfAttrT * bfAttrp,/* in - bitfile attributes ptr */
@@ -5380,7 +5380,7 @@ HANDLE_EXCEPTION:
 	         void *opRecp
 	) {
 		mcellUIdT *undoRp = (mcellUIdT *) opRecp;
-		domainT *dmnP;
+		struct domain *dmnP;
 		vdT *vdp;
 		rbfPgRefHT pgref;
 		bsMPgT *bmtpgp;
@@ -5472,7 +5472,7 @@ HANDLE_EXCEPTION:
 						 * access struct */
 	           ftxHT parentFtx	/* in - transaction handle */
 	) {
-		domainT *dmnP;
+		struct domain *dmnP;
 		vdIndexT vdIndex;
 		bfMCIdT newMCId;
 		int sts;
@@ -5841,7 +5841,7 @@ HANDLE_EXCEPTION:
 	     bfSetT *
 	     hold_cloneset(bfAccessT * bfap, int waitFlg) {
 		bfSetT *bfSetp = bfap->bfSetp;
-		domainT *dmnP = bfSetp->dmnP;
+		struct domain *dmnP = bfSetp->dmnP;
 		bfSetT *cloneSetp;
 
 		KASSERT(bfSetp->cloneId == BS_BFSET_ORIG);

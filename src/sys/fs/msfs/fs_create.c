@@ -98,7 +98,7 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 	int i;
 	long blks;
 	int mode;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfSetT *bfSetp;
 	bfSetIdT the_bfset_id;
 	int create_directory;

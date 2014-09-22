@@ -787,7 +787,7 @@ undo_xtnt_rec(
 )
 {
 	struct bsMPg *bmt;
-	domainT *domain;
+	struct domain *domain;
 	bsMCT *mcell;
 	rbfPgRefHT pgPin;
 	int sts;

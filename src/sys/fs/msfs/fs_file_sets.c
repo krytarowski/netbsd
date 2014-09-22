@@ -84,7 +84,7 @@ fs_fset_create(
 	int fileSetCreated = FALSE, ftxStarted = FALSE;
 	int dmnActive = FALSE, dmnOpen = FALSE, bfsOpen = FALSE;
 	bfDomainIdT domainId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfSetT *bfSetp;
 	bfDmnParamsT *dmnParamsp = NULL;
 	ftxHT ftxH;
@@ -374,8 +374,8 @@ fs_fset_get_stats(
 	bfSetT *bfSetp, *temp;
 	struct fileSetNode *fsnp;
 	bfSetIdT bfSetId;
-	extern domainT *DmnSentinelP;
-	domainT *dmnP;
+	extern struct domain *DmnSentinelP;
+	struct domain *dmnP;
 	u_long flags = 0;
 	bfsQueueT *entry;
 
@@ -476,7 +476,7 @@ fs_fset_delete(
 	int dmnActive = FALSE, setOpen = FALSE;
 	bfDmnParamsT *dmnParamsp = NULL;
 	bfSetParamsT *setParamsp = NULL;
-	domainT *dmnP;
+	struct domain *dmnP;
 
 	sts = bs_bfset_activate(domain, setName, 0, &bfSetId);
 	if (sts != EOK) {
@@ -581,7 +581,7 @@ fs_fset_clone(
 	bfSetT *origBfSetp;
 	bfDmnParamsT *dmnParamsp = NULL;
 	bfSetParamsT *setParamsp = NULL;
-	domainT *dmnP;
+	struct domain *dmnP;
 	fsid_t origFsid;
 
 
@@ -697,7 +697,7 @@ fs_fset_get_info(
 )
 {
 	bfDomainIdT domainId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfDmnParamsT *dmnParamsp = NULL;
 	int sts, retSts;
 	int dmnActive = FALSE, dmnOpen = FALSE;

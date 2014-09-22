@@ -139,7 +139,7 @@ extern int CheckXtnts;
 int
 imm_create_xtnt_map(
     uint32_t blksPerPage,	/* in */
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     uint32_t maxCnt,		/* in */
     uint32_t termPage,		/* in */
     vdIndexT termVdIndex,	/* in */
@@ -177,7 +177,7 @@ int
 imm_init_xtnt_map(
     bsInMemXtntMapT * xtntMap,	/* in */
     uint32_t blksPerPage,	/* in */
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     uint32_t maxCnt,		/* in */
     uint32_t termPage,		/* in */
     vdIndexT termVdIndex	/* in */

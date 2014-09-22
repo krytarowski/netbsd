@@ -1390,7 +1390,7 @@ start:
 
 void
 bs_invalidate_rsvd_access_struct(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfTagT bfTag,		/* in */
     bfAccessT * bfap		/* in */
 )
@@ -1979,7 +1979,7 @@ bs_insmntque(
 int
 bfm_open_ms(
     bfAccessT ** outbfap,	/* out - access structure pointer */
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     int bfDDisk,		/* in - domain disk index */
     bfdBfMetaT bfMIndex		/* in - metadata bitfile index */
 )
@@ -2130,7 +2130,7 @@ bs_access_one(
 	int another_fs_open = FALSE;
 	vdT *ddlVd;
 	int delFlag;
-	domainT *dmnP;
+	struct domain *dmnP;
 	uint32_t flags;
 	int got_clu_clone_vnode = FALSE;
 	int did_vp_vrele = FALSE;
@@ -3592,7 +3592,7 @@ bs_close_one(
 	void *delList;
 	uint32_t delCnt = 0;
 	bfMCIdT delMCId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	boolean_t fragFlag = FALSE;
 	boolean_t deleteIt = FALSE;
 	boolean_t ftxFlag = FALSE;

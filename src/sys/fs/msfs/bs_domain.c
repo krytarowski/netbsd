@@ -69,10 +69,10 @@
 /*  This sentinel pointer is init'd to the first advfs domain
 *   mounted.  It is used primarily for locating all domains
 *   on the system.  Use this pointer as a starting point when marching
-*   down the domainT->dmnFwd & domainT->dmnBwd linked lists and you
-*   do not have a domainT available.
+*   down the struct domain->dmnFwd & struct domain->dmnBwd linked lists and you
+*   do not have a struct domain available.
 */
-domainT *DmnSentinelP = NULL;
+struct domain *DmnSentinelP = NULL;
 
 /* Dynamic hash table for domain structures */
 void *DomainHashTbl;
@@ -119,7 +119,7 @@ bs_bfdmn_sweep(
 
 static int
 update_bfsetid(
-    domainT * dmnP,
+    struct domain * dmnP,
     int vd,
     bfMCIdT mcid,
     bfDomainIdT domainId
@@ -134,7 +134,7 @@ set_vd_mounted(
 static int
 get_raw_vd_attrs(
     char *vdDiskName,		/* IN - disk device name */
-    domainT * dmnP,		/* IN - Domain pointer */
+    struct domain * dmnP,		/* IN - Domain pointer */
     int vdi,			/* IN - vd index */
     int flag,			/* IN - flag */
     struct vnode ** vnodepp,	/* OUT - vnode ptr */
@@ -147,7 +147,7 @@ get_raw_vd_attrs(
 
 static int
 setup_vd(
-    domainT * dmnP,		/* IN - domain pointer */
+    struct domain * dmnP,		/* IN - domain pointer */
     struct vnode * vnp,		/* IN - ptr to vnode */
     char *vdDiskName,		/* IN - name of disk */
     struct bsVdAttr * vdAttrp,	/* IN - on disk vd attributes */
@@ -182,18 +182,18 @@ free_vdds(
 static int
 vd_alloc(
     vdT ** vdp,
-    domainT * dmnP
+    struct domain * dmnP
 );
 
 static void
 vd_free(
     vdT * vdp,
-    domainT * dmnP
+    struct domain * dmnP
 );
 
 static int
 vd_alloc_index(
-    domainT * dmnP
+    struct domain * dmnP
 );
 
 static
@@ -207,7 +207,7 @@ scan_rsvd_file_xtnt_map(
 static
        int
 clear_bmt(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
     uint32_t forceFlag,		/* in */
     uint32_t startBlk,		/* in */
@@ -217,13 +217,13 @@ clear_bmt(
 static
        int
 wait_for_ddl_active_entry(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     vdT * vd,			/* in */
     bfMCIdT mcellId		/* in */
 );
 static
 vd_remove(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdT * vdp,			/* in */
     int flags			/* in */
 );
@@ -231,13 +231,13 @@ vd_remove(
 static
        int
 set_disk_attrs(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bsVdOpT op,			/* in */
     dev_t rdev			/* in */
 );
 int
 set_recovery_failed(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     int value			/* in */
 );
 
@@ -248,21 +248,21 @@ dmn_alloc(
     uint32_t domainMajor,
     bfTagT dirTag,
     struct bsMPg * pgp,
-    domainT ** newdmnPP
+    struct domain ** newdmnPP
 );
 
 static void
 dmn_dealloc(
-    domainT * dmnP
+    struct domain * dmnP
 );
 
-domainT *
+struct domain *
 domain_lookup(
     bfDomainIdT bfDomainId,	/* in - domain to lookup */
     u_long flag			/* in - mount flags/check DmnTblLock? */
 );
 
-domainT *
+struct domain *
 domain_name_lookup(
     char *dmnName,		/* in - domain to lookup */
     u_long flag			/* in - mount flags/check DmnTblLock? */
@@ -312,7 +312,7 @@ vd_trace(vdT * vdp,
  */
 
 int
-bs_domain_access(domainT ** dmnPP,	/* out */
+bs_domain_access(struct domain ** dmnPP,	/* out */
     bfDomainIdT bfDomainId,	/* in */
     int deactivated_ok)
 {				/* in */
@@ -350,7 +350,7 @@ bs_domain_access(domainT ** dmnPP,	/* out */
  */
 
 void
-bs_domain_close(domainT * dmnP)
+bs_domain_close(struct domain * dmnP)
 {
 
 	KASSERT(TEST_DMNP(dmnP) == EOK);
@@ -388,7 +388,7 @@ bs_bfdmn_id_activate(
     bfDomainIdT bfDomainId	/* in - domain id */
 )
 {
-	domainT *dmnP = NULL;
+	struct domain *dmnP = NULL;
 	void bs_kernel_init();
 
 	/*
@@ -459,7 +459,7 @@ bs_bfdmn_tbl_activate(
 	int unlink_and_restart, isMount;
 	u_long isRoot;
 	vdT *vdp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bsDmnMAttrT dmnMAttr;
 	vdIndexT dmnMAttrIdx;
 	struct vnode *vnp;
@@ -561,7 +561,7 @@ start:
 		}
 
 		if (BS_UID_EQL(domainId, nilBfDomainId)) {
-			domainT *n_dmnP;
+			struct domain *n_dmnP;
 
 			domainId = dmnAttrp->bfDomainId;
 
@@ -985,7 +985,7 @@ bs_global_root_activate(
 	int closeVd, error, vdi, id, restart;
 	int update_global_rootdev;
 	vdT *vdp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bsDmnMAttrT dmnMAttr;
 	vdIndexT dmnMAttrIdx;
 	struct vnode *vnp;
@@ -1095,7 +1095,7 @@ start:
 		}
 
 		if (BS_UID_EQL(domainId, nilBfDomainId)) {
-			domainT *n_dmnP;
+			struct domain *n_dmnP;
 
 			domainId = dmnAttrp->bfDomainId;
 
@@ -1537,7 +1537,7 @@ bs_bfdmn_deactivate(
 )
 {
 	int vdi;
-	domainT *dmnP;
+	struct domain *dmnP;
 	vdT *vdp;
 	int rem, tblLocked = FALSE;
 	int sts = EOK;
@@ -1778,7 +1778,7 @@ bs_bfdmn_activate(
 	struct timeval ltime;
 	struct timezone tz;
 	int logOpen = FALSE, tagDirOpen = FALSE, setDesc = FALSE;
-	domainT *dmnP;
+	struct domain *dmnP;
 	struct vd *vdp;
 	int sts;
 	logDescT *ldP;
@@ -2024,7 +2024,7 @@ _error_cleanup:
  */
 
 int
-bs_bfdmn_sweep(domainT * dmnP)
+bs_bfdmn_sweep(struct domain * dmnP)
 {
 	int sts;
 	uint32_t *pgp;
@@ -2282,7 +2282,7 @@ err_cleanup:
 
 static int
 update_bfsetid(
-    domainT * dmnP,
+    struct domain * dmnP,
     int vd,
     bfMCIdT mcid,
     bfDomainIdT domainId
@@ -2472,7 +2472,7 @@ read_n_chk_last_rbmt_pg(vdT * vdp)
 static int
 get_raw_vd_attrs(
     char *vdDiskName,		/* IN - disk device name */
-    domainT * dmnP,		/* IN - Domain pointer */
+    struct domain * dmnP,		/* IN - Domain pointer */
     int vdi,			/* IN - vd index */
     int flag,			/* IN - flag */
     struct vnode ** vnodepp,	/* OUT - vnode ptr */
@@ -2709,7 +2709,7 @@ int advfs_prefer_trans_threshold = (int) (64 * (1 << 20));
 
 static int
 setup_vd(
-    domainT * dmnP,		/* IN - domain pointer */
+    struct domain * dmnP,		/* IN - domain pointer */
     struct vnode * vnodep,	/* IN - ptr to vnode */
     char *vdDiskName,		/* IN - name of disk */
     struct bsVdAttr * vdAttrp,	/* IN - on disk vd attributes */
@@ -2957,7 +2957,7 @@ bs_vd_add_active(
 {
 	int sts = 0;
 	bfDomainIdT domainId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	struct bsVdAttr *vdAttrp;
 	bsDmnAttrT *dmnAttrp;
 	int i;
@@ -3116,7 +3116,7 @@ err_deactivate:
 static int
 vd_alloc(
     vdT ** avdp,
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	vdT *vdp;
@@ -3338,7 +3338,7 @@ vd_alloc(
 static void
 vd_free(
     vdT * vdp,
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	int i;
@@ -3442,7 +3442,7 @@ vd_free(
 
 int
 bs_vd_remove_active(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
     uint32_t forceFlag		/* in */
 )
@@ -3625,7 +3625,7 @@ HANDLE_EXCEPTION:
 
 int
 bs_vd_add_rem_vol_done(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     char *volName,		/* in */
     bsVdOpT op			/* in */
 )
@@ -3761,7 +3761,7 @@ scan_rsvd_file_xtnt_map(
 static
        int
 clear_bmt(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
     uint32_t forceFlag,		/* in */
     uint32_t startBlk,		/* in */
@@ -4174,7 +4174,7 @@ HANDLE_EXCEPTION:
 
 int
 find_del_entry(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
     vdT ** delVd,		/* out */
@@ -4246,7 +4246,7 @@ find_del_entry(
 static
        int
 wait_for_ddl_active_entry(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdT * vd,			/* in */
     bfMCIdT mcellId		/* in */
 )
@@ -4284,7 +4284,7 @@ wait_for_ddl_active_entry(
 
 static
 vd_remove(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdT * vdp,			/* in */
     int flags			/* in */
 )
@@ -4504,7 +4504,7 @@ vd_remove(
  */
 static int
 vd_alloc_index(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	int vdi;
@@ -4541,7 +4541,7 @@ vd_alloc_index(
 static
        int
 set_disk_attrs(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     bsVdOpT op,			/* in */
     dev_t rdev			/* in */
 )
@@ -4636,7 +4636,7 @@ set_disk_attrs(
  */
 int
 check_trans_attrs(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     int dmnMAttrIdx,		/* in */
     int *onDiskCnt,		/* in/out */
     char *volPathName		/* out - pathname of vol link */
@@ -4732,7 +4732,7 @@ check_trans_attrs(
  */
 int
 clear_trans_attrs(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     int dmnMAttrIdx		/* in */
 )
 {
@@ -4785,7 +4785,7 @@ clear_trans_attrs(
 int
 bs_fix_root_dmn(
     bfDmnDescT * dmntbl,
-    domainT * dmnP,
+    struct domain * dmnP,
     char *dmnName
 )
 {
@@ -4988,7 +4988,7 @@ done:
  */
 int
 bs_check_root_dmn_sc(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	int sts;
@@ -5059,7 +5059,7 @@ bs_check_root_dmn_sc(
 
 int
 set_recovery_failed(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     int value			/* in */
 )
 {
@@ -5108,7 +5108,7 @@ set_recovery_failed(
 /*******************************************************************/
 void
 bs_bfdmn_flush_bfrs(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	int vdi;
@@ -5133,7 +5133,7 @@ bs_bfdmn_flush_bfrs(
  */
 void
 bs_bfdmn_flush(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	if (dmnP->ftxLogP) {
@@ -5157,7 +5157,7 @@ bs_bfdmn_flush(
  */
 int
 bs_bfdmn_flush_sync(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	int vdi = 1;
@@ -5191,10 +5191,10 @@ bs_bfdmn_flush_sync(
  */
 static void
 dmn_dealloc(
-    domainT * dmnP		/* in - domain table pointer */
+    struct domain * dmnP		/* in - domain table pointer */
 )
 {
-	domainT *tmpdmnP;
+	struct domain *tmpdmnP;
 	serviceClassTblT *scTbl;
 	scEntryT *scEntry;
 	int tblPos;
@@ -5294,10 +5294,10 @@ dmn_alloc(
     uint32_t domainMajor,
     bfTagT dirTag,
     struct bsMPg * pgp,
-    domainT ** newdmnPP
+    struct domain ** newdmnPP
 )
 {
-	domainT *dmnP = NULL;
+	struct domain *dmnP = NULL;
 	int i, slot = 0;
 	bfSetIdT rootBfSetId;
 	int sts = EOK;
@@ -5454,14 +5454,14 @@ _error_cleanup:
  * Returns zero if domain not found.
  */
 
-domainT *
+struct domain *
 domain_lookup(
     bfDomainIdT bfDomainId,	/* in - domain to lookup */
     u_long flag			/* in - mount flags/check DmnTblLock? */
 )
 {
 	int key;
-	domainT *dmnP_start, *dmnP;
+	struct domain *dmnP_start, *dmnP;
 
 	KASSERT((flag & M_GLOBAL_ROOT) ? 1 :
 	    mutex_owned(&DmnTblMutex.mutex) || lock_holder(&DmnTblLock));
@@ -5499,13 +5499,13 @@ domain_lookup(
  * Returns zero if domain not found.
  */
 
-domainT *
+struct domain *
 domain_name_lookup(
     char *dmnName,		/* in - domain to lookup */
     u_long flag			/* in - mount flags/check DmnTblLock? */
 )
 {
-	domainT *dmnP_Prev, *dmnP;
+	struct domain *dmnP_Prev, *dmnP;
 
 	if (!(flag & (M_GLOBAL_ROOT | M_GLROOT_OTHER))) {
 		KASSERT(lock_islocked(&DmnTblLock));
@@ -5541,7 +5541,7 @@ domain_name_lookup(
 
 struct bsMPg *
 get_bmt_pgptr(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	return (struct bsMPg *) dmnP->metaPagep;
@@ -5567,7 +5567,7 @@ bs_dmn_change(
 {
 	int sts;
 	bfDomainIdT dmnId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfDmnParamsT *dmnParamsp = NULL;
 	int dmnActive = FALSE, dmnOpen = FALSE;
 
@@ -5652,7 +5652,7 @@ bs_get_dmntbl_params(
 {
 	int sts;
 	bfDomainIdT dmnId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int dmnActive = FALSE, dmnOpen = FALSE;
 
 	sts = bs_bfdmn_tbl_activate(dmnTbl, 0, &dmnId);
@@ -5705,7 +5705,7 @@ bs_domain_init(
 	    DOMAIN_HASH_CHAIN_LENGTH,
 	    DOMAIN_HASH_ELEMENTS_TO_BUCKETS,
 	    DOMAIN_HASH_USECS_BETWEEN_SPLITS,
-	    offsetof(domainT, dmnHashlinks));
+	    offsetof(struct domain, dmnHashlinks));
 
 	if (DomainHashTbl == NULL) {
 		ADVFS_SAD0("bs_domain_init: can't get space for domain hash table");

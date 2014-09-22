@@ -427,7 +427,7 @@ add_stg_undo(
 {
 	bfAccessT *bfap;
 	bfSetT *bfSetp;
-	domainT *domain;
+	struct domain *domain;
 	int sts;
 	addStgUndoRecT *undoRec;
 	bsInMemXtntMapT *xtntMap;
@@ -620,7 +620,7 @@ remove_stg_undo(
 {
 	bfAccessT *bfap;
 	bfSetT *bfSetp;
-	domainT *domain;
+	struct domain *domain;
 	int sts;
 	rmStgUndoRecT undoRec;
 	bsInMemXtntMapT *xtntMap;
@@ -3793,7 +3793,7 @@ alloc_from_one_disk(
     uint32_t * allocPageCnt	/* out */
 )
 {
-	domainT *domain;
+	struct domain *domain;
 	uint32_t blkOff;
 	uint32_t i, j;
 	uint32_t nextBlkOff;
@@ -4127,7 +4127,7 @@ cp_stg_alloc_in_one_mcell(
     bsAllocHintT alloc_hint
 )
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	uint32_t blkOff;
 	uint32_t xI;
 	uint32_t nextBlkOff;
@@ -4464,7 +4464,7 @@ stg_alloc_one_xtnt(
 )
 {
 	uint32_t blkCnt;
-	domainT *dmnP;
+	struct domain *dmnP;
 	uint32_t pageCnt;
 	uint32_t requestedBlkCnt;
 	void *stgDesc;
@@ -7221,7 +7221,7 @@ HANDLE_EXCEPTION:
 
 void
 stg_remove_stg_finish(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     uint32_t delCnt,		/* in */
     void *delList		/* in */
 )

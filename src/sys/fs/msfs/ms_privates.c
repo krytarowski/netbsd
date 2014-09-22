@@ -64,7 +64,7 @@ serviceClassTblT nilServiceClassTbl = { 0 };
  *    bs_domain.h constants
  ****************************************************************************/
 
-domainT nilDomain = { 0 };
+struct domain nilDomain = { 0 };
 
 /****************************************************************************
  *    bs_bitfile_sets.h constants

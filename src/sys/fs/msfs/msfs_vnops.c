@@ -75,7 +75,7 @@ static int msfs_chown(struct vnode * vp, uid_t uid, gid_t gid, struct uucred * c
 #define NFS_FREEZE_LOCK(vp) {                                                       \
                                                                                     \
     if ( NFS_SERVER_TSD != 0 ) {                                                    \
-        domainT *dmnP = GETDOMAINP ( VTOMOUNT(vp) );                                \
+        struct domain *dmnP = GETDOMAINP ( VTOMOUNT(vp) );                                \
         mutex_enter( &(dmnP->dmnFreezeMutex.mutex) );                                      \
         if ( dmnP->dmnFreezeFlags & (BFD_FREEZE_IN_PROGRESS + BFD_FROZEN) ) {       \
             mutex_exit( &dmnP->dmnFreezeMutex .mutex);                                  \
@@ -89,7 +89,7 @@ static int msfs_chown(struct vnode * vp, uid_t uid, gid_t gid, struct uucred * c
 #define NFS_FREEZE_UNLOCK(vp)  {                                                    \
                                                                                     \
     if ( NFS_SERVER_TSD != 0 ) {                                                    \
-        domainT *dmnP = GETDOMAINP ( VTOMOUNT(vp) );                                \
+        struct domain *dmnP = GETDOMAINP ( VTOMOUNT(vp) );                                \
         mutex_enter( &dmnP->dmnFreezeMutex .mutex);                                        \
         dmnP->dmnFreezeRefCnt--;                                                    \
         if ( dmnP->dmnFreezeWaiting && dmnP->dmnFreezeRefCnt == 0) {                \
@@ -1897,7 +1897,7 @@ fs_fsync(
 	int saved_dkResult, ret;
 	struct fsContext *file_context;
 	bfAccessT *bfap;
-	domainT *dmnP;
+	struct domain *dmnP;
 	ftxHT ftx_handle;
 
 	FILESETSTAT(vp, msfs_fsync);
@@ -2009,7 +2009,7 @@ msfs_remove(
 	ftxHT ftx_handle;
 	bfSetT *bfSetp;
 	struct mount *mp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	struct nameidata *undel_ndp = NULL;
 	struct utask_nd undel_utnd;
 	struct undel_dir_rec bmt_rec;
@@ -2480,7 +2480,7 @@ msfs_link(
 	int ret;
 	struct mount *mp;
 	bfSetT *bfSetp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	ftxHT ftx_handle;
 	u_int effective_LINK_MAX;
 
@@ -2722,7 +2722,7 @@ msfs_rename(
 	bfSetT *bfSetp;
 	struct mount *mp, *from_mp;
 	ftxHT ftx_handle;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int ret, sts;
 	int stripslash = 0;
 	int error;
@@ -3700,7 +3700,7 @@ msfs_rmdir(
 	ftxHT ftx_handle;
 	bfSetT *bfSetp;
 	struct mount *mp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int error = 0, fail_ftx = 0;
 	int reset_rem = 0, reset_par = 0;
 	boolean_t idx_mig_trunc_lock = FALSE;

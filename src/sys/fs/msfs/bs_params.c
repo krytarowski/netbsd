@@ -1603,7 +1603,7 @@ HANDLE_EXCEPTION:
 
 int
 bs_get_dmn_vd_list(
-    domainT * dmnP,		/* in - the domain pointer */
+    struct domain * dmnP,		/* in - the domain pointer */
     int vdIndexArrayLen,	/* in - number of ints in array */
     uint32_t vdIndexArray[],	/* out - list of vd indices */
     int *numVds			/* out - num vds put in array */
@@ -1657,7 +1657,7 @@ bs_get_dmn_vd_list(
 
 int
 bs_get_dmn_params(
-    domainT * dmnP,		/* in - the domain pointer */
+    struct domain * dmnP,		/* in - the domain pointer */
     bfDmnParamsT * dmnParams,	/* out - the domain parameters */
     int lock			/* in */
 )
@@ -1706,7 +1706,7 @@ bs_get_dmn_params(
 
 int
 bs_set_dmn_params(
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     bfDmnParamsT * dmnParams	/* in - domain params */
 )
 {
@@ -1786,7 +1786,7 @@ finished_set_dmn:
 
 int
 bs_get_vd_params(
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     uint32_t vdIndex,		/* in - vd index */
     bsVdParamsT * vdParams,	/* out - the vd parameters */
     int flag			/* in GETVOLPARAMS_NO_BMT - used to contr
@@ -1927,7 +1927,7 @@ bs_get_vd_params(
 
 int
 bs_set_vd_params(
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     uint32_t vdIndex,		/* in - vd index */
     bsVdParamsT * vdParams	/* in - vd parameters */
 )
@@ -2001,7 +2001,7 @@ bs_set_vd_params(
 
 long
 bs_get_avail_mcells(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	int vdi;
@@ -2077,7 +2077,7 @@ bs_get_avail_mcells(
 
 int
 bs_get_smsync_stats(
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     uint32_t vdIndex,		/* in - vd index */
     uint32_t * smsyncQ_cnt,	/* out - cnt of bufs added to set of queues */
     uint32_t * smsync		/* out - snapshot of queue lengths */

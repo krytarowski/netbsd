@@ -441,7 +441,7 @@ msfs_mount(struct mount * mp,	/* in */
 		int vdi, vdi2, rdev_match, vdCnt;
 		struct vd *vdp;
 		vdDescT *new_vdp;
-		domainT *dmnP;
+		struct domain *dmnP;
 
 		/* We want to update file set dev on disk without
 		 * verification. */
@@ -804,7 +804,7 @@ msfs_mount(struct mount * mp,	/* in */
 
 cleanup:
 	if (error == 0) {
-		domainT *dmnp;
+		struct domain *dmnp;
 		bfSetT *bfSetp;
 
 		/* Update last modify time for initodr/resettodr, msfs_sync
@@ -877,7 +877,7 @@ cleanup:
          *    Allow freezes
          */
 	if (stopFreezefs) {
-		domainT *dmnP;
+		struct domain *dmnP;
 		dmnP = GETDOMAINP(mp);
 		mutex_enter(&dmnP->dmnFreezeMutex.mutex);
 		dmnP->dmnFreezeRefCnt--;
@@ -1431,7 +1431,7 @@ int
 check_vd_sizes(struct fileSetNode * fsnp)
 {
 	caddr_t lastBlkp = NULL;/* Buffer for reading */
-	domainT *dmnP;		/* This domain */
+	struct domain *dmnP;		/* This domain */
 	struct vd *vdp;		/* Current volume */
 	DEVGEOMST *geomstp = NULL;	/* For ioctl() call */
 	u_long actual_vd_size;	/* As returned by ioctl() */
@@ -1731,7 +1731,7 @@ msfs_unmount(
 	char dmnName[MNAMELEN];
 	advfs_ev advfs_event;
 	u_long advfs_flags = mp->m_flag & ADVFS_MOUNT_FLAGS;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int restart_quotas = FALSE, fragBfClosed = FALSE;
 	int restart_vfast = FALSE, nonrdonly_mount = FALSE;
 	bfsStateT bfs_state;
@@ -2189,7 +2189,7 @@ msfs_statfs(struct mount * mp)
 {
 	register struct nstatfs *sbp;
 	struct fileSetNode *dn;
-	domainT *dmnp;
+	struct domain *dmnp;
 	bfSetT *bfSetp;
 	long freeFiles;
 	long filesUsed;
@@ -2340,7 +2340,7 @@ msfs_sync(
 )
 {
 	struct fileSetNode *fsnp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	extern u_int smsync_period;
 
 	/*
@@ -2852,7 +2852,7 @@ msfs_mntbusybuf(
     struct mount * mp
 )
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	int ind, vols_found;
 	struct vd *vdp;
 	int numout = 0;
@@ -2928,7 +2928,7 @@ msfs_mntflushbuf(
     struct mount * mp
 )
 {
-	domainT *dmnP = GETDOMAINP(mp);
+	struct domain *dmnP = GETDOMAINP(mp);
 
 	if (dmnP->ftxLogP && dmnP->state == BFD_ACTIVATED) {
 		/*
@@ -3212,7 +3212,7 @@ msfs_smoothsync(mp, sync_age, smsync_flag)
 {
 	vdT *vdp;
 	struct fileSetNode *fsnp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int vdi;
 	int vd_count;
 	extern unsigned long startiocalls[];
@@ -3379,7 +3379,7 @@ advfs_freezefs(struct mount * mp,
     int timeout)
 {
 
-	domainT *dmnP;
+	struct domain *dmnP;
 	int error;
 	char uid_str[20];
 	advfsFreezeMsgT *msg;

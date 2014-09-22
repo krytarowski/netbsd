@@ -166,7 +166,7 @@ msfs_pl_init_cur(
 );
 static void *
 msfs_pl_cur_to_pnt(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * cur,		/* in/out */
     int * ret		/* out */
 );
@@ -177,20 +177,20 @@ msfs_pl_deref_cur(
 );
 static int
 msfs_pl_pin_cur(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * cur,		/* in/out */
     int size,			/* in     */
     ftxHT ftx			/* in     */
 );
 static int
 msfs_pl_seek_cur(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * cur,		/* in/out */
     const int rtype		/* in     */
 );
 static int
 msfs_pl_next_mc_cur(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * cur		/* in/out */
 );
 
@@ -284,7 +284,7 @@ msfs_getproplist_int(
 
 static int
 msfs_pl_get_entry(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in     */
     struct uio * uiop,		/* out    */
     char **names,		/* in     */
@@ -299,7 +299,7 @@ msfs_pl_get_entry(
 
 static int
 msfs_pl_get_name(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in/out */
     char *buffer,		/* out    */
     int *last_resid,		/* in/out */
@@ -308,7 +308,7 @@ msfs_pl_get_name(
 
 static int
 msfs_pl_get_data(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * dat,		/* in/out */
     struct uio * uiop,		/* out    */
     proplist_sec_attrs_t * sec_info,	/* in     */
@@ -359,14 +359,14 @@ msfs_pl_del_root_done_int(
 );
 static void
 msfs_pl_del_data_chain(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in     */
     bsOdRecCurT * end,		/* in     */
     ftxHT ftx			/* in     */
 );
 static int
 msfs_pl_unlink_mcells(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     vdIndexT prevVdIndex,	/* in     */
     bfMCIdT prevMcellId,	/* in     */
     vdIndexT firstVdIndex,	/* in     */
@@ -429,7 +429,7 @@ msfs_getproplist_int_v3(
 );
 static int
 msfs_pl_get_entry_v3(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in     */
     struct uio * uiop,		/* out    */
     char **names,		/* in     */
@@ -443,7 +443,7 @@ msfs_pl_get_entry_v3(
 );
 static int
 msfs_pl_get_name_v3(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in/out */
     char *buffer,		/* out    */
     int *last_resid,		/* in/out */
@@ -451,7 +451,7 @@ msfs_pl_get_name_v3(
 );
 static int
 msfs_pl_get_data_v3(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * dat,		/* in/out */
     struct uio * uiop,		/* out    */
     proplist_sec_attrs_t * sec_info,	/* in     */
@@ -666,7 +666,7 @@ msfs_pl_init_cur(
 
 static void *
 msfs_pl_cur_to_pnt(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * cur,		/* in/out */
     int * ret		/* out */
 )
@@ -723,7 +723,7 @@ msfs_pl_deref_cur(
 
 int
 msfs_pl_pin_cur(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * cur,		/* in/out */
     int size,			/* in     */
     ftxHT ftx			/* in     */
@@ -764,7 +764,7 @@ msfs_pl_pin_cur(
 
 int
 msfs_pl_seek_cur(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * cur,		/* in/out */
     const int rtype		/* in     */
 )
@@ -838,7 +838,7 @@ msfs_pl_seek_cur(
 
 int
 msfs_pl_next_mc_cur(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * cur		/* in/out */
 )
 {
@@ -2459,7 +2459,7 @@ msfs_getproplist_int(
 
 int
 msfs_pl_get_entry(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in     */
     struct uio * uiop,		/* out    */
     char **names,		/* in     */
@@ -2617,7 +2617,7 @@ out:
 
 int
 msfs_pl_get_name(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in/out */
     char *buffer,		/* out    */
     int *last_resid,		/* in/out */
@@ -2687,7 +2687,7 @@ msfs_pl_get_name(
 
 int
 msfs_pl_get_data(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in     */
     struct uio * uiop,		/* out    */
     proplist_sec_attrs_t * sec_info,	/* in     */
@@ -3170,7 +3170,7 @@ msfs_pl_del_root_done(
 )
 {
 
-	domainT *domain = ftx.dmnP;
+	struct domain *domain = ftx.dmnP;
 
 
 	if (domain->dmnVersion >= FIRST_NUMBERED_PROPLIST_VERSION) {
@@ -3195,7 +3195,7 @@ msfs_pl_del_root_done_int(
 	uint64_t flags, rdflags;
 	ftxLkT *mcellList_lk;
 	int large;
-	domainT *domain = ftx.dmnP;
+	struct domain *domain = ftx.dmnP;
 	int sts = EOK;
 
 	/* TODO: modify to return status */
@@ -3291,7 +3291,7 @@ end:
 
 void
 msfs_pl_del_data_chain(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in     */
     bsOdRecCurT * end,		/* in     */
     ftxHT ftx			/* in     */
@@ -3344,7 +3344,7 @@ msfs_pl_del_data_chain(
 
 int
 msfs_pl_unlink_mcells(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     vdIndexT prevVdIndex,	/* in */
     bfMCIdT prevMcellId,	/* in */
     vdIndexT firstVdIndex,	/* in */
@@ -4293,7 +4293,7 @@ msfs_getproplist_int_v3(
 
 int
 msfs_pl_get_entry_v3(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in     */
     struct uio * uiop,		/* out    */
     char **names,		/* in     */
@@ -4438,7 +4438,7 @@ out:
 }				/* msfs_pl_get_entry_v3() */
 int
 msfs_pl_get_name_v3(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in/out */
     char *buffer,		/* out    */
     int *last_resid,		/* in/out */
@@ -4504,7 +4504,7 @@ end:
 
 int
 msfs_pl_get_data_v3(
-    domainT * domain,		/* in     */
+    struct domain * domain,		/* in     */
     bsRecCurT * hdr,		/* in     */
     struct uio * uiop,		/* out    */
     proplist_sec_attrs_t * sec_info,	/* in     */
@@ -4920,7 +4920,7 @@ msfs_pl_del_root_done_int_v3(
 )
 {
 	bsPropListHeadT_v3 *hdr_rec;
-	domainT *domain = ftx.dmnP;
+	struct domain *domain = ftx.dmnP;
 	delPropRootDoneT rdr;
 	bsRecCurT hdr;
 	bsOdRecCurT *hdrp;

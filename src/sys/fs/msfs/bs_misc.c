@@ -62,7 +62,7 @@
 #endif
 
 static int copyin_domain_and_set_names(char *in_dmnTbl, char *in_setName, char *in_setName2, char **out_dmnTbl, char **out_setName, char **out_setName2);
-static int open_set(mode_t setMode, mode_t dmnMode, int setOwner, int dmnOwner, bfSetIdT setId, bfSetT ** retBfSetp, domainT ** dmnPP);
+static int open_set(mode_t setMode, mode_t dmnMode, int setOwner, int dmnOwner, bfSetIdT setId, bfSetT ** retBfSetp, struct domain ** dmnPP);
 static void validate_syscall_structs(void);
 void bs_get_global_stats(opGetGlobalStatsT * stats);
 
@@ -635,7 +635,7 @@ open_domain(
     int ownerOnly,		/* in - indicates if only owner is allowed
 				 * access */
     bfDomainIdT dmnId,		/* in - domain's id */
-    domainT ** dmnPP		/* out - pointer to open domain */
+    struct domain ** dmnPP		/* out - pointer to open domain */
 )
 {
 	int sts;
@@ -695,7 +695,7 @@ HANDLE_EXCEPTION:
 static void
 close_domain(
     bfDomainIdT dmnId,		/* in - domain's id */
-    domainT * dmnP,		/* in - domain's pointer */
+    struct domain * dmnP,		/* in - domain's pointer */
     uint32_t flag		/* in - set in cluster to designate mount path */
 )
 {
@@ -721,7 +721,7 @@ open_set(
 				 * the dmn */
     bfSetIdT setId,		/* in - set's id */
     bfSetT ** retBfSetp,	/* out - open set's descriptor pointer */
-    domainT ** dmnPP		/* out - set's open domain pointer */
+    struct domain ** dmnPP		/* out - set's open domain pointer */
 )
 {
 	int sts;
@@ -779,7 +779,7 @@ static void
 close_set(
     bfSetIdT setId,
     bfSetT * bfSetp,
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	bs_bfs_close(bfSetp, FtxNilFtxH, BFS_OP_DEF);
@@ -869,7 +869,7 @@ msfs_real_syscall(
 #ifdef ESS
 	int ess_error = 0;
 	int rootdmnmatch = 0;
-	domainT *essdmnP;
+	struct domain *essdmnP;
 	bfDomainIdT rootdmnID, localdmnID;
 #endif
 
@@ -3280,7 +3280,7 @@ msfs_syscall_op_move_bf_metadata(libParamsT * libBufp, struct bfAccess * bfap)
 mlStatusT
 msfs_syscall_op_get_vol_params(libParamsT * libBufp, opIndexT opIndex)
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	bsVdParamsT *vdparamsp = NULL;
 	int i, dmn_ref = FALSE;
 	mlStatusT sts;
@@ -3376,7 +3376,7 @@ HANDLE_EXCEPTION:
 mlStatusT
 msfs_syscall_op_get_vol_bf_descs(libParamsT * libBufp)
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	mlStatusT sts;
 	vdT *vdp;
 
@@ -3419,7 +3419,7 @@ msfs_syscall_op_get_vol_bf_descs(libParamsT * libBufp)
 mlStatusT
 msfs_syscall_op_set_vol_ioq_params(libParamsT * libBufp)
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	bsVdParamsT *vdparamsp = NULL;
 	mlVolIoQParamsT *vioqp = &libBufp->setVolIoQParams.volIoQParams;
 	int dmn_ref = FALSE;
@@ -3671,7 +3671,7 @@ msfs_syscall_op_get_bkup_xtnt_map(libParamsT * libBufp, struct bfAccess * bfap)
 mlStatusT
 msfs_syscall_op_get_dmn_params(libParamsT * libBufp)
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	mlStatusT sts;
 
 	sts = open_domain(BS_ACC_READ,
@@ -3690,7 +3690,7 @@ msfs_syscall_op_get_dmn_params(libParamsT * libBufp)
 	    );
 
 	if (sts == EOK) {
-		extern int getLogStats(domainT * dmnP, logStatT * logStatp);
+		extern int getLogStats(struct domain * dmnP, logStatT * logStatp);
 
 		sts = getLogStats(dmnP, &libBufp->getDmnParams.dmnParams.mlLogStat);
 	}
@@ -3708,7 +3708,7 @@ msfs_syscall_op_get_dmnname_params(libParamsT * libBufp)
 #ifdef ESS
 	int ess_error = 0;
 	int rootdmnmatch = 0;
-	domainT *essdmnP;
+	struct domain *essdmnP;
 	bfDomainIdT rootdmnID, localdmnID;
 	struct mount *pmp = NULL;
 #endif
@@ -3777,7 +3777,7 @@ msfs_syscall_op_get_dmnname_params(libParamsT * libBufp)
 mlStatusT
 msfs_syscall_op_get_bfset_params(libParamsT * libBufp)
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfSetT *bfSetp;
 	mlStatusT sts;
 
@@ -3803,7 +3803,7 @@ mlStatusT
 msfs_syscall_op_set_bfset_params(libParamsT * libBufp)
 {
 
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfSetT *bfSetp;
 	mlBfSetParamsT *mlBfSetParamsp = &libBufp->setBfSetParams.bfSetParams;
 	struct mount *pmp = NULL;
@@ -3866,7 +3866,7 @@ mlStatusT
 msfs_syscall_op_set_bfset_params_activate(libParamsT * libBufp)
 {
 
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfSetT *bfSetp;
 	bfSetIdT bfSetId;
 	mlBfSetParamsT *mlBfSetParamsp =
@@ -4138,7 +4138,7 @@ msfs_syscall_op_dmn_init(libParamsT * libBufp)
 mlStatusT
 msfs_syscall_op_get_dmn_vol_list(libParamsT * libBufp)
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	mlStatusT sts;
 
 	libBufp->getDmnVolList.volIndexArray = (uint32_t *) ms_malloc(
@@ -4537,7 +4537,7 @@ msfs_syscall_op_ss_dmn_ops(libParamsT * libBufp)
 	mlStatusT sts = EOK;
 	ssUIDmnOpsT opType = libBufp->ssDmnOps.type;
 	bfDomainIdT domainId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int dmnActive = FALSE, dmnOpen = FALSE;
 	extern REPLICATED int SS_is_running;
 	u_long dmnState = 0;
@@ -4606,7 +4606,7 @@ msfs_syscall_op_ss_set_params(libParamsT * libBufp)
 	int sts = EOK;
 	bfDomainIdT domainId;
 	mlSSDmnParamsT *ssDmnParamsp = &libBufp->ssSetParams.ssDmnParams;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int dmnActive = FALSE;
 	int dmnOpen = FALSE;
 
@@ -4670,7 +4670,7 @@ msfs_syscall_op_ss_get_params(libParamsT * libBufp)
 	bsSSDmnAttrT ssAttr;
 	int dmnActive = FALSE;
 	int dmnOpen = FALSE;
-	domainT *dmnP;
+	struct domain *dmnP;
 	/*
          * CFS TODO:
          * check if cfs_domain_change_vol() need to be called
@@ -4751,7 +4751,7 @@ msfs_syscall_op_ss_get_fraglist(libParamsT * libBufp)
 	int vd_refed = FALSE;
 	int dmnActive = FALSE;
 	int dmnOpen = FALSE;
-	domainT *dmnP;
+	struct domain *dmnP;
 	vdT *vdp;
 	ssFragLLT *fp;
 	ssFragHdrT *fhp;
@@ -4840,7 +4840,7 @@ msfs_syscall_op_ss_get_hotlist(libParamsT * libBufp)
 	int sts = EOK;
 	mlBfDomainIdT bfDomainId;
 	int dmn_ref = FALSE;
-	domainT *dmnP;
+	struct domain *dmnP;
 	ssHotLLT *hp;
 	ssHotHdrT *hhp;
 	int i = 0, wday;
@@ -4919,7 +4919,7 @@ mlStatusT
 msfs_syscall_op_add_rem_vol_svc_class(libParamsT * libBufp)
 {
 	bfDomainIdT domainId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	struct vd *vdp;
 	int vdRefBumped = 0;
 	mlStatusT sts;
@@ -5048,7 +5048,7 @@ mlStatusT
 msfs_syscall_op_add_rem_vol_done(libParamsT * libBufp)
 {
 	bfDomainIdT domainId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	mlStatusT sts;
 	int flag = 0;
 
@@ -5100,7 +5100,7 @@ msfs_syscall_op_switch_log(libParamsT * libBufp, long xid)
 {
 
 	bfDomainIdT domainId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	mlStatusT sts;
 
 	/*
@@ -5138,7 +5138,7 @@ msfs_syscall_op_switch_log(libParamsT * libBufp, long xid)
 mlStatusT
 msfs_syscall_op_switch_root_tagdir(libParamsT * libBufp)
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfDomainIdT domainId;
 	mlStatusT sts;
 
@@ -5190,7 +5190,7 @@ msfs_syscall_op_rewrite_xtnt_map(libParamsT * libBufp,
 mlStatusT
 msfs_syscall_op_reset_free_space_cache(libParamsT * libBufp)
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	unLkActionT unlock_action;
 	vdT *vdp;
 	int vdRefBumped = 0;
@@ -5250,7 +5250,7 @@ msfs_syscall_op_get_global_stats(libParamsT * libBufp)
 mlStatusT
 msfs_syscall_op_get_smsync_stats(libParamsT * libBufp)
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	mlStatusT sts;
 
 	sts = open_domain(BS_ACC_READ,
@@ -6004,7 +6004,7 @@ msfs_process_deferred_delete_list(
     u_long flag			/* in - mount flags/get DmnTblLock? */
 )
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	int vdi, vdcnt;
 	struct vd *vdp;
 	bfSetT *bfSetp;
@@ -6060,7 +6060,7 @@ msfs_set_domain_relocating_flag(
 )
 {
 	int sts;
-	domainT *dmnp;
+	struct domain *dmnp;
 
 	sts = bs_domain_access(&dmnp, dmnId, FALSE);
 	if (sts == EOK) {

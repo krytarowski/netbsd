@@ -34,7 +34,7 @@
 
 #ifdef _KERNEL
 
-struct bsMPg *get_bmt_pgptr(domainT * dmnP);
+struct bsMPg *get_bmt_pgptr(struct domain * dmnP);
 
 int
 bmt_set_mcell_free_list(
@@ -76,7 +76,7 @@ deferred_free_mcell(vdT * vd,
 
 int
 bmt_alloc_link_mcell(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     uint16_t poolVdIndex,	/* in */
     mcellPoolT poolType,	/* in */
     uint16_t oldVdIndex,		/* in */
@@ -87,7 +87,7 @@ bmt_alloc_link_mcell(
 
 int
 bmt_find_mcell(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     uint16_t bfSearchVdIndex,	/* in */
     bfMCIdT bfSearchMCId,	/* in */
     uint16_t bfStartVdIndex,	/* in */
@@ -98,7 +98,7 @@ bmt_find_mcell(
 
 int
 bmt_link_mcells(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfTagT bfTag,		/* in */
     vdIndexT prevVdIndex,	/* in */
     bfMCIdT prevMcellId,	/* in */
@@ -111,7 +111,7 @@ bmt_link_mcells(
 
 int
 bmt_unlink_mcells(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfTagT bfTag,		/* in */
     vdIndexT prevVdIndex,	/* in */
     bfMCIdT prevMcellId,	/* in */
@@ -155,7 +155,7 @@ bmtr_clone_recs(
     bfMCIdT dMCId,
     uint16_t dVdIndex,
     uint16_t npVdIndex,
-    domainT * dmnp,
+    struct domain * dmnp,
     ftxHT parentFtxH
 );
 
@@ -229,7 +229,7 @@ void *
 bmtr_find(
     struct bsMC * bsMCp,	/* pointer to cell */
     int rtype,			/* record type to find */
-    domainT * dmnP		/* in - domain handle  */
+    struct domain * dmnP		/* in - domain handle  */
 );
 
 /*
@@ -276,7 +276,7 @@ typedef struct bsBfDesc {
 }        bsBfDescT;
 int
 bmt_get_vd_bf_descs(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
     int bfDescSize,		/* in */
     bsBfDescT * bfDesc,		/* in, initialized */
@@ -297,7 +297,7 @@ typedef struct bmtH {
 int
 bmt_open(
     bmtHT * bmth,		/* out */
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT vdIndex		/* in */
 );
 
@@ -319,7 +319,7 @@ bmt_close(
  ***************************************************************************/
 
 int
-check_mcell_ptr(vdIndexT vdi, bfMCIdT mcid, bfTagT tag, domainT * dmnp);
+check_mcell_ptr(vdIndexT vdi, bfMCIdT mcid, bfTagT tag, struct domain * dmnp);
 
 void check_BMT_pg(struct bsBuf * bp);
 

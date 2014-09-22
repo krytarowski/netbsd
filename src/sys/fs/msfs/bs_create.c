@@ -58,7 +58,7 @@ new_mcell(
     ftxHT parFtx,		/* in - parent ftx */
     mcellUIdT * mcellUId,	/* in/out - ptr to global mcell id */
     bsBfAttrT * bfAttr,		/* in - ds attributes */
-    domainT * dmnP,		/* in - domain ptr */
+    struct domain * dmnP,		/* in - domain ptr */
     bsInMemXtntT * oxtntp	/* in - ptr to orig extent map */
 );
 
@@ -87,7 +87,7 @@ kill_mcell(
 
 int
 dealloc_mcells(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     uint16_t firstVdIndex,	/* in */
     bfMCIdT firstMcellId,	/* in */
     ftxHT parentFtxH		/* in */
@@ -323,7 +323,7 @@ create_rtdn_opx(ftxHT ftxH,	/* in - ftx handle */
 	mcellUIdT rtdnR = *(mcellUIdT *) opRec;
 	int sts;
 	bfSetT *bfSetp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int bfs_opened = 0;
 
 	dmnP = ftxH.dmnP;
@@ -451,7 +451,7 @@ create_undo_opx(ftxHT ftxH,	/* in - ftx handle */
 	mcellUIdT *undoRp = (mcellUIdT *) opRec;
 	int sts;
 	bfSetT *bfSetp;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 
 	if (undoRecSz != sizeof(mcellUIdT)) {
 		ADVFS_SAD0("create_undo_opx: bad root done record size");
@@ -527,7 +527,7 @@ new_mcell(
     ftxHT parFtx,		/* in - parent ftx */
     mcellUIdT * mcellUIdp,	/* in/out - ptr to global mcell id */
     bsBfAttrT * bfAttr,		/* in - ds attributes */
-    domainT * dmnP,		/* in - domain ptr */
+    struct domain * dmnP,		/* in - domain ptr */
     bsInMemXtntT * oxtntp	/* in - ptr to orig extent map */
 )
 {
@@ -651,7 +651,7 @@ kill_mcell(
 )
 {
 	struct bfAccess *bfap;
-	domainT *dmnP;
+	struct domain *dmnP;
 	vdT *vdp;
 	rbfPgRefHT pgref;
 	bsMPgT *bmtpgp;
@@ -751,7 +751,7 @@ kill_mcell(
 
 int
 dealloc_mcells(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     uint16_t firstVdIndex,	/* in */
     bfMCIdT firstMcellId,	/* in */
     ftxHT parentFtxH		/* in */

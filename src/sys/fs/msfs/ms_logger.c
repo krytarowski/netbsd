@@ -592,7 +592,7 @@ lgr_valid_blk(
 
 static void
 lgr_repair_pg(
-    domainT * dmnp,		/* in - domain for domain panic */
+    struct domain * dmnp,		/* in - domain for domain panic */
     logPgT * pgp		/* in - ptr to a log page */
 )
 {
@@ -722,7 +722,7 @@ lgr_complete_pg(
 
 static void
 lgr_restore_pg(
-    domainT * dmnp,		/* in - domain for domain panic in
+    struct domain * dmnp,		/* in - domain for domain panic in
 				 * lgr_repair_pg */
     logPgT * pgp		/* in - ptr to a log page */
 )
@@ -976,7 +976,7 @@ lgr_unpinpg(
 static void
 add_lsn_list(
     struct bsBuf * bp,		/* in */
-    domainT * dmnP		/* in */
+    struct domain * dmnP		/* in */
 )
 {
 	struct bsBufHdr *hp;
@@ -1039,7 +1039,7 @@ add_lsn_list(
 int
 lgr_writev_ftx(
     ftxStateT * ftxp,		/* in/out - ftx state */
-    domainT * dmnP,		/* in - domain state */
+    struct domain * dmnP,		/* in - domain state */
     lrDescT * lrdp,		/* in - ftx log record descriptor */
     logWriteModeT lwMode	/* in  - write mode (sync, async, ...) */
 )
@@ -1628,7 +1628,7 @@ get_clean_pg(
  */
 logRecAddrT
 lgr_retest_firstrec(
-    domainT * dmnP		/* in - ptr to domain */
+    struct domain * dmnP		/* in - ptr to domain */
 )
 {
 	logRecAddrT oldestftxla, dirtybufla, retla;
@@ -1664,7 +1664,7 @@ lgr_retest_firstrec(
  *
  */
 void
-resetfirstrec(domainT * dmnP)
+resetfirstrec(struct domain * dmnP)
 {
 	int sts;
 	logDescT *ldP;
@@ -1711,7 +1711,7 @@ resetfirstrec(domainT * dmnP)
  *      and minLogPgs.
  */
 int
-getLogStats(domainT * dmnP, logStatT * logStatp)
+getLogStats(struct domain * dmnP, logStatT * logStatp)
 {
 	int sts;
 	logDescT *ldP;
@@ -1804,7 +1804,7 @@ release_dirty_pg(
 {
 	int quadrant;
 	int sts;
-	domainT *dmnP = ldP->dmnP;
+	struct domain *dmnP = ldP->dmnP;
 
 
 	if (ldP->lastPg.pinned) {
@@ -2007,7 +2007,7 @@ HANDLE_EXCEPTION:
  */
 int
 lgr_dmn_read_open(
-    domainT * dmnP,		/* in  - domain pointer */
+    struct domain * dmnP,		/* in  - domain pointer */
     logRdHT * logrdh		/* out - lgr_read handle */
 )
 {
@@ -3017,7 +3017,7 @@ lgr_open(
 	int desc;
 	int newDesc = 0;
 	int openedLog = 0;
-	domainT *dmnP = bfSetp->dmnP;
+	struct domain *dmnP = bfSetp->dmnP;
 	bfPageRefHT pgref;
 	struct bsMPg *bmtpgp;
 	vdT *vdp;
@@ -3579,7 +3579,7 @@ HANDLE_EXCEPTION:
 
 int
 lgr_dmn_get_last_rec(
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     logRecAddrT * recAddr	/* out - rec addr of last log rec */
 )
 {
@@ -3631,7 +3631,7 @@ lgr_get_first_rec(
 
 int
 lgr_dmn_get_first_rec(
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     logRecAddrT * recAddr	/* out - rec addr of first log rec */
 )
 {
@@ -3650,7 +3650,7 @@ lgr_dmn_get_first_rec(
 
 int
 lgr_dmn_get_pseudo_first_rec(
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     logRecAddrT * recAddr	/* out - log record address */
 )
 {
@@ -3772,7 +3772,7 @@ HANDLE_EXCEPTION:
 
 void
 lgr_checkpoint_log(
-    domainT * dmnP		/* in */
+    struct domain * dmnP		/* in */
 )
 {
 	ftxHT ftxH;
@@ -3820,7 +3820,7 @@ lgr_switch_vol(
 	int sts;
 	logDescT *newldP, *newLogP;
 	bfAccessT *logAccP, *newAccP;
-	domainT *dmnP;
+	struct domain *dmnP;
 	vdT *vdP, *newVdP;
 	uint32_t logPgs;
 	bfTagT oldTag, newTag;

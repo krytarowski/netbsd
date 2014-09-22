@@ -65,7 +65,7 @@ ulong recovered_filename_space;
 
 /* Global save area for last inconsistent directory message */
 
-domainT *BsLastDomainP = NULL;
+struct domain *BsLastDomainP = NULL;
 bfSetT *BsLastFsetP = NULL;
 uint BsLastDirTagNum = NULL;
 uint BsLastDirPgNm = NULL;
@@ -122,7 +122,7 @@ insert_seq(
 	ftxHT ins_ftx_handle;
 	insert_undo_rec undo_rec;
 	dirRec *dirRecp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int extended_dir_here = FALSE;
 
 	dmnP = GETDOMAINP(mp);

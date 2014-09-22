@@ -2968,7 +2968,7 @@ move_metadata(
 	bsMPgT *bmt;
 	int delFlag;
 	int derefPageFlag = 0;
-	domainT *domain;
+	struct domain *domain;
 	ftxHT ftxH;
 	int failFtxFlag = 0;
 	bsMCT *mcell;
@@ -3897,7 +3897,7 @@ mig_pack_vd_range(
 )
 {
 	int sts = EOK, sts2 = EOK;
-	domainT *domain = NULL;
+	struct domain *domain = NULL;
 	bsInMemXtntMapT *inwayXtntMap = NULL;
 	bsInMemSubXtntMapT *subXtntMap = NULL;
 	int blksPerPage = ADVFS_PGSZ_IN_BLKS;

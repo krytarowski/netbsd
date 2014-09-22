@@ -594,7 +594,7 @@ fs_write(
 	shareExclLkStateT lk_state;
 	unsigned long nbyte;
 	enum vtype type;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int32_t directIO = 0;
 	extern u_int noadd_execaccess;
 	int data_logging = FALSE, bytes_pinned = 0, ftx_started = FALSE, first_pin_page_loop = TRUE;
@@ -2563,7 +2563,7 @@ fs_write_add_stg(
 )
 {
 	struct vnode *vp = bfap->bfVp;
-	domainT *dmnP = bfap->dmnP;
+	struct domain *dmnP = bfap->dmnP;
 	unsigned long next_file_pg, pgs_needed, pgs_prealloc, first_pg_to_add;
 	int sts;
 	ftxHT ftxH;

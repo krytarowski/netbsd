@@ -161,7 +161,7 @@ stg_remove_stg_start(
 
 void
 stg_remove_stg_finish(
-    domainT * dmnp,		/* in */
+    struct domain * dmnp,		/* in */
     uint32_t delCnt,		/* in */
     void *delList		/* in */
 );

@@ -55,7 +55,7 @@ typedef enum TraceAction {
 #define MAGIC_DEALLOC    0x00080000
 #define ACCMAGIC         0xADF00001	/* bfAccessT */
 #define SETMAGIC         0xADF00002	/* bfSetT */
-#define DMNMAGIC         0xADF00003	/* domainT */
+#define DMNMAGIC         0xADF00003	/* struct domain */
 #define VDMAGIC          0xADF00004	/* vdT */
 #define FSMAGIC          0xADF00005	/* fileSetNodeT */
 #define BUFMAGIC         0xADF00006	/* bsBuf */
@@ -171,7 +171,7 @@ static inline int TEST_VDI_RANGE(const vdIndexT vdi)
 }
 
 
-/* Test the domainT.vdpTbl[] slot indexed by vdi; return EOK if it
+/* Test the struct domain.vdpTbl[] slot indexed by vdi; return EOK if it
  * is non-NULL (presumably a pointer to a vdT), else return EBAD_VDI.
  * dmnp->vdpTblLock must be held.
  */

@@ -281,7 +281,7 @@ freeze_domain(advfsFreezeMsgT * msg)
 
 	int sts;
 	struct timeval tv;
-	domainT *dmnP = NULL;
+	struct domain *dmnP = NULL;
 	advfsFreezeInfoT *freezeInfoP = NULL;
 	advfsFreezeInfoT *trailerP = NULL;
 	advfsFreezeInfoT *leaderP = NULL;
@@ -454,7 +454,7 @@ thaw_domain(advfsFreezeInfoT * freezeInfoP, int forced)
 {
 	int sts;
 	struct timeval tv;
-	domainT *dmnP = NULL;
+	struct domain *dmnP = NULL;
 	bsDmnFreezeAttrT dmnFreezeAttr;
 	ftxHT ftxH = FtxNilFtxH;
 	struct vd *logvdp;	/* pointer to log vd */

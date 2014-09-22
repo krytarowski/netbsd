@@ -264,7 +264,7 @@ int
 _ftx_start_i(
     ftxHT * ftxH,		/* out - ftx handle */
     ftxHT parentFtxH,		/* in - parent ftx handle */
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     int page_reservation,	/* in - ref/pin pages reserved */
     unsigned int atomicRPass,	/* in - atomic recovery pass */
     int flag,			/* in - 1 == start exclusive ftx */
@@ -801,7 +801,7 @@ ftx_done_urdr(
 	unsigned int ftxSlot;
 	ftxStateT *ftxp;
 	int sts;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 	ftxTblDT *ftxTDp;
 	unsigned int lvl;
 	lrDescT *lrvecp = NULL;
@@ -1088,7 +1088,7 @@ ftx_quit(
 	unsigned int ftxSlot;
 	ftxStateT *ftxp;
 	int sts;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 	ftxTblDT *ftxTDp;
 	unsigned int lvl;
 
@@ -1189,7 +1189,7 @@ ftx_fail_2(
 	unsigned int ftxSlot;
 	ftxStateT *ftxp;
 	int sts, lrsts = EOK;
-	domainT *dmnP = NULL;
+	struct domain *dmnP = NULL;
 	ftxTblDT *ftxTDp;
 	int lvl, pli;
 	logRdHT logrh;
@@ -1627,7 +1627,7 @@ ftx_set_continuation(
 {
 	struct ftx *ftxp;
 	unsigned int ftxSlot;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 	ftxTblDT *ftxTDp;
 	ftxAgentIdT agentId;
 	ftxContRecT *fcrp;
@@ -1687,7 +1687,7 @@ ftx_special_done_mode(
 {
 	struct ftx *ftxp;
 	unsigned int ftxSlot;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 	ftxTblDT *ftxTDp;
 	unsigned int lvl;
 	perlvlT *clvlp;
@@ -1740,7 +1740,7 @@ rbf_pinpg(
 {
 	struct ftx *ftxp;
 	unsigned int ftxSlot;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 	ftxTblDT *ftxTDp;
 	int sts;
 	int ftxPinS, plpinS;
@@ -1915,7 +1915,7 @@ rbf_deref_page(
 	int ftxPinS, plpinS;
 	ftxPinTblT *fpp;
 	lvlPinTblT *plpp;
-	domainT *dmnP = rbfPgRefH.dmnP;
+	struct domain *dmnP = rbfPgRefH.dmnP;
 	ftxTblDT *ftxTDp;
 
 	/* check domain handle and pick up domain pointer */
@@ -2019,7 +2019,7 @@ rbf_pin_record(
 	ftxPinTblT *fpp;
 	lvlPinTblT *plpp;
 	int recxi, recboff, recendoff;
-	domainT *dmnP = pinPgH.dmnP;
+	struct domain *dmnP = pinPgH.dmnP;
 	ftxTblDT *ftxTDp;
 	int zapi = 0;
 
@@ -2338,7 +2338,7 @@ addone_recredo(
 int
 log_donerec_nunpin(
     ftxStateT * ftxp,		/* in/out - ftx state */
-    domainT * dmnP,		/* in - domain state */
+    struct domain * dmnP,		/* in - domain state */
     lrDescT * lrdp		/* in/out - done record desc */
 )
 {
@@ -2493,7 +2493,7 @@ _unpin:
 
 void
 do_ftx_continuations(
-    domainT * dmnP,		/* in/out - ptr to domain */
+    struct domain * dmnP,		/* in/out - ptr to domain */
     ftxStateT * ftxp,		/* in/out - ftx state */
     ftxHT ftxH,			/* in - ftx handle */
     lrDescT * lrvecp		/* in/out - done record desc */
@@ -2645,7 +2645,7 @@ get_perlvl_p(
 	unsigned int ftxSlot;
 	struct ftx *ftxp;
 	unsigned int lvl;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 	ftxTblDT *ftxTDp;
 
 	if (dmnP == NULL) {
@@ -2841,7 +2841,7 @@ get_ftx_id(ftxHT ftxH		/* ftx handle */
 {
 	struct ftx *ftxp;
 	unsigned int ftxSlot;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 	ftxTblDT *ftxTDp;
 
 	if (dmnP == NULL) {
@@ -3029,7 +3029,7 @@ ftx_free_2(
 
 void
 ftx_init_recovery_logaddr(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	/* Initialize the crash recovery log address structures. See comments
@@ -3071,7 +3071,7 @@ ftx_init_recovery_logaddr(
 
 void
 ftx_set_dirtybufla(
-    domainT * dmnP,
+    struct domain * dmnP,
     logRecAddrT dirtyBufLa
 )
 {
@@ -3094,7 +3094,7 @@ ftx_set_dirtybufla(
 
 logRecAddrT
 ftx_get_dirtybufla(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	int thisread = dmnP->dirtyBufLa.read;
@@ -3148,7 +3148,7 @@ ftx_get_dirtybufla(
 
 void
 ftx_set_oldestftxla(
-    domainT * dmnP,
+    struct domain * dmnP,
     logRecAddrT oldftxLa
 )
 {
@@ -3173,7 +3173,7 @@ ftx_set_oldestftxla(
 
 logRecAddrT
 ftx_get_oldestftxla(
-    domainT * dmnP
+    struct domain * dmnP
 )
 {
 	int thisread;
@@ -3216,7 +3216,7 @@ ftx_get_oldestftxla(
 logRecAddrT
 ftx_set_firstla(
     ftxStateT * ftxp,		/* in/out - ptr to ftx state */
-    domainT * dmnP,		/* in/out - ptr to domain */
+    struct domain * dmnP,		/* in/out - ptr to domain */
     logRecAddrT fla		/* in - first log addr */
 )
 {
@@ -3262,7 +3262,7 @@ ftx_set_firstla(
 void
 reset_oldest_lsn(
     ftxStateT * ftxp,		/* in - ptr to ftx state */
-    domainT * dmnP,		/* in/out - ptr to domain */
+    struct domain * dmnP,		/* in/out - ptr to domain */
     int continuation		/* in - TRUE if continuation */
 )
 {

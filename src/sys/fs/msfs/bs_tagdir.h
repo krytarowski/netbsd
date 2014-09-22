@@ -34,7 +34,7 @@ extern bfTagT staticRootTagDirTag;
 /* Common argument structure. */
 typedef struct tagInfo {
 	bfSetT *bfSetp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfTagT tag;
 	vdIndexT vdIndex;
 	bfMCIdT bfMCId;
@@ -137,7 +137,7 @@ init_tagdir_opx(
 
 int
 bs_switch_root_tagdir(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT newVdIndex		/* in */
 );
 

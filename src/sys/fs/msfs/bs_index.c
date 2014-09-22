@@ -5152,7 +5152,7 @@ idx_undo_opx(
 	int split_count = -1;	/* this must be initialized */
 	idxPinnedPgsT pinpgs[IDX_MAX_BTREE_LEVELS];
 	bfTagT invalid_tag = NilBfTag;
-	domainT *dmnP;
+	struct domain *dmnP;
 	struct vnode *nullvp = NULL;
 
 	/* The undo transaction can make no assumptions about what has

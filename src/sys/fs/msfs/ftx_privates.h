@@ -292,7 +292,7 @@ ftx_free_2(
 void
 reset_oldest_lsn(
     ftxStateT * ftxp,		/* in - ptr to ftx state */
-    domainT * dmnp,		/* in/out - ptr to domain */
+    struct domain * dmnp,		/* in/out - ptr to domain */
     int continuation		/* in - true when continuation */
 );
 /*
@@ -312,7 +312,7 @@ addone_recredo(
 int
 log_donerec_nunpin(
     ftxStateT * ftxp,		/* in/out - ftx state */
-    domainT * dmnp,		/* in - domain state */
+    struct domain * dmnp,		/* in - domain state */
     lrDescT * lrdp		/* in/out - done record desc */
 );
 
@@ -339,7 +339,7 @@ release_ftx_locks(
 
 void
 do_ftx_continuations(
-    domainT * dmnp,		/* in/out - ptr to domain */
+    struct domain * dmnp,		/* in/out - ptr to domain */
     ftxStateT * ftxp,		/* in/out - ftx state */
     ftxHT ftxH,			/* in - ftx handle */
     lrDescT * lrdp		/* in/out - done record desc */
@@ -363,7 +363,7 @@ get_perlvl_p(
 int
 lgr_writev_ftx(
     ftxStateT * ftxp,		/* in/out - ftx state */
-    domainT * dmnp,		/* in - domain state */
+    struct domain * dmnp,		/* in - domain state */
     lrDescT * lrdp,		/* in/out - ftx done record desc */
     logWriteModeT lw_mode	/* in  - write mode (sync, async, ...) */
 );
@@ -387,7 +387,7 @@ lgr_writev_ftx(
 
 void
 ftx_set_oldestftxla(
-    domainT * dmnp,
+    struct domain * dmnp,
     logRecAddrT oldftxLa
 );
 
@@ -397,7 +397,7 @@ ftx_set_oldestftxla(
 
 logRecAddrT
 ftx_get_oldestftxla(
-    domainT * dmnp
+    struct domain * dmnp
 );
 
 /*
@@ -411,7 +411,7 @@ ftx_get_oldestftxla(
 logRecAddrT
 ftx_set_firstla(
     ftxStateT * ftxp,		/* in/out - ptr to ftx state */
-    domainT * dmnp,		/* in/out - ptr to domain */
+    struct domain * dmnp,		/* in/out - ptr to domain */
     logRecAddrT fla		/* in - first log addr */
 );
 

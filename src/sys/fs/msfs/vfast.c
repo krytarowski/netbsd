@@ -133,7 +133,7 @@ void
      ss_startios(vdT * vdp);
 
 void
-ss_rmvol_from_hotlst(domainT * dmnP,
+ss_rmvol_from_hotlst(struct domain * dmnP,
     vdIndexT delVdi);
 
 int
@@ -143,7 +143,7 @@ ss_change_state(char *domain_name,
     int write_out_record);
 
 int
-ss_put_rec(domainT * dmnP);
+ss_put_rec(struct domain * dmnP);
 
 int
 ss_chk_fragratio(
@@ -156,10 +156,10 @@ ss_snd_hot(
 );
 
 void
-     ss_dmn_activate(domainT * dmnP, u_long flag);
+     ss_dmn_activate(struct domain * dmnP, u_long flag);
 
 void
-     ss_dealloc_dmn(domainT * dmnP);
+     ss_dealloc_dmn(struct domain * dmnP);
 
 void
      ss_kern_stop();
@@ -177,7 +177,7 @@ void
      ss_dealloc_vd(vdT * vdp);
 
 void
-     ss_dmn_deactivate(domainT * dmnP, int flag);
+     ss_dmn_deactivate(struct domain * dmnP, int flag);
 
 void
 ss_dealloc_pack_list(vdT * vdp);
@@ -187,7 +187,7 @@ ss_block_and_wait(vdT * vdp);
 
 /****** local module prototypes ******/
 static int
-ss_chk_hot_list(domainT * dmnP,
+ss_chk_hot_list(struct domain * dmnP,
     bfTagT tag,
     bfSetIdT bfSetId,
     int vdIndex,
@@ -211,7 +211,7 @@ ss_get_n_lk_free_space(vdT * vdp,
     int alloc_hint);
 
 static int
-ss_find_hot_target_vd(domainT * dmnP,
+ss_find_hot_target_vd(struct domain * dmnP,
     vdIndexT * targVdIndex,
     bfTagT * tag,
     bfSetIdT * setId);
@@ -267,15 +267,15 @@ ss_list_thd_pool(void);
 
 static void
 ss_copy_rec_from_disk(bsSSDmnAttrT * ssAttr,	/* in */
-    domainT * dmnP);		/* out */
+    struct domain * dmnP);		/* out */
 
 static void
-ss_copy_rec_to_disk(domainT * dmnP,	/* in */
+ss_copy_rec_to_disk(struct domain * dmnP,	/* in */
     bsSSDmnAttrT * ssAttr	/* out */
 );
 
 static void
-print_ssDmnInfo(domainT * dmnP);
+print_ssDmnInfo(struct domain * dmnP);
 
 static void
 print_ssVolInfo(vdT * vdp);
@@ -294,13 +294,13 @@ static void
      ss_boss_init(void);
 
 static void
-     ss_init_dmnInfo(domainT * dmnP);
+     ss_init_dmnInfo(struct domain * dmnP);
 
 static void
      ss_queues_create(void);
 
 static void
-     ss_dealloc_hot(domainT * dmnP);
+     ss_dealloc_hot(struct domain * dmnP);
 
 static void
 ss_insert_hot_list(ssListMsgTypeT msgType,
@@ -1011,13 +1011,13 @@ ss_list_thd_pool(void)
 static void
 ss_adj_msgs_flow_rate()
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	int activeDmnCnt = 0;
 	int desiredAveMsgCnt = 0;
 	int totListMsgSendCnt = 0;
 	int totListMsgDropCnt = 0;
 	extern mutexT DmnTblMutex;
-	extern domainT *DmnSentinelP;
+	extern struct domain *DmnSentinelP;
 
 
 	/* first count up the number of active domains that also have vfast
@@ -1171,8 +1171,8 @@ static
 ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
 {
 	extern mutexT DmnTblMutex;
-	extern domainT *DmnSentinelP;
-	domainT *dmnP;
+	extern struct domain *DmnSentinelP;
+	struct domain *dmnP;
 	vdIndexT dstVdIndex = -1;
 	bfTagT tag = NilBfTag;
 	bfSetIdT setId = nilBfSetId;
@@ -1399,7 +1399,7 @@ HANDLE_EXCEPTION:
  ********************************************************************/
 
 void
-ss_dmn_activate(domainT * dmnP, u_long flag)
+ss_dmn_activate(struct domain * dmnP, u_long flag)
 {
 	vdT *logVdp = NULL;
 	bfAccessT *mdap;
@@ -1465,7 +1465,7 @@ HANDLE_EXCEPTION:
  ********************************************************************/
 
 void
-ss_dmn_deactivate(domainT * dmnP, int flag)
+ss_dmn_deactivate(struct domain * dmnP, int flag)
 {
 	int sts;
 	int vdi, vdCnt = 0;
@@ -1525,7 +1525,7 @@ ss_dmn_deactivate(domainT * dmnP, int flag)
  ********************************************************************/
 
 void
-ss_dealloc_dmn(domainT * dmnP)
+ss_dealloc_dmn(struct domain * dmnP)
 {
 	ss_dealloc_hot(dmnP);
 	mutex_destroy(&dmnP->ssDmnInfo.ssDmnLk.mutex);
@@ -1582,7 +1582,7 @@ ss_change_state(char *domain_name,	/* in */
 	struct timeval new_time;
 	int vdi, vdCnt = 0;
 	vdT *vdp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfDomainIdT domainId;
 	int dmnActive = FALSE, dmnOpen = FALSE;
 	int ssDmnLocked = FALSE;
@@ -1722,7 +1722,7 @@ HANDLE_EXCEPTION:
  *
  ********************************************************************/
 void
-ss_init_dmnInfo(domainT * dmnP)
+ss_init_dmnInfo(struct domain * dmnP)
 {
 	bzero((char *) &dmnP->ssDmnInfo, sizeof(struct ssDmnInfo));
 	mutex_init(&dmnP->ssDmnInfo.ssDmnLk.mutex, MUTEX_DEFAULT, IPL_NONE);
@@ -1819,7 +1819,7 @@ ss_init_vd(vdT * vdp)
 
 void
 ss_copy_rec_from_disk(bsSSDmnAttrT * ssAttr,	/* in */
-    domainT * dmnP)
+    struct domain * dmnP)
 {				/* out */
 	dmnP->ssDmnInfo.ssDmnState = ssAttr->ssDmnState;
 	/* reset vfast state if we have been relocated by cfs - precaution */
@@ -1859,7 +1859,7 @@ ss_copy_rec_from_disk(bsSSDmnAttrT * ssAttr,	/* in */
  ********************************************************************/
 
 void
-ss_copy_rec_to_disk(domainT * dmnP,	/* in */
+ss_copy_rec_to_disk(struct domain * dmnP,	/* in */
     bsSSDmnAttrT * ssAttr)
 {				/* out */
 	/* user configurable by domain */
@@ -1901,7 +1901,7 @@ ss_copy_rec_to_disk(domainT * dmnP,	/* in */
 
 /* overwrite if there, creates if not there */
 int
-ss_put_rec(domainT * dmnP)
+ss_put_rec(struct domain * dmnP)
 {
 	vdT *logVdp = NULL;
 	ftxHT ftx;
@@ -2240,7 +2240,7 @@ ss_insert_frag_onto_list(vdIndexT vdi,
     uint64_t fragRatio,		/* primary sort in list */
     uint32_t xtntCnt)
 {				/* secondary sort in list */
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfSetT *bfSetp;
 	vdT *vdp = NULL;
 	ssFragLLT *currp, *nextp;	/* list pointer */
@@ -2739,7 +2739,7 @@ ss_insert_hot_list(
     ssListMsgTypeT msgType,	/* in */
     ssHotLLT * hp)
 {				/* in  - entry */
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfSetT *bfSetp;
 	ssHotLLT *currp, *nextp;/* curr entry ptr */
 	ssHotHdrT *hhp;		/* pointer to hot list header */
@@ -2938,7 +2938,7 @@ _cleanup:
  ********************************************************************/
 
 void
-ss_rmvol_from_hotlst(domainT * dmnP,	/* in */
+ss_rmvol_from_hotlst(struct domain * dmnP,	/* in */
     vdIndexT delVdi)
 {				/* in */
 	bfSetT *bfSetp;
@@ -3016,7 +3016,7 @@ ss_rmvol_from_hotlst(domainT * dmnP,	/* in */
 void
 ss_del_from_hot_list(ssHotLLT * hp)
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfSetT *bfSetp;
 	ssHotLLT *currp, *nextp;/* curr, next entry ptrs */
 	ssHotHdrT *hhp;		/* pointer to hot list header */
@@ -3091,7 +3091,7 @@ _cleanup:
 
 static
 int
-ss_chk_hot_list(domainT * dmnP,	/* in */
+ss_chk_hot_list(struct domain * dmnP,	/* in */
     bfTagT tag,			/* in */
     bfSetIdT bfSetId,		/* in */
     int srcVdIndex,		/* in */
@@ -3156,7 +3156,7 @@ ss_chk_hot_list(domainT * dmnP,	/* in */
  ********************************************************************/
 
 void
-ss_dealloc_hot(domainT * dmnP)
+ss_dealloc_hot(struct domain * dmnP)
 {				/* in - pointer to header for list */
 	ssHotHdrT *hhp;
 	ssHotLLT *currp, *nextp;/* entry pointer */
@@ -3466,7 +3466,7 @@ ss_move_file(vdIndexT vdi,	/* in */
 )
 {
 	vdT *svdp = NULL;
-	domainT *dmnP = NULL;
+	struct domain *dmnP = NULL;
 	int domain_open = FALSE, vdRefed = FALSE;
 	int sts = EOK;
 	ssFragLLT *fp = NULL;	/* frag file ptr */
@@ -4939,7 +4939,7 @@ ss_sim_file_on_vols(volDataT * volData,	/* in */
 
 static
        int
-ss_find_hot_target_vd(domainT * dmnP,	/* in */
+ss_find_hot_target_vd(struct domain * dmnP,	/* in */
     vdIndexT * targVdIndex,	/* out - selected vd */
     bfTagT * tag,		/* out - selected file */
     bfSetIdT * setId)

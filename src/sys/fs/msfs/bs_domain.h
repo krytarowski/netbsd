@@ -159,7 +159,7 @@ typedef struct ftxTblD {
  *
  *  An empty list is characterized as:
  *
- *                 domainT:  ____________________________
+ *                 struct domain:  ____________________________
  *                           \                           \
  *                           / ######################### /
  *                           \                           \
@@ -168,9 +168,9 @@ typedef struct ftxTblD {
  *                           /                           /
  *                           \                           \
  *            bfsQueueT:     /___________________________/
- *                 *bfsQfwd: | &domainT.bfSetHead        |<<--+
+ *                 *bfsQfwd: | &struct domain.bfSetHead        |<<--+
  *                           |___________________________|-->>|
- *                 *bfsQbck: | &domainT.bfSetHead        |-->>+
+ *                 *bfsQbck: | &struct domain.bfSetHead        |-->>+
  *                           |___________________________|
  *                           \                           \
  *                           /                           /
@@ -183,7 +183,7 @@ typedef struct ftxTblD {
  *
  *  A chain with entries in it is characterized as:
  *
- *                 domainT:  ____________________________
+ *                 struct domain:  ____________________________
  *                           \                           \
  *                           / ######################### /
  *                           \                           \
@@ -208,7 +208,7 @@ typedef struct ftxTblD {
  *     |      |bfsQueueT:    /___________________________/      /    |
  *     |    --|--->>*bfsQfwd:|&bfSetT_2.bfSetList.bfsQfwd|<<----     |
  *     |   /  \              |___________________________|---->>     |
- *     |  /    \    *bfsQbck:|&domainT.bfSetList.bfsQfwd |      \    |
+ *     |  /    \    *bfsQbck:|&struct domain.bfSetList.bfsQfwd |      \    |
  *     |  |     <<-----------|___________________________|       \   |
  *     |  |                  \                           \       |   |
  *     |  |                  /                           /       |   |
@@ -234,7 +234,7 @@ typedef struct ftxTblD {
  *     |      |              /                           /       |   |
  *     \      |              \                           \       /   |
  *      \     bfsQueueT:     /___________________________/      /    /
- *       -----|--->>*bfsQfwd:|&domainT.bfSetList.bfsQfwd |<<----    /
+ *       -----|--->>*bfsQfwd:|&struct domain.bfSetList.bfsQfwd |<<----    /
  *            \              |___________________________|-------->>
  *             \    *bfsQbck:|&bfSetT_2.bfSetList.bfsQfwd|
  *              <<-----------|___________________________|
@@ -244,7 +244,7 @@ typedef struct ftxTblD {
  *                           /___________________________/
  *
  *  Insert Head:
- *      domainT *dmnp;
+ *      struct domain *dmnp;
  *      bfSetT *bfSetp;
  *      bfsQueueT *queue = &dmnp->bfSetHead;
  *      bfsQueueT *entry = &bfSetp->bfSetList;
@@ -254,7 +254,7 @@ typedef struct ftxTblD {
  *      mutex_exit( &dmnp->mutex .mutex);
  *
  *  Insert Tail:
- *      domainT *dmnp;
+ *      struct domain *dmnp;
  *      bfSetT *bfSetp;
  *      bfsQueueT *queue = dmnp->bfSetHead.bfsQbck;
  *      bfsQueueT *entry = &bfSetp->bfSetList;
@@ -278,7 +278,7 @@ typedef struct ftxTblD {
  *             bs_bfs_remove_all() and the bfs_invalidate() routines.
  *
  *  Walk Forward:
- *      domainT *dmnp;
+ *      struct domain *dmnp;
  *      bfSetT *bfSetp;
  *      bfsQueueT *entry = dmnp->bfSetHead.bfsQfwd;
  *      ...
@@ -291,7 +291,7 @@ typedef struct ftxTblD {
  *      mutex_exit( &dmnp->mutex .mutex);
  *
  *  Walk Backwards:
- *      domainT *dmnp;
+ *      struct domain *dmnp;
  *      bfSetT *bfSetp;
  *      bfsQueueT *entry = dmnp->bfSetHead.bfsQbck;
  *      ...
@@ -334,7 +334,7 @@ typedef struct bfDmnDesc {
 	vdDescT *vddp[BS_MAX_VDI];	/* array of vd descriptor ptrs */
 } bfDmnDescT;
 
-typedef struct domain {
+struct domain {
 	mutexT mutex;		/* protects vd.mcell_lk, vd.stgMap_lk, */
 	/* totalBlks, freeBlks */
 	/* vd.ddlActiveWaitMCId */
@@ -344,9 +344,9 @@ typedef struct domain {
 	int logVdRadId;		/* the RAD the the log's vd structure */
 	/* lives on. */
 
-	/* all domainTs are on a circular doubly-linked list. */
-	struct domain *dmnFwd;	/* Forward pointer of all domainTs */
-	struct domain *dmnBwd;	/* Backward pointer of all domainTs */
+	/* all struct domains are on a circular doubly-linked list. */
+	struct domain *dmnFwd;	/* Forward pointer of all struct domains */
+	struct domain *dmnBwd;	/* Backward pointer of all struct domains */
 
 #ifdef _KERNEL
 	dyn_hashlinks_w_keyT dmnHashlinks;	/* dyn_hashtable links */
@@ -442,13 +442,13 @@ typedef struct domain {
 
 	ssDmnInfoT ssDmnInfo;	/* vfast elements. */
 /*>>>>>>> Maintain as last elements of domain structure <<<<<<<<*/
-} domainT;
+};
 
 
 /* Shared variables (externs) */
-extern domainT nilDomain;
+extern struct domain nilDomain;
 extern int DomainCnt;
-extern domainT *DomainTbl[];
+extern struct domain *DomainTbl[];
 
 /*****************************************************************
 *******************  function prototypes *************************
@@ -463,7 +463,7 @@ static inline bfSetT *BFSET_QUEUE_TO_BFSETP(bfsQueueT *link)
 /* "Return" EBAD_DOMAIN_POINTER if the domain is NULL. */
 /* "Return" EBAD_DOMAIN_POINTER if the domain structure is corrupt. */
 /* Else "return" EOK */
-static inline int TEST_DMNP(const domainT *dmnP)
+static inline int TEST_DMNP(const struct domain *dmnP)
 (
         return (dmnP == NULL) ?
             EBAD_DOMAIN_POINTER :
@@ -472,7 +472,7 @@ static inline int TEST_DMNP(const domainT *dmnP)
                 EOK);
 )
 
-static inline void BFSET_DMN_INSQ(domainT *dmnp, bfsQueueT *queue, bfsQueueT *entry)
+static inline void BFSET_DMN_INSQ(struct domain *dmnp, bfsQueueT *queue, bfsQueueT *entry)
 {
     KASSERT(mutex_owned(&dmnp->mutex.mutex));
     entry->bfsQfwd = queue->bfsQfwd;
@@ -481,7 +481,7 @@ static inline void BFSET_DMN_INSQ(domainT *dmnp, bfsQueueT *queue, bfsQueueT *en
     queue->bfsQfwd = entry;
 }
 
-static inline void BFSET_DMN_REMQ(domainT *dmnp, bfsQueueT *entry)
+static inline void BFSET_DMN_REMQ(struct domain *dmnp, bfsQueueT *entry)
 {
     KASSERT(mutex_owned(&dmnp->mutex.mutex));
     entry->bfsQfwd->bfsQbck = entry->bfsQbck;
@@ -507,7 +507,7 @@ static inline void BFSET_DMN_REMQ(domainT *dmnp, bfsQueueT *entry)
     lock_done( &(dmnp->xidRecoveryLk) )
 
 #define XID_RECOVERY_LOCK_INIT(dmnp) \
-    lock_setup( &(dmnp)->xidRecoveryLk, ADVdomainT_xidRecoveryLk_info, TRUE)
+    lock_setup( &(dmnp)->xidRecoveryLk, ADVstruct domain_xidRecoveryLk_info, TRUE)
 
 #define XID_RECOVERY_LOCK_DESTROY(dmnp) \
     lock_terminate( &(dmnp)->xidRecoveryLk )
@@ -525,7 +525,7 @@ static inline void BFSET_DMN_REMQ(domainT *dmnp, bfsQueueT *entry)
     lock_done( &(dmnp)->rmvolTruncLk )
 
 #define RMVOL_TRUNC_LOCK_INIT(dmnp) \
-    lock_setup( &(dmnp)->rmvolTruncLk, ADVdomainT_rmvolTruncLk_info, TRUE )
+    lock_setup( &(dmnp)->rmvolTruncLk, ADVstruct domain_rmvolTruncLk_info, TRUE )
 
 #define RMVOL_TRUNC_LOCK_DESTROY(dmnp) \
     lock_terminate( &(dmnp)->rmvolTruncLk )
@@ -541,7 +541,7 @@ static inline void BFSET_DMN_REMQ(domainT *dmnp, bfsQueueT *entry)
 
 /* Lock initialization for scLock. */
 #define SC_TBL_LOCK_INIT(dmnp) \
-    lock_setup( &(dmnp)->scLock, ADVdomainT_scLock_info, TRUE );
+    lock_setup( &(dmnp)->scLock, ADVstruct domain_scLock_info, TRUE );
 
 /* Lock destruction for scLock. */
 #define SC_TBL_LOCK_DESTROY(dmnp) \
@@ -575,7 +575,7 @@ extern krwlock_t DmnTblLock;
     ( (_domainId).tv_sec)
 
 #define DOMAIN_HASH_LOCK( _key, _cnt ) \
-    ( (domainT *)dyn_hash_obtain_chain( DomainHashTbl, _key, _cnt ) )
+    ( (struct domain *)dyn_hash_obtain_chain( DomainHashTbl, _key, _cnt ) )
 
 #define DOMAIN_HASH_UNLOCK( _key ) \
     (void)dyn_hash_release_chain( DomainHashTbl, _key )
@@ -586,7 +586,7 @@ extern krwlock_t DmnTblLock;
 #define DOMAIN_HASH_INSERT( _dmnP, _lock_action ) \
     (void)dyn_hash_insert( DomainHashTbl, _dmnP, _lock_action )
 
-domainT *
+struct domain *
 domain_name_lookup(
     char *dmnName,		/* in - domain to lookup */
     u_long flag			/* in - mount flags/check DmnTblLock? */
@@ -598,17 +598,17 @@ bs_domain_init(
 
 void
 bs_bfdmn_flush_bfrs(
-    domainT * dmnp
+    struct domain * dmnp
 );
 
 void
 bs_bfdmn_flush(
-    domainT * dmnp
+    struct domain * dmnp
 );
 
 int
 bs_bfdmn_flush_sync(
-    domainT * dmnp
+    struct domain * dmnp
 );
 
 int
@@ -623,12 +623,12 @@ cfs_xid_free_memory(
 );
 void
 cfs_xid_free_memory_int(
-    domainT * dmnp
+    struct domain * dmnp
 );
 
 int
 find_del_entry(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
     struct vd ** delVd,		/* out */
@@ -639,13 +639,13 @@ find_del_entry(
 int
 bs_fix_root_dmn(
     bfDmnDescT * dmntbl,	/* in */
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     char *dmnName		/* in */
 );
 
 int
 bs_check_root_dmn_sc(
-    domainT * dmnP		/* in */
+    struct domain * dmnP		/* in */
 );
 
 #endif				/* _DOMAIN_H_ */

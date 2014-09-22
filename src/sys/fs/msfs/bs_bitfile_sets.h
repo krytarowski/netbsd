@@ -156,7 +156,7 @@ typedef struct bfSet {
 	bfSetIdT bfSetId;	/* bitfile-set's ID */
 	u_int bfSetMagic;	/* magic number: structure validation */
 	int fsRefCnt;		/* current number of bfs_access() accessors */
-	domainT *dmnP;		/* pointer to BF-set's domain structure */
+	struct domain *dmnP;		/* pointer to BF-set's domain structure */
 	bfsQueueT bfSetList;	/* list of bfSetT's associated with this
 				 * domain */
 	mutexT accessChainLock;	/* protects the next two fields */
@@ -410,13 +410,13 @@ bs_bfs_add_root(
 
 void
 bs_bfs_switch_root_tagdir(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfTagT newTag		/* in */
 );
 
 void
 bfs_delete_pending_list_finish_all(
-    domainT * dmnp,
+    struct domain * dmnp,
     u_long flag
 );
 

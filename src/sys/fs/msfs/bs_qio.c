@@ -101,14 +101,14 @@ void
      wait_to_readyq(struct vd * vdp);
 
 void
-     check_cont_bits(domainT * dmnP, int src);
+     check_cont_bits(struct domain * dmnP, int src);
 
 static
 void
      lsn_io_list(struct domain * dmnP);	/* in */
 
 void
-call_logflush(domainT * dmnP,
+call_logflush(struct domain * dmnP,
     lsnT lsn,
     int wait);
 
@@ -698,7 +698,7 @@ bs_io_complete(
 
 	if (bp->lsnFwd != NULL) {
 
-		/* Seize the domainT.lsnLock while manipulating the lsnList
+		/* Seize the struct domain.lsnLock while manipulating the lsnList
 		 * chain. */
 		mutex_enter(&dmnP->lsnLock.mutex);
 
@@ -909,7 +909,7 @@ clearSignal:
  */
 
 void
-check_cont_bits(domainT * dmnP, int src)
+check_cont_bits(struct domain * dmnP, int src)
 {
 	/*
          * Racy test is ok.  If we miss the
@@ -969,12 +969,12 @@ check_cont_bits(domainT * dmnP, int src)
  *               been modified for files within this domain.  Flushes up
  *               to an lsn passed in, typically the logTrimLsn.
  *
- * SMP: seizes the domainT.lsnLock
+ * SMP: seizes the struct domain.lsnLock
  */
 
 void
 bs_pinblock(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     lsnT lsnToWriteTo		/* in */
 )
 {
@@ -1002,7 +1002,7 @@ bs_pinblock(
 
 int
 bs_pinblock_sync(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     lsnT waitLsn,		/* in */
     int noBlock			/* in */
 )
@@ -1339,7 +1339,7 @@ loop:
  *       mandatory flushing. No guarantees are made that the
  *       metadata actually gets flushed.
  *
- * SMP: 1. Seizes and releases the domainT.lsnLock.
+ * SMP: 1. Seizes and releases the struct domain.lsnLock.
  *      2. Will seize bp->bufLock for buffers that need to be flushed.
  */
 
@@ -1583,7 +1583,7 @@ bs_q_lazy(
 	ioDescT *iop, *tmp;
 	int count, i;
 	extern u_int smsync_period;
-	domainT *dmnp;
+	struct domain *dmnp;
 
 	KASSERT(ioListp->bsBuf->bfAccess->dmnP->vdpTbl);
 	KASSERT(ioListp->blkDesc.vdIndex <= BS_MAX_VDI);
@@ -2383,7 +2383,7 @@ sort_onto_readyq(
  */
 
 void
-cache_logflush(domainT * dmnP)
+cache_logflush(struct domain * dmnP)
 {
 	bfAccessT *bfap = dmnP->logAccessp;
 	struct bsBuf *tail;
@@ -2434,7 +2434,7 @@ cache_logflush(domainT * dmnP)
  */
 
 void
-call_logflush(domainT * dmnP, lsnT lsn, int wait)
+call_logflush(struct domain * dmnP, lsnT lsn, int wait)
 {
 	bfAccessT *bfap = dmnP->logAccessp;
 	int sts;
@@ -4524,7 +4524,7 @@ rm_from_lazyq(struct bsBuf * bp,
 	extern u_int smsync_period;
 	u_int period = smsync_period;
 	u_int j;
-	domainT *dmnp = bp->bfAccess->dmnP;
+	struct domain *dmnp = bp->bfAccess->dmnP;
 	u_long savListSeq = bp->accListSeq;
 	int noq_cnt = 0, on_lazyq = FALSE, lockflag = FALSE;
 	mutexT *lockptr;
@@ -4920,7 +4920,7 @@ bs_io_thread(int radId)
 
 		case LF_PB_CONT:
 			{
-				domainT *dmnP;
+				struct domain *dmnP;
 				int sts;
 
 				/*
@@ -4946,7 +4946,7 @@ bs_io_thread(int radId)
 				 * below threshold, so call bs_startio() to
 				 * process some more I/O. */
 
-				domainT *dmnP = msg->u_msg.dmnP;
+				struct domain *dmnP = msg->u_msg.dmnP;
 				uint32_t vdi = msg->vdi;
 				struct vd *vdp = msg->vdp;
 
@@ -5022,7 +5022,7 @@ bs_io_thread(int radId)
 				struct buf *bp;
 				ioDescT *iop;
 				struct vd *vdp;
-				domainT *dmnP;
+				struct domain *dmnP;
 
 				bp = msg->u_msg.ioRetryBp;
 				iop = (ioDescT *) bp->b_pagelist;

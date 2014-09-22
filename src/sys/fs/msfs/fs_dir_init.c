@@ -746,7 +746,7 @@ fs_insert_undo(
 	char *dir_buffer;
 	insert_undo_rec in_rec;
 	bfSetT *bfSetp = NULL;
-	domainT *dmnP;
+	struct domain *dmnP;
 	rbfPgRefHT page_ref;
 	bfTagT *tagp;
 	uint32_t glom_flags;
@@ -968,7 +968,7 @@ void
 fs_cleanup_thread(void)
 {
 	clupThreadMsgT *msg;
-	domainT *dmnP = NULL;
+	struct domain *dmnP = NULL;
 	int sts;
 	extern cleanup_closed_list(clupClosedListTypeT);
 	bfAccessT *bfap;

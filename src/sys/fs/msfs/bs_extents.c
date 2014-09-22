@@ -91,7 +91,7 @@ void
 
 int
 update_xtnt_rec(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfTagT bfTag,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */
     ftxHT parentFtx		/* in */
@@ -159,7 +159,7 @@ load_from_xtra_xtnt_rec(
 static
        int
 load_from_bmt_xtra_xtnt_rec(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
     bfMCIdT mcellId,		/* in */
     lbnT vdBlk,
@@ -212,7 +212,7 @@ undo_mcell_cnt(
 )
 {
 	bsMPgT *bmtp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bsMCT *mcellp;
 	rbfPgRefHT pgRef;
 	bsShadowXtntT *shadowRec;
@@ -331,7 +331,7 @@ undo_upd_xtnt_rec(
 	bsMPgT *bmt;
 	bsXtntT *bsXA;
 	uint16_t *bsXACnt;
-	domainT *domain;
+	struct domain *domain;
 	uint16_t i;
 	bsMCT *mcell;
 	rbfPgRefHT pgPin;
@@ -500,7 +500,7 @@ undo_cre_xtnt_rec(
 )
 {
 	bsMPgT *rbmt;
-	domainT *domain;
+	struct domain *domain;
 	bsMCT *mcp;
 	rbfPgRefHT pgPin;
 	int sts;
@@ -641,7 +641,7 @@ init_bs_xtnts_opx(void)
 
 int
 odm_remove_mcells_from_xtnt_map(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfTagT bfTag,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     uint32_t start_index,
@@ -715,7 +715,7 @@ odm_create_xtnt_map(
     bfMCIdT * bfMcellId		/* out */
 )
 {
-	domainT *domain;
+	struct domain *domain;
 	uint32_t i;
 	bfMCIdT mcellId;
 	bsInMemSubXtntMapT *nextSubXtntMap;
@@ -803,7 +803,7 @@ create_xtnt_map_hdr(
     bfMCIdT * bfMcellId		/* out */
 )
 {
-	domainT *domain;
+	struct domain *domain;
 	bfSetT *bfSetp;
 	bfTagT bfTag;
 	bsInMemSubXtntMapT emptySubXtntMap;
@@ -906,7 +906,7 @@ odm_rewrite_xtnt_map(
 )
 {
 	bfTagT bfSetTag;
-	domainT *domain;
+	struct domain *domain;
 	ftxHT ftxH;
 	int failFtxFlag = 0;
 	uint32_t i;
@@ -1273,7 +1273,7 @@ HANDLE_EXCEPTION:
 
 int
 x_update_ondisk_xtnt_map(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfAccessT * bfap,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     ftxHT parentFtx		/* in */
@@ -1403,7 +1403,7 @@ x_update_ondisk_xtnt_map(
 
 int
 update_xtnt_rec(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfTagT bfTag,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */
     ftxHT parentFtx		/* in */
@@ -2063,7 +2063,7 @@ x_detach_extent_chain(
 
 int
 update_mcell_cnt(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     bfTagT bfTag,		/* in */
     vdIndexT bfVdIndex,		/* in */
     bfMCIdT bfMcellId,		/* in */
@@ -2253,7 +2253,7 @@ x_load_inmem_xtnt_map(
 	vdT *vd;
 	bsXtntRT *xtntRec;
 	struct bfAccess *mdap;
-	domainT *domain = bfap->dmnP;
+	struct domain *domain = bfap->dmnP;
 	bsInMemXtntT *xtnts = &bfap->xtnts;
 
 	/* If lock_request is NOT X_LOAD_LOCKSOWNED, then nothing is locked,
@@ -2425,7 +2425,7 @@ load_inmem_xtnt_map(
 	uint32_t totalPageCnt;
 	vdIndexT vdIndex;
 	bsInMemXtntMapT *xtntMap;
-	domainT *domain = bfap->dmnP;
+	struct domain *domain = bfap->dmnP;
 	bfTagT bfTag = bfap->tag;
 	vdIndexT bfVdIndex = bfap->primVdIndex;
 	bsInMemXtntT *xtnts = &bfap->xtnts;
@@ -2584,7 +2584,7 @@ load_from_shadow_rec(
 	vdIndexT vdIndex;
 	bsInMemXtntMapT *xtntMap = NULL;
 	vdT *vdp;
-	domainT *dmnP = bfap->dmnP;
+	struct domain *dmnP = bfap->dmnP;
 	uint32_t blksPerPage = bfap->bfPageSz;
 	uint32_t lastPg;
 	uint32_t mcellCnt;
@@ -2888,7 +2888,7 @@ load_from_xtnt_rec(
 	vdIndexT vdIndex;
 	bsInMemXtntMapT *xtntMap = NULL;
 	bfAccessT *mdap;
-	domainT *dmnP = bfap->dmnP;
+	struct domain *dmnP = bfap->dmnP;
 	vdIndexT bfVdIndex = bfap->primVdIndex;
 	bfMCIdT bfMcellId = bfap->primMCId;
 	uint32_t blksPerPage = bfap->bfPageSz;
@@ -3118,7 +3118,7 @@ load_from_xtra_xtnt_rec(
 	int sts;
 	vdT *vdp;
 	struct bfAccess *mdap;
-	domainT *dmnP = bfap->dmnP;
+	struct domain *dmnP = bfap->dmnP;
 
 	vdp = VD_HTOP(vdIndex, dmnP);
 	if (RBMT_THERE(dmnP) && BS_BFTAG_RSVD(bfap->tag)) {
@@ -3201,7 +3201,7 @@ HANDLE_EXCEPTION:
 static
        int
 load_from_bmt_xtra_xtnt_rec(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
     bfMCIdT mcellId,		/* in */
     lbnT vdBlk,

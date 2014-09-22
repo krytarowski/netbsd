@@ -2179,9 +2179,9 @@ HANDLE_EXCEPTION:
 *  vdClusters in the vdT is the size of the volume in clusters rounded
 *  down to a page.
 *  freeClust in the vdt is the number of free clusters within vdClusters.
-*  totalBlks in the domainT is the total of vdSize for all the volumes in
+*  totalBlks in the struct domain is the total of vdSize for all the volumes in
 *  the domain.
-*  freeBlks in the domainT is the number of free blocks within totalBlks.
+*  freeBlks in the struct domain is the number of free blocks within totalBlks.
 */
 int
 vd_extend(struct vd * vdp)

@@ -249,7 +249,7 @@ bmtr_update_rec_int(
 
 static int check_xtnts(bsXtntT *, uint16_t, bfAccessT *, vdT *);
 
-static int test_mcell_ptr(vdIndexT, bfMCIdT, bfTagT, domainT *);
+static int test_mcell_ptr(vdIndexT, bfMCIdT, bfTagT, struct domain *);
 
 /*
  * init metadata bitfile page
@@ -388,7 +388,7 @@ void *
 bmtr_find(
     struct bsMC * bsMCp,	/* in - pointer to cell */
     int rtype,			/* in - record type to find */
-    domainT * dmnP		/* in - domain pointer       */
+    struct domain * dmnP		/* in - domain pointer       */
 )
 {
 	struct bsMR *rp;
@@ -516,7 +516,7 @@ bmtr_create_rec(
 	void *rPtr = NULL;
 	rbfPgRefHT pgref;
 	int ftxStarted = FALSE;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfAccessT *mdap;
 	int file_is_rbmt;
 
@@ -747,7 +747,7 @@ bmtr_scan_mcells(
 	struct bsMC *mcp = NULL;
 	int pgRefed = FALSE;
 	bsMRT *rp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bfAccessT *mdap;
 
 	*bsrp = NULL;
@@ -1197,7 +1197,7 @@ bmtr_put_rec_undo_opx(
 	int sts;
 	struct bfAccess *bfap = NULL;
 	bfSetT *bfSetp = NULL;
-	domainT *dmnP;
+	struct domain *dmnP;
 	vdT *vdp;
 	char *rDatap = NULL;
 	rbfPgRefHT pgref;
@@ -1828,7 +1828,7 @@ alloc_mcell_undo(
 {
 
 	bsMPgT *bmt;
-	domainT *dmnP;
+	struct domain *dmnP;
 	struct bsMC *mcell;
 	rbfPgRefHT pgPin;
 	int sts;
@@ -1908,7 +1908,7 @@ alloc_rbmt_mcell_undo(
 {
 
 	bsMPgT *bmt;
-	domainT *dmnP;
+	struct domain *dmnP;
 	struct bsMC *mcell;
 	rbfPgRefHT pgPin;
 	int sts;
@@ -2022,7 +2022,7 @@ bmt_alloc_mcell(
 )
 {
 
-	domainT *dmnP;
+	struct domain *dmnP;
 	ftxHT ftx;
 	bsMCT *mcell;
 	bfMCIdT mcellId;
@@ -2189,7 +2189,7 @@ alloc_link_mcell_undo(
 {
 
 	bsMPgT *bmt;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bsMCT *mcell;
 	bsMCT *newMcell;
 	rbfPgRefHT newPgPin;
@@ -2286,7 +2286,7 @@ alloc_link_mcell_undo(
 
 int
 bmt_alloc_link_mcell(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     uint16_t poolVdIndex,	/* in */
     mcellPoolT poolType,	/* in */
     uint16_t oldVdIndex,		/* in */
@@ -2399,7 +2399,7 @@ bmt_extend(
 	ftxHT ftxH;
 	int sts;		/* status                                  */
 	bsUnpinModeT writethru = {BS_RECYCLE_IT, BS_MOD_SYNC};
-	domainT *dmnP = vdp->dmnP;
+	struct domain *dmnP = vdp->dmnP;
 
 	/*-----------------------------------------------------------------------*/
 
@@ -2510,7 +2510,7 @@ extend_bmt_redo_opx(
 )
 {
 	vdIndexT vdIndex = *(vdIndexT *) opRec;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 	vdT *vdp;
 	int sts;
 
@@ -2551,7 +2551,7 @@ alloc_mcell(
 	struct bsMC *mcp;
 	rbfPgRefHT pgref;
 	int page;
-	domainT *dmnP = vd->dmnP;
+	struct domain *dmnP = vd->dmnP;
 	int bad_pages_found = 0;
 
 	KASSERT(lock_holder(&vd->mcell_lk.lock));
@@ -2757,7 +2757,7 @@ cleanup_corruption:
 
 int
 rbmt_extend(
-    domainT * dmnP,
+    struct domain * dmnP,
     vdIndexT vdIndex
 )
 {
@@ -2907,7 +2907,7 @@ extend_rbmt_redo_opx(
 )
 {
 	vdIndexT vdIndex = *(vdIndexT *) opRec;
-	domainT *dmnP = ftxH.dmnP;
+	struct domain *dmnP = ftxH.dmnP;
 	vdT *vdp;
 	int sts;
 
@@ -3128,7 +3128,7 @@ alloc_page0_mcell(
 
 int
 bmt_find_mcell(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     uint16_t bfSearchVdIndex,	/* in */
     bfMCIdT bfSearchMCId,	/* in */
     uint16_t bfStartVdIndex,	/* in */
@@ -3306,7 +3306,7 @@ bmt_upd_mcell_free_list(
 	int sts;
 	uint32_t oldHeadPg;
 	uint32_t freeListPg;
-	domainT *dmnP = vdp->dmnP;
+	struct domain *dmnP = vdp->dmnP;
 
 	/*
          * The first page containing free mcells is pointed to from the
@@ -3373,7 +3373,7 @@ bmt_set_mcell_free_list(
     vdT * vdp			/* in - pointer to current disk */
 )
 {
-	domainT *dmnP = vdp->dmnP;
+	struct domain *dmnP = vdp->dmnP;
 	struct bsMPg *bmtpgp;
 	int freeListPg;
 	bfPageRefHT pgRef;
@@ -3538,7 +3538,7 @@ link_unlink_mcells_undo(
 {
 
 	bsMPgT *bmt;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bsMCT *mcell;
 	rbfPgRefHT pgPin;
 	int sts;
@@ -3743,7 +3743,7 @@ link_unlink_mcells_undo(
 
 int
 bmt_link_mcells(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     bfTagT bfTag,		/* in */
     vdIndexT prevVdIndex,	/* in */
     bfMCIdT prevMcellId,	/* in */
@@ -3914,7 +3914,7 @@ bmt_link_mcells(
 
 int
 bmt_unlink_mcells(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     bfTagT bfTag,		/* in */
     vdIndexT prevVdIndex,	/* in */
     bfMCIdT prevMcellId,	/* in */
@@ -4116,7 +4116,7 @@ bmt_free_mcell(
 	bsUnpinModeT writethru = {BS_RECYCLE_IT, BS_MOD_SYNC};
 	int sts = EOK;
 	bsMRT *rec;
-	domainT *dmnP = vdp->dmnP;
+	struct domain *dmnP = vdp->dmnP;
 
 	KASSERT(lock_holder(&vdp->mcell_lk.lock));
 
@@ -4217,7 +4217,7 @@ bmtr_clone_recs(
     uint16_t destVdIndex,	/* in - Destination bf primary mcell's disk
 				 * index */
     uint16_t npVdIndex,		/* in - new primary disk index */
-    domainT * dmnP,		/* in - ptr to domain struct */
+    struct domain * dmnP,		/* in - ptr to domain struct */
     ftxHT parentFtxH		/* in - parent ftx handle */
 )
 {
@@ -4842,7 +4842,7 @@ HANDLE_EXCEPTION:
 
 int
 bmt_get_vd_bf_descs(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
     int bfDescSize,		/* in */
     bsBfDescT * bfDesc,		/* in, initialized */
@@ -4911,7 +4911,7 @@ bmt_get_vd_bf_descs(
 int
 bmt_open(
     bmtHT * bmth,		/* out - BMT handle */
-    domainT * dmnP,		/* in - domain pointer */
+    struct domain * dmnP,		/* in - domain pointer */
     vdIndexT vdIndex		/* in - vd index */
 )
 {
@@ -5294,7 +5294,7 @@ free_mcell_chains_opx(
 	int sts;
 	vdIndexT vdIndex;
 	bfMCIdT mcellId;
-	domainT *dmnP;
+	struct domain *dmnP;
 	bsMPgT *bmtp;
 	bsMCT *mcp;
 	rbfPgRefHT pgref;
@@ -5521,7 +5521,7 @@ void
 bs_extend_rbmt_thread(void)
 {
 	rbmtExtMsgT *msg;
-	domainT *dmnP = NULL;
+	struct domain *dmnP = NULL;
 	int sts;
 
 	while (TRUE) {
@@ -5559,7 +5559,7 @@ bs_extend_rbmt_thread(void)
 ** No asserts or domain_panic.
 */
 static int
-test_mcell_ptr(vdIndexT vdi, bfMCIdT mcid, bfTagT tag, domainT * dmnP)
+test_mcell_ptr(vdIndexT vdi, bfMCIdT mcid, bfTagT tag, struct domain * dmnP)
 {
 	int sts = EOK;
 	vdT *vdp;
@@ -5596,7 +5596,7 @@ HANDLE_EXCEPTION:
 ** Panic the domain if not OK.
 */
 int
-check_mcell_ptr(vdIndexT vdi, bfMCIdT mcid, bfTagT tag, domainT * dmnP)
+check_mcell_ptr(vdIndexT vdi, bfMCIdT mcid, bfTagT tag, struct domain * dmnP)
 {
 	int sts = EOK;
 
@@ -5766,7 +5766,7 @@ check_BSR_SHADOW_XTNTS_rec(bsShadowXtntT * bsShadowXtntp,
 {
 	int sts = EOK;
 	int i;
-	domainT *dmnP = bfap->dmnP;
+	struct domain *dmnP = bfap->dmnP;
 	uint32_t lastPage;
 
 	if (bsShadowXtntp->blksPerPage != bfap->bfPageSz) {

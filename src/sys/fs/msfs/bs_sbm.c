@@ -144,7 +144,7 @@ CANT_SET_TWICE(
     bfAccessT * sbmbfap
 )
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 
 	dmnP = sbmbfap->dmnP;
 
@@ -169,7 +169,7 @@ CANT_CLEAR_TWICE(
     bfAccessT * sbmbfap
 )
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 
 	dmnP = sbmbfap->dmnP;
 
@@ -247,7 +247,7 @@ bitmap_undo_opx(
 
 	int sts;
 	uint32_t clustCnt;
-	domainT *dmnP;
+	struct domain *dmnP;
 	vdT *vdp;
 	unLkActionT unlock_action;
 	bitmapUndoRecT *undoRecp;
@@ -1214,7 +1214,7 @@ sbm_remove_space(
 	uint32_t clust = howmany(blks, vdp->stgCluster);
 	uint32_t startClust = startBlk / vdp->stgCluster;
 	stgDescT *newStgDesc;
-	domainT *domain;
+	struct domain *domain;
 	int sts;
 
 
@@ -1280,7 +1280,7 @@ sbm_return_space_no_sub_ftx(
 {
 	uint32_t clusterCnt;
 	uint32_t clusterOffset;
-	domainT *domain;
+	struct domain *domain;
 	int sts;
 
 

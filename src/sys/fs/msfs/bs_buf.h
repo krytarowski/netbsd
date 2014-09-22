@@ -173,7 +173,7 @@ typedef struct rangeFlushLink {
  * Bitfile buffer descriptor
  */
 typedef struct bsBuf {
-	struct bsBuf *lsnFwd;	/* lsn list; protected by domainT.lsnLock */
+	struct bsBuf *lsnFwd;	/* lsn list; protected by struct domain.lsnLock */
 	struct bsBuf *lsnBwd;
 	struct bsBuf *accFwd;	/* bfAccess clean and dirty page list;    */
 	struct bsBuf *accBwd;	/* protected by struct bfAccess.bfIoLock    */

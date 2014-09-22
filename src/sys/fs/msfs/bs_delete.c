@@ -144,7 +144,7 @@ rbf_delete_int(
 
 void
 reset_ondisk_bf_state(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
     bfMCIdT mcellId,		/* in */
     bfStatesT bfState,		/* in */
@@ -290,7 +290,7 @@ bs_deferred_delete_undo_opx(
 	bsBfAttrT bfAttr;
 	bfSetT *bfSetp = NULL;
 	bfAccessT *bfap = NULL;
-	domainT *dmnP;
+	struct domain *dmnP;
 	struct vnode *nullvp = NULL;
 
 	dmnP = ftxH.dmnP;
@@ -372,7 +372,7 @@ rbf_delete(
 )
 {
 	int sts = EOK;
-	domainT *dmnP;
+	struct domain *dmnP;
 	ftxHT ftxH;
 	defDelOpRecT defDelOpRec;
 	int cnt;
@@ -502,7 +502,7 @@ rbf_delete_int(
 	ftxHT ftxH, subFtxH;
 	int ftxFlag = FALSE;
 	vdT *vdp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int sts = EOK;
 	rbfPgRefHT pgref;
 	bsMPgT *bmtpgp;
@@ -639,7 +639,7 @@ bs_delete_undo_opx(
 	delOpRecT *recp = (delOpRecT *) opRec;
 	int sts = EOK;
 	struct bfAccess *bfap = NULL;
-	domainT *dmnP = NULL;
+	struct domain *dmnP = NULL;
 	bfSetT *bfSetp = NULL;
 
 	dmnP = ftxH.dmnP;
@@ -718,7 +718,7 @@ HANDLE_EXCEPTION:
 
 void
 reset_ondisk_bf_state(
-    domainT * dmnP,		/* in */
+    struct domain * dmnP,		/* in */
     vdIndexT vdIndex,		/* in */
     bfMCIdT mcellId,		/* in */
     bfStatesT bfState,		/* in */
@@ -768,7 +768,7 @@ bs_delete_rtdn_opx(
 	delOpRecT *recp = (delOpRecT *) opRec;
 	int sts = EOK;
 	bfSetT *bfSetp;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int bfs_open = 0;
 
 	dmnP = ftxH.dmnP;
@@ -884,7 +884,7 @@ del_add_to_del_list(
     ftxHT parentFtxH
 )
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	int sts;
 	delLinkRT *hrp;		/* header */
 	delLinkT *frp;		/* first in list */
@@ -1002,7 +1002,7 @@ del_remove_from_del_list(
     ftxHT parentFtxH
 )
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	int sts;
 	delLinkRT *hrp;		/* header */
 	delLinkT *drp;		/* entry to be removed */
@@ -1104,7 +1104,7 @@ del_bitfile_list_undo(
 	delListRecT *zrp = (delListRecT *) opRec;
 	int sts;
 	vdT *vdp;
-	domainT *dmnP;
+	struct domain *dmnP;
 
 	dmnP = ftxH.dmnP;
 	vdp = VD_HTOP(zrp->vdIndex, dmnP);
@@ -1489,7 +1489,7 @@ static int
 ddl_complete_delete(bfTagT setTag, bfTagT fileTag, vdT * vdp)
 {
 	int sts;
-	domainT *dmnP = vdp->dmnP;
+	struct domain *dmnP = vdp->dmnP;
 	bfSetT *bfSetp = NULL;
 	bfSetIdT bfSetId;
 	struct vnode *vp = NULL;
@@ -1798,7 +1798,7 @@ del_dealloc_stg(
     vdT * pvdp			/* in - virtual disk of primary mcell */
 )
 {
-	domainT *dmnP;
+	struct domain *dmnP;
 	vdT *vdp;
 	bfMCIdT mcid;
 	vdIndexT nextVdIndex;
@@ -1966,7 +1966,7 @@ del_xtnt_array(
 	bsShadowXtntT *srp;
 	delFtxDescT dsc;
 	int sts;
-	domainT *dmnP;
+	struct domain *dmnP;
 	int pgRefed = FALSE;
 
 	dmnP = vdp->dmnP;
@@ -2204,7 +2204,7 @@ xfer_xtnts_to_clone(
 	int segSz = pxp->segmentSize;
 	u_long pageOffset;
 	int xfererr = FALSE;
-	domainT *dmnP = pvdp->dmnP;
+	struct domain *dmnP = pvdp->dmnP;
 	bfSetT *bfSetp = NULL;
 	ftxHT ftxH;
 	bsInMemXtntMapT *delXtntMap = NULL;
@@ -2806,7 +2806,7 @@ del_ftx_done(
 
 int
 del_find_del_entry(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     vdIndexT vdIndex,		/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
