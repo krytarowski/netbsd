@@ -262,23 +262,23 @@ static inline void ADD_DIRTYACCESSLIST(struct bsBuf *bp, const int seize_bfioloc
         mutex_exit(&bp->bfAccess->bfIoLock.mutex);
 }
 
-#define RM_ACCESSLIST( bp, seize_bfiolock ) \
-{ \
-    KASSERT(mutex_owned(&bp->bufLock.mutex)); \
-    if (seize_bfiolock) \
-        mutex_enter(&bp->bfAccess->bfIoLock.mutex); \
-    else \
-        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex)); \
-    KASSERT(bp->lock.state & ACC_DIRTY); \
-    bp->bfAccess->dirtyBufList.length--; \
-    KASSERT(bp->bfAccess->dirtyBufList.length >= 0); \
-    bp->lock.state &= ~ACC_DIRTY; \
-    bp->accListSeq++; \
-    bp->accFwd->accBwd = bp->accBwd; \
-    bp->accBwd->accFwd = bp->accFwd; \
-    bp->accFwd = bp->accBwd = NULL; \
-    if (seize_bfiolock) \
-        mutex_exit(&bp->bfAccess->bfIoLock.mutex); \
+static inline void RM_ACCESSLIST(struct bsBuf *bp, const int seize_bfiolock)
+{
+    KASSERT(mutex_owned(&bp->bufLock.mutex));
+    if (seize_bfiolock)
+        mutex_enter(&bp->bfAccess->bfIoLock.mutex);
+    else
+        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex));
+    KASSERT(bp->lock.state & ACC_DIRTY);
+    bp->bfAccess->dirtyBufList.length--;
+    KASSERT(bp->bfAccess->dirtyBufList.length >= 0);
+    bp->lock.state &= ~ACC_DIRTY;
+    bp->accListSeq++;
+    bp->accFwd->accBwd = bp->accBwd;
+    bp->accBwd->accFwd = bp->accFwd;
+    bp->accFwd = bp->accBwd = NULL;
+    if (seize_bfiolock)
+        mutex_exit(&bp->bfAccess->bfIoLock.mutex);
 }
 
 #define MS_VERIFY_IOQUEUE_INTEGRITY(qhdr,callerLocked)
