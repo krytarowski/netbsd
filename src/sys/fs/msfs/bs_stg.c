@@ -4576,7 +4576,7 @@ EXIT_ALLOC_FROM_BITMAP:
 
 
 /* This is a wrapper for xfer_stg_to_bf. It accepts one extent of disk
-/* storage and adds it to the extent map for bfap.
+ * storage and adds it to the extent map for bfap.
 */
 int
 xfer_stg(
@@ -5702,7 +5702,7 @@ make_perm_hole(bfAccessT * cloneap,
 			subXtntMap = &origXtntMap->subXtntMap[origXtntMap->cnt - 1];
 			holeStart = subXtntMap->bsXA[subXtntMap->cnt - 1].bsPage;
 			/* Since this page is off the end of the extent map
-			 * for this /* stripe, the hole ends at the end of the
+			 * for this  stripe, the hole ends at the end of the
 			 * stripe. */
 			holeEnd = page + (segSize - page % segSize);
 		} else {
