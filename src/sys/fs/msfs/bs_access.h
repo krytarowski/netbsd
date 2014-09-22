@@ -642,13 +642,13 @@ static inline void RM_ACC_LIST(bfAccessT *bfap)
  * must already be held by the caller instead of seizing and releasing it
  * internally.
  */
-#define RM_ACC_LIST_NOLOCK( bfap ) \
-{ \
-    KASSERT(mutex_owned(&BfAccessFreeLock.mutex)); \
-    KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
-    KASSERT(bfap->freeFwd); \
-    KASSERT(bfap->freeBwd); \
-    RM_ACC_LIST_REAL_WORK( bfap ); \
+static inline void RM_ACC_LIST_NOLOCK(bfAccessT *bfap)
+{
+    KASSERT(mutex_owned(&BfAccessFreeLock.mutex));
+    KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1);
+    KASSERT(bfap->freeFwd);
+    KASSERT(bfap->freeBwd);
+    RM_ACC_LIST_REAL_WORK(bfap);
 }
 
 /* RM_ACC_LIST_COND is like RM_ACC_LIST, except that the state of freeFwd
