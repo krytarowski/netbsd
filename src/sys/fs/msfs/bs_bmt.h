@@ -26,6 +26,7 @@
 #ifndef _BMT_H_
 #define _BMT_H_
 
+/* Defines */
 /*
  * Default number of pages to expand the BMT by when a new extent is needed
  */
