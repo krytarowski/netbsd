@@ -605,23 +605,23 @@ static inline void ADD_ACC_FREELIST(bfAccessT *bfap)
  * call this macro from your code; call only the other ones. This one
  * does no locking or lock verification.
  */
-#define RM_ACC_LIST_REAL_WORK( bfap ) \
-{ \
-    bfap->freeFwd->freeBwd = bfap->freeBwd; \
-    bfap->freeBwd->freeFwd = bfap->freeFwd; \
-    bfap->freeFwd = bfap->freeBwd = NULL; \
-    if ( bfap->onFreeList == 1 ) { \
-        KASSERT(FreeAcc.len > 0); \
-        FreeAcc.len--; \
-        KASSERT(bfap->dirtyBufList.length == 0); \
-    } else { \
-        KASSERT(ClosedAcc.len > 0); \
-        ClosedAcc.len--; \
-        if (bfap->saved_stats) { \
-            ClosedAcc.saved_stats_len--; \
-        } \
-    } \
-    bfap->onFreeList = 0; \
+static inline void RM_ACC_LIST_REAL_WORK(bfAccessT *bfap)
+{
+    bfap->freeFwd->freeBwd = bfap->freeBwd;
+    bfap->freeBwd->freeFwd = bfap->freeFwd;
+    bfap->freeFwd = bfap->freeBwd = NULL;
+    if ( bfap->onFreeList == 1 ) {
+        KASSERT(FreeAcc.len > 0);
+        FreeAcc.len--;
+        KASSERT(bfap->dirtyBufList.length == 0);
+    } else {
+        KASSERT(ClosedAcc.len > 0);
+        ClosedAcc.len--;
+        if (bfap->saved_stats) {
+            ClosedAcc.saved_stats_len--;
+        }
+    }
+    bfap->onFreeList = 0;
 }
 
 /* RM_ACC_LIST removes access structures from the free or closed list.
