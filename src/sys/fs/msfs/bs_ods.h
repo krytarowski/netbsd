@@ -145,6 +145,70 @@
  */
 #define  FIRST_ALWAYS_RUN_RECOVERY_VERSION 4
 
+/*
+ * A tag map is in use if the high bit of the sequence number is set.
+ */
+#define BS_TD_IN_USE  0x8000
+/*
+ * When the sequence number reaches this value, the slot
+ * is permanently unavailable.
+ */
+#define BS_TD_DEAD_SLOT    0x07FFF
+
+/*
+ * number of pages to expand the tag dir by when a new extent is needed
+ */
+#define BS_TD_XPND_PGS 8
+
+/*
+ * Bitfile Set Flags
+ *  The ondisk flags are defined here (BFS_OD_...)
+ *  The inmemory flags are defined in bs_bitfile_sets.h (BFS_IM_...)
+ */
+
+#define BFS_OD_OUT_OF_SYNC 0x0001	/* Clone could not allocate storage
+					 * for a copy-on-write, so it is now
+					 * out-of-sync with the original
+					 * fileset. */
+
+#define BFS_OD_NOFRAG      0x0002	/* Disable the frag file */
+
+
+#define BFS_OD_OBJ_SAFETY  0x0010	/* enables/disables forcing zeroed
+					 * newly allocated storage in a file
+					 * to disk before allowing the file to
+					 * have the storage. */
+
+/*
+ * The size of pl_num, pl_seg within bsPropListPageT
+ */
+
+#define NUM_SEG_SIZE (2*sizeof(uint32_t))
+
+/*
+ * PROPERTY LIST DATA RECORD
+ */
+#define BSR_PROPLIST_DATA 20
+
+#define BSR_PROPLIST_DATA_SIZE BS_USABLE_MCELL_SPACE
+
+#define BSR_PL_MAX_SMALL (BSR_PROPLIST_DATA_SIZE/2)
+
+
+/*
+ * PROPERTY LIST HEADER RECORD
+ */
+#define BSR_PROPLIST_HEAD 19
+#define BSR_PROPLIST_HEAD_SIZE (sizeof(uint64_t)+4*sizeof(uint32_t))
+#define BSR_PROPLIST_HEAD_SIZE_V3 (sizeof(uint64_t)+2*sizeof(uint32_t))
+
+/* flags */
+/* XXX: Verify sanity of int size 32-64 bit */
+#define BSR_PL_LARGE    0x0100000000000000
+#define BSR_PL_DELETED  0x0200000000000000
+#define BSR_PL_PAGE     0x0400000000000000
+#define BSR_PL_RESERVED 0xFF00000000000000
+
 /* Enums */
 
 typedef enum bfdVersion {
@@ -430,24 +494,6 @@ typedef struct {
 #define BSR_BFS_ATTR 8
 #define BFS_FRAG_MAX 8
 
-/*
- * Bitfile Set Flags
- *  The ondisk flags are defined here (BFS_OD_...)
- *  The inmemory flags are defined in bs_bitfile_sets.h (BFS_IM_...)
- */
-
-#define BFS_OD_OUT_OF_SYNC 0x0001	/* Clone could not allocate storage
-					 * for a copy-on-write, so it is now
-					 * out-of-sync with the original
-					 * fileset. */
-
-#define BFS_OD_NOFRAG      0x0002	/* Disable the frag file */
-
-
-#define BFS_OD_OBJ_SAFETY  0x0010	/* enables/disables forcing zeroed
-					 * newly allocated storage in a file
-					 * to disk before allowing the file to
-					 * have the storage. */
 
 typedef struct {
 	bfSetIdT bfSetId;	/* bitfile-set's ID */
@@ -582,19 +628,7 @@ typedef struct bsQuotaAttr {
 	uint32_t unused3;	/* zeros */
 	uint32_t unused4;	/* zeros */
 }           bsQuotaAttrT;
-/*
- * PROPERTY LIST HEADER RECORD
- */
-#define BSR_PROPLIST_HEAD 19
-#define BSR_PROPLIST_HEAD_SIZE (sizeof(uint64_t)+4*sizeof(uint32_t))
-#define BSR_PROPLIST_HEAD_SIZE_V3 (sizeof(uint64_t)+2*sizeof(uint32_t))
 
-/* flags */
-/* XXX: Verify sanity of int size 32-64 bit */
-#define BSR_PL_LARGE    0x0100000000000000
-#define BSR_PL_DELETED  0x0200000000000000
-#define BSR_PL_PAGE     0x0400000000000000
-#define BSR_PL_RESERVED 0xFF00000000000000
 typedef struct bsPropListHead {
 	uint64_t flags;
 	uint32_t pl_num;		/* Which pl in this tag */
@@ -610,20 +644,6 @@ typedef struct bsPropListHead_v3 {
 	uint32_t valuelen;
 	char buffer[1];		/* var len field */
 }                 bsPropListHeadT_v3;
-/*
- * The size of pl_num, pl_seg within bsPropListPageT
- */
-
-#define NUM_SEG_SIZE (2*sizeof(uint32_t))
-
-/*
- * PROPERTY LIST DATA RECORD
- */
-#define BSR_PROPLIST_DATA 20
-
-#define BSR_PROPLIST_DATA_SIZE BS_USABLE_MCELL_SPACE
-
-#define BSR_PL_MAX_SMALL (BSR_PROPLIST_DATA_SIZE/2)
 
 /*
  * PROPERTY LIST PAGE RECORD
@@ -865,21 +885,6 @@ typedef struct bsTMap {
 #define tmBfMCId tm_u.tm_s3.bfMCId
 #define tmSeqNo tm_u.tm_s3.seqNo
 #define tmVdIndex tm_u.tm_s3.vdIndex
-
-/*
- * A tag map is in use if the high bit of the sequence number is set.
- */
-#define BS_TD_IN_USE  0x8000
-/*
- * When the sequence number reaches this value, the slot
- * is permanently unavailable.
- */
-#define BS_TD_DEAD_SLOT    0x07FFF
-
-/*
- * number of pages to expand the tag dir by when a new extent is needed
- */
-#define BS_TD_XPND_PGS 8
 
 /*
  * Structure defined for the convenience of pin_record.
