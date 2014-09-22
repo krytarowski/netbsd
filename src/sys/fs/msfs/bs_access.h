@@ -555,50 +555,50 @@ static inline void ADD_ACC_CLOSEDLIST(bfAccessT *bfap)
  *       around.
  *
  */
-#define ADD_ACC_FREELIST( bfap ) \
-{ \
-    clupThreadMsgT *msg;        \
-    extern msgQHT CleanupMsgQH; \
-    extern int advfs_shutting_down; \
-                                \
-    mutex_enter(&BfAccessFreeLock.mutex); \
-    KASSERT(bfap->onFreeList == 0); \
-    KASSERT(bfap->dirtyBufList.length == 0); \
-    if ( bfap->stateLk.state == ACC_INVALID ) { \
-        KASSERT(FreeAcc.freeFwd); \
-        if (FreeAcc.freeFwd != (bfAccessT *)&FreeAcc) { \
-            bfap->bfap_free_time = FreeAcc.freeFwd->bfap_free_time; \
-        } else { \
-            bfap->bfap_free_time = sched_tick; \
-        } \
-        bfap->freeBwd = (bfAccessT *)&FreeAcc; \
-        bfap->freeFwd = FreeAcc.freeFwd; \
-        FreeAcc.freeFwd->freeBwd = bfap; \
-        FreeAcc.freeFwd = bfap; \
-    } else { \
-        KASSERT(FreeAcc.freeBwd); \
-        bfap->freeBwd = FreeAcc.freeBwd; \
-        bfap->freeFwd = (bfAccessT *)&FreeAcc; \
-        FreeAcc.freeBwd->freeFwd = bfap; \
-        FreeAcc.freeBwd = bfap; \
-        bfap->bfap_free_time = sched_tick; \
-    } \
-    bfap->onFreeList = 1; \
-    FreeAcc.len++; \
-    if (!advfs_shutting_down && \
-        ((NumAccess > MaxAccess) || \
-         ((NumAccess > AdvfsMinAccess)  && \
-          (FreeAcc.len > 2*AdvfsMinFreeAccess) && \
-         ((FreeAcc.len > (NumAccess * ADVFSMAXFREEACCESSPERCENT)/100) || \
-          (FreeAcc.freeFwd->bfap_free_time <  \
-                         (long)(sched_tick - BFAP_VALID_TIME)))))) { \
-        msg = (clupThreadMsgT *)msgq_alloc_msg(CleanupMsgQH); \
-        if (msg) { \
-            msg->msgType = DEALLOCATE_BFAPS; \
-            msgq_send_msg(CleanupMsgQH, msg); \
-        } \
-    } \
-    mutex_exit(&BfAccessFreeLock.mutex); \
+static inline void ADD_ACC_FREELIST(bfAccessT *bfap)
+{
+    clupThreadMsgT *msg;
+    extern msgQHT CleanupMsgQH;
+    extern int advfs_shutting_down;
+
+    mutex_enter(&BfAccessFreeLock.mutex);
+    KASSERT(bfap->onFreeList == 0);
+    KASSERT(bfap->dirtyBufList.length == 0);
+    if ( bfap->stateLk.state == ACC_INVALID ) {
+        KASSERT(FreeAcc.freeFwd);
+        if (FreeAcc.freeFwd != (bfAccessT *)&FreeAcc) {
+            bfap->bfap_free_time = FreeAcc.freeFwd->bfap_free_time;
+        } else {
+            bfap->bfap_free_time = sched_tick;
+        }
+        bfap->freeBwd = (bfAccessT *)&FreeAcc;
+        bfap->freeFwd = FreeAcc.freeFwd;
+        FreeAcc.freeFwd->freeBwd = bfap;
+        FreeAcc.freeFwd = bfap;
+    } else {
+        KASSERT(FreeAcc.freeBwd);
+        bfap->freeBwd = FreeAcc.freeBwd;
+        bfap->freeFwd = (bfAccessT *)&FreeAcc;
+        FreeAcc.freeBwd->freeFwd = bfap;
+        FreeAcc.freeBwd = bfap;
+        bfap->bfap_free_time = sched_tick;
+    }
+    bfap->onFreeList = 1;
+    FreeAcc.len++;
+    if (!advfs_shutting_down &&
+        ((NumAccess > MaxAccess) ||
+         ((NumAccess > AdvfsMinAccess)  &&
+          (FreeAcc.len > 2*AdvfsMinFreeAccess) &&
+         ((FreeAcc.len > (NumAccess * ADVFSMAXFREEACCESSPERCENT)/100) ||
+          (FreeAcc.freeFwd->bfap_free_time <
+                         (long)(sched_tick - BFAP_VALID_TIME)))))) {
+        msg = (clupThreadMsgT *)msgq_alloc_msg(CleanupMsgQH);
+        if (msg) {
+            msg->msgType = DEALLOCATE_BFAPS;
+            msgq_send_msg(CleanupMsgQH, msg);
+        }
+    }
+    mutex_exit(&BfAccessFreeLock.mutex);
 }
 
 /* This does the underlying work for the RM_ACC_LIST macros. Do not
