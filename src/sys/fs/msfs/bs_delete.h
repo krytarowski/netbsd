@@ -26,6 +26,8 @@
 #ifndef _BS_DELETE_H_
 #define _BS_DELETE_H_
 
+/* Defines */
+
 /*
  * Define the location of the mcell that contains the head of the
  * deferred delete list.
@@ -34,22 +36,26 @@
 #define MCELL_LIST_PAGE_V3 1
 #define MCELL_LIST_CELL 0
 
+/* Forward definition */
+struct vd;
+struct domain;
+
 int
 del_clean_mcell_list(
-    vdT * vdp,			/* virtual disk */
+    struct vd * vdp,			/* virtual disk */
     u_long flag
 );
 
 int
 del_dealloc_stg(
     bfMCIdT pmcid,		/* in - primary mcell ID */
-    vdT * pvdp			/* in - virtual disk of primary mcell */
+    struct vd * pvdp			/* in - virtual disk of primary mcell */
 );
 
 int
 del_add_to_del_list(
     bfMCIdT mcid,		/* in - mcell ID */
-    vdT * vdp,			/* in - virtual disk ptr */
+    struct vd * vdp,			/* in - virtual disk ptr */
     int ftxFlag,		/* in - don't start subtransaction if zero */
     ftxHT parentFtxH		/* in - transaction handle */
 );
@@ -57,14 +63,14 @@ del_add_to_del_list(
 int
 del_remove_from_del_list(
     bfMCIdT mcid,		/* in - mcell ID */
-    vdT * vdp,			/* in - virtual disk */
+    struct vd * vdp,			/* in - virtual disk */
     int ftxFlag,		/* in - don't start subtransaction if zero */
     ftxHT ftxH			/* in - transaction handle */
 );
 
 int
 del_find_del_entry(
-    domainT * domain,		/* in */
+    struct domain * domain,		/* in */
     vdIndexT vdIndex,		/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
