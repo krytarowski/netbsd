@@ -154,7 +154,7 @@ typedef enum shareExclLkState {
 typedef enum lkStates {
 	LKW_NONE,
 
-	/* bfAccessT client states */
+	/* struct bfAccess client states */
 	ACC_VALID,		/* represents an accessible bitfile */
 	ACC_INVALID,		/* does not represent an accessible bitfile */
 	ACC_INIT_TRANS,		/* access struct is being initialized */

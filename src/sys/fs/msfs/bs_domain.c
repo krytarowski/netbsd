@@ -199,7 +199,7 @@ vd_alloc_index(
 static
 void
 scan_rsvd_file_xtnt_map(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     vdIndexT vdIndex,		/* in */
     int *retFoundFlag		/* out */
 );
@@ -1544,7 +1544,7 @@ bs_bfdmn_deactivate(
 	bfSetT *bfSetp;
 	int vdCnt;
 	int isMount = flag & M_MSFS_MOUNT;
-	bfAccessT *badBfap;
+	struct bfAccess *badBfap;
 
 	/*
          * Don't lock the domain table for global root. DLM locks in CFS
@@ -1783,9 +1783,9 @@ bs_bfdmn_activate(
 	int sts;
 	logDescT *ldP;
 	logRecAddrT nextlogaddr;
-	bfAccessT *bfSetDirAccp;
+	struct bfAccess *bfSetDirAccp;
 	bfSetT *bfSetp;
-	bfAccessT *logbfap;
+	struct bfAccess *logbfap;
 	extern int MountWriteDelay;
 	bfDmnStatesT orig_dmnP_state;
 
@@ -3712,7 +3712,7 @@ done:
 static
 void
 scan_rsvd_file_xtnt_map(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     vdIndexT vdIndex,		/* in */
     int *retFoundFlag		/* out */
 )
@@ -3768,7 +3768,7 @@ clear_bmt(
     uint32_t numBlks		/* in */
 )
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	bfSetT *bfSetp;
 	bfSetIdT bfSetId;
 	bfTagT bfSetTag;

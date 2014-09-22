@@ -109,7 +109,7 @@ update_xtnt_array(
 static
        int
 load_inmem_xtnt_map(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     bsXtntRT * xtntRec,		/* in */
     uint32_t * retTotalPageCnt	/* out */
 );
@@ -117,7 +117,7 @@ load_inmem_xtnt_map(
 static
        int
 load_from_shadow_rec(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     vdIndexT bfVdIndex,		/* in */
     bfMCIdT bfMcellId,		/* in */
     bsInMemXtntMapT ** bfXtntMap,	/* out */
@@ -129,7 +129,7 @@ load_from_shadow_rec(
 static
        int
 load_from_xtnt_rec(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     bsXtntRT * xtntRec,		/* in */
     uint32_t * allocPageCnt,	/* out */
     vdIndexT * bfNextVdIndex,	/* out */
@@ -139,7 +139,7 @@ load_from_xtnt_rec(
 static
        int
 load_from_rbmt_xtnt_rec(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     bsXtntRT * xtntRec,		/* in */
     uint32_t * allocPageCnt	/* out */
 );
@@ -147,7 +147,7 @@ load_from_rbmt_xtnt_rec(
 static
        int
 load_from_xtra_xtnt_rec(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     vdIndexT vdIndex,		/* in */
     bfMCIdT mcellId,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */
@@ -706,7 +706,7 @@ odm_remove_mcells_from_xtnt_map(
 
 int
 odm_create_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bfSetT * bfSetp,		/* in */
     bfTagT bfTag,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
@@ -792,7 +792,7 @@ odm_create_xtnt_map(
 
 int
 create_xtnt_map_hdr(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdIndexT firstVdIndex,	/* in */
     bfMCIdT firstMcellId,	/* in */
     vdIndexT lastVdIndex,	/* in */
@@ -899,7 +899,7 @@ create_xtnt_map_hdr(
 
 int
 odm_rewrite_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     int xtntMapIndex,		/* in */
     ftxHT parentFtxH,		/* in */
     long xid			/* in - CFS transaction id */
@@ -1274,7 +1274,7 @@ HANDLE_EXCEPTION:
 int
 x_update_ondisk_xtnt_map(
     struct domain * domain,		/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     ftxHT parentFtx		/* in */
 )
@@ -1584,7 +1584,7 @@ update_xtnt_array(
 
 int
 odm_create_xtnt_rec(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdIndexT allocVdIndex,	/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */
     int xferFlg,		/* in */
@@ -1790,7 +1790,7 @@ odm_create_xtnt_rec(
 
 int
 x_create_shadow_rec(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     vdIndexT prevVdIndex,	/* in */
     bfMCIdT prevMcellId,	/* in */
@@ -1889,7 +1889,7 @@ x_create_shadow_rec(
 
 int
 x_detach_extent_chain(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     ftxHT parentFtxH,		/* in */
     vdIndexT * retPrevVdIndex,	/* out */
@@ -2163,7 +2163,7 @@ update_mcell_cnt(
 
 int
 x_create_inmem_xtnt_map(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     bsMCT * bfMcellp		/* in */
 )
 {
@@ -2239,7 +2239,7 @@ HANDLE_EXCEPTION:
 
 int
 x_load_inmem_xtnt_map(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     uint32_t lock_request	/* in */
 )
 {
@@ -2409,7 +2409,7 @@ HANDLE_EXCEPTION:
 static
        int
 load_inmem_xtnt_map(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     bsXtntRT * xtntRec,		/* in */
     uint32_t * retTotalPageCnt	/* out */
 )
@@ -2559,7 +2559,7 @@ load_inmem_xtnt_map(
 static
        int
 load_from_shadow_rec(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     vdIndexT bfVdIndex,		/* in */
     bfMCIdT bfMcellId,		/* in */
     bsInMemXtntMapT ** bfXtntMap,	/* out */
@@ -2869,7 +2869,7 @@ HANDLE_EXCEPTION:
 static
        int
 load_from_xtnt_rec(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     bsXtntRT * xtntRec,		/* in */
     uint32_t * allocPageCnt,	/* out */
     vdIndexT * bfNextVdIndex,	/* out */
@@ -2887,7 +2887,7 @@ load_from_xtnt_rec(
 	uint32_t totalPageCnt;
 	vdIndexT vdIndex;
 	bsInMemXtntMapT *xtntMap = NULL;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 	struct domain *dmnP = bfap->dmnP;
 	vdIndexT bfVdIndex = bfap->primVdIndex;
 	bfMCIdT bfMcellId = bfap->primMCId;
@@ -3101,7 +3101,7 @@ HANDLE_EXCEPTION:
 static
        int
 load_from_xtra_xtnt_rec(
-    bfAccessT * bfap,		/* in, modified */
+    struct bfAccess * bfap,		/* in, modified */
     vdIndexT vdIndex,		/* in */
     bfMCIdT mcellId,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */

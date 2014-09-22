@@ -43,7 +43,7 @@
 #include <fs/msfs/bs_access.h>
 #include <fs/msfs/fs_dir.h>
 
-static bfAccessT *get_free_acc(int *retry, int forceFlag);
+static struct bfAccess *get_free_acc(int *retry, int forceFlag);
 
 extern struct vnodeops msfs_vnodeops;
 int msfs_vget_bad = 0;
@@ -142,14 +142,14 @@ typedef struct {
 
 static int
 get_n_setup_new_vnode(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
     struct vnode ** nvp		/* in/out - new vnode pointer */
 );
 
 uint32_t
 bf_setup_truncation(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     ftxHT ftxH,			/* in */
     void **delList,		/* out */
     int made_frag
@@ -157,12 +157,12 @@ bf_setup_truncation(
 
 void
 check_mv_bfap_to_free(
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 );
 
 void
 test_xtnt(
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 );
 
 int TestXtntsFlg = 0;
@@ -198,7 +198,7 @@ extern msgQHT CleanupMsgQH;
 
 
 void
-init_access(bfAccessT * bfap)
+init_access(struct bfAccess * bfap)
 {
 	int wkday;
 
@@ -274,7 +274,7 @@ init_access(bfAccessT * bfap)
          */
 	mutex_enter(&BfAccessFreeLock.mutex);
 	KASSERT(FreeAcc.freeFwd);
-	bfap->freeBwd = (bfAccessT *) & FreeAcc;
+	bfap->freeBwd = (struct bfAccess *) & FreeAcc;
 	bfap->freeFwd = FreeAcc.freeFwd;
 	FreeAcc.freeFwd->freeBwd = bfap;
 	FreeAcc.freeFwd = bfap;
@@ -314,8 +314,8 @@ init_access(bfAccessT * bfap)
 void
 cleanup_closed_list(clupClosedListTypeT clean_type)
 {
-	bfAccessT *bfap;
-	bfAccessT *nextp;
+	struct bfAccess *bfap;
+	struct bfAccess *nextp;
 	struct fsContext *contextp;
 	lkStatesT state;
 	int ret;
@@ -349,7 +349,7 @@ _retry:
 	cic = cleanup_invalid_cnt;
 
 	bfap = ClosedAcc.freeFwd;
-	while (bfap != (bfAccessT *) (&ClosedAcc)) {
+	while (bfap != (struct bfAccess *) (&ClosedAcc)) {
 		cleanup_access_processed++;
 
 		/* The normal locking order is bfap->bfaLock before FreeLock,
@@ -395,7 +395,7 @@ _retry:
 				bfap = nextp;
 				/* make sure bfap is still on the list and
 				 * still valid */
-				if (bfap == (bfAccessT *) & ClosedAcc ||
+				if (bfap == (struct bfAccess *) & ClosedAcc ||
 				    bfap->accMagic != ACCMAGIC ||
 				    bfap->onFreeList != -1) {
 					break;
@@ -452,7 +452,7 @@ _retry:
 			}
 			bfap = nextp;
 			/* make sure bfap is still on the list and still valid */
-			if (bfap == (bfAccessT *) & ClosedAcc ||
+			if (bfap == (struct bfAccess *) & ClosedAcc ||
 			    bfap->accMagic != ACCMAGIC ||
 			    bfap->onFreeList != -1) {
 				break;
@@ -545,7 +545,7 @@ _retry:
 			/* Be careful we don't walk off the list; this bfap
 			 * may no longer be on the closed list when we return. */
 			bfap = nextp;
-			if (bfap == (bfAccessT *) & ClosedAcc ||
+			if (bfap == (struct bfAccess *) & ClosedAcc ||
 			    bfap->accMagic != ACCMAGIC) {
 				break;
 			}
@@ -586,7 +586,7 @@ _retry:
 
 			bfap = nextp;
 			if (FreeAcc.len > CleanupPass2Free ||
-			    bfap == (bfAccessT *) & ClosedAcc ||
+			    bfap == (struct bfAccess *) & ClosedAcc ||
 			    bfap->accMagic != ACCMAGIC) {
 				break;
 			}
@@ -638,7 +638,7 @@ _retry:
 		 * don't want to get caught here in a long loop;  we will be
 		 * invoked again by get_free_acc() if necessary. */
 		bfap = nextp;
-		if (bfap == (bfAccessT *) & ClosedAcc ||
+		if (bfap == (struct bfAccess *) & ClosedAcc ||
 		    bfap->accMagic != ACCMAGIC) {
 			break;
 		}
@@ -723,8 +723,8 @@ bfs_flush_dirty_stats(bfSetT * bfSetp,
     ftxHT ftxH
 )
 {
-	bfAccessT *bfap;
-	bfAccessT *nextp;
+	struct bfAccess *bfap;
+	struct bfAccess *nextp;
 	lkStatesT state;
 	int ret;
 	struct vnode *vp;
@@ -736,7 +736,7 @@ restart:
 
 	bfap = bfSetp->accessFwd;
 
-	while (bfap != (bfAccessT *) (&bfSetp->accessFwd)) {
+	while (bfap != (struct bfAccess *) (&bfSetp->accessFwd)) {
 
 		if (bfap->onFreeList != -1) {
 			/*
@@ -780,7 +780,7 @@ restart:
 				vrele(vp);
 				mutex_enter(&bfSetp->accessChainLock.mutex);
 				bfap = nextp;
-				if (bfap == (bfAccessT *) & bfSetp->accessFwd) {
+				if (bfap == (struct bfAccess *) & bfSetp->accessFwd) {
 					break;
 				}
 				if (bfap->accMagic != ACCMAGIC || bfap->onFreeList != -1) {
@@ -835,7 +835,7 @@ restart:
 			mutex_exit(&bfap->bfaLock.mutex);
 			mutex_enter(&bfSetp->accessChainLock.mutex);
 			bfap = nextp;
-			if (bfap == (bfAccessT *) & bfSetp->accessFwd) {
+			if (bfap == (struct bfAccess *) & bfSetp->accessFwd) {
 				break;
 			}
 			if (bfap->accMagic != ACCMAGIC || bfap->onFreeList != -1) {
@@ -875,11 +875,11 @@ restart:
  */
 
 
-static bfAccessT *
+static struct bfAccess *
 get_free_acc(int *retry,	/* In/Out - Retry or error status */
     int forceFlag)
 {				/* In - If TRUE, ignore AdvfsAccessMaxPercent */
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	accAllocMsgT *allocmsg;	/* message to send to bfap allocation thread */
 	clupThreadMsgT *cleanupmsg;	/* message to send to cleanup thread */
 	int sent_alloc_msg = FALSE,	/* TRUE if we send message to alloc
@@ -897,7 +897,7 @@ get_free_acc(int *retry,	/* In/Out - Retry or error status */
          */
 	mutex_enter(&BfAccessFreeLock.mutex);
 	bfap = FreeAcc.freeFwd;
-	while (bfap != (bfAccessT *) & FreeAcc) {
+	while (bfap != (struct bfAccess *) & FreeAcc) {
 
 		/* Lock the bfap before proceeding, being careful not to
 		 * deadlock with threads locking in the conventional order. */
@@ -910,7 +910,7 @@ get_free_acc(int *retry,	/* In/Out - Retry or error status */
 		break;
 	}
 
-	if (bfap != (bfAccessT *) & FreeAcc) {
+	if (bfap != (struct bfAccess *) & FreeAcc) {
 		have_access_structure = TRUE;
 	}
 	/*
@@ -1086,7 +1086,7 @@ find_bfap(
     ulong * insert_count)
 {				/* out - hint indicating an insertion since
 				 * last time chain was locked */
-	bfAccessT *findBfap, *last_bfap;
+	struct bfAccess *findBfap, *last_bfap;
 	ulong hash_key;
 	thread_t th = current_thread();
 
@@ -1243,15 +1243,15 @@ return_it:
 void
 access_invalidate(struct bfSet * bfSetp)
 {
-	bfAccessT *bfap, *nextbfap;
-	bfAccessT *bfap_remove_from_hash_list = NULL;
+	struct bfAccess *bfap, *nextbfap;
+	struct bfAccess *bfap_remove_from_hash_list = NULL;
 
 
 start:
 
 	mutex_enter(&bfSetp->accessChainLock.mutex);
 	for (bfap = bfSetp->accessFwd;
-	    bfap != (bfAccessT *) (&bfSetp->accessFwd);
+	    bfap != (struct bfAccess *) (&bfSetp->accessFwd);
 	    bfap = nextbfap) {
 
 		KASSERT(bfap->accMagic == ACCMAGIC);
@@ -1392,10 +1392,10 @@ void
 bs_invalidate_rsvd_access_struct(
     struct domain * domain,		/* in */
     bfTagT bfTag,		/* in */
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 )
 {
-	bfAccessT *tbfap;
+	struct bfAccess *tbfap;
 	int sts;
 
 	/*
@@ -1468,7 +1468,7 @@ bs_invalidate_rsvd_access_struct(
 
 int
 bs_reclaim_cfs_rsvd_vn(
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 )
 {
 	int sts = EOK;
@@ -1624,7 +1624,7 @@ void
 bs_init_area()
 {
 	int i;
-	bfAccessT *new_bfap;
+	struct bfAccess *new_bfap;
 
 	mutex_init(&BfAccessFreeLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 
@@ -1632,9 +1632,9 @@ bs_init_area()
          * Initialize the free list and the closed list.
          */
 	mutex_enter(&BfAccessFreeLock.mutex);
-	FreeAcc.freeFwd = FreeAcc.freeBwd = (bfAccessT *) & FreeAcc;
+	FreeAcc.freeFwd = FreeAcc.freeBwd = (struct bfAccess *) & FreeAcc;
 	FreeAcc.len = 0;
-	ClosedAcc.freeFwd = ClosedAcc.freeBwd = (bfAccessT *) & ClosedAcc;
+	ClosedAcc.freeFwd = ClosedAcc.freeBwd = (struct bfAccess *) & ClosedAcc;
 	ClosedAcc.len = 0;
 	ClosedAcc.saved_stats_len = 0;
 	mutex_exit(&BfAccessFreeLock.mutex);
@@ -1644,7 +1644,7 @@ bs_init_area()
          * twice the minimum desired.
          */
 	for (i = 0; i < 2 * AdvfsMinFreeAccess; i++) {
-		new_bfap = (bfAccessT *) ms_malloc(sizeof(bfAccessT));
+		new_bfap = (struct bfAccess *) ms_malloc(sizeof(struct bfAccess));
 		if (new_bfap == NULL)
 			ADVFS_SAD0("bs_init_area: can't get space for access structures");
 		init_access(new_bfap);
@@ -1653,7 +1653,7 @@ bs_init_area()
 	    BS_BFAH_HASH_CHAIN_LENGTH,
 	    BS_BFAH_ELEMENTS_TO_BUCKETS,
 	    BS_BFAH_USECS_BETWEEN_SPLITS,
-	    offsetof(bfAccessT, hashlinks));
+	    offsetof(struct bfAccess, hashlinks));
 	if (BsAccessHashTbl == NULL) {
 		ADVFS_SAD0("bs_init_area: can't get space for hash table");
 	}
@@ -1681,7 +1681,7 @@ bs_init_area()
 
 int
 bs_map_bf(
-    bfAccessT * bfap,		/* in/out - ptr to bitfile's access struct */
+    struct bfAccess * bfap,		/* in/out - ptr to bitfile's access struct */
     uint32_t options,		/* in - options flags (see bs_access.h) */
     struct mount * mp		/* in - mount point */
 )
@@ -1908,7 +1908,7 @@ HANDLE_EXCEPTION:
 void
 bs_insmntque(
     ftxHT ftxH,
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     struct mount * mp
 )
 {
@@ -1978,7 +1978,7 @@ bs_insmntque(
 
 int
 bfm_open_ms(
-    bfAccessT ** outbfap,	/* out - access structure pointer */
+    struct bfAccess ** outbfap,	/* out - access structure pointer */
     struct domain * dmnP,		/* in - domain pointer */
     int bfDDisk,		/* in - domain disk index */
     bfdBfMetaT bfMIndex		/* in - metadata bitfile index */
@@ -2004,7 +2004,7 @@ bfm_open_ms(
 	    0, NULLMT, &nullvp);
 	/*
          * The BMT mcellList_lk must be in a lower spot in the hierarchy,
-         * since the "normal" progression is bfAccessT.mcellList_lk to
+         * since the "normal" progression is struct bfAccess.mcellList_lk to
          * vdT->mcell_lk. We have to have a seperate lockinfo for the
          * mcellList_lk for the BMT access structure because a regular
          * mcell may indirectly extend the BMT which requires the BMT
@@ -2055,7 +2055,7 @@ bfm_open_ms(
 
 int
 bs_access(
-    bfAccessT ** outbfap,	/* out - access structure pointer */
+    struct bfAccess ** outbfap,	/* out - access structure pointer */
     bfTagT tag,			/* in - tag of bf to access */
     bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
     ftxHT ftxH,			/* in - ftx handle */
@@ -2065,7 +2065,7 @@ bs_access(
 )
 {
 	int sts;
-	bfAccessT *origbfap;
+	struct bfAccess *origbfap;
 	struct vnode *nullvp = NULL;
 
 	if (bfSetp->cloneId == BS_BFSET_ORIG) {
@@ -2110,17 +2110,17 @@ bs_access(
 
 int
 bs_access_one(
-    bfAccessT ** outbfap,	/* out - access structure pointer */
+    struct bfAccess ** outbfap,	/* out - access structure pointer */
     bfTagT tag,			/* in - tag of bf to access */
     bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
     ftxHT ftxH,			/* in - ftx handle */
     uint32_t options,		/* in - options flags */
     struct mount * mp,		/* in - fs mount queue */
     struct vnode ** fsvp,	/* in/out - <pre>allocated vnode */
-    bfAccessT * origBfap	/* in - Orig access (clone open) */
+    struct bfAccess * origBfap	/* in - Orig access (clone open) */
 )
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	bfMCIdT bfMCId;
 	vdIndexT vdIndex;
 	int sts;
@@ -2880,7 +2880,7 @@ retry_clu_clone_access:
 		                 *       If more such instances are added, it is important
 		                 *       that some protocol be followed to prevent deadlock.
 		                 */
-				bfAccessT *orgBfap = bfap->origAccp;
+				struct bfAccess *orgBfap = bfap->origAccp;
 
 				mutex_enter(&orgBfap->bfaLock.mutex);
 				orgBfap->refCnt--;
@@ -3051,7 +3051,7 @@ err_deref:
 
 static int
 get_n_setup_new_vnode(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     bfSetT * bfSetp,		/* in - BF-set descriptor pointer */
     struct vnode ** nvp		/* in/out - new vnode pointer */
 )
@@ -3149,7 +3149,7 @@ grab_bsacc(
     uint32_t options		/* in - options flags */
 )
 {
-	bfAccessT *bfap, *tbfap;
+	struct bfAccess *bfap, *tbfap;
 	u_long saved_v_id;
 	bfTagT saved_tag;
 	bfSetIdT saved_bfSetId;
@@ -3527,7 +3527,7 @@ found:
 
 int
 bs_close(
-    bfAccessT * bfAccessp,	/* in */
+    struct bfAccess * bfAccessp,	/* in */
     int options			/* in */
 )
 {
@@ -3580,7 +3580,7 @@ bs_close(
 
 int
 bs_close_one(
-    bfAccessT * bfap,		/* in/out */
+    struct bfAccess * bfap,		/* in/out */
     int options,		/* in */
     ftxHT parentFtxH		/* in */
 )
@@ -3605,7 +3605,7 @@ bs_close_one(
 	int destroy_enabled = 0;
 	char *attrcopy = NULL;
 	int token_flg;
-	bfAccessT *cloneap /* = NULL */ ;
+	struct bfAccess *cloneap /* = NULL */ ;
 	bfSetT *cloneSetp;
 	int setHeld = FALSE;
 	extern REPLICATED int SS_is_running;
@@ -4153,7 +4153,7 @@ _close_it:
 
 void
 free_acc_struct(
-    bfAccessT * bfap		/* in - pointer to access struct */
+    struct bfAccess * bfap		/* in - pointer to access struct */
 )
 {
 	int added_bfap_to_list = FALSE;
@@ -4241,7 +4241,7 @@ free_acc_struct(
  */
 
 void
-check_mv_bfap_to_free(bfAccessT * bfap)
+check_mv_bfap_to_free(struct bfAccess * bfap)
 {
 	struct vnode *vp = bfap->bfVp;
 	struct vm_ubc_object *obj = bfap->bfObj;
@@ -4309,7 +4309,7 @@ check_mv_bfap_to_free(bfAccessT * bfap)
 
 uint32_t
 bf_setup_truncation(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     ftxHT ftxH,			/* in */
     void **delList,		/* out */
     int made_frag
@@ -4376,7 +4376,7 @@ bs_get_current_tag(
 
 
 void
-test_xtnt(bfAccessT * bfap)
+test_xtnt(struct bfAccess * bfap)
 {
 	int i, j;
 	int last_page = 0;
@@ -4415,7 +4415,7 @@ test_xtnt(bfAccessT * bfap)
  * Deallocate an access structure.
  */
 void
-bs_dealloc_access(bfAccessT * bfap)
+bs_dealloc_access(struct bfAccess * bfap)
 {
 
 	struct vnode *vp;
@@ -4669,10 +4669,10 @@ void
 bs_access_alloc_thread(void)
 {
 	accAllocMsgT *msg;	/* Message being processed */
-	bfAccessT *bfap;	/* Pointer to new access structure */
+	struct bfAccess *bfap;	/* Pointer to new access structure */
 	int freelockheld;	/* TRUE if holding free list lock */
 	unsigned int maxPercent;/* max. percent of vm_managed_pages to use */
-	int rad_id = 0;		/* RAD on which to malloc() bfAccessT */
+	int rad_id = 0;		/* RAD on which to malloc() struct bfAccess */
 
 	while (TRUE) {
 
@@ -4712,7 +4712,7 @@ bs_access_alloc_thread(void)
 	         *
 	         */
 		while (FreeAcc.len < 2 * AdvfsMinFreeAccess || NumAccess < AdvfsMinAccess) {
-			if (((long) (NumAccess * sizeof(bfAccessT)) <
+			if (((long) (NumAccess * sizeof(struct bfAccess)) <
 				(long) (vm_managed_pages * PAGE_SIZE * maxPercent) / 100) ||
 			    (msg->msgType == ALLOC_BFAP_FORCE)) {
 
@@ -4739,7 +4739,7 @@ bs_access_alloc_thread(void)
 					}
 				}
 
-				bfap = (bfAccessT *) ms_rad_malloc_no_wait(sizeof(bfAccessT),
+				bfap = (struct bfAccess *) ms_rad_malloc_no_wait(sizeof(struct bfAccess),
 				    M_PREFER, rad_id++);
 				if (bfap == NULL) {
 					if (FreeAcc.len < ADVFS_MIN_FREE_ACCESS) {
@@ -4861,7 +4861,7 @@ search_actRange_list(
  */
 
 void
-insert_actRange_onto_list(bfAccessT * bfap,
+insert_actRange_onto_list(struct bfAccess * bfap,
     actRangeT * arp,
     struct fsContext * contextp)
 {
@@ -4958,7 +4958,7 @@ put_onto_waitlist:
  */
 
 void
-remove_actRange_from_list(bfAccessT * bfap,
+remove_actRange_from_list(struct bfAccess * bfap,
     actRangeT * arp)
 {
 	KASSERT(arp->arFwd != NULL);
@@ -5031,7 +5031,7 @@ remove_actRange_from_list(bfAccessT * bfap,
 
 static struct actRange *
 page_to_active_range(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     bsPageT pg
 )
 {
@@ -5087,7 +5087,7 @@ page_to_active_range(
  */
 int
 limits_of_active_range(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     bsPageT pg,
     bsPageT * beginpg,
     bsPageT * npgs
@@ -5122,13 +5122,13 @@ limits_of_active_range(
  * locked the bfap->bfaLock.  This macro seizes the BfAccessFreeLock
  * while moving the struct onto the closed list.
  */
-void ADD_ACC_CLOSEDLIST(bfAccessT *bfap)
+void ADD_ACC_CLOSEDLIST(struct bfAccess *bfap)
 {
     mutex_enter(&BfAccessFreeLock.mutex);
     KASSERT(bfap->onFreeList == 0);
     KASSERT(ClosedAcc.freeBwd);
     bfap->freeBwd = ClosedAcc.freeBwd;
-    bfap->freeFwd = (bfAccessT *)&ClosedAcc;
+    bfap->freeFwd = (struct bfAccess *)&ClosedAcc;
     ClosedAcc.freeBwd->freeFwd = bfap;
     ClosedAcc.freeBwd = bfap;
     bfap->onFreeList = -1;
@@ -5172,7 +5172,7 @@ void ADD_ACC_CLOSEDLIST(bfAccessT *bfap)
  *       around.
  *
  */
-void ADD_ACC_FREELIST(bfAccessT *bfap);
+void ADD_ACC_FREELIST(struct bfAccess *bfap);
 {
     clupThreadMsgT *msg;
     extern msgQHT CleanupMsgQH;
@@ -5183,19 +5183,19 @@ void ADD_ACC_FREELIST(bfAccessT *bfap);
     KASSERT(bfap->dirtyBufList.length == 0);
     if ( bfap->stateLk.state == ACC_INVALID ) {
         KASSERT(FreeAcc.freeFwd);
-        if (FreeAcc.freeFwd != (bfAccessT *)&FreeAcc) {
+        if (FreeAcc.freeFwd != (struct bfAccess *)&FreeAcc) {
             bfap->bfap_free_time = FreeAcc.freeFwd->bfap_free_time;
         } else {
             bfap->bfap_free_time = sched_tick;
         }
-        bfap->freeBwd = (bfAccessT *)&FreeAcc;
+        bfap->freeBwd = (struct bfAccess *)&FreeAcc;
         bfap->freeFwd = FreeAcc.freeFwd;
         FreeAcc.freeFwd->freeBwd = bfap;
         FreeAcc.freeFwd = bfap;
     } else {
         KASSERT(FreeAcc.freeBwd);
         bfap->freeBwd = FreeAcc.freeBwd;
-        bfap->freeFwd = (bfAccessT *)&FreeAcc;
+        bfap->freeFwd = (struct bfAccess *)&FreeAcc;
         FreeAcc.freeBwd->freeFwd = bfap;
         FreeAcc.freeBwd = bfap;
         bfap->bfap_free_time = sched_tick;
@@ -5222,7 +5222,7 @@ void ADD_ACC_FREELIST(bfAccessT *bfap);
  * call this macro from your code; call only the other ones. This one
  * does no locking or lock verification.
  */
-void RM_ACC_LIST_REAL_WORK(bfAccessT *bfap);
+void RM_ACC_LIST_REAL_WORK(struct bfAccess *bfap);
 {
     bfap->freeFwd->freeBwd = bfap->freeBwd;
     bfap->freeBwd->freeFwd = bfap->freeFwd;
@@ -5245,7 +5245,7 @@ void RM_ACC_LIST_REAL_WORK(bfAccessT *bfap);
  * The caller typically holds bfap->bfaLock. BfAccessFreeLock is
  * seized while manipulating the free or closed lists.
  */
-void RM_ACC_LIST(bfAccessT *bfap);
+void RM_ACC_LIST(struct bfAccess *bfap);
 {
     mutex_enter(&BfAccessFreeLock.mutex);
     KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1);
@@ -5259,7 +5259,7 @@ void RM_ACC_LIST(bfAccessT *bfap);
  * must already be held by the caller instead of seizing and releasing it
  * internally.
  */
-void RM_ACC_LIST_NOLOCK(bfAccessT *bfap);
+void RM_ACC_LIST_NOLOCK(struct bfAccess *bfap);
 {
     KASSERT(mutex_owned(&BfAccessFreeLock.mutex));
     KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1);
@@ -5273,7 +5273,7 @@ void RM_ACC_LIST_NOLOCK(bfAccessT *bfap);
  * if it is, then it is removed.  The caller typically has bfap->bfaLock
  * seized.
  */
-void RM_ACC_LIST_COND(bfAccessT *bfap);
+void RM_ACC_LIST_COND(struct bfAccess *bfap);
 {
     mutex_enter(&BfAccessFreeLock.mutex);
     if (bfap->freeFwd) {

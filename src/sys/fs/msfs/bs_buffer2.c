@@ -89,7 +89,7 @@ int advfsstats = 0;
 	static
 	void
 	     prefetch(
-         bfAccessT * bfap,	/* in */
+         struct bfAccess * bfap,	/* in */
          unsigned long bsPage,	/* in - bf page number to start with */
          int pageCnt,		/* in - num pages to prefetch */
          int *listLen,		/* out - len of output ioDesc list */
@@ -190,7 +190,7 @@ int advfsstats = 0;
 	static
 	void
 	     seq_ahead_cont(
-         bfAccessT * bfap,	/* in */
+         struct bfAccess * bfap,	/* in */
          struct bsBuf * bp,	/* in */
          unsigned long bsPage,	/* in - bf page number */
          short metaCheck,	/* in - metadata check type */
@@ -203,7 +203,7 @@ int advfsstats = 0;
 	static
 	void
 	     seq_ahead_start(
-         bfAccessT * bfap,	/* in */
+         struct bfAccess * bfap,	/* in */
          struct bsBuf * bp,	/* in */
          int *listLen,		/* out - len of output ioDesc list */
          ioDescT ** ioListp,	/* out - list of ioDesc */
@@ -322,7 +322,7 @@ advfs_page_get(struct bsBuf * bp, int flags)
 
 
 static int
-blkMap(struct bsBuf * bp, bfAccessT * bfap)
+blkMap(struct bsBuf * bp, struct bfAccess * bfap)
 {
 	int step = 0;
 	int res;
@@ -390,7 +390,7 @@ blkMap(struct bsBuf * bp, bfAccessT * bfap)
  *    struct bsBuf *bp              Pointer to bsBuf which describes
  *                                  the transfer and contains the ioList
  *                                  pointer (in and out)
- *    bfAccessT *bfap               Pointer to the file's bfap (in).
+ *    struct bfAccess *bfap               Pointer to the file's bfap (in).
  *    unsigned long starting_block  File's starting block to map (in).
  *    int nbytes                    Number of bytes to map (in).
  *    struct uucred *cred            User's creditials.  Need for writes if
@@ -398,7 +398,7 @@ blkMap(struct bsBuf * bp, bfAccessT * bfap)
  */
 int
 blkmap_direct(struct bsBuf * bp,
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     unsigned long starting_block,
     int nbytes,
     struct uucred * cred)
@@ -412,7 +412,7 @@ blkmap_direct(struct bsBuf * bp,
 	int ioDesc_count = 0;
 	vdIndexT vdIndex;
 	int sector_size;
-	bfAccessT *origbfap = (bfAccessT *) NULL;
+	struct bfAccess *origbfap = (struct bfAccess *) NULL;
 	bfSetT *bfSetp = bfap->bfSetp;
 	int curxfersize;
 	int max_transfer_size;
@@ -2133,7 +2133,7 @@ bs_wakeup_flush_threads(struct bsBuf * bp,	/* in - Buffer being released */
     int recordDiskError		/* in - TRUE if got an I/O error */
 )
 {
-	bfAccessT *bfap = bp->bfAccess;
+	struct bfAccess *bfap = bp->bfAccess;
 	flushWaiterT *curFlushWaiter, *nextFlushWaiter;
 	struct bsBuf *prevbp;
 
@@ -4301,7 +4301,7 @@ unsigned int AdvfsReadAheadNumIOs = 1;
 static
 void
 seq_ahead_cont(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     struct bsBuf * bp,		/* in */
     unsigned long bsPage,	/* in - bf page number */
     short metaCheck,		/* in - metadata check type */
@@ -4407,7 +4407,7 @@ seq_ahead_cont(
 static
 void
 prefetch(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     unsigned long bsPage,	/* in - bf page number to start with */
     int pageCnt,		/* in - num pages to prefetch */
     int *listLen,		/* out - len of output ioDesc list */
@@ -4453,7 +4453,7 @@ prefetch(
 static
 void
 seq_ahead_start(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     struct bsBuf * bp,		/* in */
     int *listLen,		/* out - len of output ioDesc list */
     ioDescT ** ioListp,		/* out - list of ioDesc */
@@ -4795,7 +4795,7 @@ seq_ahead(struct bfAccess * bfap,	/* in */
 
 void
 bs_invalidate_pages(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t pageOffset,		/* in */
     uint32_t pageCnt,		/* in */
     int invalflag		/* in - CURRENTLY UNUSED */
@@ -5025,7 +5025,7 @@ startover:
 
 void
 msfs_flush_and_invalidate(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     int fiflags)
 {
 	struct actRange *arp = NULL;

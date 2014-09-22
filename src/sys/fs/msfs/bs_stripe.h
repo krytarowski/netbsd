@@ -69,7 +69,7 @@ str_register_stripe_agent(void);
 
 int
 str_stripe(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t segmentCnt,		/* in */
     uint32_t segmentSize,	/* in */
     long xid			/* in */
@@ -77,7 +77,7 @@ str_stripe(
 
 int
 str_stripe_clone(
-    bfAccessT * bfap,		/* in - clone access */
+    struct bfAccess * bfap,		/* in - clone access */
     bsInMemXtntT * oXtntp,	/* in - original xtnt map */
     ftxHT pftxH			/* in - parent ftxH */
 );

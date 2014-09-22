@@ -38,25 +38,25 @@ typedef enum {
 
 int
 idx_remove_index_file(
-    bfAccessT * dir_bfap,	/* Directory access structure */
+    struct bfAccess * dir_bfap,	/* Directory access structure */
     ftxHT ftxH			/* Parent transaction */
 );
 
 int
 idx_open_index_file(
-    bfAccessT * dir_bfap,	/* directory's access structure. */
+    struct bfAccess * dir_bfap,	/* directory's access structure. */
     ftxHT ftxH			/* Parent transaction */
 );
 
 void
 idx_close_index_file(
-    bfAccessT * dir_bfap,	/* index file's access structure */
+    struct bfAccess * dir_bfap,	/* index file's access structure */
     idxCloseActionT action	/* action to perform */
 );
 
 int
 idx_insert_filename(
-    bfAccessT * dir_bfap,	/* Directory's access structure */
+    struct bfAccess * dir_bfap,	/* Directory's access structure */
     struct nameidata * ndp,	/* Namei struct of file to insert */
     int page,			/* Page to insert onto */
     long count,			/* Page offset to insert to */
@@ -65,7 +65,7 @@ idx_insert_filename(
 
 int
 idx_remove_filename(
-    bfAccessT * dir_bfap,	/* Directory's access structure */
+    struct bfAccess * dir_bfap,	/* Directory's access structure */
     struct nameidata * ndp,	/* Namei struct of file to remove */
     int page,			/* Page to insert onto */
     long count,			/* Page offset to insert to */
@@ -74,7 +74,7 @@ idx_remove_filename(
 
 int
 idx_lookup_filename(
-    bfAccessT * dir_bfap,	/* bfap of the directory */
+    struct bfAccess * dir_bfap,	/* bfap of the directory */
     struct nameidata * ndp,	/* Namei struct of file to lookup */
     bfTagT * found_bs_tag,	/* if found files tag # */
     fs_dir_entry ** found_buffer,	/* pointer to directory record */
@@ -86,7 +86,7 @@ idx_lookup_filename(
 
 int
 idx_directory_insert_space(
-    bfAccessT * dir_bfap,	/* Directories Access Structure */
+    struct bfAccess * dir_bfap,	/* Directories Access Structure */
     ulong size,			/* size of space to insert */
     int insert_page,		/* Page where space lives */
     uint32_t insert_count,	/* Offset where space lives */
@@ -98,7 +98,7 @@ idx_directory_insert_space(
 
 int
 idx_directory_get_space(
-    bfAccessT * dir_bfap,	/* The directory's access structure */
+    struct bfAccess * dir_bfap,	/* The directory's access structure */
     ulong size,			/* Requested size to obtain */
     int *insert_page,		/* out - page where storage resides */
     long *insert_count,		/* out - offset where storage resides */
@@ -107,26 +107,26 @@ idx_directory_get_space(
 
 long
 idx_setup_for_truncation(
-    bfAccessT * dir_bfap,
+    struct bfAccess * dir_bfap,
     int operation,
     ftxHT parentFtxH
 );
 
 int
 idx_convert_dir(
-    bfAccessT * dir_bfap,
+    struct bfAccess * dir_bfap,
     struct nameidata * ndp,
     ftxHT ftxH
 );
 
 int
 idx_prune_start(
-    bfAccessT * dir_bfap,
+    struct bfAccess * dir_bfap,
     ftxHT ftxH
 );
 void
 idx_prune_finish(
-    bfAccessT * dir_bfap
+    struct bfAccess * dir_bfap
 );
 
 void
@@ -153,7 +153,7 @@ bf_idx_file_test(
 
 typedef struct bsDirIdxRec {
 	ulong flags;		/* This field must not move ! */
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	bfTagT index_tag;
 }           bsDirIdxRecT;
 #endif				/* _KERNEL */
@@ -178,7 +178,7 @@ typedef struct bsIdxBmtRec {
 typedef struct bsIdxRec {
 	ulong flags;		/* This field must not move ! */
 	bsIdxBmtRecT bmt;
-	bfAccessT *dir_bfap;
+	struct bfAccess *dir_bfap;
 	ulong prune_key_ffree;
 	ulong prune_key_fname;
 }        bsIdxRecT;

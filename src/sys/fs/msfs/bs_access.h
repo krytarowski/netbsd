@@ -178,7 +178,7 @@ typedef struct actRangeHdr {
 	uint arWaitMaxLen;	/* stats: longest wait chain has been */
 } actRangeHdrT;
 
-typedef struct bfAccess {
+struct bfAccess {
 #ifdef _KERNEL
 	dyn_hashlinks_w_keyT hashlinks;	/* dynamic hashtable links */
 #endif				/* _KERNEL */
@@ -342,7 +342,7 @@ typedef struct bfAccess {
 	ulong migPagesPending;	/* unpinned migrates to flushQ but not written
 				 * yet */
 	cvT migWait;		/* will sleep until queue reduced to this size */
-} bfAccessT;
+};
 
 /*
  * This struct saves some space when we
@@ -370,7 +370,7 @@ extern struct bfAccessHdr ClosedAcc;
 /* Function prototypes */
 int
 bs_close_one(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     int options,		/* in */
     ftxHT parentFtxH		/* in */
 );
@@ -390,34 +390,34 @@ void
 bs_invalidate_rsvd_access_struct(
     struct domain * domain,		/* in */
     bfTagT bfTag,		/* in */
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 );
 
 int
 bs_reclaim_cfs_rsvd_vn(
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 );
 
 void
 free_acc_struct(
-    bfAccessT * bfap		/* in - pointer to access struct */
+    struct bfAccess * bfap		/* in - pointer to access struct */
 );
 
 int
 bs_access_one(
-    bfAccessT ** bfap,		/* out - access structure pointer */
+    struct bfAccess ** bfap,		/* out - access structure pointer */
     bfTagT tag,			/* in - tag of bf to access */
     struct bfSet * bfSetp,		/* in - BF-set descriptor pointer */
     ftxHT ftxH,			/* in - ftx handle */
     uint32_t options,		/* in - options flags */
     struct mount * mp,		/* in - fs mount queue */
     struct vnode ** fsvp,	/* out - vnode allocated */
-    bfAccessT * origBfap	/* in - Orig access (clone open) */
+    struct bfAccess * origBfap	/* in - Orig access (clone open) */
 );
 
 int
 bs_map_bf(
-    bfAccessT * bfAp,		/* in/out - ptr to bitfile's access struct */
+    struct bfAccess * bfAp,		/* in/out - ptr to bitfile's access struct */
     uint32_t options,		/* in - options flags (see ) */
     struct mount * mp		/* in - mount point */
 );
@@ -446,22 +446,22 @@ static inline u_long BS_BFAH_GET_KEY(struct bfSet *s, bfTagT *t)
    return ((BFSET_GET_HASH_INPUT(s)) * (BS_BFTAG_IDX(t)) + (BS_BFTAG_SEQ(t)));
 }
 
-static inline bfAccessT *BS_BFAH_LOCK(const u_long key, u_long *cnt)
+static inline struct bfAccess *BS_BFAH_LOCK(const u_long key, u_long *cnt)
 {
-   return (bfAccessT*)dyn_hash_obtain_chain(BsAccessHashTbl, key, cnt);
+   return (struct bfAccess*)dyn_hash_obtain_chain(BsAccessHashTbl, key, cnt);
 }
 
-static inline bfAccessT *BS_BFAH_UNLOCK(const u_long key)
+static inline struct bfAccess *BS_BFAH_UNLOCK(const u_long key)
 {
    return dyn_hash_release_chain(BsAccessHashTbl, key);
 }
 
-static inline void BS_BFAH_REMOVE(bfAccessT *bfap, int laction)
+static inline void BS_BFAH_REMOVE(struct bfAccess *bfap, int laction)
 {
     dyn_hash_remove(BsAccessHashTbl, bfap, laction);
 }
 
-static inline void BS_BFAH_INSERT(bfAccessT *bfap, int laction)
+static inline void BS_BFAH_INSERT(struct bfAccess *bfap, int laction)
 {
     KASSERT(mutex_owned(&bfap->bfaLock.mutex));
     dyn_hash_insert(BsAccessHashTbl, bfap, laction);
@@ -470,14 +470,14 @@ static inline void BS_BFAH_INSERT(bfAccessT *bfap, int laction)
 /* Test the validity of a page number in a file. */
 /* "Returns" E_BAD_PAGE_RANGE if the page is beyond the end of the file. */
 /* Else "returns" EOK. */
-static inline int TEST_PAGE(const uint32_t pg, const bfAccessT *bfap)
+static inline int TEST_PAGE(const uint32_t pg, const struct bfAccess *bfap)
 {
     return pg >= bfap->nextPage ? E_BAD_PAGE_RANGE : EOK;
 }
 
 int
 bmtr_get_rec_ptr(
-    bfAccessT * bfap,		/* in - bf access struct ptr */
+    struct bfAccess * bfap,		/* in - bf access struct ptr */
     ftxHT parentFtxH,		/* in - transaction handle */
     u_short rType,		/* in - type of record */
     u_short bSize,		/* in - size of buffer */
@@ -490,16 +490,16 @@ bmtr_get_rec_ptr(
 void bs_init_access_alloc_thread(void);
 void bs_access_alloc_thread(void);
 void 
-insert_actRange_onto_list(bfAccessT * bfap,
+insert_actRange_onto_list(struct bfAccess * bfap,
     actRangeT * arp,
     struct fsContext * contextp);
 void 
-remove_actRange_from_list(bfAccessT * bfap,
+remove_actRange_from_list(struct bfAccess * bfap,
     actRangeT * arp);
 
 int
 limits_of_active_range(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     bsPageT pg,
     bsPageT * beginpg,
     bsPageT * npgs
@@ -511,7 +511,7 @@ limits_of_active_range(
  * routine to add to free list.
  */
 
-static inline void DEC_REFCNT(bfAccessT *bfap)
+static inline void DEC_REFCNT(struct bfAccess *bfap)
 {
     KASSERT(mutex_owned(&bfap->bfaLock.mutex));
     if (--bfap->refCnt <= 0)
@@ -522,7 +522,7 @@ static inline void DEC_REFCNT(bfAccessT *bfap)
  * locked the bfap->bfaLock.  This macro seizes the BfAccessFreeLock
  * while moving the struct onto the closed list.
  */
-void ADD_ACC_CLOSEDLIST(bfAccessT *bfap);
+void ADD_ACC_CLOSEDLIST(struct bfAccess *bfap);
 
 /* ADD_ACC_FREELIST adds access structures to the free list.
  * ACC_INVALID access structures are added to the front of the list,
@@ -557,31 +557,31 @@ void ADD_ACC_CLOSEDLIST(bfAccessT *bfap);
  *       around.
  *
  */
-void ADD_ACC_FREELIST(bfAccessT *bfap);
+void ADD_ACC_FREELIST(struct bfAccess *bfap);
 
 /* This does the underlying work for the RM_ACC_LIST macros. Do not
  * call this macro from your code; call only the other ones. This one
  * does no locking or lock verification.
  */
-void RM_ACC_LIST_REAL_WORK(bfAccessT *bfap);
+void RM_ACC_LIST_REAL_WORK(struct bfAccess *bfap);
 
 /* RM_ACC_LIST removes access structures from the free or closed list.
  * The caller typically holds bfap->bfaLock. BfAccessFreeLock is
  * seized while manipulating the free or closed lists.
  */
-void RM_ACC_LIST(bfAccessT *bfap);
+void RM_ACC_LIST(struct bfAccess *bfap);
 
 /* RM_ACC_LIST_NOLOCK is like RM_ACC_LIST, except that the BfAccessFreeLock
  * must already be held by the caller instead of seizing and releasing it
  * internally.
  */
-void RM_ACC_LIST_NOLOCK(bfAccessT *bfap);
+void RM_ACC_LIST_NOLOCK(struct bfAccess *bfap);
 
 /* RM_ACC_LIST_COND is like RM_ACC_LIST, except that the state of freeFwd
  * is checked to see if the struct is already on the free or closed list;
  * if it is, then it is removed.  The caller typically has bfap->bfaLock
  * seized.
  */
-void RM_ACC_LIST_COND(bfAccessT *bfap);
+void RM_ACC_LIST_COND(struct bfAccess *bfap);
 
 #endif				/* _ACCESS_H_ */

@@ -107,7 +107,7 @@ bcopy_frag(
 );
 
 static int
-fs_write_direct(bfAccessT * bfap,
+fs_write_direct(struct bfAccess * bfap,
     struct uio * uio,
     struct uucred * cred,
     int *number_to_write,
@@ -117,7 +117,7 @@ fs_write_direct(bfAccessT * bfap,
     actRangeT * arp);
 
 static int
-fs_read_direct(bfAccessT * bfap,
+fs_read_direct(struct bfAccess * bfap,
     struct uio * uio,
     int *nbytes,
     unsigned long byte_offset_in_page);
@@ -253,7 +253,7 @@ not_vm_zeroing:
 }
 
 static void
-fs_write_cow(bfAccessT * bfap, off_t foffset, off_t nbyte)
+fs_write_cow(struct bfAccess * bfap, off_t foffset, off_t nbyte)
 {
 	bsPageT pg;
 	off_t rlimit_fsize;
@@ -585,7 +585,7 @@ fs_write(
 	int number_to_write;	/* limited to "int" due to b_bcount of "buf
 				 * struct" */
 	struct fsContext *contextp;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	bfPageRefHintT refHint;
 	bfPageRefHT page_ref;
 	char *first_page_addr, *second_page_addr;
@@ -1931,7 +1931,7 @@ fs_update_times(struct vnode * vp, int attr_flags)
  *
  * Parameters:
  *
- *    bfAccessT *bfap                    Bitfile Access Pointer (in)
+ *    struct bfAccess *bfap                    Bitfile Access Pointer (in)
  *    struct uio *uio                    UIO pointer (in)
  *    struct uucred *cred
  *    int *number_to_write               Number of bytes to write/written.
@@ -1947,7 +1947,7 @@ fs_update_times(struct vnode * vp, int attr_flags)
  *                                         the file, one gets passed in.
  */
 static int
-fs_write_direct(bfAccessT * bfap,
+fs_write_direct(struct bfAccess * bfap,
     struct uio * uio,
     struct uucred * cred,
     int *number_to_write,
@@ -2977,7 +2977,7 @@ fs_read(
 	uint32_t fragByteCnt;
 	int ahead_mode = 0;
 	struct fsContext *contextp = VTOC(vp);
-	bfAccessT *bfap = VTOA(vp);
+	struct bfAccess *bfap = VTOA(vp);
 	int32_t directIO;
 	int map_lock = 0;
 	int i;
@@ -3564,14 +3564,14 @@ _error:
  *
  * Parameters:
  *
- *    bfAccessT *bfap                    Bitfile Access Pointer (in)
+ *    struct bfAccess *bfap                    Bitfile Access Pointer (in)
  *    struct uio *uio                    UIO Pointer (in)
  *    int nbytes                         (in)Number of bytes to read (in)
  *                                       (out)Number of bytes actually read(out)
  *    unsigned long byte_offset_in_page  Starting byte offset in page (in)
  */
 static int
-fs_read_direct(bfAccessT * bfap,
+fs_read_direct(struct bfAccess * bfap,
     struct uio * uio,
     int *nbytes,
     unsigned long byte_offset_in_page)
@@ -4000,7 +4000,7 @@ bcopy_frag(
 	uint32_t subFrag1ByteCnt;
 	uint32_t subFrag1ByteOffset;
 	uint32_t sizeoffset;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	char *subFragPage = NULL;
 	bfFragIdT fragId = (VTOA(vp))->fragId;
 

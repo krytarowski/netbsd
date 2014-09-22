@@ -288,7 +288,7 @@ freeze_domain(advfsFreezeMsgT * msg)
 	bsDmnFreezeAttrT dmnFreezeAttr;
 	ftxHT ftxH = FtxNilFtxH;
 	struct vd *logvdp;	/* pointer to vd of log */
-	bfAccessT *mdap;	/* bfap for RBMT/BMT */
+	struct bfAccess *mdap;	/* bfap for RBMT/BMT */
 
 	dmnP = GETDOMAINP(msg->frzmMP);
 
@@ -458,7 +458,7 @@ thaw_domain(advfsFreezeInfoT * freezeInfoP, int forced)
 	bsDmnFreezeAttrT dmnFreezeAttr;
 	ftxHT ftxH = FtxNilFtxH;
 	struct vd *logvdp;	/* pointer to log vd */
-	bfAccessT *mdap;	/* bfap to RBMT/BMT */
+	struct bfAccess *mdap;	/* bfap to RBMT/BMT */
 
 	/*
          *  If forced thawed due to timout

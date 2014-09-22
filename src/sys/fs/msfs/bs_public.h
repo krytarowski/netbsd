@@ -53,7 +53,7 @@ typedef enum TraceAction {
  * which is set when a structure is deallocated.
  */
 #define MAGIC_DEALLOC    0x00080000
-#define ACCMAGIC         0xADF00001	/* bfAccessT */
+#define ACCMAGIC         0xADF00001	/* struct bfAccess */
 #define SETMAGIC         0xADF00002	/* bfSetT */
 #define DMNMAGIC         0xADF00003	/* struct domain */
 #define VDMAGIC          0xADF00004	/* vdT */

@@ -149,7 +149,7 @@ rbf_int_create(
 	bsTMapT *tdmap;
 	rbfPgRefHT tdpgRef;
 	unLkActionT unlkAction;
-	bfAccessT *bfap = NULL;
+	struct bfAccess *bfap = NULL;
 
 
 	dmnP = bfSetp->dmnP;

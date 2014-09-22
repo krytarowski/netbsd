@@ -170,7 +170,7 @@ typedef struct {
 	int ftxLvl;		/* transaction level to unpin at */
 	bfPageRefHT pgH;	/* ref page handle */
 	void *pgAddr;		/* address of pinned page */
-	bfAccessT *pinAccessp;	/* bitfile access structure pointer */
+	struct bfAccess *pinAccessp;	/* bitfile access structure pointer */
 	int pgSz;		/* bitfile page size */
 	bsUnpinModeT unpinMode;	/* page unpin mode */
 	ftxRecRedoT pgdesc;	/* page descriptor */

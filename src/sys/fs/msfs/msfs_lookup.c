@@ -213,7 +213,7 @@ msfs_lookup(
 )
 {
 	int error;
-	bfAccessT *dir_accessp;
+	struct bfAccess *dir_accessp;
 	struct fsContext *dir_context, *file_context;
 	int pin;
 	bfTagT found_bs_tag, bf_tag;
@@ -682,7 +682,7 @@ check_path_back(
 	int ret;
 	bfSetT *bfSetp;
 	bfPageRefHT page_ref;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	fs_dir_entry *dir_p;
 	char *p;
 	int first_time, n;

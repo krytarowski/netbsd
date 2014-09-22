@@ -126,7 +126,7 @@ void
 advfs_configure_callback(void)
 {
 	MaxAccess = ((vm_managed_pages * PAGE_SIZE * AdvfsAccessMaxPercent) / 100) /
-	sizeof(bfAccessT);
+	sizeof(struct bfAccess);
 	if (MaxAccessEventPosted && (NumAccess < MaxAccess)) {
 		MaxAccessEventPosted = FALSE;
 	}
@@ -178,7 +178,7 @@ advfs_configure(
 		                 */
 				MaxAccess =
 				    ((vm_managed_pages * PAGE_SIZE * AdvfsAccessMaxPercent) / 100) /
-				    sizeof(bfAccessT);
+				    sizeof(struct bfAccess);
 				if (MaxAccessEventPosted && (NumAccess < MaxAccess)) {
 					MaxAccessEventPosted = FALSE;
 				}

@@ -59,7 +59,7 @@
 static
        int
 stripe_zero_size(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t segmentCnt,		/* in */
     uint32_t segmentSize,	/* in */
     ftxHT parentFtxH,		/* in */
@@ -69,7 +69,7 @@ stripe_zero_size(
 static
        int
 stripe_zero_size_clone(
-    bfAccessT * bfap,		/* in - clone access */
+    struct bfAccess * bfap,		/* in - clone access */
     bsInMemXtntT * oXtntp,	/* in - original xtnt */
     ftxHT parentFtxH,		/* in */
     bsStripeHdrT ** newStripeHdr/* out */
@@ -91,7 +91,7 @@ undo_xtnt_rec(
 static
        int
 update_xtnt_rec_fields(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t segmentSize,	/* in */
     ftxHT parentFtxH		/* in */
 );
@@ -217,7 +217,7 @@ bs_stripe(
 
 int
 str_stripe(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t segmentCnt,		/* in */
     uint32_t segmentSize,	/* in */
     long xid			/* in - CFS transaction id */
@@ -229,7 +229,7 @@ str_stripe(
 	bsStripeHdrT *stripeHdr = NULL;
 	int sts;
 	struct vnode *nullvp = NULL;
-	bfAccessT *cloneap = NULL;
+	struct bfAccess *cloneap = NULL;
 
 	sts = FTX_START_XID(FTA_NULL, &ftxH, FtxNilFtxH, bfap->dmnP, 0, xid);
 	if (sts != EOK) {
@@ -374,7 +374,7 @@ HANDLE_EXCEPTION:
 
 int
 str_stripe_clone(
-    bfAccessT * bfap,		/* in - clone access */
+    struct bfAccess * bfap,		/* in - clone access */
     bsInMemXtntT * oXtntp,	/* in - original xtnt map */
     ftxHT pftxH			/* in - parent ftxH */
 )
@@ -457,7 +457,7 @@ HANDLE_EXCEPTION:
 static
        int
 stripe_zero_size(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t segmentCnt,		/* in */
     uint32_t segmentSize,	/* in */
     ftxHT parentFtxH,		/* in */
@@ -622,7 +622,7 @@ HANDLE_EXCEPTION:
 static
        int
 stripe_zero_size_clone(
-    bfAccessT * bfap,		/* in - clone access */
+    struct bfAccess * bfap,		/* in - clone access */
     bsInMemXtntT * oXtntp,	/* in - original xtnt */
     ftxHT pFtxH,		/* in */
     bsStripeHdrT ** newStripeHdr/* out */
@@ -842,7 +842,7 @@ undo_xtnt_rec(
 static
        int
 update_xtnt_rec_fields(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t segmentSize,	/* in */
     ftxHT parentFtxH		/* in */
 )

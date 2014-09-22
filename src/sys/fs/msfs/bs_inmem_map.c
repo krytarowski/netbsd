@@ -642,7 +642,7 @@ imm_init_sub_xtnt_map(
  */
 int
 imm_copy_sub_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     bsInMemSubXtntMapT * oldSubXtntMap,	/* in */
     bsInMemSubXtntMapT * newSubXtntMap	/* in */
@@ -745,7 +745,7 @@ imm_extend_sub_xtnt_map(
  */
 int
 imm_load_sub_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     bsInMemSubXtntMapT * subXtntMap	/* in */
 )
@@ -2055,7 +2055,7 @@ imm_page_to_xtnt(
 */
 
 int
-overlay_xtnt_map(bfAccessT * bfap,
+overlay_xtnt_map(struct bfAccess * bfap,
     uint32_t stripeIndex,	/* in */
     bsInMemXtntMapT * baseXtntMap,	/* in */
     bsInMemXtntMapT * overXtntMap,	/* in */
@@ -4124,9 +4124,9 @@ HANDLE_EXCEPTION:
  */
 int
 imm_merge_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * baseXtntMap,	/* in */
-    bfAccessT * cloneBfap,	/* in */
+    struct bfAccess * cloneBfap,	/* in */
     bsInMemXtntMapT * overXtntMap,	/* in */
     bsInMemXtntMapT ** retNewXtntMap	/* out */
 )
@@ -4454,7 +4454,7 @@ HANDLE_EXCEPTION:
  */
 int
 imm_copy_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntMapT * srcXtntMap,	/* in */
     bsInMemXtntMapT ** dstXtntMap	/* out */
 )

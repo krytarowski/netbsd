@@ -71,7 +71,7 @@ stg_set_alloc_disk(
 
 int
 stg_alloc_from_svc_class(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     serviceClassT reqServices,	/* in */
     serviceClassT optServices,	/* in */
     bfTagT bfSetTag,		/* in */
@@ -87,7 +87,7 @@ stg_alloc_from_svc_class(
 
 int
 cp_stg_alloc_from_svc_class(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     int32_t stg_type,
@@ -99,7 +99,7 @@ cp_stg_alloc_from_svc_class(
 
 int
 stg_alloc_from_one_disk(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     vdIndexT bfVdIndex,		/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
@@ -114,7 +114,7 @@ stg_alloc_from_one_disk(
 
 int
 cp_stg_alloc_from_one_disk(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdIndexT bfVdIndex,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
@@ -128,7 +128,7 @@ cp_stg_alloc_from_one_disk(
 
 int
 xfer_stg(
-    bfAccessT * bfap,		/* file to add storage to */
+    struct bfAccess * bfap,		/* file to add storage to */
     u_long bfPageOffset,	/* offset to add storage */
     u_long bfPageCnt,		/* number of pages to add */
     uint32_t startblk,		/* storage in hand to add */
@@ -138,7 +138,7 @@ xfer_stg(
 
 int
 stg_alloc_new_mcell(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
     vdIndexT newVdIndex,	/* in */
@@ -149,7 +149,7 @@ stg_alloc_new_mcell(
 
 int
 stg_remove_stg_start(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t pageOffset,		/* in */
     uint32_t pageCnt,		/* in */
     int relQuota,		/* in */
@@ -168,7 +168,7 @@ stg_remove_stg_finish(
 
 int
 page_is_mapped_local(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     uint32_t pg,
     uint32_t * nextPage,		/* out */
     int permHoleFlg,		/* in */

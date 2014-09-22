@@ -807,7 +807,7 @@ remove_dots(
 	fs_dir_entry *dir_p;
 	rbfPgRefHT page_ref;
 	char *dir_buffer, *p;
-	bfAccessT *dir_access;
+	struct bfAccess *dir_access;
 
 	dir_access = VTOA(dvp);
 
@@ -1307,7 +1307,7 @@ fs_dir_size_notice(
 int
 remove_bf(
     ino_t ino,
-    bfAccessT * tag_access,
+    struct bfAccess * tag_access,
     int just_delete_flag
 )
 {
@@ -1413,7 +1413,7 @@ remove_bf(
          * Make sure this is the index file itself
          */
 	if (IDX_INDEXING_ENABLED(VTOA(dir_vp))) {
-		bfAccessT *dir_bfap;
+		struct bfAccess *dir_bfap;
 		bfTagT idx_tag;
 
 		dir_bfap = VTOA(dir_vp);
@@ -1527,7 +1527,7 @@ tag_search(
 
 int
 remove_entry(
-    bfAccessT * dir_access,
+    struct bfAccess * dir_access,
     char *file_name
 )
 {
@@ -1539,8 +1539,8 @@ remove_entry(
 	struct fsContext *dir_context;
 	struct vnode *dir_vp;
 	ftxHT ftx_handle;
-	bfAccessT *bfap;
-	bfAccessT *idx_bfap = NULL;
+	struct bfAccess *bfap;
+	struct bfAccess *idx_bfap = NULL;
 	struct nameidata *ndp;
 	uint32_t entry_size;
 	uint32_t orig_entry_size;
@@ -1798,7 +1798,7 @@ setup_for_glom_dir_entries(
     fs_dir_entry ** start_dir_p,
     uint32_t * entry_size,
     uint32_t * flags,
-    bfAccessT * dir_access
+    struct bfAccess * dir_access
 )
 {
 	dirRec *dirRecp;
@@ -2145,7 +2145,7 @@ dir_trunc_start(struct vnode * dvp,
 	uint32_t delCnt = 0;
 	long file_size_in_bytes;
 	void *delList;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct fsContext *contextp;
 	dtinfoT *dtinfop = NULL;
 	off_t old_file_size;
@@ -2192,7 +2192,7 @@ dir_trunc_start(struct vnode * dvp,
 				dtinfop = (dtinfoT *) bfap->dirTruncp;
 			else {
 				/* This is bad; found something hanging off
-				 * the bfAccessT that is not a dtinfoT struct. */
+				 * the struct bfAccess that is not a dtinfoT struct. */
 				domain_panic(bfap->dmnP,
 				    "dir_trunc_start: bad bfap->dirTruncp");
 			}
@@ -2234,7 +2234,7 @@ dir_trunc_start(struct vnode * dvp,
 void 
 dir_trunc_finish(struct vnode * dvp)
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	clupThreadMsgT *msg;
 	extern msgQHT CleanupMsgQH;
 

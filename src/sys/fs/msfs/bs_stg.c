@@ -75,7 +75,7 @@ typedef struct mcellPtr {
 int
 stg_add_stg_no_cow(
     ftxHT ftxH,			/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     unsigned long bfPageOffset,	/* in */
     unsigned long bfPageCnt,	/* in */
     int allowOverlapFlag,	/* in */
@@ -85,7 +85,7 @@ stg_add_stg_no_cow(
 static
        int
 add_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     int allowOverlapFlag,	/* in */
@@ -98,7 +98,7 @@ add_stg(
 static
        int
 add_rsvd_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * xtnts,	/* in, modified */
@@ -109,7 +109,7 @@ add_rsvd_stg(
 static
        int
 alloc_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     vdIndexT bfVdIndex,		/* in */
@@ -123,7 +123,7 @@ alloc_stg(
 static
        int
 alloc_append_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     vdIndexT bfVdIndex,		/* in */
@@ -139,7 +139,7 @@ static
        int
 get_first_mcell(
     bfTagT bfSetTag,		/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageCnt,		/* in */
     ftxHT parentFtx,		/* in */
     vdIndexT * retVdIndex,	/* out */
@@ -149,7 +149,7 @@ get_first_mcell(
 static
        int
 alloc_hole_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     vdIndexT bfVdIndex,		/* in */
@@ -171,7 +171,7 @@ extend_skip(
 
 int
 alloc_from_one_disk(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     int bfPageSize,		/* in */
@@ -185,7 +185,7 @@ alloc_from_one_disk(
 
 static int
 xfer_stg_to_bf(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     u_long bfPageOffset,
     u_long bfPageCnt,
     uint32_t startblk,
@@ -194,7 +194,7 @@ xfer_stg_to_bf(
 );
 
 static int
-xfer_stg_to_xtnts(bfAccessT * bfap,
+xfer_stg_to_xtnts(struct bfAccess * bfap,
     bsInMemXtntMapT * xtntMap,
     u_long bfPageOffset,
     u_long bfPageCnt,
@@ -204,7 +204,7 @@ xfer_stg_to_xtnts(bfAccessT * bfap,
 
 static int
 xfer_append_stg(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     bsInMemXtntMapT * xtntMap,
     u_long bfPageOffset,
     u_long bfPageCnt,
@@ -215,7 +215,7 @@ xfer_append_stg(
 
 static int
 xfer_hole_stg(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     bsInMemXtntMapT * xtntMap,
     uint32_t mapIndex,
     uint32_t descIndex,
@@ -228,7 +228,7 @@ xfer_hole_stg(
 
 static int
 xfer_stg_on_one_disk(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     bfTagT bfSetTag,
     bsInMemXtntMapT * xtntMap,
     u_long bfPageOffset,
@@ -250,13 +250,13 @@ xfer_stg_in_one_subxtnt(
 
 static
        int
-make_perm_hole(bfAccessT * cloneap,
+make_perm_hole(struct bfAccess * cloneap,
     uint32_t page,
     ftxHT ftxH);
 
 static
        int
-append_perm_hole(bfAccessT * bfap,
+append_perm_hole(struct bfAccess * bfap,
     bsInMemXtntMapT * xtntMap,
     uint32_t holeStart,
     uint32_t holeEnd,
@@ -265,7 +265,7 @@ append_perm_hole(bfAccessT * bfap,
 
 static
        int
-insert_perm_hole(bfAccessT * bfap,
+insert_perm_hole(struct bfAccess * bfap,
     bsInMemXtntMapT * xtntMap,
     bsInMemXtntDescIdT xtntDescId,
     uint32_t holeStart,
@@ -275,7 +275,7 @@ insert_perm_hole(bfAccessT * bfap,
 
 static
        int
-add_hole_extent(bfAccessT * bfap,
+add_hole_extent(struct bfAccess * bfap,
     bsInMemXtntMapT * xtntMap,
     uint32_t holeStart,
     uint32_t holeEnd,
@@ -284,13 +284,13 @@ add_hole_extent(bfAccessT * bfap,
 
 static
        int
-new_sub(bfAccessT * bfap,
+new_sub(struct bfAccess * bfap,
     bsInMemXtntMapT * xtntMap,
     ftxHT ftxH);
 
 static int
 cp_stg_alloc_in_one_mcell(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in */
@@ -309,7 +309,7 @@ cp_hole_alloc_in_one_mcell(
 
 static int
 add_extent(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemSubXtntMapT * subXtntMap,	/* in/contents modified */
     uint32_t * xIp,		/* in/out */
     uint32_t pgOff,		/* in */
@@ -321,7 +321,7 @@ add_extent(
 
 static int
 stg_alloc_one_xtnt(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdT * vd,			/* in */
     uint32_t bfPageCnt,		/* in */
     uint64_t dstBlkOffset,	/* in */
@@ -334,7 +334,7 @@ stg_alloc_one_xtnt(
 static
        int
 scan_xtnt_map_list(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t pageOffset,		/* in */
     bsInMemXtntMapT * xtntMapList,	/* in */
     uint32_t blkDescCnt,		/* in */
@@ -345,7 +345,7 @@ scan_xtnt_map_list(
 static
        int
 remove_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * xtnts,	/* in, modified */
@@ -358,7 +358,7 @@ remove_stg(
 static
        int
 dealloc_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
@@ -372,7 +372,7 @@ dealloc_stg(
 static
        int
 clip_del_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
@@ -425,7 +425,7 @@ add_stg_undo(
     void *address
 )
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	bfSetT *bfSetp;
 	struct domain *domain;
 	int sts;
@@ -618,7 +618,7 @@ remove_stg_undo(
     void *address
 )
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	bfSetT *bfSetp;
 	struct domain *domain;
 	int sts;
@@ -779,7 +779,7 @@ init_bs_stg_opx()
 
 int
 bs_add_overlapping_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     unsigned long pageOffset,	/* in */
     unsigned long pageCnt,	/* in */
     uint32_t * allocPageCnt	/* out */
@@ -822,7 +822,7 @@ bs_add_overlapping_stg(
 
 int
 rbf_add_overlapping_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     unsigned long pageOffset,	/* in */
     unsigned long pageCnt,	/* in */
     ftxHT parentFtx,		/* in */
@@ -896,7 +896,7 @@ rbf_add_overlapping_stg(
 
 int
 rbf_add_overlapping_clone_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t pageOffset,		/* in */
     uint32_t reqPageCnt,		/* in */
     uint32_t holePg,		/* in */
@@ -1089,7 +1089,7 @@ HANDLE_EXCEPTION:
 
 int
 bs_add_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     unsigned long pageOffset,	/* in */
     unsigned long pageCnt	/* in */
 )
@@ -1126,7 +1126,7 @@ bs_add_stg(
 
 int
 rbf_add_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     unsigned long pageOffset,	/* in */
     unsigned long pageCnt,	/* in */
     ftxHT parentFtx,		/* in */
@@ -1195,7 +1195,7 @@ rbf_add_stg(
 int
 stg_add_stg(
     ftxHT parentFtx,		/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     unsigned long bfPageOffset,	/* in */
     unsigned long bfPageCnt,	/* in */
     int allowOverlapFlag,	/* in */
@@ -1259,7 +1259,7 @@ stg_add_stg(
 int
 stg_add_stg_no_cow(
     ftxHT parentFtx,		/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     unsigned long bfPageOffset,	/* in */
     unsigned long bfPageCnt,	/* in */
     int allowOverlapFlag,	/* in */
@@ -1428,7 +1428,7 @@ HANDLE_EXCEPTION:
 int
 stg_add_rbmt_stg(
     ftxHT parentFtx,		/* in */
-    bfAccessT * rbmtap,		/* in */
+    struct bfAccess * rbmtap,		/* in */
     unsigned long bfPageOffset,	/* in */
     unsigned long bfPageCnt,	/* in */
     bfMCIdT mcellId,		/* in */
@@ -1547,7 +1547,7 @@ stg_add_rbmt_stg(
 
 int
 stg_set_alloc_disk(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdIndexT curVdIndex,	/* in */
     uint32_t pageCntNeeded,	/* in */
     int forceFlag		/* in */
@@ -1716,7 +1716,7 @@ HANDLE_EXCEPTION:
 static
        int
 add_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     int allowOverlapFlag,	/* in */
@@ -1900,7 +1900,7 @@ HANDLE_EXCEPTION:
 static
        int
 add_rsvd_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * xtnts,	/* in, modified */
@@ -1950,7 +1950,7 @@ add_rsvd_stg(
 static
        int
 alloc_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     vdIndexT bfVdIndex,		/* in */
@@ -2057,7 +2057,7 @@ alloc_stg(
 static
        int
 alloc_append_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     vdIndexT bfVdIndex,		/* in */
@@ -2238,7 +2238,7 @@ static
        int
 get_first_mcell(
     bfTagT bfSetTag,		/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageCnt,		/* in */
     ftxHT parentFtx,		/* in */
     vdIndexT * retVdIndex,	/* out */
@@ -2510,7 +2510,7 @@ imm_try_combine_submaps(
 static
        int
 alloc_hole_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     vdIndexT bfVdIndex,		/* in */
@@ -2935,7 +2935,7 @@ HANDLE_EXCEPTION:
 
 int
 stg_alloc_from_svc_class(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     serviceClassT reqServices,	/* in */
     serviceClassT optServices,	/* in */
     bfTagT bfSetTag,		/* in */
@@ -3092,7 +3092,7 @@ HANDLE_EXCEPTION:
 */
 int
 cp_stg_alloc_from_svc_class(
-    bfAccessT * bfap,		/* in  stg for this file */
+    struct bfAccess * bfap,		/* in  stg for this file */
     uint32_t bfPageOffset,	/* in  start here */
     uint32_t bfPageCnt,		/* in  for this long */
     int32_t stg_type,
@@ -3243,7 +3243,7 @@ cp_stg_alloc_from_svc_class(
 
 int
 stg_alloc_from_one_disk(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdIndexT bfVdIndex,		/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
@@ -3488,7 +3488,7 @@ HANDLE_EXCEPTION:
 */
 int
 cp_stg_alloc_from_one_disk(
-    bfAccessT * bfap,		/* in   stg for this file */
+    struct bfAccess * bfap,		/* in   stg for this file */
     vdIndexT bfVdIndex,		/* in   stg in this vol */
     uint32_t bfPageOffset,	/* in   stg starts here */
     uint32_t bfPageCnt,		/* in   ask for this much */
@@ -3781,7 +3781,7 @@ int AdvfsAllocNFS = 1;
 
 int
 alloc_from_one_disk(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     int bfPageSize,		/* in */
@@ -4117,7 +4117,7 @@ HANDLE_EXCEPTION:
 static
        int
 cp_stg_alloc_in_one_mcell(
-    bfAccessT * bfap,		/* in  add stg this file */
+    struct bfAccess * bfap,		/* in  add stg this file */
     uint32_t bfPageOffset,	/* in  start here */
     uint32_t bfPageCnt,		/* in  requested length */
     bsInMemSubXtntMapT * subXtntMap,	/* in  use this map */
@@ -4367,7 +4367,7 @@ HANDLE_EXCEPTION:
 static
        int
 add_extent(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     bsInMemSubXtntMapT * subXtntMap,	/* add extent to this map */
     uint32_t * xIp,		/* add extent at this index */
     uint32_t pgOff,		/* first page of extent */
@@ -4452,7 +4452,7 @@ HANDLE_EXCEPTION:
 static
        int
 stg_alloc_one_xtnt(
-    bfAccessT * bfap,		/* in  find stg for this file */
+    struct bfAccess * bfap,		/* in  find stg for this file */
     vdT * vdp,			/* in  in this volume */
     uint32_t bfPageCnt,		/* in  Requested length */
     uint64_t dstBlkOffset,	/* in, chkd if hint == BS_ALLOC_MIG_RSVD */
@@ -4580,7 +4580,7 @@ EXIT_ALLOC_FROM_BITMAP:
 */
 int
 xfer_stg(
-    bfAccessT * bfap,		/* file to add storage to */
+    struct bfAccess * bfap,		/* file to add storage to */
     u_long bfPageOffset,	/* offset to add storage */
     u_long bfPageCnt,		/* number of pages to add */
     uint32_t startblk,		/* storage in hand to add */
@@ -4676,7 +4676,7 @@ HANDLE_EXCEPTION:
  */
 static int
 xfer_stg_to_bf(
-    bfAccessT * bfap,		/* add storage to this file */
+    struct bfAccess * bfap,		/* add storage to this file */
     u_long bfPageOffset,	/* at this page offset */
     u_long bfPageCnt,		/* for this many pages */
     uint32_t startblk,		/* storage exists at this block */
@@ -4739,7 +4739,7 @@ xfer_stg_to_bf(
  */
 static int
 xfer_stg_to_xtnts(
-    bfAccessT * bfap,		/* Add stg to this file */
+    struct bfAccess * bfap,		/* Add stg to this file */
     bsInMemXtntMapT * xtntMap,	/* in this extent map */
     u_long bfPageOffset,	/* Add storage at this page */
     u_long bfPageCnt,		/* add this many pages */
@@ -4813,7 +4813,7 @@ xfer_stg_to_xtnts(
  */
 static int
 xfer_append_stg(
-    bfAccessT * bfap,		/* add storage to this file */
+    struct bfAccess * bfap,		/* add storage to this file */
     bsInMemXtntMapT * xtntMap,	/* in this xtntMap */
     u_long bfPageOffset,	/* add at this page offset */
     u_long bfPageCnt,		/* add this many pages */
@@ -4916,7 +4916,7 @@ HANDLE_EXCEPTION:
 
 static int
 xfer_hole_stg(
-    bfAccessT * bfap,		/* add storge to this file */
+    struct bfAccess * bfap,		/* add storge to this file */
     bsInMemXtntMapT * xtntMap,	/* in this xtnt map */
     uint32_t mapIndex,		/* at this subextent */
     uint32_t descIndex,		/* before this descriptor */
@@ -5212,7 +5212,7 @@ HANDLE_EXCEPTION:
  */
 static int
 xfer_stg_on_one_disk(
-    bfAccessT * bfap,		/* Add stg to this file */
+    struct bfAccess * bfap,		/* Add stg to this file */
     bfTagT bfSetTag,		/* in this file set */
     bsInMemXtntMapT * xtntMap,	/* using this map */
     u_long bfPageOffset,	/* at this file page */
@@ -5531,7 +5531,7 @@ HANDLE_EXCEPTION:
 
 int
 stg_alloc_new_mcell(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
     vdIndexT newVdIndex,	/* in */
@@ -5609,11 +5609,11 @@ stg_alloc_new_mcell(
  */
 static
        int
-make_perm_hole(bfAccessT * cloneap,
+make_perm_hole(struct bfAccess * cloneap,
     uint32_t page,
     ftxHT ftxH)
 {
-	bfAccessT *origap;
+	struct bfAccess *origap;
 	bsInMemXtntT *origXtnts;
 	bsInMemXtntT *cloneXtnts;
 	bsInMemXtntMapT *origXtntMap;
@@ -5794,7 +5794,7 @@ HANDLE_EXCEPTION:
 
 static
        int
-append_perm_hole(bfAccessT * bfap,
+append_perm_hole(struct bfAccess * bfap,
     bsInMemXtntMapT * xtntMap,
     uint32_t holeStart,
     uint32_t holeEnd,
@@ -5934,7 +5934,7 @@ HANDLE_EXCEPTION:
 
 static
        int
-insert_perm_hole(bfAccessT * bfap,
+insert_perm_hole(struct bfAccess * bfap,
     bsInMemXtntMapT * xtntMap,
     bsInMemXtntDescIdT xtntDescId,
     uint32_t holeStart,
@@ -6215,7 +6215,7 @@ HANDLE_EXCEPTION:
 
 static
        int
-add_hole_extent(bfAccessT * bfap,
+add_hole_extent(struct bfAccess * bfap,
     bsInMemXtntMapT * xtntMap,
     uint32_t holeStart,
     uint32_t holeEnd,
@@ -6359,7 +6359,7 @@ HANDLE_EXCEPTION:
  */
 static
        int
-new_sub(bfAccessT * bfap, bsInMemXtntMapT * xtntMap, ftxHT ftxH)
+new_sub(struct bfAccess * bfap, bsInMemXtntMapT * xtntMap, ftxHT ftxH)
 {
 	bfSetT *bfSetp;
 	bsInMemSubXtntMapT *subXtntMap;
@@ -6438,7 +6438,7 @@ HANDLE_EXCEPTION:
 
 int
 x_page_to_iolist(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t pageOffset,		/* in */
     ioListT * ioList		/* in */
 )
@@ -6490,7 +6490,7 @@ x_page_to_iolist(
 
 int
 x_page_to_blkmap(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t pageOffset,		/* in */
     blkMapT * blkMap		/* in */
 )
@@ -6650,7 +6650,7 @@ HANDLE_EXCEPTION:
 
 int
 x_copypage_to_blkmap(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     bsInMemXtntT * xtnts,	/* in */
     uint32_t pageOffset,		/* in */
     blkMapT * blkMap		/* in */
@@ -6695,7 +6695,7 @@ x_copypage_to_blkmap(
 static
        int
 scan_xtnt_map_list(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t pageOffset,		/* in */
     bsInMemXtntMapT * xtntMapList,	/* in */
     uint32_t blkDescCnt,		/* in */
@@ -6762,7 +6762,7 @@ EXIT_SCAN_XTNT_MAP_LIST:
 
 int
 x_page_to_blk(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t pageOffset,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
     blkDescT * blkDesc		/* in */
@@ -6818,7 +6818,7 @@ EXIT_X_PAGE_TO_BLK:
 
 int
 page_is_mapped(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     uint32_t pg,
     uint32_t * nextPage,
     int permHoleFlg		/* in */
@@ -6955,7 +6955,7 @@ page_is_mapped(
 
 int
 page_is_mapped_local(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     uint32_t pg,
     uint32_t * nextPage,
     int permHoleFlg,		/* in */
@@ -7069,7 +7069,7 @@ end:
 
 int
 stg_remove_stg_start(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t pageOffset,		/* in */
     uint32_t pageCnt,		/* in */
     int relQuota,		/* in */
@@ -7256,7 +7256,7 @@ stg_remove_stg_finish(
 static
        int
 remove_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * xtnts,	/* in, modified */
@@ -7449,7 +7449,7 @@ HANDLE_EXCEPTION:
 static
        int
 dealloc_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */
@@ -7796,7 +7796,7 @@ HANDLE_EXCEPTION:
 static
        int
 clip_del_xtnt_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntMapT * xtntMap,	/* in */

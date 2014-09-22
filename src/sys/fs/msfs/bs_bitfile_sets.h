@@ -160,12 +160,12 @@ typedef struct bfSet {
 	bfsQueueT bfSetList;	/* list of bfSetT's associated with this
 				 * domain */
 	mutexT accessChainLock;	/* protects the next two fields */
-	bfAccessT *accessFwd;	/* list of access structures for this fileset */
-	bfAccessT *accessBwd;
+	struct bfAccess *accessFwd;	/* list of access structures for this fileset */
+	struct bfAccess *accessBwd;
 	dev_t dev;		/* set's dev_t; used for statfs() and stat() */
 
 	bfTagT dirTag;		/* tag of bitfile-set's tag directory */
-	bfAccessT *dirBfAp;
+	struct bfAccess *dirBfAp;
 
 	bfSetT *cloneSetp;	/* pointer to clone set */
 	bfSetT *origSetp;	/* for clones, this is parent set desc ptr */
@@ -213,7 +213,7 @@ typedef struct bfSet {
 	ftxLkT fragLock;	/* frag bf lock */
 
 	bfTagT fragBfTag;
-	bfAccessT *fragBfAp;
+	struct bfAccess *fragBfAp;
 	uint32_t freeFragGrps;
 
 	uint32_t truncating;	/* true if truncating fragbf */
@@ -289,7 +289,7 @@ extern bfSetT nilBfSet;
  * fileset's accessChainLock is held while that chain is manipulated.
  * This macros returns with the BFALOCK HELD.
  */
-static inline void ADD_ACC_SETLIST(bfAccessT *bfap)
+static inline void ADD_ACC_SETLIST(struct bfAccess *bfap)
 {
     bfSetT *bfSetp = bfap->bfSetp;
     KASSERT(BFSET_VALID(bfSetp));
@@ -298,8 +298,8 @@ static inline void ADD_ACC_SETLIST(bfAccessT *bfap)
     KASSERT(bfap->setBwd == NULL);
     mutex_enter(&bfap->bfaLock.mutex);
     bfap->setFwd = bfSetp->accessFwd;
-    bfap->setBwd = (bfAccessT *)(&bfSetp->accessFwd);
-    if (bfSetp->accessBwd == (bfAccessT *)(&bfSetp->accessFwd))
+    bfap->setBwd = (struct bfAccess *)(&bfSetp->accessFwd);
+    if (bfSetp->accessBwd == (struct bfAccess *)(&bfSetp->accessFwd))
         bfSetp->accessBwd = bfap;
     else
         bfSetp->accessFwd->setBwd = bfap;
@@ -315,7 +315,7 @@ static inline void ADD_ACC_SETLIST(bfAccessT *bfap)
  * Otherwise, it is assumed that the caller has locked the
  * chain and will unlock it.
  */
-static inline void RM_ACC_SETLIST(bfAccessT *bfap, int lock_list)
+static inline void RM_ACC_SETLIST(struct bfAccess *bfap, int lock_list)
 {
     bfSetT *bfSetp = bfap->bfSetp;
     KASSERT(BFSET_VALID(bfSetp));
@@ -461,7 +461,7 @@ bs_frag_dealloc(
 
 void
 bs_cow(
-    bfAccessT * bfap,		/* in - bitfile access struct */
+    struct bfAccess * bfap,		/* in - bitfile access struct */
     unsigned cowOpt,		/* in - COW options */
     unsigned long pg,		/* in - page being modified (if applicable) */
     unsigned long pgCnt,	/* in - # pages being modified */
@@ -470,13 +470,13 @@ bs_cow(
 
 void bs_bfs_out_of_sync(bfSetT *, ftxHT);
 
-bfSetT *hold_cloneset(bfAccessT *, int);
+bfSetT *hold_cloneset(struct bfAccess *, int);
 
 void release_cloneset(bfSetT *);
 
-int get_clu_clone_locks(bfAccessT *, struct fsContext *, bfSetT **, bfAccessT **);
+int get_clu_clone_locks(struct bfAccess *, struct fsContext *, bfSetT **, struct bfAccess **);
 
-void release_clu_clone_locks(bfAccessT *, bfSetT *, bfAccessT *, int);
+void release_clu_clone_locks(struct bfAccess *, bfSetT *, struct bfAccess *, int);
 
 #endif				/* _KERNEL */
 #endif				/* _BS_BITFILE_SETS_ */

@@ -206,7 +206,7 @@ msfs_setproplist(
 );
 static int
 msfs_pl_set_entry(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     struct proplist_head * hp,	/* in     */
     char *prop_data,		/* in     */
     struct uucred * cred,	/* in     */
@@ -226,7 +226,7 @@ msfs_pl_fill_hdr_image(
 
 static int
 msfs_pl_create_rec(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     bsRecCurT * cur,		/* in/out */
     ftxHT ftx,			/* in     */
     caddr_t obj,		/* in     */
@@ -235,7 +235,7 @@ msfs_pl_create_rec(
 );
 static int
 msfs_pl_alloc_mcell(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     bsRecCurT * cur,		/* in     */
     ftxHT ftx,			/* in     */
     int size,			/* in     */
@@ -243,7 +243,7 @@ msfs_pl_alloc_mcell(
 );
 static int
 msfs_pl_findhead_setdata(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     bsRecCurT * hdr,		/* in/out */
     ftxHT ftx,			/* in     */
     int size,			/* in     */
@@ -389,7 +389,7 @@ msfs_pl_rec_validate(
 
 static int
 msfs_pl_set_entry_v3(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     struct proplist_head * hp,	/* in     */
     char *prop_data,		/* in     */
     struct uucred * cred		/* in     */
@@ -407,7 +407,7 @@ msfs_pl_fill_hdr_image_v3(
 
 static int
 msfs_pl_findhead_setdata_v3(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     bsRecCurT * hdr,		/* in/out */
     ftxHT ftx,			/* in     */
     int size,			/* in     */
@@ -492,13 +492,13 @@ msfs_pl_del_root_done_int_v3(
  */
 void
 msfs_pl_get_locks(
-    bfAccessT * bfap,		/* in - possible clone */
+    struct bfAccess * bfap,		/* in - possible clone */
     int *clu_clxtnt_locked,	/* out - lock flag */
     int *cow_read_locked,	/* out - lock flag */
     int *trunc_xfer_locked	/* out - lock flag */
 )
 {
-	bfAccessT *orig_bfap = NULL;
+	struct bfAccess *orig_bfap = NULL;
 
 	if (bfap->cloneId == 0) {
 		/* file is an original or a clone  */
@@ -922,7 +922,7 @@ msfs_setproplist_int(
 	struct proplist_head *proplist_headp;
 	char *prop_data;
 	int error, entry_resid, rounded_namelen;
-	bfAccessT *bfAccess;
+	struct bfAccess *bfAccess;
 	struct fsContext *context_ptr = VTOC(vp);
 	bfParamsT *bfparamsp = NULL;
 	advfs_opT *advfs_op;
@@ -1212,7 +1212,7 @@ msfs_setproplist(
 {
 	struct vattr check_vattr;
 	int error;
-	bfAccessT *bfap = VTOA(vp);
+	struct bfAccess *bfap = VTOA(vp);
 
 	if (BS_BFTAG_RSVD(bfap->tag)) {
 		/* Reserved files can't have property lists. */
@@ -1244,7 +1244,7 @@ msfs_setproplist(
 
 int
 msfs_pl_set_entry(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     struct proplist_head * hp,	/* in     */
     char *prop_data,		/* in     */
     struct uucred * cred,	/* in     */
@@ -1663,7 +1663,7 @@ msfs_pl_fill_hdr_image(
 
 static int
 msfs_pl_create_rec(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     bsRecCurT * cur,		/* in/out */
     ftxHT ftx,			/* in     */
     caddr_t obj,		/* in     */
@@ -1737,7 +1737,7 @@ msfs_pl_create_rec(
 
 int
 msfs_pl_findhead_setdata(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     bsRecCurT * hdr,		/* in/out */
     ftxHT ftx,			/* in     */
     int size,			/* in     */
@@ -2084,7 +2084,7 @@ out:
  */
 static int
 msfs_pl_alloc_mcell(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     bsRecCurT * cur,		/* in     */
     ftxHT ftx,			/* in     */
     int size,			/* in     */
@@ -2182,7 +2182,7 @@ msfs_getproplist(
 {
 
 	int error;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	int namlen, namelen, vallen, valuelen, entry_size;
 	u_int flags;
 	bfParamsT *bfparamsp = NULL;
@@ -2286,7 +2286,7 @@ msfs_getproplist_int(
 )
 {
 	int error = 0;
-	bfAccessT *bfAccess;
+	struct bfAccess *bfAccess;
 	bsPropListHeadT *hdr_rec;
 	int just_sizing, total_bytes;
 	bsRecCurT hdr;
@@ -2478,7 +2478,7 @@ msfs_pl_get_entry(
 	int error = 0, name_resid, cell_size;
 	uint64_t rdflags;
 	int sts = EOK;
-	bfAccessT *bfAccess = VTOA(vp);
+	struct bfAccess *bfAccess = VTOA(vp);
 
 	DEBUG(1,
 	    printf("msfs_pl_get_entry\n"));
@@ -2875,7 +2875,7 @@ msfs_delproplist(
 {
 	struct vattr check_vattr;
 	int error;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 
 	VOP_GETATTR(vp, &check_vattr, cred, error);
 
@@ -2909,7 +2909,7 @@ msfs_delproplist_int(
 )
 {
 	int error = 0, sec_access, access_error = 0;
-	bfAccessT *bfAccess;
+	struct bfAccess *bfAccess;
 	char *name_buf = NULL;
 	int valuelen, name_resid;
 	bsRecCurT hdr;
@@ -3441,7 +3441,7 @@ msfs_pl_unlink_mcells(
 
 int
 msfs_pl_set_entry_v3(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     struct proplist_head * hp,	/* in     */
     char *prop_data,		/* in     */
     struct uucred * cred		/* in     */
@@ -3794,7 +3794,7 @@ msfs_pl_fill_hdr_image_v3(
 
 int
 msfs_pl_findhead_setdata_v3(
-    bfAccessT * bfAccess,	/* in     */
+    struct bfAccess * bfAccess,	/* in     */
     bsRecCurT * hdr,		/* in/out */
     ftxHT ftx,			/* in     */
     int size,			/* in     */
@@ -4144,7 +4144,7 @@ msfs_getproplist_int_v3(
 )
 {
 	int error = 0;
-	bfAccessT *bfAccess;
+	struct bfAccess *bfAccess;
 	bsPropListHeadT_v3 *hdr_rec;
 	int just_sizing, total_bytes;
 	bsRecCurT hdr;
@@ -4681,7 +4681,7 @@ msfs_delproplist_int_v3(
 )
 {
 	int error = 0, sec_access, access_error = 0;
-	bfAccessT *bfAccess;
+	struct bfAccess *bfAccess;
 	char *name_buf = NULL;
 	int valuelen, name_resid;
 	bsRecCurT hdr;

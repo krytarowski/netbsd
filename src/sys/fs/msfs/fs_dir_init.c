@@ -76,7 +76,7 @@ ulong access_structures_allocated = 0, access_structures_deallocated = 0, failed
 static int
 create_root_file(
     bfTagT * tagp,
-    bfAccessT ** outbfap,
+    struct bfAccess ** outbfap,
     bfSetT * bfSetp,
     bfTagT rootTag,
     bfParamsT * bfParams,
@@ -239,7 +239,7 @@ fs_assemble_dir(
 
 int
 dir_empty(
-    bfAccessT * bfap,		/* in - dir's access structure */
+    struct bfAccess * bfap,		/* in - dir's access structure */
     struct fsContext * dir_context	/* in - ptr to dir's context area */
 )
 {
@@ -355,7 +355,7 @@ fs_create_file_set(
 	bfTagT userQuotaTag, groupQuotaTag;
 	int rootOpen = 0, tagsOpen = 0;
 	int userQuotaOpen = 0, groupQuotaOpen = 0;
-	bfAccessT *rootbfap, *tagsbfap, *userQuotabfap, *groupQuotabfap;
+	struct bfAccess *rootbfap, *tagsbfap, *userQuotabfap, *groupQuotabfap;
 	ftxHT ftxH;
 
 
@@ -584,7 +584,7 @@ _error:
 static int
 create_root_file(
     bfTagT * tagp,		/* out - tag of created bitfile */
-    bfAccessT ** outbfap,	/* out - access structure of created bitfile */
+    struct bfAccess ** outbfap,	/* out - access structure of created bitfile */
     bfSetT * bfSetp,		/* in - bf set desc pointer */
     bfTagT rootTag,		/* in - tag of parent dir */
     bfParamsT * bfParams,	/* in - parameters for create */
@@ -598,7 +598,7 @@ create_root_file(
 )
 {
 	int sts;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct timeval createTime;
 	ftxHT ftxH;
 	rbfPgRefHT pgH;
@@ -606,7 +606,7 @@ create_root_file(
 	statT *dir_stats;
 	struct vnode *nullvp = NULL;
 
-	int bs_inherit_init(bfAccessT * bfap, ftxHT ftxH);
+	int bs_inherit_init(struct bfAccess * bfap, ftxHT ftxH);
 
 	dir_stats = (statT *) ms_malloc(sizeof(statT));
 	if (dir_stats == NULL) {
@@ -741,7 +741,7 @@ fs_insert_undo(
 {
 	int sts;
 	fs_dir_entry *dir_p;
-	bfAccessT *dir_accessp;
+	struct bfAccess *dir_accessp;
 	struct fsContext *context_ptr;
 	char *dir_buffer;
 	insert_undo_rec in_rec;
@@ -971,7 +971,7 @@ fs_cleanup_thread(void)
 	struct domain *dmnP = NULL;
 	int sts;
 	extern cleanup_closed_list(clupClosedListTypeT);
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 
 	while (TRUE) {
 		/* Wait for something to do */

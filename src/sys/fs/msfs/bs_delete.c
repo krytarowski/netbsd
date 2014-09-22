@@ -138,7 +138,7 @@ typedef struct {
 
 int
 rbf_delete_int(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     ftxHT parentFtxH
 );
 
@@ -195,7 +195,7 @@ del_xtnt_array(
 
 static int
 pin_link(
-    bfAccessT * bmtbfap,
+    struct bfAccess * bmtbfap,
     bfMCIdT mcid,
     delLinkT ** zlp,
     vdT * vdp,			/* in - pointer to virtual disk */
@@ -204,7 +204,7 @@ pin_link(
 
 static int
 pin_hdr(
-    bfAccessT * bmtbfap,
+    struct bfAccess * bmtbfap,
     delLinkT ** zlp,
     vdT * vdp,			/* in - Volume Pointer */
     ftxHT ftxH
@@ -289,7 +289,7 @@ bs_deferred_delete_undo_opx(
 	int sts = EOK;
 	bsBfAttrT bfAttr;
 	bfSetT *bfSetp = NULL;
-	bfAccessT *bfap = NULL;
+	struct bfAccess *bfap = NULL;
 	struct domain *dmnP;
 	struct vnode *nullvp = NULL;
 
@@ -367,7 +367,7 @@ HANDLE_EXCEPTION:
 
 int
 rbf_delete(
-    bfAccessT * bfap,		/* in - bitfile's access structure */
+    struct bfAccess * bfap,		/* in - bitfile's access structure */
     ftxHT parentFtxH		/* in - handle to parent transaction */
 )
 {
@@ -495,7 +495,7 @@ rbf_delete(
 
 int
 rbf_delete_int(
-    bfAccessT * bfap,		/* in - bitfile's access structure */
+    struct bfAccess * bfap,		/* in - bitfile's access structure */
     ftxHT parentFtxH		/* in - handle to parent transaction */
 )
 {
@@ -820,7 +820,7 @@ HANDLE_EXCEPTION: ;
 
 int
 bs_delete(
-    bfAccessT * bfap		/* in - bitfile's access structure */
+    struct bfAccess * bfap		/* in - bitfile's access structure */
 )
 {
 	return rbf_delete(bfap, FtxNilFtxH);
@@ -1136,7 +1136,7 @@ del_bitfile_list_undo(
 
 static int
 pin_link(
-    bfAccessT * bmtbfap,
+    struct bfAccess * bmtbfap,
     bfMCIdT mcid,
     delLinkT ** zlp,
     vdT * vdp,			/* in - Volume pointer */
@@ -1168,7 +1168,7 @@ pin_link(
 
 static int
 pin_hdr(
-    bfAccessT * bmtbfap,
+    struct bfAccess * bmtbfap,
     delLinkT ** zlp,
     vdT * vdp,			/* in - volume pointer */
     ftxHT ftxH
@@ -1256,9 +1256,9 @@ del_clean_mcell_list(
 	struct fs_stat *stats_ptr = NULL;	/* pointer to bmt stats record */
 	bfSetIdT bfSetId;
 	bfSetT *bfSetp;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	int delete_this_mcell, ftxStarted;
-	extern bfAccessT *find_bfap();
+	extern struct bfAccess *find_bfap();
 	ftxHT ftxH;
 
 	if (RBMT_THERE(vdp->bmtp->dmnP)) {
@@ -1493,7 +1493,7 @@ ddl_complete_delete(bfTagT setTag, bfTagT fileTag, vdT * vdp)
 	bfSetT *bfSetp = NULL;
 	bfSetIdT bfSetId;
 	struct vnode *vp = NULL;
-	bfAccessT *bfap = NULL;
+	struct bfAccess *bfap = NULL;
 	struct fsContext *cp = NULL;
 	uint i;
 	fileSetNodeT *fsnp = NULL;
@@ -1735,7 +1735,7 @@ filesetnode_init(bfSetT * bfSetp, fileSetNodeT ** fsnpA)
 ** the fileset. We only need to do enough to satisfy bs_access_one & vrele.
 */
 int
-fscontext_init(struct vnode * vp, bfAccessT * bfap, struct fsContext ** cpA)
+fscontext_init(struct vnode * vp, struct bfAccess * bfap, struct fsContext ** cpA)
 {
 	struct fsContext *cp;
 	int sts;
@@ -2184,7 +2184,7 @@ xfer_xtnts_to_clone(
     bsXtntRT * pxp		/* "primary xtnt record" of delete list */
 )
 {
-	bfAccessT *cloneap = NULL;
+	struct bfAccess *cloneap = NULL;
 	int sts;
 	int orig_sts;
 	bsBfAttrT *bfAttrp;

@@ -62,7 +62,7 @@
 static
 int
 get_stripe_next_page(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     uint32_t pg,
     int cloned,
     int *use_orig_bfap,
@@ -81,7 +81,7 @@ get_stripe_next_page(
 
 int
 bs_get_bf_xtnt_map(
-    bfAccessT * bfap,		/* in - access structure */
+    struct bfAccess * bfap,		/* in - access structure */
     int startXtntMap,		/* in - extent map at which to start */
     int startXtnt,		/* in - extent at which to start */
     int xtntArraySize,		/* in - size of extent array */
@@ -290,7 +290,7 @@ HANDLE_EXCEPTION:
 
 int
 bs_get_clone_xtnt_map(
-    bfAccessT * clone_bfap,	/* in - clone access structure */
+    struct bfAccess * clone_bfap,	/* in - clone access structure */
     int startXtntMap,		/* in - clone extent map at which to start */
     int startXtnt,		/* in - clone extent at which to start */
     int xtntArraySize,		/* in - clone size of extent array */
@@ -301,7 +301,7 @@ bs_get_clone_xtnt_map(
     int *pageCnt		/* out - see note above */
 )
 {
-	bfAccessT *orig_bfap;
+	struct bfAccess *orig_bfap;
 	bsInMemXtntMapT *clone_xtntMap, *orig_xtntMap;
 	bsInMemXtntMapT *newxtntmap = NULL;
 	uint32_t clone_cnt, orig_cnt, cnt;
@@ -620,7 +620,7 @@ HANDLE_EXCEPTION:
 
 int
 bs_get_stripe_xtnt_map(
-    bfAccessT * bfap,		/* in - stripe access structure */
+    struct bfAccess * bfap,		/* in - stripe access structure */
     int startXtntMap,		/* in - xtntmap at which to start */
     int startXtnt,		/* in - stripe extent at which to start */
     int xtntArraySize,		/* in - stripe size of extent array */
@@ -795,11 +795,11 @@ HANDLE_EXCEPTION:
 }
 
 static int
-get_stripe_next_page(bfAccessT * bfap, uint32_t pg, int cloned,
+get_stripe_next_page(struct bfAccess * bfap, uint32_t pg, int cloned,
     int *use_orig_bfap, int *start_pgP, int *nextPageP,
     vdIndexT * vdIndexP, uint32_t * vdBlkP)
 {
-	bfAccessT *orig_bfap = bfap->origAccp;
+	struct bfAccess *orig_bfap = bfap->origAccp;
 	int clone_nextPage = 0, ret;
 	int segmentSize = bfap->xtnts.stripeXtntMap->segmentSize;
 
@@ -896,7 +896,7 @@ get_stripe_next_page(bfAccessT * bfap, uint32_t pg, int cloned,
 
 int
 bs_get_bkup_xtnt_map(
-    bfAccessT * bfap,		/* in - clone access structure */
+    struct bfAccess * bfap,		/* in - clone access structure */
     int startXtntMap,		/* in - clone extent map at which to start */
     int startXtnt,		/* in - clone extent at which to start */
     int xtntArraySize,		/* in - clone size of extent array */
@@ -909,7 +909,7 @@ bs_get_bkup_xtnt_map(
 {
 	int sts;
 	int cloned;
-	bfAccessT *fromBfap = bfap;
+	struct bfAccess *fromBfap = bfap;
 	int do_clonextnt_unlock = 0;
 
 	/*
@@ -1072,7 +1072,7 @@ bs_get_bkup_xtnt_map(
 
 int
 bs_get_bf_page_cnt(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t * pageCnt		/* out */
 )
 {
@@ -1119,7 +1119,7 @@ bs_get_bf_page_cnt(
 		    IDX_FILE_IS_DIRECTORY(bfap) &&
 		    ((bsDirIdxRecT *) bfap->idx_params)->idx_bfap) {
 			uint32_t idx_pages;
-			bfAccessT *idx_bfap = ((bsDirIdxRecT *) bfap->idx_params)->idx_bfap;
+			struct bfAccess *idx_bfap = ((bsDirIdxRecT *) bfap->idx_params)->idx_bfap;
 
 			if (idx_bfap->cloneId == BS_BFSET_ORIG) {
 				idx_pages = idx_bfap->xtnts.allocPageCnt;
@@ -1155,7 +1155,7 @@ bs_get_bf_page_cnt(
 
 int
 bs_get_bf_params(
-    bfAccessT * bfap,		/* in - bfaccess structure */
+    struct bfAccess * bfap,		/* in - bfaccess structure */
     bfParamsT * bfParams,	/* out - parameters for the bf */
     int lock			/* in */
 )
@@ -1238,7 +1238,7 @@ bs_get_bf_params(
 
 int
 bs_set_bf_params(
-    bfAccessT * bfap,		/* in - access structure for bitfile */
+    struct bfAccess * bfap,		/* in - access structure for bitfile */
     bfParamsT * bfParams	/* in - parameter list */
 )
 {
@@ -1456,7 +1456,7 @@ HANDLE_EXCEPTION:
 
 int
 bs_get_bf_iparams(
-    bfAccessT * bfap,		/* in - bf access structure */
+    struct bfAccess * bfap,		/* in - bf access structure */
     bfIParamsT * bfIParams,	/* out - parameters for the bf */
     int lock			/* in */
 )
@@ -1508,7 +1508,7 @@ bs_get_bf_iparams(
 
 int
 bs_set_bf_iparams(
-    bfAccessT * bfap,		/* in - access structure for bitfile */
+    struct bfAccess * bfap,		/* in - access structure for bitfile */
     bfIParamsT * bfIParams	/* in - parameter list */
 )
 {
@@ -1710,7 +1710,7 @@ bs_set_dmn_params(
     bfDmnParamsT * dmnParams	/* in - domain params */
 )
 {
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 	bfPageRefHT pgref;
 	int sts;
 	struct bsMPg *bmtpg;
@@ -1794,7 +1794,7 @@ bs_get_vd_params(
 				 * GETVOLPARAMS2_CHVOL_OP_A */
 )
 {
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 	bfPageRefHT pgref;
 	int sts;
 	struct bsVdAttr *vdattrp;
@@ -2010,7 +2010,7 @@ bs_get_avail_mcells(
 	long potentialMcells;	/* number of mcells that could be allocated */
 	long availMcells = 0;
 	struct vd *vdp;
-	bfAccessT *bmtap;
+	struct bfAccess *bmtap;
 
 	/*
          * For each disk in the domain we calculate the number of mcells and

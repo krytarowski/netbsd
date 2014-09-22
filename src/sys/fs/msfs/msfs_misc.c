@@ -65,7 +65,7 @@ spec_page_write(void)
 static
        int
 copy_frag_into_page(
-    bfAccessT * fragBfAccessp,	/* in */
+    struct bfAccess * fragBfAccessp,	/* in */
     bfFragIdT fragId,		/* in */
     uint32_t copyByteOffset,	/* in */
     uint32_t copyByteCnt,	/* in */
@@ -87,7 +87,7 @@ copy_frag_into_page(
              struct file ** fp
 )
 {
-	bfAccessT *bfap = NULL;
+	struct bfAccess *bfap = NULL;
 	struct file *tfp = NULL;
 	struct vnode *vp = NULL;
 	int error;
@@ -340,7 +340,7 @@ bf_get_l(
 	int i, error;
 	struct vnode *nvp;
 	struct fsContext *file_context;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct vm_ubc_object *obj;
 	int sts = EOK;
 	struct undel_dir_rec undel_rec;
@@ -348,7 +348,7 @@ bf_get_l(
 	extern struct vnodeops spec_bfnodeops;
 	extern struct vnodeops fifo_bfnodeops;
 	extern int xlate_dev(dev_t, int);
-	bfAccessT *real_bfap = NULL;
+	struct bfAccess *real_bfap = NULL;
 	int shadow = FALSE, unlockFlag = FALSE;
 	struct vnode *nullvp = NULL;
 	bfTagT real_tag;
@@ -902,9 +902,9 @@ msfs_inactive(
     struct vnode * vp		/* in - vnode to inactivate */
 )
 {
-	bfAccessT *tempbfap;
+	struct bfAccess *tempbfap;
 	struct bfNode *bnp;
-	bfAccessT *real_bfap = NULL;
+	struct bfAccess *real_bfap = NULL;
 
 	FILESETSTAT(vp, msfs_inactive);
 
@@ -1030,7 +1030,7 @@ msfs_reclaim(
 {
 	struct bfNode *bnp;
 	bfSetT *bfSetp;
-	bfAccessT *bfap = NULL;
+	struct bfAccess *bfap = NULL;
 
 	FILESETSTAT(vp, msfs_reclaim);
 	bnp = (struct bfNode *) & vp->v_data[0];
@@ -1270,7 +1270,7 @@ int
 copy_frag_into_vm_page(
     vm_ubc_object_t vop,
     vm_offset_t offset,		/* in */
-    bfAccessT * fragBfAccessp,	/* in */
+    struct bfAccess * fragBfAccessp,	/* in */
     bfFragIdT fragId,		/* in */
     uint32_t bytesPerFilePage,	/* in */
     vm_page_t pp
@@ -1364,7 +1364,7 @@ msfs_refer(vm_ubc_object_t vop)
 msfs_release(vm_ubc_object_t vop)
 {
 	struct fsContext *contextp;
-	bfAccessT *bfap = vop->vu_ap;
+	struct bfAccess *bfap = vop->vu_ap;
 
 	KASSERT(bfap);	/* we have an access structure */
 	KASSERT(bfap->bfVp);	/* that has a vnode */
@@ -1438,7 +1438,7 @@ msfs_putpage(
 	int plcnt;
 	unsigned noReadMask = 0;
 	int decr_access = 0;
-	bfAccessT *bfap = NULL, *tempbfap;
+	struct bfAccess *bfap = NULL, *tempbfap;
 	struct vnode *vp = vop->vu_vp;
 	struct fsContext *contextp;
 	vdT *vdp;
@@ -1603,7 +1603,7 @@ msfs_getpage(
 {
 	struct vnode *vp;
 	struct fsContext *contextp;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	unsigned long fsize;
 	int pageCnt;
 	int page;
@@ -1960,7 +1960,7 @@ msfs_write_check(vm_ubc_object_t vop, vm_page_t pp)
 static
        int
 copy_frag_into_page(
-    bfAccessT * fragBfAccessp,	/* in */
+    struct bfAccess * fragBfAccessp,	/* in */
     bfFragIdT fragId,		/* in */
     uint32_t copyByteOffset,	/* in */
     uint32_t copyByteCnt,	/* in */
@@ -2105,7 +2105,7 @@ msfs_mmap(register struct vnode * vp,
 	int ret;
 	extern kern_return_t u_vp_create();
 	struct fsContext *contextp;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	int locked;
 	int sts;
 
@@ -2462,7 +2462,7 @@ msfs_brelse(register struct vnode * vp,
 msfs_log_and_meta_flush(vm_ubc_object_t vop,
     int pgs_to_flush)
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 
 	bfap = vop->vu_ap;
 	KASSERT(bfap);

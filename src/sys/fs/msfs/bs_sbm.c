@@ -55,7 +55,7 @@
 static
        int
 alloc_bits_page(
-    bfAccessT * sbmbfap,	/* in */
+    struct bfAccess * sbmbfap,	/* in */
     uint32_t pageOffset,		/* in */
     int startBit,		/* in */
     int endBit,			/* in */
@@ -65,7 +65,7 @@ alloc_bits_page(
 static
 void
 dealloc_bits_page(
-    bfAccessT * sbmbfap,	/* in */
+    struct bfAccess * sbmbfap,	/* in */
     uint32_t pageOffset,		/* in */
     int startBit,		/* in */
     int endBit,			/* in */
@@ -141,7 +141,7 @@ CANT_SET_TWICE(
     unsigned mask,
     unsigned pageOffset,
     unsigned wordOffset,
-    bfAccessT * sbmbfap
+    struct bfAccess * sbmbfap
 )
 {
 	struct domain *dmnP;
@@ -166,7 +166,7 @@ CANT_CLEAR_TWICE(
     unsigned mask,
     unsigned pageOffset,
     unsigned wordOffset,
-    bfAccessT * sbmbfap
+    struct bfAccess * sbmbfap
 )
 {
 	struct domain *dmnP;
@@ -501,7 +501,7 @@ HANDLE_EXCEPTION:
  */
 int
 alloc_bits_page(
-    bfAccessT * sbmbfap,	/* in */
+    struct bfAccess * sbmbfap,	/* in */
     uint32_t pageOffset,		/* in */
     int startBit,		/* in */
     int endBit,			/* in */
@@ -632,7 +632,7 @@ dealloc_bits_no_sub_ftx(
 static
 void
 dealloc_bits_page(
-    bfAccessT * sbmbfap,	/* in */
+    struct bfAccess * sbmbfap,	/* in */
     uint32_t pageOffset,		/* in */
     int startBit,		/* in */
     int endBit,			/* in */

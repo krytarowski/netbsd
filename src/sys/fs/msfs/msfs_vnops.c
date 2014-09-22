@@ -649,7 +649,7 @@ msfs_close(
 {
 	struct fsContext *context_pointer = VTOC(vp);
 	ftxHT ftx_handle;
-	bfAccessT *bfap = VTOA(vp);
+	struct bfAccess *bfap = VTOA(vp);
 
 	FILESETSTAT(vp, msfs_close);
 
@@ -712,7 +712,7 @@ msfs_access(
 	struct bfNode *bnp;
 	struct fsContext *context_ptr;
 	udac_t udac;
-	bfAccessT *bfap = VTOA(vp);
+	struct bfAccess *bfap = VTOA(vp);
 
 	FILESETSTAT(vp, msfs_access);
 
@@ -773,7 +773,7 @@ msfs_getattr(
     struct uucred * cred		/* in - callers credentials */
 )
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct fsContext *context_ptr;
 	bfSetT *bfSetp;
 	struct mount *mp;
@@ -980,7 +980,7 @@ msfs_setattr(
 }
 
 static int 
-fs_setattr_truncate(bfAccessT *, struct vattr *,
+fs_setattr_truncate(struct bfAccess *, struct vattr *,
     struct uucred *, int *);
 
 fs_setattr(
@@ -990,7 +990,7 @@ fs_setattr(
 {				/* in - callers credentials */
 	int error = 0;
 	int sts;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct fsContext *context_ptr;
 	uid_t iuid;
 	ftxHT ftxH;
@@ -1221,7 +1221,7 @@ _exit:
 }
 
 static int
-fs_setattr_truncate(bfAccessT * bfap,
+fs_setattr_truncate(struct bfAccess * bfap,
     struct vattr * vap,
     struct uucred * credp,
     int *updateStatsA)
@@ -1231,7 +1231,7 @@ fs_setattr_truncate(bfAccessT * bfap,
 	int error;
 	ulong truncationPage;
 	uint oddOffset;
-	bfAccessT *cloneap;
+	struct bfAccess *cloneap;
 	bfSetT *cloneSetp;
 	int tokenFlg;
 	int setHeld = FALSE;
@@ -1896,7 +1896,7 @@ fs_fsync(
 	struct mount *mp;
 	int saved_dkResult, ret;
 	struct fsContext *file_context;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct domain *dmnP;
 	ftxHT ftx_handle;
 
@@ -2004,8 +2004,8 @@ msfs_remove(
 	struct bfNode *bnp, *dir_bnp, *undel_bnp;
 	struct vnode *dvp = NULL, *undel_dir_vp = NULL, *rvp = NULL;
 	struct fsContext *rem_context, *dir_context, *undel_context;
-	bfAccessT *bfap;
-	bfAccessT *idx_bfap = NULL;
+	struct bfAccess *bfap;
+	struct bfAccess *idx_bfap = NULL;
 	ftxHT ftx_handle;
 	bfSetT *bfSetp;
 	struct mount *mp;
@@ -2471,9 +2471,9 @@ msfs_link(
     register struct nameidata * ndp	/* in - nameidata structure */
 )
 {
-	bfAccessT *bfap;
-	bfAccessT *dir_bfap;
-	bfAccessT *idx_bfap = NULL;
+	struct bfAccess *bfap;
+	struct bfAccess *dir_bfap;
+	struct bfAccess *idx_bfap = NULL;
 	struct fsContext *file_context, *dir_context;
 	struct bfNode *bnp, *dbnp;
 	struct vnode *dvp = NULL;
@@ -2716,8 +2716,8 @@ msfs_rename(
 	struct bfNode *tbnp, *ttbnp;
 	struct fsContext *from_file_context, *from_dir_context, *to_file_context = NULLCP,
 	         *to_dir_context;
-	bfAccessT *from_accessp, *to_accessp, *to_dir_accessp, *from_dir_accessp;
-	bfAccessT *from_idx_bfap = NULL, *to_idx_bfap = NULL;
+	struct bfAccess *from_accessp, *to_accessp, *to_dir_accessp, *from_dir_accessp;
+	struct bfAccess *from_idx_bfap = NULL, *to_idx_bfap = NULL;
 	int dir_mv = 0;
 	bfSetT *bfSetp;
 	struct mount *mp, *from_mp;
@@ -3692,8 +3692,8 @@ msfs_rmdir(
 )
 {
 	struct vnode *rvp = NULL, *dvp = NULL;
-	bfAccessT *rem_access, *par_access;
-	bfAccessT *idx_bfap = NULL;
+	struct bfAccess *rem_access, *par_access;
+	struct bfAccess *idx_bfap = NULL;
 	struct fsContext *rem_context, *par_context;
 	struct bfNode *bnp;
 	int ret, dirempty_ret;
@@ -4061,7 +4061,7 @@ msfs_readlink(
     struct uucred * cred		/* in - credentials of caller */
 )
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct fsContext *context_ptr;
 	ulong isize;
 	int error;
@@ -4339,7 +4339,7 @@ msfs_pathconf(
     int name,
     long *retval)
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 
 	switch (name) {
 	case _PC_FILESIZEBITS:
@@ -4387,7 +4387,7 @@ msfs_page_read(
 )
 {
 	struct fsContext *file_context;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	int size;		/* byte count to read */
 	u_long bf_size;		/* size of file */
 	int readable_bytes;	/* most that can be read from file */
@@ -4655,11 +4655,11 @@ msfsspec_revoke(
     int flags
 )
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	bfSetT *bfSetp;
 	struct bfNode *bnp;
 	ulong hash_key;
-	extern bfAccessT *find_bfap();
+	extern struct bfAccess *find_bfap();
 	extern struct vnodeops msfsrevoke_vnodeops;
 
 
@@ -5011,7 +5011,7 @@ attach_undel_dir(
 	struct mount *mp, *undel_mp;
 	struct fileSetNode *fsnp, *undel_fsnp;
 	struct bfNode *bnp, *undel_bnp;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct fsContext *dir_context, *undel_dir_context;
 	struct undel_dir_rec bmt_rec;
 
@@ -5172,7 +5172,7 @@ detach_undel_dir(
 	register struct vnode *dir_vp = NULL;
 	register struct vnode *vp = NULL;
 	struct bfNode *bnp;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct fsContext *dir_context;
 	struct undel_dir_rec bmt_rec;
 	struct mount *mp;
@@ -5330,7 +5330,7 @@ get_name(
 	int sts, return_status;
 	int i;
 	int last_page;
-	bfAccessT *bfap = NULL, *dir_bfap = NULL;
+	struct bfAccess *bfap = NULL, *dir_bfap = NULL;
 	bfSetT *bfSetp;
 	bfTagT root_tag;
 	char *dir_buffer, *p;
@@ -5658,7 +5658,7 @@ msfs_syncdata(
 {
 	int ret;
 	struct fsContext *file_context;
-	bfAccessT *bfap = VTOA(vp);
+	struct bfAccess *bfap = VTOA(vp);
 	bsPageT first_page_to_flush, last_page_to_flush;
 
 	FILESETSTAT(vp, msfs_syncdata);

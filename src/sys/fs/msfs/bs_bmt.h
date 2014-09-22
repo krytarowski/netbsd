@@ -58,7 +58,7 @@ bmt_alloc_prim_mcell(
 
 int
 bmt_alloc_mcell(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint16_t poolVdIndex,	/* in */
     mcellPoolT poolType,	/* in */
     bfTagT bfSetTag,		/* in */
@@ -161,7 +161,7 @@ bmtr_clone_recs(
 
 int
 bmtr_put_rec_n_unlk_int(
-    bfAccessT * bfap,		/* in - bf access structure */
+    struct bfAccess * bfap,		/* in - bf access structure */
     u_short rType,		/* in - type of record */
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
@@ -172,7 +172,7 @@ bmtr_put_rec_n_unlk_int(
 
 int
 bmtr_update_rec(
-    bfAccessT * bfap,		/* in - bf access structure */
+    struct bfAccess * bfap,		/* in - bf access structure */
     u_short rType,		/* in - type of record */
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
@@ -182,7 +182,7 @@ bmtr_update_rec(
 
 int
 bmtr_update_rec_n_unlk(
-    bfAccessT * bfap,		/* in - bf access structure */
+    struct bfAccess * bfap,		/* in - bf access structure */
     u_short rType,		/* in - type of record */
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
@@ -192,7 +192,7 @@ bmtr_update_rec_n_unlk(
 
 int
 allocate_link_new_mcell(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     vdIndexT oldVdIndex,	/* in */
     bfMCIdT oldMcellId,		/* in */
     ftxHT parentFtx,		/* in */
@@ -324,19 +324,19 @@ check_mcell_ptr(vdIndexT vdi, bfMCIdT mcid, bfTagT tag, struct domain * dmnp);
 void check_BMT_pg(struct bsBuf * bp);
 
 int
-check_mcell_hdr(bsMCT * mcp, bfAccessT * bfap);
+check_mcell_hdr(bsMCT * mcp, struct bfAccess * bfap);
 
 int
-check_BSR_XTNTS_rec(bsXtntRT * bsXtntRp, bfAccessT * bfap, vdT * vdp);
+check_BSR_XTNTS_rec(bsXtntRT * bsXtntRp, struct bfAccess * bfap, vdT * vdp);
 
 int
 check_BSR_SHADOW_XTNTS_rec(bsShadowXtntT * bsShadowXtntp,
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     vdT * vdp);
 
 int
 check_BSR_XTRA_XTNTS_rec(bsXtraXtntRT * bsXtraXtntRp,
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     vdT * vdp,
     uint32_t lastPg);
 

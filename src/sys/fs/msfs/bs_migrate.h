@@ -33,7 +33,7 @@
 
 int
 bs_move_metadata(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdT * vdp			/* in or NULL */
 );
 
@@ -42,7 +42,7 @@ void
 
 int
 mig_migrate(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     vdIndexT srcVdIndex,	/* in */
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */

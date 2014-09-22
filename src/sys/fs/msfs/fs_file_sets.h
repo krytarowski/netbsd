@@ -71,12 +71,12 @@ fs_fset_get_id(
 int
 fs_create_frag(
     bfSetT * bfSetp,		/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     struct uucred * cred,	/* in */
     ftxHT parentFtxH		/* in */
 );
 
 int
 fs_quick_frag_test(
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 );

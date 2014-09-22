@@ -1301,7 +1301,7 @@ call_disk(
 )
 {
 	struct buf *bp;
-	bfAccessT *bfAccess;
+	struct bfAccess *bfAccess;
 	struct domain *dmnP;
 #ifdef CLUSTER_STATS
 	int desCnt;

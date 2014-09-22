@@ -238,7 +238,7 @@ bmt_upd_mcell_free_list(
 );
 int
 bmtr_update_rec_int(
-    bfAccessT * bfap,		/* in - ptr to bf access struct */
+    struct bfAccess * bfap,		/* in - ptr to bf access struct */
     u_short rType,		/* in - type of record */
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
@@ -247,7 +247,7 @@ bmtr_update_rec_int(
     uint32_t flags		/* in - flags */
 );
 
-static int check_xtnts(bsXtntT *, uint16_t, bfAccessT *, vdT *);
+static int check_xtnts(bsXtntT *, uint16_t, struct bfAccess *, vdT *);
 
 static int test_mcell_ptr(vdIndexT, bfMCIdT, bfTagT, struct domain *);
 
@@ -498,7 +498,7 @@ bmtr_assign_rec(
 
 static int
 bmtr_create_rec(
-    bfAccessT * bfAccp,		/* in - bitfiles's access structure */
+    struct bfAccess * bfAccp,		/* in - bitfiles's access structure */
     bfMCIdT * mcid,		/* in - mcell id (primary/found) */
     vdT * vdp,			/* in - vd (of mcell) pointer */
     void *bPtr,			/* in - contents of new record */
@@ -517,7 +517,7 @@ bmtr_create_rec(
 	rbfPgRefHT pgref;
 	int ftxStarted = FALSE;
 	struct domain *dmnP;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 	int file_is_rbmt;
 
 	dmnP = vdp->dmnP;
@@ -748,7 +748,7 @@ bmtr_scan_mcells(
 	int pgRefed = FALSE;
 	bsMRT *rp;
 	struct domain *dmnP;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 
 	*bsrp = NULL;
 
@@ -929,7 +929,7 @@ bmtr_scan(
 
 int
 bmtr_get_rec_ptr(
-    bfAccessT * bfap,		/* in - bf access struct ptr */
+    struct bfAccess * bfap,		/* in - bf access struct ptr */
     ftxHT parentFtxH,		/* in - transaction handle */
     u_short rType,		/* in - type of record */
     u_short bSize,		/* in - size of buffer */
@@ -950,7 +950,7 @@ bmtr_get_rec_ptr(
 	u_short recSize;
 	struct bsMPg *bmtp = NULL;
 	struct bsMC *mcp = NULL;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 
 	if (bSize > BS_USABLE_MCELL_SPACE) {
 		ADVFS_SAD1("bmtr_get_rec_ptr: invalid request", bSize);
@@ -1071,7 +1071,7 @@ HANDLE_EXCEPTION:
 
 int
 bmtr_get_rec_n_lk(
-    bfAccessT * bfap,		/* in - bf access structure */
+    struct bfAccess * bfap,		/* in - bf access structure */
     u_short rType,		/* in - type of record */
     void *bPtr,			/* in/out - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
@@ -1285,7 +1285,7 @@ bmtr_max_rec_size(void)
 
 int
 bmtr_put_rec_n_unlk(
-    bfAccessT * bfap,		/* in - bf access structure */
+    struct bfAccess * bfap,		/* in - bf access structure */
     u_short rType,		/* in - type of record */
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
@@ -1339,7 +1339,7 @@ bmtr_put_rec_n_unlk(
 
 int
 bmtr_put_rec_n_unlk_int(
-    bfAccessT * bfap,		/* in - bf access structure */
+    struct bfAccess * bfap,		/* in - bf access structure */
     u_short rType,		/* in - type of record */
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
@@ -1362,7 +1362,7 @@ bmtr_put_rec_n_unlk_int(
 	struct bsMC *mcp = NULL;
 	bmtrPutRecUndoT *undoRecp = NULL;
 	uint32_t undoRecSize;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 
 	undoRecp = (bmtrPutRecUndoT *) ms_malloc(sizeof(bmtrPutRecUndoT));
 
@@ -1510,7 +1510,7 @@ HANDLE_EXCEPTION:
 
 int
 bmtr_update_rec(
-    bfAccessT * bfap,		/* in - bf access structure */
+    struct bfAccess * bfap,		/* in - bf access structure */
     u_short rType,		/* in - type of record */
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
@@ -1570,7 +1570,7 @@ bmtr_update_rec(
 
 int
 bmtr_update_rec_n_unlk(
-    bfAccessT * bfap,		/* in - bf access structure */
+    struct bfAccess * bfap,		/* in - bf access structure */
     u_short rType,		/* in - type of record */
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
@@ -1619,7 +1619,7 @@ bmtr_update_rec_n_unlk(
 
 int
 bmtr_update_rec_int(
-    bfAccessT * bfap,		/* in - ptr to bf access struct */
+    struct bfAccess * bfap,		/* in - ptr to bf access struct */
     u_short rType,		/* in - type of record */
     void *bPtr,			/* in - ptr to buffer */
     u_short bSize,		/* in - size of buffer */
@@ -1639,7 +1639,7 @@ bmtr_update_rec_int(
 	u_short recSize;
 	struct bsMPg *bmtp = NULL;
 	struct bsMC *mcp = NULL;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 
 	if (bSize > BS_USABLE_MCELL_SPACE) {
 		return (EBAD_PARAMS);
@@ -1914,7 +1914,7 @@ alloc_rbmt_mcell_undo(
 	int sts;
 	allocMcellUndoRecT *undoRec;
 	vdT *vd;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 
 	if (undoRecSize != sizeof(allocMcellUndoRecT)) {
 		ADVFS_SAD0("alloc_rbmt_mcell_undo --- bad undo record size");
@@ -2010,7 +2010,7 @@ alloc_rbmt_mcell_undo(
 
 int
 bmt_alloc_mcell(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint16_t poolVdIndex,	/* in */
     mcellPoolT poolType,	/* in */
     bfTagT bfSetTag,		/* in */
@@ -2772,7 +2772,7 @@ rbmt_extend(
 	bfMCIdT mcid;
 	bsUnpinModeT writethru = {BS_RECYCLE_IT, BS_MOD_SYNC};
 	struct vd *vdp = VD_HTOP(vdIndex, dmnP);
-	bfAccessT *rbmtap = vdp->rbmtp;
+	struct bfAccess *rbmtap = vdp->rbmtp;
 
 	/* This starts an exclusive, root transaction.  The transaction
 	 * sending the message to the bs_extend_rbmt_thread must complete
@@ -3545,7 +3545,7 @@ link_unlink_mcells_undo(
 	linkUnlinkMcellsUndoRecT *undoRec;
 	vdT *vd;
 	bsXtntRT *xp = NULL;
-	bfAccessT *mdap, *bfap;
+	struct bfAccess *mdap, *bfap;
 	bsInMemXtntT *xtnts;
 	int v4bmt_or_rbmt;
 	int this_is_v3bmt;
@@ -3765,7 +3765,7 @@ bmt_link_mcells(
 	linkUnlinkMcellsUndoRecT undoRec;
 	vdT *vd;
 	bsXtntRT *xp = NULL;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 
 	vd = VD_HTOP(prevVdIndex, dmnP);
 
@@ -3936,7 +3936,7 @@ bmt_unlink_mcells(
 	linkUnlinkMcellsUndoRecT undoRec;
 	vdT *vd;
 	bsXtntRT *xp = NULL;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 
 	vd = VD_HTOP(prevVdIndex, dmnP);
 
@@ -4697,7 +4697,7 @@ bmt_get_vd_bf_inway(
 	int closeBmtFlag = 0, closeRbmtFlag = 0;
 	int sts;
 	struct bsMC *mcp = NULL;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 	struct bsMPg *rbmtp = NULL;
 	bfPageRefHT pgref;
 	int list_too_big = FALSE;
@@ -5439,7 +5439,7 @@ bmt_free_bf_mcells(
 
 int
 allocate_link_new_mcell(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     vdIndexT oldVdIndex,	/* in */
     bfMCIdT oldMcellId,		/* in */
     ftxHT parentFtx,		/* in */
@@ -5563,7 +5563,7 @@ test_mcell_ptr(vdIndexT vdi, bfMCIdT mcid, bfTagT tag, struct domain * dmnP)
 {
 	int sts = EOK;
 	vdT *vdp;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 
 	if (vdi == 0) {
 		return (EOK);
@@ -5668,7 +5668,7 @@ check_BMT_pg(struct bsBuf * bp)
 ** Input: bfap is (R)BMT (metadata file for file of mcp)
 */
 int
-check_mcell_hdr(bsMCT * mcp, bfAccessT * bfap)
+check_mcell_hdr(bsMCT * mcp, struct bfAccess * bfap)
 {
 	int sts = EOK;
 	vdIndexT vdi = (vdIndexT) mcp->nextVdIndex;
@@ -5701,7 +5701,7 @@ check_mcell_hdr(bsMCT * mcp, bfAccessT * bfap)
 ** Test the validity of a BSR_XTNTS record.
 */
 int
-check_BSR_XTNTS_rec(bsXtntRT * bsXtntRp, bfAccessT * bfap, vdT * vdp)
+check_BSR_XTNTS_rec(bsXtntRT * bsXtntRp, struct bfAccess * bfap, vdT * vdp)
 {
 	int sts = EOK;
 	int i;
@@ -5761,7 +5761,7 @@ HANDLE_EXCEPTION:
 */
 int
 check_BSR_SHADOW_XTNTS_rec(bsShadowXtntT * bsShadowXtntp,
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     vdT * vdp)
 {
 	int sts = EOK;
@@ -5808,7 +5808,7 @@ HANDLE_EXCEPTION:
 */
 int
 check_BSR_XTRA_XTNTS_rec(bsXtraXtntRT * bsXtraXtntRp,
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     vdT * vdp,
     uint32_t lastPg)
 {
@@ -5844,7 +5844,7 @@ HANDLE_EXCEPTION:
 ** Panic the domain if errors are found.
 */
 static int
-check_xtnts(bsXtntT bsXA[], uint16_t cnt, bfAccessT * bfap, vdT * vdp)
+check_xtnts(bsXtntT bsXA[], uint16_t cnt, struct bfAccess * bfap, vdT * vdp)
 {
 	int sts = EOK;
 	int i;

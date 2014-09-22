@@ -840,7 +840,7 @@ lgr_restore_rec(
 
 static int
 lgr_valid_pg(
-    bfAccessT * logAccP,	/* in - log's bitfile access structure */
+    struct bfAccess * logAccP,	/* in - log's bitfile access structure */
     logPgT * pgp		/* in - ptr to a log page */
 )
 {
@@ -895,7 +895,7 @@ static int
 lgr_refpg(
     bfPageRefHT * refH,		/* out - log page ref handle */
     logPgT ** pgP,		/* out - ptr to log page */
-    bfAccessT * bfap,		/* in - log's bitfile access structure */
+    struct bfAccess * bfap,		/* in - log's bitfile access structure */
     unsigned long pg,		/* in - log page number to ref */
     bfPageRefHintT refHint	/* in - cache hint */
 )
@@ -2397,7 +2397,7 @@ HANDLE_EXCEPTION:
 
 static void
 get_pg_lsn(
-    bfAccessT * bfap,		/* in - log's bitfile access structure */
+    struct bfAccess * bfap,		/* in - log's bitfile access structure */
     uint32_t pg,			/* in - log page's number */
     lsnT * pgLsn,		/* out - log page's first record's LSN */
     int *invalidPg,		/* out - flag indicates if page is invalid */
@@ -2944,7 +2944,7 @@ HANDLE_EXCEPTION:
 
 static int
 log_init(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     uint32_t pgCnt,
     bfDomainIdT domainId
 )
@@ -3006,14 +3006,14 @@ int
 lgr_open(
     logDescT ** ldP,		/* out - pointer to open logDesc Pointer */
     logRecAddrT * nextLogRec,	/* out - rec addr of next rec in log */
-    bfAccessT ** logbfap,	/* out - access structure of the open log */
+    struct bfAccess ** logbfap,	/* out - access structure of the open log */
     bfTagT logtag,		/* in - the log's tag */
     bfSetT * bfSetp,		/* in - the log's bitfile-set desc pointer */
     uint32_t flag		/* in - if set, re-init the log (forced mount) */
 )
 {
 	int sts;
-	bfAccessT *logAccP;
+	struct bfAccess *logAccP;
 	int desc;
 	int newDesc = 0;
 	int openedLog = 0;
@@ -3819,12 +3819,12 @@ lgr_switch_vol(
 {
 	int sts;
 	logDescT *newldP, *newLogP;
-	bfAccessT *logAccP, *newAccP;
+	struct bfAccess *logAccP, *newAccP;
 	struct domain *dmnP;
 	vdT *vdP, *newVdP;
 	uint32_t logPgs;
 	bfTagT oldTag, newTag;
-	bfAccessT *newLogBfap;
+	struct bfAccess *newLogBfap;
 	logRecAddrT nextLogAddr;
 	int newLogOpen = FALSE, excFtxStarted = FALSE, ftxStarted = FALSE;
 	ftxHT ftxH = FtxNilFtxH, excFtxH = FtxNilFtxH;
@@ -3835,7 +3835,7 @@ lgr_switch_vol(
 	bfPageRefHT pgRef;
 	logRecAddrT oldestFtxLa, dirtyBufLa;
 	int attridx;
-	bfAccessT *oldMdap, *newMdap;
+	struct bfAccess *oldMdap, *newMdap;
 	int srcVdpBumped = 0;
 	int dstVdpBumped = 0;
 

@@ -133,7 +133,7 @@ find_cfs_server(
  */
 int
 check_privilege(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     mlBfAttributesT * bfattrp
 )
 {
@@ -860,7 +860,7 @@ msfs_real_syscall(
 	int which = 0;
 	int do_local = 1;
 	struct file *fp = NULL;
-	bfAccessT *bfap = NULL;
+	struct bfAccess *bfap = NULL;
 	int dlm_locked = 0;
 	int have_domain_lock = 0;
 	dlm_lkid_t cfs_domain_lock;
@@ -4233,7 +4233,7 @@ msfs_syscall_op_tag_stat(libParamsT * libBufp)
 	int bfs_lock = 0;
 	struct mount *mp;
 	struct vnode *nullvp, *index_vp = NULL;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	mlStatusT sts;
 
 	/*
@@ -5768,8 +5768,8 @@ validate_syscall_structs(
 
 int
 bs_inherit(
-    bfAccessT * parentbfap,
-    bfAccessT * childbfap,
+    struct bfAccess * parentbfap,
+    struct bfAccess * childbfap,
     bfInheritT inherit,
     ftxHT ftxH
 )
@@ -5831,7 +5831,7 @@ bs_inherit(
 
 int
 bs_inherit_init(
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     ftxHT ftxH
 )
 {

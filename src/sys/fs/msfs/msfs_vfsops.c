@@ -171,7 +171,7 @@ krwlock_t FilesetLock;
 
 	struct nstatfs *sbp;
 
-	bfAccessT *root_accessp;
+	struct bfAccess *root_accessp;
 	int fs_time;
 	int sts;
 	int error, count;
@@ -379,7 +379,7 @@ msfs_mount(struct mount * mp,	/* in */
 	int fsId = 0;
 	int chk_fsdev_flag = FALSE;
 	bfDmnDescT *dmntbl = NULL;
-	bfAccessT *root_accessp;
+	struct bfAccess *root_accessp;
 	char *setName = NULL;
 	char *dmnName = NULL;
 	char *tmp = NULL;
@@ -905,7 +905,7 @@ advfs_mountfs(struct mount * mp)
 	int dmn_active = FALSE, on_fileset_list = FALSE, domain_open = FALSE, locks_init = FALSE,
 	    set_open = FALSE, root_open = FALSE, fragBfOpen = FALSE;
 	bfSetParamsT *bfSetParamsp = NULL;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct vnode *nvp = NULL;
 	extern struct vnodeops msfs_vnodeops;
 	struct fsContext *root_context;
@@ -1817,7 +1817,7 @@ msfs_unmount(
 	dir_context_pointer = VTOC(rvp);
 	if ((dir_context_pointer != NULL) &&
 	    (dir_context_pointer->dirty_stats == TRUE)) {
-		bfAccessT *root_accessp = GETROOTACCESS(mp);
+		struct bfAccess *root_accessp = GETROOTACCESS(mp);
 		sts = fs_update_stats(rvp, root_accessp, FtxNilFtxH, 0);
 		if (sts != EOK) {
 			ms_uprintf("Error updating roots stats %s\n", BSERRMSG(sts));
@@ -2426,12 +2426,12 @@ msfs_sync_mmap(
 {
 	struct vnode *vp = NULL, *nvp = NULL;
 	struct fsContext *contextp = NULL;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	struct bfNode *bnp;
 	bfSetT *bfSetp;
 	int diskFile = FALSE;
 	extern fsFragStateT bs_get_bf_fragState();
-	extern bfAccessT *find_bfap();
+	extern struct bfAccess *find_bfap();
 	struct bsBuf *bp, *bptmp;
 	int i;
 	MOUNT_VLIST_LOCK(mp);
@@ -2653,7 +2653,7 @@ msfs_sync_todr(
 {
 	int now_time;
 	extern int advfs_shutting_down;	/* global in machdep.c */
-	bfAccessT *root_accessp;
+	struct bfAccess *root_accessp;
 	int sts = EOK;
 	struct mount *pmp;
 

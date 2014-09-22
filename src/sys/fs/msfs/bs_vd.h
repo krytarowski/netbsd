@@ -102,9 +102,9 @@ typedef struct vd {
 	uint32_t stgCluster;	/* num blks each stg bitmap bit */
 	struct vnode *devVp;	/* device access (temp vnode *) */
 	u_int vdMagic;		/* magic number: structure validation */
-	bfAccessT *rbmtp;	/* access structure pointer for RBMT */
-	bfAccessT *bmtp;	/* access structure pointer for BMT */
-	bfAccessT *sbmp;	/* access structure pointer for SBM */
+	struct bfAccess *rbmtp;	/* access structure pointer for RBMT */
+	struct bfAccess *bmtp;	/* access structure pointer for BMT */
+	struct bfAccess *sbmp;	/* access structure pointer for SBM */
 	struct domain *dmnP;		/* domain pointer for ds */
 	uint32_t vdIndex;	/* 1-based virtual disk index */
 	uint32_t maxPgSz;	/* max possible page size on vd */

@@ -59,7 +59,7 @@
 
 int
 idx_create_index_file_int(
-    bfAccessT * dir_bfap,
+    struct bfAccess * dir_bfap,
     ftxHT ftxH
 );
 
@@ -77,7 +77,7 @@ idx_hash_filename_int(
 
 int
 idx_index_get_free_pgs_int(
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     uint32_t count,
     idxPinnedPgsT * pptr,
     ftxHT parentFtxH,
@@ -101,7 +101,7 @@ idx_insert_filename_int(
     ulong level,
     ulong * search_key,
     ulong * offset,
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     uint32_t * insert,
     int *split_count,
     idxPinnedPgsT * pptr,
@@ -114,7 +114,7 @@ idx_remove_filename_int(
     ulong level,
     ulong search_key,
     ulong offset,
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     int *found,
     ftxHT ftxH
 );
@@ -124,7 +124,7 @@ idx_lookup_node_int(
     uint32_t node_page,
     uint32_t level,
     ulong search_key,
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     idxNodeT ** found_ptr,
     void *found_pgref,
     uint32_t * found_index,
@@ -139,7 +139,7 @@ idx_directory_insert_space_int(
     ulong level,
     ulong * search_key,
     ulong * size,
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     ftxHT ftxH,
     int *split_count,
     idxPinnedPgsT * pptr,
@@ -152,13 +152,13 @@ idx_directory_get_space_int(
     uint32_t level,
     ulong * size,
     ulong * file_offset,
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     ftxHT ftxH
 );
 
 long
 idx_setup_for_truncation_int(
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     uint32_t page_to_search,
     uint32_t level,
     ulong * undo_space_start,
@@ -168,7 +168,7 @@ idx_setup_for_truncation_int(
 
 int
 idx_glom_entry_int(
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     idxNodeT * node_ptr,
     rbfPgRefHT pgref,
     ulong start_addr,
@@ -190,14 +190,14 @@ idx_prune_btree_int(
     ulong * search_key,
     uint32_t * page,
     uint32_t root_level,
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     uint32_t tree,
     ftxHT ftxH
 );
 
 int
 idx_remove_page_of_storage_int(
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     uint32_t page,
     ftxHT ftxH
 );
@@ -205,7 +205,7 @@ idx_remove_page_of_storage_int(
 int
 idx_directory_insert_space_undo(
     idxUndoRecordT * recp,
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     ftxHT ftxH
 );
 
@@ -295,12 +295,12 @@ init_idx_index_opx(void)
 
 int
 idx_create_index_file_int(
-    bfAccessT * dir_bfap,	/* directory access structure */
+    struct bfAccess * dir_bfap,	/* directory access structure */
     ftxHT parentFtxH		/* parent's transaction Handle */
 )
 {
 	bfTagT indexTag;
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	bfParamsT bfParams;
 	bsDirIdxRecT *dir_idx_params = NULL;
 	bsIdxRecT *idx_params;
@@ -485,10 +485,10 @@ idx_create_error:
 int
 idx_remove_index_file
 (
-    bfAccessT * dir_bfap,	/* Directory access structure */
+    struct bfAccess * dir_bfap,	/* Directory access structure */
     ftxHT ftxH			/* Parent transaction */
 ) {
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	bfTagT index_tag;
 	int sts;
 
@@ -533,12 +533,12 @@ idx_remove_index_file
 
 int
 idx_open_index_file(
-    bfAccessT * dir_bfap,	/* directory's access structure. */
+    struct bfAccess * dir_bfap,	/* directory's access structure. */
     ftxHT ftxH			/* Parent transaction */
 )
 {
 	bfTagT index_tag;
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	bsIdxRecT *idx_params;
 	bsDirIdxRecT *dir_idx_params;
 	int sts = EOK;
@@ -694,11 +694,11 @@ idx_open_index_file(
 
 void
 idx_close_index_file(
-    bfAccessT * dir_bfap,	/* index file's access structure */
+    struct bfAccess * dir_bfap,	/* index file's access structure */
     idxCloseActionT action	/* Close circumstances */
 )
 {
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	int sts;
 
 	idx_bfap = ((bsDirIdxRecT *) dir_bfap->idx_params)->idx_bfap;
@@ -898,7 +898,7 @@ idx_hash_filename_int(
 
 int
 idx_index_get_free_pgs_int(
-    bfAccessT * idx_bfap,	/* Index access structure ptr */
+    struct bfAccess * idx_bfap,	/* Index access structure ptr */
     uint32_t count,		/* Number of pages required */
     idxPinnedPgsT * pptr,	/* out - pages we obtained */
     ftxHT ftxH,			/* Parent transaction */
@@ -1130,7 +1130,7 @@ idx_split_node_int(
 
 int
 idx_insert_filename(
-    bfAccessT * dir_bfap,	/* Directory's access structure */
+    struct bfAccess * dir_bfap,	/* Directory's access structure */
     struct nameidata * ndp,	/* pointer to nameidata */
     int page,			/* Page to insert onto */
     long count,			/* Page offset to insert to */
@@ -1141,7 +1141,7 @@ idx_insert_filename(
 	ulong root_page;
 	uint32_t level;
 	ulong location;
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	ftxHT ftxH;
 	int split_count;
 	uint32_t insert;
@@ -1335,7 +1335,7 @@ idx_insert_filename_int(
     ulong * search_key,		/* in - key to insert out - key to insert */
     ulong * offset,		/* in - location to store in directory out -
 				 * location to store in node */
-    bfAccessT * idx_bfap,	/* b-tree access structure */
+    struct bfAccess * idx_bfap,	/* b-tree access structure */
     uint32_t * insert,		/* boolean indicating if an insertion to this
 				 * node needs to be done */
     int *split_count,		/* number of pages needed for split */
@@ -1545,7 +1545,7 @@ idx_insert_filename_int(
 
 int
 idx_remove_filename(
-    bfAccessT * dir_bfap,	/* Directory's access structure */
+    struct bfAccess * dir_bfap,	/* Directory's access structure */
     struct nameidata * ndp,
     int page,			/* Directory page where filename lives */
     long count,			/* Offset on page where filename lives */
@@ -1554,7 +1554,7 @@ idx_remove_filename(
 {
 	ulong search_key;
 	uint32_t level;
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	ulong location, root_page;
 	ftxHT ftxH;
 	idxUndoRecordT undorec;
@@ -1691,7 +1691,7 @@ idx_remove_filename_int(
     ulong level,		/* level of b-tree calling */
     ulong search_key,		/* value to search for */
     ulong offset,		/* Uniquifier */
-    bfAccessT * idx_bfap,	/* index file access struct */
+    struct bfAccess * idx_bfap,	/* index file access struct */
     int *found,			/* indicates if file was found */
     ftxHT ftxH			/* Parent ftx */
 )
@@ -1873,7 +1873,7 @@ idx_remove_filename_int(
 
 int
 idx_lookup_filename(
-    bfAccessT * dir_bfap,	/* bfap of the directory */
+    struct bfAccess * dir_bfap,	/* bfap of the directory */
     struct nameidata * ndp,
     bfTagT * found_bs_tag,	/* if found files tag # */
     fs_dir_entry ** found_buffer,	/* pointer to directory record */
@@ -1885,7 +1885,7 @@ idx_lookup_filename(
 {
 
 	ulong search_key;
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	idxNodeT *node_ptr;
 	rbfPgRefHT rbfpgref_dir;
 	bfPageRefHT bfpgref_dir;
@@ -2098,7 +2098,7 @@ idx_lookup_node_int(
     uint32_t node_page,		/* btree node to search */
     uint32_t level,		/* level of recursion */
     ulong search_key,		/* hash vale to find */
-    bfAccessT * idx_bfap,	/* index file access pointer */
+    struct bfAccess * idx_bfap,	/* index file access pointer */
     idxNodeT ** found_ptr,	/* Leaf node */
     void *found_pgref,		/* Page ref if pin occurred */
     uint32_t * found_index,	/* offset in node */
@@ -2249,7 +2249,7 @@ idx_lookup_node_int(
 
 int
 idx_directory_insert_space(
-    bfAccessT * dir_bfap,	/* Directories Access Structure */
+    struct bfAccess * dir_bfap,	/* Directories Access Structure */
     ulong size,			/* size of space to insert */
     int insert_page,		/* Page where space lives */
     uint32_t insert_pgoff,	/* Offset where space lives */
@@ -2263,7 +2263,7 @@ idx_directory_insert_space(
 	uint32_t root_page;
 	uint32_t level;
 	ulong location;
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	int split_count;
 	idxNodeT *new_root;
 	int sts;
@@ -2473,7 +2473,7 @@ idx_directory_insert_space_int(
  /* out - key to insert */
     ulong * size,		/* in - size to store */
  /* out - location to store */
-    bfAccessT * idx_bfap,	/* b-tree access structure */
+    struct bfAccess * idx_bfap,	/* b-tree access structure */
     ftxHT ftxH,			/* parent transaction */
     int *split_count,		/* number of pages needed for split */
     idxPinnedPgsT * pptr,	/* pinned pages array pointer  */
@@ -2759,7 +2759,7 @@ idx_directory_insert_space_int(
 
 int
 idx_directory_get_space(
-    bfAccessT * dir_bfap,	/* The directory's access structure */
+    struct bfAccess * dir_bfap,	/* The directory's access structure */
     ulong size,			/* Requested size to obtain */
     int *insert_page,		/* out - page where storage resides */
     long *insert_pgoff,		/* out - offset where storage resides */
@@ -2768,7 +2768,7 @@ idx_directory_get_space(
 {
 	ulong root_page;
 	ulong location, insert_loc;
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	ftxHT ftxH;
 	long found_size;
 	idxUndoRecordT undorec;
@@ -2914,7 +2914,7 @@ idx_directory_get_space_int(
     uint32_t level,
     ulong * size,
     ulong * file_offset,
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     ftxHT ftxH
 )
 {
@@ -3307,13 +3307,13 @@ idx_directory_get_space_int(
 
 long
 idx_setup_for_truncation(
-    bfAccessT * dir_bfap,
+    struct bfAccess * dir_bfap,
     int operation,
     ftxHT parentFtxH
 )
 {
 	long bytes_to_trunc;
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	ulong undo_space_start;
 	int sts;
 	idxUndoRecordT undorec;
@@ -3434,7 +3434,7 @@ idx_setup_for_truncation(
 
 long
 idx_setup_for_truncation_int(
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     uint32_t page_to_search,
     uint32_t level,
     ulong * undo_space_start,
@@ -3657,7 +3657,7 @@ idx_setup_for_truncation_int(
 
 int
 idx_glom_entry_int(
-    bfAccessT * idx_bfap,	/* index files access structure */
+    struct bfAccess * idx_bfap,	/* index files access structure */
     idxNodeT * node_ptr,	/* Leaf node to examine */
     rbfPgRefHT pgref,		/* page ref for pinrec */
     ulong start_addr,		/* free space start    */
@@ -3666,7 +3666,7 @@ idx_glom_entry_int(
     ftxHT ftxH
 )
 {
-	bfAccessT *dir_bfap;
+	struct bfAccess *dir_bfap;
 	idxNodeEntryT *reuse_ptr = NULL;
 	idxNodeT *right_node_ptr;
 	idxNodeT *left_node_ptr;
@@ -3951,12 +3951,12 @@ idx_glom_entry_int(
 
 int
 idx_convert_dir(
-    bfAccessT * dir_bfap,
+    struct bfAccess * dir_bfap,
     struct nameidata * ndp,
     ftxHT ftxH
 )
 {
-	bfAccessT *idx_bfap;
+	struct bfAccess *idx_bfap;
 	rbfPgRefHT file_pgref, free_pgref;
 	bfPageRefHT dir_pgref;
 	idxNodeT *filename_node, *freespace_node;
@@ -4245,7 +4245,7 @@ dir_sort_int(
 
 int
 idx_prune_start(
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     ftxHT parentFtxH
 )
 {
@@ -4436,7 +4436,7 @@ idx_prune_btree_int(
     ulong * search_key,
     uint32_t * page,
     uint32_t root_level,
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     uint32_t tree,
     ftxHT ftxH
 )
@@ -5018,7 +5018,7 @@ idx_prune_btree_int(
 
 int
 idx_remove_page_of_storage_int(
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     uint32_t page_to_remove,
     ftxHT ftxH
 )
@@ -5097,7 +5097,7 @@ idx_remove_page_of_storage_int(
 
 void
 idx_prune_finish(
-    bfAccessT * idx_bfap
+    struct bfAccess * idx_bfap
 )
 {
 	idxPruneMsgsT *pmsgs;
@@ -5145,7 +5145,7 @@ idx_undo_opx(
 	idxUndoRecordT recp;
 	int sts;
 	bfSetT *bfSetp;
-	bfAccessT *idx_bfap, *dir_bfap;
+	struct bfAccess *idx_bfap, *dir_bfap;
 	bsIdxRecT *idx_params;
 	uint32_t insert;
 	int found;
@@ -5385,7 +5385,7 @@ idx_undo_exit:
 int
 idx_directory_insert_space_undo(
     idxUndoRecordT * recp,
-    bfAccessT * idx_bfap,
+    struct bfAccess * idx_bfap,
     ftxHT ftxH
 )
 {

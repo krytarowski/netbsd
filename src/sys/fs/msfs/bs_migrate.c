@@ -62,7 +62,7 @@
 static
        int
 migrate_normal_one_disk(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
@@ -75,7 +75,7 @@ migrate_normal_one_disk(
 static
        int
 migrate_normal(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
@@ -87,7 +87,7 @@ migrate_normal(
 static
        int
 migrate_stripe(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
@@ -119,7 +119,7 @@ extend_page_range_list(
 static
        int
 switch_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t stripeIndex,	/* in */
     bsInMemXtntMapT ** origXtntMapAddr,	/* in */
     vdIndexT * copyVdIndex,	/* in, modified */
@@ -131,8 +131,8 @@ switch_stg(
 static
        int
 move_metadata(
-    bfAccessT * bfap,		/* in */
-    bfAccessT * cloneBfap,	/* in */
+    struct bfAccess * bfap,		/* in */
+    struct bfAccess * cloneBfap,	/* in */
     vdIndexT newVdIndex,	/* in */
     ftxHT parentFtxH		/* in */
 );
@@ -140,7 +140,7 @@ move_metadata(
 static
        int
 reset_block_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt		/* in */
 );
@@ -148,14 +148,14 @@ reset_block_map(
 static
        int
 reset_block_map_special(
-    bfAccessT * cloneap,	/* in - special case remapping */
+    struct bfAccess * cloneap,	/* in - special case remapping */
     uint32_t bfPageCnt		/* in */
 );
 
 static
        int
 alloc_copy_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t startPage,		/* in */
     pageRangeT * xmPageRange,	/* in */
     uint32_t xmPageRangeCnt,	/* in */
@@ -171,7 +171,7 @@ alloc_copy_stg(
 static
        int
 alloc_hole_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     pageRangeT * xmHoleRange,	/* in */
     vdIndexT vdIndex,		/* in */
     vdIndexT * copyVdIndex,	/* out */
@@ -251,7 +251,7 @@ mig_register_migrate_agent()
 
 int
 bs_migrate(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
@@ -368,7 +368,7 @@ HANDLE_EXCEPTION:
 
 int
 mig_verify_stripe_page_range(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
     uint32_t srcVdIndex,		/* in */
@@ -513,7 +513,7 @@ HANDLE_EXCEPTION:
 
 int
 mig_migrate(
-    bfAccessT * srcBfap,	/* in */
+    struct bfAccess * srcBfap,	/* in */
     vdIndexT srcVdIndex,	/* in */
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
@@ -525,7 +525,7 @@ mig_migrate(
 {
 	bfSetT *bfSet;
 	int noMetadataFlag;
-	bfAccessT *origBfap;
+	struct bfAccess *origBfap;
 	bfSetT *origBfSet;
 	int sts = EOK;
 
@@ -641,7 +641,7 @@ HANDLE_EXCEPTION:
 static
        int
 migrate_normal_one_disk(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
@@ -869,14 +869,14 @@ HANDLE_EXCEPTION:
 */
 
 static int
-migrate_get_clu_locks(bfAccessT * bfap,
+migrate_get_clu_locks(struct bfAccess * bfap,
     bfSetT ** cloneSetpA,
     int *setHeldA,
     int *clu_excl_flgA,
     int *clu_xtntlk_flgA)
 {
 	bfSetT *cloneSetp;
-	bfAccessT *cloneap;
+	struct bfAccess *cloneap;
 	int is_clone = (bfap->bfSetp->cloneId != BS_BFSET_ORIG) ? TRUE : FALSE;
 	int clu_cow_mode_enter = 0;
 	fsid_t fsid;
@@ -994,7 +994,7 @@ migrate_get_clu_locks(bfAccessT * bfap,
 	lock_done(&bfap->cow_lk);
 
 	if (clu_cow_mode_enter) {
-		bfAccessT *cloneap;
+		struct bfAccess *cloneap;
 
 		/* We are in a cluster and we are either a clone or an
 		 * original that has a clone. */
@@ -1094,11 +1094,11 @@ migrate_get_clu_locks(bfAccessT * bfap,
 ** Called by migrate_normal & migrate_stripe.
 */
 static int
-pre_reset_block_map_special(bfAccessT * bfap)
+pre_reset_block_map_special(struct bfAccess * bfap)
 {
 	bfSetT *cloneSetp;
 	int sts;
-	bfAccessT *cloneap = NULL;
+	struct bfAccess *cloneap = NULL;
 	struct vnode *nullvp = NULL;
 	uint32_t numPgs;
 
@@ -1182,7 +1182,7 @@ int clone_migrate_retries = 0;	/* Number of collisions with bs_cow_pg() */
 static
        int
 migrate_normal(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
     vdIndexT dstVdIndex,	/* in */
@@ -1598,7 +1598,7 @@ HANDLE_EXCEPTION:
 	}
 	if (do_clxtnt_unlock) {
 
-		bfAccessT *cloneap;
+		struct bfAccess *cloneap;
 		if (is_clone)
 			cloneap = bfap;
 		else
@@ -1658,7 +1658,7 @@ HANDLE_EXCEPTION:
 static
        int
 migrate_stripe(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdIndexT srcVdIndex,	/* in */
     uint32_t srcPageOffset,	/* in */
     uint32_t srcPageCnt,		/* in */
@@ -2116,7 +2116,7 @@ HANDLE_EXCEPTION:
 	}
 	if (do_clxtnt_unlock) {
 
-		bfAccessT *cloneap;
+		struct bfAccess *cloneap;
 		if (is_clone)
 			cloneap = bfap;
 		else
@@ -2588,7 +2588,7 @@ extend_page_range_list(
 static
        int
 switch_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t stripeIndex,	/* in */
     bsInMemXtntMapT ** origXtntMapAddr,	/* in */
     vdIndexT * copyVdIndex,	/* in, modified */
@@ -2787,12 +2787,12 @@ HANDLE_EXCEPTION:
 
 int
 bs_move_metadata(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     vdT * vdp			/* in - if NULL, don't care which vd */
 )
 {
 	bfSetT *bfSet;
-	bfAccessT *cloneBfap;
+	struct bfAccess *cloneBfap;
 	int closeCloneFlag = 0;
 	int failFtxFlag = 0;
 	ftxHT ftxH;
@@ -2959,8 +2959,8 @@ HANDLE_EXCEPTION:
 static
        int
 move_metadata(
-    bfAccessT * bfap,		/* in */
-    bfAccessT * cloneBfap,	/* in */
+    struct bfAccess * bfap,		/* in */
+    struct bfAccess * cloneBfap,	/* in */
     vdIndexT newVdIndex,	/* in */
     ftxHT parentFtxH		/* in */
 )
@@ -3290,7 +3290,7 @@ HANDLE_EXCEPTION:
 static
        int
 reset_block_map(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt		/* in */
 )
@@ -3383,7 +3383,7 @@ HANDLE_EXCEPTION:
 static
        int
 reset_block_map_special(
-    bfAccessT * cloneap,	/* in - special case remapping */
+    struct bfAccess * cloneap,	/* in - special case remapping */
     uint32_t bfPageCnt		/* in */
 )
 {
@@ -3459,7 +3459,7 @@ HANDLE_EXCEPTION:
 static
        int
 alloc_copy_stg(
-    bfAccessT * bfap,		/* in   get stg for this file */
+    struct bfAccess * bfap,		/* in   get stg for this file */
     uint32_t startPage,		/* in   start map at this page */
     pageRangeT * xmPageRange,	/* in   array of extents */
     uint32_t xmPageRangeCnt,	/* in   array size */
@@ -3574,7 +3574,7 @@ HANDLE_EXCEPTION:
 static
        int
 alloc_hole_stg(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     pageRangeT * xmHoleRange,	/* in */
     vdIndexT vdIndex,		/* in */
     vdIndexT * copyVdIndex,	/* out */
@@ -3774,7 +3774,7 @@ HANDLE_EXCEPTION:
 static int
 mig_get_stripe_bfpage_list(
     vdT * vdp,			/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     ssPackLLT * pXtntp,		/* in */
     pageRangeT ** bfPageRange,	/* out */
     uint32_t * bfPageRangeCnt	/* out */
@@ -3907,7 +3907,7 @@ mig_pack_vd_range(
 	uint32_t i, k;
 	bfSetT *inwayBfSetp = NULL;
 	bfSetIdT inwayBfSetId;
-	bfAccessT *inwayBfap = NULL;
+	struct bfAccess *inwayBfap = NULL;
 	uint64_t nextcRangeBeginBlk, xmPageOffset, migPageCntSoFar, migPageCnt, thdblkMigPageCnt = 0, dstBlkOffset = 0, pgsRemaining, newBlkOffset, bfPageOffset, newPageCnt;
 	uint32_t clearPageCnt;
 	ssPackHdrT *php = NULL;

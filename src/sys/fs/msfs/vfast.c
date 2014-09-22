@@ -118,14 +118,14 @@ ss_open_file(
     bfSetIdT bfSetId,
     bfTagT filetag,
     bfSetT ** retbfSetp,
-    bfAccessT ** retbfap,
+    struct bfAccess ** retbfap,
     int *fsetMounted
 );
 
 int
 ss_close_file(
     bfSetT * bfSetp,
-    bfAccessT * bfap,
+    struct bfAccess * bfap,
     int fsetmounted
 );
 
@@ -147,12 +147,12 @@ ss_put_rec(struct domain * dmnP);
 
 int
 ss_chk_fragratio(
-    bfAccessT * bfap
+    struct bfAccess * bfap
 );
 void
 ss_snd_hot(
     ssListMsgTypeT msgType,	/* in-miss or write i/o counter */
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 );
 
 void
@@ -220,7 +220,7 @@ static int
        ss_do_periodic_tasks(ssPeriodicMsgTypeT task);
 
 static int
-    ss_find_target_vd(bfAccessT * bfap);
+    ss_find_target_vd(struct bfAccess * bfap);
 
 static int
 ss_vd_migrate(bfTagT filetag,
@@ -231,7 +231,7 @@ ss_vd_migrate(bfTagT filetag,
 );
 
 static int
-ss_get_most_xtnts(bfAccessT * bfap,
+ss_get_most_xtnts(struct bfAccess * bfap,
     int *xtntmap_locked,
     uint64_t reqPageCnt,
     uint64_t * startPg,
@@ -244,7 +244,7 @@ ss_get_most_xtnts(bfAccessT * bfap,
     uint64_t prevBlk);
 
 static int
-ss_get_vd_most_free(bfAccessT * bfap,
+ss_get_vd_most_free(struct bfAccess * bfap,
     vdIndexT * newVdIndex);
 
 static ssFragLLT *
@@ -1184,7 +1184,7 @@ ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
 	int sts;
 	int fsetMounted = 0;
 	bfSetT *bfSetp = NULL;
-	bfAccessT *bfap = NULL;
+	struct bfAccess *bfap = NULL;
 	struct fileSetNode *fsp;
 	struct fragfiles {
 		struct fragfiles *fsNext;
@@ -1402,7 +1402,7 @@ void
 ss_dmn_activate(struct domain * dmnP, u_long flag)
 {
 	vdT *logVdp = NULL;
-	bfAccessT *mdap;
+	struct bfAccess *mdap;
 	int sts;
 	bsSSDmnAttrT ssAttr;
 	u_long dmnState;
@@ -2028,7 +2028,7 @@ ss_trace(vdT * vdp,
  ********************************************************************/
 
 int
-ss_xtnt_counter(bfAccessT * bfap)
+ss_xtnt_counter(struct bfAccess * bfap)
 {
 	bsInMemXtntMapT *xtntMap = NULL;
 	int totXtnts = 0;
@@ -2120,7 +2120,7 @@ ss_xtnt_counter(bfAccessT * bfap)
 
 int
 ss_chk_fragratio(
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 )
 {
 	uint32_t totXtnts = 0;
@@ -2557,7 +2557,7 @@ ss_dealloc_pack_list(vdT * vdp)
 void
 ss_snd_hot(
     ssListMsgTypeT msgType,	/* in - miss or write i/o counter */
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 )
 {
 	int wday;
@@ -3306,14 +3306,14 @@ ss_open_file(
     bfSetIdT bfSetId,		/* in */
     bfTagT filetag,		/* in */
     bfSetT ** retbfSetp,	/* out */
-    bfAccessT ** retbfap,	/* out */
+    struct bfAccess ** retbfap,	/* out */
     int *retmounted		/* out */
 )
 {
 	int sts = EOK;
 	struct vnode *vp;
 	int closeBfSetFlag = FALSE, closeBitfileFlag = FALSE;
-	bfAccessT *bfap = NULL;
+	struct bfAccess *bfap = NULL;
 	bfSetT *bfSetp = NULL;
 	struct fileSetNode *fsnp = NULL;
 	struct mount *mp;
@@ -3431,7 +3431,7 @@ HANDLE_EXCEPTION:
 int
 ss_close_file(
     bfSetT * bfSetp,		/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     int fsetMounted
 )
 {
@@ -4039,7 +4039,7 @@ HANDLE_EXCEPTION:
  ********************************************************************/
 
 static int
-ss_get_most_xtnts(bfAccessT * bfap,	/* in - file */
+ss_get_most_xtnts(struct bfAccess * bfap,	/* in - file */
     int *xtntmap_locked,	/* in/out - xtnts locked? */
     uint64_t reqPageCnt,		/* in - requested page range size */
     uint64_t * startPg,		/* out - new start page */
@@ -4137,7 +4137,7 @@ _RUN_DONE:
 
 static
        int
-ss_get_vd_most_free(bfAccessT * bfap,
+ss_get_vd_most_free(struct bfAccess * bfap,
     vdIndexT * newVdIndex)
 {
 	vdT *vdp = NULL;
@@ -4228,7 +4228,7 @@ ss_vd_migrate(bfTagT filetag,
 {
 	int sts = EOK, sts2;
 	int closeFileFlag = FALSE;
-	bfAccessT *bfap = NULL;
+	struct bfAccess *bfap = NULL;
 	bfSetT *bfSetp = NULL;
 	vdT *dvdp = NULL;
 	uint64_t srcPageOffset, migPageCnt, newBlkOffset, xmEndPage, xmTotalPageCnt = 0, allocTotalPageCnt = 0, allocPagesLeft, pgsMigSoFar, extentCnt = 0;
@@ -4621,7 +4621,7 @@ HANDLE_EXCEPTION:
 
 static
        uint64_t
-ss_blks_on_vd(bfAccessT * bfap,	/* in */
+ss_blks_on_vd(struct bfAccess * bfap,	/* in */
     vdIndexT vdi		/* in */
 )
 {
@@ -4667,7 +4667,7 @@ ss_blks_on_vd(bfAccessT * bfap,	/* in */
 
 static
 int
-ss_find_target_vd(bfAccessT * bfap)
+ss_find_target_vd(struct bfAccess * bfap)
 {
 	int sts;
 	vdT *vdp = NULL;

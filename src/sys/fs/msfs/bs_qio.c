@@ -1060,7 +1060,7 @@ lsn_io_list(struct domain * dmnP)
 	struct bsBufHdr *lsnp = &dmnP->lsnList;
 	struct bsBuf *bp, *nextbp;
 	ioDescT *tmp;
-	bfAccessT *logBfap;
+	struct bfAccess *logBfap;
 	ioDescT *ioListp, *ioListPart;
 	int len, listLenPart;
 	lsnT origLsn;
@@ -1349,7 +1349,7 @@ bs_lsnList_flush(struct domain * dmnP)
 	struct bsBufHdr *lsnp = &dmnP->lsnList;
 	struct bsBuf *bp, *nextbp;
 	ioDescT *tmp;
-	bfAccessT *logBfap;
+	struct bfAccess *logBfap;
 	ioDescT *ioListp, *ioListPart;
 	int len, listLenPart;
 	lsnT origLsn;
@@ -1662,7 +1662,7 @@ bs_q_lazy(
          */
 	if (!LSN_EQ_NIL(ioListp->bsBuf->origLogRec.lsn)) {
 
-		bfAccessT *bfap;
+		struct bfAccess *bfap;
 
 		/*
 	         * Check if buffer can be written.
@@ -1710,7 +1710,7 @@ bs_q_lazy(
 void
 wait_to_readyq(struct vd * vdp)
 {
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	ioDescT *iop, *start, *end;
 	int count;
 	extern u_int smsync_period;
@@ -2385,7 +2385,7 @@ sort_onto_readyq(
 void
 cache_logflush(struct domain * dmnP)
 {
-	bfAccessT *bfap = dmnP->logAccessp;
+	struct bfAccess *bfap = dmnP->logAccessp;
 	struct bsBuf *tail;
 	lsnT logPageLsn;
 
@@ -2436,7 +2436,7 @@ cache_logflush(struct domain * dmnP)
 void
 call_logflush(struct domain * dmnP, lsnT lsn, int wait)
 {
-	bfAccessT *bfap = dmnP->logAccessp;
+	struct bfAccess *bfap = dmnP->logAccessp;
 	int sts;
 	struct bsBuf *tail;
 	lsnT logPageLsn;
@@ -2523,7 +2523,7 @@ call_logflush(struct domain * dmnP, lsnT lsn, int wait)
 
 int
 bs_logpage_dirty(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     u_long pageNum		/* in */
 )
 {
@@ -2576,7 +2576,7 @@ bs_logpage_dirty(
 
 int
 bs_logflush_start(
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     lsnT lsn			/* in */
 )
 {
@@ -2832,7 +2832,7 @@ restart:
 
 void
 bfflush_start(
-    bfAccessT * bfap,		/* in - ptr to access struct */
+    struct bfAccess * bfap,		/* in - ptr to access struct */
     lsnT * seq,			/* in */
     int migrate,		/* in */
     unsigned long flushPgCnt	/* in: set to 0 to flush all pages or */
@@ -2846,7 +2846,7 @@ bfflush_start(
 	lsnT finalLsnWeNeedToFlush;
 	lsnT hiCurrentLsn;
 	ioDescT *ioList, *ioListPart, *save;
-	bfAccessT *logBfap;
+	struct bfAccess *logBfap;
 	lsnT highestSkippedLsn = {0};
 	int noqfnd;
 	lsnT saveFlushSeq = nilLSN;
@@ -3365,7 +3365,7 @@ end_of_loop:
 
 int
 bfflush_sync(
-    bfAccessT * bfap,		/* in - bf access ptr */
+    struct bfAccess * bfap,		/* in - bf access ptr */
     lsnT waitLsn		/* in - seq to wait for */
 )
 {
@@ -3504,7 +3504,7 @@ bfflush_sync(
 
 int
 bs_bf_flush_nowait(
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 )
 {
 	lsnT waitLsn;
@@ -3675,7 +3675,7 @@ bs_bflush_sync(
 
 int
 bfflush(
-    bfAccessT * bfap,		/* in - ptr to access struct */
+    struct bfAccess * bfap,		/* in - ptr to access struct */
     bsPageT first_page,		/* in - first page to flush */
     bsPageT pages_to_flush,	/* in - number of pages to flush  */
     int priority		/* in - priority of the flush */
@@ -3690,7 +3690,7 @@ bfflush(
 	bsPageT last_page;
 	rangeFlushT *rfp = (rangeFlushT *) NULL;
 	rangeFlushLinkT *rflp;
-	bfAccessT *logbfap;
+	struct bfAccess *logbfap;
 	lsnT hiCurrentLsn;
 	boolean_t foundTerminator;
 	int bsBufsCounted = 0;
@@ -4790,7 +4790,7 @@ again:
  */
 
 int
-bs_raw_page(bfAccessT * bfap,		/* in */
+bs_raw_page(struct bfAccess * bfap,		/* in */
     unsigned vdIndex,		/* in */
     unsigned startBlk,		/* in */
     unsigned blkCnt,		/* in */

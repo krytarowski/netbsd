@@ -367,7 +367,7 @@ struct domain {
 	ftxLkT BfSetTblLock;	/* protects the filesets in the domain */
 	bfsQueueT bfSetHead;	/* bitfile-sets associated with this
 					 * domain */
-	bfAccessT *bfSetDirAccp;	/* bfAccess of bitfile-set's tag
+	struct bfAccess *bfSetDirAccp;	/* bfAccess of bitfile-set's tag
 					 * directory */
 	bfTagT ftxLogTag;	/* tag of domain ftx log */
 	logDescT *ftxLogP;	/* pointer to ftx log for this domain */

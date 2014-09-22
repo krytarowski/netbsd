@@ -209,7 +209,7 @@ tagdir_get_info(
     int *bfCnt			/* out - num bitfiles in set */
 )
 {
-	bfAccessT *tdap;
+	struct bfAccess *tdap;
 	int sts;
 	bsTDirPgT *tdpgp;
 	bfPageRefHT pgRef;
@@ -573,7 +573,7 @@ static int
 init_next_tag_page(
     unsigned long tagPg,	/* in - page to init */
     bfSetT * bfSetp,		/* in - ptr to bitfile set */
-    bfAccessT * bfap,		/* in - access struct ptr */
+    struct bfAccess * bfap,		/* in - access struct ptr */
     ftxHT ftxH,			/* in - ftx handle */
     int checkmigtrunclock	/* in */
 )
@@ -972,7 +972,7 @@ tagdir_set_next_tag(
 	bsTMapT *prevTdmap;
 	int prevFound;
 	uint32_t seq;
-	bfAccessT *bfAccess;
+	struct bfAccess *bfAccess;
 
 	/*
          *  Tag values below this are always in use, so don't bother to
@@ -1671,7 +1671,7 @@ bs_switch_root_tagdir(
 	ftxHT ftxH;
 	int i;
 	vdT *logVd;
-	bfAccessT *newBfAccessp;
+	struct bfAccess *newBfAccessp;
 	char *newPage;
 	uint32_t newPageCnt;
 	bfTagT newTag;

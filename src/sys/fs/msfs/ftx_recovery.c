@@ -84,7 +84,7 @@ ftx_metameta_rec_redo(
 {
 	char *srcRecp;
 	char *dstRecp;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	int sts;
 	bfPageRefHT pgH;
 	unsigned ptag = -(signed) pgredop->pgdesc.tag.num;
@@ -165,7 +165,7 @@ ftx_bfmeta_rec_redo(
 {
 	char *srcRecp;
 	char *dstRecp;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	int sts;
 	bfPageRefHT pgH;
 	void *bpp;
@@ -275,7 +275,7 @@ ftx_bfdata_rec_redo(
 {
 	char *srcRecp;
 	char *dstRecp;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	int sts;
 	int retsts = EOK;
 	bfPageRefHT pgH;

@@ -160,7 +160,7 @@ fs_fset_create(
 	ftxStarted = FALSE;
 
 	if (dmnP->dmn_panic) {
-		bfAccessT *bfap, *nextbfap;
+		struct bfAccess *bfap, *nextbfap;
 
 		/* If the domain paniced before ftx_done_n was run,
 		 * create_rtdn_opx */
@@ -175,7 +175,7 @@ fs_fset_create(
 start:
 		mutex_enter(&bfSetp->accessChainLock.mutex);
 		for (bfap = bfSetp->accessFwd;
-		    bfap != (bfAccessT *) (&bfSetp->accessFwd);
+		    bfap != (struct bfAccess *) (&bfSetp->accessFwd);
 		    bfap = nextbfap) {
 
 			if (bfap->stateLk.state != ACC_FTX_TRANS) {
@@ -912,7 +912,7 @@ HANDLE_EXCEPTION:
 int
 fs_create_frag(
     bfSetT * bfSetp,		/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     struct uucred * cred,	/* in */
     ftxHT parentFtxH		/* in */
 )
@@ -1108,7 +1108,7 @@ HANDLE_EXCEPTION:
 
 int
 fs_quick_frag_test(
-    bfAccessT * bfap		/* in */
+    struct bfAccess * bfap		/* in */
 )
 {
 	struct fileSetNode *fileSetNode;
@@ -1190,7 +1190,7 @@ fs_quick_frag_test(
 int
 fs_delete_frag(
     bfSetT * bfSetp,		/* in */
-    bfAccessT * bfap,		/* in */
+    struct bfAccess * bfap,		/* in */
     struct vnode * vnode,	/* in */
     struct uucred * cred,	/* in */
     int quotas_done,		/* in */

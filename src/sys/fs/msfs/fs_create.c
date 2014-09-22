@@ -90,7 +90,7 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 	int ret;
 	bfTagT new_file_tag;
 	rbfPgRefHT page_ref;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	bfParamsT *new_bs_paramsp = NULL;
 	ftxHT ftx_handle;
 	int create_symlink;
@@ -103,8 +103,8 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 	bfSetIdT the_bfset_id;
 	int create_directory;
 	bfTagT dir_bs_tag;
-	bfAccessT *dir_bfap;
-	bfAccessT *idx_bfap = NULL;
+	struct bfAccess *dir_bfap;
+	struct bfAccess *idx_bfap = NULL;
 	u_int effective_LINK_MAX;
 	u_long ids[MAXQUOTAS];
 	boolean_t quota_mig_trunc_lock[MAXQUOTAS];
@@ -1022,7 +1022,7 @@ EXIT_UPDATE:
  */
 int
 fs_flush_saved_stats(
-    bfAccessT * bfap,		/* in - access struct */
+    struct bfAccess * bfap,		/* in - access struct */
     uint32_t flags,		/* in - flags */
     ftxHT ftxH			/* in - transaction handle */
 )
@@ -1093,7 +1093,7 @@ fs_trunc_test(
 {
 	long nextPageToAlloc;
 	long lastPage;
-	bfAccessT *bfap;
+	struct bfAccess *bfap;
 	bfSetT *bfSetp;
 	struct fsContext *fileContext = VTOC(vp);
 

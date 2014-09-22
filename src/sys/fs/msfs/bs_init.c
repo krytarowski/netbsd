@@ -2203,8 +2203,8 @@ vd_extend(struct vd * vdp)
 	boolean_t mcellListLocked = FALSE;
 	boolean_t stgMapLocked = FALSE;
 	boolean_t otherLksLocked = FALSE;
-	bfAccessT *sbmBfap = vdp->sbmp;
-	bfAccessT *mdBfap = RBMT_THERE(vdp->dmnP) ? vdp->rbmtp : vdp->bmtp;
+	struct bfAccess *sbmBfap = vdp->sbmp;
+	struct bfAccess *mdBfap = RBMT_THERE(vdp->dmnP) ? vdp->rbmtp : vdp->bmtp;
 	ftxHT ftxH;
 	int sts;
 	bsVdAttrT vdAttr;
@@ -2416,8 +2416,8 @@ vd_extend_add_sbm_pgs(vdT * vdp,
     bsVdAttrT * vdAttrp,
     ftxHT ftxH)
 {
-	bfAccessT *sbmBfap = vdp->sbmp;
-	bfAccessT *mdBfap = RBMT_THERE(vdp->dmnP) ? vdp->rbmtp : vdp->bmtp;
+	struct bfAccess *sbmBfap = vdp->sbmp;
+	struct bfAccess *mdBfap = RBMT_THERE(vdp->dmnP) ? vdp->rbmtp : vdp->bmtp;
 	lbnT oldVdSize = vdAttrp->vdBlkCnt & ~(ADVFS_PGSZ_IN_BLKS - 1);
 	lbnT sbmBitsToSet;
 	lbnT newSbmBlk;

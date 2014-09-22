@@ -58,7 +58,7 @@
 static
        int
 set_block_map(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
@@ -69,7 +69,7 @@ set_block_map(
 static
        int
 verify_page_write(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
@@ -79,7 +79,7 @@ verify_page_write(
 static
        int
 force_write(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
     unsigned char *buf,		/* in */
     bsInMemXtntT * copyXtnts	/* in */
@@ -88,7 +88,7 @@ force_write(
 static
        int
 compare_copies(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
@@ -141,7 +141,7 @@ static int cp_debug = 0;
 
 int
 cp_copy_page_range(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     pageRangeT * bfPageRange,	/* in */
     uint32_t bfPageRangeCnt,	/* in */
     bsInMemXtntT * copyXtnts,	/* in */
@@ -302,7 +302,7 @@ cp_copy_page_range(
 static
        int
 set_block_map(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
@@ -540,7 +540,7 @@ HANDLE_EXCEPTION:
 static
        int
 verify_page_write(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
@@ -664,7 +664,7 @@ HANDLE_EXCEPTION:
 static
        int
 force_write(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
     unsigned char *buf,		/* in */
     bsInMemXtntT * copyXtnts	/* in */
@@ -743,7 +743,7 @@ force_write(
 static
        int
 compare_copies(
-    bfAccessT * bfAccess,	/* in */
+    struct bfAccess * bfAccess,	/* in */
     uint32_t bfPageOffset,	/* in */
     uint32_t bfPageCnt,		/* in */
     bsInMemXtntT * copyXtnts,	/* in */
