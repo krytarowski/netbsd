@@ -26,7 +26,6 @@
 #ifndef _DOMAIN_H_
 #define _DOMAIN_H_
 
-#include <stddef.h>
 #include <sys/types.h>
 #include <sys/rwlock.h>
 
