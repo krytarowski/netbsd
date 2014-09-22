@@ -26,34 +26,47 @@
 #ifndef _BS_COPY_
 #define _BS_COPY_
 
+/* Defines */
+
 #define STG 0
 #define MAX_COPY_XFER_SIZE 65535/* max size is 512 MB - 512 bytes */
+
+/* Forward definitions */
+struct bfAccess;
+struct pageRange;
+struct bsInMemXtnt;
+struct bsInMemXtntMap;
+
+/* Structures */
 
 typedef struct pageRange {
 	uint32_t pageOffset;
 	uint32_t pageCnt;
 	int32_t pageType;	/* STG, XTNT_TERM, or PERM_HOLE_START */
-}         pageRangeT;
+} pageRangeT;
+
+/* Function prototypes */
+
 int
 cp_copy_page_range(
-    bfAccessT * bfAccess,	/* in */
-    pageRangeT * bfPageRange,	/* in */
+    struct bfAccess * bfAccess,	/* in */
+    struct pageRange * bfPageRange,	/* in */
     uint32_t bfPageRangeCnt,	/* in */
-    bsInMemXtntT * copyXtnts,	/* in */
+    struct bsInMemXtnt * copyXtnts,	/* in */
     uint32_t copyXferSize,	/* in */
     uint32_t forceFlag		/* in */
 );
 
 void
 cp_insert_onto_xtnt_map_list(
-    bsInMemXtntMapT ** xtntMapListhead,	/* in */
-    bsInMemXtntMapT * targetXtntMap	/* in */
+    struct bsInMemXtntMap ** xtntMapListhead,	/* in */
+    struct bsInMemXtntMap * targetXtntMap	/* in */
 );
 
 int
 cp_remove_from_xtnt_map_list(
-    bsInMemXtntMapT ** xtntMapListhead,	/* in */
-    bsInMemXtntMapT * targetXtntMap	/* in */
+    struct bsInMemXtntMap ** xtntMapListhead,	/* in */
+    struct bsInMemXtntMap * targetXtntMap	/* in */
 );
 
 #endif				/* _BS_COPY_ */
