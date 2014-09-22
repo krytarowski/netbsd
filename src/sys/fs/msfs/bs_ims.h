@@ -124,6 +124,7 @@ typedef struct ioList {
 	int maxCnt;		/* number of entries in ioDesc[] */
 	ioDescT *ioDesc;
 }      ioListT;
+#include <fs/msfs/bs_access.h>
 #include <fs/msfs/bs_buf.h>
 #include <fs/msfs/bs_service_classes.h>
 #include <fs/msfs/bs_domain.h>

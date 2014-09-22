@@ -26,6 +26,8 @@
 #include <sys/vnode.h>
 #include <sys/rwlock.h>
 
+#include "dyn_hash.h"
+
 #define NEW_ACCESS
 
 /*
@@ -505,22 +507,7 @@ static inline void DEC_REFCNT(bfAccessT *bfap)
  * locked the bfap->bfaLock.  This macro seizes the BfAccessFreeLock
  * while moving the struct onto the closed list.
  */
-static inline void ADD_ACC_CLOSEDLIST(bfAccessT *bfap)
-{
-    mutex_enter(&BfAccessFreeLock.mutex);
-    KASSERT(bfap->onFreeList == 0);
-    KASSERT(ClosedAcc.freeBwd);
-    bfap->freeBwd = ClosedAcc.freeBwd;
-    bfap->freeFwd = (bfAccessT *)&ClosedAcc;
-    ClosedAcc.freeBwd->freeFwd = bfap;
-    ClosedAcc.freeBwd = bfap;
-    bfap->onFreeList = -1;
-    ClosedAcc.len++;
-    if (bfap->saved_stats) {
-        ClosedAcc.saved_stats_len++;
-    }
-    mutex_exit(&BfAccessFreeLock.mutex);
-}
+void ADD_ACC_CLOSEDLIST(bfAccessT *bfap);
 
 /* ADD_ACC_FREELIST adds access structures to the free list.
  * ACC_INVALID access structures are added to the front of the list,
@@ -555,116 +542,31 @@ static inline void ADD_ACC_CLOSEDLIST(bfAccessT *bfap)
  *       around.
  *
  */
-static inline void ADD_ACC_FREELIST(bfAccessT *bfap)
-{
-    clupThreadMsgT *msg;
-    extern msgQHT CleanupMsgQH;
-    extern int advfs_shutting_down;
-
-    mutex_enter(&BfAccessFreeLock.mutex);
-    KASSERT(bfap->onFreeList == 0);
-    KASSERT(bfap->dirtyBufList.length == 0);
-    if ( bfap->stateLk.state == ACC_INVALID ) {
-        KASSERT(FreeAcc.freeFwd);
-        if (FreeAcc.freeFwd != (bfAccessT *)&FreeAcc) {
-            bfap->bfap_free_time = FreeAcc.freeFwd->bfap_free_time;
-        } else {
-            bfap->bfap_free_time = sched_tick;
-        }
-        bfap->freeBwd = (bfAccessT *)&FreeAcc;
-        bfap->freeFwd = FreeAcc.freeFwd;
-        FreeAcc.freeFwd->freeBwd = bfap;
-        FreeAcc.freeFwd = bfap;
-    } else {
-        KASSERT(FreeAcc.freeBwd);
-        bfap->freeBwd = FreeAcc.freeBwd;
-        bfap->freeFwd = (bfAccessT *)&FreeAcc;
-        FreeAcc.freeBwd->freeFwd = bfap;
-        FreeAcc.freeBwd = bfap;
-        bfap->bfap_free_time = sched_tick;
-    }
-    bfap->onFreeList = 1;
-    FreeAcc.len++;
-    if (!advfs_shutting_down &&
-        ((NumAccess > MaxAccess) ||
-         ((NumAccess > AdvfsMinAccess)  &&
-          (FreeAcc.len > 2*AdvfsMinFreeAccess) &&
-         ((FreeAcc.len > (NumAccess * ADVFSMAXFREEACCESSPERCENT)/100) ||
-          (FreeAcc.freeFwd->bfap_free_time <
-                         (long)(sched_tick - BFAP_VALID_TIME)))))) {
-        msg = (clupThreadMsgT *)msgq_alloc_msg(CleanupMsgQH);
-        if (msg) {
-            msg->msgType = DEALLOCATE_BFAPS;
-            msgq_send_msg(CleanupMsgQH, msg);
-        }
-    }
-    mutex_exit(&BfAccessFreeLock.mutex);
-}
+void ADD_ACC_FREELIST(bfAccessT *bfap);
 
 /* This does the underlying work for the RM_ACC_LIST macros. Do not
  * call this macro from your code; call only the other ones. This one
  * does no locking or lock verification.
  */
-static inline void RM_ACC_LIST_REAL_WORK(bfAccessT *bfap)
-{
-    bfap->freeFwd->freeBwd = bfap->freeBwd;
-    bfap->freeBwd->freeFwd = bfap->freeFwd;
-    bfap->freeFwd = bfap->freeBwd = NULL;
-    if ( bfap->onFreeList == 1 ) {
-        KASSERT(FreeAcc.len > 0);
-        FreeAcc.len--;
-        KASSERT(bfap->dirtyBufList.length == 0);
-    } else {
-        KASSERT(ClosedAcc.len > 0);
-        ClosedAcc.len--;
-        if (bfap->saved_stats) {
-            ClosedAcc.saved_stats_len--;
-        }
-    }
-    bfap->onFreeList = 0;
-}
+void RM_ACC_LIST_REAL_WORK(bfAccessT *bfap);
 
 /* RM_ACC_LIST removes access structures from the free or closed list.
  * The caller typically holds bfap->bfaLock. BfAccessFreeLock is
  * seized while manipulating the free or closed lists.
  */
-static inline void RM_ACC_LIST(bfAccessT *bfap)
-{
-    mutex_enter(&BfAccessFreeLock.mutex);
-    KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1);
-    KASSERT(bfap->freeFwd);
-    KASSERT(bfap->freeBwd);
-    RM_ACC_LIST_REAL_WORK( bfap );
-    mutex_exit(&BfAccessFreeLock.mutex);
-}
+void RM_ACC_LIST(bfAccessT *bfap);
 
 /* RM_ACC_LIST_NOLOCK is like RM_ACC_LIST, except that the BfAccessFreeLock
  * must already be held by the caller instead of seizing and releasing it
  * internally.
  */
-static inline void RM_ACC_LIST_NOLOCK(bfAccessT *bfap)
-{
-    KASSERT(mutex_owned(&BfAccessFreeLock.mutex));
-    KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1);
-    KASSERT(bfap->freeFwd);
-    KASSERT(bfap->freeBwd);
-    RM_ACC_LIST_REAL_WORK(bfap);
-}
+void RM_ACC_LIST_NOLOCK(bfAccessT *bfap);
 
 /* RM_ACC_LIST_COND is like RM_ACC_LIST, except that the state of freeFwd
  * is checked to see if the struct is already on the free or closed list;
  * if it is, then it is removed.  The caller typically has bfap->bfaLock
  * seized.
  */
-static inline void RM_ACC_LIST_COND(bfAccessT *bfap)
-{
-    mutex_enter(&BfAccessFreeLock.mutex);
-    if (bfap->freeFwd) {
-        KASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1);
-        KASSERT(bfap->freeBwd);
-        RM_ACC_LIST_REAL_WORK( bfap );
-    }
-    mutex_exit(&BfAccessFreeLock.mutex);
-}
+void RM_ACC_LIST_COND(bfAccessT *bfap);
 
 #endif				/* _ACCESS_H_ */
