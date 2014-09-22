@@ -40,8 +40,6 @@
 #include <fs/msfs/bs_domain.h>
 #include <fs/msfs/bs_ims.h>
 
-#define NEW_ACCESS
-
 /*
  * min_free_vnodes: This is the minimum number of free vnodes on the free list.
  *                  If the number of vnodes on the free list is less than the
