@@ -281,8 +281,6 @@ typedef struct bsInMemXtnt {
 	uint32_t allocPageCnt;	/* Number of allocated pages */
 } bsInMemXtntT;
 
-extern bsInMemXtntT NilXtnts;
-
 /*
  * ioThreadMsgT
  */
@@ -296,6 +294,9 @@ typedef struct ioThreadMsg {
 	uint32_t vdi;
 	vdT *vdp;
 } ioThreadMsgT;
+
+/* Shared variables (externs) */
+extern bsInMemXtntT NilXtnts;
 
 /*
  * PROTOTYPES
