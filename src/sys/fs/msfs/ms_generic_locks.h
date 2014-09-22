@@ -188,6 +188,7 @@ typedef enum lkStates {
 	CLONE_DEL_DELETING	/* Deletion of clone fileset is occurring */
 } lkStatesT;
 
+/* typedefs */
 /*
  * cvT
  *
@@ -195,6 +196,8 @@ typedef enum lkStates {
  */
 
 typedef short cvT;
+
+/* Structs */
 
 /*
  * mutexT - This structure defines a file system mutex.  It contains an
@@ -340,7 +343,11 @@ typedef struct advfsLockStats {
 	unsigned long ftxTrimBroadcast;
 } advfsLockStatsT;
 
+/* Shared variables (externals) */
+
 extern advfsLockStatsT *AdvfsLockStats;
+
+/* Function prototypes */
 
 static inline u_short lk_waiters(const stateLkT *lk)
 {
