@@ -37,11 +37,42 @@
 #include <fs/msfs/bs_buf.h>
 #include <fs/msfs/bs_service_classes.h>
 #include <fs/msfs/bs_domain.h>
+#include <fs/msfs/bs_vd.h>
+#include <fs/msfs/bs_domain.h>
+#include <fs/msfs/bs_bitfile_sets.h>
+#include <fs/msfs/bs_tagdir.h>
+#include <fs/msfs/bs_bmt.h>
+#include <fs/msfs/bs_sbm.h>
+
+/* Defines */
 
 /*
  ** LOG_FLUSH_THRESHOLD must be a multiple of 4 **
  */
 #define LOG_FLUSH_THRESHOLD  8
+
+#define ADVFS_IO_RETRY_MAX  9	/* Maximum number of I/O retries allowed */
+
+#define IODH_TRACE_HISTORY 16
+
+/*
+ * Flags for msfs_flush_and_invalidate().
+ */
+#define NO_INVALIDATE           0x1
+#define INVALIDATE_UNWIRED      0x2
+#define INVALIDATE_ALL          0x4
+#define FLUSH_PREALLOC          0x8
+#define INVALIDATE_QUOTA_FILES  0x10
+
+/*
+ * Flags for backup extent map routines.
+ */
+#define XTNT_XTNTMAP       1	/* Get the extent map */
+#define XTNT_XTNTCNT_ONLY  2	/* Get the extent count */
+#define XTNT_PAGECNT_ONLY  4	/* Get the page count */
+
+
+
 
 /*
  * Block map structures
@@ -82,11 +113,7 @@ typedef struct ioDesc {
 	ushort ioRetryCount;	/* Count of AdvFS initiated I/O retries */
 } ioDescT;
 
-#define ADVFS_IO_RETRY_MAX  9	/* Maximum number of I/O retries allowed */
-
-#define IODH_TRACE_HISTORY 16
-
-typedef struct {
+typedef struct ioDHTraceElm {
 	uint32_t seq;
 	uint16_t mod;
 	uint16_t ln;
@@ -112,7 +139,7 @@ typedef struct ioDescHdr {
 	uint trace_ptr;
 	ioDHTraceElmT trace_buf[IODH_TRACE_HISTORY];
 #endif
-}         ioDescHdrT;
+} ioDescHdrT;
 
 typedef struct blkMap {
 	int read;		/* index of first read entry in ioDesc[] */
@@ -273,13 +300,7 @@ typedef struct {
 	uint32_t vdi;
 	struct vd *vdp;
 }      ioThreadMsgT;
-#include <fs/msfs/bs_access.h>
-#include <fs/msfs/bs_vd.h>
-#include <fs/msfs/bs_domain.h>
-#include <fs/msfs/bs_bitfile_sets.h>
-#include <fs/msfs/bs_tagdir.h>
-#include <fs/msfs/bs_bmt.h>
-#include <fs/msfs/bs_sbm.h>
+
 
 /*
  * PROTOTYPES
@@ -315,15 +336,6 @@ bs_invalidate_pages(
     uint32_t pageCnt,		/* in */
     int invalflag		/* in */
 );
-
-/*
- * Flags for msfs_flush_and_invalidate().
- */
-#define NO_INVALIDATE           0x1
-#define INVALIDATE_UNWIRED      0x2
-#define INVALIDATE_ALL          0x4
-#define FLUSH_PREALLOC          0x8
-#define INVALIDATE_QUOTA_FILES  0x10
 
 void
 msfs_flush_and_invalidate(
@@ -439,13 +451,6 @@ bs_get_bf_xtnt_map(
     int *xtntCnt,		/* out */
     vdIndexT * allocVdIndex	/* out */
 );
-
-/*
- * Flags for backup extent map routines.
- */
-#define XTNT_XTNTMAP       1	/* Get the extent map */
-#define XTNT_XTNTCNT_ONLY  2	/* Get the extent count */
-#define XTNT_PAGECNT_ONLY  4	/* Get the page count */
 
 int
 bs_get_clone_xtnt_map(
