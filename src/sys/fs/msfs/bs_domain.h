@@ -26,9 +26,7 @@
 #ifndef _DOMAIN_H_
 #define _DOMAIN_H_
 
-#ifndef offsetof
 #include <stddef.h>
-#endif
 
 #include <fs/msfs/vfast.h>
 #include <sys/rwlock.h>
