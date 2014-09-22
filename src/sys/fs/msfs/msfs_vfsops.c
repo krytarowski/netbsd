@@ -204,10 +204,6 @@ krwlock_t FilesetLock;
 	mp->m_uid = 0;
 	mp->m_mounth = (struct vnode *) 0;
 
-#ifdef  SER_COMPAT || RT_PREEMPT
-	mp->m_funnel = FUNNEL_NULL;
-#endif
-
 	if (flag & M_GLOBAL_ROOT) {
 		/* Mounting cluster global root - must get root dev array from
 		 * global_rootdev and initialize global_rootdev_count vnodes. */
@@ -427,9 +423,6 @@ msfs_mount(struct mount * mp,	/* in */
 	if ((mp->m_flag & M_DIRECTIO) && !Advfs_enable_dio_mount) {
 		mp->m_flag &= ~M_DIRECTIO;
 	}
-#ifdef  SER_COMPAT || RT_PREEMPT
-	mp->m_funnel = FUNNEL_NULL;
-#endif
 
 	MOUNT_UNLOCK(mp);
 
