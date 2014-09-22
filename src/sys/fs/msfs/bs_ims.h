@@ -26,23 +26,26 @@
 #ifndef _BS_IMS_H_
 #define _BS_IMS_H_
 
-#include <fs/msfs/bs_ods.h>
-#include <fs/msfs/fs_dir.h>	/* for fsContext def - bad layering? */
 #ifdef _KERNEL
 #include <sys/vnode.h>
 #endif				/* _KERNEL */
+#include <sys/types.h>
 #include <sys/rwlock.h>
+#include <sys/buf.h>
 
+#include <fs/msfs/bs_ods.h>
+#include <fs/msfs/fs_dir.h>	/* for fsContext def - bad layering? */
 #include <fs/msfs/bs_access.h>
 #include <fs/msfs/bs_buf.h>
 #include <fs/msfs/bs_service_classes.h>
 #include <fs/msfs/bs_domain.h>
 #include <fs/msfs/bs_vd.h>
-#include <fs/msfs/bs_domain.h>
 #include <fs/msfs/bs_bitfile_sets.h>
 #include <fs/msfs/bs_tagdir.h>
 #include <fs/msfs/bs_bmt.h>
 #include <fs/msfs/bs_sbm.h>
+#include <fs/msfs/ms_generic_locks.h>
+#include <fs/msfs/bs_public.h>
 
 /* Defines */
 
@@ -72,13 +75,13 @@
 #define XTNT_PAGECNT_ONLY  4	/* Get the page count */
 
 /* Enums */
-enum ioQueue {
+typedef enum ioQueue {
 	NONE = 0, WAIT_LAZY, READY_LAZY, BLOCKING, DEVICE, CONSOL, SMSYNC_LAZY0,
 	SMSYNC_LAZY1, SMSYNC_LAZY2, SMSYNC_LAZY3, SMSYNC_LAZY4, SMSYNC_LAZY5,
 	SMSYNC_LAZY6, SMSYNC_LAZY7, SMSYNC_LAZY8, SMSYNC_LAZY9, SMSYNC_LAZY10,
 	SMSYNC_LAZY11, SMSYNC_LAZY12, SMSYNC_LAZY13, SMSYNC_LAZY14,
 	SMSYNC_LAZY15, FLUSHQ, TEMPORARYQ, UBCREQQ
-};
+} ioQueueT;
 
 /*
  * Used when creating a subextent. Indicates the state of the
@@ -120,14 +123,14 @@ typedef struct ioDesc {
 	struct ioDesc *fwd;	/* doubly linked I/O queue */
 	struct ioDesc *bwd;
 	blkDescT blkDesc;
-	enum ioQueue ioQ;	/* which queue desc is on */
+	ioQueueT ioQ;	/* which queue desc is on */
 	int numBlks;		/* number of 512 byte blocks */
 	int ioQtime;		/* lbolt when placed on this queue */
 	unsigned long ioQln;	/* who did the deed */
 	/* devosfbuf buffer is only valid between I/O start and I/O completion */
 	struct buf *devosfbuf;	/* call_disk address for I/O buf struct */
 	unsigned char *targetAddr;	/* data address for I/O */
-	struct bsBuf *bsBuf;	/* buffer that owns this I/O */
+	bsBufT *bsBuf;	/* buffer that owns this I/O */
 	short ioCount;		/* how many I/O's queued for this descriptor */
 	/* Fields used for consolidated I/O */
 	short consolidated;	/* bit indicates whether consolidated */
@@ -142,7 +145,7 @@ typedef struct ioDHTraceElm {
 	uint32_t seq;
 	uint16_t mod;
 	uint16_t ln;
-	struct thread *thd;
+	struct thread *thd; /* XXX: adapt for NetBSD */
 	void *val;
 } ioDHTraceElmT;
 
@@ -283,18 +286,16 @@ extern bsInMemXtntT NilXtnts;
 /*
  * ioThreadMsgT
  */
-
 typedef struct ioThreadMsg {
 	ioThreadMsgTypeT msgType;
 	union {
 		bfDomainIdT dmnId;
 		domainT *dmnP;
 		struct buf *ioRetryBp;
-	}     u_msg;
+	} u_msg;
 	uint32_t vdi;
-	struct vd *vdp;
+	vdT *vdp;
 } ioThreadMsgT;
-
 
 /*
  * PROTOTYPES

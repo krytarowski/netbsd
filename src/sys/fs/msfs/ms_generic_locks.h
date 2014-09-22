@@ -61,7 +61,7 @@ typedef struct mutex {
 #else				/* _KERNEL */
 	pthread_mutex_t mutex;
 #endif				/* _KERNEL */
-}     mutexT;
+} mutexT;
 
 extern mutexT *MutexList;
 

@@ -409,7 +409,7 @@ extern bfDomainIdT nilBfDomainId;
 typedef struct bfMCId {
 	uint32_t cell:5;		/* Cell number within page */
 	uint32_t page:27;	/* Page number */
-}      bfMCIdT;
+} bfMCIdT;
 /*
  * bfSetIdT - bitfile set id
  *  = domain id + bitfile directory tag

@@ -277,31 +277,35 @@ typedef struct bsMPg {
 typedef struct bsXtnt {
 	uint32_t bsPage;		/* Bitfile page number */
 	uint32_t vdBlk;		/* Logical (disk) block number */
-}      bsXtntT;
+} bsXtntT;
+
 /*
  * Definition of delete link for global deferred deleted list.
  */
-typedef struct {
+typedef struct delLink {
 	bfMCIdT nextMCId;	/* next mcell in the list */
 	bfMCIdT prevMCId;	/* preceding mcell in list */
-}      delLinkT;
+} delLinkT;
+
 /*
  * Structure which records the progress of a delete.
  */
-typedef struct {
+typedef struct delRst {
 	bfMCIdT mcid;		/* first unfinished mcell in del pend chain */
 	vdIndexT vdIndex;	/* vd index of first unfinished mcell */
 	uint32_t xtntIndex;	/* index of the first unfinished extent */
 	uint32_t offset;		/* first unprocessed page in extent */
 	uint32_t blocks;		/* quota blocks already freed */
-}      delRstT;
+} delRstT;
+
 #define BMT_XTNTS 2		/* num. xtnt descriptors per bsXtntR */
 
-typedef struct {
+typedef struct bfPrimXT {
 	uint16_t mcellCnt;	/* total number of mcells with descriptors */
 	uint16_t xCnt;		/* Count of elements used in bsXA */
 	bsXtntT bsXA[BMT_XTNTS];/* Array of disk extent descriptors */
-}      bfPrimXT;
+} bfPrimXT;
+
 /*
  * The extent header, which mostly has stuff other than extents
  * (except for reserved files).
