@@ -215,6 +215,36 @@ typedef enum bfdVersion {
 	BFD_ODS_LAST_VERSION = 4/* NOTE **** only 5 bits (< 32) */
 } bfdVersionT;
 
+typedef enum bfStates {
+	BSRA_INVALID, BSRA_CREATING, BSRA_DELETING, BSRA_VALID
+} bfStatesT;
+
+typedef enum bsVdOp {
+	BSR_VD_NO_OP,
+	BSR_VD_ADDVOL,
+	BSR_VD_RMVOL
+} bsVdOpT;
+
+typedef enum ssDmnOp {
+	SS_DEACTIVATED,		/* vfast disabled on domain */
+	SS_ACTIVATED,		/* vfast enabled on domain */
+	SS_SUSPEND,		/* vfast has work suspended, lists still
+				 * active */
+	SS_ERROR,		/* vfast is disabled on domain due to unknown
+				 * error */
+	SS_CFS_RELOC,		/* CFS is in process of relocating domain to a
+				 * new server node. vfast will have this
+				 * state, if current state was SS_ACTIVATED,
+				 * until last umount, when domain deactivation
+				 * will reset state to SS_ACTIVATED. Special
+				 * cluster reloc state that is not to be
+				 * written to disk. */
+	SS_CFS_MOUNT,
+	SS_CFS_UMOUNT
+	/* CFS is in process of (u)mounting. vfast will be temporarily set to
+	 * these states, IF current state is SS_ACTIVATED. Otherwise, vfast
+	 * state is untouched during the cluster (u)mount. */
+} ssDmnOpT;
 
 #define RBMT_THERE(dp)  (((dp)->dmnVersion) >= FIRST_RBMT_VERSION)
 
@@ -396,16 +426,12 @@ typedef struct bsXtntR {
 }       bsXtntRT;
 #define BSR_ATTR 2		/* bitfile attributes record */
 
-typedef enum {
-	BSRA_INVALID, BSRA_CREATING, BSRA_DELETING, BSRA_VALID
-}    bfStatesT;
 /*
  * Bitfile client attributes.  These attributes are freely changeable
  * by clients (users and file system layer).  This struct is also used
  * for the inheritable attributes which the file system layer associates
  * with directories.
  */
-
 typedef struct bsBfClAttr {
 	bfDataSafetyT dataSafety;	/* Bitfile data safety requirement */
 	serviceClassT reqServices;	/* required service class */
@@ -690,12 +716,6 @@ typedef struct bsPropListPage_v3 {
 }                 bsPropListPageT_v3;
 #define BSR_DMN_TRANS_ATTR 21
 
-typedef enum {
-	BSR_VD_NO_OP,
-	BSR_VD_ADDVOL,
-	BSR_VD_RMVOL
-}    bsVdOpT;
-
 typedef struct bsDmnTAttr {
 	uint32_t chainVdIndex;
 	bfMCIdT chainMCId;
@@ -711,27 +731,6 @@ typedef struct bsDmnTAttr {
  */
 
 #define BSR_DMN_SS_ATTR 22
-
-typedef enum {
-	SS_DEACTIVATED,		/* vfast disabled on domain */
-	SS_ACTIVATED,		/* vfast enabled on domain */
-	SS_SUSPEND,		/* vfast has work suspended, lists still
-				 * active */
-	SS_ERROR,		/* vfast is disabled on domain due to unknown
-				 * error */
-	SS_CFS_RELOC,		/* CFS is in process of relocating domain to a
-				 * new server node. vfast will have this
-				 * state, if current state was SS_ACTIVATED,
-				 * until last umount, when domain deactivation
-				 * will reset state to SS_ACTIVATED. Special
-				 * cluster reloc state that is not to be
-				 * written to disk. */
-	SS_CFS_MOUNT,
-	SS_CFS_UMOUNT
-	/* CFS is in process of (u)mounting. vfast will be temporarily set to
-	 * these states, IF current state is SS_ACTIVATED. Otherwise, vfast
-	 * state is untouched during the cluster (u)mount. */
-}    ssDmnOpT;
 
 typedef struct bsSSDmnAttr {
 	ssDmnOpT ssDmnState;	/* processing state that domain is in */
