@@ -29,7 +29,6 @@
 #include <sys/buf.h>
 
 #include <fs/msfs/ms_generic_locks.h>
-#include <fs/msfs/bs_access.h>
 #include <fs/msfs/bs_public.h>
 #include <fs/msfs/bs_ims.h>
 
@@ -141,6 +140,10 @@
 typedef struct vm_page *vm_page_t;	/*  so bsBuf stays the same size */
 typedef struct vm_map  *vm_map_t;
 
+/* Forward definitions */
+struct actRange;
+struct bfAccess;
+
 /* Structs */
 
 /*
@@ -173,7 +176,7 @@ typedef struct bsBuf {
 	struct bsBuf *lsnFwd;	/* lsn list; protected by domainT.lsnLock */
 	struct bsBuf *lsnBwd;
 	struct bsBuf *accFwd;	/* bfAccess clean and dirty page list;    */
-	struct bsBuf *accBwd;	/* protected by bfAccessT.bfIoLock    */
+	struct bsBuf *accBwd;	/* protected by struct bfAccess.bfIoLock    */
 	rangeFlushLinkT *rflList;	/* List of connectors to rangeFlushT's    */
 	/* that include this bsBuf in their range */
 	/* rflList is protected by bsBuf.bufLock  */
@@ -184,7 +187,7 @@ typedef struct bsBuf {
 	long ln;		/* dbg: line # high 28 bits; tid in low 36 */
 	int writeRef;		/* # of refs on this buffer for writing */
 	u_int sync_stamp;	/* used for smoothsync operation */
-	actRangeT *actRangep;	/* Active range containing this
+	struct actRange *actRangep;	/* Active range containing this
 					 * buffer. */
 
 	/* note this field may be invalid when the vm_page isn't held or busy */

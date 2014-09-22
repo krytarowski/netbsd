@@ -36,7 +36,6 @@
 #include <fs/msfs/bs_buf.h>
 #include <fs/msfs/bs_ods.h>
 #include <fs/msfs/ftx_public.h>
-#include <fs/msfs/bs_bitfile_sets.h>
 #include <fs/msfs/bs_domain.h>
 #include <fs/msfs/bs_ims.h>
 
