@@ -5582,29 +5582,3 @@ smsync_to_readyq(struct vd * vdp, int flushFlag)
 		thread_preempt(th, FALSE);
 	}
 }
-#ifdef ADVFS_IODH_TRACE
-
-void
-iodh_trace(ioDescHdrT * ioDH,
-    uint16_t module,
-    uint16_t line,
-    void *value)
-{
-	register ioDHTraceElmT *te;
-	extern kmutex_t TraceLock;
-	extern int TraceSequence;
-
-	simple_lock(&TraceLock);
-
-	ioDH->trace_ptr = (ioDH->trace_ptr + 1) % IODH_TRACE_HISTORY;
-	te = &ioDH->trace_buf[ioDH->trace_ptr];
-	te->thd = (struct thread *) (((long) current_cpu() << 36) |
-	    (long) current_thread() & 0xffffffff);
-	te->seq = TraceSequence++;
-	te->mod = module;
-	te->ln = line;
-	te->val = value;
-
-	simple_unlock(&TraceLock);
-}
-#endif

@@ -88,7 +88,7 @@ enum ioQueue {
  *  NEW_MCELL - Brand new Mcell, create on-disk xtnt rec and link mcell
  *  USED_MCELL - Use old mcell, update on-disk xtnt rec and relink mcell
  */
-typedef enum {
+typedef enum mcellState {
 	INITIALIZED,
 	NEW_MCELL,
 	USED_MCELL
@@ -98,7 +98,7 @@ typedef enum {
  * ioThreadMsgTypeT
  */
 
-typedef enum {
+typedef enum ioThreadMsgType {
 	LF_PB_CONT,
 	START_MORE_IO,
 	THREAD_GO_AWAY,
@@ -113,7 +113,7 @@ typedef enum {
 typedef struct blkDesc {
 	uint16_t vdIndex;
 	uint32_t vdBlk;
-}       blkDescT;
+} blkDescT;
 
 typedef struct ioDesc {
 	struct ioDesc *fwd;	/* doubly linked I/O queue */
@@ -159,10 +159,6 @@ typedef struct ioDescHdr {
 	uint ioQ;
 	int pad[5];		/* pad to 64-byte boundary to avoid cache line
 				 * contention */
-#ifdef ADVFS_IODH_TRACE
-	uint trace_ptr;
-	ioDHTraceElmT trace_buf[IODH_TRACE_HISTORY];
-#endif
 } ioDescHdrT;
 
 typedef struct blkMap {
