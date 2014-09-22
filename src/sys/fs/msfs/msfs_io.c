@@ -698,7 +698,6 @@ bs_osf_complete(
 	last_iop->fwd = NULL;
 	vdp->devQ.ioQLen -= len;
 
-	MS_VERIFY_IOQUEUE_INTEGRITY(&vdp->devQ, TRUE);
 
 	/* If the device queue is less than half full, and we have buffers on
 	 * the queues that could go out, have the background I/O thread get
@@ -1012,7 +1011,6 @@ consecutive_list_io(
 
 	KASSERT(max_buffers > 1);
 
-	MS_VERIFY_IOQUEUE_INTEGRITY(qhdr, TRUE);
 
 	KASSERT(mutex_owned(&vdp->devQ.ioQLock.mutex));
 	KASSERT(mutex_owned(&qhdr->ioQLock.mutex));
@@ -1181,7 +1179,6 @@ retry:
 	start->bwd->fwd = last->fwd;
 	last->fwd->bwd = start->bwd;
 	start->bwd = last->fwd = NULL;
-	MS_VERIFY_IOQUEUE_INTEGRITY(qhdr, TRUE);
 
 	/*
          * If we have consolidated I/O, allocate some contiguous virtual
@@ -1242,7 +1239,6 @@ retry:
 			count = 1;
 			last = start;
 
-			MS_VERIFY_IOQUEUE_INTEGRITY(&vdp->blockingQ, TRUE);
 			if (qhdr != &vdp->blockingQ) {
 				mutex_exit(&vdp->blockingQ.ioQLock.mutex);
 				locks_held[BLKQ] = 0;
@@ -1778,7 +1774,6 @@ bs_startio(
 			ioList->bwd->fwd = ioList->fwd;
 			ioList->fwd = ioList->bwd = ioList;
 			qhdr->ioQLen -= 1;
-			MS_VERIFY_IOQUEUE_INTEGRITY(qhdr, locks_held[qindex]);
 		}
 
 		if (locks_held[qindex]) {
@@ -1808,7 +1803,6 @@ bs_startio(
 			} else {
 				lazy_cnt -= ioList->desCnt;
 			}
-			MS_VERIFY_IOQUEUE_INTEGRITY(&vdp->devQ, TRUE);
 		} else {
 
 			/*
@@ -1828,7 +1822,6 @@ bs_startio(
 			} else {
 				lazy_cnt--;
 			}
-			MS_VERIFY_IOQUEUE_INTEGRITY(&vdp->devQ, TRUE);
 		}
 
 		/* vdIoOut is the count of all I/O's queued to the device.  */

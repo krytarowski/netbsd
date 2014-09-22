@@ -298,8 +298,6 @@ static inline void RM_ACCESSLIST(struct bsBuf *bp, const int seize_bfiolock)
         mutex_exit(&bp->bfAccess->bfIoLock.mutex);
 }
 
-#define MS_VERIFY_IOQUEUE_INTEGRITY(qhdr,callerLocked)
-
 #define PGREF_EQL(x1, x2) \
     ( (x1) == (x2))
 
