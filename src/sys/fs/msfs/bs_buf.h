@@ -135,16 +135,6 @@
 #define ADVFS_GET_NOCACHE    0x100	/* page not in cache is ok for this
 					 * call */
 
-/* Enums */
-typedef enum TraceAction {
-	Ref = 1,
-	Deref = 2,
-	Pin = 4,
-	Unpin = 8,
-	DevRead = 0x10,
-	DevWrite = 0x20
-} TraceActionT;
-
 /* Typedefs */
 /* XXX: Go for native vm_page and vm_map */
 /* XXX: comment with bsBuf to be investigated */

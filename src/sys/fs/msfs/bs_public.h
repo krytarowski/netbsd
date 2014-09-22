@@ -37,6 +37,15 @@
 
 #include <fs/msfs/advfs_modules.h>
 
+typedef enum TraceAction {
+	Ref = 1,
+	Deref = 2,
+	Pin = 4,
+	Unpin = 8,
+	DevRead = 0x10,
+	DevWrite = 0x20
+} TraceActionT;
+
 /*
  * Magic numbers for validation of in-memory structures.
  * These should all begin with 0xADF and should not use
