@@ -37,34 +37,7 @@
 
 #include <sys/time.h>
 
-/*
- * cvT
- *
- * Defines a condition variable.
- */
-
-typedef short cvT;
-
-/*
- * mutexT - This structure defines a file system mutex.  It contains an
- * actual (primitive/CMA/...).
- *
- * INITIALIZATION:
- *
- *    XXX: Fix it:
- *    You must call mutex_init2() before using a mutexT variable.
- */
-
-typedef struct mutex {
-#ifdef _KERNEL
-	kmutex_t mutex;
-#else				/* _KERNEL */
-	pthread_mutex_t mutex;
-#endif				/* _KERNEL */
-} mutexT;
-
-extern mutexT *MutexList;
-
+/* Enums */
 /*
  * lkTypeT
  *
@@ -145,28 +118,6 @@ typedef enum lkUsage {			/* ##, ftx_start() locking order    */
 } lkUsageT;
 
 /*
- * lkHdrT
- *
- * Common struct header for all locks.
- */
-
-typedef struct lkHdr {
-	lkTypeT lkType;
-
-	/*
-         * The following are used only for/by ftx locks.
-         */
-	void *nxtFtxLk;
-	mutexT *mutex;
-	lkUsageT lkUsage;
-} lkHdrT;
-
-typedef struct ftxLk {
-	lkHdrT hdr;		/* header used by ftx lock routines only */
-	krwlock_t lock;		/* shared access, exclusive writer.  */
-	cvT cv;			/* condition variable */
-} ftxLkT;
-/*
  * unLkActionT
  *
  * Used to determine whether or not a thread that just unlocked a lock
@@ -185,6 +136,7 @@ typedef enum shareExclLkState {
 	LKS_SHARE,
 	LKS_EXCL
 } shareExclLkStateT;
+
 /****************************************************************************
  * STATE LOCK SUPPORT
  *
@@ -235,6 +187,57 @@ typedef enum lkStates {
 	CLONE_DEL_PENDING,	/* Deletion of clone fileset is pending */
 	CLONE_DEL_DELETING	/* Deletion of clone fileset is occurring */
 } lkStatesT;
+
+/*
+ * cvT
+ *
+ * Defines a condition variable.
+ */
+
+typedef short cvT;
+
+/*
+ * mutexT - This structure defines a file system mutex.  It contains an
+ * actual (primitive/CMA/...).
+ *
+ * INITIALIZATION:
+ *
+ *    XXX: Fix it:
+ *    You must call mutex_init2() before using a mutexT variable.
+ */
+
+typedef struct mutex {
+#ifdef _KERNEL
+	kmutex_t mutex;
+#else				/* _KERNEL */
+	pthread_mutex_t mutex;
+#endif				/* _KERNEL */
+} mutexT;
+
+extern mutexT *MutexList;
+
+/*
+ * lkHdrT
+ *
+ * Common struct header for all locks.
+ */
+
+typedef struct lkHdr {
+	lkTypeT lkType;
+
+	/*
+         * The following are used only for/by ftx locks.
+         */
+	void *nxtFtxLk;
+	mutexT *mutex;
+	lkUsageT lkUsage;
+} lkHdrT;
+
+typedef struct ftxLk {
+	lkHdrT hdr;		/* header used by ftx lock routines only */
+	krwlock_t lock;		/* shared access, exclusive writer.  */
+	cvT cv;			/* condition variable */
+} ftxLkT;
 
 /*
  * stateLkT
