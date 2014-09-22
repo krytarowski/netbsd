@@ -217,7 +217,7 @@ typedef struct bsInMemSubXtntMap {
 /*
  * bsInMemXtntMapT - Represents cached on-disk extent information.
  */
-struct bsInMemXtntMap {
+typedef struct bsInMemXtntMap {
 	struct bsInMemXtntMap *nextXtntMap;	/* Link to next extent map */
 	struct domain *domain;	/* pointer to the domain */
 	uint32_t hdrType;	/* Type of on-disk header record */
