@@ -485,30 +485,29 @@ bs_get_bkup_xtnt_map(
     int *pageCnt		/* out */
 );
 
-	struct bfAccess *
-	         grab_bsacc(
-             bfSetT * bfSetp,	/* in - bitfile-set descriptor pointer */
-             bfTagT tag,	/* in - bitfile tag */
-             int forceFlag,	/* in - passed to get_free_acc() */
-             uint32_t options	/* in - options flags */
+bfAccessT *
+grab_bsacc(
+    bfSetT * bfSetp,	/* in - bitfile-set descriptor pointer */
+    bfTagT tag,	/* in - bitfile tag */
+    int forceFlag,	/* in - passed to get_free_acc() */
+    uint32_t options	/* in - options flags */
 );
 
-	void *
-	     bs_vd_thread(
-         void *
+void *
+bs_vd_thread(
+    void *
 );
 
-	void
-	     bs_init(int doingRoot);
+void bs_init(int doingRoot);
 
-	void bs_init_area(void);
-	void init_bscreate_opx(void);
-	int init_bs_stg_opx(void);
-	void init_bs_xtnts_opx(void);
-	int init_bs_bitmap_opx(void);
-	int init_crmcell_opx(void);
-	void init_bs_delete_opx(void);
-	void init_bs_bmt_util_opx(void);
+void bs_init_area(void);
+void init_bscreate_opx(void);
+int init_bs_stg_opx(void);
+void init_bs_xtnts_opx(void);
+int init_bs_bitmap_opx(void);
+int init_crmcell_opx(void);
+void init_bs_delete_opx(void);
+void init_bs_bmt_util_opx(void);
 
 int
 bs_logflush_start(
@@ -538,11 +537,10 @@ bs_q_list(
     void (*q_for_io) (ioDescT *, int)	/* in */
 );
 
-	void
-	     bs_init_io_thread(void);
+void bs_init_io_thread(void);
 
-	int
-	    sendtoiothread(
+int
+sendtoiothread(
         struct vd * vdp,	/* in */
         ioThreadMsgTypeT sendType,	/* in */
         struct buf * bp		/* in */
@@ -557,8 +555,8 @@ bs_q_list(
 /*
  * ftx_set_dirtybufla - set oldest dirty buffer log address for domain
  */
-	void
-	     ftx_set_dirtybufla(
+void
+ftx_set_dirtybufla(
          domainT * dmnp,
          logRecAddrT dirtyBufLa
 );
