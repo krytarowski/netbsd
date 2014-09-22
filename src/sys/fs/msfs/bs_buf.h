@@ -286,10 +286,8 @@ static inline void RM_ACCESSLIST(struct bsBuf *bp, const int seize_bfiolock)
 #define PGREF_EQL(x1, x2) \
     ( (x1) == (x2))
 
-#define state_block( bp, w ) _state_block( bp, w );
-
 void
-_state_block(
+state_block(
     struct bsBuf * bp,		/* in - buffer on which to block */
     int *wait			/* in/out - waited previously? */
 );
