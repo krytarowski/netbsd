@@ -49,7 +49,9 @@
  *                  systems.
  *  -- Tru64 Unix File System Administration Handbook, Steven M. Hancock
  *
- * NetBSD miss MIN_FREE_VNODES so go for NVNODE.
+ * NVNODE:          This option sets the size of the cache used by the
+ *                  name-to-inode translation routines.
+ *  -- NetBSD man-page options(4)
  */
 #define ADVFS_MIN_FREE_ACCESS NVNODE
 #define ADVFSMAXFREEACCESSPERCENT 80
