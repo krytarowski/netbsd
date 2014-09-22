@@ -243,23 +243,23 @@ static inline void IODESC_CLR(struct bsBuf *bp, const int i)
     bp->ioList.ioDesc[i].data_never_written = 0;
 }
 
-#define ADD_DIRTYACCESSLIST( bp, seize_bfiolock ) \
-{ \
-    KASSERT(mutex_owned(&bp->bufLock.mutex)); \
-    if (seize_bfiolock) \
-        mutex_enter(&bp->bfAccess->bfIoLock.mutex); \
-    else \
-        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex)); \
-    bp->accListSeq++; \
-    KASSERT(!(bp->lock.state & ACC_DIRTY)); \
-    bp->lock.state |= ACC_DIRTY; \
-    bp->accFwd = (struct bsBuf *)&bp->bfAccess->dirtyBufList; \
-    bp->accBwd = bp->bfAccess->dirtyBufList.accBwd; \
-    bp->bfAccess->dirtyBufList.accBwd->accFwd = bp; \
-    bp->bfAccess->dirtyBufList.accBwd = bp; \
-    bp->bfAccess->dirtyBufList.length++; \
-    if (seize_bfiolock) \
-        mutex_exit(&bp->bfAccess->bfIoLock.mutex); \
+static inline void ADD_DIRTYACCESSLIST(struct bsBuf *bp, const int seize_bfiolock)
+{
+    KASSERT(mutex_owned(&bp->bufLock.mutex));
+    if (seize_bfiolock)
+        mutex_enter(&bp->bfAccess->bfIoLock.mutex);
+    else
+        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex));
+    bp->accListSeq++;
+    KASSERT(!(bp->lock.state & ACC_DIRTY));
+    bp->lock.state |= ACC_DIRTY;
+    bp->accFwd = (struct bsBuf *)&bp->bfAccess->dirtyBufList;
+    bp->accBwd = bp->bfAccess->dirtyBufList.accBwd;
+    bp->bfAccess->dirtyBufList.accBwd->accFwd = bp;
+    bp->bfAccess->dirtyBufList.accBwd = bp;
+    bp->bfAccess->dirtyBufList.length++;
+    if (seize_bfiolock)
+        mutex_exit(&bp->bfAccess->bfIoLock.mutex);
 }
 
 #define RM_ACCESSLIST( bp, seize_bfiolock ) \
