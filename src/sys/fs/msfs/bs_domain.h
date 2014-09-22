@@ -32,6 +32,37 @@
 #include <sys/rwlock.h>
 #include "dyn_hash.h"
 
+
+/* Defines */
+#define FTX_MAX_FTXH     100
+#define FTX_RR_GAP       3
+#define FTX_DEF_RR_SLOTS 30	/* default round robin slots */
+ /* If FTX_DEF_RR_SLOTS changes; be sure to change the value of MAX_RD_PGS in
+  * ms_logger.h since that value is dependent on this one. */
+
+#define BFD_NORMAL                 (0)
+#define BFD_RMVOL_IN_PROGRESS      (1<<0)
+#define BFD_DUAL_MOUNT_IN_PROGRESS (1<<1)
+#define BFD_CFS_RELOC_IN_PROGRESS  (1<<2)
+#define BFD_DEACTIVATE_PENDING     (1<<3)
+#define BFD_DEACTIVATE_IN_PROGRESS (1<<4)
+#define BFD_DOMAIN_FLUSH_IN_PROGRESS (1<<5)
+
+/*
+ *  Freeze flags
+ */
+#define BFD_NO_FREEZE              (0)
+#define BFD_FREEZE_IN_PROGRESS     (1<<0)
+#define BFD_FROZEN                 (1<<1)
+
+/* Dynamic hash macros */
+
+#define DOMAIN_HASH_INITIAL_SIZE 32
+#define DOMAIN_HASH_CHAIN_LENGTH 16
+#define DOMAIN_HASH_ELEMENTS_TO_BUCKETS 4
+#define DOMAIN_HASH_USECS_BETWEEN_SPLITS 5000000	/* 5 seconds */
+
+
 /*
  * Some ftx types that are part of the domain structure, so must be
  * here instead of ftx_privates, which is included after this file.
@@ -50,11 +81,6 @@ typedef struct ftxSlot {
 	struct ftx *ftxp;	/* ptr to ftx struct */
 	ftxSlotStateT state;	/* slot state */
 }       ftxSlotT;
-#define FTX_MAX_FTXH     100
-#define FTX_RR_GAP       3
-#define FTX_DEF_RR_SLOTS 30	/* default round robin slots */
- /* If FTX_DEF_RR_SLOTS changes; be sure to change the value of MAX_RD_PGS in
-  * ms_logger.h since that value is dependent on this one. */
 
 /*
  * ftxTblD - Transaction Table Descriptor
@@ -273,20 +299,6 @@ PB_CONT = 1, CK_WAITQ = 2};
 /* Domain dmnFlag values */
 
 
-#define BFD_NORMAL                 (0)
-#define BFD_RMVOL_IN_PROGRESS      (1<<0)
-#define BFD_DUAL_MOUNT_IN_PROGRESS (1<<1)
-#define BFD_CFS_RELOC_IN_PROGRESS  (1<<2)
-#define BFD_DEACTIVATE_PENDING     (1<<3)
-#define BFD_DEACTIVATE_IN_PROGRESS (1<<4)
-#define BFD_DOMAIN_FLUSH_IN_PROGRESS (1<<5)
-
-/*
- *  Freeze flags
- */
-#define BFD_NO_FREEZE              (0)
-#define BFD_FREEZE_IN_PROGRESS     (1<<0)
-#define BFD_FROZEN                 (1<<1)
 
 /*
  * domain - this structure describes a bitfile domain, which is
@@ -540,13 +552,6 @@ static inline void BFSET_DMN_REMQ(domainT *dmnp, bfsQueueT *entry)
 #define DMNTBL_UNLOCK( sLk )  lock_done( sLk );
 
 extern krwlock_t DmnTblLock;
-
-/* Dynamic hash macros */
-
-#define DOMAIN_HASH_INITIAL_SIZE 32
-#define DOMAIN_HASH_CHAIN_LENGTH 16
-#define DOMAIN_HASH_ELEMENTS_TO_BUCKETS 4
-#define DOMAIN_HASH_USECS_BETWEEN_SPLITS 5000000	/* 5 seconds */
 
 #define DOMAIN_GET_HASH_KEY( _domainId ) \
     ( (_domainId).tv_sec)
