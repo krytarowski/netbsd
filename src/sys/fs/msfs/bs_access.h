@@ -25,8 +25,20 @@
 #include <sys/param.h>
 #include <sys/vnode.h>
 #include <sys/rwlock.h>
+#include <sys/types.h>
+#include <sys/mount.h>
 
 #include "dyn_hash.h"
+
+#include <fs/msfs/fs_dir.h>
+#include <fs/msfs/ms_generic_locks.h>
+#include <fs/msfs/bs_public.h>
+#include <fs/msfs/bs_buf.h>
+#include <fs/msfs/bs_ods.h>
+#include <fs/msfs/ftx_public.h>
+#include <fs/msfs/bs_bitfile_sets.h>
+#include <fs/msfs/bs_domain.h>
+#include <fs/msfs/bs_ims.h>
 
 #define NEW_ACCESS
 
