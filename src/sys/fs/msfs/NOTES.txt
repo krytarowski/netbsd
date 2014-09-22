@@ -1,0 +1,28 @@
+bs_access.h:
+- <fs_dir.h> fs_stat, fsFragStateT
+- <> dyn_hashlinks_w_keyT
+- <ms_generic_locks.h> mutexT, stateLkT, ftxLkT
+- <bs_buf.h> bsBufHdr
+- <bs_public.h> lsnT, bfDataSafetyT, bfFragIdT, serviceClassT, bfTagT, bfSetT*, bsPageT, bfMCIdT, vdIndexT, ftxHT
+- <bs_ods.h> bfStatesT
+- <ftx_public.h> ftxIdT
+- <bs_bitfile_sets.h> bfSetT*
+- <bs_domain.h> domainT
+- <bs_ims.h> bsInMemXtntT
+- <vfast.h> SS_HOT_TRACKING_DAYS
+
+bs_buf.h:
+- <ms_generic_locks.h> mutexT, bufLkT
+- <bs_access.h> actRangeT*, bfAccess*
+- <bs_public.h> logRecAddrT, lsnT, bfPageRefHintT, ftxHT
+- <bs_ims.h> ioListT, ioDescT
+
+bs_ims.h:
+- <bs_buf.h> bsBufT*, TraceActionT (moved to <bs_public.h>)
+- <ms_generic_locks.h> mutexT
+- <bs_public.h> vdIndexT, bfMCIdT, bfDomainIdT, bfdBfMetaT, bfTagT, rawModeT, lsnT, bfPageRefHT, bsExtentDescT[], logRecAddrT
+- <bs_ods.h> bsXtntT*
+- <bs_domain.h> domainT*
+- <bs_vd.h> vdT*
+- <bs_access.h> bfAccessT*
+- <bs_bitfile_sets.h> bfSetT*
