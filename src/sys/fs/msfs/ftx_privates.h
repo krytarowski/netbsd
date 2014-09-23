@@ -272,7 +272,7 @@ ftxStateT *
 void 
 ftx_free(
     int ftxSlot,
-    struct ftxTbl * ftxTDp
+    struct ftxTblD * ftxTDp
 );
 
 void 
