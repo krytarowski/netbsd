@@ -28,6 +28,8 @@
 #ifndef _FTX_PRIVATES_
 #define _FTX_PRIVATES_
 
+/* Defines */
+
 /***********************************************************
  *
  * Ftx stable record types, structures (on-disk log records)
@@ -53,29 +55,34 @@
 #define FTX_MAX_RECOVERY_PASS DATA_PASS	/* last recovery pass */
 #endif				/* FTX_MAX_RECOVERY_PASS */
 
-/* RECOVERY PASS COMPARISON macros:  Since the passes are now done in
- * a sequence that is not increasing numerical order, the comparison of
- * atomicRPass values is complicated slightly.  Direct == comparisons are
- * OK, but any < or > comparison must be done via the following macros:
+/*
+ * perlvl struct - contains state for each level of an ftx.  An array
+ * of these is in the ftx struct.
  */
-/* Evaluates to 1 if pass1 < pass2; else 0 */
-#define RECOV_PASS_LT( dmnp, pass1, pass2) \
-  ( RBMT_THERE(dmnp) ? \
-    ( ((pass1) == META_META_PASS && ((pass1) != (pass2))) ? 1 : \
-      (pass1) < (pass2) ) :          /* rbmt     comparison */  \
-    ( (pass1) < (pass2) )            /* pre-rbmt comparison */  \
-  )
+#define FTX_MX_PINP 7		/* maximum pinned pages per level */
 
-/* Evaluates to 1 if pass1 <= pass2; else 0 */
-#define RECOV_PASS_LTE( dmnp, pass1, pass2) \
-  ( RBMT_THERE(dmnp) ?   \
-    ( ((pass1) == META_META_PASS) ? 1 : (pass1) <= (pass2) ) :  \
-    ( (pass1) <= (pass2) )      \
-  )
+#define FTX_MAX_CONT_REC_BSZ 96
+#define FTX_MX_PINR 7		/* maximum pinned records per page */
+
+#define FTX_MX_NEST     11
+#define FTX_TOTAL_PINS  10
+#define FTX_RD_BFRSZ    100
+
+/* Enums */
 
 typedef enum {
 	ftxNilLR, ftxDoneLR
 }    ftxLRTypeT;
+
+typedef enum {
+	NORMAL, REC_REDO, OP_REDO, OP_UNDO, ROOTDONE, CONTINUATION
+}    ftxTypeT;
+
+/* Forward definitions */
+
+struct ftxTblD;
+
+/* Structs */
 
 typedef struct {
 	ftxLRTypeT type;	/* ftx Log Record Type */
@@ -131,25 +138,20 @@ typedef struct {
 	int agentId;		/* agent ID */
 	int bCnt;		/* byte count of data to follow */
 }      ftxRDHdrT;
-#define FTX_MAX_CONT_REC_BSZ 96
+
 
 typedef struct {
 	int agentId;		/* agent ID */
 	int bCnt;		/* byte count of data record */
 	int rec[FTX_MAX_CONT_REC_BSZ / sizeof(int)];
 }      ftxContRecT;
-#define FTX_MX_PINR 7		/* maximum pinned records per page */
+
 
 typedef struct {
 	int ftxPinS;		/* ftx pin page slot */
 	int numXtnts;		/* number of record extents */
 	ftxRecXT recX[FTX_MX_PINR];	/* record extent list */
 }      lvlPinTblT;
-/*
- * perlvl struct - contains state for each level of an ftx.  An array
- * of these is in the ftx struct.
- */
-#define FTX_MX_PINP 7		/* maximum pinned pages per level */
 
 typedef struct {		/* per level context */
 	ftxDoneModeT donemode;	/* done mode for this level */
@@ -175,6 +177,7 @@ typedef struct {
 	bsUnpinModeT unpinMode;	/* page unpin mode */
 	ftxRecRedoT pgdesc;	/* page descriptor */
 }      ftxPinTblT;
+
 /*
  * The ftx structure contains state for an active transaction.
  *
@@ -211,13 +214,8 @@ typedef struct {
  *  msfs_create
  */
 
-#define FTX_MX_NEST     11
-#define FTX_TOTAL_PINS  10
-#define FTX_RD_BFRSZ    100
 
-typedef enum {
-	NORMAL, REC_REDO, OP_REDO, OP_UNDO, ROOTDONE, CONTINUATION
-}    ftxTypeT;
+
 /*
  * log record descriptor
  */
@@ -274,7 +272,7 @@ ftxStateT *
 void 
 ftx_free(
     int ftxSlot,
-    ftxTblDT * ftxTDp
+    struct ftxTbl * ftxTDp
 );
 
 void 
@@ -414,5 +412,25 @@ ftx_set_firstla(
     struct domain * dmnp,		/* in/out - ptr to domain */
     logRecAddrT fla		/* in - first log addr */
 );
+
+/* RECOVERY PASS COMPARISON macros:  Since the passes are now done in
+ * a sequence that is not increasing numerical order, the comparison of
+ * atomicRPass values is complicated slightly.  Direct == comparisons are
+ * OK, but any < or > comparison must be done via the following macros:
+ */
+/* Evaluates to 1 if pass1 < pass2; else 0 */
+#define RECOV_PASS_LT( dmnp, pass1, pass2) \
+  ( RBMT_THERE(dmnp) ? \
+    ( ((pass1) == META_META_PASS && ((pass1) != (pass2))) ? 1 : \
+      (pass1) < (pass2) ) :          /* rbmt     comparison */  \
+    ( (pass1) < (pass2) )            /* pre-rbmt comparison */  \
+  )
+
+/* Evaluates to 1 if pass1 <= pass2; else 0 */
+#define RECOV_PASS_LTE( dmnp, pass1, pass2) \
+  ( RBMT_THERE(dmnp) ?   \
+    ( ((pass1) == META_META_PASS) ? 1 : (pass1) <= (pass2) ) :  \
+    ( (pass1) <= (pass2) )      \
+  )
 
 #endif				/* _FTX_PRIVATES_ */
