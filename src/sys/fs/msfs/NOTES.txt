@@ -26,3 +26,13 @@ bs_ims.h:
 - <bs_vd.h> vdT*
 - <bs_access.h> bfAccessT*
 - <bs_bitfile_sets.h> bfSetT*
+
+ftx_privates.h:
+- <ftx_public.h> ftxIdT, opxT*, ftxDoneModeT
+- <bs_public.h> bfDomainIdT, logRecAddrT, bfTagT, bfPageRefHT, bsUnpinModeT, ftxHT
+- <ftx_agents.h> ftxAgentIdT
+- <bs_access.h> bfAccess*
+- <ms_logger.h> logBufVectorT, logWriteModeT
+- <ms_generic_locks.h> cvT
+- <bd_domain> ftxTblD*, domain*
+- 
