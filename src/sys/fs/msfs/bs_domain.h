@@ -104,6 +104,9 @@ typedef enum ftxSlotState {
 	FTX_SLOT_UNUSED = 5	/* never been used (recovery may use it) */
 } ftxSlotStateT;
 
+/* Forward definitions */
+struct serviceClassTbl;
+
 /* Structures */
 
 typedef struct ftxSlot {
@@ -401,7 +404,7 @@ struct domain {
 
 	/* This lock protects the storage class table. */
 	krwlock_t scLock;
-	serviceClassTblT *scTbl;/* service class table */
+	struct serviceClassTbl *scTbl;/* service class table */
 
 	/*
          * These fields used to be protected by the DmnTblLock.  That function
