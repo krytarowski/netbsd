@@ -81,6 +81,8 @@ typedef enum {
 /* Forward definitions */
 
 struct ftxTblD;
+struct domain;
+struct bfAccess;
 
 /* Structs */
 
