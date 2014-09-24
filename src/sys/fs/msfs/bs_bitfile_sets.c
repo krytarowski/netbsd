@@ -52,6 +52,7 @@
 #include <fs/msfs/bs_extents.h>
 #include <fs/msfs/bs_msg_queue.h>
 #include <fs/msfs/ftx_public.h>
+#include <fs/msfs/bs_bitfile_sets.h>
 
 #define ADVFS_MODULE BS_BITFILE_SETS
 
