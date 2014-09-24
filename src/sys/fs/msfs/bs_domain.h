@@ -38,6 +38,7 @@
 #include <fs/msfs/ms_logger.h>
 #include <fs/msfs/bs_vd.h>
 #include <fs/msfs/bs_ods.h>
+#include <fs/msfs/bs_bitfile_sets.h>
 
 #include "dyn_hash.h"
 

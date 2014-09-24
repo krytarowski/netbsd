@@ -42,6 +42,8 @@
 #include <sys/stat.h>
 #include <sys/syslog.h>
 
+#include "dyn_hash.h"
+
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/ms_osf.h>
@@ -53,6 +55,7 @@
 #include <fs/msfs/bs_msg_queue.h>
 #include <fs/msfs/ftx_public.h>
 #include <fs/msfs/bs_bitfile_sets.h>
+#include <fs/msfs/bs_domain.h>
 
 #define ADVFS_MODULE BS_BITFILE_SETS
 
