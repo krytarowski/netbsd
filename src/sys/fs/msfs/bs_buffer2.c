@@ -39,6 +39,7 @@
 #include <sys/vnode.h>
 #include <sys/buf.h>
 #include <fs/msfs/vfast.h>
+#include <fs/msfs/bs_buf.h>
 
 extern void rm_from_lazyq(struct bsBuf * bp, ioDescT ** ioList, int *listLen, int *noqfnd);
 extern void advfs_page_dirty(vm_page_t);
