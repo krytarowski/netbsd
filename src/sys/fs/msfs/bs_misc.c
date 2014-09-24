@@ -4348,7 +4348,7 @@ msfs_syscall_op_tag_stat(libParamsT * libBufp)
 		libBufp->tagStat.tag = tag;
 		libBufp->tagStat.uid = fs_statp->st_uid;
 		libBufp->tagStat.gid = fs_statp->st_gid;
-		libBufp->tagStat.atime = fs_statp->st_atime;
+		libBufp->tagStat.atime = fs_statp->advfs_st_atime;
 		libBufp->tagStat.mode = fs_statp->st_mode;
 		libBufp->tagStat.size = bytes;
 

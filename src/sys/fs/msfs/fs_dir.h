@@ -72,7 +72,7 @@ struct fs_stat {
 	gid_t st_gid;
 	dev_t st_rdev;
 	off_t st_size;
-	time_t st_atime;
+	time_t advfs_st_atime;
 	int st_uatime;
 	time_t st_mtime;
 	int st_umtime;

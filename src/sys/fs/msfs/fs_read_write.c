@@ -3070,7 +3070,7 @@ _retry_map:
 	if (f_offset >= total_size) {
 		/*
 	         * reading past end-of-file
-	         * update st_atime in the file's stat structure
+	         * update advfs_st_atime in the file's stat structure
 	         * for posix
 	         */
 
@@ -3483,7 +3483,7 @@ _retry_map:
 	}			/* end of while loop */
 
 	/*
-         * update st_atime in the file's stat structure
+         * update advfs_st_atime in the file's stat structure
          */
 	if (!(ioflag & IO_NOSTATUPDATE)) {
 		mutex_enter(&contextp->fsContext_mutex.mutex);
