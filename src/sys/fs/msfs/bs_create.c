@@ -652,7 +652,7 @@ kill_mcell(
 {
 	struct bfAccess *bfap;
 	struct domain *dmnP;
-	vdT *vdp;
+	struct vd *vdp;
 	rbfPgRefHT pgref;
 	bsMPgT *bmtpgp;
 	int sts;
@@ -765,7 +765,7 @@ dealloc_mcells(
 	rbfPgRefHT pgPin;
 	int sts;
 	vdIndexT vdIndex;
-	vdT *vdp;
+	struct vd *vdp;
 
 	vdIndex = firstVdIndex;
 	mcellId = firstMcellId;

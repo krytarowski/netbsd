@@ -634,7 +634,7 @@ bs_osf_complete(
 	} else if ((lbolt - vdp->vd_lbolt) >= (hz << bio_sample_shift)) {
 		/* The sampling period has ended. Based on the # of I/Os
 		 * processed per unit time averaged throughout the sampling
-		 * period, set vdT.devQ.lenLimit to accommodate requests for y
+		 * period, set struct vd.devQ.lenLimit to accommodate requests for y
 		 * seconds.  The value for y is based on the setting of
 		 * bio_time_shift.  By default, devQ.lenLimit will accommodate
 		 * the number of buffers processed per 2 seconds. */
@@ -1465,7 +1465,7 @@ typedef enum err {
 
 /* This routine is called with devQ.ioQLock held */
 errT
-get_locks(ioDescHdrT * qhdr, vdT * vdp, qtypeT qindex, int *locks_held)
+get_locks(ioDescHdrT * qhdr, struct vd * vdp, qtypeT qindex, int *locks_held)
 {
 	errT error = OK;
 
@@ -1529,7 +1529,7 @@ get_locks(ioDescHdrT * qhdr, vdT * vdp, qtypeT qindex, int *locks_held)
  *      queues, but attempt to load up a proportionately small
  *      percentage from the lazy queue.  This percentage can be
  *      modified on a per-device basis using 'chvol -q' to change
- *      the values for vdT.qtodev.
+ *      the values for struct vd.qtodev.
  *
  * SMP: bp->bufLock will be acquired as needed.
  */

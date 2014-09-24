@@ -264,7 +264,7 @@ bs_migrate(
 	ftxHT ftxH;
 	int sts;
 	unLkActionT unlockAction;
-	vdT *svdp, *dvdp;
+	struct vd *svdp, *dvdp;
 	int srcVdBumped = FALSE;
 	int dstVdBumped = 0;
 
@@ -2788,7 +2788,7 @@ HANDLE_EXCEPTION:
 int
 bs_move_metadata(
     struct bfAccess * bfap,		/* in */
-    vdT * vdp			/* in - if NULL, don't care which vd */
+    struct vd * vdp			/* in - if NULL, don't care which vd */
 )
 {
 	bfSetT *bfSet;
@@ -2982,7 +2982,7 @@ move_metadata(
 	bfPageRefHT pgRef;
 	int sts;
 	tagInfoT tagInfo;
-	vdT *vd;
+	struct vd *vd;
 	bsInMemXtntMapT *xtntMapp = NULL;
 	vdIndexT localVdIndex;
 
@@ -3477,7 +3477,7 @@ alloc_copy_stg(
 	uint32_t i;
 	int sts;
 	bsInMemXtntMapT *xtntMap = NULL;
-	vdT *vdp = NULL;
+	struct vd *vdp = NULL;
 
 	KASSERT(startPage <= xmPageRange[0].pageOffset);
 
@@ -3595,7 +3595,7 @@ alloc_hole_stg(
 	bsInMemXtntMapT *xtntMap = NULL;
 	uint32_t newtype, newmax;
 	int vdRefFlg = FALSE;
-	vdT *vdp;
+	struct vd *vdp;
 
 	bfSetTag = bfap->bfSetp->dirTag;
 
@@ -3773,7 +3773,7 @@ HANDLE_EXCEPTION:
 
 static int
 mig_get_stripe_bfpage_list(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     struct bfAccess * bfap,		/* in */
     ssPackLLT * pXtntp,		/* in */
     pageRangeT ** bfPageRange,	/* out */
@@ -3889,7 +3889,7 @@ mig_get_stripe_bfpage_list(
 
 int
 mig_pack_vd_range(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     uint32_t cRangeBeginBlk,	/* in */
     uint64_t cRangeEndBlk,	/* in */
     uint32_t * newcRangeBeginBlk,/* out */

@@ -152,7 +152,7 @@ setup_vd(
     char *vdDiskName,		/* IN - name of disk */
     struct bsVdAttr * vdAttrp,	/* IN - on disk vd attributes */
     u_long flag,		/* IN - mount flags/check DmnTblLock? */
-    vdT ** vdPtr		/* OUT - vd struct pointer */
+    struct vd ** vdPtr		/* OUT - vd struct pointer */
 );
 
 static vdDescT *
@@ -181,13 +181,13 @@ free_vdds(
 
 static int
 vd_alloc(
-    vdT ** vdp,
+    struct vd ** vdp,
     struct domain * dmnP
 );
 
 static void
 vd_free(
-    vdT * vdp,
+    struct vd * vdp,
     struct domain * dmnP
 );
 
@@ -218,13 +218,13 @@ static
        int
 wait_for_ddl_active_entry(
     struct domain * domain,		/* in */
-    vdT * vd,			/* in */
+    struct vd * vd,			/* in */
     bfMCIdT mcellId		/* in */
 );
 static
 vd_remove(
     struct domain * dmnP,		/* in */
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     int flags			/* in */
 );
 
@@ -268,7 +268,7 @@ domain_name_lookup(
     u_long flag			/* in - mount flags/check DmnTblLock? */
 );
 
-void read_n_chk_last_rbmt_pg(vdT *);
+void read_n_chk_last_rbmt_pg(struct vd *);
 
 
 /***************************************************/
@@ -277,7 +277,7 @@ void read_n_chk_last_rbmt_pg(vdT *);
 
 #ifdef ADVFS_VD_TRACE
 void
-vd_trace(vdT * vdp,
+vd_trace(struct vd * vdp,
     uint16_t module,
     uint16_t line,
     void *value)
@@ -458,7 +458,7 @@ bs_bfdmn_tbl_activate(
 	int closeVd, dmnTblLocked, error, vdi, id;
 	int unlink_and_restart, isMount;
 	u_long isRoot;
-	vdT *vdp;
+	struct vd *vdp;
 	struct domain *dmnP;
 	bsDmnMAttrT dmnMAttr;
 	vdIndexT dmnMAttrIdx;
@@ -984,7 +984,7 @@ bs_global_root_activate(
 	bfDomainIdT domainId;
 	int closeVd, error, vdi, id, restart;
 	int update_global_rootdev;
-	vdT *vdp;
+	struct vd *vdp;
 	struct domain *dmnP;
 	bsDmnMAttrT dmnMAttr;
 	vdIndexT dmnMAttrIdx;
@@ -1538,7 +1538,7 @@ bs_bfdmn_deactivate(
 {
 	int vdi;
 	struct domain *dmnP;
-	vdT *vdp;
+	struct vd *vdp;
 	int rem, tblLocked = FALSE;
 	int sts = EOK;
 	bfSetT *bfSetp;
@@ -2049,7 +2049,7 @@ bs_bfdmn_sweep(struct domain * dmnP)
 
 	vdCnt = 0;
 	for (vdi = 1; vdCnt < dmnP->vdCnt && vdi <= BS_MAX_VDI; vdi++) {
-		vdT *vdp;
+		struct vd *vdp;
 		bsDmnAttrT *dmnAttrp;
 		int mcell_index;
 		struct bfAccess *mdap;
@@ -2291,7 +2291,7 @@ update_bfsetid(
 	int sts = EOK;
 	int error;
 	uint32_t *pagep;
-	vdT *vdp = VD_HTOP(vd, dmnP);
+	struct vd *vdp = VD_HTOP(vd, dmnP);
 	bsBfSetAttrT *bfsAttrp;
 	bfPageRefHT bmtPgRef;
 
@@ -2421,7 +2421,7 @@ set_vd_mounted(
 }
 
 void
-read_n_chk_last_rbmt_pg(vdT * vdp)
+read_n_chk_last_rbmt_pg(struct vd * vdp)
 {
 	bfPageRefHT bmtPgRef;
 	struct bsMPg *bmtpgp;
@@ -2714,7 +2714,7 @@ setup_vd(
     char *vdDiskName,		/* IN - name of disk */
     struct bsVdAttr * vdAttrp,	/* IN - on disk vd attributes */
     u_long flag,		/* IN - mount flags/check DmnTblLock? */
-    vdT ** vdPtr		/* OUT - vd struct pointer */
+    struct vd ** vdPtr		/* OUT - vd struct pointer */
 )
 {
 	struct bfAccess *metafileap;
@@ -2769,7 +2769,7 @@ setup_vd(
 	/* Can't move this down since the bfm_open_ms -> rbf_access_int ->
 	 * rbf_access_one_int -> tagdir_lookup() -> vd_htop_if_valid() path
 	 * below needs the vdp in the vdpTbl[].  Note, however, that this vdp
-	 * will not yet be found as a valid vdT struct by vd_htop_if_valid()
+	 * will not yet be found as a valid struct vd struct by vd_htop_if_valid()
 	 * for other threads since the vdState is not yet set to
 	 * BSR_VD_MOUNTED. */
 	dmnP->vdpTbl[vdIndex - 1] = vdp;
@@ -2967,7 +2967,7 @@ bs_vd_add_active(
 	int sz;
 	serviceClassT tagSvc, logSvc;
 	int vdi;
-	vdT *vdp;
+	struct vd *vdp;
 
 	struct vnode *vnodep = NULL;
 	struct nameidata *ndp = &u.u_nd;
@@ -3115,15 +3115,15 @@ err_deactivate:
 
 static int
 vd_alloc(
-    vdT ** avdp,
+    struct vd ** avdp,
     struct domain * dmnP
 )
 {
-	vdT *vdp;
+	struct vd *vdp;
 	int i;
 	extern int AdvfsReadyQLim;
 
-	if ((vdp = (vdT *) ms_malloc(sizeof(vdT))) == NULL) {
+	if ((vdp = (struct vd *) ms_malloc(sizeof(struct vd))) == NULL) {
 		return (ENO_MORE_MEMORY);
 	}
 	ftx_lock_init(&vdp->del_list_lk, &dmnP->mutex, ADVvdT_del_list_lk_info);
@@ -3337,7 +3337,7 @@ vd_alloc(
 
 static void
 vd_free(
-    vdT * vdp,
+    struct vd * vdp,
     struct domain * dmnP
 )
 {
@@ -3455,7 +3455,7 @@ bs_vd_remove_active(
 	bfMCIdT nextBfDescId;
 	int sts;
 	uint32_t totalClusters;
-	vdT *vdp;
+	struct vd *vdp;
 	int dmntbl_lock = 0;
 	bfTagT bfTag;
 	int ss_was_activated = FALSE;
@@ -3631,7 +3631,7 @@ bs_vd_add_rem_vol_done(
 )
 {
 	int sts;
-	vdT *vd;
+	struct vd *vd;
 	vdIndexT vdIndex;
 	struct bfAccess *mdap;
 	int mcell_index;
@@ -3777,7 +3777,7 @@ clear_bmt(
 	int closeBfSetFlag = 0;
 	int closeBitfileFlag = 0;
 	int closeBmtFlag = 0;
-	vdT *ddlVd;
+	struct vd *ddlVd;
 	int delFlag;
 	bfMCIdT mcellId;
 	metadataTypeT metadataType;
@@ -4177,7 +4177,7 @@ find_del_entry(
     struct domain * dmnP,		/* in */
     bfTagT bfSetTag,		/* in */
     bfTagT bfTag,		/* in */
-    vdT ** delVd,		/* out */
+    struct vd ** delVd,		/* out */
     bfMCIdT * delMcellId,	/* out */
     int *delFlag		/* out */
 )
@@ -4185,7 +4185,7 @@ find_del_entry(
 	int dFlag;
 	bfMCIdT mcellId;
 	int sts;
-	vdT *vd = NULL;
+	struct vd *vd = NULL;
 	int vdCnt;
 	vdIndexT vdIndex;
 
@@ -4247,7 +4247,7 @@ static
        int
 wait_for_ddl_active_entry(
     struct domain * dmnP,		/* in */
-    vdT * vd,			/* in */
+    struct vd * vd,			/* in */
     bfMCIdT mcellId		/* in */
 )
 {
@@ -4285,7 +4285,7 @@ wait_for_ddl_active_entry(
 static
 vd_remove(
     struct domain * dmnP,		/* in */
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     int flags			/* in */
 )
 {
@@ -4496,7 +4496,7 @@ vd_remove(
  * Note that the global DmnTblLock, seized in bs_vd_add_active(),
  * prevents the slot returned by this routine from being used by another
  * addvol thread until the vdpTbl[] slot is filled in with the pointer
- * to the newly-allocated vdT struct.
+ * to the newly-allocated struct vd struct.
  *
  * Returns either a vdIndexT (one based index) or 0.
  *
@@ -4551,7 +4551,7 @@ set_disk_attrs(
 	bsDmnTAttrT *dmnTAttr;
 	bfPageRefHT pgPin;
 	int sts;
-	vdT *vd;
+	struct vd *vd;
 	vdIndexT vdIndex;
 	int mcell_index;
 	struct bfAccess *mdap;
@@ -4642,7 +4642,7 @@ check_trans_attrs(
     char *volPathName		/* out - pathname of vol link */
 )
 {
-	vdT *vdp;
+	struct vd *vdp;
 	bsMPgT *bmtPage;
 	bfPageRefHT pgPin;
 	int sts = EOK;
@@ -4736,7 +4736,7 @@ clear_trans_attrs(
     int dmnMAttrIdx		/* in */
 )
 {
-	vdT *vdp;
+	struct vd *vdp;
 	bsMPgT *bmtPage;
 	bfPageRefHT pgPin;
 	int sts = EOK;
@@ -4790,7 +4790,7 @@ bs_fix_root_dmn(
 )
 {
 	int sts = EOK;
-	vdT *vdp;
+	struct vd *vdp;
 	int error, mcell_index, vdi, idx, idx2, vdCnt = 0;
 	bfPageRefHT pgPin;
 	bsMPgT *bmtPage;
@@ -4992,7 +4992,7 @@ bs_check_root_dmn_sc(
 )
 {
 	int sts;
-	vdT *vdp;
+	struct vd *vdp;
 	struct bfAccess *mdap;
 	int mcell_index, vdi, vdCnt = 0;
 	bfPageRefHT pgPin;
@@ -5067,7 +5067,7 @@ set_recovery_failed(
 	bsDmnMAttrT *dmnMAttr;
 	bfPageRefHT pgPin;
 	int sts;
-	vdT *vd;
+	struct vd *vd;
 	vdIndexT vdIndex;
 	int mcell_index;
 	struct bfAccess *mdap;
@@ -5112,7 +5112,7 @@ bs_bfdmn_flush_bfrs(
 )
 {
 	int vdi;
-	vdT *vdp;
+	struct vd *vdp;
 	int vdCnt;
 
 	vdCnt = 0;
@@ -5162,7 +5162,7 @@ bs_bfdmn_flush_sync(
 {
 	int vdi = 1;
 	int rem = 0;
-	vdT *vdp;
+	struct vd *vdp;
 	int vdCnt;
 
 	/*
@@ -6504,11 +6504,11 @@ free_vdds(
 }
 
 
-/* Routine to see if a vdIndex describes a valid vdT structure, and, if so,
- * bumps the refcnt (if desired) on that vdT and returns its address.
+/* Routine to see if a vdIndex describes a valid struct vd structure, and, if so,
+ * bumps the refcnt (if desired) on that struct vd and returns its address.
  * If it is not valid, NULL is returned, and obviously, vdRefCnt is not bumped.
  * Calling this function with bump_refcnt set to FALSE is handy when checking
- * if a vdIndex contains a valid vdT structure, but the caller is either
+ * if a vdIndex contains a valid struct vd structure, but the caller is either
  * not going to use the structure or knows that there can be no racing rmvol
  * threads.  This avoids having to call vd_dec_refcnt().
  *
@@ -6525,7 +6525,7 @@ vd_htop_if_valid(vdIndexT vdi,	/* vdIndex to check */
 	mutex_enter(&dmnP->vdpTblLock.mutex);
 	if (VDI_IS_VALID(vdi, dmnP)) {
 
-		vdT *vdp = dmnP->vdpTbl[vdi - 1];
+		struct vd *vdp = dmnP->vdpTbl[vdi - 1];
 		KASSERT(vdp->vdMagic == VDMAGIC);
 		mutex_enter(&vdp->vdStateLock.mutex);
 		mutex_exit(&dmnP->vdpTblLock.mutex);
@@ -6533,7 +6533,7 @@ vd_htop_if_valid(vdIndexT vdi,	/* vdIndex to check */
 		/* vdp is considered valid if and only if one of the following
 		 * is true: 1. the state is BSR_VD_MOUNTED 2. the state is
 		 * (BSR_VD_VIRGIN, BSR_VD_ZOMBIE or BSR_VD_DMNT_INPROG) AND
-		 * the caller is the thread setting up or removing the vdT. 3.
+		 * the caller is the thread setting up or removing the struct vd. 3.
 		 * the state is BSR_VD_ZOMBIE,BSR_VD_DMNT_INPROG or
 		 * BSR_VD_VIRGIN AND zombie_ok is TRUE */
 		if ((vdp->vdState == BSR_VD_MOUNTED) ||
@@ -6551,11 +6551,11 @@ vd_htop_if_valid(vdIndexT vdi,	/* vdIndex to check */
 		} else {
 			/* This is not a valid vdp, so return NULL.  */
 			mutex_exit(&vdp->vdStateLock.mutex);
-			return (vdT *) (NULL);
+			return (struct vd *) (NULL);
 		}
 	} else {
 		mutex_exit(&dmnP->vdpTblLock.mutex);
-		return (vdT *) (NULL);
+		return (struct vd *) (NULL);
 	}
 }
 /* This routine is differs from vd_htop_if_valid() in that it assumes
@@ -6568,7 +6568,7 @@ vd_htop_already_valid(vdIndexT vdi,	/* vdIndex to retrieve */
     struct domain * dmnP,	/* domain */
     int bump_refcnt)
 {				/* if !FALSE, bump vdRefCnt */
-	vdT *vdp = NULL;
+	struct vd *vdp = NULL;
 
 	/* We reduce lock contention by not seizing the dmnP->vdpTblLock in
 	 * this routine.  This is done since we call this routine only when we
@@ -6585,7 +6585,7 @@ vd_htop_already_valid(vdIndexT vdi,	/* vdIndex to retrieve */
 	}
 	return vdp;
 }
-/* Routine to decrement the refcnt on a vdT structure.  This must be called
+/* Routine to decrement the refcnt on a struct vd structure.  This must be called
  * by a routine that has already called vd_htop_if_valid() or
  * vd_htop_already_valid() with the bump_refcnt parameter as TRUE and
  * got back a vdp pointer.  When the refcnt gets to zero, any waiters
@@ -6596,7 +6596,7 @@ vd_htop_already_valid(vdIndexT vdi,	/* vdIndex to retrieve */
  *       This lock is not held on entry or exit.
  */
 void
-vd_dec_refcnt(vdT * vdp)
+vd_dec_refcnt(struct vd * vdp)
 {
 
 	mutex_enter(&vdp->vdStateLock.mutex);

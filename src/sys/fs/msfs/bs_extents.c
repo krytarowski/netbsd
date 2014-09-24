@@ -219,7 +219,7 @@ undo_mcell_cnt(
 	int sts;
 	mcellCntUndoRecT *undoRec;
 	bsXtntRT *xtntRec;
-	vdT *vdp;
+	struct vd *vdp;
 	struct bfAccess *mdap;
 
 	undoRec = (mcellCntUndoRecT *) address;
@@ -340,7 +340,7 @@ undo_upd_xtnt_rec(
 	bsXtntRT *xtntRec;
 	bsXtraXtntRT *xtraXtntRec;
 	updXtntRecUndoRecT undoRec;
-	vdT *vdp;
+	struct vd *vdp;
 	struct bfAccess *mdap, *bfap;
 	bsInMemXtntT *xtnts;
 	int v4bmt_or_rbmt;
@@ -505,7 +505,7 @@ undo_cre_xtnt_rec(
 	rbfPgRefHT pgPin;
 	int sts;
 	creXtntRecUndoRecT undoRec;
-	vdT *vdp;
+	struct vd *vdp;
 	struct bfAccess *mdap;
 	bsMRT *rec;
 
@@ -918,7 +918,7 @@ odm_rewrite_xtnt_map(
 	bsInMemSubXtntMapT *subXtntMap;
 	vdIndexT vdIndex;
 	bsInMemXtntMapT *xtntMap;
-	vdT *vdp = NULL;
+	struct vd *vdp = NULL;
 
 	if ((bfap->xtnts.type != BSXMT_APPEND) &&
 	    (bfap->xtnts.type != BSXMT_STRIPE)) {
@@ -1422,7 +1422,7 @@ update_xtnt_rec(
 	int sts;
 	updXtntRecUndoRecT undoRec;
 	int undoRecSize;
-	vdT *vd;
+	struct vd *vd;
 	vdIndexT vdIndex;
 	bsXtntRT *xtntRec;
 	bsXtraXtntRT *xtraXtntRec;
@@ -1599,7 +1599,7 @@ odm_create_xtnt_rec(
 	bfMCIdT mcellId;
 	rbfPgRefHT pgPin;
 	int sts;
-	vdT *vd;
+	struct vd *vd;
 	vdIndexT vdIndex;
 	bsXtntRT *xtntRec;
 	bsXtraXtntRT *xtraXtntRec;
@@ -1906,7 +1906,7 @@ x_detach_extent_chain(
 	bfMCIdT prevMcellId;
 	vdIndexT prevVdIndex;
 	int sts;
-	vdT *vd;
+	struct vd *vd;
 	bsXtntRT *xtntRec;
 	bsXtntT primXtntSave[2], *tempXtntp;
 	bsInMemSubXtntMapT *tempSubXtntp;
@@ -2080,7 +2080,7 @@ update_mcell_cnt(
 	bsShadowXtntT *shadowRec;
 	int sts;
 	mcellCntUndoRecT undoRec;
-	vdT *vd;
+	struct vd *vd;
 	bsXtntRT *xtntRec;
 	struct bfAccess *mdap;
 
@@ -2169,7 +2169,7 @@ x_create_inmem_xtnt_map(
 {
 	int sts;
 	bsXtntRT *xtntRec;
-	vdT *vdp;
+	struct vd *vdp;
 	bsInMemXtntT *xtnts = &bfap->xtnts;
 
 	lock_write(&(bfap->xtntMap_lk));
@@ -2250,7 +2250,7 @@ x_load_inmem_xtnt_map(
 	int sts;
 	uint32_t totalPageCnt;
 	unLkActionT unlock_action;
-	vdT *vd;
+	struct vd *vd;
 	bsXtntRT *xtntRec;
 	struct bfAccess *mdap;
 	struct domain *domain = bfap->dmnP;
@@ -2583,7 +2583,7 @@ load_from_shadow_rec(
 	uint32_t totalPageCnt;
 	vdIndexT vdIndex;
 	bsInMemXtntMapT *xtntMap = NULL;
-	vdT *vdp;
+	struct vd *vdp;
 	struct domain *dmnP = bfap->dmnP;
 	uint32_t blksPerPage = bfap->bfPageSz;
 	uint32_t lastPg;
@@ -2892,7 +2892,7 @@ load_from_xtnt_rec(
 	vdIndexT bfVdIndex = bfap->primVdIndex;
 	bfMCIdT bfMcellId = bfap->primMCId;
 	uint32_t blksPerPage = bfap->bfPageSz;
-	vdT *vdp;
+	struct vd *vdp;
 	lbnT nextVdBlk;
 	lbnT vdBlk;
 	uint32_t lastPg;
@@ -3116,7 +3116,7 @@ load_from_xtra_xtnt_rec(
 	bsXtraXtntRT *xtraXtntRec;
 	bfPageRefHT pgRef;
 	int sts;
-	vdT *vdp;
+	struct vd *vdp;
 	struct bfAccess *mdap;
 	struct domain *dmnP = bfap->dmnP;
 
@@ -3217,7 +3217,7 @@ load_from_bmt_xtra_xtnt_rec(
 	int sts;
 	int xtntCnt;
 	bsXtraXtntRT *xtraXtntRec;
-	vdT *vdp;
+	struct vd *vdp;
 
 	/* Page zero for the rbmt or the V3 bmt is already in memory so just
 	 * grab it from there */

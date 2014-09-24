@@ -154,15 +154,15 @@ reset_ondisk_bf_state(
 void
 xfer_xtnts_to_clone(
     bfMCIdT pmcid,		/* "primary mcell" id of delete list */
-    vdT * pvdp,			/* "primary vd" of delete list */
+    struct vd * pvdp,			/* "primary vd" of delete list */
     bsMCT * mcp,		/* "primary mcell" of delete list */
     bsXtntRT * pxp		/* "primary xtnt record" of delete list */
 );
 
 static void
 del_part_xtnt(bfMCIdT pmcid,	/* in - mcell ID of primary mcell */
-    vdT * pvdp,			/* in - pointer to virtual disk of primary */
-    vdT * vdp,			/* in - virtual disk of storage to free */
+    struct vd * pvdp,			/* in - pointer to virtual disk of primary */
+    struct vd * vdp,			/* in - virtual disk of storage to free */
     bsXtntT * fxp,		/* in - xtnt that maps storage to free */
     uint32_t startpg,		/* in - first page in xtnt to free */
     uint32_t pgstofree,		/* in - number of pages to free */
@@ -176,7 +176,7 @@ del_range(
     int *pinPages,		/* in/out - maximum number of pages that can
 				 * be pinned / number of pages that were
 				 * pinned */
-    vdT * vdp,			/* in - virtual disk containing range */
+    struct vd * vdp,			/* in - virtual disk containing range */
     int pgSz,			/* in - page size */
     ftxHT ftxH			/* in transaction handle */
 );
@@ -186,8 +186,8 @@ del_xtnt_array(
     bfMCIdT pmcid,		/* in - mcell ID of primary mcell */
     bfMCIdT mcid,		/* in - mcell ID of extra or shadow xtnts
 				 * record */
-    vdT * pvdp,			/* in - pointer to virtual disk of primary */
-    vdT * vdp,			/* in - pointer to virtual disk of xtra or
+    struct vd * pvdp,			/* in - pointer to virtual disk of primary */
+    struct vd * vdp,			/* in - pointer to virtual disk of xtra or
 				 * shad */
     vdIndexT * nextVdIndex,	/* out - vd index of next mcell */
     bfMCIdT * nextMCId		/* out - mcell ID of next mcell */
@@ -198,7 +198,7 @@ pin_link(
     struct bfAccess * bmtbfap,
     bfMCIdT mcid,
     delLinkT ** zlp,
-    vdT * vdp,			/* in - pointer to virtual disk */
+    struct vd * vdp,			/* in - pointer to virtual disk */
     ftxHT ftxH
 );
 
@@ -206,14 +206,14 @@ static int
 pin_hdr(
     struct bfAccess * bmtbfap,
     delLinkT ** zlp,
-    vdT * vdp,			/* in - Volume Pointer */
+    struct vd * vdp,			/* in - Volume Pointer */
     ftxHT ftxH
 );
 
 static int
 del_ftx_start(
     bfMCIdT pcmid,
-    vdT * pvdp,
+    struct vd * pvdp,
     delFtxDescT * ddp
 );
 
@@ -501,7 +501,7 @@ rbf_delete_int(
 {
 	ftxHT ftxH, subFtxH;
 	int ftxFlag = FALSE;
-	vdT *vdp;
+	struct vd *vdp;
 	struct domain *dmnP;
 	int sts = EOK;
 	rbfPgRefHT pgref;
@@ -730,7 +730,7 @@ reset_ondisk_bf_state(
 	bsMCT *mcp;
 	rbfPgRefHT pgref;
 	int sts;
-	vdT *vdp;
+	struct vd *vdp;
 
 	vdp = VD_HTOP(vdIndex, dmnP);
 
@@ -879,7 +879,7 @@ init_bs_delete_opx(void)
 int
 del_add_to_del_list(
     bfMCIdT mcid,
-    vdT * vdp,
+    struct vd * vdp,
     int ftxFlag,		/* in - don't start subtransaction if zero */
     ftxHT parentFtxH
 )
@@ -997,7 +997,7 @@ done:
 int
 del_remove_from_del_list(
     bfMCIdT mcid,
-    vdT * vdp,
+    struct vd * vdp,
     int ftxFlag,
     ftxHT parentFtxH
 )
@@ -1103,7 +1103,7 @@ del_bitfile_list_undo(
 {
 	delListRecT *zrp = (delListRecT *) opRec;
 	int sts;
-	vdT *vdp;
+	struct vd *vdp;
 	struct domain *dmnP;
 
 	dmnP = ftxH.dmnP;
@@ -1139,7 +1139,7 @@ pin_link(
     struct bfAccess * bmtbfap,
     bfMCIdT mcid,
     delLinkT ** zlp,
-    vdT * vdp,			/* in - Volume pointer */
+    struct vd * vdp,			/* in - Volume pointer */
     ftxHT ftxH
 )
 {
@@ -1170,7 +1170,7 @@ static int
 pin_hdr(
     struct bfAccess * bmtbfap,
     delLinkT ** zlp,
-    vdT * vdp,			/* in - volume pointer */
+    struct vd * vdp,			/* in - volume pointer */
     ftxHT ftxH
 )
 {
@@ -1239,7 +1239,7 @@ int AdvfsCaptureBadDDL = 0;
 
 int
 del_clean_mcell_list(
-    vdT * vdp,
+    struct vd * vdp,
     u_long flag
 )
 {
@@ -1417,7 +1417,7 @@ del_clean_mcell_list(
  * report the problem.  Then, patch the DDL header so the DDL
  * is empty.
  */
-del_clean_fix_ddl(vdT * vdp, bfPageRefHT pgRef)
+del_clean_fix_ddl(struct vd * vdp, bfPageRefHT pgRef)
 {
 	int sts;
 	ftxHT ftxH;
@@ -1486,7 +1486,7 @@ del_clean_fix_ddl(vdT * vdp, bfPageRefHT pgRef)
  * and the system crashes.
  */
 static int
-ddl_complete_delete(bfTagT setTag, bfTagT fileTag, vdT * vdp)
+ddl_complete_delete(bfTagT setTag, bfTagT fileTag, struct vd * vdp)
 {
 	int sts;
 	struct domain *dmnP = vdp->dmnP;
@@ -1795,11 +1795,11 @@ fscontext_init(struct vnode * vp, struct bfAccess * bfap, struct fsContext ** cp
 int
 del_dealloc_stg(
     bfMCIdT pmcid,		/* in - primary mcell ID */
-    vdT * pvdp			/* in - virtual disk of primary mcell */
+    struct vd * pvdp			/* in - virtual disk of primary mcell */
 )
 {
 	struct domain *dmnP;
-	vdT *vdp;
+	struct vd *vdp;
 	bfMCIdT mcid;
 	vdIndexT nextVdIndex;
 	bfMCIdT nextMCId;
@@ -1948,8 +1948,8 @@ del_xtnt_array(
     bfMCIdT pmcid,		/* in - mcell ID of primary mcell */
     bfMCIdT mcid,		/* in - mcell ID of extra or shadow xtnts
 				 * record */
-    vdT * pvdp,			/* in - pointer to virtual disk of primary */
-    vdT * vdp,			/* in - pointer to virtual disk of xtra or
+    struct vd * pvdp,			/* in - pointer to virtual disk of primary */
+    struct vd * vdp,			/* in - pointer to virtual disk of xtra or
 				 * shad */
     vdIndexT * nextVdIndex,	/* out - vd index of next mcell */
     bfMCIdT * nextMCId		/* out - mcell ID of next mcell */
@@ -2179,7 +2179,7 @@ HANDLE_EXCEPTION:
 void
 xfer_xtnts_to_clone(
     bfMCIdT pmcid,		/* "primary mcell" id of delete list */
-    vdT * pvdp,			/* "primary vd" of delete list */
+    struct vd * pvdp,			/* "primary vd" of delete list */
     bsMCT * mcp,		/* "primary mcell" of delete list */
     bsXtntRT * pxp		/* "primary xtnt record" of delete list */
 )
@@ -2326,7 +2326,7 @@ xfer_xtnts_to_clone(
 		bsShadowXtntT *srp;
 		bsXtntRT *xp;
 		long tpa = 0;
-		vdT *vdp = VD_HTOP(vdIndex, dmnP);
+		struct vd *vdp = VD_HTOP(vdIndex, dmnP);
 
 		/* read the mcell in the delete chain */
 		sts = bmt_refpg(&refPgH,
@@ -2646,8 +2646,8 @@ err3:
 
 static void
 del_part_xtnt(bfMCIdT pmcid,	/* in - mcell ID of primary mcell */
-    vdT * pvdp,			/* in - pointer to virtual disk of primary */
-    vdT * vdp,			/* in - virtual disk of storage to free */
+    struct vd * pvdp,			/* in - pointer to virtual disk of primary */
+    struct vd * vdp,			/* in - virtual disk of storage to free */
     bsXtntT * fxp,		/* in - xtnt that maps storage to free */
     uint32_t startpg,		/* in - first page in xtnt to free */
     uint32_t pgstofree,		/* in - number of pages to free */
@@ -2716,7 +2716,7 @@ del_range(
     int *pinPages,		/* in/out - maximum number of pages that can
 				 * be pinned / number of pages that were
 				 * pinned */
-    vdT * vdp,			/* in - virtual disk containing range */
+    struct vd * vdp,			/* in - virtual disk containing range */
     int pgSz,			/* in - page size */
     ftxHT ftxH			/* in transaction handle */
 )
@@ -2742,7 +2742,7 @@ del_range(
 static int
 del_ftx_start(
     bfMCIdT pmcid,
-    vdT * pvdp,
+    struct vd * pvdp,
     delFtxDescT * ddp
 )
 {
@@ -2826,7 +2826,7 @@ del_find_del_entry(
 	bfPageRefHT pgRef;
 	int sts;
 	int unlockFlag = 0;
-	vdT *vd;
+	struct vd *vd;
 	bsXtntRT *xtntRec;
 	unsigned long pgnum;
 

@@ -2005,10 +2005,10 @@ bfm_open_ms(
 	/*
          * The BMT mcellList_lk must be in a lower spot in the hierarchy,
          * since the "normal" progression is struct bfAccess.mcellList_lk to
-         * vdT->mcell_lk. We have to have a seperate lockinfo for the
+         * struct vd->mcell_lk. We have to have a seperate lockinfo for the
          * mcellList_lk for the BMT access structure because a regular
          * mcell may indirectly extend the BMT which requires the BMT
-         * access mcellList_lk after getting vdT->mcell_lk.
+         * access mcellList_lk after getting struct vd->mcell_lk.
          */
 	if (sts == EOK) {
 		if (RBMT_THERE(dmnP)) {
@@ -2128,7 +2128,7 @@ bs_access_one(
 	struct vnode *vp = NULL, *clu_clone_vnode_to_vrele = NULL;
 	lkStatesT bfaccState;
 	int another_fs_open = FALSE;
-	vdT *ddlVd;
+	struct vd *ddlVd;
 	int delFlag;
 	struct domain *dmnP;
 	uint32_t flags;
@@ -3587,7 +3587,7 @@ bs_close_one(
 {
 	ftxHT ftxH;
 	lkStatesT prevState;
-	vdT *delVdp;
+	struct vd *delVdp;
 	int sts;
 	void *delList;
 	uint32_t delCnt = 0;

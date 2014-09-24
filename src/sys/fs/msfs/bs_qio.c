@@ -1981,7 +1981,7 @@ sort_to_list(
  */
 static void
 adjust_temporary_queue_elements(tempQMarkerT * tempQ_marker,
-    ioDescT * ioListp, int cnt, vdT * vdp)
+    ioDescT * ioListp, int cnt, struct vd * vdp)
 {
 	struct thread *tid;
 	tempQMarkerT *local_tmpQ_marker;
@@ -4383,7 +4383,7 @@ loop:
 }
 
 static void
-get_ioq(vdT * vdp, ioDescT * iop, ioDescHdrT ** qhdr, int *on_lazyq)
+get_ioq(struct vd * vdp, ioDescT * iop, ioDescHdrT ** qhdr, int *on_lazyq)
 {
 
 	switch (iop->ioQ) {
@@ -4979,7 +4979,7 @@ bs_io_thread(int radId)
 		                         * allow some of the lazy buffers to be flushed,
 		                         * but don't force them all to the device.  The
 		                         * # flushed from the lazy queues can be modified
-		                         * via 'chvol -q' to change vdT.qtodev.
+		                         * via 'chvol -q' to change struct vd.qtodev.
 		                         *
 		                         * Reset start_io_posted before bs_startio, because
 		                         * bs_startio() temporarily drops the devQ.ioQLock
@@ -5247,7 +5247,7 @@ _done:
 }
 
 ioDescHdrT *
-get_smsyncq(vdT * vdp, int stampq, int *ioQ)
+get_smsyncq(struct vd * vdp, int stampq, int *ioQ)
 {
 	switch (stampq) {
 	case 0:

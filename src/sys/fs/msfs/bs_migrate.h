@@ -34,7 +34,7 @@
 int
 bs_move_metadata(
     struct bfAccess * bfap,		/* in */
-    vdT * vdp			/* in or NULL */
+    struct vd * vdp			/* in or NULL */
 );
 
 void

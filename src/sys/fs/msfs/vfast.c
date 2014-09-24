@@ -130,7 +130,7 @@ ss_close_file(
 );
 
 void
-     ss_startios(vdT * vdp);
+     ss_startios(struct vd * vdp);
 
 void
 ss_rmvol_from_hotlst(struct domain * dmnP,
@@ -171,19 +171,19 @@ void
      ss_kern_init();
 
 void
-     ss_init_vd(vdT * vdp);
+     ss_init_vd(struct vd * vdp);
 
 void
-     ss_dealloc_vd(vdT * vdp);
+     ss_dealloc_vd(struct vd * vdp);
 
 void
      ss_dmn_deactivate(struct domain * dmnP, int flag);
 
 void
-ss_dealloc_pack_list(vdT * vdp);
+ss_dealloc_pack_list(struct vd * vdp);
 
 int
-ss_block_and_wait(vdT * vdp);
+ss_block_and_wait(struct vd * vdp);
 
 /****** local module prototypes ******/
 static int
@@ -196,14 +196,14 @@ ss_chk_hot_list(struct domain * dmnP,
 
 static int
 ss_find_space(
-    vdT * vdp,
+    struct vd * vdp,
     uint64_t requestedBlkCnt,
     uint32_t * allocBlkOffp,
     uint32_t * allocPageCnt,
     int flags);
 
 static int
-ss_get_n_lk_free_space(vdT * vdp,
+ss_get_n_lk_free_space(struct vd * vdp,
     uint64_t bfPageSize,
     uint64_t reqPageCnt,
     uint32_t * allocBlkOffp,
@@ -248,7 +248,7 @@ ss_get_vd_most_free(struct bfAccess * bfap,
     vdIndexT * newVdIndex);
 
 static ssFragLLT *
-          ss_select_frag_file(vdT * vdp);
+          ss_select_frag_file(struct vd * vdp);
 
 static void
      ss_adj_msgs_flow_rate();
@@ -278,7 +278,7 @@ static void
 print_ssDmnInfo(struct domain * dmnP);
 
 static void
-print_ssVolInfo(vdT * vdp);
+print_ssVolInfo(struct vd * vdp);
 
 static void
 ss_insert_frag_onto_list(vdIndexT vdi,
@@ -288,7 +288,7 @@ ss_insert_frag_onto_list(vdIndexT vdi,
     uint32_t xtntCnt);		/* secondary sort in list */
 
 static void
-ss_dealloc_frag_list(vdT * vdp);
+ss_dealloc_frag_list(struct vd * vdp);
 
 static void
      ss_boss_init(void);
@@ -310,7 +310,7 @@ static void
      ss_del_from_hot_list(ssHotLLT * hp);
 
 static void
-     ss_delete_from_frag_list(vdT * vdp, bfTagT tag, bfSetIdT bfSetId);
+     ss_delete_from_frag_list(struct vd * vdp, bfTagT tag, bfSetIdT bfSetId);
 
 static void
 ss_move_file(
@@ -394,7 +394,7 @@ ss_kern_stop()
 	ssBossMsgT *msg;
 	struct fileSetNode *fsp = NULL;
 	ssHotHdrT *hhp;		/* pointer to hot list header */
-	vdT *vdp;
+	struct vd *vdp;
 	int vdi = 0, vdCnt = 0;
 	int false = FALSE;
 	int ss_map_locked = FALSE;
@@ -746,7 +746,7 @@ ss_monitor_thread(void)
 	ssBossMsgT *bmsg;
 	struct fileSetNode *fsp = NULL;
 	int vdi;
-	vdT *vdp;
+	struct vd *vdp;
 	unsigned long curBlkIO;	/* current IO count on volume */
 	int msg_rev_cnt = 0;
 	int hot_chk_rev_cnt = 0, zero_io_rev_cnt = 0;
@@ -1177,8 +1177,8 @@ ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
 	bfTagT tag = NilBfTag;
 	bfSetIdT setId = nilBfSetId;
 	int vdRefed = FALSE;
-	vdT *dvdp = NULL;	/* destination vd */
-	vdT *vdp = NULL;	/* possible vd needs vfast work */
+	struct vd *dvdp = NULL;	/* destination vd */
+	struct vd *vdp = NULL;	/* possible vd needs vfast work */
 	int vdi, vdCnt = 0;
 	unsigned long ioBlkCnt;
 	int sts;
@@ -1401,7 +1401,7 @@ HANDLE_EXCEPTION:
 void
 ss_dmn_activate(struct domain * dmnP, u_long flag)
 {
-	vdT *logVdp = NULL;
+	struct vd *logVdp = NULL;
 	struct bfAccess *mdap;
 	int sts;
 	bsSSDmnAttrT ssAttr;
@@ -1469,7 +1469,7 @@ ss_dmn_deactivate(struct domain * dmnP, int flag)
 {
 	int sts;
 	int vdi, vdCnt = 0;
-	vdT *vdp;
+	struct vd *vdp;
 
 	KASSERT(dmnP);
 
@@ -1542,7 +1542,7 @@ ss_dealloc_dmn(struct domain * dmnP)
  ********************************************************************/
 
 void
-ss_dealloc_vd(vdT * vdp)
+ss_dealloc_vd(struct vd * vdp)
 {				/* in - pointer to header for list */
 	/* remove frag list from vd */
 	ss_dealloc_frag_list(vdp);
@@ -1581,7 +1581,7 @@ ss_change_state(char *domain_name,	/* in */
 	int sts;
 	struct timeval new_time;
 	int vdi, vdCnt = 0;
-	vdT *vdp;
+	struct vd *vdp;
 	struct domain *dmnP;
 	bfDomainIdT domainId;
 	int dmnActive = FALSE, dmnOpen = FALSE;
@@ -1780,7 +1780,7 @@ ss_init_dmnInfo(struct domain * dmnP)
  ********************************************************************/
 
 void
-ss_init_vd(vdT * vdp)
+ss_init_vd(struct vd * vdp)
 {
 	mutex_init(&vdp->ssVolInfo.ssVdMsgLk.mutex, MUTEX_DEFAULT, IPL_NONE);
 	mutex_init(&vdp->ssVolInfo.ssVdMigLk.mutex, MUTEX_DEFAULT, IPL_NONE);
@@ -1903,7 +1903,7 @@ ss_copy_rec_to_disk(struct domain * dmnP,	/* in */
 int
 ss_put_rec(struct domain * dmnP)
 {
-	vdT *logVdp = NULL;
+	struct vd *logVdp = NULL;
 	ftxHT ftx;
 	int sts;
 	bsSSDmnAttrT ssAttr;
@@ -1980,7 +1980,7 @@ HANDLE_EXCEPTION:
 
 #ifdef ADVFS_SS_TRACE
 void
-ss_trace(vdT * vdp,
+ss_trace(struct vd * vdp,
     uint16_t module,
     uint16_t line,
     long value1,
@@ -2127,7 +2127,7 @@ ss_chk_fragratio(
 	bfSetIdT bfSetId;
 	ssListMsgT *listmsg;
 	uint32_t allocPageCnt = 0;
-	vdT *vdp;
+	struct vd *vdp;
 	int sts = EOK;
 	int vd_refed = FALSE;
 
@@ -2242,7 +2242,7 @@ ss_insert_frag_onto_list(vdIndexT vdi,
 {				/* secondary sort in list */
 	struct domain *dmnP;
 	bfSetT *bfSetp;
-	vdT *vdp = NULL;
+	struct vd *vdp = NULL;
 	ssFragLLT *currp, *nextp;	/* list pointer */
 	ssFragHdrT *fhp;
 	int inserted = FALSE;
@@ -2376,7 +2376,7 @@ _cleanup:
  ********************************************************************/
 
 static void
-ss_delete_from_frag_list(vdT * vdp,	/* in */
+ss_delete_from_frag_list(struct vd * vdp,	/* in */
     bfTagT tag,			/* in */
     bfSetIdT bfSetId)
 {				/* in */
@@ -2428,7 +2428,7 @@ ss_delete_from_frag_list(vdT * vdp,	/* in */
  ********************************************************************/
 
 static ssFragLLT *
-ss_select_frag_file(vdT * vdp)
+ss_select_frag_file(struct vd * vdp)
 {				/* in - vd */
 	ssFragLLT *fp;		/* local entry pointer */
 	ssFragHdrT *fhp;
@@ -2463,7 +2463,7 @@ ss_select_frag_file(vdT * vdp)
  ********************************************************************/
 
 void
-ss_dealloc_frag_list(vdT * vdp)
+ss_dealloc_frag_list(struct vd * vdp)
 {				/* in */
 	ssFragHdrT *fhp;
 	ssFragLLT *currp, *nextp;	/* entry pointer */
@@ -2510,7 +2510,7 @@ ss_dealloc_frag_list(vdT * vdp)
 
 /* deletes the pack list */
 void
-ss_dealloc_pack_list(vdT * vdp)
+ss_dealloc_pack_list(struct vd * vdp)
 {				/* in */
 	ssPackHdrT *php;
 	ssPackLLT *currp, *nextp;	/* entry pointer */
@@ -3205,7 +3205,7 @@ ss_dealloc_hot(struct domain * dmnP)
 
 /* check for vfast enabled for processing on this domain */
 void
-ss_startios(vdT * vdp)
+ss_startios(struct vd * vdp)
 {
 	ssWorkMsgT *workmsg = NULL;
 
@@ -3250,7 +3250,7 @@ ss_startios(vdT * vdp)
  ********************************************************************/
 
 int
-ss_block_and_wait(vdT * vdp)
+ss_block_and_wait(struct vd * vdp)
 {
 	/* allow any other threads of equal or higher priority to run */
 	PREEMPT_CHECK(current_thread());
@@ -3465,7 +3465,7 @@ ss_move_file(vdIndexT vdi,	/* in */
     ssWorkMsgTypeT msgType
 )
 {
-	vdT *svdp = NULL;
+	struct vd *svdp = NULL;
 	struct domain *dmnP = NULL;
 	int domain_open = FALSE, vdRefed = FALSE;
 	int sts = EOK;
@@ -3674,7 +3674,7 @@ HANDLE_EXCEPTION:
 
 static int
 ss_find_space(
-    vdT * vdp,			/* in - vd on which to find the free blocks */
+    struct vd * vdp,			/* in - vd on which to find the free blocks */
     uint64_t requestedBlkCnt,	/* in - number of pages requested */
     uint32_t * blkOffset,	/* out - ptr to new, clear sbm locked range */
     uint32_t * blkCnt,		/* out - count of pages locked */
@@ -3743,7 +3743,7 @@ HANDLE_EXCEPTION:
 
 static int
 ss_get_n_lk_free_space(
-    vdT * vdp,			/* in - vd on which to find the free blocks */
+    struct vd * vdp,			/* in - vd on which to find the free blocks */
     uint64_t bfPageSize,		/* in - size of one page */
     uint64_t reqPageCnt,		/* in - number of pages requested */
     uint32_t * allocBlkOffp,	/* out - ptr to new, clear sbm locked range */
@@ -4140,7 +4140,7 @@ static
 ss_get_vd_most_free(struct bfAccess * bfap,
     vdIndexT * newVdIndex)
 {
-	vdT *vdp = NULL;
+	struct vd *vdp = NULL;
 	int vdCnt, vdi;
 	int sts = EOK;
 	uint64_t savedtotFreeBlks = 0, requestedBlkCnt;
@@ -4230,7 +4230,7 @@ ss_vd_migrate(bfTagT filetag,
 	int closeFileFlag = FALSE;
 	struct bfAccess *bfap = NULL;
 	bfSetT *bfSetp = NULL;
-	vdT *dvdp = NULL;
+	struct vd *dvdp = NULL;
 	uint64_t srcPageOffset, migPageCnt, newBlkOffset, xmEndPage, xmTotalPageCnt = 0, allocTotalPageCnt = 0, allocPagesLeft, pgsMigSoFar, extentCnt = 0;
 	uint64_t consecutivePageCnt, page;
 	uint32_t allocBlkOffset = 0;	/* sbm is free starting at this
@@ -4670,7 +4670,7 @@ int
 ss_find_target_vd(struct bfAccess * bfap)
 {
 	int sts;
-	vdT *vdp = NULL;
+	struct vd *vdp = NULL;
 	uint64_t fileBlockCount, dmnSizeBlks, dmnFreeSizeBlks, newVolFreeSizeBlks;
 	uint64_t blksOnTarg,	/* file blocks on target volume */
 	        blksOnVd;	/* file blocks on non-target volume */
@@ -4949,7 +4949,7 @@ ss_find_hot_target_vd(struct domain * dmnP,	/* in */
 	ssHotHdrT *hhp;
 	ssHotLLT *currp, *hp, *new_hp = NULL;	/* entry pointer */
 	int vdRefed = FALSE;
-	vdT *vdp = NULL, *vdp2 = NULL;
+	struct vd *vdp = NULL, *vdp2 = NULL;
 	long volDeviation, newBalanceDeviation, bestNewBalanceDeviation, currDmnIOBalance;
 	uint64_t dmnHotIO = 0, newVolIO, currHotIOCnt;
 	int i, wday, targ, targetVolumeIndex = -1, bestVolumeIndex, vdi,

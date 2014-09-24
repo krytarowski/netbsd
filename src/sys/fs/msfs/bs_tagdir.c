@@ -487,7 +487,7 @@ void
 tagdir_freetag_dellist(
     bsMCT * mcp,		/* in - primary mcell from deferred delete
 				 * list */
-    vdT * pvdp			/* in - vd of deferred delete list */
+    struct vd * pvdp			/* in - vd of deferred delete list */
 )
 {
 	int sts;
@@ -1433,7 +1433,7 @@ tagdir_lookup(
 			return (ENO_SUCH_TAG);
 		}
 		/* Verify the vdIndex portion of the tag.  The vdIndex must
-		 * represent either a valid vdT struct, or a vdT struct in the
+		 * represent either a valid struct vd struct, or a struct vd struct in the
 		 * BSR_VD_VIRGIN state that is being set up by the current
 		 * thread. */
 		if (vd_htop_if_valid(*vdIndex, domain, FALSE, FALSE)) {
@@ -1555,7 +1555,7 @@ tagdir_lookup_next(
 	bsTMapT *tdmap;
 	int isReferenced = 0;
 	struct domain *domain = bfSetp->dmnP;
-	vdT *vdp;
+	struct vd *vdp;
 
 	tagPg = TAGTOPG(tp);
 	slot = TAGTOSLOT(tp);
@@ -1670,15 +1670,15 @@ bs_switch_root_tagdir(
 	int failFtxFlag = 0;
 	ftxHT ftxH;
 	int i;
-	vdT *logVd;
+	struct vd *logVd;
 	struct bfAccess *newBfAccessp;
 	char *newPage;
 	uint32_t newPageCnt;
 	bfTagT newTag;
-	vdT *newVd;
+	struct vd *newVd;
 	char *oldPage;
 	uint32_t oldPageCnt;
-	vdT *oldVd;
+	struct vd *oldVd;
 	bfPageRefHT pgPin;
 	bfPageRefHT pgRef;
 	rbfPgRefHT rbfPgPin;

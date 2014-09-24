@@ -3360,7 +3360,7 @@ msfs_pl_unlink_mcells(
 	bsMCT *prevMcell;
 	rbfPgRefHT prevPgPin;
 	int sts = EOK;
-	vdT *vd;
+	struct vd *vd;
 
 	DEBUG(1,
 	    printf("msfs_pl_unlink_mcells\n"));

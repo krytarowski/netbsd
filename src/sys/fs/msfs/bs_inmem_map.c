@@ -760,7 +760,7 @@ imm_load_sub_xtnt_map(
 	bfPageRefHT pgRef;
 	bsShadowXtntT *shadowRec;
 	int sts;
-	vdT *vd;
+	struct vd *vd;
 	vdIndexT vdIndex;
 	bsXtntRT *xtntRec;
 	bsXtraXtntRT *xtraXtntRec;

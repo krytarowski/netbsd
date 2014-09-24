@@ -3203,7 +3203,7 @@ msfs_smoothsync(mp, sync_age, smsync_flag)
 	u_int sync_age;
 	u_int smsync_flag;	/* perform non-smooth'ed operations */
 {
-	vdT *vdp;
+	struct vd *vdp;
 	struct fileSetNode *fsnp;
 	struct domain *dmnP;
 	int vdi;

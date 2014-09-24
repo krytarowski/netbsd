@@ -29,17 +29,17 @@
 
 int
 sbm_init(
-    vdT * vdp
+    struct vd * vdp
 );
 
 int
 sbm_clear_cache(
-    vdT * vdp
+    struct vd * vdp
 );
 
 void *
 sbm_find_space(
-    vdT * vdp,
+    struct vd * vdp,
     uint32_t requested_blks,
     uint64_t dstBlkOffset,
     bsAllocHintT alloc_hint,
@@ -52,13 +52,13 @@ sbm_howmany_blks(
     uint32_t blkOffset,
     uint32_t * blkCount,		/* in/out , might be reduced */
     int *pinPages,		/* in/out */
-    vdT * vdp,
+    struct vd * vdp,
     int pgSz
 );
 
 int
 sbm_remove_space(
-    vdT * vdp,
+    struct vd * vdp,
     uint32_t startBlk,
     uint32_t blks,
     stgDescT * stg_desc,
@@ -68,7 +68,7 @@ sbm_remove_space(
 
 int
 sbm_return_space_no_sub_ftx(
-    vdT * virtualDiskp,		/* in */
+    struct vd * virtualDiskp,		/* in */
     uint32_t blkOffset,		/* in */
     uint32_t blkCnt,		/* in */
     ftxHT parentFtx		/* in */
@@ -83,7 +83,7 @@ sbm_set_pg_bits(
 
 int
 sbm_alloc_bits(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     int bitOffset,		/* in */
     int bitCount,		/* in */
     ftxHT parentFtx		/* in */
@@ -91,12 +91,12 @@ sbm_alloc_bits(
 
 uint32_t
 sbm_total_free_space(
-    vdT * vdp
+    struct vd * vdp
 );
 
 void
 sbm_dump(
-    vdT * vdp
+    struct vd * vdp
 );
 
 #endif				/* _SBM_H_ */

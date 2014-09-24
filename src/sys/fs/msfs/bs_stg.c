@@ -322,7 +322,7 @@ add_extent(
 static int
 stg_alloc_one_xtnt(
     struct bfAccess * bfap,		/* in */
-    vdT * vd,			/* in */
+    struct vd * vd,			/* in */
     uint32_t bfPageCnt,		/* in */
     uint64_t dstBlkOffset,	/* in */
     bsAllocHintT alloc_hint,	/* in */
@@ -1564,7 +1564,7 @@ stg_set_alloc_disk(
 	bsShadowXtntT *shadowRec;
 	bsStripeHdrT *stripeHdr;
 	int sts;
-	vdT *vdp = NULL;
+	struct vd *vdp = NULL;
 	bsInMemXtntMapT *xtntMap;
 	NEW_VD_SKIP(vd_skip_list);
 
@@ -1736,7 +1736,7 @@ add_stg(
 	int sts;
 	uint32_t totalPageCnt;
 	bsInMemXtntMapT *xtntMap;
-	vdT *vdp;
+	struct vd *vdp;
 	int vdpCnt_bumped = FALSE;
 
 	if (bfPageOffset >= bfap->nextPage) {
@@ -2162,7 +2162,7 @@ alloc_append_stg(
 		    &pageCnt);
 	} else {
 		uint32_t fileClust;
-		vdT *vdp;
+		struct vd *vdp;
 
 		vdp = VD_HTOP(bfVdIndex, bfap->dmnP);
 		if (vdp->stgCluster == BS_CLUSTSIZE) {
@@ -2248,7 +2248,7 @@ get_first_mcell(
 	bfMCIdT mcellId;
 	int sts;
 	vdIndexT vdIndex;
-	vdT *vdp;
+	struct vd *vdp;
 	NEW_VD_SKIP(vd_skip_list);
 
 
@@ -2601,7 +2601,7 @@ alloc_hole_stg(
 		    &pageCnt);
 	} else {
 		uint32_t fileClust;
-		vdT *vdp;
+		struct vd *vdp;
 
 		vdp = VD_HTOP(bfVdIndex, bfap->dmnP);
 		if (vdp->stgCluster == BS_CLUSTSIZE) {
@@ -2955,7 +2955,7 @@ stg_alloc_from_svc_class(
 	uint32_t totalPageCnt = 0;
 	uint32_t updateStart;
 	vdIndexT vdIndex;
-	vdT *vdp;
+	struct vd *vdp;
 	NEW_VD_SKIP(vd_skip_list);
 
 
@@ -3108,7 +3108,7 @@ cp_stg_alloc_from_svc_class(
 	int sts;
 	uint32_t totalPageCnt = 0;
 	vdIndexT vdIndex;
-	vdT *vdp;
+	struct vd *vdp;
 	NEW_VD_SKIP(vd_skip_list);
 
 
@@ -3801,7 +3801,7 @@ alloc_from_one_disk(
 	int sts;
 	bsXtntT termDesc;
 	uint32_t totalPageCnt = 0;
-	vdT *vd;
+	struct vd *vd;
 	int pinCnt = 6;		/* no more than 6 pages of SBM pinned */
 	int tryToExpandLastExtent = FALSE;
 	extern int nfs_max_daemon;
@@ -4135,7 +4135,7 @@ cp_stg_alloc_in_one_mcell(
 	int sts = EOK;
 	bsXtntT termDesc;
 	uint32_t totalPageCnt = 0;
-	vdT *vdp;
+	struct vd *vdp;
 	int pinCnt = FTX_MX_PINP - 1;
 
 	KASSERT(bfPageCnt);	/* don't call this routine w/o a
@@ -4453,7 +4453,7 @@ static
        int
 stg_alloc_one_xtnt(
     struct bfAccess * bfap,		/* in  find stg for this file */
-    vdT * vdp,			/* in  in this volume */
+    struct vd * vdp,			/* in  in this volume */
     uint32_t bfPageCnt,		/* in  Requested length */
     uint64_t dstBlkOffset,	/* in, chkd if hint == BS_ALLOC_MIG_RSVD */
     bsAllocHintT alloc_hint,	/* in */
@@ -6524,7 +6524,7 @@ x_page_to_blkmap(
 	/* Avoid needless locking and checking of in-memory extent maps for
 	 * the following cases: a. this is the log metadata file; its extents
 	 * are only modified when a single thread has access to it.  b. this
-	 * is the SBM; the vdT.stgMap_lk should synchronize access to it.  c.
+	 * is the SBM; the struct vd.stgMap_lk should synchronize access to it.  c.
 	 * this is a bitfile set tag directory. The bfSetp->dirLock will
 	 * synchronize access to it during file creation/deletion, and it is
 	 * migrated under an exclusive transaction. d. This is the RBMT; the
@@ -6867,7 +6867,7 @@ page_is_mapped(
 	/* Avoid needless locking and checking of in-memory extent maps for
 	 * the following cases: a. this is the log metadata file; its extents
 	 * are only modified when a single thread has access to it.  b. this
-	 * is the SBM; the vdT.stgMap_lk will synchronize access to it.  c.
+	 * is the SBM; the struct vd.stgMap_lk will synchronize access to it.  c.
 	 * This is the RBMT; the RBMT extents are only modified under an
 	 * exclusive transaction. (Ver. 4 domains only) d. this is a bitfile
 	 * set tag directory. The bfSetp->dirLock will synchronize access to

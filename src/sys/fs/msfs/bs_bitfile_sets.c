@@ -3503,7 +3503,7 @@ HANDLE_EXCEPTION:
 		bsBfSetAttrT *setAttrp;
 		bsDmnMAttrT *dmnMAttrp;
 		int sts;
-		vdT *logVdp = NULL;
+		struct vd *logVdp = NULL;
 		rbfPgRefHT fsetPgH, dmnPgH;
 		struct bfAccess *mdap;
 
@@ -3625,7 +3625,7 @@ HANDLE_EXCEPTION:
 		bsDmnMAttrT *dmnMAttrp;
 		int sts;
 		struct domain *dmnP;
-		vdT *logVdp = NULL;
+		struct vd *logVdp = NULL;
 		delPendUndoRecT undoRec;
 		struct bfAccess *nextTagDirBfap;
 		bfTagT nextTag;
@@ -3774,7 +3774,7 @@ HANDLE_EXCEPTION:
 		bfTagT nextTag;
 		struct bfAccess *tagDirBfap;
 		bsBfSetAttrT setAttr;
-		vdT *logVdp = NULL;
+		struct vd *logVdp = NULL;
 		struct bfAccess *mdap;
 		struct vnode *nullvp;
 
@@ -5387,7 +5387,7 @@ HANDLE_EXCEPTION:
 	) {
 		mcellUIdT *undoRp = (mcellUIdT *) opRecp;
 		struct domain *dmnP;
-		vdT *vdp;
+		struct vd *vdp;
 		rbfPgRefHT pgref;
 		bsMPgT *bmtpgp;
 		int sts;

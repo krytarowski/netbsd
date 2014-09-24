@@ -3378,7 +3378,7 @@ msfs_syscall_op_get_vol_bf_descs(libParamsT * libBufp)
 {
 	struct domain *dmnP;
 	mlStatusT sts;
-	vdT *vdp;
+	struct vd *vdp;
 
 	libBufp->getVolBfDescs.bfDesc = (mlBfDescT *) ms_malloc(
 	    libBufp->getVolBfDescs.bfDescSize * sizeof(bsBfDescT));
@@ -3406,7 +3406,7 @@ msfs_syscall_op_get_vol_bf_descs(libParamsT * libBufp)
 	    (bfMCIdT *) & (libBufp->getVolBfDescs.nextBfDescId),
 	    &(libBufp->getVolBfDescs.bfDescCnt));
 
-	/* Decrement the vdRefCnt on the vdT struct */
+	/* Decrement the vdRefCnt on the struct vd struct */
 	vd_dec_refcnt(vdp);
 
 	close_domain(libBufp->getVolBfDescs.bfDomainId, dmnP, 0);
@@ -3611,7 +3611,7 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT * libBufp, struct bfAccess * bfap
 			libBufp->getCludioXtntMap.volMax = vdi + 1;
 
 		if (VDI_IS_VALID(vdi + 1, bfap->dmnP)) {
-			vdT *vdp = bfap->dmnP->vdpTbl[vdi];
+			struct vd *vdp = bfap->dmnP->vdpTbl[vdi];
 			KASSERT(vdp->vdMagic == VDMAGIC);
 			mutex_enter(&vdp->vdStateLock.mutex);
 			if (vdp->vdState == BSR_VD_MOUNTED) {
@@ -4468,7 +4468,7 @@ msfs_syscall_op_rem_volume(libParamsT * libBufp, opIndexT opIndex)
 
 	strcpy(vdName, vdp->vdName);
 
-	/* Decrement the vdRefCnt on the vdT struct */
+	/* Decrement the vdRefCnt on the struct vd struct */
 	vd_dec_refcnt(vdp);
 	vdRefBumped = 0;
 
@@ -4515,7 +4515,7 @@ msfs_syscall_op_rem_volume(libParamsT * libBufp, opIndexT opIndex)
 	}
 HANDLE_EXCEPTION:
 
-	/* Decrement reference count on vdT if we left it bumped. */
+	/* Decrement reference count on struct vd if we left it bumped. */
 	if (vdRefBumped) {
 		vd_dec_refcnt(vdp);
 		vdRefBumped = 0;
@@ -4752,7 +4752,7 @@ msfs_syscall_op_ss_get_fraglist(libParamsT * libBufp)
 	int dmnActive = FALSE;
 	int dmnOpen = FALSE;
 	struct domain *dmnP;
-	vdT *vdp;
+	struct vd *vdp;
 	ssFragLLT *fp;
 	ssFragHdrT *fhp;
 	int i = 0;
@@ -5022,7 +5022,7 @@ msfs_syscall_op_add_rem_vol_svc_class(libParamsT * libBufp)
 		}
 	}
 
-	/* Decrement the vdRefCnt on the vdT struct */
+	/* Decrement the vdRefCnt on the struct vd struct */
 	vd_dec_refcnt(vdp);
 	vdRefBumped = 0;
 
@@ -5192,7 +5192,7 @@ msfs_syscall_op_reset_free_space_cache(libParamsT * libBufp)
 {
 	struct domain *dmnP;
 	unLkActionT unlock_action;
-	vdT *vdp;
+	struct vd *vdp;
 	int vdRefBumped = 0;
 	mlStatusT sts;
 
@@ -5228,7 +5228,7 @@ msfs_syscall_op_reset_free_space_cache(libParamsT * libBufp)
 		vdp->scanStartClust = temp / vdp->stgCluster;
 	}
 	lock_done(&vdp->stgMap_lk);
-	/* Decrement the vdRefCnt on the vdT struct */
+	/* Decrement the vdRefCnt on the struct vd struct */
 	    vd_dec_refcnt(vdp);
 	vdRefBumped = 0;
 

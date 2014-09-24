@@ -95,7 +95,7 @@ typedef struct {
  * access handle for the metadata bitfile.
  */
 
-typedef struct vd {
+struct vd {
 	/*
          ** Static fields (ie - they are set once and never changed).
          */
@@ -111,10 +111,10 @@ typedef struct vd {
 	uint32_t bmtXtntPgs;	/* number of pages per BMT extent */
 	char vdName[BS_VD_NAME_SZ];	/* temp - should be global name */
 
-	/* The following fields are protected by the vdT.vdStateLock mutex */
+	/* The following fields are protected by the struct vd.vdStateLock mutex */
 	bsVdStatesT vdState;	/* vd state */
 	struct thread *vdSetupThd;	/* Thread Id of the thread setting up
-					 * vdT */
+					 * struct vd */
 	uint32_t vdRefCnt;	/* # threads actively using this volume */
 	uint32_t vdRefWaiters;	/* # threads waiting for vdRefCnt to goto 0 */
 	mutexT vdStateLock;	/* lock for above 4 fields */
@@ -240,7 +240,7 @@ typedef struct vd {
 	uint32_t ss_trace_ptr;
 	ssTraceElmtT ss_trace_buf[SS_TRACE_HISTORY];
 #endif
-}  vdT;
+};
 #define IOTHRESHOLD 1024	/* Default # of buffers allowed to accumulate
 				 * on the readyLazy queue before they get
 				 * moved down to the consolq. */
@@ -262,7 +262,7 @@ typedef struct vd {
     vd_trace((vdp), (uint16_t)ADVFS_MODULE, (uint16_t)__LINE__, (void*)(n1))
 
 void
-vd_trace(vdT * vdp,
+vd_trace(struct vd * vdp,
     uint16_t module,
     uint16_t line,
     void *value);
@@ -279,7 +279,7 @@ vd_trace(vdT * vdp,
     ss_trace((vdp), (uint16_t)ADVFS_MODULE, (uint16_t)__LINE__, (long)(n1),(long)(n2),(long)(n3),(long)(n4))
 
 void
-ss_trace(vdT * vdp,
+ss_trace(struct vd * vdp,
     uint16_t module,
     uint16_t line,
     long value1,
@@ -293,11 +293,11 @@ ss_trace(vdT * vdp,
 
 #endif				/* ADVFS_SS_TRACE */
 
-/* Values for vdT.nextMcellPg */
+/* Values for struct vd.nextMcellPg */
 #define EXTEND_BMT -1
 #define NO_MORE_MCELLS -2
 
-/* Values for vdT.rbmtFlags */
+/* Values for struct vd.rbmtFlags */
 #define RBMT_EXTENSION_IN_PROGRESS 0x1
 
 /* Test validity of a block in an extent. */

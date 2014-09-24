@@ -900,7 +900,7 @@ sc_valid_vd(
 
 int
 sc_select_vd_for_mcell(
-    vdT ** vdpa,		/* out - selected vd */
+    struct vd ** vdpa,		/* out - selected vd */
     struct domain * dmnP,		/* in - domain pointer */
     serviceClassTblT * scTbl,	/* in - service class table */
     serviceClassT reqServices,	/* in - requried service class */
@@ -913,10 +913,10 @@ sc_select_vd_for_mcell(
 	int sts;
 	vdLstSgmntT *vdLstSeg;
 	scEntryT *scEntry;
-	vdT *vdp;
+	struct vd *vdp;
 	int done = FALSE;
 	uint16_t vdi = 0;
-	vdT *bestVdp = NULL;
+	struct vd *bestVdp = NULL;
 	int bestVd;
 
 	SC_TBL_LOCK(dmnP);
@@ -1055,7 +1055,7 @@ sc_select_vd_for_mcell(
 
 int
 sc_select_vd_for_stg(
-    vdT ** vdpa,		/* out - selected volume */
+    struct vd ** vdpa,		/* out - selected volume */
     struct domain * dmnP,		/* in - domain pointer */
     serviceClassT reqServices,	/* in - required service class */
     serviceClassT optServices,	/* in - optional service class */
@@ -1076,7 +1076,7 @@ sc_select_vd_for_stg(
 	int sts;
 	vdLstSgmntT *vdLstSeg;
 	scEntryT *scEntry;
-	vdT *vdp = NULL;
+	struct vd *vdp = NULL;
 	int done = FALSE;
 	int start_vd;
 	serviceClassTblT *scTbl = dmnP->scTbl;
@@ -1295,7 +1295,7 @@ best_vd(
     vdIndexT * vdi		/* OUT - set to vd if good or best */
 )
 {
-	vdT *vdp;
+	struct vd *vdp;
 
 	/* is the volume index zero, then reject */
 	if (vd == 0) {

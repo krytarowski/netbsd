@@ -38,7 +38,7 @@ struct bsMPg *get_bmt_pgptr(struct domain * dmnP);
 
 int
 bmt_set_mcell_free_list(
-    vdT * vdp			/* in - pointer to current disk */
+    struct vd * vdp			/* in - pointer to current disk */
 );
 
 typedef enum {
@@ -51,7 +51,7 @@ int
 bmt_alloc_prim_mcell(
     ftxHT ftxH,			/* in - callers ftx handle */
     mcellUIdT * mcellUIdp,	/* in/out - mcelluid ptr */
-    vdT * vdp,			/* in - pointer to virtual disk */
+    struct vd * vdp,			/* in - pointer to virtual disk */
     rbfPgRefHT * pgRefp,	/* out - free mcell page ref */
     struct bsMC ** p_mcp	/* out - New mcell      */
 );
@@ -70,7 +70,7 @@ bmt_alloc_mcell(
 );
 
 int
-deferred_free_mcell(vdT * vd,
+deferred_free_mcell(struct vd * vd,
     bfMCIdT mcellId,
     ftxHT pftxH);
 
@@ -124,7 +124,7 @@ bmt_unlink_mcells(
 
 void
 bmt_free_bf_mcells(
-    vdT * vdp,			/* in - ptr to vd struct */
+    struct vd * vdp,			/* in - ptr to vd struct */
     bfMCIdT primMCellId,	/* in - prim mcell id */
     ftxHT parentFtxH,		/* in - parent ftx */
     int freeXchain		/* in - flag */
@@ -133,7 +133,7 @@ bmt_free_bf_mcells(
 void
 bmt_free_mcell(
     ftxHT ftxH,			/* in */
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     bsMCT * mcp,		/* in */
     bfMCIdT mcid,		/* in */
     bsMPgT * bmtpgp,		/* in - page ptr */
@@ -288,7 +288,7 @@ bmt_get_vd_bf_descs(
  * bmtHT
  */
 typedef struct bmtH {
-	vdT *vdp;
+	struct vd *vdp;
 	uint32_t curMcell;
 	uint32_t curPg;
 	bfPageRefHT pgRef;
@@ -327,17 +327,17 @@ int
 check_mcell_hdr(bsMCT * mcp, struct bfAccess * bfap);
 
 int
-check_BSR_XTNTS_rec(bsXtntRT * bsXtntRp, struct bfAccess * bfap, vdT * vdp);
+check_BSR_XTNTS_rec(bsXtntRT * bsXtntRp, struct bfAccess * bfap, struct vd * vdp);
 
 int
 check_BSR_SHADOW_XTNTS_rec(bsShadowXtntT * bsShadowXtntp,
     struct bfAccess * bfap,
-    vdT * vdp);
+    struct vd * vdp);
 
 int
 check_BSR_XTRA_XTNTS_rec(bsXtraXtntRT * bsXtraXtntRp,
     struct bfAccess * bfap,
-    vdT * vdp,
+    struct vd * vdp,
     uint32_t lastPg);
 
 #endif				/* _KERNEL */

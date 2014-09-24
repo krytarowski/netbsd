@@ -3020,7 +3020,7 @@ lgr_open(
 	struct domain *dmnP = bfSetp->dmnP;
 	bfPageRefHT pgref;
 	struct bsMPg *bmtpgp;
-	vdT *vdp;
+	struct vd *vdp;
 	bsBfAttrT *attrp;
 	struct bfAccess *mdap;
 	logDescT *new_ldP = NULL;
@@ -3821,7 +3821,7 @@ lgr_switch_vol(
 	logDescT *newldP, *newLogP;
 	struct bfAccess *logAccP, *newAccP;
 	struct domain *dmnP;
-	vdT *vdP, *newVdP;
+	struct vd *vdP, *newVdP;
 	uint32_t logPgs;
 	bfTagT oldTag, newTag;
 	struct bfAccess *newLogBfap;

@@ -65,7 +65,7 @@ static void tagdir_init_pg0(bsTDirPgT * tdpgp);
 static int del_init_mcell_list(bsMPgT * bmtp);
 static int bmt_init_mcell_free_list(bsMPgT * bmtpgp);
 static int 
-vd_extend_add_sbm_pgs(vdT *, bsPageT, lbnT,
+vd_extend_add_sbm_pgs(struct vd *, bsPageT, lbnT,
     lbnT, bsVdAttrT *, ftxHT);
 
 #define INIT_RBMT_PGS 1
@@ -2174,9 +2174,9 @@ HANDLE_EXCEPTION:
 *  vdBlkCnt stored in the vdAttr record on disk is the true size of
 *  the volume in blocks. It may not be a multiple of ADVFS_PGSZ.
 *  This is the only volume size that might not be a multiple of ADVFS_PGSZ.
-*  vdSize in the vdT is the size of the volume in blocks rounded down
+*  vdSize in the struct vd is the size of the volume in blocks rounded down
 *  to a page boundary.
-*  vdClusters in the vdT is the size of the volume in clusters rounded
+*  vdClusters in the struct vd is the size of the volume in clusters rounded
 *  down to a page.
 *  freeClust in the vdt is the number of free clusters within vdClusters.
 *  totalBlks in the struct domain is the total of vdSize for all the volumes in
@@ -2409,7 +2409,7 @@ error:
 
 
 static int
-vd_extend_add_sbm_pgs(vdT * vdp,
+vd_extend_add_sbm_pgs(struct vd * vdp,
     bsPageT newSbmPgs,
     lbnT newSbmBitsToSet,
     lbnT xtraBitsInSbm,

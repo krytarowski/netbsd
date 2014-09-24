@@ -473,7 +473,7 @@ stripe_zero_size(
 	int sts;
 	bsInMemSubXtntMapT *subXtntMap;
 	int allDisksRefed = FALSE;
-	vdT *vdp;
+	struct vd *vdp;
 	NEW_VD_SKIP(vd_skip_list);
 
 	disk = (vdIndexT *) ms_malloc(segmentCnt * sizeof(vdIndexT));
@@ -637,7 +637,7 @@ stripe_zero_size_clone(
 	bsInMemSubXtntMapT *subXtntMap;
 	uint32_t segmentCnt;
 	int allDisksRefed = FALSE;
-	vdT *vdp;
+	struct vd *vdp;
 
 	KASSERT(oXtntp->validFlag);
 	KASSERT(oXtntp->type == BSXMT_STRIPE);

@@ -416,7 +416,7 @@ blkmap_direct(struct bsBuf * bp,
 	bfSetT *bfSetp = bfap->bfSetp;
 	int curxfersize;
 	int max_transfer_size;
-	vdT *vdp;
+	struct vd *vdp;
 
 
 	/*

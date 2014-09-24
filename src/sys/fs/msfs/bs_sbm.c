@@ -75,7 +75,7 @@ dealloc_bits_page(
 static
 stgDescT *
 load_x_cache(
-    vdT * vd,			/* in */
+    struct vd * vd,			/* in */
     uint32_t req_clust,		/* in */
     uint32_t max_clust,		/* in */
     uint32_t fillCache,		/* in */
@@ -86,14 +86,14 @@ load_x_cache(
 static
 void
 remove_desc(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     stgDescT * stg_desc		/* in */
 );
 
 static
 stgDescT *
 add_cache(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     const uint32_t blk,		/* in */
     const uint32_t blks,		/* in */
     bsAllocHintT alloc_hint	/* in */
@@ -102,7 +102,7 @@ add_cache(
 static
 void
 remove_cache(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     const uint32_t clustOffset,	/* in */
     const uint32_t clustCnt,	/* in */
     stgDescT * stgDesc,		/* in */
@@ -114,7 +114,7 @@ static int
 
 uint32_t
 find_bmt_end(
-    vdT * vdp			/* in */
+    struct vd * vdp			/* in */
 );
 
 #define IS_FREE(bit, wd) (!((wd) & (1 << (bit))))
@@ -248,7 +248,7 @@ bitmap_undo_opx(
 	int sts;
 	uint32_t clustCnt;
 	struct domain *dmnP;
-	vdT *vdp;
+	struct vd *vdp;
 	unLkActionT unlock_action;
 	bitmapUndoRecT *undoRecp;
 
@@ -428,7 +428,7 @@ sbm_set_pg_bits(
  */
 int
 sbm_alloc_bits(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     int bitOffset,		/* in */
     int bitCount,		/* in */
     ftxHT parentFtx		/* in */
@@ -588,7 +588,7 @@ alloc_bits_page(
 static
        int
 dealloc_bits_no_sub_ftx(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     int bitOffset,		/* in */
     int bitCount,		/* in */
     ftxHT parentFtx		/* in */
@@ -786,7 +786,7 @@ uint32_t AdvfsSbmFindSpace;
 
 void *
 sbm_find_space(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     uint32_t requested_blks,	/* in */
     uint64_t dstBlkOffset,	/* in, if alloc_hint==BS_ALLOC_MIG_RSVD */
     bsAllocHintT alloc_hint,	/* in */
@@ -1123,7 +1123,7 @@ sbm_howmany_blks(
     uint32_t blkOffset,
     uint32_t * blkCount,		/* in/out , might be reduced */
     int *pinPages,		/* in/out */
-    vdT * vdp,
+    struct vd * vdp,
     int pgSz
 )
 {
@@ -1203,7 +1203,7 @@ sbm_howmany_blks(
  */
 int
 sbm_remove_space(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     uint32_t startBlk,		/* in */
     uint32_t blks,		/* in */
     stgDescT * stg_desc,	/* in */
@@ -1272,7 +1272,7 @@ EXIT_SBM_REMOVE_SPACE:
  */
 int
 sbm_return_space_no_sub_ftx(
-    vdT * virtualDiskp,		/* in */
+    struct vd * virtualDiskp,		/* in */
     uint32_t blkOffset,		/* in */
     uint32_t blkCnt,		/* in */
     ftxHT parentFtx		/* in */
@@ -1321,7 +1321,7 @@ sbm_return_space_no_sub_ftx(
  */
 void
 remove_desc(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     stgDescT * stg_desc		/* in */
 )
 {
@@ -1472,7 +1472,7 @@ uint32_t AdvfsAddCache = 0;
 
 static stgDescT *
 add_cache(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     const uint32_t begin_clust,	/* in */
     const uint32_t add_num_clust,/* in */
     bsAllocHintT alloc_hint	/* in */
@@ -1584,7 +1584,7 @@ uint32_t AdvfsUpdateCache;
 static
 void
 remove_cache(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     const uint32_t clustOffset,	/* in */
     const uint32_t clustCnt,	/* in */
     stgDescT * stgDesc,		/* in */
@@ -1781,7 +1781,7 @@ uint32_t AdvfsLoadXCache;
 static
 stgDescT *
 load_x_cache(
-    vdT * vdp,			/* in - vd ptr */
+    struct vd * vdp,			/* in - vd ptr */
     uint32_t req_clust,		/* in - req contig free clusters */
     uint32_t max_clust,		/* in - max contig free clusters */
     uint32_t fillCache,		/* in - flag to fill cache */
@@ -2150,7 +2150,7 @@ _PAGE_FINISHED:
  */
 int
 sbm_lock_range(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     uint32_t blkOffset,		/* in  */
     uint32_t blkCnt		/* in */
 )
@@ -2184,7 +2184,7 @@ sbm_lock_range(
  */
 int
 sbm_lock_unlock_range(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     uint32_t startClust,		/* in -  zero unlocks */
     uint32_t numClust		/* in -  zero unlocks */
 )
@@ -2239,7 +2239,7 @@ sbm_lock_unlock_range(
  */
 int
 sbm_init(
-    vdT * vdp			/* in */
+    struct vd * vdp			/* in */
 )
 {
 	stgDescT *reserved_desc;
@@ -2336,7 +2336,7 @@ sbm_init(
  */
 int
 sbm_clear_cache(
-    vdT * vdp			/* in */
+    struct vd * vdp			/* in */
 )
 {
 	stgDescT *cur_desc;
@@ -2355,7 +2355,7 @@ sbm_clear_cache(
  */
 uint32_t
 sbm_total_free_space(
-    vdT * vdp			/* in */
+    struct vd * vdp			/* in */
 )
 {
 	bfPageRefHT pgref;
@@ -2487,7 +2487,7 @@ sbm_total_free_space(
  */
 void
 sbm_dump(
-    vdT * vdp			/* in */
+    struct vd * vdp			/* in */
 )
 {
 	stgDescT *cur_desc = vdp->freeStgLst;
@@ -2533,7 +2533,7 @@ sbm_dump(
 
 int
 sbm_scan(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     uint32_t startBlk,		/* in */
     uint32_t endBlk,		/* in */
     uint32_t * cnt		/* out */
@@ -2790,7 +2790,7 @@ _PAGE_FINISHED:
 
 int
 sbm_scan_v3_v4(
-    vdT * vdp,			/* in */
+    struct vd * vdp,			/* in */
     uint64_t reqClustSize,	/* in */
     uint32_t startPg,		/* in */
     uint32_t startWd,		/* in */
@@ -3072,7 +3072,7 @@ sbm_verify_xor(bsStgBmT * sbmPagep)
  */
 
 uint32_t
-find_bmt_end(vdT * vdp)
+find_bmt_end(struct vd * vdp)
 {
 	uint32_t vdBlk, prevpage, lastpage, blk_offset;
 	bsInMemXtntMapT *xMap;

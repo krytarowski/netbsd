@@ -89,7 +89,7 @@ ftx_metameta_rec_redo(
 	bfPageRefHT pgH;
 	unsigned ptag = -(signed) pgredop->pgdesc.tag.num;
 	int rbmtidx, recxi, vdi;
-	vdT *vdp;
+	struct vd *vdp;
 	bsMPgT *rbmtpgp;
 
 	if (!RBMT_THERE(dmnP)) {
@@ -179,7 +179,7 @@ ftx_bfmeta_rec_redo(
 		bfap = dmnP->bfSetDirAccp;
 	} else {
 		int vdi;
-		vdT *vdp;
+		struct vd *vdp;
 
 		vdi = ptag / BFM_RSVD_TAGS;
 		vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE);

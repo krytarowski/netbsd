@@ -56,7 +56,7 @@ typedef enum TraceAction {
 #define ACCMAGIC         0xADF00001	/* struct bfAccess */
 #define SETMAGIC         0xADF00002	/* bfSetT */
 #define DMNMAGIC         0xADF00003	/* struct domain */
-#define VDMAGIC          0xADF00004	/* vdT */
+#define VDMAGIC          0xADF00004	/* struct vd */
 #define FSMAGIC          0xADF00005	/* fileSetNodeT */
 #define BUFMAGIC         0xADF00006	/* bsBuf */
 
@@ -172,7 +172,7 @@ static inline int TEST_VDI_RANGE(const vdIndexT vdi)
 
 
 /* Test the struct domain.vdpTbl[] slot indexed by vdi; return EOK if it
- * is non-NULL (presumably a pointer to a vdT), else return EBAD_VDI.
+ * is non-NULL (presumably a pointer to a struct vd), else return EBAD_VDI.
  * dmnp->vdpTblLock must be held.
  */
 #define TEST_VDI_SLOT(vdi, dmnp) \
@@ -589,7 +589,7 @@ typedef uint32_t bsLogSeqT;
 #define _VD_STATES_T_
 #endif
 /* Note that BSR_VD_VIRGIN and BSR_VD_ZOMBIE are are used in the
- * vdp->vdState to keep track of when a vdT is allocated, and possibly
+ * vdp->vdState to keep track of when a struct vd is allocated, and possibly
  * in the dmnp->vdpTbl[], but still not valid for general use.
  */
 typedef enum {

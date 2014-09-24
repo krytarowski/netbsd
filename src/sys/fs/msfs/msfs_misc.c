@@ -1441,7 +1441,7 @@ msfs_putpage(
 	struct bfAccess *bfap = NULL, *tempbfap;
 	struct vnode *vp = vop->vu_vp;
 	struct fsContext *contextp;
-	vdT *vdp;
+	struct vd *vdp;
 	int klusterPages;
 
 	bfap = vop->vu_ap;
@@ -1545,7 +1545,7 @@ msfs_putpage(
 		start = (vm_offset_t) page *ADVFS_PGSZ;
 
 		/* Grab all the vm pages that are dirty and can fit into one
-		 * I/O. Note that these pages may actually span vdT's so this
+		 * I/O. Note that these pages may actually span struct vd's so this
 		 * is not really good clustering of I/Os in some situations.
 		 * But most of the time it will give good clustering results. */
 		vdp = vd_htop_if_valid(((struct bsBuf *) pp->pg_opfs)->ioList.ioDesc->

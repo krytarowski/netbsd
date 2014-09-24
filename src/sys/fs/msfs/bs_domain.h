@@ -416,7 +416,7 @@ struct domain {
 	mutexT vdpTblLock;	/* protects next 2 fields   */
 	int maxVds;		/* Maximum allowed vds */
 	int vdCnt;		/* number of vd's in vdpTbl */
-	vdT *vdpTbl[BS_MAX_VDI];	/* table of vd ptrs */
+	struct vd *vdpTbl[BS_MAX_VDI];	/* table of vd ptrs */
 
 	krwlock_t rmvolTruncLk;	/* serializes truncation and rmvol */
 
