@@ -29,6 +29,14 @@
 #include <sys/param.h>
 #include <sys/rwlock.h>
 
+#include <fs/msfs/bs_ims.h>
+#include <fs/msfs/ms_generic_locks.h>
+#include <fs/msfs/bs_public.h>
+#include <fs/msfs/vfast.h>
+
+struct vnode;
+struct bfAccess;
+
 /*
  * stgDescT - Describes a contiguous set of available (free) vd blocks.
  * These structures are used to maintain a list of free disk space.  There

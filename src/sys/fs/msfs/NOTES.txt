@@ -44,3 +44,12 @@ bs_bitfile_sets.h:
 - <bs_access.h> bfAccess*
 - <sys/types.h> dev_t
 - <ms_osf.h> fileSetNode*
+
+bs_vd.h:
+- <bs_ims.h> ioDesc*, ioDescHdrT
+- <ms_generic_locks.h> mutexT
+- <sys/vnode.h> vnode*
+- <bs_access.h> bfAccess*
+- <bs_public.h> BS_VD_NAME_SZ, bsVdStatesT, bfMCIdT, dStat
+- <ms_generic_locks.h> mutexT, ftxLkT, cvT, stateLkT
+- <vfast.h> ssVolInfoT
