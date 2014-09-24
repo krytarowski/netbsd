@@ -45,19 +45,6 @@ typedef struct stgDesc {
 	struct stgDesc *nextp;
 }       stgDescT;
 
-#ifdef ADVFS_VD_TRACE
-
-#define VD_TRACE_HISTORY 100
-
-typedef struct {
-	uint32_t seq;
-	uint16_t mod;
-	uint16_t ln;
-	struct thread *thd;
-	void *val;
-}      vdTraceElmtT;
-#endif				/* ADVFS_VD_TRACE */
-
 /* vdp->tempQ is a doubly linked list of tempQMarkers. Each tempQMarker heads a
  * doubly linked list of ioDescs.
  */
@@ -73,21 +60,6 @@ typedef struct tempQMarker {
 				 * tempQMarkers; otherwise it is currently
 				 * unused */
 }           tempQMarkerT;
-#ifdef ADVFS_SS_TRACE
-
-#define SS_TRACE_HISTORY 100
-
-typedef struct {
-	uint32_t seq;
-	uint16_t mod;
-	uint16_t ln;
-	struct thread *thd;
-	long val1;
-	long val2;
-	long val3;
-	long val4;
-}      ssTraceElmtT;
-#endif				/* ADVFS_SS_TRACE */
 
 /*
  * vd - this structure describes a virtual disk, including accessed
@@ -216,10 +188,6 @@ struct vd {
 	mutexT vdIoLock;	/* simple lock for guarding I/O fields */
 	u_int syncQIndx;	/* next smsync queue to be processed */
 	u_int vdRetryCount;	/* count of AdvFS initiated retries */
-#ifdef ADVFS_SMP_ASSERT
-	u_long rmioq_cnt;	/* count of bufs rm_ioq'ed */
-	u_long rmormvq_cnt;	/* count of bufs rm_or_moveq'ed */
-#endif
 	/* end of fields protected by vdIoLock */
 
 	int consolidate;	/* Flag, one indicates disk can take big io's */
@@ -232,14 +200,6 @@ struct vd {
 	stgDescT freeRsvdStg;	/* desc for free rsvd stg for rsvd files */
 	stgDescT freeMigRsvdStg;/* desc for free rsvd stg for migrating files */
 	ssVolInfoT ssVolInfo;	/* smartstore frag and free lists */
-#ifdef ADVFS_VD_TRACE
-	uint32_t trace_ptr;
-	vdTraceElmtT trace_buf[VD_TRACE_HISTORY];
-#endif
-#ifdef ADVFS_SS_TRACE
-	uint32_t ss_trace_ptr;
-	ssTraceElmtT ss_trace_buf[SS_TRACE_HISTORY];
-#endif
 };
 #define IOTHRESHOLD 1024	/* Default # of buffers allowed to accumulate
 				 * on the readyLazy queue before they get
@@ -256,42 +216,6 @@ struct vd {
 				 * buffers to queue to device during
 				 * IO_SOMEFLUSH.  Value of 5 is 3.125% of the
 				 * buffers on consolQ. */
-#ifdef ADVFS_VD_TRACE
-
-#define VD_TRACE( vdp, n1 ) \
-    vd_trace((vdp), (uint16_t)ADVFS_MODULE, (uint16_t)__LINE__, (void*)(n1))
-
-void
-vd_trace(struct vd * vdp,
-    uint16_t module,
-    uint16_t line,
-    void *value);
-
-#else				/* ADVFS_VD_TRACE */
-
-#define VD_TRACE( vdp, n1 )
-
-#endif				/* ADVFS_VD_TRACE */
-
-#ifdef ADVFS_SS_TRACE
-
-#define SS_TRACE( vdp, n1,n2,n3,n4 ) \
-    ss_trace((vdp), (uint16_t)ADVFS_MODULE, (uint16_t)__LINE__, (long)(n1),(long)(n2),(long)(n3),(long)(n4))
-
-void
-ss_trace(struct vd * vdp,
-    uint16_t module,
-    uint16_t line,
-    long value1,
-    long value2,
-    long value3,
-    long value4
-);
-#else				/* ADVFS_SS_TRACE */
-
-#define SS_TRACE( vdp, n1,n2,n3,n4 )
-
-#endif				/* ADVFS_SS_TRACE */
 
 /* Values for struct vd.nextMcellPg */
 #define EXTEND_BMT -1

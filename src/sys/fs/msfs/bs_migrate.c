@@ -3935,7 +3935,6 @@ mig_pack_vd_range(
 	if (sts != EOK) {
 		return sts;
 	}
-	SS_TRACE(vdp, cRangeBeginBlk, cRangeEndBlk, sbm_bit_cnt, 0);
 
 	if (sbm_bit_cnt) {
 		/* some pages are already allocated in our chosen range. */
@@ -4166,8 +4165,6 @@ mig_pack_vd_range(
 						 * allowed by smartstore */
 						migPageCnt = MIN(migPageCnt, SSPageCnt);
 
-						SS_TRACE(vdp, inwayBfap->tag.num, xmPageOffset,
-						    migPageCnt, dstBlkOffset);
 						sts = migrate_normal(
 						    inwayBfap,
 						    xmPageOffset,
@@ -4441,9 +4438,6 @@ mig_pack_vd_range(
 							 * smartstore */
 							migPageCnt = MIN(migPageCnt, SSPageCnt);
 
-							SS_TRACE(vdp, inwayBfap->tag.num, bfPageOffset,
-							    migPageCnt, dstBlkOffset);
-
 							sts = migrate_stripe(inwayBfap,
 							    vdp->vdIndex,
 							    bfPageOffset,
@@ -4535,7 +4529,6 @@ mig_pack_vd_range(
 	}			/* end if bits */
 
 	*newcRangeBeginBlk = dstBlkOffset;
-	SS_TRACE(vdp, 0, 0, 0, dstBlkOffset);
 
 _cleanup:
 
@@ -4543,7 +4536,6 @@ _cleanup:
 		ms_free(bfPageRange);
 		bfPageRange = NULL;
 	}
-	SS_TRACE(vdp, 0, 0, 0, sts);
 	ss_dealloc_pack_list(vdp);
 
 	if (closeFileFlag == TRUE) {

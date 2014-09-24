@@ -885,8 +885,6 @@ sbm_find_space(
 		}
 		/* reduce cur_desc size to requested amount */
 		cur_desc->num_clust = requested_clust;
-		SS_TRACE(vdp, dstBlkOffset, requested_clust,
-		    cur_desc->start_clust, cur_desc->num_clust);
 		goto use_cur_desc;
 	}
 	cur_desc = vdp->freeStgLst;

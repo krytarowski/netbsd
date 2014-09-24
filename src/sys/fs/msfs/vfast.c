@@ -1494,7 +1494,6 @@ ss_dmn_deactivate(struct domain * dmnP, int flag)
 		mutex_exit(&vdp->ssVolInfo.ssVdMigLk.mutex);
 
 		cond_broadcast(&vdp->ssVolInfo.ssContMig_cv);
-		SS_TRACE(vdp, 0, 0, 0, 0);
 		vd_dec_refcnt(vdp);
 		vdCnt++;
 	}
@@ -1506,12 +1505,10 @@ ss_dmn_deactivate(struct domain * dmnP, int flag)
 		assert_wait_mesg((vm_offset_t) & dmnP->ssDmnInfo.ssDmnSSWaiters, FALSE,
 		    "ssDmnSSThdCnt");
 		mutex_exit(&dmnP->ssDmnInfo.ssDmnLk.mutex);
-		SS_TRACE(vdp, 0, 0, 0, 0);
 		thread_block();
 	} else {
 		mutex_exit(&dmnP->ssDmnInfo.ssDmnLk.mutex);
 	}
-	SS_TRACE(vdp, 0, 0, 0, 0);
 	return;
 }
 /*********************************************************************
@@ -1975,44 +1972,6 @@ HANDLE_EXCEPTION:
 
 
 /********   end of structure and record init routines  *******/
-
-/*********** start  debug routines  ****************/
-
-#ifdef ADVFS_SS_TRACE
-void
-ss_trace(struct vd * vdp,
-    uint16_t module,
-    uint16_t line,
-    long value1,
-    long value2,
-    long value3,
-    long value4
-)
-{
-	register ssTraceElmtT *te;
-	extern kmutex_t TraceLock;
-	extern int TraceSequence;
-
-	simple_lock(&TraceLock);
-
-	vdp->ss_trace_ptr = (vdp->ss_trace_ptr + 1) % SS_TRACE_HISTORY;
-	te = &vdp->ss_trace_buf[vdp->ss_trace_ptr];
-	te->thd = (struct thread *) (((long) current_cpu() << 36) |
-	    (long) current_thread() & 0xffffffff);
-	te->seq = TraceSequence++;
-	te->mod = module;
-	te->ln = line;
-	te->val1 = value1;	/* tag */
-	te->val2 = value2;	/* offset */
-	te->val3 = value3;	/* cnt */
-	te->val4 = value4;	/* destinationBlk */
-
-	simple_unlock(&TraceLock);
-}
-#endif				/* ADVFS_SS_TRACE */
-
-
-/*********** end of debug routines  ****************/
 
 /********   start of frag list routines  *******/
 
@@ -3281,7 +3240,6 @@ ss_block_and_wait(struct vd * vdp)
 	vdp->ssVolInfo.ssVdMigState = SS_PARKED;
 	cond_wait(&vdp->ssVolInfo.ssContMig_cv, &vdp->ssVolInfo.ssVdMigLk);
 	SS_UNLOCK(&SSLock);
-	SS_TRACE(vdp, 0, 0, 0, 0);
 
 	/* check vd for deactivation before continuing to migrate */
 	if ((vdp->ssVolInfo.ssVdMigState == SS_ABORT) ||
@@ -3702,7 +3660,6 @@ ss_find_space(
 	}
 	if (flags == TRUE) {
 		/* lock the sbm location we may migrate src extents into */
-		SS_TRACE(vdp, 0, 0, locblkOffset, locblkCnt);
 		sts = sbm_lock_range(vdp,
 		    locblkOffset,
 		    locblkCnt);
@@ -3930,10 +3887,8 @@ HANDLE_EXCEPTION:
 	if ((sts != EOK) && (sbm_range_locked)) {
 		/* if there was an unrecoverable error, clear the lock */
 		sbm_lock_unlock_range(vdp, 0, 0);
-		SS_TRACE(vdp, 0, 0, 0, sts);
 		sbm_range_locked = FALSE;
 	}
-	SS_TRACE(vdp, 0, *allocBlkOffp, *allocPageCnt, sts);
 	return sts;
 
 }
@@ -4389,8 +4344,6 @@ ss_vd_migrate(bfTagT filetag,
 			RAISE_EXCEPTION(sts);
 		}
 		wholeFile = FALSE;
-		SS_TRACE(dvdp, bfap->tag.num, srcPageOffset,
-		    xmTotalPageCnt, extentCnt);
 	}
 	/* determine the number of pages to migrate */
 	newBlkOffset = allocBlkOffset;
@@ -4428,8 +4381,6 @@ ss_vd_migrate(bfTagT filetag,
 		allocPagesLeft = allocPageCnt - pgsMigSoFar;
 		migPageCnt = MIN(allocPagesLeft, migPageCnt);
 
-		SS_TRACE(dvdp, bfap->tag.num, srcPageOffset,
-		    migPageCnt, newBlkOffset);
 		sts = bs_migrate(
 		    bfap,	/* in */
 		    -1,		/* -1 indicates from any disk */
@@ -4529,8 +4480,6 @@ HANDLE_EXCEPTION:
 	    (sts == EOK) &&
 	    (vdRefed)) {
 
-		SS_TRACE(dvdp, 0, 0, 0, sts);
-
 		/* delete entry from list, if there */
 		if (!BS_BFS_EQL(bfSetId, nilBfSetId)) {
 			mutex_enter(&dvdp->ssVolInfo.ssFragLk.mutex);
@@ -4560,7 +4509,6 @@ HANDLE_EXCEPTION:
 			    totXtnts);
 		}
 	}
-	SS_TRACE(dvdp, 0, 0, 0, sts);
 
 	/* Must reset flag away from SS_POSTED */
 	if (closeFileFlag == TRUE) {
@@ -4582,8 +4530,6 @@ HANDLE_EXCEPTION:
 	}
 
 	if (vdRefed) {
-
-		SS_TRACE(dvdp, 0, 0, 0, sts);
 
 		/* unlock free space */
 		sbm_lock_unlock_range(dvdp, 0, 0);

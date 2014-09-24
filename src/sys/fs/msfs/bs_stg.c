@@ -4514,7 +4514,6 @@ retry:
 		 * accessed. */
 		vdp->freeMigRsvdStg.start_clust = 0;
 		vdp->freeMigRsvdStg.num_clust = 0;
-		SS_TRACE(vdp, 0, 0, 0, 0);
 		goto retry;
 	}
 	if ((stgDesc == NULL) ||
@@ -4523,7 +4522,6 @@ retry:
 	         * The disk does not have 'requestedBlkCnt' free blks.
 	         */
 		lock_done(&vdp->stgMap_lk);
-		    SS_TRACE(vdp, stgDesc, alloc_hint, blkCnt, requestedBlkCnt);
 		sts = ENO_MORE_BLKS;
 		goto EXIT_ALLOC_FROM_BITMAP;
 	}

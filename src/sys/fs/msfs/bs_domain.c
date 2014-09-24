@@ -277,32 +277,6 @@ void read_n_chk_last_rbmt_pg(struct vd *);
 /*****  Bitfile Domain access/close functions  *****/
 /***************************************************/
 
-#ifdef ADVFS_VD_TRACE
-void
-vd_trace(struct vd * vdp,
-    uint16_t module,
-    uint16_t line,
-    void *value)
-{
-	register vdTraceElmtT *te;
-	extern kmutex_t TraceLock;
-	extern int TraceSequence;
-
-	simple_lock(&TraceLock);
-
-	vdp->trace_ptr = (vdp->trace_ptr + 1) % VD_TRACE_HISTORY;
-	te = &vdp->trace_buf[vdp->trace_ptr];
-	te->thd = (struct thread *) (((long) current_cpu() << 36) |
-	    (long) current_thread() & 0xffffffff);
-	te->seq = TraceSequence++;
-	te->mod = module;
-	te->ln = line;
-	te->val = value;
-
-	simple_unlock(&TraceLock);
-}
-#endif				/* ADVFS_VD_TRACE */
-
 /*
  * bs_domain_access
  *
@@ -3137,8 +3111,6 @@ vd_alloc(
 	mutex_init(&vdp->vdStateLock.mutex, MUTEX_DEFAULT, IPL_NONE);
 
 	ss_init_vd(vdp);
-
-	VD_TRACE(vdp, 0);
 
 	vdp->ddlActiveWaitMCId = bsNilMCId;
 	advfs_cv_init(&vdp->ddlActiveWaitCv);
