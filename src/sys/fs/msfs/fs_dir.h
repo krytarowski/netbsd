@@ -27,12 +27,12 @@
 #ifndef FS_DIR
 #define FS_DIR
 
-#include <fs/msfs/ms_public.h>
 #include <sys/types.h>
-
 #include <sys/rwlock.h>
 #include <sys/time.h>
 #include <sys/vnode.h>
+
+#include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_generic_locks.h>
 #include <fs/msfs/fs_quota.h>
 
