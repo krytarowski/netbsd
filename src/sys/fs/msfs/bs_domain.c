@@ -51,6 +51,13 @@
 #include <sys/systm.h>
 #include <sys/file.h>
 #include <sys/errno.h>
+#include <sys/time.h>
+#include <sys/mount.h>
+#include <sys/buf.h>
+#include <sys/conf.h>
+#include <sys/ucred.h>
+#include <sys/vnode.h>
+
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/ms_osf.h>
@@ -59,12 +66,7 @@
 #include <fs/msfs/bs_inmem_map.h>
 #include <fs/msfs/bs_migrate.h>
 #include <fs/msfs/msfs_syscalls.h>
-#include <sys/time.h>
-#include <sys/mount.h>
-#include <sys/buf.h>
-#include <sys/conf.h>
-#include <sys/ucred.h>
-#include <sys/vnode.h>
+#include <fs/msfs/bs_domain.h>
 
 /*  This sentinel pointer is init'd to the first advfs domain
 *   mounted.  It is used primarily for locating all domains

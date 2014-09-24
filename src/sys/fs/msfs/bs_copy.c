@@ -49,6 +49,8 @@
 #include <fs/msfs/bs_inmem_map.h>
 #include <fs/msfs/bs_stg.h>
 #include <fs/msfs/bs_migrate.h>
+#include <fs/msfs/bs_domain.h>
+
 #define ADVFS_MODULE BS_COPY
 
 /*
