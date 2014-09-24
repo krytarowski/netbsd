@@ -35,4 +35,12 @@ ftx_privates.h:
 - <ms_logger.h> logBufVectorT, logWriteModeT
 - <ms_generic_locks.h> cvT
 - <bd_domain> ftxTblD*, domain*
-- 
+
+bs_bitfile_sets.h:
+- <bs_public.h> bfFragT, bfSetIdT, BS_SET_NAME_SZ, bfTagT, fragGrpT, BF_FRAG_MAX, serviceClassT, ftxHT, bfFragIdT
+- <> dyn_hashlinks_w_keyT
+- <bs_domain> domain*, bfsQueueT
+- <ms_generic_locks.h> mutexT, stateLkT, ftxLkT
+- <bs_access.h> bfAccess*
+- <sys/types.h> dev_t
+- <ms_osf.h> fileSetNode*

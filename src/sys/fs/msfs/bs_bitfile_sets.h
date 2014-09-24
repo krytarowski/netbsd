@@ -26,7 +26,19 @@
 #ifndef _BS_BITFILE_SETS_
 #define _BS_BITFILE_SETS_
 
+#include <sys/types.h>
+#include <sys/stdint.h>
+
+#include "dyn_hash.h"
+
+#include <fs/msfs/bs_public.h>
+#include <fs/msfs/bs_domain.h>
+#include <fs/msfs/ms_generic_locks.h>
+
+
 struct domain;
+struct bfAccess;
+struct fileSetNode;
 
 /****************************************************************************
  * frag mgt
