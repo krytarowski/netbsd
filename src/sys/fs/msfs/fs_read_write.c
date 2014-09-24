@@ -1517,7 +1517,7 @@ _retry:
 	mutex_enter(&contextp->fsContext_mutex.mutex);
 
 	/*
-         * update st_size and st_mtime in the file's stat structure
+         * update st_size and advfs_st_mtime in the file's stat structure
          * IO_NOSTATUPDATE is used by CFS to tell the PFS not to update
          * the mtime and ctime as the data is being written past close.
          *

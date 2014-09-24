@@ -745,7 +745,7 @@ fs_create_file(struct vattr * vap,	/* in - vnode attributes pointer */
 		new_file_cp->dir_stats.st_mode = mode;
 	}
 	/*
-         * update the st_mtime field in the inserted-in directory's stat
+         * update the advfs_st_mtime field in the inserted-in directory's stat
          * structure. Also set the stat dirty flag so that the stats get
          * saved on closing the directory, and incr the dirstamp field to
          * indicate that the dir has changed
@@ -980,7 +980,7 @@ fs_update_stats(
 	if (context_ptr->fs_flag & (MOD_MTIME | MOD_ATIME | MOD_CTIME)) {
 		TIME_READ(new_time);
 		if (context_ptr->fs_flag & MOD_MTIME) {
-			context_ptr->dir_stats.st_mtime = new_time.tv_sec;
+			context_ptr->dir_stats.advfs_st_mtime = new_time.tv_sec;
 			context_ptr->dir_stats.st_umtime = (new_time.tv_usec * 1000);
 		}
 		if (context_ptr->fs_flag & MOD_ATIME) {
@@ -1041,7 +1041,7 @@ fs_flush_saved_stats(
 	if (ssp->fs_flag & (MOD_MTIME | MOD_ATIME | MOD_CTIME)) {
 		TIME_READ(new_time);
 		if (ssp->fs_flag & MOD_MTIME) {
-			ssp->dir_stats.st_mtime = new_time.tv_sec;
+			ssp->dir_stats.advfs_st_mtime = new_time.tv_sec;
 			ssp->dir_stats.st_umtime = (new_time.tv_usec * 1000);
 		}
 		if (ssp->fs_flag & MOD_ATIME) {
