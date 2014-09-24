@@ -38,18 +38,20 @@
 #if 0
 #pragma ident "@(#)$RCSfile: bs_bitfile_sets.c,v $ $Revision: 1.1.473.33 $ (DEC) $Date: 2008/01/18 14:30:02 $"
 #endif
+
+#include <sys/stat.h>
+#include <sys/syslog.h>
+
 #include <fs/msfs/ms_public.h>
 #include <fs/msfs/ms_privates.h>
 #include <fs/msfs/ms_osf.h>
 #include <fs/msfs/bs_msg_queue.h>
 #include <fs/msfs/bs_stripe.h>
 #include <fs/msfs/bs_extents.h>
-#include <sys/syslog.h>
 #include <fs/msfs/bs_stripe.h>
 #include <fs/msfs/bs_extents.h>
 #include <fs/msfs/bs_msg_queue.h>
-
-#include <sys/stat.h>
+#include <fs/msfs/ftx_public.h>
 
 #define ADVFS_MODULE BS_BITFILE_SETS
 
