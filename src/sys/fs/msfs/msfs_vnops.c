@@ -871,7 +871,7 @@ msfs_getattr(
 		vap->va_atime.tv_usec = context_ptr->dir_stats.st_uatime / 1000;
 		vap->va_mtime.tv_sec = context_ptr->dir_stats.advfs_st_mtime;
 		vap->va_mtime.tv_usec = context_ptr->dir_stats.st_umtime / 1000;
-		vap->va_ctime.tv_sec = context_ptr->dir_stats.st_ctime;
+		vap->va_ctime.tv_sec = context_ptr->dir_stats.advfs_st_ctime;
 		vap->va_ctime.tv_usec = context_ptr->dir_stats.st_uctime / 1000;
 		goto no_update;
 	}
@@ -903,10 +903,10 @@ msfs_getattr(
 	if (context_ptr->fs_flag & MOD_CTIME) {
 		vap->va_ctime.tv_sec = new_time.tv_sec;
 		vap->va_ctime.tv_usec = new_time.tv_usec;
-		context_ptr->dir_stats.st_ctime = new_time.tv_sec;
+		context_ptr->dir_stats.advfs_st_ctime = new_time.tv_sec;
 		context_ptr->dir_stats.st_uctime = new_time.tv_usec * 1000;
 	} else {
-		vap->va_ctime.tv_sec = context_ptr->dir_stats.st_ctime;
+		vap->va_ctime.tv_sec = context_ptr->dir_stats.advfs_st_ctime;
 		vap->va_ctime.tv_usec = context_ptr->dir_stats.st_uctime / 1000;
 	}
 	context_ptr->fs_flag &= ~(MOD_MTIME | MOD_ATIME | MOD_CTIME);
@@ -1071,7 +1071,7 @@ fs_setattr(
 			context_ptr->fs_flag &= ~(MOD_MTIME);
 		}
 		if ((vap->va_ctime.tv_sec != 0) || (vap->va_ctime.tv_usec != 0)) {
-			context_ptr->dir_stats.st_ctime = vap->va_ctime.tv_sec;
+			context_ptr->dir_stats.advfs_st_ctime = vap->va_ctime.tv_sec;
 			context_ptr->dir_stats.st_uctime = vap->va_ctime.tv_usec * 1000;
 			context_ptr->fs_flag &= ~(MOD_CTIME);
 		}
