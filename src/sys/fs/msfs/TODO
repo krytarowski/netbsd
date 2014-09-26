@@ -30,3 +30,7 @@ Tru64 ubc -> NetBSD UVM
 Unknown:
 - PREEMPT_CHECK() ?
 - l_wait_writers ?
+
+Modern features missing:
+- birthtime (aka creating time)
+- nanosec timestamps
