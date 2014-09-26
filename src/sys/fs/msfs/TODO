@@ -34,3 +34,4 @@ Unknown:
 Modern features missing:
 - birthtime (aka creating time)
 - nanosec timestamps
+- chflags(1)
