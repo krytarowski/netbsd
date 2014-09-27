@@ -125,7 +125,6 @@
 
 #ifdef _KERNEL
 
-#include <kern/thread.h>
 #include "../msfs/ms_assert.h"
 #define ASSERT_NO_LOCKS()     MS_SMP_ASSERT(current_thread()->lock_count == 0)
 
