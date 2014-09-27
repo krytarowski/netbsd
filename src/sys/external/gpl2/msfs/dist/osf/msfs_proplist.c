@@ -28,39 +28,24 @@
 /*
  * INCLUDES
  */
-#include <sys/security.h>
-#include <sys/secpolicy.h>
-#include <sys/sp_attr.h>
 
 #include <sys/param.h>
-#include <sys/systm.h>
-#include <sys/user.h>
-#include <sys/kernel.h>
-#include <sys/file.h>
-#include <sys/stat.h>
+#include <sys/types.h>
+#include <ufs/ufs/quota.h>
+#include <ufs/ufs/inode.h>
+#include <ufs/ffs/fs.h>
 #include <sys/buf.h>
+#include <sys/conf.h>
+#include <sys/file.h>
+#include <sys/kernel.h>
+#include <sys/mount.h>
 #include <sys/proc.h>
-#include <sys/uio.h>
 #include <sys/socket.h>
 #include <sys/socketvar.h>
-#include <sys/conf.h>
-#include <sys/mount.h>
+#include <sys/stat.h>
+#include <sys/systm.h>
+#include <sys/uio.h>
 #include <sys/vnode.h>
-#include <sys/specdev.h>
-#include <sys/flock.h>
-#include <ufs/quota.h>
-#include <ufs/inode.h>
-#include <ufs/fs.h>
-#if	MACH
-#include <sys/syslimits.h>
-#include <kern/assert.h>
-#endif
-#include <mach/mach_types.h>
-#include <vm/vm_page.h>
-#include <vm/vm_vppage.h>
-#include <vm/vm_mmap.h>
-#include <vm/vm_debug.h>
-#include <sys/proplist.h>
 
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
@@ -71,7 +56,6 @@
 #include "../msfs/ms_osf.h"
 #include "../msfs/fs_dir.h"
 #include "../msfs/fs_dir_routines.h"
-#include    <sys/lock_probe.h>
 #include "../msfs/msfs_syscalls.h"
 
 
