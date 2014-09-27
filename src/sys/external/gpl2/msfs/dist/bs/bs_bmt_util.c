@@ -66,7 +66,8 @@
  **************************************************************************/
 
 #include <sys/param.h>
-#include <sys/lock_probe.h>
+#include <sys/types.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_delete.h"
@@ -77,7 +78,6 @@
 #include "../msfs/ftx_public.h"
 #include "../msfs/ftx_privates.h"
 #include "../msfs/bs_msg_queue.h"
-#include "../msfs/advfs_evm.h"
 
 #define ADVFS_MODULE BS_BMT_UTIL
 
