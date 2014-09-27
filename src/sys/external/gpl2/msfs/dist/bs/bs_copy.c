@@ -43,6 +43,9 @@
 #pragma ident "@(#)$RCSfile: bs_copy.c,v $ $Revision: 1.1.50.3 $ (DEC) $Date: 2008/02/12 13:06:50 $"
 #endif
 
+#include <sys/param.h>
+#include <sys/types.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_copy.h"
@@ -50,7 +53,7 @@
 #include "../msfs/bs_inmem_map.h"
 #include "../msfs/bs_stg.h"
 #include "../msfs/bs_migrate.h"
-#include <vm/vm_numa.h>
+
 #define ADVFS_MODULE BS_COPY
 
 /*
