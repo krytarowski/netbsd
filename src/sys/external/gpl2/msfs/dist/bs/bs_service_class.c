@@ -38,7 +38,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_service_class.c,v $ $Revision: 1.1.57.3 $ (DEC) $Date: 2008/02/12 13:07:02 $"
+#endif
 
 #ifndef KERNEL
 #include <stdio.h>

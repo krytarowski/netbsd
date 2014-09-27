@@ -35,7 +35,9 @@
  * 
  * 
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_bitfile_sets.c,v $ $Revision: 1.1.473.33 $ (DEC) $Date: 2008/01/18 14:30:02 $"
+#endif
 
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"

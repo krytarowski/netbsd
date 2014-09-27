@@ -39,7 +39,9 @@
  * HISTORY
  * 
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_params.c,v $ $Revision: 1.1.169.7 $ (DEC) $Date: 2008/01/03 05:51:03 $"
+#endif
 
 #define ADVFS_MODULE   BS_PARAMS
 

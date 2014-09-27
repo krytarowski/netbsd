@@ -19,7 +19,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: ms_mode.c,v $ $Revision: 1.1.27.4 $ (DEC) $Date: 2000/04/26 12:56:07 $"
+#endif
 
 /*
  * ms_mode.c - provides function hooks so that AdvFS may be compiled
