@@ -2,7 +2,7 @@
 
 .include <bsd.own.mk>
 
-SUBDIR=	altq arch compat dev fs miscfs \
+SUBDIR=	altq arch compat dev external fs miscfs \
 	net net80211 netatalk netbt netipsec netinet netinet6 \
         netisdn netkey netmpls netnatm netsmb \
 	nfs opencrypto sys ufs uvm
