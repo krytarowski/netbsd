@@ -41,6 +41,9 @@
 #pragma ident "@(#)$RCSfile: ms_public.c,v $ $Revision: 1.1.10.2 $ (DEC) $Date: 1998/06/16 20:12:52 $"
 #endif
 
+#include <sys/param.h>
+#include <sys/types.h>
+
 #include "../msfs/ms_public.h"
 
 /****************************************************************************
