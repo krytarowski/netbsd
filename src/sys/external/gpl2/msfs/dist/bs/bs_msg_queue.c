@@ -42,6 +42,8 @@
 #endif
 
 #include <sys/param.h>
+#include <sys/types.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_msg_queue.h"
