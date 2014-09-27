@@ -27,9 +27,9 @@
 #define _MSFS_SYSCALLS_
 
 #include <sys/param.h>
-#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include "../msfs/bs_public.h"
 #include "../msfs/ms_public.h"
 #include "../msfs/vfast.h"
