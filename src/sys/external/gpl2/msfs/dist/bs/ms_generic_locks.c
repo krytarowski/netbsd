@@ -41,11 +41,11 @@
 
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
-#ifdef KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 #include <sys/syslog.h>
 #include <sys/kernel.h>
 #include <sys/time.h>
-#endif /* KERNEL */
+#endif /* defined(KERNEL) && defined(_KERNEL) */
 
 static lkHdrT *find_locked_lock(lkHdrT *lk);
 
@@ -89,7 +89,7 @@ advfsLockStatsT *AdvfsLockStats = NULL;
 void 
 trace_hdr(void)
 {
-#ifdef KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
     struct timeval hdrTime;
     int s;
     TIME_READ(hdrTime);
@@ -120,10 +120,10 @@ trace_hdr(void)
 
 #endif /* _OSF_SOURCE */
 
-#endif /* KERNEL */
+#endif /* defined(KERNEL) && defined(_KERNEL) */
 }
    
-#ifdef KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 char *
 strrchr( char *s, char c )
 {
@@ -713,7 +713,7 @@ lk_init(
             stateLkT *lk = (void *)lkHdr;
             stateLkT nilStateLk = { LKT_STATE, 0 }; 
             *lk = nilStateLk;
-#ifndef KERNEL
+#if ! defined(KERNEL) && ! defined(_KERNEL)
             cv_init( &lk->cv );
 #ifdef ADVFS_DEBUG
             lk->hdr.try_line_num = -1;
@@ -727,7 +727,7 @@ lk_init(
             bufLkT *lk = (void *)lkHdr;
             bufLkT NilBufLk = { LKT_BUF, 0 };
             *lk = NilBufLk;
-#ifndef KERNEL
+#if ! defined(KERNEL) && ! defined(_KERNEL)
             cv_init( &lk->bufCond );
 #ifdef ADVFS_DEBUG
             lk->hdr.try_line_num = -1;

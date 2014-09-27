@@ -133,7 +133,7 @@ typedef struct wtPgDesc {
  * release_dirty_pg().
  */
 typedef struct logDesc {
-#ifdef KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
     lock_data_t descLock;          /* Protects all fields in the descriptor */
 #endif
     struct domain *dmnP  ;         /* Domain pointer for log bitfile */
@@ -151,7 +151,7 @@ typedef struct logDesc {
     unsigned    switching : 1;     /* 1 = switching logs is in progress */
     unsigned    reuseLastPg : 1;   /* 1 = repin last page after flushing */
     unsigned    : 27;
-#ifdef KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
     lock_data_t flushLock;          /* Protects flushLsn, flushing, wrtPgD */
 #endif
     lsnT        flushLsn;          /* lsn we're flushing to */

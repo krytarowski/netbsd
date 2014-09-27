@@ -30,11 +30,11 @@
  **** THIS FILE MUST NOT INCLUDE ANY OTHER MSFS HEADER FILES ****
  */
 
-#ifdef KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 #define abs( a )    ((a) < 0 ? -(a) : (a))
 #else
 #include <stdlib.h>
-#endif /* KERNEL */
+#endif /* defined(KERNEL) && defined(_KERNEL) */
 
 #define MSFS_FIRST_ERR 1025
 

@@ -28,10 +28,10 @@
 
 #include "../msfs/bs_ods.h"
 #include "../msfs/fs_dir.h"             /* for fsContext def - bad layering? */
-#ifdef KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 #include <sys/vnode.h>
 #include <kern/event.h>
-#endif /* KERNEL */
+#endif /* defined(KERNEL) && defined(_KERNEL) */
 
 /*
  ** LOG_FLUSH_THRESHOLD must be a multiple of 4 **

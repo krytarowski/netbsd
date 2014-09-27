@@ -26,9 +26,9 @@
 #ifndef _BS_BITFILE_SETS_
 #define _BS_BITFILE_SETS_
 
-#ifdef _KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 #include <kern/e_dyn_hash.h>
-#endif /* _KERNEL */
+#endif /* defined(KERNEL) && defined(_KERNEL) */
 
 struct domain;
 
@@ -168,7 +168,7 @@ typedef enum {
  * bfSetT - Bitfile-set descriptor (in-memory)
  */
 
-#ifdef _KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 typedef struct bfSet {
     dyn_hashlinks_w_keyT hashlinks; /* dyn_hashtable links */
     char bfSetName[BS_SET_NAME_SZ]; /* bitfile-set's name */
@@ -245,7 +245,7 @@ typedef struct bfSet {
     bfsetTraceElmtT trace_buf[BFSET_TRACE_HISTORY];
 #endif /* ADVFS_BFSET_TRACE */
 } bfSetT;
-#endif /* _KERNEL */
+#endif /* defined(KERNEL) && defined(_KERNEL) */
 
 extern bfSetT nilBfSet;
 
@@ -266,7 +266,7 @@ extern bfSetT nilBfSet;
 #define BFS_IM_ON_DISK_MASK    0x0000FFFF   /* Used to select the on-disk flags */
 #define BFS_IM_DIRECTIO        0x00010000   /* Default direct I/O */
 
-#ifdef KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 /*
  * MACROs for working with the BfSetHashTbl
  */
@@ -513,5 +513,5 @@ int get_clu_clone_locks( bfAccessT*, struct fsContext*, bfSetT**, bfAccessT** );
 
 void release_clu_clone_locks( bfAccessT*, bfSetT*, bfAccessT*, int );
 
-#endif /* KERNEL */
+#endif /* defined(KERNEL) && defined(_KERNEL) */
 #endif /* _BS_BITFILE_SETS_ */

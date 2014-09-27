@@ -48,7 +48,7 @@ struct mount {int notused;};
 struct vnode {int notused;};
 #endif /* USER_MODE */
 
-#ifndef KERNEL
+#if ! defined(KERNEL) && ! defined(_KERNEL)
 #define uprintf printf
 #endif
 
@@ -122,7 +122,7 @@ bmtr_put_rec_n_unlk_int(
     long xid                    /* in - CFS transaction id */
     );
 
-#ifdef KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 dev_t bs_bfset_get_dev( bfSetT *bfSetp );
 #endif
 

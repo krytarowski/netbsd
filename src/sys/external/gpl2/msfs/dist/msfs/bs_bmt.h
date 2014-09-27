@@ -31,7 +31,7 @@
  */
 #define BS_BMT_XPND_PGS 128
 
-#ifdef KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 
 struct bsMPg* get_bmt_pgptr();
 
@@ -355,5 +355,5 @@ check_BSR_XTRA_XTNTS_rec( bsXtraXtntRT *bsXtraXtntRp,
                           vdT *vdp,
                           uint32T lastPg);
 
-#endif /* KERNEL */
+#endif /* defined(KERNEL) && defined(_KERNEL) */
 #endif /* _BMT_H_ */

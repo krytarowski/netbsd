@@ -61,7 +61,7 @@ typedef struct xidRecovery {
  * check for xid status.
  */
 
-#ifdef _KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 int cfs_check_for_pfs_commit(fsid_t fsid, ftxIdT xid);
 #endif
 

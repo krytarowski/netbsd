@@ -123,7 +123,7 @@
 
 #define MAX_VIRT_VM_PAGE_RNG 256
 
-#ifdef _KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 
 #include <kern/thread.h>
 #include "../msfs/ms_assert.h"
@@ -134,7 +134,7 @@
 /*
  * smoothsync support
  */
-#ifdef  _KERNEL
+#if defined(KERNEL) || defined(_KERNEL)
 #ifdef ADVFS_SMP_ASSERT
 /* only enable smoothsync_debug support if the rest of the AdvFS assert
  * package has been enabled.
@@ -154,7 +154,7 @@ extern u_int smsync_debug;
 #else
 #define SMSYNC_DBG(flag,action)
 #endif /* SMOOTHSYNC_DEBUG */
-#endif /* _KERNEL */
+#endif /* defined(KERNEL) && defined(_KERNEL) */
 
 #include "../msfs/bs_ods.h"
 #include "../msfs/bs_ims.h"
