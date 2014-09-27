@@ -38,12 +38,10 @@
 
 #define ADVFS_MODULE VFAST
 
-#include <sys/lock_probe.h>
+#include <sys/param.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#include <sys/clu.h>
-#include <sys/dlm.h>
-#include <machine/clock.h>
 
 #include "../msfs/fs_dir_routines.h"
 #include "../msfs/ms_public.h"
