@@ -1477,7 +1477,7 @@ include "miscfs/umapfs/files.umapfs"
 include "nfs/files.nfs"
 include "ufs/files.ufs"
 
-include "external/gpl2/msfs/files.msfs"
+include "external/gpl2/msfs/conf/files.msfs"
 
 #
 # UVM (virtual memory)
