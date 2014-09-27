@@ -40,8 +40,9 @@
  * HISTORY
  * 
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: ftx_routines.c,v $ $Revision: 1.1.192.4 $ (DEC) $Date: 2008/02/12 13:07:07 $"
-
+#endif
 #define ADVFS_MODULE FTX_ROUTINES
 
 #if defined( MSFS_CRASHTEST )

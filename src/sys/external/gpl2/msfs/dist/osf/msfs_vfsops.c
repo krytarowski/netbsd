@@ -44,8 +44,9 @@
  * 
  */
 
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: msfs_vfsops.c,v $ $Revision: 1.1.827.17 $ (DEC) $Date: 2006/08/08 18:25:09 $"
-
+#endif
 #include <sys/lock_probe.h>
 #include <kern/lock.h>
 #include <kern/rad.h>

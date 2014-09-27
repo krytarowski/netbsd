@@ -36,8 +36,9 @@
 /*
  * HISTORY
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: bs_tagdir.c,v $ $Revision: 1.1.131.5 $ (DEC) $Date: 2008/02/12 13:07:05 $"
-
+#endif
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ms_assert.h"

@@ -43,8 +43,9 @@
 /*
  * HISTORY
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: fs_file_sets.c,v $ $Revision: 1.1.149.6 $ (DEC) $Date: 2006/03/20 15:11:05 $"
-
+#endif
 #include <sys/lock_probe.h>
 #include <sys/param.h>
 #include "../msfs/ms_public.h"

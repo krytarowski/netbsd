@@ -37,8 +37,9 @@
 /*
  * HISTORY
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: bs_msg_queue.c,v $ $Revision: 1.1.41.2 $ (DEC) $Date: 2008/02/12 13:07:00 $"
-
+#endif
 #include <sys/param.h>
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"

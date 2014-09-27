@@ -38,8 +38,9 @@
 /*
  * HISTORY
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: bs_service_class.c,v $ $Revision: 1.1.57.3 $ (DEC) $Date: 2008/02/12 13:07:02 $"
-
+#endif
 #if ! defined(KERNEL) && ! defined(_KERNEL)
 #include <stdio.h>
 #endif /* defined(KERNEL) && defined(_KERNEL) */

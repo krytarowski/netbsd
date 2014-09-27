@@ -38,8 +38,9 @@
  * HISTORY
  * 
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: bs_init.c,v $ $Revision: 1.1.107.4 $ (DEC) $Date: 2006/04/12 16:59:34 $"
-
+#endif
 #include <sys/file.h>
 #include <sys/time.h>
 #include "../msfs/ms_public.h"

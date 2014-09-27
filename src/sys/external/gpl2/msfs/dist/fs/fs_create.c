@@ -37,8 +37,9 @@
 /*
  * HISTORY
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: fs_create.c,v $ $Revision: 1.1.225.5 $ (DEC) $Date: 2006/03/20 15:11:00 $"
-
+#endif
 #include "../msfs/fs_dir_routines.h"
 #include "../msfs/ms_public.h"
 #include "../msfs/fs_dir.h"

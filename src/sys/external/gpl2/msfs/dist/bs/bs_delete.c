@@ -37,8 +37,9 @@
 /*
  * HISTORY
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: bs_delete.c,v $ $Revision: 1.1.173.11 $ (DEC) $Date: 2007/05/30 15:27:58 $"
-
+#endif
 #include <sys/param.h>
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"

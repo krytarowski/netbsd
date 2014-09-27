@@ -21,8 +21,9 @@
  * 
  * 
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: bs_access.c,v $ $Revision: 1.1.746.17 $ (DEC) $Date: 2006/11/20 08:47:25 $"
-
+#endif
 #include <sys/param.h>
 #include <sys/mount.h>
 #include <sys/lock_probe.h>

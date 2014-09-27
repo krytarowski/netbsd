@@ -41,8 +41,9 @@
  * 
  */
 
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: bs_stg.c,v $ $Revision: 1.1.357.20 $ (DEC) $Date: 2008/01/16 13:32:15 $"
-
+#endif
 #include <sys/param.h>
 #include <sys/lock_probe.h>
 #include "../msfs/ms_public.h"

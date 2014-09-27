@@ -39,8 +39,9 @@
 /*
  * HISTORY
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: ftx_recovery.c,v $ $Revision: 1.1.159.2 $ (DEC) $Date: 2004/09/16 20:38:54 $"
-
+#endif
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ftx_privates.h"

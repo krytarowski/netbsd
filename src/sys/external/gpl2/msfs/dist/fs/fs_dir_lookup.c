@@ -40,8 +40,9 @@
  * 
  */
 
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: fs_dir_lookup.c,v $ $Revision: 1.1.125.4 $ (DEC) $Date: 2006/03/20 15:11:01 $"
-
+#endif
 #include <sys/lock_probe.h>
 #include "../msfs/fs_dir.h"
 #include "../msfs/ms_public.h"

@@ -42,8 +42,9 @@
  * 
  * 
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: bs_domain.c,v $ $Revision: 1.1.506.13 $ (DEC) $Date: 2007/05/30 15:28:01 $"
-
+#endif
 #define ADVFS_MODULE    BS_DOMAIN
 
 #include <dirent.h>

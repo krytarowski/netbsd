@@ -41,8 +41,9 @@
  * 
  * 
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: msfs_io.c,v $ $Revision: 1.1.262.11 $ (DEC) $Date: 2007/06/26 12:49:42 $"
-
+#endif
 #define ADVFS_MODULE MSFS_IO
 
 #include "../msfs/ms_public.h"

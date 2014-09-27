@@ -37,8 +37,9 @@
 /*
  * HISTORY
  */
+#ifdef OSF
 #pragma ident "@(#)$RCSfile: msfs_syscalls.c,v $ $Revision: 1.1.14.1 $ (DEC) $Date: 2008/02/12 13:07:13 $"
-
+#endif
 #include <sys/secdefines.h>
 #if     SEC_BASE
 #include <sys/security.h>
