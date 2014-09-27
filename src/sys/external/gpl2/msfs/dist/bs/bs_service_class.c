@@ -42,9 +42,9 @@
 #pragma ident "@(#)$RCSfile: bs_service_class.c,v $ $Revision: 1.1.57.3 $ (DEC) $Date: 2008/02/12 13:07:02 $"
 #endif
 
-#ifndef KERNEL
+#ifndef _KERNEL
 #include <stdio.h>
-#endif /* KERNEL */
+#endif /* _KERNEL */
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 

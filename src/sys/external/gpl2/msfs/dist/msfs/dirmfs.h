@@ -28,12 +28,12 @@
 #define DIRMFS
 
 #include "../msfs/ms_public.h"
-#ifdef KERNEL
+#ifdef _KERNEL
 #include <sys/user.h> /* eventually includes UFS dirent */
 #endif
 #define NAME_MAX 255
 
-#ifndef KERNEL /* take out our dirent definition */
+#ifndef _KERNEL /* take out our dirent definition */
 struct dirent
 {
     unsigned long  d_ino;
@@ -55,7 +55,7 @@ typedef struct dirContext DIRT;
 
 extern DIRT opendir_s[100];
 
-#ifndef KERNEL
+#ifndef _KERNEL
 extern DIRT* opendir( char * );
 extern struct dirent* readdir( DIRT * );
 extern int closedir( DIRT * );
