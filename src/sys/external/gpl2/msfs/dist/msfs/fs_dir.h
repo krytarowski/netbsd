@@ -30,7 +30,12 @@
 #include "../msfs/ms_public.h"
 #include <sys/types.h>
 
+#ifdef OSF
 #include <kern/lock.h>
+#endif
+#ifdef __NetBSD__
+#include <sys/lock.h>
+#endif
 
 #include <sys/vnode.h>
 #include "../msfs/ms_generic_locks.h"

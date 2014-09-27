@@ -124,8 +124,9 @@
 #define MAX_VIRT_VM_PAGE_RNG 256
 
 #if defined(KERNEL) || defined(_KERNEL)
-
+#ifdef OSF
 #include <kern/thread.h>
+#endif
 #include "../msfs/ms_assert.h"
 #define ASSERT_NO_LOCKS()     MS_SMP_ASSERT(current_thread()->lock_count == 0)
 

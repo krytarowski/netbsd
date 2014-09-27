@@ -27,8 +27,13 @@
 #define _GENERIC_LOCKS_
 
 #if defined(KERNEL) || defined(_KERNEL) 
+#ifdef OSF
 #include <kern/sched_prim.h>
 #include <kern/lock.h>
+#endif
+#ifdef __NetBSD__
+#include <sys/lock.h>
+#endif
 #include <sys/kernel.h>
 
 #else /* defined(KERNEL) && defined(_KERNEL) */

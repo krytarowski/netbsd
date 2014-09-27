@@ -30,7 +30,9 @@
 #include "../msfs/fs_dir.h"             /* for fsContext def - bad layering? */
 #if defined(KERNEL) || defined(_KERNEL)
 #include <sys/vnode.h>
+#ifdef OSF
 #include <kern/event.h>
+#endif
 #endif /* defined(KERNEL) && defined(_KERNEL) */
 
 /*

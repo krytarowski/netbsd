@@ -26,10 +26,14 @@
 #endif
 #include <sys/param.h>
 #include <sys/mount.h>
+#ifdef OSF
 #include <sys/lock_probe.h>
 #include <sys/clu.h>
+#endif
 
+#ifdef OSF
 #include <kern/sched_prim.h>
+#endif
 
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
@@ -50,8 +54,10 @@
 #endif
 #include <sys/ucred.h>
 #include <sys/fcntl.h>          /* for MAXEND */
+#ifdef OSF
 #include <vm/vm_ubc.h>
 #include <vm/vm_numa.h>
+#endif
 #include "../msfs/bs_msg_queue.h"
 #include "../msfs/bs_access.h"
 #include "../msfs/fs_dir.h"

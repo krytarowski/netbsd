@@ -65,7 +65,9 @@
  **************************************************************************/
 
 #include <sys/param.h>
+#ifdef OSF
 #include <sys/lock_probe.h>
+#endif
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_delete.h"
