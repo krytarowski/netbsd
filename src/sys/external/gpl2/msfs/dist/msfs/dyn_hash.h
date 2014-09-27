@@ -22,8 +22,8 @@
 #ifndef _KERN_DYN_HASH_H_
 #define _KERN_DYN_HASH_H_
 
-#include <advfs/e_dyn_hash.h>
-#include <advfs/ms_generic_locks.h>
+#include "../msfs/e_dyn_hash.h"
+#include "../msfs/ms_generic_locks.h"
 
 /*
  * This is dictates the maximum size of the synamic hash table.
@@ -184,4 +184,3 @@ struct {
 #endif
 
 #endif  /* _KERN_DYN_HASH_H_ */
-
