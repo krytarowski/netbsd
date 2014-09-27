@@ -23,21 +23,23 @@
 #pragma ident "@(#)$RCSfile: msfs_vnops.c,v $ $Revision: 1.1.528.21 $ (DEC) $Date: 2008/01/31 13:03:33 $"
 #endif
 
-#include <sys/lock_probe.h>
 #include <sys/param.h>
-#include <sys/systm.h>
-#include <sys/time.h>
-#include <sys/vnode.h>
-#include <sys/vfs_proto.h>
-#include <sys/mount.h>
-#include <sys/uio.h>
+#include <sys/types.h>
+#include <nfs/nfs.h>
+#include <sys/buf.h> 
 #include <sys/errno.h>
-#include <sys/kernel.h>
+#include <sys/fcntl.h>
+#include <sys/file.h>
+#include <sys/ioctl.h>
+#include <sys/mount.h>
 #include <sys/namei.h>
 #include <sys/stat.h>
-#include <sys/mode.h>
-#include <sys/fcntl.h>
-#include <sys/flock.h>
+#include <sys/systm.h>
+#include <sys/time.h>
+#include <sys/uio.h>
+#include <sys/vnode.h>
+#include <sys/unistd.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ftx_public.h"
@@ -45,27 +47,9 @@
 #include "../msfs/fs_dir.h"
 #include "../msfs/fs_dir_routines.h"
 #include "../msfs/fs_quota.h"
-#include <sys/buf.h>
-#include <sys/lock_probe.h>
-#include <sys/secpolicy.h>
-#include <sys/sec_objects.h>
-#include <sys/ioctl.h>
 #include "../msfs/bs_index.h"
-#include <sys/clu.h>
-#include <sys/versw.h>
 #include "../msfs/ms_assert.h"
 #include "../msfs/bs_params.h"
-#include <sys/sp_attr.h>
-#include <sys/specdev.h>
-#include <unistd.h>
-#include <mach/memory_object.h>
-#include <nfs/nfs.h>
-#if SEC_BASE
-#include <sys/security.h>
-#endif
-#include <builtin/ux_exception.h>
-#include <mach/exception.h>
-#include <sys/file.h>
 
 extern void * BsAccessHashTbl;
 
