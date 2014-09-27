@@ -27,7 +27,7 @@
 #ifndef DIRMFS
 #define DIRMFS
 
-#include <msfs/ms_public.h>
+#include "../msfs/ms_public.h"
 #ifdef KERNEL
 #include <sys/user.h> /* eventually includes UFS dirent */
 #endif

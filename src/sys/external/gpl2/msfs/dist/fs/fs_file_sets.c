@@ -47,10 +47,10 @@
 
 #include <sys/lock_probe.h>
 #include <sys/param.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/fs_dir_routines.h>
-#include <msfs/ms_osf.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
+#include "../msfs/fs_dir_routines.h"
+#include "../msfs/ms_osf.h"
 #include <sys/stat.h>
 #ifdef _OSF_SOURCE
 #include <sys/mode.h>
@@ -61,8 +61,8 @@
 #include <sys/ucred.h>
 #include <sys/mount.h>
 #include <sys/clu.h>
-#include <msfs/bs_params.h>
-#include <msfs/ms_assert.h>
+#include "../msfs/bs_params.h"
+#include "../msfs/ms_assert.h"
 
 #define ADVFS_MODULE FS_FILE_SETS
 
