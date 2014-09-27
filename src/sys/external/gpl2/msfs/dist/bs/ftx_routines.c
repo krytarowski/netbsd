@@ -46,6 +46,10 @@
 
 #define ADVFS_MODULE FTX_ROUTINES
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/time.h>
+
 #if defined( MSFS_CRASHTEST )
 #define AGENT_STRINGS   1
 #endif
@@ -55,13 +59,7 @@
 #include "../msfs/ftx_privates.h"
 #include "../msfs/ftx_agents.h"
 #include "../msfs/ms_assert.h"
-#include <sys/radset.h>
-#include <vm/vm_numa.h>
-#include <kern/rad.h>
-#include <sys/kernel.h>
-#include <sys/time.h>
-#include <sys/user.h>
-#include <sys/clu.h>
+
 #ifdef MSFS_CRASHTEST
 #include <sys/reboot.h>
 void
@@ -70,10 +68,6 @@ msfs_reboot(
     );
 #endif  /* MSFS_CRASHTEST */
 
-#ifdef MSFS_CRASHTEST
-#include <mach/port.h>
-#include <kern/thread.h>
-#endif
 
 ftxHT FtxNilFtxH = {0,0}; /* Nil ftx for use as root parent */
 
