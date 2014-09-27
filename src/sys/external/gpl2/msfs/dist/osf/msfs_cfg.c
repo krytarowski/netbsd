@@ -28,11 +28,11 @@
  * subsystem.
  */
 
+#include <sys/param.h>
 #include <sys/types.h>
-#include <sys/sysconfig.h>
 #include <sys/errno.h>
-#include <mach/vm_param.h>
-#include <machine/machlimits.h>
+#include <machine/limits.h>
+
 #include "../msfs/ms_assert.h"
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
@@ -264,4 +264,3 @@ advfs_configure(
 
     return retval;
 }
-
