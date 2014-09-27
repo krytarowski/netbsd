@@ -41,13 +41,13 @@
  */
 #pragma ident "@(#)$RCSfile: ftx_recovery.c,v $ $Revision: 1.1.159.2 $ (DEC) $Date: 2004/09/16 20:38:54 $"
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ftx_privates.h>
-#include <msfs/bs_domain.h>
-#include <msfs/bs_public.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
+#include "../msfs/ftx_privates.h"
+#include "../msfs/bs_domain.h"
+#include "../msfs/bs_public.h"
 #include <sys/lock_probe.h>
-#include <msfs/ms_osf.h>
+#include "../msfs/ms_osf.h"
 #include <sys/clu.h>
 
 #define ADVFS_MODULE FTX_RECOVERY

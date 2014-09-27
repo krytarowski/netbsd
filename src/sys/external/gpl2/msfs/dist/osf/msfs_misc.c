@@ -29,18 +29,18 @@
 #include <sys/vnode.h>
 #include <sys/buf.h>
 #include <sys/clu.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_osf.h>
-#include <msfs/fs_dir.h>
-#include <msfs/fs_dir_routines.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
+#include "../msfs/ms_osf.h"
+#include "../msfs/fs_dir.h"
+#include "../msfs/fs_dir_routines.h"
 #include <sys/mode.h>
 #include <sys/mount.h>
-#include <msfs/ms_assert.h>
+#include "../msfs/ms_assert.h"
 #include <vm/vm_mmap.h>
 #include <machine/vm_ubc.h>
-#include <msfs/bs_index.h>
-#include <msfs/bs_params.h>
+#include "../msfs/bs_index.h"
+#include "../msfs/bs_params.h"
 #include <sys/resource.h>
 
 #define ADVFS_MODULE MSFS_MISC

@@ -26,8 +26,8 @@
  * in user mode or in kernel mode.
  */
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_assert.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_assert.h"
 
 #ifdef KERNEL
 #include <sys/syslog.h>
@@ -35,7 +35,7 @@
 #else
 #include <stdlib.h>
 #ifndef _OSF_SOURCE
-#include <msfs/bs_extern.h>
+#include "../msfs/bs_extern.h"
 #endif /* _OSF_SOURCE */
 #endif /* KERNEL */
 

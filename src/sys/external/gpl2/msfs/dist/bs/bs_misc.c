@@ -50,20 +50,20 @@
 
 #include <kern/event.h>
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_assert.h>
-#include <msfs/bs_extents.h>
-#include <msfs/bs_migrate.h>
-#include <msfs/bs_service_classes.h>
-#include <msfs/bs_stg.h>
-#include <msfs/bs_stripe.h>
-#include <msfs/fs_file_sets.h>
-#include <msfs/msfs_syscalls.h>
-#include <msfs/ms_osf.h>
-#include <msfs/bs_ims.h>
-#include <msfs/advfs_evm.h>
-#include <msfs/bs_index.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
+#include "../msfs/ms_assert.h"
+#include "../msfs/bs_extents.h"
+#include "../msfs/bs_migrate.h"
+#include "../msfs/bs_service_classes.h"
+#include "../msfs/bs_stg.h"
+#include "../msfs/bs_stripe.h"
+#include "../msfs/fs_file_sets.h"
+#include "../msfs/msfs_syscalls.h"
+#include "../msfs/ms_osf.h"
+#include "../msfs/bs_ims.h"
+#include "../msfs/advfs_evm.h"
+#include "../msfs/bs_index.h"
 #include <sys/versw.h>
 
 #ifdef ESS
