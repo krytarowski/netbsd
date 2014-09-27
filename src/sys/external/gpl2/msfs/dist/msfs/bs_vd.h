@@ -27,6 +27,8 @@
 #define _VD_H_
 
 #include <sys/param.h>
+#include <sys/types.h>
+#include <sys/rwlock.h>
 
 /*
  * stgDescT - Describes a contiguous set of available (free) vd blocks.
