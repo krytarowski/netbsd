@@ -41,13 +41,14 @@
                          /* in ms_generic_locks.h */
 #endif
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/syslog.h>
+#include <sys/time.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
-#ifdef _KERNEL
-#include <sys/syslog.h>
-#include <sys/kernel.h>
-#include <sys/time.h>
-#endif /* _KERNEL */
+
 
 static lkHdrT *find_locked_lock(lkHdrT *lk);
 
