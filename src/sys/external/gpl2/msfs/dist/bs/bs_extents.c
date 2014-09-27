@@ -43,14 +43,14 @@
 #pragma ident "@(#)$RCSfile: bs_extents.c,v $ $Revision: 1.1.145.7 $ (DEC) $Date: 2006/01/03 18:54:59 $"
 
 #include <sys/lock_probe.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_bmt.h>
-#include <msfs/bs_extents.h>
-#include <msfs/bs_inmem_map.h>
-#include <msfs/bs_migrate.h>
-#include <msfs/bs_stg.h>
-#include <msfs/bs_stripe.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
+#include "../msfs/bs_bmt.h"
+#include "../msfs/bs_extents.h"
+#include "../msfs/bs_inmem_map.h"
+#include "../msfs/bs_migrate.h"
+#include "../msfs/bs_stg.h"
+#include "../msfs/bs_stripe.h"
 
 #define ADVFS_MODULE BS_EXTENTS
 

@@ -30,9 +30,9 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <msfs/bs_public.h>
-#include <msfs/ms_public.h>
-#include <msfs/vfast.h>
+#include "../msfs/bs_public.h"
+#include "../msfs/ms_public.h"
+#include "../msfs/vfast.h"
 
 #define MSFS_DMN_DIR "/etc/fdmns"
 #define ADVFS_LOCK_FILE "/etc/fdmns/.advfslock_"

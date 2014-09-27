@@ -42,11 +42,11 @@
 
 #include <sys/file.h>
 #include <sys/time.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_assert.h>
-#include <msfs/bs_migrate.h>
-#include <msfs/bs_delete.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
+#include "../msfs/ms_assert.h"
+#include "../msfs/bs_migrate.h"
+#include "../msfs/bs_delete.h"
 #ifndef KERNEL
 #include <stdio.h>
 #include <sys/errno.h>
@@ -70,9 +70,9 @@ extern char *sys_errlist[];
 #include <sys/ioctl.h>
 #include <sys/vnode.h>
 #include <sys/disklabel.h>
-#include <msfs/bs_vd.h>
-#include <msfs/bs_extents.h>
-#include <msfs/advfs_evm.h>
+#include "../msfs/bs_vd.h"
+#include "../msfs/bs_extents.h"
+#include "../msfs/advfs_evm.h"
 
 #include <sys/open.h>
 

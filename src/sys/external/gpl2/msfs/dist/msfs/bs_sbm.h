@@ -25,7 +25,7 @@
 #ifndef _SBM_H_
 #define _SBM_H_
 
-#include <msfs/bs_stg.h>
+#include "../msfs/bs_stg.h"
 
 statusT
 sbm_init(
