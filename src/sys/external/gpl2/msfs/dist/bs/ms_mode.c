@@ -31,7 +31,7 @@
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_assert.h"
 
-#ifdef KERNEL
+#ifdef _KERNEL
 #include <sys/syslog.h>
 #include <sys/limits.h>
 #else
@@ -39,11 +39,11 @@
 #ifndef _OSF_SOURCE
 #include "../msfs/bs_extern.h"
 #endif /* _OSF_SOURCE */
-#endif /* KERNEL */
+#endif /* _KERNEL */
 
 extern unsigned TrFlags;
 
-#ifdef KERNEL
+#ifdef _KERNEL
 
 char *
 kalloc();
@@ -53,7 +53,7 @@ struct msHdr {
     unsigned int size;
 };
 
-#endif /* KERNEL */
+#endif /* _KERNEL */
 
 #define ADVFS_MODULE MS_MODE
 
@@ -71,7 +71,7 @@ mem_trace(
     trace_hdr();
 
     if (!(ptr = (char *)strrchr( fn, '/' ))) return;
-#ifdef KERNEL
+#ifdef _KERNEL
     log( LOG_MEGASAFE | LOG_INFO,
 #else
     ms_printf( 
@@ -88,7 +88,7 @@ _ms_malloc(
            int rad_id           /* in */
            )
 {
-#ifdef KERNEL
+#ifdef _KERNEL
     struct msHdr *hdr;
     long amt = size + sizeof( struct msHdr );
     if (flag & M_WAITOK) {
@@ -117,7 +117,7 @@ _ms_malloc(
     return( (char *)hdr + sizeof( struct msHdr ) );
 #else
     return( malloc( size ) );
-#endif /* KERNEL */
+#endif /* _KERNEL */
 }
 
 void
@@ -128,7 +128,7 @@ _ms_free(
 
          )
 {
-#ifdef KERNEL
+#ifdef _KERNEL
     struct msHdr *hdr;
     int size;
 
@@ -152,11 +152,11 @@ _ms_free(
     free( ptr );
 
 
-#endif /* KERNEL */
+#endif /* _KERNEL */
 }
 
 
-#ifdef KERNEL
+#ifdef _KERNEL
 
 long int
 atol( char *nptr )
@@ -204,12 +204,12 @@ atol( char *nptr )
     n *= sign;
     return (n);
 }
-#endif /* KERNEL */
+#endif /* _KERNEL */
 
 int
 ms_copyin( void *src, void *dest, int len )
 {
-#ifdef KERNEL
+#ifdef _KERNEL
     return copyin( src, dest, len );
 #else
     bcopy( src, dest, len );
@@ -221,7 +221,7 @@ ms_copyin( void *src, void *dest, int len )
 int
 ms_copyout( void *src, void *dest, int len )
 {
-#ifdef KERNEL
+#ifdef _KERNEL
     return copyout( src, dest, len );
 #else
     bcopy( src, dest, len );
