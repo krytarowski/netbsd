@@ -46,6 +46,9 @@
 #define ADVFS_MODULE   BS_PARAMS
 
 #include <sys/param.h>
+#include <sys/types.h>
+#include <sys/vnode.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_extents.h"
@@ -53,13 +56,10 @@
 #include "../msfs/bs_stripe.h"
 #include "../msfs/bs_ims.h"
 #include "../msfs/fs_dir.h"
-#include <sys/vnode.h>
 #include "../msfs/ms_osf.h"
-#include <sys/lock_probe.h>
 #include "../msfs/ms_assert.h"
 #include "../msfs/bs_public.h"
 #include "../msfs/msfs_syscalls.h"
-#include <sys/clu.h>
 #include "../msfs/bs_index.h"
 
 
@@ -2249,4 +2249,3 @@ bs_get_smsync_stats(
     vd_dec_refcnt( vdp );
     return 0;
 }
-
