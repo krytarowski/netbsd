@@ -41,22 +41,10 @@
 #pragma ident "@(#)$RCSfile: msfs_syscalls.c,v $ $Revision: 1.1.14.1 $ (DEC) $Date: 2008/02/12 13:07:13 $"
 #endif
 
-#include <sys/secdefines.h>
-#if     SEC_BASE
-#include <sys/security.h>
-#endif
-#if     SEC_ARCH
-#include <sys/secpolicy.h>
-#endif
-
 #include <sys/param.h>
-#include <sys/systm.h>
-#include <sys/kernel.h>
+#include <sys/types.h>
 #include <sys/proc.h>
-#include <sys/user.h>
-#include <kern/task.h>
-#include <kern/thread.h>
-#include    <sys/lock_probe.h>
+#include <sys/systm.h>
 
 /*
  ** msfsSyscallp
