@@ -26,8 +26,12 @@
 #ifndef _BS_BITFILE_SETS_
 #define _BS_BITFILE_SETS_
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/stdint.h>
+
 #ifdef _KERNEL
-#include <kern/e_dyn_hash.h>
+#include "../msfs/e_dyn_hash.h"
 #endif /* _KERNEL */
 
 struct domain;
