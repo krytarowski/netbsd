@@ -39,7 +39,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_migrate.c,v $ $Revision: 1.1.239.19 $ (DEC) $Date: 2008/02/12 13:06:53 $"
+#endif
 
 #include <sys/dlm.h>
 #include <sys/clu.h>

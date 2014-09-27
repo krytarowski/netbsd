@@ -39,7 +39,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: bs_inmem_map.c,v $ $Revision: 1.1.103.13 $ (DEC) $Date: 2008/02/15 10:09:11 $"
+#endif
 
 #include <sys/fcntl.h>
 #include <sys/lock_probe.h>
