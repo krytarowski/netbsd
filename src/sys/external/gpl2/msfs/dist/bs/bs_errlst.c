@@ -41,16 +41,16 @@
 #pragma ident "@(#)$RCSfile: bs_errlst.c,v $ $Revision: 1.1.51.2 $ (DEC) $Date: 2004/10/01 06:25:14 $"
 #endif
 
+#include <sys/param.h>
 #include <sys/types.h>
 #include <sys/systm.h>
-#ifdef OSF
 #include <sys/errno.h>
-#endif
-#ifdef USER_MODE
+
+#ifndef _KERNEL
 #include <stdio.h>
-#include <sys/errno.h>
+#endif /* _KERNEL */
+
 #define ESUCCESS 0
-#endif
 
 /* THIS FILE MUST NOT INCLUDE ANY ADVFS FILES EXCEPT bs_error.h */
 /* Otherwise you'll break user mode apps that link with this file */
