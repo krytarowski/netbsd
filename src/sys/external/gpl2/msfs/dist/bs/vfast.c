@@ -43,19 +43,19 @@
 #include <sys/dlm.h>
 #include <machine/clock.h>
 
-#include <msfs/fs_dir_routines.h>
-#include <msfs/ms_public.h>
-#include <msfs/ftx_public.h>
-#include <msfs/fs_dir.h>
-#include <msfs/fs_quota.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_access.h>
-#include <msfs/ms_osf.h>
-#include <msfs/vfast.h>
-#include <msfs/bs_extents.h>
-#include <msfs/bs_inmem_map.h>
-#include <msfs/bs_vd.h>
-#include <msfs/bs_stg.h>
+#include "../msfs/fs_dir_routines.h"
+#include "../msfs/ms_public.h"
+#include "../msfs/ftx_public.h"
+#include "../msfs/fs_dir.h"
+#include "../msfs/fs_quota.h"
+#include "../msfs/ms_privates.h"
+#include "../msfs/bs_access.h"
+#include "../msfs/ms_osf.h"
+#include "../msfs/vfast.h"
+#include "../msfs/bs_extents.h"
+#include "../msfs/bs_inmem_map.h"
+#include "../msfs/bs_vd.h"
+#include "../msfs/bs_stg.h"
 
 msgQHT ssBossQH;       /* bosses msg queue for adding threads */
 msgQHT ssListQH;       /* list processing msg queue */

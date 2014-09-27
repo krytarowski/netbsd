@@ -45,16 +45,16 @@
 
 #include <sys/param.h>
 #include <sys/lock_probe.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/bs_delete.h>
-#include <msfs/bs_extents.h>
-#include <msfs/bs_ims.h>
-#include <msfs/bs_inmem_map.h>
-#include <msfs/bs_stg.h>
-#include <msfs/bs_stripe.h>
-#include <msfs/ftx_privates.h>    /* for FTX_MX_PINP */
-#include <msfs/bs_ods.h>        /* needed for BS_IS_TAG_OF_TYPE() */
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
+#include "../msfs/bs_delete.h"
+#include "../msfs/bs_extents.h"
+#include "../msfs/bs_ims.h"
+#include "../msfs/bs_inmem_map.h"
+#include "../msfs/bs_stg.h"
+#include "../msfs/bs_stripe.h"
+#include "../msfs/ftx_privates.h"    /* for FTX_MX_PINP */
+#include "../msfs/bs_ods.h"        /* needed for BS_IS_TAG_OF_TYPE() */
 
 extern mutexT IoQueueMutex;
 

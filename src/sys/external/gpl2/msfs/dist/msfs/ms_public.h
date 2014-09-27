@@ -52,12 +52,12 @@ struct vnode {int notused;};
 #define uprintf printf
 #endif
 
-#include <msfs/bs_error.h>
-#include <msfs/bs_public.h>
-/*#include <msfs/mss_common.h>*/
-#include <msfs/ms_logger.h>
-#include <msfs/ms_generic_locks.h>
-#include <msfs/ftx_public.h>
+#include "../msfs/bs_error.h"
+#include "../msfs/bs_public.h"
+/*#include "../msfs/mss_common.h"*/
+#include "../msfs/ms_logger.h"
+#include "../msfs/ms_generic_locks.h"
+#include "../msfs/ftx_public.h"
 
 #include <sys/resource.h>
 

@@ -43,19 +43,19 @@
  */
 #pragma ident "@(#)$RCSfile: fs_dir_init.c,v $ $Revision: 1.1.144.2 $ (DEC) $Date: 2008/02/12 13:07:10 $"
 
-#include <msfs/fs_dir.h>
-#include <msfs/fs_dir_routines.h>
-#include <msfs/ms_public.h>
+#include "../msfs/fs_dir.h"
+#include "../msfs/fs_dir_routines.h"
+#include "../msfs/ms_public.h"
 #include <sys/stat.h>
 #include <sys/mount.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_osf.h>
+#include "../msfs/ms_privates.h"
+#include "../msfs/ms_osf.h"
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/time.h>
-#include <msfs/bs_params.h>
-#include <msfs/ms_assert.h>
-#include <msfs/bs_msg_queue.h>
+#include "../msfs/bs_params.h"
+#include "../msfs/ms_assert.h"
+#include "../msfs/bs_msg_queue.h"
 
 #define ROOTMASK 0755
 #define TAGSMASK 0700

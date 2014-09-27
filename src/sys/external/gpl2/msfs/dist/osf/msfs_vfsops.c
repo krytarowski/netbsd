@@ -60,27 +60,27 @@
 #include <sys/stat.h>
 #include <sys/mode.h>
 #include <sys/malloc.h>
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_osf.h>
-#include <msfs/fs_dir.h>
-#include <msfs/fs_dir_routines.h>
-#include <msfs/ms_generic_locks.h>
-#include <msfs/fs_quota.h>
-#include <msfs/ms_assert.h>
-#include <msfs/msfs_syscalls.h>
-#include <msfs/bs_index.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
+#include "../msfs/ms_osf.h"
+#include "../msfs/fs_dir.h"
+#include "../msfs/fs_dir_routines.h"
+#include "../msfs/ms_generic_locks.h"
+#include "../msfs/fs_quota.h"
+#include "../msfs/ms_assert.h"
+#include "../msfs/msfs_syscalls.h"
+#include "../msfs/bs_index.h"
 #include <sys/proc.h>
 #include <sys/fcntl.h>
 #include <sys/buf.h>
 #include <sys/ioctl.h>
 #include <sys/disklabel.h>
 #include <sys/clu.h>
-#include <msfs/bs_params.h>
-#include <msfs/advfs_evm.h>
+#include "../msfs/bs_params.h"
+#include "../msfs/advfs_evm.h"
 #include <sys/syslog_pri.h>
-#include <msfs/bs_freeze.h>
-#include <msfs/bs_domain.h>
+#include "../msfs/bs_freeze.h"
+#include "../msfs/bs_domain.h"
 
 #define ADVFS_MODULE     MSFS_VFSOPS
 #define BOGUS_ROOTNAME  "generic#root"

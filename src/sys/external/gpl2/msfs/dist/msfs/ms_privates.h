@@ -126,7 +126,7 @@
 #ifdef _KERNEL
 
 #include <kern/thread.h>
-#include <msfs/ms_assert.h>
+#include "../msfs/ms_assert.h"
 #define ASSERT_NO_LOCKS()     MS_SMP_ASSERT(current_thread()->lock_count == 0)
 
 #endif
@@ -156,8 +156,8 @@ extern u_int smsync_debug;
 #endif /* SMOOTHSYNC_DEBUG */
 #endif /* _KERNEL */
 
-#include <msfs/bs_ods.h>
-#include <msfs/bs_ims.h>
+#include "../msfs/bs_ods.h"
+#include "../msfs/bs_ims.h"
 enum msfs_setproplist_enum { NO_SET_CTIME=0, SET_CTIME = 1 };
 
 #endif /* MS_PRIVATES */
