@@ -43,14 +43,15 @@
 #endif
 
 #include <sys/param.h>
-#include <sys/time.h>
-#include <sys/vnode.h>
+#include <sys/types.h>
+#include <sys/errno.h>
 #include <sys/mount.h>
 #include <sys/namei.h>
+#include <sys/time.h>
+#include <sys/vnode.h>
+
 #include "../msfs/fs_dir_routines.h"
 #include "../msfs/ms_public.h"
-#include <sys/mode.h>
-#include <sys/errno.h>
 #include "../msfs/fs_dir.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ms_osf.h"
