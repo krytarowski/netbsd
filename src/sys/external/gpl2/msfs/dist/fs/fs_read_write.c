@@ -40,31 +40,26 @@
 #pragma ident "@(#)$RCSfile: fs_read_write.c,v $ $Revision: 1.1.468.28 $ (DEC) $Date: 2008/01/31 13:01:09 $" 
 #endif
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/buf.h>
+#include <sys/conf.h>
+#include <sys/errno.h>
+#include <sys/fcntl.h>
+#include <sys/mount.h>
+#include <sys/syslog.h>
+#include <sys/uio.h>
+#include <sys/vnode.h>
+
 #include "../msfs/fs_dir_routines.h"
 #include "../msfs/fs_dir.h"
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/fs_file_sets.h"
-#include <sys/param.h>
-#include <sys/errno.h>
 #include "../msfs/ms_osf.h"
-#include <sys/conf.h>
-#include <sys/unix_defs.h>
-#include <sys/mode.h>
-#include <sys/mount.h>
-#include <sys/vnode.h>
-#include <sys/buf.h>
-#include <sys/uio.h>
-#include <sys/kernel.h>
-#include <sys/lock_probe.h>
 #include "../msfs/ftx_public.h"
 #include "../msfs/ms_assert.h"
 #include "../msfs/bs_params.h"
-#include <sys/sp_attr.h>
-#include "../msfs/advfs_evm.h"
-#include <sys/syslog.h>
-#include <vm/vm_numa.h>
-#include <sys/fcntl.h>
 
 #define POSIX1B_MSFS_SYNC_STATS
 
