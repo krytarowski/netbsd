@@ -42,6 +42,10 @@
 #endif
 
 #include <sys/param.h>
+#include <sys/types.h>
+#include <sys/lock.h>
+#include <sys/ucred.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ms_assert.h"
@@ -49,10 +53,6 @@
 #include "../msfs/bs_delete.h"
 #include "../msfs/bs_stg.h"
 #include "../msfs/ms_osf.h"
-#include <sys/user.h>
-#include <sys/ucred.h>
-#include <kern/lock.h>
-#include <sys/lock_probe.h>
 #include "../msfs/bs_params.h"
 #include "../msfs/bs_stripe.h"
 #include "../msfs/bs_index.h"
