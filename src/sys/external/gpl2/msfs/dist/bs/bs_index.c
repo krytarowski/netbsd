@@ -26,6 +26,10 @@
 #pragma ident "@(#)$RCSfile: bs_index.c,v $ $Revision: 1.1.92.8 $ (DEC) $Date: 2007/08/10 11:43:50 $"
 #endif
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #define ADVFS_MODULE BS_INDEX
 
 /* These are internal status */
@@ -38,13 +42,11 @@
 #define UPDATE 6
 #define CONTINUE 7
 
-#include <sys/lock_probe.h>
 #include "../msfs/fs_dir_routines.h"
 #include "../msfs/ms_public.h"
 #include "../msfs/bs_public.h"
 #include "../msfs/ftx_public.h"
 #include "../msfs/fs_dir.h"
-#include <sys/stat.h>
 #include "../msfs/fs_quota.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_access.h"
