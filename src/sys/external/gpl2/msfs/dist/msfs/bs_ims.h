@@ -26,12 +26,14 @@
 #ifndef _BS_IMS_H_
 #define _BS_IMS_H_
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/buf.h>
+#include <sys/rwlock.h>
+#include <sys/vnode.h>
+
 #include "../msfs/bs_ods.h"
 #include "../msfs/fs_dir.h"             /* for fsContext def - bad layering? */
-#ifdef _KERNEL
-#include <sys/vnode.h>
-#include <kern/event.h>
-#endif /* _KERNEL */
 
 /*
  ** LOG_FLUSH_THRESHOLD must be a multiple of 4 **
