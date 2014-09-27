@@ -40,17 +40,11 @@
 #pragma ident "@(#)$RCSfile: bs_misc.c,v $ $Revision: 1.1.442.15 $ (DEC) $Date: 2007/08/10 11:43:53 $"
 #endif
 
-#include <varargs.h>
-#include <sys/user.h>
+#include <sys/param.h>
+#include <sys/types.h>
 #include <sys/file.h>
+#include <sys/stdarg.h>
 #include <sys/vnode.h>
-#include <sys/specdev.h>
-#include <sys/audit.h>
-#include <sys/lock_probe.h>
-#include <sys/clu.h>
-#include <sys/dlm.h>
-
-#include <kern/event.h>
 
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
@@ -64,13 +58,7 @@
 #include "../msfs/msfs_syscalls.h"
 #include "../msfs/ms_osf.h"
 #include "../msfs/bs_ims.h"
-#include "../msfs/advfs_evm.h"
 #include "../msfs/bs_index.h"
-#include <sys/versw.h>
-
-#ifdef ESS
-#include <ess/event_simulation.h>
-#endif
 
 static int copyin_domain_and_set_names(char *in_dmnTbl, char *in_setName, char *in_setName2, char **out_dmnTbl, char **out_setName, char **out_setName2);
 static statusT open_set(mode_t setMode, mode_t dmnMode, int setOwner, int dmnOwner, bfSetIdT setId, bfSetT **retBfSetp, domainT **dmnPP);
