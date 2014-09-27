@@ -58,7 +58,9 @@
 #include <sys/mount.h>
 #include <sys/lock_probe.h>
 #include <kern/event.h>
+#ifdef OSF
 #include "../msfs/advfs_evm.h"
+#endif
 #include <io/common/deveei.h>
 #include <stdarg.h>
 

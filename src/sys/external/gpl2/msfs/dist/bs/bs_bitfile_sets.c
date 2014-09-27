@@ -52,7 +52,9 @@
 #include "../msfs/bs_extents.h"
 #include <kern/sched_prim.h>
 #include <kern/event.h>
+#ifdef OSF
 #include "../msfs/advfs_evm.h"
+#endif
 #include "../msfs/bs_msg_queue.h"
 
 #ifdef _OSF_SOURCE

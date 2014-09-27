@@ -36,7 +36,9 @@
 #include "../msfs/bs_delete.h"
 #include "../msfs/bs_extents.h"
 #include "../msfs/bs_stg.h"
+#ifdef OSF
 #include "../msfs/advfs_evm.h" 
+#endif
 #include "../msfs/fs_dir_routines.h"
 #include "../msfs/fs_file_sets.h"
 #include "../msfs/ms_assert.h"

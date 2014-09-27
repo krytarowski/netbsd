@@ -63,7 +63,9 @@
 #include "../msfs/msfs_syscalls.h"
 #include "../msfs/ms_osf.h"
 #include "../msfs/bs_ims.h"
+#ifdef OSF
 #include "../msfs/advfs_evm.h"
+#endif
 #include "../msfs/bs_index.h"
 #include <sys/versw.h>
 

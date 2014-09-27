@@ -73,7 +73,9 @@ extern char *sys_errlist[];
 #include <sys/disklabel.h>
 #include "../msfs/bs_vd.h"
 #include "../msfs/bs_extents.h"
+#ifdef OSF
 #include "../msfs/advfs_evm.h"
+#endif
 
 #include <sys/open.h>
 

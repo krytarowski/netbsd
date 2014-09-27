@@ -60,7 +60,9 @@
 #include "../msfs/ms_assert.h"
 #include "../msfs/bs_params.h"
 #include <sys/sp_attr.h>
+#ifdef OSF
 #include "../msfs/advfs_evm.h"
+#endif
 #include <sys/syslog.h>
 #include <vm/vm_numa.h>
 #include <sys/fcntl.h>

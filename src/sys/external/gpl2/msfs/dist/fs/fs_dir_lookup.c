@@ -57,7 +57,9 @@
 #include "../msfs/ms_assert.h"
 #include "../msfs/bs_msg_queue.h"
 #include "../msfs/bs_index.h"
+#ifdef OSF
 #include "../msfs/advfs_evm.h"
+#endif
 
 #define ADVFS_MODULE FS_DIR_LOOKUP
 

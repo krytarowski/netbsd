@@ -73,7 +73,9 @@
 #include <sys/open.h>
 #include <sys/versw.h>
 #include <sys/clu.h>
+#ifdef OSF
 #include "../msfs/advfs_evm.h"
+#endif
 
 /*  This sentinel pointer is init'd to the first advfs domain
 *   mounted.  It is used primarily for locating all domains
