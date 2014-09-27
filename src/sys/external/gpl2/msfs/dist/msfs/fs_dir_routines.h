@@ -27,8 +27,8 @@
 #ifndef FS_DIR_ROUTINES
 #define FS_DIR_ROUTINES
 
-#include <msfs/ms_public.h>
-#include <msfs/fs_dir.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/fs_dir.h"
 /* #include <dirent.h> */
 #include <sys/uio.h>
 

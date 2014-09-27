@@ -43,8 +43,8 @@
 #ifndef KERNEL
 #include <stdio.h>
 #endif /* KERNEL */
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
 
 static statusT sc_add_class(serviceClassTblT *scTbl, serviceClassT serviceClass, int *tblPos);
 static int best_vd(domainT *dmnP, int vd, vdIndexT *vdi);

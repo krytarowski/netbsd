@@ -45,9 +45,9 @@
 
 #define ADVFS_MODULE MSFS_IO
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
-#include <msfs/ms_osf.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
+#include "../msfs/ms_osf.h"
 #include <sys/param.h>
 #include <sys/errno.h>
 #include <sys/specdev.h>
@@ -57,7 +57,7 @@
 #include <sys/mount.h>
 #include <sys/lock_probe.h>
 #include <kern/event.h>
-#include <msfs/advfs_evm.h>
+#include "../msfs/advfs_evm.h"
 #include <io/common/deveei.h>
 #include <stdarg.h>
 
