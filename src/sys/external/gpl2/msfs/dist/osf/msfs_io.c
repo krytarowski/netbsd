@@ -47,29 +47,18 @@
 
 #define ADVFS_MODULE MSFS_IO
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/buf.h>
+#include <sys/errno.h>
+#include <sys/mount.h>
+#include <sys/stdarg.h>
+#include <sys/syslog.h>
+#include <sys/ucred.h>          /* only for NOCRED */
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ms_osf.h"
-#include <sys/param.h>
-#include <sys/errno.h>
-#include <sys/specdev.h>
-#include <sys/buf.h>
-#include <sys/radset.h>
-#include <sys/ucred.h>  /* only for NOCRED */
-#include <sys/mount.h>
-#include <sys/lock_probe.h>
-#include <kern/event.h>
-#include "../msfs/advfs_evm.h"
-#include <io/common/deveei.h>
-#include <stdarg.h>
-
-#include <vm/vm_page.h>
-#include <vm/vm_numa.h>
-#include <vm/vm_ubc.h>
-#include <sys/lwc.h>
-#include <sys/syslog_pri.h>
-#include <dec/binlog/binlog.h>
-#include <sys/clu.h>
 
 #ifdef ADVFS_SMP_ASSERT
 static char *smdbg1 =  "bs_startio:    bsBuf 0x%lx  (blockingQ)  vd 0x%lx\n";
