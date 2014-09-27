@@ -26,22 +26,10 @@
 #ifndef _GENERIC_LOCKS_
 #define _GENERIC_LOCKS_
 
-#ifdef _KERNEL 
-#include <kern/sched_prim.h>
-#include <kern/lock.h>
-#include <sys/kernel.h>
-
-#else /* _KERNEL */
-
-#include <stdio.h>
-#include <strings.h>
-#ifdef PTHREADS_OSF
-#include <pthread_osf.h>
-#else
+#include <sys/param.h>
 #include <sys/types.h>
-#endif
-#endif /* _KERNEL */
-
+#include <sys/lock.h>
+#include <sys/kernel.h>
 #include <sys/time.h>
 
 /*
