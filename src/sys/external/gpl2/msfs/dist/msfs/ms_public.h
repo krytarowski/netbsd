@@ -26,13 +26,9 @@
 #ifndef MS_PUBLIC
 #define MS_PUBLIC
 
-#ifdef USER_MODE
-
-#ifdef PTHREADS_OSF
-#include <pthread_osf.h>
-#else
-#include <pthread.h>
-#endif
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/resource.h>
 
 /*
  * These struct defs are necessary so that we don't have to put a bunch of
@@ -42,9 +38,7 @@
  * because ftx_public.h defines rbf_vfs_access()'s proto.
  */
 
-#if 0
-struct mount {int notused;};
-#endif
+#ifndef _KERNEL
 struct vnode {int notused;};
 #endif /* USER_MODE */
 
@@ -58,8 +52,6 @@ struct vnode {int notused;};
 #include "../msfs/ms_logger.h"
 #include "../msfs/ms_generic_locks.h"
 #include "../msfs/ftx_public.h"
-
-#include <sys/resource.h>
 
 /***************************************************************************
  ***** MCELL mgt routines                                             ******
