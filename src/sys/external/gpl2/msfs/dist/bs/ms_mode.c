@@ -28,18 +28,13 @@
  * in user mode or in kernel mode.
  */
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/syslog.h>
+#include <sys/syslimits.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_assert.h"
-
-#ifdef _KERNEL
-#include <sys/syslog.h>
-#include <sys/limits.h>
-#else
-#include <stdlib.h>
-#ifndef _OSF_SOURCE
-#include "../msfs/bs_extern.h"
-#endif /* _OSF_SOURCE */
-#endif /* _KERNEL */
 
 extern unsigned TrFlags;
 
