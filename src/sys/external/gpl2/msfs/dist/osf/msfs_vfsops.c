@@ -48,20 +48,17 @@
 #pragma ident "@(#)$RCSfile: msfs_vfsops.c,v $ $Revision: 1.1.827.17 $ (DEC) $Date: 2006/08/08 18:25:09 $"
 #endif
 
-#include <sys/lock_probe.h>
-#include <kern/lock.h>
-#include <kern/rad.h>
 #include <sys/param.h>
+#include <sys/types.h>
 #include <sys/errno.h>
-#include <sys/systm.h>
-#include <sys/time.h>
-#include <sys/user.h>
-#include <sys/vnode.h>
-#include <sys/specdev.h>
+#include <sys/lock.h>
+#include <sys/malloc.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
-#include <sys/mode.h>
-#include <sys/malloc.h>
+#include <sys/systm.h>
+#include <sys/time.h>
+#include <sys/vnode.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ms_osf.h"
@@ -72,15 +69,7 @@
 #include "../msfs/ms_assert.h"
 #include "../msfs/msfs_syscalls.h"
 #include "../msfs/bs_index.h"
-#include <sys/proc.h>
-#include <sys/fcntl.h>
-#include <sys/buf.h>
-#include <sys/ioctl.h>
-#include <sys/disklabel.h>
-#include <sys/clu.h>
 #include "../msfs/bs_params.h"
-#include "../msfs/advfs_evm.h"
-#include <sys/syslog_pri.h>
 #include "../msfs/bs_freeze.h"
 #include "../msfs/bs_domain.h"
 
@@ -3593,7 +3582,3 @@ advfs_freezefs ( struct mount *mp,
 }
 
 /* end msfs_vfsops.c */
-
-
-
-
