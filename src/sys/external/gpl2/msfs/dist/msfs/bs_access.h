@@ -22,14 +22,15 @@
 #ifndef _ACCESS_H_
 #define _ACCESS_H_
 
-#ifdef _KERNEL /* need this so user mode utils (msfsck.c) can compile - ps */
-#include <vm/vm_ubc.h>
-#endif
-
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/mount.h>
+#include <sys/rwlock.h>
 #include <sys/vnode.h>
+
 #include "../msfs/ms_assert.h"
 #ifdef _KERNEL
-#include <kern/e_dyn_hash.h>
+#include "../msfs/e_dyn_hash.h"
 #endif
 
 #define NEW_ACCESS
