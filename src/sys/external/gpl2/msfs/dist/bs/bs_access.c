@@ -26,29 +26,22 @@
 #endif
 
 #include <sys/param.h>
+#include <sys/types.h>
+#include <sys/buf.h>
+#include <sys/fcntl.h>          /* for MAXEND */
 #include <sys/mount.h>
-#include <sys/lock_probe.h>
-#include <sys/clu.h>
-
-#include <kern/sched_prim.h>
+#include <sys/ucred.h>
 
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_delete.h"
 #include "../msfs/bs_extents.h"
 #include "../msfs/bs_stg.h"
-#include "../msfs/advfs_evm.h" 
 #include "../msfs/fs_dir_routines.h"
 #include "../msfs/fs_file_sets.h"
 #include "../msfs/ms_assert.h"
 #include "../msfs/bs_index.h"
 #include "../msfs/ms_osf.h"
-#include <sys/buf.h>
-#include <sys/user.h>
-#include <sys/ucred.h>
-#include <sys/fcntl.h>          /* for MAXEND */
-#include <vm/vm_ubc.h>
-#include <vm/vm_numa.h>
 #include "../msfs/bs_msg_queue.h"
 #include "../msfs/bs_access.h"
 #include "../msfs/fs_dir.h"
