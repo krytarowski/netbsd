@@ -43,8 +43,9 @@
 #pragma ident "@(#)$RCSfile: bs_migrate.c,v $ $Revision: 1.1.239.19 $ (DEC) $Date: 2008/02/12 13:06:53 $"
 #endif
 
-#include <sys/dlm.h>
-#include <sys/clu.h>
+#include <sys/param.h>
+#include <sys/types.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_copy.h"
