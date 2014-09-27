@@ -30,7 +30,7 @@
 #include <stddef.h>
 #endif
 
-#include <msfs/vfast.h>
+#include "../msfs/vfast.h"
 #include <kern/e_dyn_hash.h>
 
 /*

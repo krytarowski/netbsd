@@ -27,7 +27,7 @@
 #endif
 
 #include <sys/vnode.h>
-#include <msfs/ms_assert.h>
+#include "../msfs/ms_assert.h"
 #ifdef KERNEL
 #include <kern/e_dyn_hash.h>
 #endif

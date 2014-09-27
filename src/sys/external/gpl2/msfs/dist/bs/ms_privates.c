@@ -39,8 +39,8 @@
  */
 #pragma ident "@(#)$RCSfile: ms_privates.c,v $ $Revision: 1.1.9.5 $ (DEC) $Date: 1998/03/13 20:20:34 $"
 
-#include <msfs/ms_public.h>
-#include <msfs/ms_privates.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/ms_privates.h"
 
 /****************************************************************************
  *    bs_ods.h constants

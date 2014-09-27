@@ -26,8 +26,8 @@
 #ifndef _BS_IMS_H_
 #define _BS_IMS_H_
 
-#include <msfs/bs_ods.h>
-#include <msfs/fs_dir.h>             /* for fsContext def - bad layering? */
+#include "../msfs/bs_ods.h"
+#include "../msfs/fs_dir.h"             /* for fsContext def - bad layering? */
 #ifdef KERNEL
 #include <sys/vnode.h>
 #include <kern/event.h>
@@ -122,9 +122,9 @@ typedef struct ioList {
     ioDescT *ioDesc;
 } ioListT;
 
-#include <msfs/bs_buf.h>
-#include <msfs/bs_service_classes.h>
-#include <msfs/bs_domain.h>
+#include "../msfs/bs_buf.h"
+#include "../msfs/bs_service_classes.h"
+#include "../msfs/bs_domain.h"
 
 /*
  * In-memory extent map data structures.
@@ -264,13 +264,13 @@ typedef struct {
    struct vd *vdp;
 } ioThreadMsgT;
 
-#include <msfs/bs_access.h>
-#include <msfs/bs_vd.h>
-#include <msfs/bs_domain.h>
-#include <msfs/bs_bitfile_sets.h>
-#include <msfs/bs_tagdir.h>
-#include <msfs/bs_bmt.h>
-#include <msfs/bs_sbm.h>
+#include "../msfs/bs_access.h"
+#include "../msfs/bs_vd.h"
+#include "../msfs/bs_domain.h"
+#include "../msfs/bs_bitfile_sets.h"
+#include "../msfs/bs_tagdir.h"
+#include "../msfs/bs_bmt.h"
+#include "../msfs/bs_sbm.h"
 
 /*
  * PROTOTYPES
