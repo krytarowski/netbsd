@@ -27,10 +27,13 @@
 #ifndef FS_DIR_ROUTINES
 #define FS_DIR_ROUTINES
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <sys/ucred.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/fs_dir.h"
-/* #include <dirent.h> */
-#include <sys/uio.h>
 
 void
 fs_init_directory (
