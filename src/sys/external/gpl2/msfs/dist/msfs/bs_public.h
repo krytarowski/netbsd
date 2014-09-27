@@ -26,18 +26,16 @@
 #ifndef BS_PUBLIC
 #define BS_PUBLIC
 
-#include <sys/mount.h>
-#include <sys/time.h>       /* tmp - using timeval for bs_uid */
+#include <sys/param.h>
 #include <sys/types.h>
 #include <sys/malloc.h>
+#include <sys/mount.h>
+#include <sys/stdint.h>
+#include <sys/time.h>       /* tmp - using timeval for bs_uid */
 
 #ifndef REUSABLE_TAGS
 #define REUSABLE_TAGS
 #endif
-
-#ifdef _KERNEL
-#include <sys/user.h>
-#endif /* _KERNEL */
 
 #include "../msfs/advfs_modules.h"
 
