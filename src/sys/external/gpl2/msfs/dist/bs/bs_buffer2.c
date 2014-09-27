@@ -27,13 +27,15 @@
 
 #define ADVFS_MODULE BS_BUFFER2
 
+#include <sys/param.h>
 #include <sys/types.h>
-#include <sys/time.h>
-#ifdef _OSF_SOURCE
-#include <machine/machparam.h>
-#else
 #include <machine/param.h>
-#endif /* _OSF_SOURCE */
+#include <sys/buf.h>
+#include <sys/clock.h>
+#include <sys/syslog.h>
+#include <sys/time.h>
+#include <sys/vnode.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ms_logger.h"
@@ -41,17 +43,7 @@
 #include "../msfs/bs_public.h"
 #include "../msfs/ms_assert.h"
 #include "../msfs/ms_osf.h"
-#include <sys/syslog.h>
-#include <sys/vnode.h>
-#include <sys/buf.h>
-#include <sys/radset.h>
-#include <mach/std_types.h>
-#include <vm/vm_ubc.h>
-#include <vm/vm_numa.h>
-#include <kern/rad.h>
-#include <sys/lock_probe.h>
 #include "../msfs/vfast.h"
-#include <machine/clock.h>
 
 extern void rm_from_lazyq( struct bsBuf *bp, ioDescT **ioList, int *listLen, int *noqfnd);
 extern void advfs_page_dirty(vm_page_t);
