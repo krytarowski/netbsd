@@ -22,13 +22,13 @@
 #ifndef _ACCESS_H_
 #define _ACCESS_H_
 
-#ifdef KERNEL /* need this so user mode utils (msfsck.c) can compile - ps */
+#ifdef _KERNEL /* need this so user mode utils (msfsck.c) can compile - ps */
 #include <vm/vm_ubc.h>
 #endif
 
 #include <sys/vnode.h>
 #include "../msfs/ms_assert.h"
-#ifdef KERNEL
+#ifdef _KERNEL
 #include <kern/e_dyn_hash.h>
 #endif
 
@@ -167,9 +167,9 @@ typedef struct actRangeHdr {
 } actRangeHdrT;
 
 typedef struct bfAccess {
-#ifdef KERNEL
+#ifdef _KERNEL
     dyn_hashlinks_w_keyT hashlinks; /* dynamic hashtable links */
-#endif /*KERNEL*/
+#endif /*_KERNEL*/
                                 /* guard next 3 with BfAccessFreeLock */
     struct bfAccess *freeFwd;   /* freelist or closed list */
     struct bfAccess *freeBwd;
@@ -376,9 +376,9 @@ void tag_trace(uint, uint, uint16T, uint16T, void*);
  */
 
 struct bfAccessHdr {
-#ifdef KERNEL
+#ifdef _KERNEL
     dyn_hashlinks_w_keyT hashlinks; /* dynamic hashtable links */
-#endif /*KERNEL*/
+#endif /*_KERNEL*/
     struct bfAccess *freeFwd;
     struct bfAccess *freeBwd;
     int len;

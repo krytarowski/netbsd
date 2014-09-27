@@ -377,9 +377,9 @@ typedef struct domain {
     struct domain *dmnFwd;       /* Forward pointer of all domainTs */
     struct domain *dmnBwd;      /* Backward pointer of all domainTs */
 
-#ifdef KERNEL
+#ifdef _KERNEL
     dyn_hashlinks_w_keyT dmnHashlinks;   /* dyn_hashtable links */
-#endif /* KERNEL */
+#endif /* _KERNEL */
 
     int dmnVersion;             /* version number: on-disk validation */
     bfDmnStatesT state;         /* domain state */
