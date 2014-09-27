@@ -43,13 +43,14 @@
 #endif
 
 #include <sys/param.h>
+#include <sys/types.h>
+#include <sys/lock.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_ods.h"
 #include "../msfs/ftx_privates.h"
-#include <kern/lock.h>
 #include "../msfs/ms_logger.h"
-#include <kern/sched_prim.h>
 
 #define ADVFS_MODULE MS_LOGGER
 
