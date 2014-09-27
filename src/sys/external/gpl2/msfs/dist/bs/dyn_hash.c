@@ -19,16 +19,16 @@
  * Copyright (c) 2002-2004 Hewlett-Packard Development Company, L.P. 
  */
 
-#include <sys/proc_iface.h>
-#include <sys/kdaemon_thread.h>
+#include <sys/param.h>
 #include <sys/types.h>
-#include <sys/kernel.h>		/* kernel global lbolt */
+#include <sys/condvar.h>		/* kernel global lbolt */
+#include <sys/proc.h>
 
-#include <ms_public.h>
-#include <bs_public.h>
-#include <dyn_hash.h>
-#include <bs_msg_queue.h>
-#include <ms_assert.h>
+#include "../msfs/ms_public.h"
+#include "../msfs/bs_public.h"
+#include "../msfs/dyn_hash.h"
+#include "../msfs/bs_msg_queue.h"
+#include "../msfs/ms_assert.h"
 
 #define TRUE  1
 #define FALSE 0
