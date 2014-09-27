@@ -42,6 +42,9 @@
 #pragma ident "@(#)$RCSfile: bs_create.c,v $ $Revision: 1.1.132.3 $ (DEC) $Date: 2008/02/12 13:06:51 $"
 #endif
 
+#include <sys/param.h>
+#include <sys/types.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ms_assert.h"
