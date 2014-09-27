@@ -42,6 +42,9 @@
 #pragma ident "@(#)$RCSfile: bs_stripe.c,v $ $Revision: 1.1.91.5 $ (DEC) $Date: 2008/02/12 13:07:04 $"
 #endif
 
+#include <sys/param.h>
+#include <sys/types.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_extents.h"
