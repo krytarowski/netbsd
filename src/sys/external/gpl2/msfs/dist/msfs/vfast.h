@@ -22,6 +22,10 @@
 #ifndef _SS_H_
 #define _SS_H_
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/clock.h>
+
 /* include header files */
 #include "../msfs/bs_ods.h"
 #include "../msfs/bs_msg_queue.h"
