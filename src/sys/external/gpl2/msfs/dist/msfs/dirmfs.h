@@ -28,9 +28,7 @@
 #define DIRMFS
 
 #include "../msfs/ms_public.h"
-#ifdef _KERNEL
-#include <sys/user.h> /* eventually includes UFS dirent */
-#endif
+
 #define NAME_MAX 255
 
 #ifndef _KERNEL /* take out our dirent definition */
