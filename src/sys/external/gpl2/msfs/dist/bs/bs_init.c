@@ -42,43 +42,25 @@
 #pragma ident "@(#)$RCSfile: bs_init.c,v $ $Revision: 1.1.107.4 $ (DEC) $Date: 2006/04/12 16:59:34 $"
 #endif
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/buf.h>
+#include <sys/disklabel.h>
 #include <sys/file.h>
+#include <sys/ioctl.h>
+#include <sys/kernel.h>
+#include <sys/mount.h>
 #include <sys/time.h>
+#include <sys/ucred.h>
+#include <sys/vnode.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ms_assert.h"
 #include "../msfs/bs_migrate.h"
 #include "../msfs/bs_delete.h"
-#ifndef _KERNEL
-#include <stdio.h>
-#include <sys/errno.h>
-#include <sys/stat.h>
-#include <sys/param.h>
-#include <strings.h>
-extern int errno;
-extern char *sys_errlist[];
-#else /* _KERNEL */
-#include <sys/user.h>
-#include <sys/kernel.h>
-#include <sys/mount.h>
-#include <sys/specdev.h>
-#include <sys/buf.h>
-#include <sys/ucred.h>
-#include <sys/vnode.h>
-#include <sys/mode.h>
-#include <sys/lock_probe.h>
-#include <sys/versw.h>
-#include <sys/clu.h>
-#include <sys/ioctl.h>
-#include <sys/vnode.h>
-#include <sys/disklabel.h>
 #include "../msfs/bs_vd.h"
 #include "../msfs/bs_extents.h"
-#include "../msfs/advfs_evm.h"
-
-#include <sys/open.h>
-
-#endif /* _KERNEL */
 
 #define ADVFS_MODULE BS_INIT
 
@@ -2826,4 +2808,3 @@ vd_extend_add_sbm_pgs( vdT *vdp,
 }
 
 /* end bs_init.c */
-
