@@ -59,7 +59,9 @@
 #include <kern/rad.h>
 #include <sys/kernel.h>
 #include <sys/time.h>
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <sys/clu.h>
 #ifdef MSFS_CRASHTEST
 #include <sys/reboot.h>

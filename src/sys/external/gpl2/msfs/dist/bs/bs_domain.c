@@ -61,7 +61,9 @@
 #include "../msfs/bs_migrate.h"
 #include "../msfs/msfs_syscalls.h"
 #include <sys/time.h>
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <sys/mount.h>
 #include <sys/specdev.h>
 #include <sys/buf.h>

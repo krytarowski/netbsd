@@ -57,7 +57,9 @@
 extern int errno;
 extern char *sys_errlist[];
 #else /* defined(KERNEL) && defined(_KERNEL) */
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <sys/kernel.h>
 #include <sys/mount.h>
 #include <sys/specdev.h>

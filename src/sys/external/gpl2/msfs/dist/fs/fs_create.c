@@ -55,7 +55,9 @@
 #include <sys/vnode.h>
 #include <sys/namei.h>
 #include <sys/mount.h>
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <sys/ucred.h>
 #include <sys/lock_probe.h>
 #include "../msfs/bs_params.h"

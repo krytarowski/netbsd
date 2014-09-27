@@ -45,7 +45,9 @@
 #include "../msfs/bs_index.h"
 #include "../msfs/ms_osf.h"
 #include <sys/buf.h>
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <sys/ucred.h>
 #include <sys/fcntl.h>          /* for MAXEND */
 #include <vm/vm_ubc.h>

@@ -54,7 +54,9 @@
 #include <sys/errno.h>
 #include <sys/systm.h>
 #include <sys/time.h>
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <sys/vnode.h>
 #include <sys/specdev.h>
 #include <sys/mount.h>

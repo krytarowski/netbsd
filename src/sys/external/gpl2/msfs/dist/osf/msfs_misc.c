@@ -25,7 +25,9 @@
 #endif
 #include <sys/lock_probe.h>
 #include <sys/param.h>
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <sys/file.h>
 #include <sys/vnode.h>
 #include <sys/buf.h>

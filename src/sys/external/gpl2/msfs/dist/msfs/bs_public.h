@@ -36,7 +36,9 @@
 #endif
 
 #if defined(KERNEL) || defined(_KERNEL)
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #endif /* defined(KERNEL) && defined(_KERNEL) */
 
 #include "../msfs/advfs_modules.h"

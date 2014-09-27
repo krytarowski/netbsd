@@ -33,7 +33,9 @@
 
 #include <sys/param.h>
 #include <sys/systm.h>
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <sys/kernel.h>
 #include <sys/file.h>
 #include <sys/stat.h>

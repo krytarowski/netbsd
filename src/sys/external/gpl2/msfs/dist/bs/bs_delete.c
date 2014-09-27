@@ -48,7 +48,9 @@
 #include "../msfs/bs_delete.h"
 #include "../msfs/bs_stg.h"
 #include "../msfs/ms_osf.h"
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <sys/ucred.h>
 #include <kern/lock.h>
 #include <sys/lock_probe.h>

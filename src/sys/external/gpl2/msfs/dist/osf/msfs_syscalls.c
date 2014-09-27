@@ -52,7 +52,9 @@
 #include <sys/systm.h>
 #include <sys/kernel.h>
 #include <sys/proc.h>
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <kern/task.h>
 #include <kern/thread.h>
 #include    <sys/lock_probe.h>

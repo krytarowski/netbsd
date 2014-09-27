@@ -57,7 +57,9 @@
 #include <sys/mode.h>
 #endif
 
+#ifndef __NetBSD__
 #include <sys/user.h>
+#endif
 #include <sys/kernel.h>
 #include <sys/ucred.h>
 #include <sys/mount.h>

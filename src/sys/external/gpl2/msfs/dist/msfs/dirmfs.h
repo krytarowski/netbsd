@@ -29,7 +29,9 @@
 
 #include "../msfs/ms_public.h"
 #if defined(KERNEL) || defined(_KERNEL)
+#ifndef __NetBSD__
 #include <sys/user.h> /* eventually includes UFS dirent */
+#endif
 #endif
 #define NAME_MAX 255
 
