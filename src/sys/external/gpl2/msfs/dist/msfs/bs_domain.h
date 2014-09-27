@@ -26,12 +26,12 @@
 #ifndef _DOMAIN_H_
 #define _DOMAIN_H_
 
-#ifndef offsetof
-#include <stddef.h>
-#endif
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/rwlock.h>
 
 #include "../msfs/vfast.h"
-#include <kern/e_dyn_hash.h>
+#include "../msfs/e_dyn_hash.h"
 
 /*
  * Some ftx types that are part of the domain structure, so must be
