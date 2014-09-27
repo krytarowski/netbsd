@@ -46,7 +46,8 @@
 #endif
 
 #include <sys/param.h>
-#include <sys/lock_probe.h>
+#include <sys/types.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_delete.h"
