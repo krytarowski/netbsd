@@ -103,7 +103,7 @@ typedef struct _advfs_event {
 } advfs_ev;
 
 
-#ifdef KERNEL
+#ifdef _KERNEL
     int advfs_post_kernel_event(char *evname, advfs_ev *advfs_event);
 #else
     int init_event(advfs_ev *advfs_event);

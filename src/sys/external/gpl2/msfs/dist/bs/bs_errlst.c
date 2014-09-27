@@ -417,7 +417,7 @@ advfs_errmsg(
     static char * unknownErr = "unknown error";
 
     if ((abs( sts ) < MSFS_FIRST_ERR)) {
-#ifdef KERNEL
+#ifdef _KERNEL
         aprintf( "errno = %d\n", abs( sts ) );
         return errNo;
 #else
@@ -426,7 +426,7 @@ advfs_errmsg(
 #endif
 
     } else if ((abs( sts ) > abs(MSFS_LAST_ERR))) {
-#ifdef KERNEL
+#ifdef _KERNEL
         aprintf( "unknown error = %d", sts );
         return unknownErr;
 #else
