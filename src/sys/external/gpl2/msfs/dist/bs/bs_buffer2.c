@@ -21,7 +21,9 @@
  * 
  */
 
+#if 0
 #pragma ident "@(#)$RCSfile: bs_buffer2.c,v $ $Revision: 1.1.625.18 $ (DEC) $Date: 2006/10/10 12:14:42 $"
+#endif
 
 #define ADVFS_MODULE BS_BUFFER2
 
