@@ -57,6 +57,9 @@
 
 #define ADVFS_MODULE BS_FREEZE
 
+#include <sys/param.h>
+#include <sys/types.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/bs_public.h"
 #include "../msfs/ftx_public.h"
@@ -64,7 +67,6 @@
 #include "../msfs/bs_domain.h"
 #include "../msfs/ms_osf.h"
 #include "../msfs/bs_freeze.h"
-#include <vfs/vfs_evm.h>
 
 /******************************************************************************
  *
