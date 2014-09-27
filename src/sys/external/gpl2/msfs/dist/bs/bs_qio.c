@@ -44,16 +44,16 @@
 
 #define ADVFS_MODULE  BS_QIO
 
+#include <sys/param.h>
+#include <sys/types.h>
 #include <sys/file.h>
+#include <sys/syslog.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/bs_msg_queue.h"
 #include "../msfs/ms_osf.h"
 
-#include <sys/syslog.h>
-#include <mach/std_types.h>
-#include <sys/lock_probe.h>
-#include <vm/vm_ubc.h>
 
 #define BUF_WRITE_LIM 5
 #define DEV_LOCKED 1
