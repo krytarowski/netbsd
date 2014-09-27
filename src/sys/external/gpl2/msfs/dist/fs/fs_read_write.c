@@ -36,7 +36,9 @@
  * 
  * 
  */
+#if 0
 #pragma ident "@(#)$RCSfile: fs_read_write.c,v $ $Revision: 1.1.468.28 $ (DEC) $Date: 2008/01/31 13:01:09 $" 
+#endif
 
 #include "../msfs/fs_dir_routines.h"
 #include "../msfs/fs_dir.h"

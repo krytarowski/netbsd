@@ -20,7 +20,9 @@
  * HISTORY
  * 
  */
+#if 0
 #pragma ident "@(#)$RCSfile: msfs_misc.c,v $ $Revision: 1.1.597.13 $ (DEC) $Date: 2006/03/20 15:11:26 $"
+#endif
 
 #include <sys/lock_probe.h>
 #include <sys/param.h>

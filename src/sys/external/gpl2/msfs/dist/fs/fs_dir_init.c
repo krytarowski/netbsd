@@ -41,7 +41,9 @@
  * 
  * 
  */
+#if 0
 #pragma ident "@(#)$RCSfile: fs_dir_init.c,v $ $Revision: 1.1.144.2 $ (DEC) $Date: 2008/02/12 13:07:10 $"
+#endif
 
 #include "../msfs/fs_dir.h"
 #include "../msfs/fs_dir_routines.h"
