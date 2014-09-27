@@ -39,6 +39,11 @@
 #pragma ident "@(#)$RCSfile: bs_bitfile_sets.c,v $ $Revision: 1.1.473.33 $ (DEC) $Date: 2008/01/18 14:30:02 $"
 #endif
 
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/syslog.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ms_assert.h"
@@ -46,21 +51,9 @@
 #include "../msfs/bs_msg_queue.h"
 #include "../msfs/bs_stripe.h"
 #include "../msfs/bs_extents.h"
-#include <sys/syslog.h>
-#include <sys/lock_probe.h>
-#include <sys/clu.h>
 #include "../msfs/bs_stripe.h"
 #include "../msfs/bs_extents.h"
-#include <kern/sched_prim.h>
-#include <kern/event.h>
-#include "../msfs/advfs_evm.h"
 #include "../msfs/bs_msg_queue.h"
-
-#ifdef _OSF_SOURCE
-#include <sys/mode.h>
-#else
-#include <sys/stat.h>
-#endif
 
 #define ADVFS_MODULE BS_BITFILE_SETS
 
