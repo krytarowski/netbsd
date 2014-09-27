@@ -38,7 +38,9 @@
 /*
  * HISTORY
  */
+#if 0
 #pragma ident "@(#)$RCSfile: msfs_lookup.c,v $ $Revision: 1.1.118.2 $ (DEC) $Date: 2008/02/12 13:07:11 $"
+#endif
 
 #include <sys/param.h>
 #include <sys/time.h>
