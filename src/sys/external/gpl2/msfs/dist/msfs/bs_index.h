@@ -82,7 +82,7 @@ idx_lookup_filename(
     fs_dir_entry **found_buffer, /* pointer to directory record */
     rbfPgRefHT  *pgref,          /* pgref for pinning record */
     int         flag,	         /* flag: PIN_PAGE return pointer to
-                                 /* dir entry with page pinned */
+                                  * dir entry with page pinned */
     ftxHT  ftxH                  /* parent ftx */ 
     );
 
