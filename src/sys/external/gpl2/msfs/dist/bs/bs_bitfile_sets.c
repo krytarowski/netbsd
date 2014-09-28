@@ -1413,7 +1413,7 @@ bs_frag_alloc(
         }
 #endif
     
-    } /* while (have_not_found_frag)
+    } /* while (have_not_found_frag) */
 
     /*
      * return allocated frag's fragId
