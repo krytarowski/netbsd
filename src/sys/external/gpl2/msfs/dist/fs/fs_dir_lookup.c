@@ -1968,6 +1968,7 @@ setup_for_glom_dir_entries(
          * This is necesary first to have the largest space available
          * for handing out, but more importantly, keeping in sync with
          * the index.
+         */
 
         /*
          * the previous entry is deleted, so setup to glom the 2 entries
