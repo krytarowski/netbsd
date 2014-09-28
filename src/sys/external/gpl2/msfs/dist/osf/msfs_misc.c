@@ -24,26 +24,23 @@
 #pragma ident "@(#)$RCSfile: msfs_misc.c,v $ $Revision: 1.1.597.13 $ (DEC) $Date: 2006/03/20 15:11:26 $"
 #endif
 
-#include <sys/lock_probe.h>
 #include <sys/param.h>
-#include <sys/user.h>
+#include <sys/types.h>
+#include <sys/buf.h>
 #include <sys/file.h>
 #include <sys/vnode.h>
-#include <sys/buf.h>
-#include <sys/clu.h>
+#include <sys/mount.h>
+#include <sys/resource.h>
+
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
 #include "../msfs/ms_osf.h"
 #include "../msfs/fs_dir.h"
 #include "../msfs/fs_dir_routines.h"
-#include <sys/mode.h>
-#include <sys/mount.h>
 #include "../msfs/ms_assert.h"
-#include <vm/vm_mmap.h>
-#include <machine/vm_ubc.h>
 #include "../msfs/bs_index.h"
 #include "../msfs/bs_params.h"
-#include <sys/resource.h>
+
 
 #define ADVFS_MODULE MSFS_MISC
 
