@@ -368,7 +368,7 @@ typedef struct domain {
                                 /* totalBlks, freeBlks */
                                 /* vd.ddlActiveWaitMCId */
                                 /* bfSetHead, bfSetList */
-    uint_t dmnMagic;            /* magic number: structure validation */
+    u_int dmnMagic;            /* magic number: structure validation */
 
     int logVdRadId;             /* the RAD the the log's vd structure */
                                 /* lives on. */
