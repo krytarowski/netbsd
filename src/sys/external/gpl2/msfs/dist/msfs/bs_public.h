@@ -762,12 +762,12 @@ typedef struct logStat {
     ulong_t segmentedRecs;
     ulong_t logTrims;
     ulong_t wastedWords;
-    uint_t  maxLogPgs;
-    uint_t  minLogPgs;
-    uint_t  maxFtxWords;
-    uint_t  maxFtxAgent;
-    uint_t  maxFtxTblSlots;
-    uint_t  oldFtxTblAgent;
+    u_int  maxLogPgs;
+    u_int  minLogPgs;
+    u_int  maxFtxWords;
+    u_int  maxFtxAgent;
+    u_int  maxFtxTblSlots;
+    u_int  oldFtxTblAgent;
     ulong_t excSlotWaits;
     ulong_t fullSlotWaits;
     ulong_t rsv1;
