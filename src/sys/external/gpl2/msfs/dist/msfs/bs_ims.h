@@ -495,12 +495,12 @@ bs_vd_thread(
 void
 bs_init( int doingRoot );
 
-void bs_init_area();
-void init_bscreate_opx();
-int init_bs_stg_opx();
-void init_bs_xtnts_opx();
-int init_bs_bitmap_opx();
-int init_crmcell_opx();
+void bs_init_area(void);
+void init_bscreate_opx(void);
+int init_bs_stg_opx(void);
+void init_bs_xtnts_opx(void);
+int init_bs_bitmap_opx(void);
+int init_crmcell_opx(void);
 void init_bs_delete_opx( void );
 void init_bs_bmt_util_opx( void );
 

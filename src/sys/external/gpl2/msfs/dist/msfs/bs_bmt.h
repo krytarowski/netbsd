@@ -33,7 +33,7 @@
 
 #ifdef _KERNEL
 
-struct bsMPg* get_bmt_pgptr();
+struct bsMPg* get_bmt_pgptr(domainT * dmnP);
 
 statusT
 bmt_set_mcell_free_list(
