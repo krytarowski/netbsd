@@ -1228,10 +1228,10 @@ extern char *SadFmt3;
     advfs_sad( __FILE__, __LINE__, SadFmt3, msg, (n1), (n2), (n3) );
 
 void
-advfs_sad(char * module,
+advfs_sad(const char * module,
           int line,
           char *fmt,
-          char *msg,
+          const char *msg,
           long n1,
           long n2,
           long n3);
@@ -1245,12 +1245,12 @@ advfs_sad(char * module,
  
 void
 _domain_panic(struct domain *dmnP,
-              char *msg,
+              const char *msg,
               int flags
              );
 void
 domain_panic( struct domain *dmnP,
-              char *format,
+              const char *format,
               ...
             );
 
