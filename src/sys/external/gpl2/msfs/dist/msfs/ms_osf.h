@@ -118,7 +118,7 @@ typedef struct fileSetNode {
     struct fileSetNode **fsPrev;
     bfTagT rootTag;                 /* tag of root directory */
     bfTagT tagsTag;                 /* tag of ".tags */
-    uint_t filesetMagic;            /* magic number: structure validation */
+    u_int filesetMagic;            /* magic number: structure validation */
     domainT *dmnP;
     bfAccessT *rootAccessp;         /* Access structure pointer for root */
     bfSetIdT bfSetId;

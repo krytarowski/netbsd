@@ -109,7 +109,7 @@ typedef struct vd {
      */
     uint32T stgCluster;         /* num blks each stg bitmap bit */
     struct vnode *devVp;        /* device access (temp vnode *) */
-    uint_t vdMagic;             /* magic number: structure validation */
+    u_int vdMagic;             /* magic number: structure validation */
     bfAccessT *rbmtp;           /* access structure pointer for RBMT */
     bfAccessT *bmtp;            /* access structure pointer for BMT */
     bfAccessT *sbmp;            /* access structure pointer for SBM */
