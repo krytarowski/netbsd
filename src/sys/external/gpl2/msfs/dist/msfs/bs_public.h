@@ -61,10 +61,10 @@
  * constant regardless of cpu architecture.
  **********************************************************************/
 
-typedef unsigned int uint32T;           /* unsigned 32 bit int */
-typedef unsigned short uint16T;         /* unsigned 16 bit int */
-typedef short int16T;                   /* signed 16 bit int */
-typedef int int32T;                     /* signed 32 bit int */
+typedef uint32_t uint32T;               /* unsigned 32 bit int */
+typedef uint16_t uint16T;               /* unsigned 16 bit int */
+typedef int16_t int16T;                 /* signed 16 bit int */
+typedef int32_t int32T;                 /* signed 32 bit int */
 typedef unsigned int bsPageT;           /* bitfile page number, 32 bits */
 typedef unsigned int lbnT;              /* logical block number, 32 bits */
 typedef struct timeval bsIdT;           /* unique identifier, 64 bits */
