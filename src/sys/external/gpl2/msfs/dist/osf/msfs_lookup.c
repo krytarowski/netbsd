@@ -596,7 +596,7 @@ lookup:
      */
     if (*ndp->ni_next == '\0' && flag == LOOKUP) {
         dir_context->last_offset =
-            ((ulong_t)ndp->ni_count * ADVFS_PGSZ) + ndp->ni_offset;
+            ((u_long)ndp->ni_count * ADVFS_PGSZ) + ndp->ni_offset;
     }
 
 
