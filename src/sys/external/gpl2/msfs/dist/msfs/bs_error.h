@@ -229,11 +229,11 @@
  * The macro BSERRMSG() can be used to print the error messages.
  */
 
-extern char *bs_errlist[];           /* bs_errlst.c */
+extern const char *bs_errlist[];           /* bs_errlst.c */
 
 #define BSERRMSG( sts ) advfs_errmsg( sts )
 
-char * advfs_errmsg( int sts );
+const char * advfs_errmsg( int sts );
 
 
 extern int sts_to_errno_map[];      /* bs_errlst.c */
