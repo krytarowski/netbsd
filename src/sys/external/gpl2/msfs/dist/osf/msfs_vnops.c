@@ -859,7 +859,7 @@ msfs_getattr(
         if (sts != EOK) {
             vap->va_bytes = 0;      /* XXX */
         } else {
-            vap->va_bytes = (ulong_t)pageCnt * ADVFS_PGSZ;
+            vap->va_bytes = (u_long)pageCnt * ADVFS_PGSZ;
         }
 
         return 0;
@@ -960,7 +960,7 @@ no_update:
 
     /* the real number of bytes in the file */
     (void)bs_get_bf_page_cnt(bfap, &pageCnt);
-    vap->va_bytes = (ulong_t)pageCnt * ADVFS_PGSZ;
+    vap->va_bytes = (u_long)pageCnt * ADVFS_PGSZ;
 
     /*
      * fragState and fragId are normally protected by the fragLock
