@@ -641,7 +641,7 @@ get_ftx_id(ftxHT ftxH           /* in - ftx handle */
            );
 
 void
-ftx_init();
+ftx_init(void);
 
 statusT
 rbf_set_bfset_params(
