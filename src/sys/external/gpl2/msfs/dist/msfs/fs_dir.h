@@ -81,7 +81,7 @@ struct fs_stat
     int     st_umtime;
     time_t  st_ctime;
     int     st_uctime;
-    uint_t  st_flags;          /* user defined flags for file */
+    u_int  st_flags;          /* user defined flags for file */
 				/* 0x10000000 reserved for AUTOFS */
 				/* 0x20000000 reserved for AUTOFS */
     bfTagT  dir_tag;           /* tag of parent directory */

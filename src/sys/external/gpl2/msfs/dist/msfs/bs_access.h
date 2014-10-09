@@ -175,7 +175,7 @@ typedef struct bfAccess {
     struct bfAccess *freeFwd;   /* freelist or closed list */
     struct bfAccess *freeBwd;
     int onFreeList;             /* 1 = on free list, -1 on closed list */
-    uint_t accMagic;            /* magic number: structure validation */
+    u_int accMagic;            /* magic number: structure validation */
                                 /* guard next two with bfSetT.accessChainLock */
     struct bfAccess *setFwd;    /* fileset chaining */
     struct bfAccess *setBwd;
