@@ -2914,7 +2914,7 @@ ftx_lock_write(
     ftxLkT *lk,      /* in */
     ftxHT ftxH,      /* in */
     int ln,          /* in */
-    char *fn         /* in */
+    const char *fn         /* in */
     )
 {
     perlvlT *clvlp;
@@ -2961,7 +2961,7 @@ ftx_lock_read(
     ftxLkT *lk,      /* in */
     ftxHT ftxH,      /* in */
     int ln,          /* in */
-    char *fn         /* in */
+    const char *fn         /* in */
     )
 {
     perlvlT *clvlp;
@@ -3042,7 +3042,7 @@ _ftx_add_lock(
               ftxLkT *lk,      /* in */
               ftxHT ftxH,      /* in */
               int ln,          /* in */
-              char *fn         /* in */
+              const char *fn         /* in */
               )
 {
     perlvlT *clvlp;

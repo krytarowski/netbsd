@@ -57,7 +57,7 @@
 
 #include "../msfs/bs_error.h"
 
-char *bs_errlist[] = {
+const char *bs_errlist[] = {
     "ETAG_OVF (-1025)",
     "EHANDLE_OVF (-1026)",
     "EINVALID_HANDLE (-1027)",
@@ -408,13 +408,13 @@ int sts_to_errno_map[] = {
     EINVAL,      /* E_ILLEGAL_CLONE_OP                  (-1191) */
 };
 
-char *
+const char *
 advfs_errmsg(
     int sts
     )
 {
-    static char * errNo = "errno";
-    static char * unknownErr = "unknown error";
+    static const char * errNo = "errno";
+    static const char * unknownErr = "unknown error";
 
     if ((abs( sts ) < MSFS_FIRST_ERR)) {
 #ifdef _KERNEL
@@ -436,7 +436,7 @@ advfs_errmsg(
 #endif
 
     } else {
-        char *m;
+        const char *m;
         m =  bs_errlist[abs( sts ) - MSFS_FIRST_ERR];
         return m;
     }

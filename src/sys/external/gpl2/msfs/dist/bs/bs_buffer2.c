@@ -74,7 +74,7 @@ decl_simple_lock_info(, ADVbufLock_lockinfo)
 /*
  * Tracing vars
  */
-char *PrintAction[] = {
+const char *PrintAction[] = {
     "Ref     ",
     "Deref   ",
     "Pin     ",
@@ -82,7 +82,7 @@ char *PrintAction[] = {
     "Devread ",
     "Devwrite" };
 
-char *UnpinAction[] = {
+const char *UnpinAction[] = {
     "Immed",
     "Clean",
     "Dirty",
