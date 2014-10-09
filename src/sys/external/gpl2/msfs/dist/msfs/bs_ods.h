@@ -622,18 +622,11 @@ typedef struct bsQuotaAttr {
 #define BSR_PROPLIST_HEAD_SIZE_V3 (sizeof(uint64T)+2*sizeof(uint32T))
 
 /* flags */
-#ifdef __arch64__
 #define BSR_PL_LARGE    0x0100000000000000
 #define BSR_PL_DELETED  0x0200000000000000
 #define BSR_PL_PAGE     0x0400000000000000
 #define BSR_PL_RESERVED 0xFF00000000000000
-#else /* __arch32__ */
-#warning Flags changed to allow compilation - functional chages yet to be done 
-#define BSR_PL_LARGE    0x01000000
-#define BSR_PL_DELETED  0x02000000
-#define BSR_PL_PAGE     0x04000000
-#define BSR_PL_RESERVED 0xFF000000
-#endif  /* compile hack */
+
 typedef struct bsPropListHead {
   uint64T  flags;
   uint32T  pl_num;                      /* Which pl in this tag */
