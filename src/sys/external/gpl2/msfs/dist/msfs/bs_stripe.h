@@ -65,7 +65,7 @@
 
 
 void
-str_register_stripe_agent (
+str_register_stripe_agent (void
                            );
 
 statusT

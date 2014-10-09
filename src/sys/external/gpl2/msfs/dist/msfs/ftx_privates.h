@@ -316,7 +316,7 @@ ftx_trace( ftxStateT *ftxp,
  */
 
 ftxStateT*
-newftx();
+newftx(void);
 
 void ftx_free(
     int ftxSlot,

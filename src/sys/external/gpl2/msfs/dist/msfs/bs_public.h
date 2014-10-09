@@ -1280,27 +1280,21 @@ domain_panic( struct domain *dmnP,
 
 void
 ms_printf(
-#ifndef _KERNEL
           char *msg, ...
-#endif
           );
 
 void
 ms_uprintf(
-#ifndef _KERNEL
           char *msg, ...
-#endif
           );
 
 void
 ms_uaprintf(
-#ifndef _KERNEL
           char *msg, ...
-#endif
           );
 
 void
-ms_pfflush();
+ms_pfflush(void);
 
 /*
  * public bitfile set routines
