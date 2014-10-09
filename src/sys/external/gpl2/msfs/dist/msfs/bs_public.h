@@ -260,34 +260,13 @@ typedef struct ftxH {
     unsigned level : 8; /* ftx level (root = 0) */
 } ftxHT;
 
-#ifdef __arch32__
-typedef struct {
-    uint32T low;
-    uint32T high;
-} uint64T;
-
-#define UINT64T_ADD(uint64t_field, addend) \
-  if (((uint64t_field).low + (addend)) < (uint64t_field).low) { \
-      (uint64t_field).high++; \
-  } \
-  (uint64t_field).low = (uint64t_field).low + (addend);
-
-#define UINT64T_SUB(uint64t_field, subtrahend) \
-  if (((uint64t_field).low - (subtrahend)) > (uint64t_field).low) { \
-      (uint64t_field).high--; \
-  } \
-  (uint64t_field).low = (uint64t_field).low - (subtrahend);
-
-#else /* __arch32__ */
-
-typedef unsigned long uint64T;
+typedef uint64_t uint64T;
 
 #define UINT64T_ADD(uint64t_field, addend) \
   (uint64t_field) = (uint64t_field) + (addend);
 
 #define UINT64T_SUB(uint64t_field, subtrahend) \
   (uint64t_field) = (uint64t_field) - (subtrahend);
-#endif /* __arch32__ */
 
 #define BS_UID_EQL(bs_uid1, bs_uid2) \
     ((bs_uid1).tv_sec == (bs_uid2).tv_sec && \
