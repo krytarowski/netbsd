@@ -811,7 +811,7 @@ bs_osf_complete(
          * The allocation scheme is strictly internal
          * to MegaSafe.
          */
-        pages = (ulong_t)iop->totalBlks * BS_BLKSIZE / PAGE_SIZE;
+        pages = (u_long)iop->totalBlks * BS_BLKSIZE / PAGE_SIZE;
         iop->totalBlks = 0;
         iop->consolidated = 0;
         len = iop->desCnt;

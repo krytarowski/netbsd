@@ -1497,7 +1497,7 @@ check_vd_sizes(struct fileSetNode *fsnp)
     domainT         *dmnP;                      /* This domain */
     struct vd       *vdp;                       /* Current volume */
     DEVGEOMST       *geomstp = NULL;            /* For ioctl() call */
-    ulong_t         actual_vd_size;             /* As returned by ioctl() */
+    u_long         actual_vd_size;             /* As returned by ioctl() */
     getioinfo_t     *getioinfop;                /* To get disk partition size */
     struct vnode    *dvp;                       /* Device vnode pointer */
     int             sts,                        /* Return status */

@@ -757,23 +757,23 @@ typedef struct bmtStat {
 } bmtStatT;
 
 typedef struct logStat {
-    ulong_t logWrites;
-    ulong_t transactions;
-    ulong_t segmentedRecs;
-    ulong_t logTrims;
-    ulong_t wastedWords;
+    u_long logWrites;
+    u_long transactions;
+    u_long segmentedRecs;
+    u_long logTrims;
+    u_long wastedWords;
     u_int  maxLogPgs;
     u_int  minLogPgs;
     u_int  maxFtxWords;
     u_int  maxFtxAgent;
     u_int  maxFtxTblSlots;
     u_int  oldFtxTblAgent;
-    ulong_t excSlotWaits;
-    ulong_t fullSlotWaits;
-    ulong_t rsv1;
-    ulong_t rsv2;
-    ulong_t rsv3;
-    ulong_t rsv4;
+    u_long excSlotWaits;
+    u_long fullSlotWaits;
+    u_long rsv1;
+    u_long rsv2;
+    u_long rsv3;
+    u_long rsv4;
 } logStatT;
 
 typedef struct bfDmnParams {

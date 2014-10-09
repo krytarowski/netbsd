@@ -519,8 +519,8 @@ blkmap_direct(struct bsBuf *bp,
                     FS_FILE_WRITE_LOCK( contextp );
                 }
                 res = fs_write_add_stg( bfap,
-                                        (ulong_t) page,
-                                        (ulong_t)bytes_left,
+                                        (u_long) page,
+                                        (u_long)bytes_left,
                                         bfap->file_size,
                                         0,       
                                         cred,
@@ -641,10 +641,10 @@ blkmap_direct(struct bsBuf *bp,
                         FS_FILE_WRITE_LOCK( contextp );
                     }
                     res = fs_write_add_stg(bfap,
-                                           (ulong_t)page,
-                                           (ulong_t)bytes_left,
-                                           (ulong_t)(bfap->file_size +
-                                             (ulong_t) (nbytes - bytes_left)),
+                                           (u_long)page,
+                                           (u_long)bytes_left,
+                                           (u_long)(bfap->file_size +
+                                             (u_long) (nbytes - bytes_left)),
                                            0,
                                            cred,
                                            0,
