@@ -38,7 +38,7 @@ bs_move_metadata (
                   );
 
 void
-mig_register_migrate_agent ();
+mig_register_migrate_agent (void);
 
 statusT
 mig_migrate (
