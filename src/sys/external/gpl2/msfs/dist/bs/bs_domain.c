@@ -2114,15 +2114,8 @@ bs_bfdmn_activate(
      * mounting process.
      */
 
-#ifdef __arch32__
-    dmnP->totalBlks.low = 0;
-    dmnP->totalBlks.high = 0;
-    dmnP->freeBlks.low = 0;
-    dmnP->freeBlks.high = 0;
-#else  /* __arch32__ */
     dmnP->totalBlks = 0;
     dmnP->freeBlks = 0;
-#endif  /* __arch32__ */
 
     /*
      * Establish new domain mount time.
