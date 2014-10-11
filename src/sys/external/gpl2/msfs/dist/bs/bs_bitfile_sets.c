@@ -2039,7 +2039,7 @@ close_fragbf:
 close_bfs:
     bs_bfs_close(bfSetp, ftxH, BFS_OP_DEF);
 
-done:
+done: ;
 }
 
 /*
