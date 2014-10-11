@@ -327,14 +327,14 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
     new_file_cp->fs_flag = 0;
 
     if (BSD_MODE(ndp->ni_dvp)) {
-        new_file_cp->dir_stats.st_gid = dir_cp->dir_stats.st_gid;
+        new_file_cp->dir_stats.advfs_st_gid = dir_cp->dir_stats.advfs_st_gid;
 #if SEC_BASE
         if((new_file_cp->dir_stats.advfs_st_mode & S_ISGID) &&
-            !groupmember( new_file_cp->dir_stats.st_gid, ndp->ni_cred ) &&
+            !groupmember( new_file_cp->dir_stats.advfs_st_gid, ndp->ni_cred ) &&
             !privileged(SEC_SETPROCIDENT, 0)) {
 #else
         if((new_file_cp->dir_stats.advfs_st_mode & S_ISGID) &&
-            !groupmember( new_file_cp->dir_stats.st_gid, ndp->ni_cred ) &&
+            !groupmember( new_file_cp->dir_stats.advfs_st_gid, ndp->ni_cred ) &&
             suser(ndp->ni_cred, NULL)) {
 #endif
             new_file_cp->dir_stats.advfs_st_mode &= ~S_ISGID;
@@ -348,7 +348,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
              * new nodes' group id becomes the group id of the
              * parent directory.
              */
-             new_file_cp->dir_stats.st_gid = dir_cp->dir_stats.st_gid;
+             new_file_cp->dir_stats.advfs_st_gid = dir_cp->dir_stats.advfs_st_gid;
              if (create_directory) {
                  /* new directory gets the ISGID bit set */
                  mode |= S_ISGID;
@@ -359,7 +359,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
              * Therefore new nodes' group id becomes the group id (egid)
              * of the calling process.
              */
-            new_file_cp->dir_stats.st_gid = ndp->ni_cred->cr_gid;
+            new_file_cp->dir_stats.advfs_st_gid = ndp->ni_cred->cr_gid;
 
             if (!(vap->va_mode & S_ISGID)) {
                 /*
@@ -374,7 +374,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
             }
         }
 
-        if (!groupmember(new_file_cp->dir_stats.st_gid, ndp->ni_cred)) {
+        if (!groupmember(new_file_cp->dir_stats.advfs_st_gid, ndp->ni_cred)) {
             new_file_cp->dir_stats.advfs_st_mode &= ~S_ISGID;
         }
     }
