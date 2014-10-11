@@ -7060,7 +7060,7 @@ vd_dec_refcnt( vdT *vdp )
  * mega_touch_presto
  */
 
-mega_touch_presto( struct vnode *vp )
+void mega_touch_presto( struct vnode *vp )
 {
     struct presto_status prs;
     int result;
