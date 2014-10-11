@@ -78,7 +78,7 @@ struct fs_stat
     time_t  advfs_st_atime;
     int     advfs_st_uatime;
     time_t  advfs_st_mtime;
-    int     st_umtime;
+    int     advfs_st_umtime;
     time_t  st_ctime;
     int     st_uctime;
     u_int  st_flags;          /* user defined flags for file */

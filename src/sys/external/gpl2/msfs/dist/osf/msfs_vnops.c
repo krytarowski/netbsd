@@ -889,7 +889,7 @@ msfs_getattr(
         vap->va_atime.tv_sec = context_ptr->dir_stats.advfs_st_atime;
         vap->va_atime.tv_usec = context_ptr->dir_stats.advfs_st_uatime / 1000;
         vap->va_mtime.tv_sec = context_ptr->dir_stats.advfs_st_mtime;
-        vap->va_mtime.tv_usec = context_ptr->dir_stats.st_umtime / 1000;
+        vap->va_mtime.tv_usec = context_ptr->dir_stats.advfs_st_umtime / 1000;
         vap->va_ctime.tv_sec = context_ptr->dir_stats.st_ctime;
         vap->va_ctime.tv_usec = context_ptr->dir_stats.st_uctime / 1000;
         goto no_update;
@@ -905,10 +905,10 @@ msfs_getattr(
         vap->va_mtime.tv_sec = new_time.tv_sec;
         vap->va_mtime.tv_usec = new_time.tv_usec;
         context_ptr->dir_stats.advfs_st_mtime = new_time.tv_sec;
-        context_ptr->dir_stats.st_umtime = new_time.tv_usec * 1000;
+        context_ptr->dir_stats.advfs_st_umtime = new_time.tv_usec * 1000;
     } else {
         vap->va_mtime.tv_sec = context_ptr->dir_stats.advfs_st_mtime;
-        vap->va_mtime.tv_usec = context_ptr->dir_stats.st_umtime / 1000;
+        vap->va_mtime.tv_usec = context_ptr->dir_stats.advfs_st_umtime / 1000;
     }
     if (context_ptr->fs_flag & MOD_ATIME) {
         vap->va_atime.tv_sec = new_time.tv_sec;
@@ -1089,7 +1089,7 @@ fs_setattr(
             }
             if ((vap->va_mtime.tv_sec != 0) || (vap->va_mtime.tv_usec != 0)) {
                 context_ptr->dir_stats.advfs_st_mtime = vap->va_mtime.tv_sec;
-                context_ptr->dir_stats.st_umtime = vap->va_mtime.tv_usec * 1000;
+                context_ptr->dir_stats.advfs_st_umtime = vap->va_mtime.tv_usec * 1000;
                 context_ptr->fs_flag &= ~(MOD_MTIME);
             }
             if ((vap->va_ctime.tv_sec != 0) || (vap->va_ctime.tv_usec != 0)) {
@@ -1130,7 +1130,7 @@ fs_setattr(
         }
         if (vap->va_mtime.tv_sec != (int)VNOVAL) {
             context_ptr->dir_stats.advfs_st_mtime = vap->va_mtime.tv_sec;
-            context_ptr->dir_stats.st_umtime = vap->va_mtime.tv_usec * 1000;
+            context_ptr->dir_stats.advfs_st_umtime = vap->va_mtime.tv_usec * 1000;
             context_ptr->fs_flag &= ~(MOD_MTIME);
         }
         context_ptr->dirty_stats = TRUE;
