@@ -698,7 +698,7 @@ create_root_file(
     dir_stats->st_atime = createTime.tv_sec;
     dir_stats->st_mtime = createTime.tv_sec;
     dir_stats->st_ctime = createTime.tv_sec;
-    dir_stats->st_size = size;
+    dir_stats->advfs_st_size = size;
     bfap->file_size = size;
     dir_stats->advfs_st_mode = mode;
     dir_stats->st_nlink = nlinks;

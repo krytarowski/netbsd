@@ -1581,7 +1581,7 @@ _retry_append_range:
     mutex_lock( &contextp->fsContext_mutex );
 
     /*
-     * update st_size and st_mtime in the file's stat structure
+     * update advfs_st_size and st_mtime in the file's stat structure
      * IO_NOSTATUPDATE is used by CFS to tell the PFS not to update
      * the mtime and ctime as the data is being written past close.
      *
@@ -3243,7 +3243,7 @@ _retry_map:
     }
 
     if (contextp->fs_flag & META_OPEN) {
-        /* meta data and fragbf st_size needs to be kept updated */
+        /* meta data and fragbf advfs_st_size needs to be kept updated */
         bfap->file_size = (off_t)((bfap->bfSetp->cloneId && bfap->cloneId) ?
                                    (off_t)bfap->maxClonePgs * ADVFS_PGSZ :
                                    (off_t)bfap->nextPage * ADVFS_PGSZ);
