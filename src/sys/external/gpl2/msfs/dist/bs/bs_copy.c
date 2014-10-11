@@ -154,10 +154,8 @@ cp_copy_page_range (
                     uint32T forceFlag         /* in */
                     )
 {
-    blkMapT blkMap;
     uint32T i;
     statusT sts;
-    bsInMemXtntMapT *xtntMap;
     int flag = 0;
 
     /* FIX - if log, can't do */
