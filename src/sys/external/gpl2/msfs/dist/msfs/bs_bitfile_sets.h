@@ -257,8 +257,8 @@ extern bfSetT nilBfSet;
 
 #define BS_GET_FSID(_setp,_fsid) \
 { \
-    _fsid.val[0] = _setp->dev; \
-    _fsid.val[1] = MOUNT_MSFS; \
+    _fsid.__fsid_val[0] = _setp->dev; \
+    _fsid.__fsid_val[1] = MOUNT_MSFS; \
 }
 
 
