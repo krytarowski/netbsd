@@ -935,7 +935,7 @@ no_update:
 /*      vap->va_fsid = bs_bfset_get_dev( bfSetp ); */
         vap->va_fsid = bfSetp->dev; /*  == f_fsid.val[0] */
     }
-    vap->va_fileid = BS_BFTAG_IDX(context_ptr->dir_stats.st_ino);
+    vap->va_fileid = BS_BFTAG_IDX(context_ptr->dir_stats.advfs_st_ino);
     vap->va_mode = context_ptr->dir_stats.st_mode;
 
     /* set 16-bit and 32-bit link counts in vattr */
@@ -949,7 +949,7 @@ no_update:
     vap->va_flags = context_ptr->dir_stats.st_flags;
     vap->va_blocksize = ADVFS_PGSZ;
     vap->va_type = vp->v_type;
-    vap->va_gen = BS_BFTAG_SEQ(context_ptr->dir_stats.st_ino);
+    vap->va_gen = BS_BFTAG_SEQ(context_ptr->dir_stats.advfs_st_ino);
 
     /*
      * release mutex now because some of the 'bs' routines

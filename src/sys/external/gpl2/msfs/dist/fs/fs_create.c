@@ -756,7 +756,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
      * get file creation date/time
      */
     new_file_cp->fs_flag |= (MOD_ATIME | MOD_MTIME | MOD_CTIME);
-    new_file_cp->dir_stats.st_ino = new_file_tag;
+    new_file_cp->dir_stats.advfs_st_ino = new_file_tag;
     bfap->fragState = FS_FRAG_NONE;
     bfap->fragId = bsNilFragId;
     new_file_cp->dirty_stats = TRUE;
