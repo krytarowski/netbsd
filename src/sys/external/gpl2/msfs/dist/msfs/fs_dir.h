@@ -70,7 +70,7 @@ typedef enum {
 struct fs_stat
 {
     bfTagT  advfs_st_ino;
-    mode_t  st_mode;
+    mode_t  advfs_st_mode;
     uid_t   st_uid;
     gid_t   st_gid;
     dev_t   st_rdev;

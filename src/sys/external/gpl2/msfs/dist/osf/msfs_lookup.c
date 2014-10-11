@@ -263,7 +263,7 @@ msfs_lookup(
         ADVFS_SAD0("Error getting dir_context_ptr in msfs_lookup");
     }
 
-    if ((dir_context->dir_stats.st_mode & S_IFMT) !=
+    if ((dir_context->dir_stats.advfs_st_mode & S_IFMT) !=
         S_IFDIR) {
         return (ENOTDIR);
     }
@@ -670,7 +670,7 @@ lookup:
          * if directory is sticky, use must own the directory, or
          * the file in it, to delete it, unless root.
          */
-        if ((dir_context->dir_stats.st_mode & S_ISVTX) &&
+        if ((dir_context->dir_stats.advfs_st_mode & S_ISVTX) &&
             ndp->ni_cred->cr_uid != 0 &&
             ndp->ni_cred->cr_uid !=
             dir_context->dir_stats.st_uid) {
