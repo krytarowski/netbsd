@@ -448,7 +448,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
                 VN_UNLOCK(nvp);
                 goto fail_out;
             }
-            new_file_cp->dir_stats.st_rdev = vap->va_rdev;
+            new_file_cp->dir_stats.advfs_st_rdev = vap->va_rdev;
             VN_LOCK(nvp);
             nvp->v_op = &spec_bfnodeops;
             VN_UNLOCK(nvp);
