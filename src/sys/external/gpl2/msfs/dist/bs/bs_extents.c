@@ -521,7 +521,7 @@ undo_cre_xtnt_rec (
     statusT sts;
     creXtntRecUndoRecT undoRec;
     vdT *vdp;
-    struct bfAccess *mdap,*bfap;
+    struct bfAccess *mdap;
     bsMRT *rec;
  
     /*
@@ -836,7 +836,6 @@ create_xtnt_map_hdr (
     bfMCIdT primMcellId;
     vdIndexT primVdIndex;
     statusT sts;
-    vdT *vd;
 
     MS_SMP_ASSERT(!BS_BFTAG_RSVD(bfap->tag));  /* not designed for rsvd files */
 
@@ -2497,7 +2496,6 @@ load_inmem_xtnt_map (
     bfMCIdT nextMcellId;
     vdIndexT nextVdIndex;
     bsInMemXtntMapT *nextXtntMap;
-    uint32T pageCnt;
     bsInMemXtntMapT *prevXtntMap;
     int segmentCnt;
     statusT sts;
