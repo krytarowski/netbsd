@@ -53,7 +53,7 @@
 
 extern void * BsAccessHashTbl;
 
-static int msfs_chown(struct vnode *vp, uid_t uid, gid_t gid, struct ucred *cred, ftxHT parentFtxH, int setctime);
+static int msfs_chown(struct vnode *vp, uid_t uid, gid_t gid, struct uucred *cred, ftxHT parentFtxH, int setctime);
 
 #define ADVFS_MODULE MSFS_VNOPS
 
@@ -113,35 +113,35 @@ msfs_noop(void)
 
 int msfs_lookup(),
     msfs_create(struct nameidata *ndp, struct vattr *vap),
-    msfs_mknod(struct nameidata *ndp, struct vattr *vap, struct ucred *cred),
-    msfs_open(struct vnode **vpp, int mode, struct ucred *cred),
-    msfs_close(struct vnode *vp, int fflag, struct ucred *cred),
-    msfs_access(struct vnode *vp, int mode, struct ucred *cred),
-    msfs_getattr(struct vnode *vp, register struct vattr *vap, struct ucred *cred),
-    msfs_setattr(register struct vnode *vp, register struct vattr *vap, register struct ucred *cred),
-    msfs_read(struct vnode *vp, register struct uio *uio, int ioflag, struct ucred *cred),
-    msfs_write(struct vnode *vp, register struct uio *uio, int ioflag, struct ucred *cred),
+    msfs_mknod(struct nameidata *ndp, struct vattr *vap, struct uucred *cred),
+    msfs_open(struct vnode **vpp, int mode, struct uucred *cred),
+    msfs_close(struct vnode *vp, int fflag, struct uucred *cred),
+    msfs_access(struct vnode *vp, int mode, struct uucred *cred),
+    msfs_getattr(struct vnode *vp, register struct vattr *vap, struct uucred *cred),
+    msfs_setattr(register struct vnode *vp, register struct vattr *vap, register struct uucred *cred),
+    msfs_read(struct vnode *vp, register struct uio *uio, int ioflag, struct uucred *cred),
+    msfs_write(struct vnode *vp, register struct uio *uio, int ioflag, struct uucred *cred),
     msfs_ioctl(),
     seltrue(),
     msfs_mmap(),
-    msfs_fsync(struct vnode *vp, int fflags, struct ucred *cred, int waitfor),
-    msfs_seek(struct vnode *vp, off_t oldoff, off_t newoff, struct ucred *cred),
+    msfs_fsync(struct vnode *vp, int fflags, struct uucred *cred, int waitfor),
+    msfs_seek(struct vnode *vp, off_t oldoff, off_t newoff, struct uucred *cred),
     msfs_remove(struct nameidata *ndp),
     msfs_link(register struct vnode *vp, register struct nameidata *ndp),
     msfs_rename(register struct nameidata *fndp, register struct nameidata *tndp),
     msfs_mkdir(struct nameidata *ndp, struct vattr *vap),
     msfs_rmdir(register struct nameidata *ndp),
     msfs_symlink(struct nameidata *ndp, struct vattr *vap, char *target),
-    msfs_readdir(struct vnode *vp, register struct uio *uio, struct ucred *cred, int *eofflagp),
-    msfs_readlink(struct vnode *vp, struct uio *uiop, struct ucred *cred),
+    msfs_readdir(struct vnode *vp, register struct uio *uio, struct uucred *cred, int *eofflagp),
+    msfs_readlink(struct vnode *vp, struct uio *uiop, struct uucred *cred),
     msfs_abortop(struct nameidata *ndp, int ret_val),
     msfs_inactive(),
     msfs_reclaim(),
     msfs_bmap(),
     msfs_strategy(),
     msfs_print(struct vnode *vp),
-    msfs_page_read(struct vnode *vp, struct uio *uio, struct ucred *cred),
-    msfs_page_write(struct vnode *vp, struct uio *uio, struct ucred *cred, memory_object_t pager, vm_offset_t offset),
+    msfs_page_read(struct vnode *vp, struct uio *uio, struct uucred *cred),
+    msfs_page_write(struct vnode *vp, struct uio *uio, struct uucred *cred, memory_object_t pager, vm_offset_t offset),
     msfs_refer(),
     msfs_release(),
     msfs_getpage(),     /* get page */
@@ -150,10 +150,10 @@ int msfs_lookup(),
     msfs_swap(),        /* swap handler */
     msfs_bread(),       /* buffer read */
     msfs_brelse(),      /* buffer release */
-    msfs_lockctl(struct vnode *vp, struct eflock *eld, int flag, struct ucred *cred, pid_t clid, off_t offset),
+    msfs_lockctl(struct vnode *vp, struct eflock *eld, int flag, struct uucred *cred, pid_t clid, off_t offset),
     /* file locking */
     msfs_setvlocks(struct vnode *vp),
-    msfs_syncdata(struct vnode *vp, int fflags, vm_offset_t start, vm_size_t length, struct ucred *cred),
+    msfs_syncdata(struct vnode *vp, int fflags, vm_offset_t start, vm_size_t length, struct uucred *cred),
     /* fsync byte range */
     msfs_pathconf(),    /* pathconf */
     msfs_objtovp(),
@@ -223,14 +223,14 @@ struct vnodeops msfs_vnodeops = {
  */
 int spec_lookup(),
     spec_open(),
-    msfsspec_read(struct vnode *vp, struct uio *uio, int ioflag, struct ucred *cred),
-    msfsspec_write(struct vnode *vp, struct uio *uio, int ioflag, struct ucred *cred),
+    msfsspec_read(struct vnode *vp, struct uio *uio, int ioflag, struct uucred *cred),
+    msfsspec_write(struct vnode *vp, struct uio *uio, int ioflag, struct uucred *cred),
     spec_strategy(),
     spec_bmap(),
     spec_ioctl(),
     spec_select(),
     spec_seek(),
-    msfsspec_close(struct vnode *vp, int fflag, struct ucred *cred),
+    msfsspec_close(struct vnode *vp, int fflag, struct uucred *cred),
     msfsspec_reclaim(register struct vnode *vp, int flags),
     spec_page_read(),
     spec_page_write(),
@@ -297,10 +297,10 @@ extern int
     fifo_brelse(),
     fifo_pathconf();
 
-int msfsfifo_close(struct vnode *vp, int fflag, struct ucred *cred),
-    msfsfifo_read(struct vnode *vp, struct uio *uio, int ioflag, struct ucred *cred),
-    msfsfifo_write(struct vnode *vp, struct uio *uio, int ioflag, struct ucred *cred),
-    msfsfifo_getattr(struct vnode *vp, register struct vattr *vap, struct ucred *cred),
+int msfsfifo_close(struct vnode *vp, int fflag, struct uucred *cred),
+    msfsfifo_read(struct vnode *vp, struct uio *uio, int ioflag, struct uucred *cred),
+    msfsfifo_write(struct vnode *vp, struct uio *uio, int ioflag, struct uucred *cred),
+    msfsfifo_getattr(struct vnode *vp, register struct vattr *vap, struct uucred *cred),
     msfsfifo_reclaim(struct vnode *vp, int flags),
     msfsfifo_pathconf(register struct vnode *vp, int name, long *retval);
 
@@ -378,7 +378,7 @@ msfs_chown(
            struct vnode *vp,          /* in - vnode pointer for bitfile */
            uid_t uid,                 /* in - uid to change to */
            gid_t gid,                 /* in - gid to change to */
-           struct ucred *cred,        /* in - callers credentials */
+           struct uucred *cred,        /* in - callers credentials */
            ftxHT parentFtxH,          /* in - transaction handle */
            int setctime
            );
@@ -395,7 +395,7 @@ msfs_chmod(
            struct vnode *vp,               /* in - vnode of bitfile */
            struct fsContext *file_context, /* in - file context pointer */
            register int mode,              /* in - mode to change to */
-           struct ucred *cred              /* in - callers credentials */
+           struct uucred *cred              /* in - callers credentials */
            );
 
 /*
@@ -406,7 +406,7 @@ msfs_chmod(
 msfs_mknod(
     struct nameidata *ndp,   /* in - nameidata pointer */
     struct vattr *vap,       /* in - vnode attributes */
-    struct ucred *cred       /* in - caller's credentials */
+    struct uucred *cred       /* in - caller's credentials */
     );
 
 /*
@@ -479,7 +479,7 @@ msfs_create(
 msfs_mknod(
        struct nameidata *ndp,   /* in - nameidata pointer */
        struct vattr *vap,       /* in - vnode attributes */
-       struct ucred *cred       /* in - caller's credentials */
+       struct uucred *cred       /* in - caller's credentials */
        )
 {
     int error;
@@ -522,7 +522,7 @@ msfs_mknod(
 msfs_open(
           struct vnode **vpp,   /* in - vnode pointer */
           int mode,             /* in - open mode */
-          struct ucred *cred    /* in - credentials of caller */
+          struct uucred *cred    /* in - credentials of caller */
           )
 {
     struct fsContext *contextp = VTOC(*vpp);
@@ -654,7 +654,7 @@ msfs_open(
 msfs_close(
            struct vnode *vp,    /* in - vnode of file to close */
            int fflag,           /* in - flags - not used */
-           struct ucred *cred   /* in - credentials of caller */
+           struct uucred *cred   /* in - credentials of caller */
            )
 {
     struct fsContext *context_pointer = VTOC( vp );
@@ -719,7 +719,7 @@ msfs_close(
 msfs_access(
             struct vnode *vp,   /* in - vnode of file to check */
             int mode,           /* in - mode of caller */
-            struct ucred *cred  /* in - credential structure of caller */
+            struct uucred *cred  /* in - credential structure of caller */
             )
 {
     int results, ret;
@@ -786,7 +786,7 @@ msfs_getattr(
              struct vnode *vp,           /* in - vnode pointer of file */
              register struct vattr *vap, /* out - vnode attribute
                                             structure */
-             struct ucred *cred          /* in - callers credentials */
+             struct uucred *cred          /* in - callers credentials */
              )
 {
     bfAccessT *bfap;
@@ -986,7 +986,7 @@ no_update:
 msfs_setattr(
              register struct vnode *vp,    /* in - vnode pointer of file */
              register struct vattr *vap,   /* in - vnode attribute structure */
-             register struct ucred *cred   /* in - callers credentials */
+             register struct uucred *cred   /* in - callers credentials */
              )
 {
     statusT sts=0;
@@ -1000,12 +1000,12 @@ msfs_setattr(
 }
 
 static int fs_setattr_truncate( bfAccessT *, struct vattr *,
-                                struct ucred *, int * );
+                                struct uucred *, int * );
 
 fs_setattr(
              register struct vnode *vp,    /* in - vnode pointer of file */
              register struct vattr *vap,   /* in - vnode attribute structure */
-             register struct ucred *cred)   /* in - callers credentials */
+             register struct uucred *cred)   /* in - callers credentials */
 {
     int error = 0;
     statusT sts;
@@ -1253,7 +1253,7 @@ _exit:
 static int
 fs_setattr_truncate( bfAccessT *bfap,
                      struct vattr *vap,
-                     struct ucred *credp,
+                     struct uucred *credp,
                      int *updateStatsA )
 {
     struct vnode *vp = bfap->bfVp;
@@ -1661,7 +1661,7 @@ msfs_read(
           struct vnode *vp,         /* in - vnode of file to read */
           register struct uio *uio, /* in - uio struct - info for read */
           int ioflag,               /* in - ioflag - POSIX 1003.1b sync i/o */
-          struct ucred *cred        /* in - callers credentials */
+          struct uucred *cred        /* in - callers credentials */
           )
 {
     int ret;
@@ -1703,7 +1703,7 @@ msfs_write(
            struct vnode *vp,          /* in - vnode pointer of file */
            register struct uio *uio,  /* in - uio struct - io information */
            int ioflag,                /* in - flag - append, sync */
-           struct ucred *cred         /* in - callers credentials */
+           struct uucred *cred         /* in - callers credentials */
            )
 {
     int ret;
@@ -1771,11 +1771,11 @@ typedef struct stg_alloc {
  * int cmd               Command, GETCACHEPOLICY or SETCACHEPOLICY (in)
  * caddr_t data          CS_DIRECTIO or CS_CACHE (in and out)
  * int fflag             Unused (in)
- * struct ucred *cred    Unused (in)
+ * struct uucred *cred    Unused (in)
  */
 int
 msfs_ioctl(struct vnode *vp, int cmd, caddr_t data,
-           int fflag, struct ucred *cred)
+           int fflag, struct uucred *cred)
 {
     int retval;
     int vn_locked = FALSE;
@@ -1938,7 +1938,7 @@ msfs_ioctl(struct vnode *vp, int cmd, caddr_t data,
 msfs_fsync(
            struct vnode *vp,    /* in - vnode to fsync */
            int fflags,          /* in - flags */
-           struct ucred *cred,  /* in - credentials of caller */
+           struct uucred *cred,  /* in - credentials of caller */
            int waitfor          /* in - wait flag */
            )
 {
@@ -1956,7 +1956,7 @@ msfs_fsync(
 fs_fsync(
            struct vnode *vp,    /* in - vnode to fsync */
            int fflags,          /* in - flags */
-           struct ucred *cred,  /* in - credentials of caller */
+           struct uucred *cred,  /* in - credentials of caller */
            int waitfor          /* in - wait flag */
            )
 {
@@ -2055,7 +2055,7 @@ msfs_seek(
           struct vnode *vp,     /* in - vnode of file */
           off_t oldoff,         /* in? - old offset */
           off_t newoff,         /* in - new offset */
-          struct ucred *cred    /* in - callers credentials */
+          struct uucred *cred    /* in - callers credentials */
           )
 {
     FILESETSTAT( vp, msfs_seek );
@@ -4225,7 +4225,7 @@ msfs_symlink(
 msfs_readdir(
              struct vnode *vp,           /* in - vnode pointer of directory */
              register struct uio *uio,   /* in - uio structure */
-             struct ucred *cred,         /* in - callers credentials */
+             struct uucred *cred,         /* in - callers credentials */
              int *eofflagp               /* out - eof flag  */
              )
 {
@@ -4265,7 +4265,7 @@ msfs_readdir(
 msfs_readlink(
               struct vnode *vp,   /* in - vnode pointer of file to read */
               struct uio *uiop,   /* in - uio structure pointer */
-              struct ucred *cred  /* in - credentials of caller */
+              struct uucred *cred  /* in - credentials of caller */
               )
 {
     bfAccessT *bfap;
@@ -4636,7 +4636,7 @@ msfs_pathconf(
 msfs_page_read(
                struct vnode *vp,   /* in - vnode of file */
                struct uio *uio,    /* in - uio struct */
-               struct ucred *cred  /* in - callers credentials */
+               struct uucred *cred  /* in - callers credentials */
                )
 {
     struct fsContext *file_context;
@@ -4792,7 +4792,7 @@ msfs_page_read_exit:
 msfs_page_write(
                 struct vnode *vp,      /* in - vnode pointer */
                 struct uio *uio,       /* in - uio structure pointer */
-                struct ucred *cred,    /* in - callers credentials */
+                struct uucred *cred,    /* in - callers credentials */
                 memory_object_t pager, /* in - not used */
                 vm_offset_t offset     /* in - not used */
                 )
@@ -4819,7 +4819,7 @@ msfsspec_read(
     struct vnode *vp,
     struct uio *uio,
     int ioflag,
-    struct ucred *cred)
+    struct uucred *cred)
 {
     struct fsContext *cp;
     int ret;
@@ -4843,7 +4843,7 @@ msfsspec_write(
     struct vnode *vp,
     struct uio *uio,
     int ioflag,
-    struct ucred *cred
+    struct uucred *cred
     )
 {
     struct fsContext *cp;
@@ -4871,7 +4871,7 @@ msfsspec_write(
 msfsspec_close(
     struct vnode *vp,
     int fflag,
-    struct ucred *cred)
+    struct uucred *cred)
 {
     struct fsContext *cp;
     statusT ret;
@@ -5025,7 +5025,7 @@ msfsfifo_read(
     struct vnode *vp,
     struct uio *uio,
     int ioflag,
-    struct ucred *cred
+    struct uucred *cred
     )
 {
     struct fsContext *cp;
@@ -5049,7 +5049,7 @@ msfsfifo_write(
     struct vnode *vp,
     struct uio *uio,
     int ioflag,
-    struct ucred *cred
+    struct uucred *cred
     )
 {
     struct fsContext *cp;
@@ -5077,7 +5077,7 @@ msfsfifo_write(
 msfsfifo_close(
     struct vnode *vp,
     int fflag,
-    struct ucred *cred
+    struct uucred *cred
     )
 {
     struct fsContext *cp;
@@ -5113,7 +5113,7 @@ msfsfifo_close(
 msfsfifo_getattr(
     struct vnode *vp,
     register struct vattr *vap,
-    struct ucred *cred
+    struct uucred *cred
     )
 {
     int error;
@@ -5167,7 +5167,7 @@ msfs_chown(
            struct vnode *vp,               /* in - vnode of bitfile */
            uid_t uid,                      /* in - uid to change to */
            gid_t gid,                      /* in - gid to change to */
-           struct ucred *cred,             /* in - callers credentials */
+           struct uucred *cred,             /* in - callers credentials */
            ftxHT parentFtxH,               /* in - parent transaction handle */
            int setctime                    /* in - setctime */
            )
@@ -5232,7 +5232,7 @@ msfs_chmod(
            struct vnode *vp,               /* in - vnode of bitfile */
            struct fsContext *file_context, /* in - file context pointer */
            register int mode,              /* in - mode to change to */
-           struct ucred *cred              /* in - callers credentials */
+           struct uucred *cred              /* in - callers credentials */
            )
 {
     int error;
@@ -5855,7 +5855,7 @@ msfs_lockctl(
              struct vnode *vp,    /* in - vnode pointer of file */
              struct eflock *eld,  /* in */
              int flag,            /* in */
-             struct ucred *cred,  /* in - callers credentials */
+             struct uucred *cred,  /* in - callers credentials */
              pid_t clid,          /* in */
              off_t offset         /* in */
              )
@@ -5965,7 +5965,7 @@ msfs_syncdata(
               int fflags,          /* in - flags */
               vm_offset_t start,   /* in - starting offset to sync in file */
               vm_size_t length,    /* in - length to sync */
-              struct ucred *cred   /* in - credentials of caller */
+              struct uucred *cred   /* in - credentials of caller */
               )
 {
     statusT ret;

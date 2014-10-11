@@ -990,7 +990,7 @@ statusT
 fs_create_frag (
                 bfSetT *bfSetp,  /* in */
                 bfAccessT* bfap,  /* in */
-                struct ucred *cred,  /* in */
+                struct uucred *cred,  /* in */
                 ftxHT parentFtxH  /* in */
                 )
 {
@@ -1285,7 +1285,7 @@ fs_delete_frag (
     bfSetT *bfSetp,  /* in */
     bfAccessT *bfap,    /* in */
     struct vnode *vnode,  /* in */
-    struct ucred *cred,  /* in */
+    struct uucred *cred,  /* in */
     int quotas_done,  /* in */
     ftxHT parentFtxH  /* in */
     )
