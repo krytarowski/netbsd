@@ -753,7 +753,6 @@ typedef struct bsSSDmnAttr {
     uint16T    ssDmnDefragment;
     uint16T    ssDmnSmartPlace;
     uint16T    ssDmnBalance;
-    uint16T    ssDmnVerbosity;
     uint16T    ssDmnDirectIo;
     uint16T    ssMaxPercentOfIoWhenBusy;
     /* output only variables */
