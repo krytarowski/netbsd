@@ -691,7 +691,7 @@ create_root_file(
     bfap->fragState = FS_FRAG_NONE;
     bfap->fragId = bsNilFragId;
 
-    dir_stats->st_ino = *tagp;
+    dir_stats->advfs_st_ino = *tagp;
     /* no need to set fragPageOffset */
     dir_stats->fragId = bsNilFragId;
     dir_stats->dir_tag = rootTag;

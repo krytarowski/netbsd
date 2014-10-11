@@ -69,7 +69,7 @@ typedef enum {
 /* NOTE this is an on-disk structure and all sizes are for tru64 alpha */
 struct fs_stat
 {
-    bfTagT  st_ino;    
+    bfTagT  advfs_st_ino;
     mode_t  st_mode;
     uid_t   st_uid;
     gid_t   st_gid;
