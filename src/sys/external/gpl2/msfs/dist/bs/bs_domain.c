@@ -839,7 +839,7 @@ start:
         }
 
         /* Check to see if this index is already in use */
-        if ( vd_htop_if_valid(vdAttrp->vdIndex, dmnP, FALSE, FALSE) ) {
+        if ( (vd_htop_if_valid(vdAttrp->vdIndex, dmnP, FALSE, FALSE)) ) {
             sts = EDUP_VD;
             goto vd_add_error;
         }
@@ -1008,7 +1008,7 @@ get_attrs_error:
         statusT temp_sts;
         
         for (vdi = 1; (vdi <= BS_MAX_VDI) && (dmnP->vdCnt > 0); vdi++)
-            if ( vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE) ) {
+            if ((vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE))) {
                 /*
                  * reclaim any old reserved file CFS vnodes that are
                  * hanging around on vnode free list for any of the
@@ -1386,7 +1386,7 @@ start:
         }
 
         /* Check to see if this index is already in use */
-        if ( vd_htop_if_valid(vdAttrp->vdIndex, dmnP, FALSE, FALSE) ) {
+        if ((vd_htop_if_valid(vdAttrp->vdIndex, dmnP, FALSE, FALSE))) {
             sts = EDUP_VD;
             goto vd_add_error;
         }
@@ -1440,7 +1440,7 @@ start:
                 for (vd_idx = 1; 
                      vd_count < dmnP->vdCnt && vd_idx <= BS_MAX_VDI; 
                      vd_idx++) {
-                    if (vdp = vd_htop_if_valid(vd_idx, dmnP, FALSE, FALSE)) {
+                    if ((vdp = vd_htop_if_valid(vd_idx, dmnP, FALSE, FALSE))) {
                         if (vdp->devVp->v_rdev == global_rootdev_opinprog) {
                             vd_remove(dmnP, vdp,
                                       VD_STATE_CHANGE | VD_REMOVE_PERM);
@@ -1615,7 +1615,7 @@ get_attrs_error:
         statusT temp_sts;
 
         for (vdi = 1; (vdi <= BS_MAX_VDI) && (dmnP->vdCnt > 0); vdi++)
-            if ( vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE) ) {
+            if ((vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE))) {
                 /*
                  * reclaim any old reserved file CFS vnodes that are
                  * hanging around on vnode free list for any of the
@@ -1805,7 +1805,7 @@ bs_bfdmn_deactivate(
     vdi = 1;
 
     while ((vdi <= BS_MAX_VDI) && (dmnP->vdCnt > 0)) {
-        if ( vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE) ) {
+        if ((vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE))) {
 
             /* reclaim any old reserved CFS vnodes that are
              * hanging around on vnode free list for any of the
@@ -1861,7 +1861,7 @@ bs_bfdmn_deactivate(
         /* The DmnTblLock prevents racing addvol/rmvol; no need to bump
          * the vdRefCnt here.
          */
-        if ( vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE) ) {
+        if ((vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE))) {
             vdCnt++;
             sts = sbm_clear_cache( vdp );
             if ( sts != EOK ) {
@@ -1888,7 +1888,7 @@ bs_bfdmn_deactivate(
      * this should not fail because vd is inaccessible
      */
     for (vdi = 1; (vdi <= BS_MAX_VDI) && (dmnP->vdCnt > 0); vdi++)
-        if ( vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE) ) {
+        if ((vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE))) {
             /*
              * In the cluster, for non-mount paths we release the dlm device locks.
              */
@@ -2153,7 +2153,7 @@ bs_bfdmn_activate(
      */
     if (!MountWriteDelay) {
         bs_bfdmn_flush( dmnP );
-        if ( done = bs_bfdmn_flush_sync( dmnP ) ) {
+        if ((done = bs_bfdmn_flush_sync( dmnP ))) {
             ADVFS_SAD1("bs_bfdmn_activate: pinned buffers after activation",
                        done );
         }
@@ -2171,7 +2171,7 @@ bs_bfdmn_activate(
     if (!clu_is_ready() || !(flag & M_FAILOVER)) {
         vdcnt = vdi = 1;
         while ((vdi <= BS_MAX_VDI) && (vdcnt <= dmnP->vdCnt )) {
-            if ( vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE) ) {
+            if ((vdp = vd_htop_if_valid(vdi, dmnP, FALSE, FALSE))) {
                 del_clean_mcell_list (vdp, flag);
                 vdcnt++;
             }
@@ -2268,7 +2268,7 @@ bs_bfdmn_sweep(domainT * dmnP)
             mdap = vdp->bmtp;
             mcell_index = BFM_BMT_EXT_V3;
         }
-        if (error = bs_pinpg (&bmtPgRef, (void *)&pgp, mdap, 0, BS_NIL)) {
+        if ((error = bs_pinpg (&bmtPgRef, (void *)&pgp, mdap, 0, BS_NIL))) {
             sts = (statusT)error;
             goto err_cleanup;
         }
@@ -2312,7 +2312,7 @@ bs_bfdmn_sweep(domainT * dmnP)
             dmnMAttrp = bmtr_find(&((bsMPgT *)pgp)->bsMCA[mcell_index],
                                  BSR_DMN_MATTR, dmnP);
 
-            if( error = getvp( &vp, vdp->vdName, ndp, UIO_SYSSPACE ) ) {
+            if((error = getvp( &vp, vdp->vdName, ndp, UIO_SYSSPACE ))) {
                 sts = (statusT)error;
                     goto err_cleanup;
                 }
@@ -2441,8 +2441,8 @@ bs_bfdmn_sweep(domainT * dmnP)
                  rootTagPg++) {
                 bsTDirPgT* rootTagPgP;
 
-                if (error = bs_refpg(&rootTagPgRef, (void *)&rootTagPgP,
-                                     dmnP->bfSetDirAccp, rootTagPg, BS_NIL)) {
+                if ((error = bs_refpg(&rootTagPgRef, (void *)&rootTagPgP,
+                                     dmnP->bfSetDirAccp, rootTagPg, BS_NIL))) {
                     sts = (statusT)error;
                     goto err_cleanup;
                 }
@@ -2457,10 +2457,10 @@ bs_bfdmn_sweep(domainT * dmnP)
                         if (rootTagPgP->tMapA[i].tmSeqNo & BS_TD_IN_USE) {
                             vd = rootTagPgP->tMapA[i].tmVdIndex;
                             mcid = rootTagPgP->tMapA[i].tmBfMCId;
-                            if (error = update_bfsetid(dmnP,
+                            if ((error = update_bfsetid(dmnP,
                                                        vd,
                                                        mcid,
-                                                       domainId)) {
+                                                       domainId))) {
                                 sts = (statusT)error;
                                 goto err_cleanup;
                             }
@@ -2468,7 +2468,7 @@ bs_bfdmn_sweep(domainT * dmnP)
                     }
                 }
 
-                if (error = bs_derefpg(rootTagPgRef, BS_NIL)) {
+                if ((error = bs_derefpg(rootTagPgRef, BS_NIL))) {
                     sts = (statusT)error;
                     goto err_cleanup;
                 }
@@ -2521,8 +2521,8 @@ update_bfsetid(
     bfPageRefHT bmtPgRef;
 
 mcell_chain:
-    if (sts = bs_pinpg (&bmtPgRef, (void*)&pagep, vdp->bmtp, mcid.page,
-                          BS_NIL)) {
+    if ((sts = bs_pinpg (&bmtPgRef, (void*)&pagep, vdp->bmtp, mcid.page,
+                          BS_NIL))) {
 
         return(sts);
     }
@@ -2544,7 +2544,7 @@ mcell_chain:
 
 err_cleanup:
 
-    if (error = bs_unpinpg (bmtPgRef, logNilRecord, BS_DIRTY)) {
+    if ((error = bs_unpinpg (bmtPgRef, logNilRecord, BS_DIRTY))) {
         sts = (statusT)error;
     }
     return(sts);
@@ -2741,7 +2741,7 @@ get_raw_vd_attrs(
     } else if (isRoot & M_GLOBAL_ROOT) {
         vp = GlobalRootVpp[vdi];
     } else {
-        if( error = getvp( &vp, vdDiskName, ndp, UIO_SYSSPACE ) ) {
+        if((error = getvp( &vp, vdDiskName, ndp, UIO_SYSSPACE ))) {
             return (statusT)error;
         }
         VOP_ACCESS( vp, VREAD | VWRITE, ndp->ni_cred, error );
@@ -2762,7 +2762,7 @@ get_raw_vd_attrs(
             dev_t dev;
             dev = vp->v_rdev;
             vrele(vp);
-            if (error = bdevvp(dev, &vp)) {
+            if ((error = bdevvp(dev, &vp))) {
                 return (statusT)error;
             }
         }
@@ -2826,7 +2826,7 @@ get_raw_vd_attrs(
     ms_free( superBlk );
     superBlk = NULL;
 
-    if( error = read_raw_bmt_page(vp, MSFS_RESERVED_BLKS, pgp) ) {
+    if((error = read_raw_bmt_page(vp, MSFS_RESERVED_BLKS, pgp))) {
         sts = (statusT) error;
         goto err_closeall;
     }
@@ -3976,7 +3976,7 @@ bs_vd_add_rem_vol_done (
         ndp->ni_segflg = UIO_SYSSPACE;
         ndp->ni_dirp = volName;
 
-        if ( sts = (statusT) namei(ndp) ) {
+        if ((sts = (statusT) namei(ndp))) {
             bs_unpinpg (pgPin, logNilRecord, BS_DIRTY); /* Ignore status. */
             DMNTBL_UNLOCK( &DmnTblLock )
             return sts;
@@ -6229,7 +6229,7 @@ get_domain_disks(
     vdNameLen = strlen( vdName );
 
     /* get the vnode */
-    if( error = getvp( &vp, dmnName, ndp, UIO_SYSSPACE ) ) {
+    if((error = getvp( &vp, dmnName, ndp, UIO_SYSSPACE ))) {
         goto _error;
     }
 
@@ -6472,7 +6472,7 @@ get_vdd(
     ndp->ni_segflg = UIO_SYSSPACE;
     ndp->ni_dirp = vdName;
 
-    if( error = namei( ndp ) ) {
+    if((error = namei( ndp ))) {
         *err = error;
         goto _error;
     }
@@ -6526,7 +6526,7 @@ get_vdd(
     ndp->ni_segflg = UIO_SYSSPACE;
     ndp->ni_dirp = vdName;
 
-    if( error = namei( ndp ) ) {
+    if((error = namei( ndp ))) {
         *err = ENODEV;
         goto _error;
     }
@@ -6771,7 +6771,7 @@ get_domain_major(
     ndp->ni_segflg = UIO_SYSSPACE;
     ndp->ni_dirp = MSFS_DMN_DIR;
 
-    if( error = namei( ndp ) ) {
+    if((error = namei( ndp ))) {
         goto _error;
     }
 
