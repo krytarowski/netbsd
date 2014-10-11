@@ -886,7 +886,7 @@ msfs_getattr(
          * divide the utime fields by 1000 to put microsecs
          * back to millisecs
          */
-        vap->va_atime.tv_sec = context_ptr->dir_stats.st_atime;
+        vap->va_atime.tv_sec = context_ptr->dir_stats.advfs_st_atime;
         vap->va_atime.tv_usec = context_ptr->dir_stats.st_uatime / 1000;
         vap->va_mtime.tv_sec = context_ptr->dir_stats.st_mtime;
         vap->va_mtime.tv_usec = context_ptr->dir_stats.st_umtime / 1000;
@@ -913,10 +913,10 @@ msfs_getattr(
     if (context_ptr->fs_flag & MOD_ATIME) {
         vap->va_atime.tv_sec = new_time.tv_sec;
         vap->va_atime.tv_usec = new_time.tv_usec;
-        context_ptr->dir_stats.st_atime = new_time.tv_sec;
+        context_ptr->dir_stats.advfs_st_atime = new_time.tv_sec;
         context_ptr->dir_stats.st_uatime = new_time.tv_usec * 1000;
     } else {
-        vap->va_atime.tv_sec = context_ptr->dir_stats.st_atime;
+        vap->va_atime.tv_sec = context_ptr->dir_stats.advfs_st_atime;
         vap->va_atime.tv_usec = context_ptr->dir_stats.st_uatime / 1000;
     }
     if (context_ptr->fs_flag & MOD_CTIME) {
@@ -1083,7 +1083,7 @@ fs_setattr(
 
             mutex_lock( &context_ptr->fsContext_mutex);
             if ((vap->va_atime.tv_sec != 0) || (vap->va_atime.tv_usec != 0)) {
-                context_ptr->dir_stats.st_atime = vap->va_atime.tv_sec;
+                context_ptr->dir_stats.advfs_st_atime = vap->va_atime.tv_sec;
                 context_ptr->dir_stats.st_uatime = vap->va_atime.tv_usec * 1000;
                 context_ptr->fs_flag &= ~(MOD_ATIME);
             }
@@ -1124,7 +1124,7 @@ fs_setattr(
         }
         mutex_lock( &context_ptr->fsContext_mutex);
         if (vap->va_atime.tv_sec != (int)VNOVAL) {
-            context_ptr->dir_stats.st_atime = vap->va_atime.tv_sec;
+            context_ptr->dir_stats.advfs_st_atime = vap->va_atime.tv_sec;
             context_ptr->dir_stats.st_uatime = vap->va_atime.tv_usec * 1000;
             context_ptr->fs_flag &= ~(MOD_ATIME);
         }
