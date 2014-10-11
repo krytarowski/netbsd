@@ -323,7 +323,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
     /*
      * Fill in the uid and gid early for the benefit of the quota system.
      */
-    new_file_cp->dir_stats.st_uid = ndp->ni_cred->cr_uid;
+    new_file_cp->dir_stats.advfs_st_uid = ndp->ni_cred->cr_uid;
     new_file_cp->fs_flag = 0;
 
     if (BSD_MODE(ndp->ni_dvp)) {

@@ -157,7 +157,7 @@ check_privilege(
         }
     }
 
-    if (u.u_uid != contextp->dir_stats.st_uid) {
+    if (u.u_uid != contextp->dir_stats.advfs_st_uid) {
         /* not owner of file */
 
         error = suser( u.u_cred, &u.u_acflag );
@@ -4561,7 +4561,7 @@ msfs_syscall_op_tag_stat(libParamsT *libBufp)
         bytes += fs_statp->fragId.type * 1024;
 
         libBufp->tagStat.tag = tag;
-        libBufp->tagStat.uid = fs_statp->st_uid;
+        libBufp->tagStat.uid = fs_statp->advfs_st_uid;
         libBufp->tagStat.gid = fs_statp->st_gid;
         libBufp->tagStat.atime = fs_statp->st_atime;
         libBufp->tagStat.mode = fs_statp->advfs_st_mode;
