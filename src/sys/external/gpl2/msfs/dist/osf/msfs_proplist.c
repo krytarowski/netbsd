@@ -213,14 +213,14 @@ int
 msfs_setproplist(
 		 struct vnode *vp,              /* in     */
 		 struct uio *uiop,              /* in     */
-		 struct ucred *cred             /* in     */
+		 struct uucred *cred             /* in     */
 		 );		
 static int	
 msfs_pl_set_entry(
 		  bfAccessT *bfAccess,          /* in     */
                   struct proplist_head *hp,     /* in     */
                   char *prop_data,              /* in     */
-                  struct ucred *cred,		/* in     */
+                  struct uucred *cred,		/* in     */
                   int sync
                  );
 static int
@@ -279,7 +279,7 @@ msfs_getproplist(
 		 struct uio *uiop,              /* out    */
 		 int *min_buf_size,             /* in/out */
 		 int mask,                      /* in     */
-		 struct ucred *cred             /* in     */
+		 struct uucred *cred             /* in     */
 		 );
 
 int
@@ -289,7 +289,7 @@ msfs_getproplist_int(
 		 struct uio *uiop,              /* out    */
 		 int *min_buf_size,             /* in/out */
 		 int mask,                      /* in     */
-		 struct ucred *cred             /* in     */
+		 struct uucred *cred             /* in     */
 		 );
 
 static int
@@ -302,7 +302,7 @@ msfs_pl_get_entry(
 		  int *just_sizing,             /* in/out */
 		  int *total_bytes,             /* in/out */
 		  int mask,                     /* in     */
-		  struct ucred *cred,		/* in     */
+		  struct uucred *cred,		/* in     */
 		  struct vnode *vp,		/* in     */
 		  proplist_sec_attrs_t *sec_info /* out   */
 		  );
@@ -323,7 +323,7 @@ msfs_pl_get_data(
 		 struct uio *uiop,              /* out    */
 		 proplist_sec_attrs_t *sec_info, /* in     */
 		 struct vnode *vp,		/* in     */
-		 struct ucred *cred,		/* in     */
+		 struct uucred *cred,		/* in     */
 		 int name_resid,                /* in     */
 		 int data_resid,                /* in     */
 		 int cell_size                 /* in     */
@@ -337,7 +337,7 @@ msfs_delproplist(
 		 struct vnode *vp,              /* in     */
                  char **names,                  /* in     */
 		 int flag,			/* in	  */
-                 struct ucred *cred,            /* in     */
+                 struct uucred *cred,            /* in     */
 		 long xid                       /* in     */
 		 );
 
@@ -346,7 +346,7 @@ msfs_delproplist_int(
 		 struct vnode *vp,              /* in     */
                  char **names,                  /* in     */
 		 int flag,			/* in	  */
-                 struct ucred *cred,            /* in     */
+                 struct uucred *cred,            /* in     */
 		 long xid,                      /* in     */
                  int setctime                   /* in     */
 		 );
@@ -401,7 +401,7 @@ msfs_pl_set_entry_v3(
 		  bfAccessT *bfAccess,          /* in     */
                   struct proplist_head *hp,     /* in     */
                   char *prop_data,              /* in     */
-                  struct ucred *cred 		/* in     */
+                  struct uucred *cred 		/* in     */
                  );
 static int
 msfs_pl_fill_hdr_image_v3(
@@ -434,7 +434,7 @@ msfs_getproplist_int_v3(
 		 struct uio *uiop,              /* out    */
 		 int *min_buf_size,             /* in/out */
 		 int mask,                      /* in     */
-		 struct ucred *cred             /* in     */
+		 struct uucred *cred             /* in     */
 		 );
 static int
 msfs_pl_get_entry_v3(
@@ -446,7 +446,7 @@ msfs_pl_get_entry_v3(
 		  int *just_sizing,             /* in/out */
 		  int *total_bytes,             /* in/out */
 		  int mask,                     /* in     */
-		  struct ucred *cred,		/* in     */
+		  struct uucred *cred,		/* in     */
 		  struct vnode *vp,		/* in     */
 		  proplist_sec_attrs_t *sec_info /* out   */
 		  );
@@ -465,7 +465,7 @@ msfs_pl_get_data_v3(
 		 struct uio *uiop,              /* out    */
 		 proplist_sec_attrs_t *sec_info, /* in     */
 		 struct vnode *vp,		/* in     */
-		 struct ucred *cred,		/* in     */
+		 struct uucred *cred,		/* in     */
 		 int name_resid,                /* in     */
 		 int data_resid,                /* in     */
 		 int cell_size                 /* in     */
@@ -475,7 +475,7 @@ msfs_delproplist_int_v3(
 		 struct vnode *vp,              /* in     */
                  char **names,                  /* in     */
 		 int flag,			/* in	  */
-                 struct ucred *cred,            /* in     */
+                 struct uucred *cred,            /* in     */
 		 long xid,                      /* in     */
                  int setctime                   /* in     */
 		 );
@@ -927,7 +927,7 @@ int
 msfs_setproplist_int(
 		 struct vnode *vp,              /* in     */
 		 struct uio *uiop,              /* in     */
-		 struct ucred *cred,            /* in     */
+		 struct uucred *cred,            /* in     */
                  int setctime,                  /* in     */
                  int sync                       /* in     */
 		 )
@@ -1242,7 +1242,7 @@ out:
 msfs_setproplist(
 		 struct vnode *vp,              /* in     */
 		 struct uio *uiop,              /* in     */
-		 struct ucred *cred             /* in     */
+		 struct uucred *cred             /* in     */
 		 )
 {
     struct vattr    check_vattr;
@@ -1284,7 +1284,7 @@ msfs_pl_set_entry(
        		  bfAccessT *bfAccess,          /* in     */
                   struct proplist_head *hp,     /* in     */
                   char *prop_data,              /* in     */
-		  struct ucred *cred,		/* in     */
+		  struct uucred *cred,		/* in     */
 		  int sync                      /* in     */
                  )
 
@@ -2250,7 +2250,7 @@ msfs_getproplist(
 		 struct uio *uiop,              /* out    */
 		 int *min_buf_size,             /* in/out */
 		 int mask,                      /* in     */
-		 struct ucred *cred             /* in     */
+		 struct uucred *cred             /* in     */
 		 )
 {
 
@@ -2362,7 +2362,7 @@ msfs_getproplist_int(
 		 struct uio *uiop,              /* out    */
 		 int *min_buf_size,             /* in/out */
 		 int mask,                      /* in     */
-		 struct ucred *cred             /* in     */
+		 struct uucred *cred             /* in     */
 		 )
 
 {
@@ -2554,7 +2554,7 @@ msfs_pl_get_entry(
 		  int *just_sizing,             /* in/out */
 		  int *total_bytes,             /* in/out */
 		  int mask,                     /* in     */
-		  struct ucred *cred,		/* in     */
+		  struct uucred *cred,		/* in     */
 		  struct vnode	*vp,		/* in     */
   		  proplist_sec_attrs_t *sec_info /* out   */
 		  )
@@ -2784,7 +2784,7 @@ msfs_pl_get_data(
 		 struct uio *uiop,              /* out    */
   		 proplist_sec_attrs_t *sec_info, /* in     */
 		 struct vnode *vp,		/* in     */
-		 struct ucred *cred,		/* in     */
+		 struct uucred *cred,		/* in     */
 		 int name_resid,                /* in     */
 		 int data_resid,                /* in     */
 		 int cell_size                  /* in     */
@@ -2966,7 +2966,7 @@ msfs_delproplist(
 		 struct vnode *vp,              /* in     */
                  char **names,                  /* in     */
 		 int mask,			/* in     */
-                 struct ucred *cred,            /* in     */
+                 struct uucred *cred,            /* in     */
 		 long xid                       /* in     */
 		 )
 {
@@ -3002,7 +3002,7 @@ msfs_delproplist_int(
 		 struct vnode *vp,              /* in     */
                  char **names,                  /* in     */
 		 int mask,			/* in     */
-                 struct ucred *cred,            /* in     */
+                 struct uucred *cred,            /* in     */
 		 long xid,                      /* in, MBZ iff !CFS */
                  int setctime                   /* in     */
 		 )
@@ -3562,7 +3562,7 @@ msfs_pl_set_entry_v3(
        		  bfAccessT *bfAccess,          /* in     */
                   struct proplist_head *hp,     /* in     */
                   char *prop_data,              /* in     */
-		  struct ucred *cred		/* in     */
+		  struct uucred *cred		/* in     */
                  )
 
 {
@@ -4295,7 +4295,7 @@ msfs_getproplist_int_v3(
 		 struct uio *uiop,              /* out    */
 		 int *min_buf_size,             /* in/out */
 		 int mask,                      /* in     */
-		 struct ucred *cred             /* in     */
+		 struct uucred *cred             /* in     */
 		 )
 
 {
@@ -4462,7 +4462,7 @@ msfs_pl_get_entry_v3(
 		  int *just_sizing,             /* in/out */
 		  int *total_bytes,             /* in/out */
 		  int mask,                     /* in     */
-		  struct ucred *cred,		/* in     */
+		  struct uucred *cred,		/* in     */
 		  struct vnode	*vp,		/* in     */
   		  proplist_sec_attrs_t *sec_info /* out   */
 		  )
@@ -4678,7 +4678,7 @@ msfs_pl_get_data_v3(
 		 struct uio *uiop,              /* out    */
   		 proplist_sec_attrs_t *sec_info, /* in     */
 		 struct vnode *vp,		/* in     */
-		 struct ucred *cred,		/* in     */
+		 struct uucred *cred,		/* in     */
 		 int name_resid,                /* in     */
 		 int data_resid,                /* in     */
 		 int cell_size                  /* in     */
@@ -4850,7 +4850,7 @@ msfs_delproplist_int_v3(
 		 struct vnode *vp,              /* in     */
                  char **names,                  /* in     */
 		 int mask,			/* in     */
-                 struct ucred *cred,            /* in     */
+                 struct uucred *cred,            /* in     */
 		 long xid,                      /* in, MBZ iff !CFS */
                  int setctime                   /* in     */
 		 )

@@ -712,7 +712,7 @@ _exit:
 check_path_back(
                 struct vnode *source_vp,  /* in - vnode of the source directory */
                 struct vnode *target_vp,  /* in - vnode of the target directory */
-                struct ucred *cred        /* in - cred - credentials of target */
+                struct uucred *cred        /* in - cred - credentials of target */
                 )
 {
     struct bfNode *sbnp, *tbnp;
