@@ -447,7 +447,6 @@ typedef struct mlSSDmnParams {
     uint32T ssDmnDefragment;
     uint32T ssDmnSmartPlace;
     uint32T ssDmnBalance;
-    uint32T ssDmnVerbosity;
     uint32T ssDmnDirectIo;
     uint32T ssMaxPercentOfIoWhenBusy;
     uint32T ssFilesDefraged;
