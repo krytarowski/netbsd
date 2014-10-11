@@ -762,7 +762,7 @@ msfs_access(
     mutex_lock( &context_ptr->fsContext_mutex );
     udac.uid = udac.cuid = context_ptr->dir_stats.st_uid;
     udac.gid = udac.cgid = context_ptr->dir_stats.st_gid;
-    udac.mode = context_ptr->dir_stats.st_mode & 0777;
+    udac.mode = context_ptr->dir_stats.advfs_st_mode & 0777;
     mutex_unlock( &context_ptr->fsContext_mutex );
 
     results = sp_vnaccess(vp,  mode, &udac, cred);
@@ -936,7 +936,7 @@ no_update:
         vap->va_fsid = bfSetp->dev; /*  == f_fsid.val[0] */
     }
     vap->va_fileid = BS_BFTAG_IDX(context_ptr->dir_stats.advfs_st_ino);
-    vap->va_mode = context_ptr->dir_stats.st_mode;
+    vap->va_mode = context_ptr->dir_stats.advfs_st_mode;
 
     /* set 16-bit and 32-bit link counts in vattr */
     set_vattr_nlinks(vap, context_ptr->dir_stats.st_nlink);
@@ -1409,7 +1409,7 @@ fs_setattr_truncate( bfAccessT *bfap,
      *  Update mode (don't clear enforcement mode lock bits).
      *  indicated by setgid bit, but no group execute.
      */
-    if ( !cp->dir_stats.st_mode & S_ISGID || cp->dir_stats.st_mode & S_IXGRP ) {
+    if ( !cp->dir_stats.advfs_st_mode & S_ISGID || cp->dir_stats.advfs_st_mode & S_IXGRP ) {
         if ( BSD_MODE(vp) ) {
             mask |= S_ISGID;
         }
@@ -1426,7 +1426,7 @@ fs_setattr_truncate( bfAccessT *bfap,
         }
     }
 
-    cp->dir_stats.st_mode &= ~mask;
+    cp->dir_stats.advfs_st_mode &= ~mask;
 
     if ( remove_exec_perm ) {
         attribute_t *acl;
@@ -2976,7 +2976,7 @@ again:
     /*
      * if 'from' is a directory, disallow '.' and '..'
      */
-    if ((from_file_context->dir_stats.st_mode & S_IFMT) == S_IFDIR) {
+    if ((from_file_context->dir_stats.advfs_st_mode & S_IFMT) == S_IFDIR) {
         register struct dirent *dirp = &fndp->ni_dent;
         if ((dirp->d_namlen == 1 && dirp->d_name[0] == '.') ||
             (from_vp == from_dir_vp) || fndp->ni_isdotdot) {
@@ -2998,7 +2998,7 @@ again:
     /*
      * if it's a dir, save the parent
      */
-    if ((from_file_context->dir_stats.st_mode & S_IFMT) == S_IFDIR) {
+    if ((from_file_context->dir_stats.advfs_st_mode & S_IFMT) == S_IFDIR) {
         oldparent_tag = from_dir_context->bf_tag;
         dir_mv = TRUE;
         stripslash = STRIPSLASH;
@@ -3409,7 +3409,7 @@ call_namei:
          * either the 'to' directory or the file being renamed 'on
          * top of' or it can;t be done
          */
-        if ((to_dir_context->dir_stats.st_mode
+        if ((to_dir_context->dir_stats.advfs_st_mode
              & S_ISVTX) && tndp->ni_cred->cr_uid != 0 &&
             tndp->ni_cred->cr_uid !=
             to_dir_context->dir_stats.st_uid) {
@@ -3427,7 +3427,7 @@ call_namei:
         /*
          * if 'to' is a dir, make sure it is empty
          */
-        if ((to_file_context->dir_stats.st_mode & S_IFMT) == S_IFDIR) {
+        if ((to_file_context->dir_stats.advfs_st_mode & S_IFMT) == S_IFDIR) {
             if (to_file_context->dir_stats.st_nlink != 2) {
                 error = EEXIST;
                 goto err_nofail_ftx;
@@ -4293,7 +4293,7 @@ msfs_readlink(
         goto _exit;
     }
     /* if it's a fast link, read it from the bmt record */
-    if (((context_ptr->dir_stats.st_mode & S_IFMT) == S_IFLNK) &&
+    if (((context_ptr->dir_stats.advfs_st_mode & S_IFMT) == S_IFLNK) &&
         (bfap->file_size <= bmtr_max_rec_size())) {
 
         buffer = (char *) ms_malloc( bmtr_max_rec_size() );
@@ -5205,8 +5205,8 @@ msfs_chown(
     file_context->dir_stats.st_gid = gid;
 
     if (cred->cr_uid != 0) {
-        file_context->dir_stats.st_mode &= ~S_ISUID;
-        file_context->dir_stats.st_mode &= ~S_ISGID;
+        file_context->dir_stats.advfs_st_mode &= ~S_ISUID;
+        file_context->dir_stats.advfs_st_mode &= ~S_ISGID;
     }
 
     if (setctime == SET_CTIME) {
@@ -5253,9 +5253,9 @@ msfs_chmod(
         return (error);
     }
 
-    file_context->dir_stats.st_mode &= ~07777;
+    file_context->dir_stats.advfs_st_mode &= ~07777;
     if (cred->cr_uid) {
-        if ((file_context->dir_stats.st_mode &
+        if ((file_context->dir_stats.advfs_st_mode &
              S_IFMT) != S_IFDIR) {
             mode &= ~S_ISVTX;
         }
@@ -5265,7 +5265,7 @@ msfs_chmod(
         }
     }
 
-    file_context->dir_stats.st_mode |= mode & 07777;
+    file_context->dir_stats.advfs_st_mode |= mode & 07777;
     file_context->dirty_stats = TRUE;
     mutex_unlock( &file_context->fsContext_mutex );
 
@@ -5705,7 +5705,7 @@ get_name(
     if (sts != EOK) {
         RAISE_EXCEPTION(sts);
     }
-    if ( (dir_stats.st_mode & S_IFMT) != S_IFDIR ) {
+    if ( (dir_stats.advfs_st_mode & S_IFMT) != S_IFDIR ) {
         /* This isn't a directory */
         RAISE_EXCEPTION(ENO_NAME);
     }
@@ -5941,8 +5941,8 @@ msfs_setvlocks(
     mutex_lock( &context_ptr->fsContext_mutex );
     VN_LOCK(vp);
 
-    if ((context_ptr->dir_stats.st_mode & S_ISGID) &&
-        (!(context_ptr->dir_stats.st_mode & S_IXGRP))) {
+    if ((context_ptr->dir_stats.advfs_st_mode & S_ISGID) &&
+        (!(context_ptr->dir_stats.advfs_st_mode & S_IXGRP))) {
         vp->v_flag |= VENF_LOCK;
     }
     mutex_unlock( &context_ptr->fsContext_mutex );
