@@ -673,7 +673,7 @@ lookup:
         if ((dir_context->dir_stats.advfs_st_mode & S_ISVTX) &&
             ndp->ni_cred->cr_uid != 0 &&
             ndp->ni_cred->cr_uid !=
-            dir_context->dir_stats.st_uid) {
+            dir_context->dir_stats.advfs_st_uid) {
 
             bnp = (struct bfNode *)&found_vp->v_data[0];
             file_context = bnp->fsContextp;
@@ -682,7 +682,7 @@ lookup:
              * racy with setattr anyway, the lock wouldn't
              * help.
              */
-            if (file_context->dir_stats.st_uid !=
+            if (file_context->dir_stats.advfs_st_uid !=
                 ndp->ni_cred->cr_uid){
                 vrele(found_vp);
                 ndp->ni_vp = NULL;

@@ -760,7 +760,7 @@ msfs_access(
 #endif
 
     mutex_lock( &context_ptr->fsContext_mutex );
-    udac.uid = udac.cuid = context_ptr->dir_stats.st_uid;
+    udac.uid = udac.cuid = context_ptr->dir_stats.advfs_st_uid;
     udac.gid = udac.cgid = context_ptr->dir_stats.st_gid;
     udac.mode = context_ptr->dir_stats.advfs_st_mode & 0777;
     mutex_unlock( &context_ptr->fsContext_mutex );
@@ -941,7 +941,7 @@ no_update:
     /* set 16-bit and 32-bit link counts in vattr */
     set_vattr_nlinks(vap, context_ptr->dir_stats.st_nlink);
  
-    vap->va_uid = context_ptr->dir_stats.st_uid;
+    vap->va_uid = context_ptr->dir_stats.advfs_st_uid;
     vap->va_gid = context_ptr->dir_stats.st_gid;
     vap->va_rdev = context_ptr->dir_stats.st_rdev;
 
@@ -1070,7 +1070,7 @@ fs_setattr(
         }
     }
 
-    iuid = context_ptr->dir_stats.st_uid;
+    iuid = context_ptr->dir_stats.advfs_st_uid;
 
     if (vap->va_ctime.tv_sec != (int)VNOVAL) {
 
@@ -3412,9 +3412,9 @@ call_namei:
         if ((to_dir_context->dir_stats.advfs_st_mode
              & S_ISVTX) && tndp->ni_cred->cr_uid != 0 &&
             tndp->ni_cred->cr_uid !=
-            to_dir_context->dir_stats.st_uid) {
+            to_dir_context->dir_stats.advfs_st_uid) {
             FS_FILE_READ_LOCK(to_file_context);
-            if (to_file_context->dir_stats.st_uid
+            if (to_file_context->dir_stats.advfs_st_uid
                 != tndp->ni_cred->cr_uid) {
                 FS_FILE_UNLOCK(to_file_context);
 
@@ -5177,7 +5177,7 @@ msfs_chown(
 
 
     if (uid == (uid_t)VNOVAL) {
-        uid = file_context->dir_stats.st_uid;
+        uid = file_context->dir_stats.advfs_st_uid;
     }
     if (gid == (uid_t)VNOVAL) {
         gid = file_context->dir_stats.st_gid;
@@ -5189,8 +5189,8 @@ msfs_chown(
      * the caller must be superuser.
      */
     if ((cred->cr_uid !=
-         file_context->dir_stats.st_uid ||
-         uid != file_context->dir_stats.st_uid ||
+         file_context->dir_stats.advfs_st_uid ||
+         uid != file_context->dir_stats.advfs_st_uid ||
          !groupmember((gid_t)gid, cred)) &&
          (error = suser(cred, &u.u_acflag))) {
         return (error);
@@ -5201,7 +5201,7 @@ msfs_chown(
         return (BSERRMAP(error));
     }
 
-    file_context->dir_stats.st_uid = uid;
+    file_context->dir_stats.advfs_st_uid = uid;
     file_context->dir_stats.st_gid = gid;
 
     if (cred->cr_uid != 0) {
@@ -5247,7 +5247,7 @@ msfs_chmod(
      */
 
     if (cred->cr_uid !=
-        file_context->dir_stats.st_uid &&
+        file_context->dir_stats.advfs_st_uid &&
         (error = suser(cred, &u.u_acflag))) {
         mutex_unlock( &file_context->fsContext_mutex );
         return (error);

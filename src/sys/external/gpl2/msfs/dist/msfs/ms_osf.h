@@ -247,7 +247,7 @@ extern lock_data_t FilesetLock;
 #define VTOC(vp) (((struct bfNode *)(&(vp)->v_data[0]))->fsContextp)
 
 /* Extract the user id from an fsContext structure. */
-#define CPTOUID(cp) (cp)->dir_stats.st_uid
+#define CPTOUID(cp) (cp)->dir_stats.advfs_st_uid
 
 /* Extract the group id from an fsContext structure. */
 #define CPTOGID(cp) (cp)->dir_stats.st_gid
