@@ -946,7 +946,7 @@ no_update:
     vap->va_rdev = context_ptr->dir_stats.advfs_st_rdev;
 
     vap->va_size = bfap->file_size;
-    vap->va_flags = context_ptr->dir_stats.st_flags;
+    vap->va_flags = context_ptr->dir_stats.advfs_st_flags;
     vap->va_blocksize = ADVFS_PGSZ;
     vap->va_type = vp->v_type;
     vap->va_gen = BS_BFTAG_SEQ(context_ptr->dir_stats.advfs_st_ino);
@@ -1160,10 +1160,10 @@ fs_setattr(
         }
         mutex_lock( &context_ptr->fsContext_mutex);
         if (cred->cr_uid == 0) {
-            context_ptr->dir_stats.st_flags = vap->va_flags;
+            context_ptr->dir_stats.advfs_st_flags = vap->va_flags;
         } else {
-            context_ptr->dir_stats.st_flags &= 0xffff0000;
-            context_ptr->dir_stats.st_flags |= vap->va_flags & 0xffff;
+            context_ptr->dir_stats.advfs_st_flags &= 0xffff0000;
+            context_ptr->dir_stats.advfs_st_flags |= vap->va_flags & 0xffff;
         }
         mutex_unlock( &context_ptr->fsContext_mutex);
         updateStats = 1;
