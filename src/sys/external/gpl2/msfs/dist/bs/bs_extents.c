@@ -577,7 +577,7 @@ undo_cre_xtnt_rec (
  */
 
 void
-init_bs_xtnts_opx ()
+init_bs_xtnts_opx (void)
 {
     statusT sts;
 
