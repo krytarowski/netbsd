@@ -295,7 +295,7 @@ rbf_int_create(
     *tag = mcellUId.ut.tag;
     return( EOK );
 
-HANDLE_EXCEPTION:
+HANDLE_EXCEPTION: ;
     
     if ( bfap ) {
         mutex_lock( &bfap->bfaLock );
@@ -375,7 +375,7 @@ create_rtdn_opx(ftxHT ftxH,     /* in - ftx handle */
         bs_bfs_close(bfSetp, ftxH, BFS_OP_DEF);
     }
 
-HANDLE_EXCEPTION:
+HANDLE_EXCEPTION: ;
 }
 
 
@@ -512,7 +512,7 @@ create_undo_opx(ftxHT ftxH,     /* in - ftx handle */
 
     bs_bfs_close(bfSetp, ftxH, BFS_OP_DEF);
 
-HANDLE_EXCEPTION:
+HANDLE_EXCEPTION: ;
 }
 
 
