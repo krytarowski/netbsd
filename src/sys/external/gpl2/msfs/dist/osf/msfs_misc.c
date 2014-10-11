@@ -672,7 +672,7 @@ bf_get_l(
         file_context->dirty_stats = 0;
     }
 
-    bfap->file_size = file_context->dir_stats.st_size;
+    bfap->file_size = file_context->dir_stats.advfs_st_size;
 
     /*
      * The dirstamp could be initialied to zero, but this has proven
@@ -1247,7 +1247,7 @@ msfs_reclaim(
                         bcopy( &(context_ptr->dir_stats),    /* from */
                                &(ssp->dir_stats),            /* to   */
                                sizeof(struct fs_stat) );
-                        ssp->dir_stats.st_size        = bfap->file_size;
+                        ssp->dir_stats.advfs_st_size        = bfap->file_size;
                         ssp->dir_stats.fragId         = bfap->fragId;
                         ssp->dir_stats.fragPageOffset = bfap->fragPageOffset;
 

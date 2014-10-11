@@ -1692,7 +1692,7 @@ ddl_complete_delete( bfTagT setTag, bfTagT fileTag, vdT *vdp )
     bnp = (bfNodeT*)vp->v_data;
     bnp->accessp = bfap;
 
-    bfap->file_size = cp->dir_stats.st_size;
+    bfap->file_size = cp->dir_stats.advfs_st_size;
     bfap->fragId = cp->dir_stats.fragId;
     if ((cp->dir_stats.fragId.frag == bsNilFragId.frag) &&
         (cp->dir_stats.fragId.type == bsNilFragId.type))
