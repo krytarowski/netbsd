@@ -257,7 +257,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
          */
         if (((qtype == USRQUOTA) ||
              (qtype == GRPQUOTA && !BSD_MODE(ndp->ni_dvp) && 
-             !(dir_cp->dir_stats.st_mode & S_ISGID))) &&
+             !(dir_cp->dir_stats.advfs_st_mode & S_ISGID))) &&
             !quota_page_is_mapped(fsNp->qi[qtype].qiAccessp, ids[qtype])) {
             MIGTRUNC_LOCK_READ( &(fsNp->qi[qtype].qiAccessp->xtnts.migTruncLk) );
             quota_mig_trunc_lock[qtype] = TRUE;
@@ -329,20 +329,20 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
     if (BSD_MODE(ndp->ni_dvp)) {
         new_file_cp->dir_stats.st_gid = dir_cp->dir_stats.st_gid;
 #if SEC_BASE
-        if((new_file_cp->dir_stats.st_mode & S_ISGID) &&
+        if((new_file_cp->dir_stats.advfs_st_mode & S_ISGID) &&
             !groupmember( new_file_cp->dir_stats.st_gid, ndp->ni_cred ) &&
             !privileged(SEC_SETPROCIDENT, 0)) {
 #else
-        if((new_file_cp->dir_stats.st_mode & S_ISGID) &&
+        if((new_file_cp->dir_stats.advfs_st_mode & S_ISGID) &&
             !groupmember( new_file_cp->dir_stats.st_gid, ndp->ni_cred ) &&
             suser(ndp->ni_cred, NULL)) {
 #endif
-            new_file_cp->dir_stats.st_mode &= ~S_ISGID;
+            new_file_cp->dir_stats.advfs_st_mode &= ~S_ISGID;
             mode &= ~S_ISGID;
         }
     } else {
         /* svid III compatibility */
-        if (dir_cp->dir_stats.st_mode & S_ISGID) {
+        if (dir_cp->dir_stats.advfs_st_mode & S_ISGID) {
             /*
              * Parent directory has the ISGID bit set.  Therefore
              * new nodes' group id becomes the group id of the
@@ -370,12 +370,12 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
                  * must turn off the ISGID bit.
                  * - It is not normal to set ISGID with open.
                  */
-                new_file_cp->dir_stats.st_mode &= ~S_ISGID;
+                new_file_cp->dir_stats.advfs_st_mode &= ~S_ISGID;
             }
         }
 
         if (!groupmember(new_file_cp->dir_stats.st_gid, ndp->ni_cred)) {
-            new_file_cp->dir_stats.st_mode &= ~S_ISGID;
+            new_file_cp->dir_stats.advfs_st_mode &= ~S_ISGID;
         }
     }
 
@@ -781,16 +781,16 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
         new_file_cp->dir_stats.st_nlink = 2;
         ++dir_cp->dir_stats.st_nlink;
         if (mode != 0) {
-            new_file_cp->dir_stats.st_mode = mode | S_IFDIR;
+            new_file_cp->dir_stats.advfs_st_mode = mode | S_IFDIR;
         } else {
-            new_file_cp->dir_stats.st_mode = S_IFDIR | S_IRWXU;
+            new_file_cp->dir_stats.advfs_st_mode = S_IFDIR | S_IRWXU;
         }
     } else {
         new_file_cp->dir_stats.st_nlink = 1;
         if (!create_symlink) {
             bfap->file_size = 0;
         }
-        new_file_cp->dir_stats.st_mode = mode;
+        new_file_cp->dir_stats.advfs_st_mode = mode;
     }
     /*
      * update the st_mtime field in the inserted-in directory's stat

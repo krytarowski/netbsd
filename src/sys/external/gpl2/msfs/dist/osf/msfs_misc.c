@@ -532,7 +532,7 @@ bf_get_l(
          * good thing to avoid" aspect of it.
          */
 
-        if ((file_context->dir_stats.st_mode & S_IFMT) == S_IFDIR)
+        if ((file_context->dir_stats.advfs_st_mode & S_IFMT) == S_IFDIR)
         {
             /* don't get the lock if we already obtained it in lookup */
             if ( !lock_holder( &file_context->file_lock ) ) {
@@ -557,7 +557,7 @@ bf_get_l(
         FS_FILE_WRITE_LOCK( file_context );
         if ( file_context->initialized ) {
 
-            if ((file_context->dir_stats.st_mode & S_IFMT) == S_IFDIR) 
+            if ((file_context->dir_stats.advfs_st_mode & S_IFMT) == S_IFDIR) 
             {
                 if(IDX_NEED_INDEX_OPEN(bfap))
                 {
@@ -590,7 +590,7 @@ bf_get_l(
 
         file_context->fs_flag = META_OPEN;
         bfap->fragState = FS_FRAG_NONE;
-        file_context->dir_stats.st_mode = S_IFREG;
+        file_context->dir_stats.advfs_st_mode = S_IFREG;
         bfap->file_size = (off_t)((bfap->bfSetp->cloneId && bfap->cloneId) ?
                                    (off_t)bfap->maxClonePgs * ADVFS_PGSZ :
                                    (off_t)bfap->nextPage * ADVFS_PGSZ);
@@ -658,7 +658,7 @@ bf_get_l(
             bfap->fragState = FS_FRAG_NONE;
             bfap->fragId = bsNilFragId;
             /* no need to set fragPageOffset */
-            file_context->dir_stats.st_mode = S_IFREG;
+            file_context->dir_stats.advfs_st_mode = S_IFREG;
             bfap->file_size = (off_t)((bfap->bfSetp->cloneId && bfap->cloneId) ?
                                    (off_t)bfap->maxClonePgs * ADVFS_PGSZ :
                                    (off_t)bfap->nextPage * ADVFS_PGSZ);
@@ -685,7 +685,7 @@ bf_get_l(
     /*
      * if the file is a directory, then read it's undel_dir record
      */
-    if ((file_context->dir_stats.st_mode & S_IFMT) == S_IFDIR) {
+    if ((file_context->dir_stats.advfs_st_mode & S_IFMT) == S_IFDIR) {
         sts = bmtr_get_rec( bfap,
                             BMTR_FS_UNDEL_DIR,
                             &undel_rec,
@@ -729,7 +729,7 @@ finish_setup:
 
     /* set the vnode type */
 
-    nvp->v_type = TYPTOVT( file_context->dir_stats.st_mode );
+    nvp->v_type = TYPTOVT( file_context->dir_stats.advfs_st_mode );
 
     switch (nvp->v_type) {
 
