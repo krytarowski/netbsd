@@ -766,7 +766,7 @@ finish_setup:
 
         case VBLK:
         case VCHR:
-            if (((file_context->dir_stats.st_rdev >> 16) & 0xffff) == 0) {
+            if (((file_context->dir_stats.advfs_st_rdev >> 16) & 0xffff) == 0) {
                 /*
                  * TEMPORARY - XXX (Cribbed from ufs_inode.c)
                  *
@@ -780,15 +780,15 @@ finish_setup:
                  * we will convert it to 32 bits and write out the
                  * converted dev_t to disk.
                  */
-                if (((file_context->dir_stats.st_rdev >> 8) & 0xff) == 0) {
+                if (((file_context->dir_stats.advfs_st_rdev >> 8) & 0xff) == 0) {
                     /*
                      * NOTE: Major number zero is restricted to an
                      * 8-bit minor so that translation from old to
                      * new format can be performed.
                      */
-                    file_context->dir_stats.st_rdev =
+                    file_context->dir_stats.advfs_st_rdev =
                         makedev( 0,
-                                ((file_context->dir_stats.st_rdev) & 0xff) );
+                                ((file_context->dir_stats.advfs_st_rdev) & 0xff) );
                 } else {
                     /*
                      * We have an old format dev_t so call the
@@ -798,13 +798,13 @@ finish_setup:
                      * Set dirty_stats to TRUE, so the 32 bit dev_t will
                      * be written to disk.
                      */
-                    file_context->dir_stats.st_rdev =
-                        xlate_dev(file_context->dir_stats.st_rdev, 1);
+                    file_context->dir_stats.advfs_st_rdev =
+                        xlate_dev(file_context->dir_stats.advfs_st_rdev, 1);
                     file_context->dirty_stats = TRUE;
                 }
             }
 
-            if (error = specalloc( nvp, file_context->dir_stats.st_rdev )) {
+            if (error = specalloc( nvp, file_context->dir_stats.advfs_st_rdev )) {
                 RAISE_EXCEPTION((statusT) error);
             }
 

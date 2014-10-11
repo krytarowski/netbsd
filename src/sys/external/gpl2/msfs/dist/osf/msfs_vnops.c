@@ -943,7 +943,7 @@ no_update:
  
     vap->va_uid = context_ptr->dir_stats.advfs_st_uid;
     vap->va_gid = context_ptr->dir_stats.advfs_st_gid;
-    vap->va_rdev = context_ptr->dir_stats.st_rdev;
+    vap->va_rdev = context_ptr->dir_stats.advfs_st_rdev;
 
     vap->va_size = bfap->file_size;
     vap->va_flags = context_ptr->dir_stats.st_flags;
