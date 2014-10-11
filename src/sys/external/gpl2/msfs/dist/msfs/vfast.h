@@ -294,7 +294,6 @@ typedef struct ssDmnInfo {
     uint16T    ssDmnDefragment; /* defragmenting enable/disable */
     uint16T    ssDmnSmartPlace; /* IO load balance enable/disable */
     uint16T    ssDmnBalance;    /* volume free space balance enable/disable */
-    uint16T    ssDmnVerbosity;  /* enable/disable comments to evm */
     uint16T    ssDmnDirectIo;  /* vfast on files with directio allowed? */
     uint16T    ssMaxPercentOfIoWhenBusy; /* % of IO vfast is allowed to 
                                           * use when system is busy 
