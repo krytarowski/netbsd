@@ -1236,7 +1236,7 @@ advfs_mountfs(struct mount *mp)
         goto cleanup;
     }
 
-    bfap->file_size = root_context->dir_stats.st_size;
+    bfap->file_size = root_context->dir_stats.advfs_st_size;
     bfap->fragId = root_context->dir_stats.fragId;
     bfap->fragPageOffset = root_context->dir_stats.fragPageOffset;
 

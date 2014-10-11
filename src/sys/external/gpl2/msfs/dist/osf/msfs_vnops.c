@@ -5733,7 +5733,7 @@ get_name(
     }
 
     FS_FILE_READ_LOCK( dir_contextp );
-    last_page = howmany(dir_stats.st_size, ADVFS_PGSZ);
+    last_page = howmany(dir_stats.advfs_st_size, ADVFS_PGSZ);
 
     for (i = 0; i < last_page; i++) {
         sts = bs_refpg(
