@@ -1586,7 +1586,7 @@ bs_invalidate_rsvd_access_struct(
      * Set the access structure's state to ACC_INVALID.
      */
     tbfap = bfap;
-    bfap = grab_bsacc (domain->bfSetDirp, bfTag, FALSE, NULL);
+    bfap = grab_bsacc (domain->bfSetDirp, bfTag, FALSE, 0);
     if (bfap != NULL) {
         MS_SMP_ASSERT(bfap->refCnt == 1);
         if ((tbfap == bfap) &&
