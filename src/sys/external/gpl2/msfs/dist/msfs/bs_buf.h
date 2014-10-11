@@ -418,7 +418,7 @@ bs_pinpg_direct(void *bfPageAddr,              /* in */
                 int *number_written,           /* out */
                 int *aio_flag,                 /* out */
                 int cowingDone,                /* in */
-                struct ucred *cred);           /* in */
+                struct uucred *cred);           /* in */
 
 #endif /* _KERNEL */
 

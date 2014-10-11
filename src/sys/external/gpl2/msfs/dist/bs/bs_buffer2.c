@@ -440,7 +440,7 @@ blkMap( struct bsBuf *bp, bfAccessT *bfap )
  *    bfAccessT *bfap               Pointer to the file's bfap (in).
  *    unsigned long starting_block  File's starting block to map (in).
  *    int nbytes                    Number of bytes to map (in).
- *    struct ucred *cred            User's creditials.  Need for writes if
+ *    struct uucred *cred            User's creditials.  Need for writes if
  *                                  storage needs to be added.
  */
 statusT
@@ -448,7 +448,7 @@ blkmap_direct(struct bsBuf *bp,
               bfAccessT *bfap,
               unsigned long starting_block,
               int nbytes,
-              struct ucred *cred)
+              struct uucred *cred)
 {
     uint32T page;
     unsigned long next_block;
@@ -1569,7 +1569,7 @@ bs_refpg_direct(void *addr,                    /* in */
      * Map bf page to vd block.
      */
     sts = blkmap_direct(bp, bfap, bsBlock, number_to_read - *number_read,
-                        (struct ucred *)NULL);
+                        (struct uucred *)NULL);
 
     /*
      * Exit now on error.
@@ -3024,7 +3024,7 @@ bs_pinpg_newpage(
  *                                     I/O, 1 otherwise (out)
  *    int cowingDone                   TRUE if we want to have the page range
  *                                     verified for correct cowing.
- *    struct ucred *cred               User's creditials.  Used by
+ *    struct uucred *cred               User's creditials.  Used by
  *                                     blkmap_direct().
  */
 
@@ -3039,7 +3039,7 @@ bs_pinpg_direct(void *addr,
                 int *number_written,           /* out */
                 int *aio_flag,                 /* out */
                 int cowingDone,                /* in */
-                struct ucred *cred)            /* in */
+                struct uucred *cred)            /* in */
 {
     struct bsBuf *bp;
     statusT sts = EOK;
