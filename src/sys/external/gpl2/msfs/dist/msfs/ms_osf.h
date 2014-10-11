@@ -253,7 +253,7 @@ extern lock_data_t FilesetLock;
 #define CPTOGID(cp) (cp)->dir_stats.advfs_st_gid
 
 /* Extract the size from an fsContext structure. */
-#define CPTOSIZ(cp) (cp)->dir_stats.st_size
+#define CPTOSIZ(cp) (cp)->dir_stats.advfs_st_size
 
 /* The null fsContext pointer. */
 #define NULLCP  ((struct fsContext *)0)
