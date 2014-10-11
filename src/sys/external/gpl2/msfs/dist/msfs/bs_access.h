@@ -52,7 +52,21 @@ typedef struct {
 
 #endif /* ADVFS_ACCESS_TRACE */
 
-#define ADVFS_MIN_FREE_ACCESS MIN_FREE_VNODES
+/*
+ * min_free_vnodes: This is the minimum number of free vnodes on the free list.
+ *                  If the number of vnodes on the free list is less than the
+ *                  value of the min_free_vnodes parameter, than vnodes are
+ *                  removed. The minimum value for this parameter is 150 for
+ *                  24 MB systems and nvnodes for 32 MB and larger memory
+ *                  systems.
+ *  -- Tru64 Unix File System Administration Handbook, Steven M. Hancock
+ *
+ * NVNODE:          This option sets the size of the cache used by the
+ *                  name-to-inode translation routines.
+ *  -- NetBSD man-page options(4)
+ */
+#define ADVFS_MIN_FREE_ACCESS NVNODE
+
 #define ADVFSMAXFREEACCESSPERCENT 80
 extern ulong ncache_valid_time;
 #define BFAP_VALID_TIME ncache_valid_time
