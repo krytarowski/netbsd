@@ -100,7 +100,7 @@ typedef struct rdPgDesc {
     uint32T     num;    /* page's number */
 } rdPgDescT;
 
-static const rdPgDescT NilRdPgDesc = NULL_STRUCT;
+static const rdPgDescT NilRdPgDesc;
 
 /*
  * wtPgDescT -
