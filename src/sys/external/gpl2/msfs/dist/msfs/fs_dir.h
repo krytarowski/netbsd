@@ -79,7 +79,7 @@ struct fs_stat
     int     advfs_st_uatime;
     time_t  advfs_st_mtime;
     int     advfs_st_umtime;
-    time_t  st_ctime;
+    time_t  advfs_st_ctime;
     int     st_uctime;
     u_int  st_flags;          /* user defined flags for file */
 				/* 0x10000000 reserved for AUTOFS */
