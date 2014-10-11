@@ -1545,7 +1545,7 @@ msfs_putpage(
 
             mutex_lock( &contextp->fsContext_mutex );
             /*
-             * st_ctime in the file's stat structure
+             * advfs_st_ctime in the file's stat structure
              */
             contextp->fs_flag |= MOD_CTIME | MOD_MTIME;
             contextp->dirty_stats = TRUE;
