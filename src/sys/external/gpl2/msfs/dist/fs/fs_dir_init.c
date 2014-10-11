@@ -695,7 +695,7 @@ create_root_file(
     /* no need to set fragPageOffset */
     dir_stats->fragId = bsNilFragId;
     dir_stats->dir_tag = rootTag;
-    dir_stats->st_atime = createTime.tv_sec;
+    dir_stats->advfs_st_atime = createTime.tv_sec;
     dir_stats->st_mtime = createTime.tv_sec;
     dir_stats->st_ctime = createTime.tv_sec;
     dir_stats->advfs_st_size = size;
