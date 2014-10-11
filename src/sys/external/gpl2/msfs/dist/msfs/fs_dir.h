@@ -72,7 +72,7 @@ struct fs_stat
     bfTagT  advfs_st_ino;
     mode_t  advfs_st_mode;
     uid_t   advfs_st_uid;
-    gid_t   st_gid;
+    gid_t   advfs_st_gid;
     dev_t   st_rdev;
     off_t   st_size;
     time_t  st_atime;

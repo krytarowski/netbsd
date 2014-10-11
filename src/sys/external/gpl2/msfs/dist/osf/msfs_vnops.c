@@ -761,7 +761,7 @@ msfs_access(
 
     mutex_lock( &context_ptr->fsContext_mutex );
     udac.uid = udac.cuid = context_ptr->dir_stats.advfs_st_uid;
-    udac.gid = udac.cgid = context_ptr->dir_stats.st_gid;
+    udac.gid = udac.cgid = context_ptr->dir_stats.advfs_st_gid;
     udac.mode = context_ptr->dir_stats.advfs_st_mode & 0777;
     mutex_unlock( &context_ptr->fsContext_mutex );
 
@@ -942,7 +942,7 @@ no_update:
     set_vattr_nlinks(vap, context_ptr->dir_stats.st_nlink);
  
     vap->va_uid = context_ptr->dir_stats.advfs_st_uid;
-    vap->va_gid = context_ptr->dir_stats.st_gid;
+    vap->va_gid = context_ptr->dir_stats.advfs_st_gid;
     vap->va_rdev = context_ptr->dir_stats.st_rdev;
 
     vap->va_size = bfap->file_size;
@@ -5180,7 +5180,7 @@ msfs_chown(
         uid = file_context->dir_stats.advfs_st_uid;
     }
     if (gid == (uid_t)VNOVAL) {
-        gid = file_context->dir_stats.st_gid;
+        gid = file_context->dir_stats.advfs_st_gid;
     }
 
     /*
@@ -5202,7 +5202,7 @@ msfs_chown(
     }
 
     file_context->dir_stats.advfs_st_uid = uid;
-    file_context->dir_stats.st_gid = gid;
+    file_context->dir_stats.advfs_st_gid = gid;
 
     if (cred->cr_uid != 0) {
         file_context->dir_stats.advfs_st_mode &= ~S_ISUID;
@@ -5260,7 +5260,7 @@ msfs_chmod(
             mode &= ~S_ISVTX;
         }
         if
-        (!groupmember(file_context->dir_stats.st_gid, cred)) {
+        (!groupmember(file_context->dir_stats.advfs_st_gid, cred)) {
             mode &= ~S_ISGID;
         }
     }
