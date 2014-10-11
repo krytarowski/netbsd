@@ -299,7 +299,7 @@ ms_uprintf(fmt, va_alist)
      * temporary buffer.  If nothing to
      * print, return.
      */
-    va_start(valist);
+    va_start(valist, fmt);
     n = prf(&buf[0], &buf[PRFMAX], fmt, valist);
     va_end(valist);
     if (n <= 0)
@@ -333,7 +333,7 @@ ms_uaprintf(fmt, va_alist)
      * temporary buffer.  If nothing to
      * print, return.
      */
-    va_start(valist);
+    va_start(valist, fmt);
     n = prf(&buf[0], &buf[PRFMAX], fmt, valist);
     va_end(valist);
     if (n <= 0)
