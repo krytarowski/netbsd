@@ -1616,13 +1616,13 @@ _retry_append_range:
 #endif
         u_short mask = S_ISUID;
 
-        if ((contextp->dir_stats.st_mode & S_IXGRP) && (BSD_MODE(vp)))
+        if ((contextp->dir_stats.advfs_st_mode & S_IXGRP) && (BSD_MODE(vp)))
             mask |= S_ISGID;
 
         if (noadd_execaccess)
                 mask |= (S_IXUSR|S_IXGRP|S_IXOTH);
 
-        contextp->dir_stats.st_mode &= ~mask;
+        contextp->dir_stats.advfs_st_mode &= ~mask;
     }
 
     mutex_unlock( &contextp->fsContext_mutex );

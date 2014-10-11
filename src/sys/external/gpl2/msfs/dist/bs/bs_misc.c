@@ -4540,7 +4540,7 @@ msfs_syscall_op_tag_stat(libParamsT *libBufp)
         /* Need to open the index file if this is a dir so we can
          * add in the allocated block count in bs_get_bf_page_cnt().
          */
-        if ((fs_statp->st_mode & S_IFMT) == S_IFDIR) {
+        if ((fs_statp->advfs_st_mode & S_IFMT) == S_IFDIR) {
         	sts = bf_get_l(tag, NULL, DONT_UNLOCK, mp, &index_vp, NULL);
 		if (sts != EOK) {
 		    RAISE_EXCEPTION(sts);
@@ -4564,7 +4564,7 @@ msfs_syscall_op_tag_stat(libParamsT *libBufp)
         libBufp->tagStat.uid = fs_statp->st_uid;
         libBufp->tagStat.gid = fs_statp->st_gid;
         libBufp->tagStat.atime = fs_statp->st_atime;
-        libBufp->tagStat.mode = fs_statp->st_mode;
+        libBufp->tagStat.mode = fs_statp->advfs_st_mode;
         libBufp->tagStat.size = bytes;
 
         break;
