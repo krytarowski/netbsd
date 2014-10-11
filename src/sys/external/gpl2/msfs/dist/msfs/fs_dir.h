@@ -74,7 +74,7 @@ struct fs_stat
     uid_t   advfs_st_uid;
     gid_t   advfs_st_gid;
     dev_t   advfs_st_rdev;
-    off_t   st_size;
+    off_t   advfs_st_size;
     time_t  st_atime;
     int     st_uatime;
     time_t  st_mtime;

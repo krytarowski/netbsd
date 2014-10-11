@@ -1049,7 +1049,7 @@ fs_update_stats(
         }
         context_ptr->fs_flag &= ~(MOD_ATIME | MOD_CTIME | MOD_MTIME);
     }
-    context_ptr->dir_stats.st_size = bfap->file_size;
+    context_ptr->dir_stats.advfs_st_size = bfap->file_size;
     context_ptr->dir_stats.fragId = bfap->fragId;
     context_ptr->dir_stats.fragPageOffset = bfap->fragPageOffset;
     mutex_unlock( &context_ptr->fsContext_mutex );

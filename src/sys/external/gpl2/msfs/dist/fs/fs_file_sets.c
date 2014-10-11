@@ -1135,7 +1135,7 @@ fs_create_frag (
 
     bfap->fragId = fragId;
     bfap->fragPageOffset = lastPageOffset;
-    fileContext->dir_stats.st_size = bfap->file_size;
+    fileContext->dir_stats.advfs_st_size = bfap->file_size;
     fileContext->dir_stats.fragId = fragId;
     fileContext->dir_stats.fragPageOffset = lastPageOffset;
     sts = bmtr_update_rec (
@@ -1325,7 +1325,7 @@ fs_delete_frag (
         bs_frag_dealloc(bfSetp, parentFtxH, dir_stats.fragId);
 
         bfap->fragId =  bsNilFragId;
-        dir_stats.st_size = bfap->file_size;
+        dir_stats.advfs_st_size = bfap->file_size;
         dir_stats.fragId = bsNilFragId;
         /* no need to set fragPageOffset */
 
@@ -1359,7 +1359,7 @@ fs_delete_frag (
 
         bfap->fragState = FS_FRAG_NONE;
         bfap->fragId =  bsNilFragId;
-        fileContext->dir_stats.st_size = bfap->file_size;
+        fileContext->dir_stats.advfs_st_size = bfap->file_size;
         fileContext->dir_stats.fragId = bsNilFragId;
         /* no need to set fragPageOffset */
 
