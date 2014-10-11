@@ -703,7 +703,7 @@ create_root_file(
     dir_stats->advfs_st_mode = mode;
     dir_stats->st_nlink = nlinks;
     dir_stats->advfs_st_uid = 0;
-    dir_stats->st_gid = gid;
+    dir_stats->advfs_st_gid = gid;
 
     sts = bmtr_put_rec(bfap, BMTR_FS_STAT, dir_stats, sizeof(statT), ftxH);
 
