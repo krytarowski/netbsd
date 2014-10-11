@@ -3691,7 +3691,7 @@ lookup:
          * seized so we can get our new one onto the list without racing any
          * other threads.
          */
-        if ( tbfap = find_bfap(bfSetp, tag, TRUE, NULL) )
+        if ((tbfap = find_bfap(bfSetp, tag, TRUE, NULL)))
         {
             BS_BFAH_UNLOCK(hash_key);
             /*
