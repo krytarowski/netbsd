@@ -1939,7 +1939,6 @@ ss_copy_rec_from_disk(bsSSDmnAttrT *ssAttr,        /* in */
     dmnP->ssDmnInfo.ssDmnDefragment = ssAttr->ssDmnDefragment;
     dmnP->ssDmnInfo.ssDmnSmartPlace = ssAttr->ssDmnSmartPlace;
     dmnP->ssDmnInfo.ssDmnBalance = ssAttr->ssDmnBalance;
-    dmnP->ssDmnInfo.ssDmnVerbosity = ssAttr->ssDmnVerbosity;
     dmnP->ssDmnInfo.ssDmnDirectIo = ssAttr->ssDmnDirectIo;
     dmnP->ssDmnInfo.ssMaxPercentOfIoWhenBusy = 
                             ssAttr->ssMaxPercentOfIoWhenBusy;
@@ -1978,7 +1977,6 @@ ss_copy_rec_to_disk(domainT      *dmnP,    /* in */
     ssAttr->ssDmnDefragment = dmnP->ssDmnInfo.ssDmnDefragment;
     ssAttr->ssDmnSmartPlace = dmnP->ssDmnInfo.ssDmnSmartPlace;
     ssAttr->ssDmnBalance = dmnP->ssDmnInfo.ssDmnBalance;
-    ssAttr->ssDmnVerbosity = dmnP->ssDmnInfo.ssDmnVerbosity;
     ssAttr->ssDmnDirectIo = dmnP->ssDmnInfo.ssDmnDirectIo;
 
     /* user hidden configurable by domain */
