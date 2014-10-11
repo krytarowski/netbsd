@@ -1031,7 +1031,7 @@ tagdir_set_next_tag(
      *  (if one isn't cached, grab_bsacc() will allocate one).
      */
     sts = EOK;
-    bfAccess = grab_bsacc (bfSetp, *tag, FALSE, NULL);
+    bfAccess = grab_bsacc (bfSetp, *tag, FALSE, 0);
     if (bfAccess != NULL) {
         /*
          *  Is this thread the only accessor of the access struct?
