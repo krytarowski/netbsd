@@ -1045,7 +1045,7 @@ fs_update_stats(
         }
         if (context_ptr->fs_flag & MOD_CTIME) {
             context_ptr->dir_stats.advfs_st_ctime = new_time.tv_sec;
-            context_ptr->dir_stats.st_uctime = (new_time.tv_usec * 1000);
+            context_ptr->dir_stats.advfs_st_uctime = (new_time.tv_usec * 1000);
         }
         context_ptr->fs_flag &= ~(MOD_ATIME | MOD_CTIME | MOD_MTIME);
     }
@@ -1106,7 +1106,7 @@ fs_flush_saved_stats(
         }
         if (ssp->fs_flag & MOD_CTIME) {
             ssp->dir_stats.advfs_st_ctime = new_time.tv_sec;
-            ssp->dir_stats.st_uctime = (new_time.tv_usec * 1000);
+            ssp->dir_stats.advfs_st_uctime = (new_time.tv_usec * 1000);
         }
         ssp->fs_flag &= ~(MOD_ATIME | MOD_CTIME | MOD_MTIME);
     }
