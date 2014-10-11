@@ -250,7 +250,7 @@ extern lock_data_t FilesetLock;
 #define CPTOUID(cp) (cp)->dir_stats.advfs_st_uid
 
 /* Extract the group id from an fsContext structure. */
-#define CPTOGID(cp) (cp)->dir_stats.st_gid
+#define CPTOGID(cp) (cp)->dir_stats.advfs_st_gid
 
 /* Extract the size from an fsContext structure. */
 #define CPTOSIZ(cp) (cp)->dir_stats.st_size
