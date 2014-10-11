@@ -72,7 +72,7 @@ statusT
 fs_create_frag (
                 bfSetT *bfSetp,  /* in */
                 bfAccessT* bfap,  /* in */
-                struct ucred *cred,  /* in */
+                struct uucred *cred,  /* in */
                 ftxHT parentFtxH  /* in */
                 );
 

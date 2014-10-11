@@ -508,7 +508,7 @@ bs_owner(
     uid_t ouid  /* in - object's user id */
     )
 {
-    struct ucred *cred = u.u_nd.ni_cred;
+    struct uucred *cred = u.u_nd.ni_cred;
 
     if (SUSER || cred->cr_uid == ouid) {
         return TRUE;
@@ -533,7 +533,7 @@ bs_accessible(
     gid_t ogid              /* in - object's gid */
     )
 {
-    struct ucred *cred = u.u_nd.ni_cred;
+    struct uucred *cred = u.u_nd.ni_cred;
     gid_t *gp;
     int i;
 

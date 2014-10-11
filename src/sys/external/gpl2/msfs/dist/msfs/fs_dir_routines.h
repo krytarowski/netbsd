@@ -206,7 +206,7 @@ fs_write(
          struct vnode *vp,
          struct uio *uio,
          int ioflag,
-         struct ucred *cred
+         struct uucred *cred
          );
 
 #define ADVFS_IO_NO_ZERO 0x10000000 /* secret ioflag for fs_write() */
@@ -221,7 +221,7 @@ fs_read(
         struct vnode *vp,
         struct uio *uio,
         int ioflag,
-        struct ucred *cred
+        struct uucred *cred
         );
 
 opxT fs_insert_undo;
@@ -253,7 +253,7 @@ fs_write_add_stg(
     unsigned long bytes_to_write,  /* in - bytes that remain to be written */
     unsigned long file_size,       /* in - bytes in file */
     unsigned starting_byte_in_page,/* in - first byte in page */
-    struct ucred *cred,            /* in - credentials of caller */
+    struct uucred *cred,            /* in - credentials of caller */
     int add_stg_flags,             /* in - allocation flags */
     int *pgs_allocated             /* out - # of pages allocated */
     );
@@ -269,7 +269,7 @@ fs_delete_frag(
     bfSetT *bfSetp,               /* in - file's bfSet pointer */
     struct bfAccess *bfap,        /* in - file's access structure */
     struct vnode *vnode,          /* in - vnode if external open */
-    struct ucred *cred,           /* in - credentials of caller */
+    struct uucred *cred,           /* in - credentials of caller */
     int quotas_done,              /* in - flag, caller did quota update */
     ftxHT parentFtxH              /* in - parent transaction */
     );
@@ -277,7 +277,7 @@ fs_delete_frag(
 statusT
 copy_and_del_frag (
                    struct vnode* vp,
-                   struct ucred *cred,
+                   struct uucred *cred,
                    int flushit, /* synchronous unpin flag */
                    ftxHT ftxH
                    );
