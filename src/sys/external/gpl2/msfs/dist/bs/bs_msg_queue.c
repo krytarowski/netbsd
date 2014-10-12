@@ -55,7 +55,6 @@
 /* message queue private definitions */
 
 typedef uint32T msgSizeT;
-decl_simple_lock_info(, ADVmsgQT_mutex_lockinfo )
 
 /*
  * msgStateT
