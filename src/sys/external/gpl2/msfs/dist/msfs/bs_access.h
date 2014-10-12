@@ -24,6 +24,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/condvar.h>
 #include <sys/mount.h>
 #include <sys/rwlock.h>
 #include <sys/vnode.h>
@@ -340,7 +341,7 @@ typedef struct bfAccess {
                                      an invalid directory entry */
     /* following two migrate Throttle fields are protected by bfIoLock */
     ulong migPagesPending;  /*unpinned migrates to flushQ but not written yet */
-    cvT migWait;            /* will sleep until queue reduced to this size */
+    kcondvar_t migWait;            /* will sleep until queue reduced to this size */
 } bfAccessT;
 
 #ifdef    ADVFS_ACCESS_TRACE

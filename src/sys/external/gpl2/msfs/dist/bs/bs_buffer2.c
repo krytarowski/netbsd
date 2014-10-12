@@ -4291,7 +4291,7 @@ _state_block(
      * Block until condition variable is signaled.
      */
     bp->lock.waiting++;
-    cond_wait( &bp->lock.bufCond, &bp->bufLock );
+    cv_wait( &bp->lock.bufCond, &bp->bufLock );
     bp->lock.waiting--;
 
 #ifdef ADVFS_DEBUG
@@ -4473,14 +4473,14 @@ clear_state (
                     AdvfsLockStats->bufSignal++;
                 }
 
-                cond_signal( &bp->lock.bufCond );
+                cv_signal( &bp->lock.bufCond );
             } else {
                 if (AdvfsLockStats) {
                     AdvfsLockStats->usageStats[ bp->lock.hdr.lkUsage ].broadcast++;
                     AdvfsLockStats->bufBroadcast++;
                 }
 
-                cond_broadcast( &bp->lock.bufCond );
+                cv_broadcast( &bp->lock.bufCond );
             }
         }
     }

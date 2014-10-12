@@ -298,7 +298,7 @@ cp_copy_page_range (
  * performance.
  *
  * For a disk with a 256 block prefered transfer size doing 2 GB migrate, there
- * is a cond_wait issued about every 70 MB of data transfer.  This is nearly 
+ * is a cv_wait issued about every 70 MB of data transfer.  This is nearly 
  * 20 seconds  between issues.  The wallclock time is degraded by about 
  * 10% over the case with unlimited ubc usage and no trips are made through
  * the scheduler.  The ubc usage is constrained to 4 MB for this migrate.
@@ -522,7 +522,7 @@ set_block_map (
             if (bfAccess->migPagesPending >= maxMigrateUbcPgs) {
                 MS_SMP_ASSERT( maxMigrateUbcPgs/2 <= 0x7fff );
                 bfAccess->migWait = maxMigrateUbcPgs/2;
-                cond_wait(&bfAccess->migWait, &bfAccess->bfIoLock);
+                cv_wait(&bfAccess->migWait, &bfAccess->bfIoLock);
             }
             mutex_unlock(&bfAccess->bfIoLock);
         }
