@@ -343,7 +343,7 @@ _ftx_start_i(
         lock_read(&dmnP->ftxSlotLock);
 #endif
 
-        mutex_lock( &FtxMutex );
+        mutex_enter( &FtxMutex );
 
 #ifdef ADVFS_SMP_ASSERT
         if ( AdvfsEnableAsserts ) {
@@ -458,7 +458,7 @@ _ftx_start_i(
         /* Allocate a new ftx struct */
         mutex_exit( &FtxMutex );
         ftxp = newftx();
-        mutex_lock( &FtxMutex );
+        mutex_enter( &FtxMutex );
 
         /* Update stats for number allocated */
         FtxDynAlloc.currAllocated++;
@@ -1200,7 +1200,7 @@ ftx_done_urdr(
         do_ftx_continuations( dmnP, ftxp, ftxH, lrvecp );
     }
 
-    mutex_lock( &FtxMutex );
+    mutex_enter( &FtxMutex );
 
     /* Mark this ftx as available; won't get used until FtxMutex is
      * dropped.
@@ -1282,7 +1282,7 @@ ftx_quit(
 
     /* free the ftx */
 
-    mutex_lock( &FtxMutex );
+    mutex_enter( &FtxMutex );
 
     ftx_free( ftxSlot, ftxTDp );
 
@@ -1748,7 +1748,7 @@ free_ftx:
          * undo backlink chain.
          */
 
-        mutex_lock( &FtxMutex );
+        mutex_enter( &FtxMutex );
 
         /* Mark this slot as available */
         ftx_free( ftxSlot, ftxTDp );
@@ -2788,7 +2788,7 @@ do_ftx_continuations(
          * value in the log.
          */
         if ( !LSN_EQ_NIL( ftxTDp->logTrimLsn ) ) {
-            mutex_lock( &FtxMutex );
+            mutex_enter( &FtxMutex );
             --ftxTDp->noTrimCnt;
 
             reset_oldest_lsn( ftxp, dmnP, TRUE );
@@ -2931,7 +2931,7 @@ ftx_lock_write(
     }
 
 #ifdef ADVFS_DEBUG
-    mutex_lock( lk->hdr.mutex );
+    mutex_enter( lk->hdr.mutex );
     lk->hdr.try_line_num = ln;
     lk->hdr.try_file_name = fn;
     mutex_exit( lk->hdr.mutex );
@@ -2947,7 +2947,7 @@ ftx_lock_write(
     clvlp->lkList = lk;
 
 #ifdef ADVFS_DEBUG
-    mutex_lock( lk->hdr.mutex );
+    mutex_enter( lk->hdr.mutex );
     lk->hdr.line_num = ln;
     lk->hdr.file_name = fn;
     lk->hdr.thread = *((int *)&(current_thread()));
@@ -2972,7 +2972,7 @@ ftx_lock_read(
     }
 
 #ifdef ADVFS_DEBUG
-    mutex_lock( lk->hdr.mutex );
+    mutex_enter( lk->hdr.mutex );
     lk->hdr.try_line_num = ln;
     lk->hdr.try_file_name = fn;
     mutex_exit( lk->hdr.mutex );
@@ -2988,7 +2988,7 @@ ftx_lock_read(
     clvlp->lkList = lk;
 
 #ifdef ADVFS_DEBUG
-    mutex_lock( lk->hdr.mutex );
+    mutex_enter( lk->hdr.mutex );
     lk->hdr.line_num = ln;
     lk->hdr.file_name = fn;
     lk->hdr.thread = *((int *)&(current_thread()));
@@ -3015,7 +3015,7 @@ ftx_unlock(
     switch( lkHdr->lkType ) {
 
         case LKT_STATE:
-            mutex_lock( lkHdr->mutex );
+            mutex_enter( lkHdr->mutex );
             lk_signal( lk_set_state( sLk, sLk->pendingState ), sLk );
             sLk->pendingState = LKW_NONE;
             mutex_exit( lkHdr->mutex );
@@ -3030,7 +3030,7 @@ ftx_unlock(
     }
 
 #ifdef ADVFS_DEBUG
-    mutex_lock( lkHdr->mutex );
+    mutex_enter( lkHdr->mutex );
     lkHdr->lock_cnt--;
     mutex_exit( lkHdr->mutex );
 #endif /* ADVFS_DEBUG */
@@ -3411,7 +3411,7 @@ ftx_get_dirtybufla(
 
         /* It's been updated, get the lock, re-read and reset */
 
-        mutex_lock( &dmnP->lsnLock );
+        mutex_enter( &dmnP->lsnLock );
 
         thisread = dmnP->dirtyBufLa.update;
         dmnP->dirtyBufLa.read = thisread;
@@ -3454,7 +3454,7 @@ ftx_set_oldestftxla(
     int updindex;
     ftxCRLAT* oldftxlap = &dmnP->ftxTbld.oldestFtxLa;
 
-    mutex_lock( &FtxMutex );
+    mutex_enter( &FtxMutex );
 
     updindex = oldftxlap->update;
 
@@ -3496,7 +3496,7 @@ ftx_get_oldestftxla(
 
     /* It's been updated, get the lock, re-read and reset */
 
-    mutex_lock( &FtxMutex );
+    mutex_enter( &FtxMutex );
 
     thisread = oldftxlap->update;
     oldftxlap->read = thisread;
@@ -3527,7 +3527,7 @@ ftx_set_firstla(
     logRecAddrT oldftxLa;
     ftxCRLAT* oldftxlap = &dmnP->ftxTbld.oldestFtxLa;
 
-    mutex_lock( &FtxMutex );
+    mutex_enter( &FtxMutex );
 
     updindex = oldftxlap->update;
 
@@ -3666,7 +3666,7 @@ checklogtrim:
 
         (void)bs_pinblock_sync( dmnP, ftxTDp->logTrimLsn, 0 );
 
-        mutex_lock( &FtxMutex );
+        mutex_enter( &FtxMutex );
 
         ftxTDp->logTrimLsn = nilLSN;
 

@@ -267,7 +267,7 @@ rbf_int_create(
     if (sts != EOK) {RAISE_EXCEPTION( sts );}
 
     /* dereference the bfAccess object, set into INVALID state */
-    mutex_lock(&bfap->bfaLock);
+    mutex_enter(&bfap->bfaLock);
     unlkAction = lk_set_state( &bfap->stateLk, ACC_INVALID );
 
     lk_signal( unlkAction, &bfap->stateLk );
@@ -298,7 +298,7 @@ rbf_int_create(
 HANDLE_EXCEPTION: ;
     
     if ( bfap ) {
-        mutex_lock( &bfap->bfaLock );
+        mutex_enter( &bfap->bfaLock );
 
         unlkAction = lk_set_state( &bfap->stateLk, ACC_INVALID );
 
@@ -436,7 +436,7 @@ make_mcell_valid(
         ADVFS_SAD0("create_rtdn_opx: can't find ds attributes");
     }
 
-    mutex_lock( &bfap->bfaLock );
+    mutex_enter( &bfap->bfaLock );
 
     if (odattr->state == BSRA_CREATING) {
 
@@ -751,7 +751,7 @@ kill_mcell(
         if (bfap->bfObj) {
             mutex_exit( &bfap->bfaLock );
             bs_invalidate_pages(bfap, 0, 0, 0);
-            mutex_lock( &bfap->bfaLock );
+            mutex_enter( &bfap->bfaLock );
         }
     }
 

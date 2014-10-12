@@ -384,17 +384,6 @@ typedef struct advfsLockStats {
 
 extern advfsLockStatsT *AdvfsLockStats;
 
-#ifdef ADVFS_DEBUG
-
-#define mutex_lock( mp )    _mutex_lock( mp, __LINE__, __FILE__ )
-
-#else
-
-#define mutex_lock( mp )   simple_lock( &((mp)->mutex) )
-#define _mutex_lock( mp, ln, fn )   simple_lock( &((mp)->mutex) )
-
-#endif /* ADVFS_DEBUG */
-
 #define lk_locked( lk )           (lk_is_locked(&(lk)))
 
 #define lk_waiters( lk )          ((lk).waiters)

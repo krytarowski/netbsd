@@ -161,7 +161,7 @@ bs_freeze_thread( void )
     struct timeval     curTime;
 
     while (TRUE) {
-        mutex_lock(&AdvfsFreezeMsgsLock);
+        mutex_enter(&AdvfsFreezeMsgsLock);
         if (!AdvfsFreezeMsgs) {
             assert_wait_mesg( (vm_offset_t) &AdvfsFreezeMsgs, FALSE, "advfs_freeze_thread" );
             if (freezeInfoP = AdvfsFrozenList) {
@@ -224,7 +224,7 @@ check_for_new_msg( void )
     advfsFreezeInfoT  *freezeInfoP;
     advfsFreezeInfoT  *trailerP;
 
-    mutex_lock(&AdvfsFreezeMsgsLock);
+    mutex_enter(&AdvfsFreezeMsgsLock);
     if (AdvfsFreezeMsgs == NULL) {
         mutex_exit(&AdvfsFreezeMsgsLock);
         return;
@@ -311,7 +311,7 @@ freeze_domain( advfsFreezeMsgT *msg )
      *  BFD_FREEZE_IN_PROGRESS has already been set by the vfsop 
      *  Get the lock and proceed if the freeze reference count is 0
      */
-    mutex_lock(&dmnP->dmnFreezeMutex);
+    mutex_enter(&dmnP->dmnFreezeMutex);
     if (dmnP->dmnFreezeRefCnt) {
         dmnP->dmnFreezeWaiting++;
         assert_wait_mesg( (vm_offset_t)&dmnP->dmnFreezeWaiting,
@@ -383,7 +383,7 @@ freeze_domain( advfsFreezeMsgT *msg )
      */
     sts = FTX_START_EXC(FTA_NULL, &freezeInfoP->frziFtxH, dmnP, 0);
     if (sts != EOK) {
-        mutex_lock(&dmnP->dmnFreezeMutex);
+        mutex_enter(&dmnP->dmnFreezeMutex);
         dmnP->dmnFreezeFlags &= ~BFD_FREEZE_IN_PROGRESS;
         mutex_exit(&dmnP->dmnFreezeMutex);
         ms_free (freezeInfoP);
@@ -400,7 +400,7 @@ freeze_domain( advfsFreezeMsgT *msg )
     /*
      *  Update the domain flag and set the timeout value
      */
-    mutex_lock(&dmnP->dmnFreezeMutex);
+    mutex_enter(&dmnP->dmnFreezeMutex);
     dmnP->dmnFreezeFlags &= ~BFD_FREEZE_IN_PROGRESS;
     dmnP->dmnFreezeFlags |=  BFD_FROZEN;
     mutex_exit(&dmnP->dmnFreezeMutex);
@@ -485,7 +485,7 @@ thaw_domain( advfsFreezeInfoT *freezeInfoP, int forced )
     dmnP = freezeInfoP->frziFtxH.dmnP;
     ftx_special_done_mode (freezeInfoP->frziFtxH, FTXDONE_LOGSYNC);
     ftx_done_n (freezeInfoP->frziFtxH, FTA_BS_FREEZE);
-    mutex_lock(&dmnP->dmnFreezeMutex);
+    mutex_enter(&dmnP->dmnFreezeMutex);
     dmnP->dmnFreezeFlags &= ~BFD_FROZEN;
     mutex_exit(&dmnP->dmnFreezeMutex);
     ms_free (freezeInfoP);
