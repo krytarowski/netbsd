@@ -1685,7 +1685,7 @@ HANDLE_EXCEPTION:
         mutex_lock(&bfap->actRangeLock);
         MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
-        mutex_unlock(&bfap->actRangeLock);
+        mutex_exit(&bfap->actRangeLock);
         ms_free(arp);
     }
 
@@ -2229,7 +2229,7 @@ HANDLE_EXCEPTION:
         mutex_lock(&bfap->actRangeLock);
         MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
-        mutex_unlock(&bfap->actRangeLock);
+        mutex_exit(&bfap->actRangeLock);
         ms_free(arp);
     }
 

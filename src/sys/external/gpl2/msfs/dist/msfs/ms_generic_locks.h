@@ -387,14 +387,11 @@ extern advfsLockStatsT *AdvfsLockStats;
 #ifdef ADVFS_DEBUG
 
 #define mutex_lock( mp )    _mutex_lock( mp, __LINE__, __FILE__ )
-#define mutex_unlock( mp )  _mutex_unlock( mp, __LINE__, __FILE__ )
 
 #else
 
 #define mutex_lock( mp )   simple_lock( &((mp)->mutex) )
-#define mutex_unlock( mp ) simple_unlock( &((mp)->mutex) )
 #define _mutex_lock( mp, ln, fn )   simple_lock( &((mp)->mutex) )
-#define _mutex_unlock( mp, ln, fn ) simple_unlock( &((mp)->mutex) )
 
 #endif /* ADVFS_DEBUG */
 

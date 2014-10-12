@@ -654,7 +654,7 @@ after_inactive:
                          * newly-available slot.
                          */
                         ftx_free_2( ftxp );
-                        mutex_unlock( &FtxMutex );
+                        mutex_exit( &FtxMutex );
                     }
                 } else {
                     domain_panic(dmnP,
@@ -719,14 +719,14 @@ logclose:
     while( dmnP->bfSetHead.bfsQfwd != &dmnP->bfSetHead ) {
         entry = dmnP->bfSetHead.bfsQfwd;
         BFSET_DMN_REMQ( dmnP, entry );
-        mutex_unlock( &dmnP->mutex );
+        mutex_exit( &dmnP->mutex );
         bfSetp = BFSET_QUEUE_TO_BFSETP( entry );
         if (bfSetp->fsRefCnt == 0) {
             bfs_dealloc( bfSetp, TRUE );
         }    
         mutex_lock( &dmnP->mutex );
     }
-    mutex_unlock( &dmnP->mutex );
+    mutex_exit( &dmnP->mutex );
     BFSETTBL_UNLOCK( dmnP );    
 
 freexid:
@@ -945,7 +945,7 @@ ftx_recovery_pass(
             FtxDynAlloc.currAllocated++;
             if ( FtxDynAlloc.currAllocated > FtxDynAlloc.maxAllocated )
                 FtxDynAlloc.maxAllocated = FtxDynAlloc.currAllocated;
-            mutex_unlock(&FtxMutex);
+            mutex_exit(&FtxMutex);
 
             ftxTDp->tablep[ftxSlot].state = FTX_SLOT_BUSY;
             ++ftxTDp->slotUseCnt;
@@ -1172,7 +1172,7 @@ ftx_recovery_pass(
             /* Now free the ftx struct allocated to the newly-available slot. */
 
             ftx_free_2( ftxp );
-            mutex_unlock(&FtxMutex);
+            mutex_exit(&FtxMutex);
         }
 
         /* Give back the memory given to us from lgr_read */
@@ -1380,7 +1380,7 @@ ftx_recovery_pass(
                 mutex_lock(&FtxMutex);
                 ftx_free( ftxSlot, ftxTDp );
                 ftx_free_2( ftxp );
-                mutex_unlock(&FtxMutex);
+                mutex_exit(&FtxMutex);
             }
 #ifdef ADVFS_DEBUG
             if ( rdcnt ) {

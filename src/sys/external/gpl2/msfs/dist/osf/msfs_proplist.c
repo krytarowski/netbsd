@@ -1217,7 +1217,7 @@ msfs_setproplist_int(
 	    mutex_lock( &context_ptr->fsContext_mutex);
   	    context_ptr->fs_flag |= MOD_CTIME;
     	    context_ptr->dirty_stats = TRUE;
-	    mutex_unlock( &context_ptr->fsContext_mutex);
+	    mutex_exit( &context_ptr->fsContext_mutex);
          }
      
 out:
@@ -3224,7 +3224,7 @@ start:
       mutex_lock( &rem_context->fsContext_mutex);
       rem_context->fs_flag |= MOD_CTIME;
       rem_context->dirty_stats = TRUE;
-      mutex_unlock( &rem_context->fsContext_mutex);
+      mutex_exit( &rem_context->fsContext_mutex);
   }
 
  out:
@@ -5068,7 +5068,7 @@ start:
       mutex_lock( &rem_context->fsContext_mutex);
       rem_context->fs_flag |= MOD_CTIME;
       rem_context->dirty_stats = TRUE;
-      mutex_unlock( &rem_context->fsContext_mutex);
+      mutex_exit( &rem_context->fsContext_mutex);
   }
 
  out:
