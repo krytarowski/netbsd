@@ -30,6 +30,7 @@
 #include <sys/file.h>
 #include <sys/vnode.h>
 #include <sys/mount.h>
+#include <sys/mutex.h>
 #include <sys/resource.h>
 
 #include "../msfs/ms_public.h"
@@ -160,8 +161,7 @@ _error:
 void
 fscontext_lock_init( struct fsContext* fscp )
 {
-    mutex_init3( &fscp->fsContext_mutex, 0, "fsContextMutex",
-                 ADVfsContext_mutex_lockinfo );
+    mutex_init( &fscp->fsContext_mutex, MUTEX_DEFAULT, IPL_NONE);
     lock_setup( &fscp->file_lock, ADVfsContext_file_lock_info, TRUE);
 }
 

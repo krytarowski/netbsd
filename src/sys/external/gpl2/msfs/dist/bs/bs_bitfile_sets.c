@@ -41,6 +41,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/mutex.h>
 #include <sys/stat.h>
 #include <sys/syslog.h>
 
@@ -2060,7 +2061,7 @@ bs_bfs_init(
     void unlink_clone_undo( ftxHT ftxH, int opRecSz, void* opRec );
     void del_list_remove_undo( ftxHT ftxH, int opRecSz, void* opRec );
 
-    mutex_init3( &LookupMutex, 0, "BFS LookupMutex", ADVLookupMutex_lockinfo );
+    mutex_init( &LookupMutex, MUTEX_DEFAULT, IPL_NONE);
 
     sts = ftx_register_agent( FTA_BS_BFS_CREATE_V1, &bs_bfs_create_undo, NIL );
     if (sts != EOK) {
@@ -2413,14 +2414,11 @@ bfs_alloc(
     bfSetp->accessFwd  =
     bfSetp->accessBwd  = (bfAccessT *)(&bfSetp->accessFwd);
 
-    mutex_init3(&bfSetp->setMutex, 0, "bfSetT.setMutex",
-                ADVbfSetT_setMutex_lockinfo );
-    mutex_init3(&bfSetp->accessChainLock, 0, "bfSetT.accessChainLock",
-                ADVbfSetT_accessChainLock_lockinfo );
+    mutex_init(&bfSetp->setMutex, MUTEX_DEFAULT, IPL_NONE);
+    mutex_init(&bfSetp->accessChainLock, MUTEX_DEFAULT, IPL_NONE);
     ftx_lock_init(&bfSetp->dirLock, &bfSetp->setMutex, ADVbfSetT_dirLock_info );
     ftx_lock_init(&bfSetp->fragLock, &bfSetp->setMutex, ADVbfSetT_fragLock_info );
-    mutex_init3(&bfSetp->cloneDelStateMutex, 0, "bfSetT.cloneDelStateMutex", 
-                ADVbfSetT_cloneDelStateMutex_lockinfo);
+    mutex_init(&bfSetp->cloneDelStateMutex, MUTEX_DEFAULT, IPL_NONE);
     mutex_lock(&bfSetp->cloneDelStateMutex);
     lk_init(&bfSetp->cloneDelState, &bfSetp->cloneDelStateMutex, 
             LKT_STATE, 0, LKU_CLONE_DEL);
@@ -2428,8 +2426,7 @@ bfs_alloc(
     bfSetp->xferThreads = 0;
     mutex_unlock(&bfSetp->cloneDelStateMutex);
 
-    mutex_init3(&bfSetp->bfSetMutex, 0, "bfSetT.bfSetMutex",
-                ADVbfSetT_bfSetMutex_lockinfo);
+    mutex_init(&bfSetp->bfSetMutex, MUTEX_DEFAULT, IPL_NONE);
                
 
     /*
