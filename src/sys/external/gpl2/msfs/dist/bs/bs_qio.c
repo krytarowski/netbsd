@@ -1213,7 +1213,7 @@ loop:
             continue;
         }
 
-        if ( !mutex_lock_try( &bp->bufLock.mutex )) {
+        if ( !mutex_tryenter( &bp->bufLock.mutex )) {
             /* try to reseize in order.  Buffers are added only at the end
              * of the lsnList, so we don't have to worry about buffers 
              * having been inserted in front of this one.  We do have to be
@@ -1485,7 +1485,7 @@ loop:
             continue;
         }
 
-        if ( !mutex_lock_try( &bp->bufLock.mutex )) {
+        if ( !mutex_tryenter( &bp->bufLock.mutex )) {
             nextbp = bp->lsnFwd;
             /* Drop UBC page (pg_hold count) reference. */
             ubc_page_release(bp->vmpage, B_WRITE);
@@ -2843,7 +2843,7 @@ restart:
          * the buffer state is still what we expect (on dirty list, not
          * BUSY).
          */
-        if (!mutex_lock_try( &bp->bufLock.mutex )) {
+        if (!mutex_tryenter( &bp->bufLock.mutex )) {
             mutex_unlock( &bfap->bfIoLock );
             mutex_lock( &bp->bufLock );
             mutex_lock( &bfap->bfIoLock );
@@ -3138,7 +3138,7 @@ loop:
          * fails, relock in correct order, but be sure that
          * buffer is still on dirty list after the locks are held.
          */
-        if (!mutex_lock_try( &bp->bufLock.mutex )) {
+        if (!mutex_tryenter( &bp->bufLock.mutex )) {
             mutex_unlock( &bfap->bfIoLock );
             mutex_lock( &bp->bufLock );
             mutex_lock( &bfap->bfIoLock );
@@ -4168,7 +4168,7 @@ loop:
          * fails, relock in correct order, but be sure that
          * buffer is still on dirty list after the locks are held.
          */
-        if (!mutex_lock_try( &bp->bufLock.mutex )) {
+        if (!mutex_tryenter( &bp->bufLock.mutex )) {
             mutex_unlock( &bfap->bfIoLock );
             mutex_lock( &bp->bufLock );
             mutex_lock( &bfap->bfIoLock );
@@ -4839,7 +4839,7 @@ again:
 
             lockptr = &qhdr->ioQLock;
 
-            if (!mutex_lock_try(&lockptr->mutex)) {
+            if (!mutex_tryenter(&lockptr->mutex)) {
 
                 mutex_unlock( &bp->bufLock );
 
