@@ -282,7 +282,7 @@ typedef struct ftx {
  */
 struct ftx_dyn_alloc {
     int waiters;                  /* # of waiters */
-    cv res;                       /* condition variable for waiting */
+    kcondvar_t res;                       /* condition variable for waiting */
     unsigned int maxAllowed;      /* maximum # allowed */
     unsigned int currAllocated;  /* current # allocated */
     unsigned int maxAllocated;    /* max # actually allocated at once; stats */

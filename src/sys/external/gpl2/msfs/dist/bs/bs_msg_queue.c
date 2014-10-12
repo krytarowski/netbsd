@@ -88,7 +88,7 @@ typedef struct msgQEntry {
 
 typedef struct msgQ {
     kmutex_t mutex;                     /* synchronization mutex              */
-    cv res;                           /* synchronization condition variable */
+    kcondvar_t res;                           /* synchronization condition variable */
     msgQEntryT *qHead;                /* msg queue head pointer             */
     msgQEntryT *qTail;                /* msq queue tail pointer             */
     msgQEntryT *freeMsgLst;           /* list of free message entries       */

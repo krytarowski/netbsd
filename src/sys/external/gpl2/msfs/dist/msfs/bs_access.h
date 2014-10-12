@@ -341,7 +341,7 @@ typedef struct bfAccess {
                                      an invalid directory entry */
     /* following two migrate Throttle fields are protected by bfIoLock */
     ulong migPagesPending;  /*unpinned migrates to flushQ but not written yet */
-    cv migWait;            /* will sleep until queue reduced to this size */
+    kcondvar_t migWait;            /* will sleep until queue reduced to this size */
 } bfAccessT;
 
 #ifdef    ADVFS_ACCESS_TRACE

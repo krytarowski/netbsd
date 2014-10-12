@@ -102,7 +102,7 @@ trace_hdr(void)
 void
 trace_lkcall( 
              LkTraceActionT action,  /* in */
-             cv *resp,               /* in */ 
+             kcondvar_t *resp,               /* in */ 
              kmutex_t *mp,             /* in */
              int ln,                 /* in */
              char *fn,               /* in */

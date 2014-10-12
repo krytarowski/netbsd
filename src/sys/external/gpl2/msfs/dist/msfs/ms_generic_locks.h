@@ -136,7 +136,7 @@ typedef struct lkHdr {
 typedef struct ftxLk {
     lkHdrT hdr;               /* header used by ftx lock routines only */
     krwlock_t  lock;        /* The OSF lock .  */
-    cv res;                   /* condition variable */
+    kcondvar_t res;                   /* condition variable */
 } ftxLkT;
 
 /*
@@ -218,7 +218,7 @@ typedef struct stateLk {
     lkStatesT state;            /* current state */
     lkStatesT pendingState;     /* pending state - ftx lock routines only */
     u_short waiters;            /* num threads waiting on the cvp */
-    cv res;                     /* condition variable */
+    kcondvar_t res;                     /* condition variable */
 } stateLkT;
 
 /*
@@ -234,7 +234,7 @@ typedef struct stateLk {
 typedef struct bufLk {
     lkHdrT hdr;           /* header used by ftx lock routines only */
     unsigned state;         /* define'd flags in bs_buf.h */
-    cv bufCond;          /* condition variable */
+    kcondvar_t bufCond;          /* condition variable */
     u_short waiting;      /* number of threads waiting on the lock */
 } bufLkT;
 
