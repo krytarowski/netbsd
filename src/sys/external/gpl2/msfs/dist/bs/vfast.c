@@ -99,14 +99,6 @@ _ int SS_const_data_pad_1[4] = {0};
 
 
 struct lockinfo * ADV_SSLock_lk_info;
-decl_simple_lock_info(, ADVssStoppedMutex_lockinfo )
-decl_simple_lock_info(, ADVssListTpool_lockinfo )
-decl_simple_lock_info(, ADVssWorkTpool_lockinfo )
-decl_simple_lock_info(, ADVvdT_ssVdMsgLk_lockinfo )
-decl_simple_lock_info(, ADVvdT_ssVdMigLk_lockinfo )
-decl_simple_lock_info(, ADVvdT_ssFragLk_lockinfo )
-decl_simple_lock_info(, ADVdomainT_ssDmnLk_lockinfo )
-decl_simple_lock_info(, ADVdomainT_ssDmnHotLk_lockinfo )
 
 typedef enum {
     SS_ADD_LIST_THREAD,
