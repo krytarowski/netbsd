@@ -80,7 +80,6 @@ domainT *DmnSentinelP = NULL;
 
 /* Dynamic hash table for domain structures */
 void *DomainHashTbl;
-struct lockinfo *ADVDomainHashChainLock_lockinfo;
 
 /* Count of existing domains.  This is still sync'd with
 *  DmnTblMutex and is modified ONLY in dmn_alloc()
@@ -96,21 +95,6 @@ struct bsMPg *Dpgp = NULL;
 struct bsMPg *GRpgp = NULL;
 
 vdDescT nilVdDesc = NULL_STRUCT;
-
-struct lockinfo * ADVvdT_del_list_lk_info;
-struct lockinfo * ADVvdT_stgMap_lk_info;
-struct lockinfo * ADVvdT_mcell_lk_info;
-struct lockinfo * ADVvdT_rbmt_mcell_lk_info;
-struct lockinfo * ADVvdT_ddlActiveLk_info;
-struct lockinfo * ADVDmnTblLock_info;
-struct lockinfo * ADVdomainT_scLock_info;
-struct lockinfo * ADVdomainT_rmvolTruncLk_info;
-struct lockinfo * ADVdomainT_xidRecoveryLk_info;
-struct lockinfo * ADVBfSetTblLock_info;
-#ifdef ADVFS_SMP_ASSERT
-struct lockinfo *ADVdomainT_ftxSlotLock_lk_info;
-#endif
-
 
 #define  DMNTBL_LOCK_WRITE( sLk ) \
     lock_write( sLk );

@@ -1756,8 +1756,6 @@ cleanup:
 ** Returns EBUSY if fsnp exists and is on FilesetHead.
 ** Returns other errors for other problems.
 */
-extern struct lockinfo *ADVfilesetMutex_lockinfo;
-extern struct lockinfo *ADVquotaInfoT_qiLock;
 
 static statusT
 filesetnode_init( bfSetT *bfSetp, fileSetNodeT **fsnpA )
