@@ -628,14 +628,14 @@ bf_get_l(
              */
             ssp->op_flags |= SS_STATS_COPIED_TO_CONTEXT;
         }
-        mutex_unlock( &bfap->bfaLock );
+        mutex_exit( &bfap->bfaLock );
 
         /* Only deallocate if cleanup_closed_list() not processing it! */
         if ( !flush_in_progress )
             ms_free( ssp );
 
     }  else {
-        mutex_unlock( &bfap->bfaLock );
+        mutex_exit( &bfap->bfaLock );
 
         /*
          * read the stats from the BMT
@@ -829,10 +829,10 @@ finish_setup:
             nvp->v_object = NULL;
             VN_UNLOCK(nvp);
             obj->vu_object.ob_ref_count -= 1;
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             ubc_object_free(obj);
         } else {
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
         }
     }
 
@@ -1010,7 +1010,7 @@ msfs_inactive(
          */
         mutex_lock(&tempbfap->bfaLock);
         tempbfap->refCnt++;
-        mutex_unlock(&tempbfap->bfaLock);
+        mutex_exit(&tempbfap->bfaLock);
 
         /*
          * Advise bs_close that it is being called from
@@ -1056,7 +1056,7 @@ msfs_inactive(
     if (tempbfap) {
         mutex_lock(&tempbfap->bfaLock);
         DEC_REFCNT(tempbfap);
-        mutex_unlock(&tempbfap->bfaLock);
+        mutex_exit(&tempbfap->bfaLock);
     }
 
     return (0);
@@ -1185,7 +1185,7 @@ msfs_reclaim(
                     !(fragfile) && !(idxfile) )
                 {
                     vp->v_op = &msfs_vnodeops;
-                    mutex_unlock(&bfap->bfaLock);
+                    mutex_exit(&bfap->bfaLock);
                     msfs_flush_and_invalidate(bfap, INVALIDATE_ALL);
                     mutex_lock(&bfap->bfaLock);
                     vp->v_op = vnop_save;
@@ -1235,7 +1235,7 @@ msfs_reclaim(
                      */
                     if ( !bfap->saved_stats ) {
                         /* This should be the typical path */
-                        mutex_unlock( &bfap->bfaLock );
+                        mutex_exit( &bfap->bfaLock );
                         ssp = (saved_statsT *)ms_malloc( sizeof(saved_statsT) );
                         mutex_lock( &bfap->bfaLock );
                     } else
@@ -1298,7 +1298,7 @@ msfs_reclaim(
         bnp->tag = NilBfTag;
         bnp->bfSetId = nilBfSetId;
         if (bfap)
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
     }
 
     /*
@@ -1402,7 +1402,7 @@ msfs_refer(vm_ubc_object_t vop)
 
     mutex_lock( &vop->vu_ap->bfaLock);
     vop->vu_ap->mmapCnt++;
-    mutex_unlock( &vop->vu_ap->bfaLock);
+    mutex_exit( &vop->vu_ap->bfaLock);
 
 }
 
@@ -1447,12 +1447,12 @@ msfs_release(vm_ubc_object_t vop)
         if ((!bfap->mmapCnt) && (bfap->dataSafety == BFD_NIL)) {
            bfap->dataSafety = BFD_FTX_AGENT_TEMPORARY;
         }
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
         FS_FILE_UNLOCK(contextp);
     } else {
         mutex_lock(&bfap->bfaLock);
         bfap->mmapCnt--;
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
     }
 
     vrele(bfap->bfVp);
@@ -1524,7 +1524,7 @@ msfs_putpage(
             decr_access = 1;
             RM_ACC_LIST_COND( bfap );
             bfap->refCnt++;
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
         }
         else {
             MS_SMP_ASSERT(tempbfap == bfap);
@@ -1550,7 +1550,7 @@ msfs_putpage(
             contextp->fs_flag |= MOD_CTIME | MOD_MTIME;
             contextp->dirty_stats = TRUE;
 
-            mutex_unlock( &contextp->fsContext_mutex );
+            mutex_exit( &contextp->fsContext_mutex );
         }
 
         /*
@@ -1568,7 +1568,7 @@ msfs_putpage(
         if( decr_access ) {
             mutex_lock( &bfap->bfaLock );
             DEC_REFCNT( bfap );
-            mutex_unlock( &bfap->bfaLock );
+            mutex_exit( &bfap->bfaLock );
         }
         return( error );
     }
@@ -1633,7 +1633,7 @@ msfs_putpage(
             if (decr_access) {
                 mutex_lock(&bfap->bfaLock);
                 DEC_REFCNT( bfap );
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
             }
             return( EIO );
         }
@@ -1645,7 +1645,7 @@ msfs_putpage(
     if( decr_access ) {
         mutex_lock(&bfap->bfaLock);
         DEC_REFCNT( bfap );
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
     }
 
     return( error );
@@ -1906,7 +1906,7 @@ _error:
         mutex_lock(&contextp->fsContext_mutex);
         contextp->fs_flag |= MOD_MTIME | MOD_CTIME;
         contextp->dirty_stats = TRUE;
-        mutex_unlock(&contextp->fsContext_mutex);
+        mutex_exit(&contextp->fsContext_mutex);
     }
 
     return(error);
@@ -2240,7 +2240,7 @@ restart:
          */
         mutex_lock( &bfap->bfaLock );
         bfap->mmapCnt++;
-        mutex_unlock( &bfap->bfaLock );
+        mutex_exit( &bfap->bfaLock );
 
         if (!(vp->v_flag & VMMAPPED)) {
             /*
@@ -2271,7 +2271,7 @@ restart:
                 locked = FALSE;
                 mutex_lock( &bfap->bfaLock );
                 bfap->mmapCnt--;
-                mutex_unlock( &bfap->bfaLock );
+                mutex_exit( &bfap->bfaLock );
                 ret = ENOTSUP;
                 goto _exit;
             }
@@ -2317,7 +2317,7 @@ restart:
              */
             bfap->dataSafety = BFD_FTX_AGENT_TEMPORARY;
         }
-        mutex_unlock( &bfap->bfaLock );
+        mutex_exit( &bfap->bfaLock );
     }
 
 HANDLE_EXCEPTION:
@@ -2339,7 +2339,7 @@ HANDLE_EXCEPTION:
         contextp->fs_flag |= MOD_ATIME;
         if ( !(vp->v_mount->m_flag & (M_NOATIMES | M_RDONLY)) )
             contextp->dirty_stats = TRUE;
-        mutex_unlock( &contextp->fsContext_mutex );
+        mutex_exit( &contextp->fsContext_mutex );
     }
 
 _exit:
@@ -2436,7 +2436,7 @@ msfs_bread(register struct vnode *vp,
         cp->fs_flag |= MOD_ATIME;
         if ( !(vp->v_mount->m_flag & M_NOATIMES) )
             cp->dirty_stats = TRUE;
-        mutex_unlock(&cp->fsContext_mutex);
+        mutex_exit(&cp->fsContext_mutex);
         return 0;
     }
 
@@ -2453,7 +2453,7 @@ msfs_bread(register struct vnode *vp,
     cp->fs_flag |= MOD_ATIME;
     if ( !(vp->v_mount->m_flag & M_NOATIMES) )
         cp->dirty_stats = TRUE;
-    mutex_unlock(&cp->fsContext_mutex);
+    mutex_exit(&cp->fsContext_mutex);
 
     error = msfs_getpage( vp->v_object,
                           lbn * sbp->f_bsize,

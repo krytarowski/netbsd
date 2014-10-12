@@ -195,7 +195,7 @@ start:
              * locking order.
              */
             if (!mutex_tryenter(&bfap->bfaLock.mutex)) {
-                mutex_unlock(&bfSetp->accessChainLock);
+                mutex_exit(&bfSetp->accessChainLock);
                 goto start;
             }
 
@@ -209,7 +209,7 @@ start:
              */
             if (lk_get_state(bfap->stateLk) == ACC_RECYCLE) {
                 nextbfap = bfap->setFwd;
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
                 continue;
             }
 
@@ -217,9 +217,9 @@ start:
             lk_signal(lk_set_state(&bfap->stateLk, ACC_VALID), &bfap->stateLk);
 
             nextbfap = bfap->setFwd;
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
         }       
-        mutex_unlock(&bfSetp->accessChainLock);
+        mutex_exit(&bfSetp->accessChainLock);
 
         sts = EIO;
         goto _error;

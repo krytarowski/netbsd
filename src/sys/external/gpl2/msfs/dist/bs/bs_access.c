@@ -393,9 +393,9 @@ init_access(bfAccessT *bfap)
     FreeAcc.len++;
     ACCMAX(FreeAcc);
     NumAccess++;
-    mutex_unlock(&BfAccessFreeLock);
+    mutex_exit(&BfAccessFreeLock);
 
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
     return;
 }
 
@@ -483,7 +483,7 @@ _retry:
         /* do not move access struct with pending I/O errors */
         if (bfap->dkResult != EOK)
         {
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             bfap = bfap->freeFwd;
             cleanup_structs_skipped++;
             continue;
@@ -508,12 +508,12 @@ _retry:
                  * just skip this access structure.
                  */
                 if (mutex_tryenter(&bfap->bfIoLock.mutex)) {
-                    mutex_unlock(&BfAccessFreeLock);
+                    mutex_exit(&BfAccessFreeLock);
                     check_mv_bfap_to_free(bfap);
                     mutex_lock(&BfAccessFreeLock);
-                    mutex_unlock(&bfap->bfIoLock);
+                    mutex_exit(&bfap->bfIoLock);
                 }
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
                 bfap = nextp;
                 /* make sure bfap is still on the list and still valid */
                 if ( bfap == (bfAccessT*)&ClosedAcc ||
@@ -532,7 +532,7 @@ _retry:
                 nextp = bfap->freeFwd;
                 RM_ACC_LIST_NOLOCK(bfap);
                 ADD_ACC_FREELIST(bfap);
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
                 bfap = nextp;
                 continue;
             }
@@ -562,13 +562,13 @@ _retry:
             /* Make sure index file access structs make it
               * to the free list */
             if (mutex_tryenter(&bfap->bfIoLock.mutex)) {
-                mutex_unlock(&BfAccessFreeLock);
+                mutex_exit(&BfAccessFreeLock);
                 check_mv_bfap_to_free(bfap);
                 mutex_lock(&BfAccessFreeLock);
-                mutex_unlock(&bfap->bfIoLock);
+                mutex_exit(&bfap->bfIoLock);
             }
 
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             if (bfap->onFreeList != 1) /* we skipped it */
             {
                 cleanup_structs_skipped++;
@@ -623,7 +623,7 @@ _retry:
              */
             bfap->saved_stats->op_flags |= SS_FLUSH_IN_PROGRESS;
 
-            mutex_unlock(&BfAccessFreeLock);
+            mutex_exit(&BfAccessFreeLock);
             ret = fs_flush_saved_stats(bfap, FTX_NOWAIT, FtxNilFtxH);
             if (ret == EWOULDBLOCK) {
                 /* All ftx slots used up; we did no processing of the stats
@@ -641,7 +641,7 @@ _retry:
                 }
                 cleanup_wouldblock_cnt++;
                 DEC_REFCNT(bfap);
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
                 
                   /*
                    *  If on behalf of a domain deactivation,
@@ -662,7 +662,7 @@ _retry:
                 ms_free( bfap->saved_stats );
                 bfap->saved_stats = NULL;
                 DEC_REFCNT(bfap);
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
                 mutex_lock(&BfAccessFreeLock);
             }
 
@@ -682,7 +682,7 @@ _retry:
             else
                 continue;
         } else if (ClosedAccCleanStatsInProgress) {
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             bfap = bfap->freeFwd;
             cleanup_structs_skipped++;
             continue;
@@ -702,13 +702,13 @@ _retry:
             cleanup_pass2_processed++;
             if (vp->v_usecount == 0 && vp->v_tag == VT_MSFS) {
                 cleanup_pass2_vgone++;
-                mutex_unlock(&BfAccessFreeLock);
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&BfAccessFreeLock);
+                mutex_exit(&bfap->bfaLock);
                 vgone(vp, VX_NOSLEEP, 0);
                 VN_UNLOCK(vp);
                 mutex_lock(&BfAccessFreeLock);
             } else {
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
                 VN_UNLOCK(vp);
             }
 
@@ -734,15 +734,15 @@ _retry:
             VN_UNLOCK(vp);
             RM_ACC_LIST_NOLOCK(bfap);
             bfap->refCnt++;
-            mutex_unlock(&BfAccessFreeLock);
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&BfAccessFreeLock);
+            mutex_exit(&bfap->bfaLock);
             ret = fs_update_stats(vp, bfap, FtxNilFtxH, FTX_NOWAIT);
             /* Don't relock FreeLock until after DEC_REFCNT since it will be
              * seized there when moving bfap to free list.
              */
             mutex_lock(&bfap->bfaLock);
             DEC_REFCNT(bfap);
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             vrele(vp);
             mutex_lock(&BfAccessFreeLock);
 
@@ -757,7 +757,7 @@ _retry:
             cleanup_vget_failed++;
             cleanup_structs_skipped++;
             VN_UNLOCK(vp);
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
         }
 
         /* The next one on the CloseAcc list may not be on that list
@@ -795,7 +795,7 @@ _retry:
             if (FreeAcc.len && SentCleanupMsg) {
                 thread_wakeup((vm_offset_t)&SentCleanupMsg);
             }
-            mutex_unlock(&BfAccessFreeLock);
+            mutex_exit(&BfAccessFreeLock);
             assert_wait_mesg_timo(NULL, FALSE, "AdvFS delay", 1);
             thread_block();
             mutex_lock(&BfAccessFreeLock);
@@ -818,7 +818,7 @@ _retry:
         SentCleanupMsg = 0;
         thread_wakeup((vm_offset_t)&SentCleanupMsg);
     }
-    mutex_unlock(&BfAccessFreeLock);
+    mutex_exit(&BfAccessFreeLock);
 
     switch (clean_type) {
         case CLEANUP_ANY:
@@ -884,7 +884,7 @@ restart:
 
         nextp  = bfap->setFwd;
         vp = bfap->bfVp;
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
 
         if (vp != NULL) {
 
@@ -894,20 +894,20 @@ restart:
              * gone and will be handled as if it were previously reclaimed.
              */
 
-            mutex_unlock(&bfSetp->accessChainLock);
+            mutex_exit(&bfSetp->accessChainLock);
 
             if (!vget(vp)) {
                 /* Update stats and (hopefully) move to freelist in DEC_REFCNT() */
                 RM_ACC_LIST(bfap);
                 mutex_lock(&bfap->bfaLock);
                 bfap->refCnt++;
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
 
                 ret = fs_update_stats(vp, bfap, ftxH, 0);
 
                 mutex_lock(&bfap->bfaLock);
                 DEC_REFCNT(bfap);
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
                 vrele(vp);
                 mutex_lock(&bfSetp->accessChainLock);
                 bfap = nextp;
@@ -957,14 +957,14 @@ restart:
              * deallocate it after flushing and setting saved_stats to NULL.
              */
             bfap->saved_stats->op_flags |= SS_FLUSH_IN_PROGRESS;
-            mutex_unlock(&bfSetp->accessChainLock);
+            mutex_exit(&bfSetp->accessChainLock);
             ret = fs_flush_saved_stats(bfap, 0, ftxH);
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             ms_free( bfap->saved_stats );
             mutex_lock(&bfap->bfaLock);
             bfap->saved_stats = NULL;
             DEC_REFCNT(bfap);
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             mutex_lock(&bfSetp->accessChainLock);
             bfap = nextp;
             if ( bfap == (bfAccessT*)&bfSetp->accessFwd ) {
@@ -978,7 +978,7 @@ restart:
         bfap = nextp;
     }  /* End of WHILE loop */
 
-    mutex_unlock(&bfSetp->accessChainLock);
+    mutex_exit(&bfSetp->accessChainLock);
 
     return;
 }
@@ -1130,7 +1130,7 @@ get_free_acc(int *retry,        /* In/Out - Retry or error status */
      * If we found a free access structure, we're done.
      */
     if (have_access_structure) {
-        mutex_unlock(&BfAccessFreeLock);
+        mutex_exit(&BfAccessFreeLock);
         *retry = FALSE;
         return bfap;
     }
@@ -1145,7 +1145,7 @@ get_free_acc(int *retry,        /* In/Out - Retry or error status */
     if (sent_alloc_msg) {
         cleanup_times_blocked_waiting_for_cleanup++;
         assert_wait((vm_offset_t)(&BfapAllocInProgress), FALSE);
-        mutex_unlock(&BfAccessFreeLock);
+        mutex_exit(&BfAccessFreeLock);
         thread_block();
         mutex_lock(&BfAccessFreeLock);
     }
@@ -1162,7 +1162,7 @@ get_free_acc(int *retry,        /* In/Out - Retry or error status */
          * We are done with BfAccessFreeLock.
          * Must remove it before we call ms_malloc anyway, so do it now.
          */
-        mutex_unlock(&BfAccessFreeLock);
+        mutex_exit(&BfAccessFreeLock);
         *retry = EHANDLE_OVF;
         if (!MaxAccessEventPosted) {
             advfs_ev *advfs_event = NULL;
@@ -1187,12 +1187,12 @@ get_free_acc(int *retry,        /* In/Out - Retry or error status */
 
         if (SentCleanupMsg) {
             assert_wait((vm_offset_t)(&SentCleanupMsg), FALSE);
-            mutex_unlock(&BfAccessFreeLock);
+            mutex_exit(&BfAccessFreeLock);
             thread_block();
             return (NULL);
         }
 
-        mutex_unlock(&BfAccessFreeLock);
+        mutex_exit(&BfAccessFreeLock);
 
     }
     return (NULL);
@@ -1298,7 +1298,7 @@ restart:
                     BS_BFAH_UNLOCK(hash_key);
                     lk_wait_while(&findBfap->stateLk, &findBfap->bfaLock,
                                   ACC_RECYCLE);
-                    mutex_unlock(&findBfap->bfaLock);
+                    mutex_exit(&findBfap->bfaLock);
                     goto restart;
                 }
                 else if (lk_get_state(findBfap->stateLk) == ACC_DEALLOC) {
@@ -1311,7 +1311,7 @@ restart:
                      * don't do this and he is on another processor, we will
                      * have an unfair advantage and possibly cause livelock.
                      */
-                    mutex_unlock(&findBfap->bfaLock);
+                    mutex_exit(&findBfap->bfaLock);
                     BS_BFAH_UNLOCK(hash_key);
                     thread_preempt( th, FALSE );
                     goto restart;
@@ -1342,7 +1342,7 @@ restart:
                         BS_BFAH_UNLOCK(hash_key);
                         lk_wait_while(&findBfap->stateLk, &findBfap->bfaLock,
                                       ACC_RECYCLE);
-                        mutex_unlock(&findBfap->bfaLock);
+                        mutex_exit(&findBfap->bfaLock);
                         goto restart;
                     }
                     else if (lk_get_state(findBfap->stateLk) == ACC_DEALLOC) {
@@ -1355,7 +1355,7 @@ restart:
                          * don't do this and he is on another processor, we will
                          * have an unfair advantage and possibly cause livelock.
                          */
-                        mutex_unlock(&findBfap->bfaLock);
+                        mutex_exit(&findBfap->bfaLock);
                         BS_BFAH_UNLOCK(hash_key);
                         thread_preempt( th, FALSE );
                         goto restart;
@@ -1418,8 +1418,8 @@ start:
          * and relooping.
          */
         if (lk_get_state(bfap->stateLk) == ACC_DEALLOC) {
-            mutex_unlock(&bfap->bfaLock);
-            mutex_unlock(&bfSetp->accessChainLock);
+            mutex_exit(&bfap->bfaLock);
+            mutex_exit(&bfSetp->accessChainLock);
             assert_wait_mesg_timo(NULL, FALSE, "AdvFS delay", 1);
             thread_block();
             goto start;
@@ -1435,9 +1435,9 @@ start:
          * where we left off, since we have been removing access structures.
          */
         if (lk_get_state(bfap->stateLk) == ACC_RECYCLE) {
-            mutex_unlock(&bfSetp->accessChainLock);
+            mutex_exit(&bfSetp->accessChainLock);
             lk_wait_while(&bfap->stateLk, &bfap->bfaLock, ACC_RECYCLE);
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             goto start;
         }
 
@@ -1486,9 +1486,9 @@ start:
 
             ADD_ACC_FREELIST(bfap);
         }
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
     }
-    mutex_unlock(&bfSetp->accessChainLock);
+    mutex_exit(&bfSetp->accessChainLock);
     /*
      * Now we will clean up our work list. It is safe to release the
      * chain lock here since all of the access structures on our work list
@@ -1520,7 +1520,7 @@ start:
         bfap->bfSetp = NULL;
 
         ADD_ACC_FREELIST(bfap);
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
     }
 }
 
@@ -1597,7 +1597,7 @@ bs_invalidate_rsvd_access_struct(
             bfap->stateLk.state = ACC_INVALID;
         }
         DEC_REFCNT (bfap);
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
     }
 
     return;
@@ -1798,7 +1798,7 @@ bs_init_area()
     ClosedAcc.freeFwd = ClosedAcc.freeBwd = (bfAccessT *)&ClosedAcc;
     ClosedAcc.len = 0;
     ClosedAcc.saved_stats_len = 0;
-    mutex_unlock( &BfAccessFreeLock );
+    mutex_exit( &BfAccessFreeLock );
 
     /*
      * Create some access structures.  We'll start with
@@ -2136,7 +2136,7 @@ bs_insmntque(
 
         bfaccState = lk_get_state( bfap->stateLk);
         (void)lk_set_state( &bfap->stateLk, ACC_INIT_TRANS );
-        mutex_unlock( &bfap->bfaLock );
+        mutex_exit( &bfap->bfaLock );
 
         /*
          * insmntque() gets a vm_object if the type is VREG, so trick it
@@ -2155,7 +2155,7 @@ bs_insmntque(
             unlkAction = lk_set_state( &bfap->stateLk, bfaccState );
             lk_signal( unlkAction, &bfap->stateLk );
         }
-        mutex_unlock( &bfap->bfaLock );
+        mutex_exit( &bfap->bfaLock );
     }
 }
 
@@ -2402,7 +2402,7 @@ retry_clu_clone_access:
         */
         MS_SMP_ASSERT(got_clu_clone_vnode == TRUE);
         DEC_REFCNT(bfap);
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
         vrele(vp);
 
         got_clu_clone_vnode = FALSE;
@@ -2473,7 +2473,7 @@ retry_clu_clone_access:
            (options & BF_OP_GET_VNODE) &&
            (bfap->bfVp == NULL) &&
            (!got_clu_clone_vnode)) {
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             sts = getnewvnode(VT_MSFS, &msfs_vnodeops, &vp);
             mutex_lock(&bfap->bfaLock);
             MS_SMP_ASSERT(bfap->refCnt > 0);
@@ -2599,7 +2599,7 @@ retry_clu_clone_access:
            ) &&
            (options & BF_OP_GET_VNODE) &&
            (!got_clu_clone_vnode)) {
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             sts = getnewvnode(VT_MSFS, &msfs_vnodeops, &vp);
             mutex_lock(&bfap->bfaLock);
             MS_SMP_ASSERT(bfap->refCnt > 0);
@@ -2623,7 +2623,7 @@ retry_clu_clone_access:
          */
 
         unlkAction = lk_set_state( &bfap->stateLk, ACC_INIT_TRANS );
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
 
         /*
          * If we don't already have one, get a new vnode; because the access 
@@ -2876,7 +2876,7 @@ retry_clu_clone_access:
                      * We got here after setting up a new vnode, so
                      * exit through the error path to release it.
                      */
-                    mutex_unlock(&bfap->bfaLock);
+                    mutex_exit(&bfap->bfaLock);
                     goto err_vrele;
                 } else {
                     goto err_deref;
@@ -2905,7 +2905,7 @@ retry_clu_clone_access:
         if ( options & (BF_OP_GET_VNODE | BF_OP_HAVE_VNODE) ) {
             if (!bfap->bfVp) {
                 (void)lk_set_state( &bfap->stateLk, ACC_INIT_TRANS );
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
 
                 /*
                  * The access structure has no vnode attached to it.
@@ -2983,7 +2983,7 @@ retry_clu_clone_access:
                         lk_signal( unlkAction, &bfap->stateLk );
                     }
 
-                    mutex_unlock(&bfap->bfaLock);
+                    mutex_exit(&bfap->bfaLock);
 
                     if ((vret == 0) || (vget_cache(vp) == 0)) {
                         vrele(vp);
@@ -3045,7 +3045,7 @@ retry_clu_clone_access:
                      *       be started so we should not be here if we
                      *       have already started a transaction.
                      */
-                    mutex_unlock(&bfap->bfaLock);
+                    mutex_exit(&bfap->bfaLock);
                     vrele(*fsvp);
                     mutex_lock(&bfap->bfaLock);
                 }
@@ -3115,7 +3115,7 @@ retry_clu_clone_access:
                  * was opened before this clone open.  (See bs_access()).
                  */
                 orgBfap->accessCnt--;
-                mutex_unlock(&orgBfap->bfaLock);
+                mutex_exit(&orgBfap->bfaLock);
             }
 
         } else {
@@ -3168,7 +3168,7 @@ retry_clu_clone_access:
         bfap->origAccp = origBfap;
     }
 
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     /*
      * If we need to vrele() a preallocated vnode that we
@@ -3237,7 +3237,7 @@ err_setinvalid:
      */
     if (bfap->bfObj) {
         bfap->bfObj->vu_object.ob_ref_count -= 1;
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
         ubc_object_free(bfap->bfObj);
         mutex_lock(&bfap->bfaLock);
         bfap->bfObj = NULL;
@@ -3255,7 +3255,7 @@ err_deref:
      */
     lk_signal( unlkAction, &bfap->stateLk );
 
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     if (got_clu_clone_vnode && !did_vp_vrele) {
         vrele(vp);
@@ -3434,7 +3434,7 @@ lookup:
                  * before it has had a chance to call vrele() on the
                  * file's vnode.
                  */
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
                 assert_wait_mesg_timo(NULL, FALSE, "AdvFS delay", 1);
                 thread_block();
                 goto lookup;
@@ -3466,14 +3466,14 @@ lookup:
             case ACC_INVALID:
             case ACC_INIT_TRANS:
             case ACC_RECYCLE:
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
                 goto lookup;
 
             default:
                 if ((!BS_BFTAG_EQL(bfap->tag, tag)) ||
                     (!BS_BFS_EQL(bfSetp->bfSetId,
                                  ((bfSetT *)(bfap->bfSetp))->bfSetId))) {
-                    mutex_unlock(&bfap->bfaLock);
+                    mutex_exit(&bfap->bfaLock);
                     goto lookup;
                 }
                 break;
@@ -3565,7 +3565,7 @@ lookup:
             VN_UNLOCK(vp);
         }
 
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
         MS_SMP_ASSERT(vm_object_type((vm_object_t)bfap->bfObj) == OT_UBC);
         msfs_flush_and_invalidate(bfap, INVALIDATE_ALL | INVALIDATE_QUOTA_FILES);
         bfap->bfObj->vu_object.ob_ref_count -= 1;
@@ -3581,7 +3581,7 @@ lookup:
      * We can for go the bfalock because we have marked the access
      * structure ACC_RECYCLE.
      */
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
     if( bfap->hashlinks.dh_links.dh_next != NULL )
     {
         BS_BFAH_LOCK(bfap->hashlinks.dh_key,NULL);
@@ -3627,7 +3627,7 @@ lookup:
      */
     mutex_lock(&bfap->bfaLock);
     lk_signal(lk_set_state(&bfap->stateLk, ACC_INVALID), &bfap->stateLk);
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     /*
      * Move the vnode to the head of the free list so it will be chosen
@@ -3701,7 +3701,7 @@ lookup:
              */
             mutex_lock(&bfap->bfaLock);
             ADD_ACC_FREELIST(bfap);
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
 
             bfap = tbfap;
             goto found;
@@ -3992,7 +3992,7 @@ bs_close_one (
         }
     }
 
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     if ( (fragFlag || bfap->trunc) &&
          (bfap->bfState != BSRA_DELETING) &&
@@ -4089,7 +4089,7 @@ bs_close_one (
     prevState = lk_get_state (bfap->stateLk);
     (void) lk_set_state (&(bfap->stateLk), ACC_INIT_TRANS);
 
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     if ( TestXtntsFlg ) {
         test_xtnt(bfap);
@@ -4304,7 +4304,7 @@ bs_close_one (
 
     mutex_lock(&bfap->bfaLock);
     lk_signal( lk_set_state (&(bfap->stateLk), prevState), &bfap->stateLk );
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     /*
      * Now that we're out of ACC_INIT_TRANS state, we can
@@ -4368,7 +4368,7 @@ bs_close_one (
 _close_it:
     if ( trunc_xfer_lock ) {
         if ( setHeld ) {
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             release_clu_clone_locks( bfap, cloneSetp, cloneap, token_flg );
             mutex_lock(&bfap->bfaLock);
         }
@@ -4452,7 +4452,7 @@ _close_it:
 
     DEC_REFCNT( bfap );
 
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     if ( ftxFlag ) {
         ftx_done_n( ftxH, FTA_BS_CLOSE_V1 );
@@ -4520,7 +4520,7 @@ free_acc_struct(
             ADD_ACC_CLOSEDLIST(bfap);
             added_bfap_to_list = TRUE;
         }
-        mutex_unlock(&bfap->bfIoLock);
+        mutex_exit(&bfap->bfIoLock);
     }
     
     if (!added_bfap_to_list) {
@@ -4847,7 +4847,7 @@ bs_dealloc_access(bfAccessT *bfap)
                 vp->v_object = VM_UBC_OBJECT_NULL;
             VN_UNLOCK(vp);
         }
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
         MS_SMP_ASSERT(vm_object_type((vm_object_t)bfap->bfObj) == OT_UBC);
         msfs_flush_and_invalidate(bfap, INVALIDATE_ALL | INVALIDATE_QUOTA_FILES);
         bfap->bfObj->vu_object.ob_ref_count -= 1;
@@ -4863,7 +4863,7 @@ bs_dealloc_access(bfAccessT *bfap)
      * Unlock the access structure.  This is necessary to
      * avoid lock hierarchy violations below.
      */
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     /*
      * If the access structure is in the access structure
@@ -5069,7 +5069,7 @@ bs_access_alloc_thread(void)
                  * try to allocate access structures in a 
                  * round-robin fashion across all RADs that have memory.  
                  */
-                mutex_unlock(&BfAccessFreeLock);
+                mutex_exit(&BfAccessFreeLock);
                 freelockheld = FALSE;
 
                 /*
@@ -5126,7 +5126,7 @@ bs_access_alloc_thread(void)
         }
         BfapAllocInProgress = FALSE;
         if (freelockheld)
-            mutex_unlock(&BfAccessFreeLock);
+            mutex_exit(&BfAccessFreeLock);
 
         /*
          * Wakeup any threads waiting on BfapAllocInProgress
@@ -5249,7 +5249,7 @@ insert_actRange_onto_list( bfAccessT *bfap,
         if ( bfap->actRangeList.arCount > bfap->actRangeList.arMaxLen )
             bfap->actRangeList.arMaxLen = bfap->actRangeList.arCount;
 
-        mutex_unlock(&bfap->actRangeLock);
+        mutex_exit(&bfap->actRangeLock);
         return;
     }
 
@@ -5295,7 +5295,7 @@ put_onto_waitlist:
     /* When we wake up, our actRange is on the active range list.  
      * Reseize the file_lock if necessary and return.
      */
-    mutex_unlock(&bfap->actRangeLock);
+    mutex_exit(&bfap->actRangeLock);
     if (contextp ) {
         if ( read_lock_held ) {
             FS_FILE_READ_LOCK_RECURSIVE( contextp );
@@ -5474,13 +5474,13 @@ limits_of_active_range(
     /* catch the impossible even if asserts are turned off */
     if (ar == NULL ||
         THREAD_ID(ar->arDebug) != THREAD_ID((unsigned long)current_thread())) {
-        mutex_unlock(&bfap->actRangeLock);
+        mutex_exit(&bfap->actRangeLock);
         return E_ACTIVE_RANGE;
     }
       
     *beginpg = ar->arStartBlock / ADVFS_PGSZ_IN_BLKS;
     /* number of pages = endpage - beginpage + 1; */
     *npgs = ar->arEndBlock / ADVFS_PGSZ_IN_BLKS  - ar->arStartBlock / ADVFS_PGSZ_IN_BLKS + 1;
-    mutex_unlock(&bfap->actRangeLock);
+    mutex_exit(&bfap->actRangeLock);
     return EOK;
 }

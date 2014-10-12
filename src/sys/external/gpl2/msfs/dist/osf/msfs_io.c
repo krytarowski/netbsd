@@ -391,7 +391,7 @@ bs_diskerror(
     vdp->errorCount = count;
     vdp->errorRepeat = count;
 
-    mutex_unlock( &vdp->vdIoLock );
+    mutex_exit( &vdp->vdIoLock );
     vd_dec_refcnt( vdp );
     return( EOK );
 }
@@ -519,7 +519,7 @@ bs_osf_complete(
 
                 mutex_lock( &vdp->devQ.ioQLock );
                 sts = sendtoiothread(vdp,RETRY_IO,bp);
-                mutex_unlock( &vdp->devQ.ioQLock );
+                mutex_exit( &vdp->devQ.ioQLock );
 
                 if ( sts == 0 ) {
                     /*
@@ -702,7 +702,7 @@ bs_osf_complete(
                 iop->bsBuf->lock.state & WRITING ? "write" : "read" );
         }
     }
-    mutex_unlock( &vdp->vdIoLock );
+    mutex_exit( &vdp->vdIoLock );
 #endif /* ADVFS_DEBUG */
     /*
      * If a write to a metadata file fails, call domain_panic().
@@ -866,7 +866,7 @@ bs_osf_complete(
         }
     }
 
-    mutex_unlock( &vdp->devQ.ioQLock );
+    mutex_exit( &vdp->devQ.ioQLock );
 
     if (SS_is_running &&
        (dmnP->ssDmnInfo.ssDmnState == SS_ACTIVATED) &&
@@ -919,7 +919,7 @@ bs_osf_complete(
                 bs_io_complete( iop->bsBuf, &resetfirst );
             }
             else {
-                mutex_unlock(&iop->bsBuf->bufLock);
+                mutex_exit(&iop->bsBuf->bufLock);
             }
         }
         iop = next;
@@ -937,7 +937,7 @@ bs_osf_complete(
     if ( resetfirst ) {
         mutex_lock( &dmnP->lsnLock );
         resetfirstrec(dmnP);
-        mutex_unlock( &dmnP->lsnLock );
+        mutex_exit( &dmnP->lsnLock );
     }
 
     /* Mark the disk inactive if this completes all outstanding I/Os.
@@ -950,7 +950,7 @@ bs_osf_complete(
     if( vdp->gen_active == 0 && vdp->vdIoOut == 0 ) {
         lk_signal( lk_set_state( &vdp->active, INACTIVE_DISK ), &vdp->active );
     }
-    mutex_unlock( &vdp->devQ.ioQLock );
+    mutex_exit( &vdp->devQ.ioQLock );
 
     /* release the struct buf, only kept this long for easier debugging */
     freeosfbuf( bp );
@@ -1189,7 +1189,7 @@ retry:
             mutex_lock( &start->bsBuf->bufLock );
             if ( start->bsBuf->lock.state & REMOVE_FROM_IOQ ) {
                 /* Whoops, got set while we were locking */
-                mutex_unlock( &start->bsBuf->bufLock );
+                mutex_exit( &start->bsBuf->bufLock );
                 start= start->fwd;
                 len--;
                 goto retry;
@@ -1205,7 +1205,7 @@ retry:
              */
             MS_SMP_ASSERT(!(start->bsBuf->lock.state & RAWRW));
             if (advfs_page_get(start->bsBuf, UBC_GET_BUSY)) {
-                mutex_unlock( &start->bsBuf->bufLock );
+                mutex_exit( &start->bsBuf->bufLock );
                 start= start->fwd;
                 len--;
                 goto retry;
@@ -1220,7 +1220,7 @@ retry:
             start->bsBuf->bufDebug &= ~BSBUF_WAITQ;
             start->bsBuf->sync_stamp = 0;
             start->ioQ = DEVICE;
-            mutex_unlock( &start->bsBuf->bufLock );
+            mutex_exit( &start->bsBuf->bufLock );
         }
     } else {
         /* Just take first one off blocking, flush, or ubcReq queue */
@@ -1230,7 +1230,7 @@ retry:
         start->bsBuf->bufDebug &= ~BSBUF_WAITQ;
         start->bsBuf->sync_stamp = 0;
         start->ioQ = DEVICE;
-        mutex_unlock( &start->bsBuf->bufLock );
+        mutex_exit( &start->bsBuf->bufLock );
     }
 
     /* Account for first ioDesc now */
@@ -1310,7 +1310,7 @@ retry:
                  */
                 if (advfs_page_get(this->bsBuf, UBC_GET_BUSY)) {
                     /* Next buffer will not be block contiguous so break. */
-                    mutex_unlock( &this->bsBuf->bufLock );
+                    mutex_exit( &this->bsBuf->bufLock );
                     break;
                 }
 #ifdef ADVFS_SMP_ASSERT
@@ -1327,7 +1327,7 @@ retry:
             this->bsBuf->bufDebug &= ~BSBUF_WAITQ;
             this->bsBuf->sync_stamp = 0;
             this->ioQ = DEVICE;
-            mutex_unlock( &this->bsBuf->bufLock );
+            mutex_exit( &this->bsBuf->bufLock );
 
             count++;                         /* keep track of # to consol */
             max_buffers--;
@@ -1337,7 +1337,7 @@ retry:
        }
        else {
             /* can't do any more */
-            mutex_unlock( &this->bsBuf->bufLock );
+            mutex_exit( &this->bsBuf->bufLock );
             break;
        }
     }
@@ -1387,9 +1387,9 @@ retry:
              * will pend on the BUSY buffer associated with each ioDescT.
              */
             if ( qhdr != &vdp->blockingQ ) {
-                mutex_unlock( &qhdr->ioQLock );
+                mutex_exit( &qhdr->ioQLock );
                 locks_held[qindex] = 0;
-                mutex_unlock( &vdp->devQ.ioQLock );
+                mutex_exit( &vdp->devQ.ioQLock );
                 mutex_lock( &vdp->blockingQ.ioQLock );
                 locks_held[BLKQ] = 1;
                 mutex_lock( &vdp->devQ.ioQLock );
@@ -1409,7 +1409,7 @@ retry:
 
             MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->blockingQ, TRUE );
             if ( qhdr != &vdp->blockingQ ) {
-                mutex_unlock( &vdp->blockingQ.ioQLock );
+                mutex_exit( &vdp->blockingQ.ioQLock );
                 locks_held[BLKQ] = 0;
             }
 
@@ -1650,7 +1650,7 @@ get_locks( ioDescHdrT *qhdr, vdT *vdp, qtypeT qindex, int *locks_held )
     MS_SMP_ASSERT(SLOCK_HOLDER(&vdp->devQ.ioQLock.mutex));
     if ( !mutex_tryenter(&qhdr->ioQLock.mutex) ) {
 
-        mutex_unlock( &vdp->devQ.ioQLock );
+        mutex_exit( &vdp->devQ.ioQLock );
         mutex_lock( &qhdr->ioQLock );
         mutex_lock( &vdp->devQ.ioQLock );
 
@@ -1662,17 +1662,17 @@ get_locks( ioDescHdrT *qhdr, vdT *vdp, qtypeT qindex, int *locks_held )
              * I/O to kick off more I/O.
              */
             error = RET;
-            mutex_unlock( &qhdr->ioQLock );
+            mutex_exit( &qhdr->ioQLock );
             vdp->gen_active--;
             if( vdp->gen_active == 0 && vdp->vdIoOut == 0 ) {
                 lk_signal( lk_set_state( &vdp->active, INACTIVE_DISK ), &vdp->active);
             }
-            mutex_unlock( &vdp->devQ.ioQLock );
+            mutex_exit( &vdp->devQ.ioQLock );
         } else if ( qhdr->ioQLen <= 0 ) {
             /* a negative queue length is invalid */
             MS_SMP_ASSERT(qhdr->ioQLen == 0);
             error = CONT;
-            mutex_unlock( &qhdr->ioQLock );
+            mutex_exit( &qhdr->ioQLock );
         } else {
             locks_held[qindex] = 1;
         }
@@ -1681,7 +1681,7 @@ get_locks( ioDescHdrT *qhdr, vdT *vdp, qtypeT qindex, int *locks_held )
             /* a negative queue length is invalid */
             MS_SMP_ASSERT(qhdr->ioQLen == 0);
             error = CONT;
-            mutex_unlock( &qhdr->ioQLock );
+            mutex_exit( &qhdr->ioQLock );
         } else
             locks_held[qindex] = 1;
     }
@@ -1770,7 +1770,7 @@ bs_startio(
 
     devQ_room = MAX( 0, vdp->devQ.lenLimit - vdp->devQ.ioQLen );
     if ( !devQ_room ) {
-        mutex_unlock( &vdp->devQ.ioQLock );
+        mutex_exit( &vdp->devQ.ioQLock );
         return;          /* no room on the device queue right now */
     }
 
@@ -1838,7 +1838,7 @@ bs_startio(
         if ( !(vdp->devQ.ioQLen) ) {
             ss_startios(vdp);
         }
-        mutex_unlock( &vdp->devQ.ioQLock );
+        mutex_exit( &vdp->devQ.ioQLock );
         return;
     }
 
@@ -1914,7 +1914,7 @@ bs_startio(
 loop:
                 while ( ioList->bsBuf->lock.state & REMOVE_FROM_IOQ ) {
                     ioDescT *next = ioList->fwd;
-                    mutex_unlock( &ioList->bsBuf->bufLock );
+                    mutex_exit( &ioList->bsBuf->bufLock );
                     ioList = next;
                     if (ioList == (ioDescT *)qhdr )
                         break;
@@ -1939,7 +1939,7 @@ loop:
                      * transition, but that is ok since eventually we will see
                      * it again on a future pass.
                      */
-                    mutex_unlock( &ioList->bsBuf->bufLock );
+                    mutex_exit( &ioList->bsBuf->bufLock );
                     ioList = ioList->fwd;
                     if (ioList == (ioDescT *)qhdr )
                         break;
@@ -1960,7 +1960,7 @@ loop:
             ioList->bsBuf->sync_stamp = 0;
             vdp->devQ.queue_cnt++;
 
-            mutex_unlock( &ioList->bsBuf->bufLock );
+            mutex_exit( &ioList->bsBuf->bufLock );
 
             /* Remove this descriptor from the queue */
             ioList->fwd->bwd = (ioDescT *)ioList->bwd; 
@@ -1971,7 +1971,7 @@ loop:
         }
 
         if (locks_held[qindex]) {
-            mutex_unlock(&qhdr->ioQLock);
+            mutex_exit(&qhdr->ioQLock);
             locks_held[qindex] = 0;
         }
 
@@ -2099,13 +2099,13 @@ loop:
          */
         ioList->ioRetryCount = 0;
 
-        mutex_unlock( &vdp->devQ.ioQLock );
+        mutex_exit( &vdp->devQ.ioQLock );
         call_disk( vdp, ioAmt, vdBlk, ioList );
         mutex_lock( &vdp->devQ.ioQLock );
     }
 
     if (qhdr && locks_held[qindex]) {
-        mutex_unlock(&qhdr->ioQLock);
+        mutex_exit(&qhdr->ioQLock);
         locks_held[qindex] = 0;
     }
 
@@ -2114,7 +2114,7 @@ loop:
         lk_signal( lk_set_state( &vdp->active, INACTIVE_DISK ), &vdp->active );
     }
 
-    mutex_unlock( &vdp->devQ.ioQLock );
+    mutex_exit( &vdp->devQ.ioQLock );
 }
 
 

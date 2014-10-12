@@ -470,10 +470,10 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
             nvp->v_object = NULL;
             VN_UNLOCK(nvp);
             obj->vu_object.ob_ref_count -= 1;
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
             ubc_object_free(obj);
         } else {
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
         }
     }
             
@@ -803,7 +803,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
     dir_cp->fs_flag |= (MOD_MTIME | MOD_CTIME);
     dir_cp->dirty_stats = TRUE;
     dir_cp->dirstamp++;
-    mutex_unlock( &dir_cp->fsContext_mutex );
+    mutex_exit( &dir_cp->fsContext_mutex );
 
     ndp->ni_vp = nvp;
 
@@ -1052,7 +1052,7 @@ fs_update_stats(
     context_ptr->dir_stats.advfs_st_size = bfap->file_size;
     context_ptr->dir_stats.fragId = bfap->fragId;
     context_ptr->dir_stats.fragPageOffset = bfap->fragPageOffset;
-    mutex_unlock( &context_ptr->fsContext_mutex );
+    mutex_exit( &context_ptr->fsContext_mutex );
     ret = bmtr_update_rec(
                           bfap,
                           BMTR_FS_STAT,
@@ -1111,7 +1111,7 @@ fs_flush_saved_stats(
         ssp->fs_flag &= ~(MOD_ATIME | MOD_CTIME | MOD_MTIME);
     }
 
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
     ret = bmtr_update_rec(bfap,
                           BMTR_FS_STAT,
                           (void *)&ssp->dir_stats,
