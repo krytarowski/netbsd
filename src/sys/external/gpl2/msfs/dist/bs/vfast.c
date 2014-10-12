@@ -40,6 +40,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/condvar.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 
@@ -70,7 +71,7 @@ lock_data_t SSLock;   /* complex lock for SS_is_running */
 #endif
 
 mutexT ssStoppedMutex; /* global simple lock for ss_stopped_cv */
-cvT    ss_stopped_cv;  /* condition variable used when shutting ss system down */
+cv    ss_stopped_cv;  /* condition variable used when shutting ss system down */
 
 /* NUMA constants */
 #pragma extern_model save
@@ -461,7 +462,7 @@ ss_kern_stop()
                     continue;
                 }
 
-                cond_broadcast (&vdp->ssVolInfo.ssContMig_cv);
+                cv_broadcast (&vdp->ssVolInfo.ssContMig_cv);
 
                 vdCnt++;
                 vd_dec_refcnt( vdp );
@@ -478,7 +479,7 @@ ss_kern_stop()
         }
 
         mutex_lock(&ssStoppedMutex );
-        cond_wait( &ss_stopped_cv, &ssStoppedMutex );
+        cv_wait( &ss_stopped_cv, &ssStoppedMutex );
         mutex_unlock(&ssStoppedMutex );
 
         /* Now free the vfast lists */
@@ -754,7 +755,7 @@ ss_boss_thread( void )
                     ss_queues_destroy();
 
                     /* notify message sender that shutdown is completed */
-                    cond_broadcast (&ss_stopped_cv);
+                    cv_broadcast (&ss_stopped_cv);
 
                     /* hari-kari */
                     (void) thread_terminate(current_thread());
@@ -1586,7 +1587,7 @@ ss_dmn_deactivate(domainT *dmnP, int flag)
         vdp->ssVolInfo.ssVdMigState = SS_ABORT;
         mutex_unlock( &vdp->ssVolInfo.ssVdMigLk );
 
-        cond_broadcast (&vdp->ssVolInfo.ssContMig_cv);
+        cv_broadcast (&vdp->ssVolInfo.ssContMig_cv);
         SS_TRACE(vdp,0,0,0,0);
         vd_dec_refcnt( vdp );
         vdCnt++;
@@ -3534,7 +3535,7 @@ ss_startios(vdT *vdp)
         mutex_unlock( &vdp->ssVolInfo.ssVdMsgLk );
 
         if (vdp->ssVolInfo.ssVdMigState == SS_PARKED) {
-            cond_broadcast (&vdp->ssVolInfo.ssContMig_cv);
+            cv_broadcast (&vdp->ssVolInfo.ssContMig_cv);
         }
 
     } /* end if vfast is enabled */
@@ -3586,7 +3587,7 @@ ss_block_and_wait(vdT *vdp)
      * broadcast from io thd. 
      */
     vdp->ssVolInfo.ssVdMigState = SS_PARKED;
-    cond_wait( &vdp->ssVolInfo.ssContMig_cv, &vdp->ssVolInfo.ssVdMigLk );
+    cv_wait( &vdp->ssVolInfo.ssContMig_cv, &vdp->ssVolInfo.ssVdMigLk );
     SS_UNLOCK(&SSLock);
     SS_TRACE(vdp,0,0,0,0);
 
@@ -4681,7 +4682,7 @@ ss_vd_migrate( bfTagT   filetag,
     while ((dvdp->ssVolInfo.ssVdMigState == SS_PROCESSING) ||
            (dvdp->ssVolInfo.ssVdMigState == SS_PARKED)) {
         /* must be another thread got here first, simply wait for my turn */
-        cond_wait( &dvdp->ssVolInfo.ssContMig_cv, &dvdp->ssVolInfo.ssVdMigLk );
+        cv_wait( &dvdp->ssVolInfo.ssContMig_cv, &dvdp->ssVolInfo.ssVdMigLk );
     }
 
     if((dvdp->ssVolInfo.ssVdMigState == SS_ABORT) ||
@@ -4689,7 +4690,7 @@ ss_vd_migrate( bfTagT   filetag,
        (bfap->dmnP->ssDmnInfo.ssDmnState != SS_ACTIVATED) ) {
         mutex_unlock( &dvdp->ssVolInfo.ssVdMigLk );
         /* re-broadcast in case there are more threads waiting */
-        cond_broadcast (&dvdp->ssVolInfo.ssContMig_cv);
+        cv_broadcast (&dvdp->ssVolInfo.ssContMig_cv);
         RAISE_EXCEPTION(E_WOULD_BLOCK);
     }
 
@@ -4993,7 +4994,7 @@ HANDLE_EXCEPTION:
                 dvdp->ssVolInfo.ssVdMigState = SS_MIG_IDLE;
         mutex_unlock( &dvdp->ssVolInfo.ssVdMigLk );
 
-        cond_broadcast (&dvdp->ssVolInfo.ssContMig_cv);
+        cv_broadcast (&dvdp->ssVolInfo.ssContMig_cv);
 
         /* decrement the vd vfast thread count */
         mutex_lock( &dvdp->ssVolInfo.ssVdMigLk );
