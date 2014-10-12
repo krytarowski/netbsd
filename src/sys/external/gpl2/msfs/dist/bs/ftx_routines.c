@@ -289,10 +289,6 @@ _ftx_start_i(
       unsigned int atomicRPass, /* in - atomic recovery pass */
       int flag,                 /* in - 1 == start exclusive ftx */
       long xid                  /* in - CFS-generated transaction id */
-#ifdef ADVFS_DEBUG
-      , int ln,                 /* in - caller's line number */
-      char *fn                  /* in - caller's file name */
-#endif /* ADVFS_DEBUG */
       )
 {
     unsigned int ftxSlot;
@@ -699,10 +695,6 @@ _ftx_start_i(
     clvlp->lkList = NULL;
     clvlp->skipSubsLink = ftxp->lastLogRec;
     clvlp->lastPinS = -1;
-#ifdef ADVFS_DEBUG
-    clvlp->startLn = ln;
-    clvlp->startFn = fn;
-#endif
 #ifdef FTX_PROFILING
     clvlp->agentId = agentId;
 #endif
@@ -2894,16 +2886,6 @@ ftx_lock_init(
     ftxLkT nilLk = { {LKT_FTX},0 };
     *lk = nilLk;
 
-#ifdef ADVFS_DEBUG
-    if (lkHdr->mutex != NULL) {
-        /* Assume it is already linked properly */
-        return;
-    }
-
-    /* add to head of linked list */
-    lkHdr->nxtLk = mutex->locks;
-    mutex->locks = lkHdr;
-#endif /* ADVFS_DEBUG */
     lkHdr->mutex = mutex;
     lock_setup( &(lk->lock), Plinfo, TRUE);
 
@@ -2930,13 +2912,6 @@ ftx_lock_write(
         ADVFS_SAD0( "ftx_lock_write: bad ftx handle" );
     }
 
-#ifdef ADVFS_DEBUG
-    mutex_enter( lk->hdr.mutex );
-    lk->hdr.try_line_num = ln;
-    lk->hdr.try_file_name = fn;
-    mutex_exit( lk->hdr.mutex );
-#endif /* ADVFS_DEBUG */
-
     lock_write( &(lk->lock) );
 
     /* 
@@ -2945,16 +2920,6 @@ ftx_lock_write(
      
     lk->hdr.nxtFtxLk = clvlp->lkList;
     clvlp->lkList = lk;
-
-#ifdef ADVFS_DEBUG
-    mutex_enter( lk->hdr.mutex );
-    lk->hdr.line_num = ln;
-    lk->hdr.file_name = fn;
-    lk->hdr.thread = *((int *)&(current_thread()));
-    lk->hdr.lock_cnt++;
-    lk->hdr.use_cnt++;
-    mutex_exit( lk->hdr.mutex );
-#endif /* ADVFS_DEBUG */
 }
 
 void
@@ -2971,13 +2936,6 @@ ftx_lock_read(
         ADVFS_SAD0( "ftx_lock_read: bad ftx handle" );
     }
 
-#ifdef ADVFS_DEBUG
-    mutex_enter( lk->hdr.mutex );
-    lk->hdr.try_line_num = ln;
-    lk->hdr.try_file_name = fn;
-    mutex_exit( lk->hdr.mutex );
-#endif /* ADVFS_DEBUG */
-
     lock_read( &(lk->lock) );
     
     /* 
@@ -2986,16 +2944,6 @@ ftx_lock_read(
      
     lk->hdr.nxtFtxLk = clvlp->lkList;  
     clvlp->lkList = lk;
-
-#ifdef ADVFS_DEBUG
-    mutex_enter( lk->hdr.mutex );
-    lk->hdr.line_num = ln;
-    lk->hdr.file_name = fn;
-    lk->hdr.thread = *((int *)&(current_thread()));
-    lk->hdr.lock_cnt++;
-    lk->hdr.use_cnt++;
-    mutex_exit( lk->hdr.mutex );
-#endif /* ADVFS_DEBUG */
 }
 
 
@@ -3028,13 +2976,6 @@ ftx_unlock(
         default:
             ADVFS_SAD1("ftx_unlock: unknown lock type", lkHdr->lkType);
     }
-
-#ifdef ADVFS_DEBUG
-    mutex_enter( lkHdr->mutex );
-    lkHdr->lock_cnt--;
-    mutex_exit( lkHdr->mutex );
-#endif /* ADVFS_DEBUG */
-
 } /* end ftx_unlock */
 
 

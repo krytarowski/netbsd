@@ -51,15 +51,6 @@ typedef enum {
     LKT_FTX		/* ftx lock */
 } lkTypeT;
 
-#ifdef ADVFS_LK_STRINGS
-static char *lkTypeNames[] = { 
-    "INVALID", 
-    "STATE",
-    "BUFFER",
-    "FTX"
-    };
-#endif /* ADVFS_LK_STRINGS */
-
 /*
  * lkUsageT
  *
@@ -124,55 +115,6 @@ typedef enum {                  /* ##, ftx_start() locking order    */
     LKU_num_usage_types
 } lkUsageT;
 
-#ifdef ADVFS_LK_STRINGS
-static char *lkUsageNames[] = { 
-    "UNKNOWN",                  /*  0 */
-    "LOG_DESC",
-    "LOG_READ_STREAM",
-    "BF_STATE",
-    "BF_XTNT_MAP",
-    "BF_COW",
-    "BF_MCELL_LIST",
-    "BF_FLUSH",
-    "BUFFER",
-    "BF_SET_TBL",
-    "BF_SET_TAG_DIR",           /* 10 */
-    "VD_STG_MAP",
-    "VD_MCELLS",
-    "VD_PAGE0_MCELLS",
-    "VD_MIG_MCELLS",
-    "VD_DEV_BUSY",
-    "VD_ACTIVE",
-    "VD_LAZY_BLOCK",
-    "WIRED_FREE",
-    "RAW_BUF_FREE", 
-    "INIT",                     /* 20 */
-    "FS_BF_GET",
-    "CLONE_DEL",
-    "unused23",
-    "unused24",
-    "FS_CONTEXT_SEM",
-    "DQ_LOCK",
-    "FILE_SET_LK",
-    "DOMAIN_TBL",
-    "BF_SET_STATE",
-    "SERVICE_CLASS_TBL",        /* 30 */
-    "BF_SHLV",
-    "FS_FILE",
-    "ZAP_MCELLS",
-    "MOVE_METADATA",
-    "MIG_TRUNC",
-    "DDL_ACTIVE",
-    "DDL_ACTIVE_WAIT",
-    "QUOTA_FILE_LOCK",
-    "FRAG_BF",
-    "BF_SET_SHLV",              /* 40 */
-    "LKU_MSS_PQD",               
-    "LKU_MSS_PQD_LOWPRI",       /* 42 */
-    "**OVERFLOW**"              /* always last */
-    };
-#endif /* ADVFS_LK_STRINGS */
-
 /*
  * lkHdrT
  *
@@ -188,20 +130,6 @@ typedef struct lkHdr {
     void *nxtFtxLk;
     kmutex_t *mutex;
     lkUsageT lkUsage;
-
-#ifdef ADVFS_DEBUG
-    /*
-     * The following are for debugging only.
-     */
-    void *nxtLk;
-    u_short lock_cnt;
-    u_short try_line_num;
-    u_short line_num;
-    u_int   use_cnt;
-    char *try_file_name;
-    char *file_name;
-    int thread;
-#endif /* ADVFS_DEBUG */
 } lkHdrT;
 
 typedef struct ftxLk {
@@ -389,7 +317,6 @@ extern advfsLockStatsT *AdvfsLockStats;
 #define lk_waiters( lk )          ((lk).waiters)
 #define lk_get_state( lk )        ((lk).state)
 
-#ifndef ADVFS_DEBUG
 #define lk_signal( act, lkp ) _lk_signal( act, lkp, __LINE__, NULL )
 #define lk_set_state( lkp, state ) \
         _lk_set_state( lkp, state , __LINE__, NULL )
@@ -399,17 +326,6 @@ extern advfsLockStatsT *AdvfsLockStats;
        _lk_wait_for2( lkp, mp, state1, state2 , __LINE__, NULL )
 #define lk_wait_while( lkp, mp, state ) \
        _lk_wait_while( lkp, mp, state , __LINE__, NULL )
-#else /* ADVFS_DEBUG */
-#define lk_signal( act, lkp ) _lk_signal( act, lkp, __LINE__, __FILE__ )
-#define lk_set_state( lkp, state ) \
-        _lk_set_state( lkp, state , __LINE__, __FILE__ )
-#define lk_wait_for( lkp, mp, state ) \
-       _lk_wait_for( lkp, mp, state , __LINE__, __FILE__ )
-#define lk_wait_for2( lkp, mp, state1, state2 ) \
-       _lk_wait_for2( lkp, mp, state1, state2 , __LINE__, __FILE__ )
-#define lk_wait_while( lkp, mp, state ) \
-       _lk_wait_while( lkp, mp, state , __LINE__, __FILE__ )
-#endif /* ADVFS_DEBUG */
 
 /*
  ** Prototypes.

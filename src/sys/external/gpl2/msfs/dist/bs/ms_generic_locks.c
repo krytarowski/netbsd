@@ -36,11 +36,6 @@
 #pragma ident "@(#)$RCSfile: ms_generic_locks.c,v $ $Revision: 1.1.37.1 $ (DEC) $Date: 2001/01/24 21:05:26 $"
 #endif
 
-#ifdef ADVFS_DEBUG
-#define ADVFS_LK_STRINGS /* needed for lock string arrays */
-                         /* in ms_generic_locks.h */
-#endif
-
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/condvar.h>
@@ -162,60 +157,6 @@ trace_lkcall(
              void *lk                /* in */
              )
 {
-#ifdef ADVFS_DEBUG
-    stateLkT *slk = (stateLkT *) lk;
-
-    char *LkPrintAction[] = { 
-        "Mutex Lk  ", 
-        "Mutex Unlk", 
-        "CV Block  ", 
-        "CV Resume ",
-        "CV Signal ",
-        "CV Bcast  ",
-        "Set State ",
-        "Wait For  ",
-        "Wait While",
-    };
-
-    trace_hdr();
-
-    log( LOG_MEGASAFE | LOG_INFO, "%11s ",  LkPrintAction[ action ] );
-
-    switch (action) {
-        case MUTEX_LOCK:
-        case MUTEX_UNLOCK:
-            log( LOG_MEGASAFE | LOG_INFO,
-                "%08x  %2d mtx --------  --     ", mp, mp->lock_cnt );
-            break;
-
-        case CV_WAIT:
-        case CV_DONEWAIT:
-            log( LOG_MEGASAFE | LOG_INFO, "%08x  %2d mtx %08x     cnd ", 
-                mp, mp->lock_cnt, resp );
-            break;
-
-        case CV_SIGNAL:
-        case CV_BROADCAST:
-            log( LOG_MEGASAFE | LOG_INFO, "--------  --     %08x     cnd ", resp );
-            break;
-
-        case WAIT_FOR: 
-        case WAIT_WHILE: 
-            log( LOG_MEGASAFE | LOG_INFO, "%08x  %2d mtx %08x  %2d slk ", 
-                mp, mp->lock_cnt, slk, slk->state );
-            break;
-
-        case SET_STATE: 
-            log( LOG_MEGASAFE | LOG_INFO, "--------  --     %08x  %2d slk ", slk, slk->state );
-            break;
-
-        default:
-            log( LOG_MEGASAFE | LOG_INFO, "--------  --     --------  --     " );
-            break;
-    }
-    log( LOG_MEGASAFE | LOG_INFO, "  %4d:%s\n", ln, strrchr( fn, '/' )+1 );
-
-#endif /* ADVFS_DEBUG */
 }
 
 void
@@ -252,13 +193,6 @@ lk_init(
 {
     lkHdrT *lkHdr = lk, *curLk, *newLk;
 
-#ifdef ADVFS_DEBUG
-    if (lkHdr->mutex != NULL) {
-        /* Assume it is already linked properly */
-        return;
-    }
-#endif /* ADVFS_DEBUG */
-
     switch (lkType) {
         case LKT_STATE:
             {
@@ -267,9 +201,6 @@ lk_init(
             *lk = nilStateLk;
 #ifndef _KERNEL
             cv_init( &lk->res );
-#ifdef ADVFS_DEBUG
-            lk->hdr.try_line_num = -1;
-#endif /* ADVFS_DEBUG */
 #endif
             }
             break;
@@ -281,9 +212,6 @@ lk_init(
             *lk = NilBufLk;
 #ifndef _KERNEL
             cv_init( &lk->bufCond );
-#ifdef ADVFS_DEBUG
-            lk->hdr.try_line_num = -1;
-#endif /* ADVFS_DEBUG */
 #endif
             }
             break;
@@ -293,13 +221,6 @@ lk_init(
     }
 
     lkHdr->lkUsage = usage;
-
-#ifdef ADVFS_DEBUG
-    /* add to head of linked list */
-    lkHdr->nxtLk = mutex->locks;
-    mutex->locks = lkHdr;
-#endif /* ADVFS_DEBUG */
-
     lkHdr->mutex = mutex;
 }
 
@@ -316,46 +237,6 @@ lk_destroy(
     void *lk    /* in - pointer to the lock */
     )
 {
-#ifdef ADVFS_DEBUG
-    lkHdrT *prevLk, *curLk, *lkHdr = lk;
-    int found = FALSE;
-
-    /*
-     * Find the lock in the mutex's linked list of locks.
-     */
-
-    if (lkHdr->mutex == NULL) {
-        ADVFS_SAD0( "lk_destroy: lk has no mutex" );
-    }
-
-    prevLk = curLk = lkHdr->mutex->locks;
-
-    while (!found && (curLk != NULL)) {
-        if (curLk == lk) {
-            found = TRUE;
-        } else {
-            prevLk = curLk;
-            curLk = curLk->nxtLk;
-        }
-    }
-
-    if (!found) {
-        ADVFS_SAD0( "lk_destroy: lk is not in mutex's linked list" );
-    }
-
-    /*
-     * Remove the lock from the mutex's linked list.
-     */
-
-    if (lkHdr == lkHdr->mutex->locks) {
-        lkHdr->mutex->locks = lkHdr->nxtLk;
-    } else {
-        prevLk->nxtLk = lkHdr->nxtLk;
-    }
-
-    lkHdr->mutex = NULL;
-    lkHdr->nxtLk = NULL;
-#endif /* ADVFS_DEBUG */
 }
 
 /*
@@ -418,12 +299,6 @@ _lk_set_state(
 {
     unLkActionT unlock_action = UNLK_NEITHER;
 
-#ifdef ADVFS_DEBUG
-    if (TrFlags&trLock) {
-        trace_lkcall( SET_STATE, &lk->res, NULL, ln, fn, lk );
-    }
-#endif /* ADVFS_DEBUG */
-
     lk->state = newState;
 
     if (lk->waiters > 0) {
@@ -466,20 +341,6 @@ _lk_wait_for(
 {
     int wait = 0;
 
-#ifdef ADVFS_DEBUG
-    if (!lk_mutex->locked) {
-        printf( "_lk_wait_for: ln = %d, fn = %s\n", ln, fn );
-        ADVFS_SAD0( "_lk_wait_for: mutex not locked" );
-    }
-
-    if (TrFlags&trLock) {
-        trace_lkcall( WAIT_FOR, &lk->res, lk_mutex,ln,fn, lk );
-    }
-
-    lk->hdr.try_line_num = ln;
-    lk->hdr.try_file_name = fn;
-#endif /* ADVFS_DEBUG */
-
     if (AdvfsLockStats) {
         AdvfsLockStats->usageStats[ lk->hdr.lkUsage ].lock++;
         AdvfsLockStats->stateLock++;
@@ -506,12 +367,6 @@ _lk_wait_for(
 
         lk->waiters--;
     }
-
-#ifdef ADVFS_DEBUG
-    lk->hdr.line_num = ln;
-    lk->hdr.file_name = fn;
-    lk->hdr.use_cnt++;
-#endif /* ADVFS_DEBUG */
 }
 
 /* 
@@ -535,20 +390,6 @@ _lk_wait_for2(
     )
 {
     int wait = 0;
-
-#ifdef ADVFS_DEBUG
-    if (!lk_mutex->locked) {
-        printf( "_lk_wait_for2: ln = %d, fn = %s\n", ln, fn );
-        ADVFS_SAD0( "_lk_wait_for2: mutex not locked" );
-    }
-
-    if (TrFlags&trLock) {
-        trace_lkcall( WAIT_FOR, &lk->res, lk_mutex,ln,fn, lk );
-    }
-
-    lk->hdr.try_line_num = ln;
-    lk->hdr.try_file_name = fn;
-#endif /* ADVFS_DEBUG */
 
     if (AdvfsLockStats) {
         AdvfsLockStats->usageStats[ lk->hdr.lkUsage ].lock++;
@@ -574,12 +415,6 @@ _lk_wait_for2(
 
         lk->waiters--;
     }
-
-#ifdef ADVFS_DEBUG
-    lk->hdr.line_num = ln;
-    lk->hdr.file_name = fn;
-    lk->hdr.use_cnt++;
-#endif /* ADVFS_DEBUG */
 }
 
 /* 
@@ -602,20 +437,6 @@ _lk_wait_while(
     )
 {
     int wait = 0;
-
-#ifdef ADVFS_DEBUG
-    if (!lk_mutex->locked) {
-        printf( "_lk_wait_while ln = %d, fn = %s\n", ln, fn );
-        ADVFS_SAD0( "_lk_wait_while: mutex not locked" );
-    }
-
-    if (TrFlags&trLock) {
-        trace_lkcall( WAIT_WHILE, &lk->res, lk_mutex,ln,fn, lk );
-    }
-
-    lk->hdr.try_line_num = ln;
-    lk->hdr.try_file_name = fn;
-#endif /* ADVFS_DEBUG */
 
     if (AdvfsLockStats) {
         AdvfsLockStats->usageStats[ lk->hdr.lkUsage ].lock++;
@@ -643,12 +464,6 @@ _lk_wait_while(
 
         lk->waiters--;
     }
-
-#ifdef ADVFS_DEBUG
-    lk->hdr.line_num = ln;
-    lk->hdr.file_name = fn;
-    lk->hdr.use_cnt++;
-#endif /* ADVFS_DEBUG */
 }
 
 /*
@@ -680,144 +495,7 @@ lk_is_locked(
     }
 }
 
-#ifdef ADVFS_DEBUG
-static lkHdrT *
-find_locked_lock(
-    lkHdrT *lk
-    )
-{
-    while (lk != NULL) {
-        if (lk_is_locked( lk )) {
-            return lk;
-        }
-
-        lk = lk->nxtLk;
-    }
-
-    return NULL;
-}
-#endif /* ADVFS_DEBUG */
-
 void
 bs_dump_locks( int locked )
 {
-#ifdef ADVFS_DEBUG
-    kmutex_t *mp = NULL;
-    lkHdrT *lkHdr = NULL;
-
-    mp = MutexList;
-
-    while (mp != NULL) {
-        if (!locked || 
-            (locked && 
-             ((mp->lock_cnt > 0) || find_locked_lock( mp->locks )))) {
-            printf( "\n" );
-            printf( " mutex : 0x%08x  (%s)\n", mp, mp->name );
-            printf( "\tlocked        : %d\n", mp->locked );
-            printf( "\ttry line num  : %d\n", mp->try_line_num );
-            if (mp->try_file_name == NULL) {
-                printf( "\ttry file name : \n" );
-            } else {
-                printf( "\ttry file name : %s\n", mp->try_file_name );
-            }
-            printf( "\tlock cnt      : %d\n", mp->lock_cnt );
-            printf( "\tline num      : %d\n", mp->line_num );
-            if (mp->file_name == NULL) {
-                printf( "\tfile name     : \n" );
-            } else {
-                printf( "\tfile name     : %s\n", mp->file_name );
-            }
-
-            lkHdr = mp->locks;
-
-            while (lkHdr != NULL) {
-                if (locked && !lk_is_locked( lkHdr )){
-                    lkHdr = lkHdr->nxtLk;
-                    continue;
-                }
-                
-                printf( "\n" );
-                printf( "\tlock type     : %s\n", lkTypeNames[lkHdr->lkType]);
-                printf( "\tlock usage    : %s\n", lkUsageNames[lkHdr->lkUsage]);
-                printf( "\tuse cnt       : %d\n", lkHdr->use_cnt );
-                printf( "\tmutex         : 0x%08x\n", lkHdr->mutex );
-                printf( "\tnxtFtxLk      : 0x%08x\n", lkHdr->nxtFtxLk );
-                printf( "\ttry_line_num  : %d\n", lkHdr->try_line_num );
-                if (lkHdr->try_file_name == NULL) {
-                    printf( "\ttry_file_name : \n" );
-                } else {
-                    printf( "\ttry_file_name : %s\n", lkHdr->try_file_name );
-                }
-                printf( "\tline_num      : %d\n", lkHdr->line_num );
-                if (lkHdr->file_name == NULL) {
-                    printf( "\tfile_name     : \n" );
-                } else {
-                    printf( "\tfile_name     : %s\n", lkHdr->file_name );
-                }
-
-                switch (lkHdr->lkType) {
-
-                case LKT_BUF:
-                    {
-                    bufLkT *lk = (void *)lkHdr;
-                    printf("\tstate         : 0x%08x\n", lk->state );
-                    printf("\twaiting       : %d\n", lk->waiting );
-                    }
-                    break;
-
-                case LKT_STATE:
-                    {
-                    stateLkT *lk = (void *)lkHdr;
-                    char *stateNames[] = { 
-                        "LKW_NONE",
-                    
-                        /* bfAccessT client states */
-                        "ACC_VALID",
-                        "ACC_INVALID",
-                        "ACC_INIT_TRANS",
-                        "ACC_FTX_TRANS", 
-                    
-                        /* struct vd */
-                        "ACTIVE_DISK",   
-                        "INACTIVE_DISK",
-                        "BLOCKED_Q",     
-                        "UNBLOCKED_Q",
-                    
-                        /* struct bsBuf */
-                        "BUF_DIRTY",
-                        "BUF_BUSY",
-                        "BUF_UNPIN_BLOCK",
-                        "BUF_PIN_BLOCK",
-                    
-                        /* block for a free buffer header */
-                        "BUF_AVAIL",
-                        "NO_BUF_AVAIL",
-
-                        /* bitfile set states in bfSetT */
-                        "BFS_INVALID",
-                        "BFS_READY",
-                        "BFS_CLONING",
-                        "BFS_BUSY",
-                        "BFS_DELETING",
-                        "BFS_DELETING_CLONE"
-                        };
-                    printf("\twaiters       : %d\n", lk->waiters );
-                    printf("\tstate         : %s\n", stateNames[lk->state] );
-                    printf("\tpending state : %s\n", stateNames[lk->state] );
-                    }
-                    break;
-
-                default:
-                    break;
-                }
-
-                lkHdr = lkHdr->nxtLk;
-            }
-        }
-
-        mp = mp->next_mutex;
-    }
-#else
-    printf( "no lock dumps when ADVFS_DEBUG is not defined\n" );
-#endif /* ADVFS_DEBUG */
 }
