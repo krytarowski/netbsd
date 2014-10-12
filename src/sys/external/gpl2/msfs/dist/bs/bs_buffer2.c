@@ -5138,7 +5138,7 @@ startover:
          * succeeds, this is the simplest thing to do.  If it fails, try
          * the next buffer but remember we need to start again.
          */
-        if ( !mutex_lock_try(&bp->bufLock.mutex) ) {
+        if ( !mutex_tryenter(&bp->bufLock.mutex) ) {
             skipped_buffers++;
             continue;
         }

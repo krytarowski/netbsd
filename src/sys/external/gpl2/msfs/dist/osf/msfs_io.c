@@ -1648,7 +1648,7 @@ get_locks( ioDescHdrT *qhdr, vdT *vdp, qtypeT qindex, int *locks_held )
     errT error = OK;
 
     MS_SMP_ASSERT(SLOCK_HOLDER(&vdp->devQ.ioQLock.mutex));
-    if ( !mutex_lock_try(&qhdr->ioQLock.mutex) ) {
+    if ( !mutex_tryenter(&qhdr->ioQLock.mutex) ) {
 
         mutex_unlock( &vdp->devQ.ioQLock );
         mutex_lock( &qhdr->ioQLock );

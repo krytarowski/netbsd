@@ -475,7 +475,7 @@ _retry:
          * Basically, if we can't get a lock on a given access struct, we
          * skip it.
          */
-        if ( !mutex_lock_try(&bfap->bfaLock.mutex) ) {
+        if ( !mutex_tryenter(&bfap->bfaLock.mutex) ) {
             bfap = bfap->freeFwd;
             cleanup_structs_skipped++;
             continue;
@@ -507,7 +507,7 @@ _retry:
                  * Try to lock the bfIoLock out-of-order.  If this fails,
                  * just skip this access structure.
                  */
-                if (mutex_lock_try(&bfap->bfIoLock.mutex)) {
+                if (mutex_tryenter(&bfap->bfIoLock.mutex)) {
                     mutex_unlock(&BfAccessFreeLock);
                     check_mv_bfap_to_free(bfap);
                     mutex_lock(&BfAccessFreeLock);
@@ -561,7 +561,7 @@ _retry:
             nextp = bfap->freeFwd;
             /* Make sure index file access structs make it
               * to the free list */
-            if (mutex_lock_try(&bfap->bfIoLock.mutex)) {
+            if (mutex_tryenter(&bfap->bfIoLock.mutex)) {
                 mutex_unlock(&BfAccessFreeLock);
                 check_mv_bfap_to_free(bfap);
                 mutex_lock(&BfAccessFreeLock);
@@ -1034,7 +1034,7 @@ get_free_acc(int *retry,        /* In/Out - Retry or error status */
         /* Lock the bfap before proceeding, being careful not to deadlock
          * with threads locking in the conventional order.
          */
-        if ( !mutex_lock_try(&bfap->bfaLock.mutex) ) {
+        if ( !mutex_tryenter(&bfap->bfaLock.mutex) ) {
             bfap = bfap->freeFwd;
             continue;
         }
@@ -4511,7 +4511,7 @@ free_acc_struct(
      * take that lock, pull a bsBuf off the dirtyBufList
      * and then release the lock.
      */
-    if (!mutex_lock_try(&bfap->bfIoLock.mutex)) {
+    if (!mutex_tryenter(&bfap->bfIoLock.mutex)) {
         ADD_ACC_CLOSEDLIST(bfap);
         added_bfap_to_list = TRUE;
     } 

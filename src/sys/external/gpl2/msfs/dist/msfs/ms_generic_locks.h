@@ -387,7 +387,6 @@ extern advfsLockStatsT *AdvfsLockStats;
 #ifdef ADVFS_DEBUG
 
 #define mutex_lock( mp )    _mutex_lock( mp, __LINE__, __FILE__ )
-#define mutex_lock_try( mp ) _mutex_lock_try( mp, __LINE__, __FILE__ )
 #define mutex_unlock( mp )  _mutex_unlock( mp, __LINE__, __FILE__ )
 
 #define real_mutex_lock_io( mp, s ) \
@@ -398,10 +397,8 @@ extern advfsLockStatsT *AdvfsLockStats;
 #else
 
 #define mutex_lock( mp )   simple_lock( &((mp)->mutex) )
-#define mutex_lock_try( mp )   simple_lock_try( mp )
 #define mutex_unlock( mp ) simple_unlock( &((mp)->mutex) )
 #define _mutex_lock( mp, ln, fn )   simple_lock( &((mp)->mutex) )
-#define _mutex_lock_try( mp, ln, fn )   simple_lock_try( &((mp)->mutex) )
 #define _mutex_unlock( mp, ln, fn ) simple_unlock( &((mp)->mutex) )
 
 #define real_mutex_lock_io( mp, s ) \
