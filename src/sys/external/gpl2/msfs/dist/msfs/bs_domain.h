@@ -278,21 +278,6 @@ typedef struct bfsQueue {
 #define BFSET_QUEUE_TO_BFSETP( _link ) \
     ((bfSetT *)((char *)(_link) - offsetof(bfSetT,bfSetList)))
 
-
-#ifdef ADVFS_DOMAIN_TRACE
-
-#define DOMAIN_TRACE_HISTORY 100
-
-typedef struct {
-  uint32T       seq;
-  uint16T       mod;
-  uint16T       ln;
-  struct thread *thd;
-  void          *val;
-} dmnTraceElmtT;
-
-#endif /* ADVFS_DOMAIN_TRACE */
-
 typedef enum {
     BFD_UNKNOWN,                /* domain is in unknown state */
     BFD_VIRGIN,                 /* domain has never been activated */
@@ -466,34 +451,12 @@ typedef struct domain {
     uint32T dmnFreezeRefCnt;    /* Count of threads currently blocking the start of a freeze */
 
     ssDmnInfoT ssDmnInfo;       /* vfast elements. */
-/*>>>>>>> Maintain as last elements of domain structure <<<<<<<<*/ 
-#ifdef ADVFS_DOMAIN_TRACE
-    uint32T trace_ptr;
-    dmnTraceElmtT trace_buf[DOMAIN_TRACE_HISTORY];
-#endif /* ADVFS_DOMAIN_TRACE */
 } domainT;
 
 extern domainT nilDomain;
 
 extern int DomainCnt;
 extern domainT* DomainTbl[];
-
-#ifdef ADVFS_DOMAIN_TRACE
-
-#define DOMAIN_TRACE( dmnp, n1 ) \
-    domain_trace((dmnp), (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void*)(n1))
-
-void
-domain_trace( domainT *dmnp,
-              uint16T module,
-              uint16T line,
-              void    *value);
-
-#else  /* ADVFS_DOMAIN_TRACE */
-
-#define DOMAIN_TRACE( dmnp, n1 )
-
-#endif /* ADVFS_DOMAIN_TRACE */
 
 /*
  * Functions for the xidRecoveryLk
