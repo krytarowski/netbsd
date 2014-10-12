@@ -414,7 +414,7 @@ _ftx_start_i(
                   wait = 1;
                 }
                 ftxTDp->ftxWaiters++;
-                cond_wait( &ftxTDp->slotCv, &FtxMutex );
+                cv_wait( &ftxTDp->slotCv, &FtxMutex );
                 ftxTDp->ftxWaiters--;
             }
 
@@ -436,7 +436,7 @@ _ftx_start_i(
                 }
 
                 ftxTDp->ftxWaiters++;
-                cond_wait( &ftxTDp->slotCv, &FtxMutex );
+                cv_wait( &ftxTDp->slotCv, &FtxMutex );
                 ftxTDp->ftxWaiters--;
             }
         }
@@ -450,7 +450,7 @@ _ftx_start_i(
         if ( FtxDynAlloc.currAllocated >= FtxDynAlloc.maxAllowed ) {
             FtxDynAlloc.sumWaits++;
             FtxDynAlloc.waiters++;
-            cond_wait( &FtxDynAlloc.cv, &FtxMutex );
+            cv_wait( &FtxDynAlloc.res, &FtxMutex );
             FtxDynAlloc.waiters--;    
         }
 
@@ -527,7 +527,7 @@ _ftx_start_i(
             }
 
             ftxTDp->excWaiters++;
-            cond_wait( &ftxTDp->excCv, &FtxMutex );
+            cv_wait( &ftxTDp->excCv, &FtxMutex );
             ftxTDp->excWaiters--;
         }
 
@@ -547,7 +547,7 @@ _ftx_start_i(
 
             trimwait = 1;
             ftxTDp->trimWaiters++;
-            cond_wait( &ftxTDp->trimCv, &FtxMutex );
+            cv_wait( &ftxTDp->trimCv, &FtxMutex );
             ftxTDp->trimWaiters--;
         }
 
@@ -581,9 +581,9 @@ _ftx_start_i(
                  * run.
                  */
                 if ( trimwait ) {
-                    cond_broadcast( &ftxTDp->slotCv );
+                    cv_broadcast( &ftxTDp->slotCv );
                 } else {
-                    cond_signal( &ftxTDp->slotCv );
+                    cv_signal( &ftxTDp->slotCv );
                 }
             }
         }
@@ -2814,7 +2814,7 @@ do_ftx_continuations(
                 }
 
                 ftxTDp->trimWaiters++;
-                cond_wait( &ftxTDp->trimCv, &FtxMutex );
+                cv_wait( &ftxTDp->trimCv, &FtxMutex );
                 ftxTDp->trimWaiters--;
             }
 
@@ -3156,7 +3156,7 @@ ftx_init(void)
     struct ftx *ftxp;
 
     mutex_init3(&FtxMutex, 0, "FtxMutex", ADVFtxMutex_lockinfo);
-    cv_init( &FtxDynAlloc.cv );
+    cv_init( &FtxDynAlloc.res );
     FtxDynAlloc.waiters       = 0;
     FtxDynAlloc.currAllocated = 0;
     FtxDynAlloc.maxAllocated  = 0;
@@ -3228,7 +3228,7 @@ ftx_free(
         if (AdvfsLockStats) {
             AdvfsLockStats->ftxSlotSignalFree++;
         }
-        cond_signal( &ftxTDp->slotCv );
+        cv_signal( &ftxTDp->slotCv );
     }
 
     /* Now wake up anyone waiting for an exclusive transaction */
@@ -3237,7 +3237,7 @@ ftx_free(
         if (AdvfsLockStats) {
             AdvfsLockStats->ftxExcSignal++;
         }
-        cond_signal( &ftxTDp->excCv );
+        cv_signal( &ftxTDp->excCv );
     }
 
 }
@@ -3280,7 +3280,7 @@ ftx_free_2(
      */
     if ( FtxDynAlloc.waiters &&
          FtxDynAlloc.currAllocated < FtxDynAlloc.maxAllowed ) {
-        cond_signal( &FtxDynAlloc.cv );
+        cv_signal( &FtxDynAlloc.res );
     }
 }
 
@@ -3674,7 +3674,7 @@ checklogtrim:
             if (AdvfsLockStats) {
                 AdvfsLockStats->ftxExcSignal++;
             }
-            cond_signal( &ftxTDp->excCv );
+            cv_signal( &ftxTDp->excCv );
         }
 
         /*
@@ -3686,7 +3686,7 @@ checklogtrim:
             if (AdvfsLockStats) {
                 AdvfsLockStats->ftxTrimBroadcast++;
             }
-            cond_broadcast( &ftxTDp->trimCv );
+            cv_broadcast( &ftxTDp->trimCv );
         }
     }
 

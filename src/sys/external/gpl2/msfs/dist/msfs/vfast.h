@@ -333,7 +333,7 @@ typedef struct ssDmnInfo {
 typedef struct ssVolInfo {
     mutexT     ssVdMigLk; /* locks the following 5 fields */
     ssMigOpT   ssVdMigState;  /* state the migrate is in for this volume */
-    cvT        ssContMig_cv;  /* cv used to manage single thd/volume migrates */
+    kcondvar_t        ssContMig_cv;  /* cv used to manage single thd/volume migrates */
     int        ssVdSSThdCnt;  /* current number of vfast threads in vd */
     int        ssVdSSWaiters; /* number of waiters on ssVdSSThdCnt */
 
