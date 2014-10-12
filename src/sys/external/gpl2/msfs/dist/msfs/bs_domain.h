@@ -496,83 +496,130 @@ domain_trace( domainT *dmnp,
 #endif /* ADVFS_DOMAIN_TRACE */
 
 /*
- * Macros for the xidRecoveryLk
+ * Functions for the xidRecoveryLk
  */
 
-#define XID_RECOVERY_LOCK_WRITE( dmnp ) \
-    lock_write( &(dmnp->xidRecoveryLk) )
+static inline void XID_RECOVERY_LOCK_WRITE( domainT *dmnp )
+{
+    rw_enter( &dmnp->xidRecoveryLk, RW_WRITER );
+}
 
-#define XID_RECOVERY_LOCK_TRY_WRITE( dmnp ) \
-    lock_try_write( &(dmnp->xidRecoveryLk) )
+static inline void XID_RECOVERY_LOCK_TRY_WRITE( domainT *dmnp )
+{
+    rw_tryenter( &dmnp->xidRecoveryLk, RW_WRITER );
+}
 
-#define XID_RECOVERY_LOCK_READ( dmnp ) \
-    lock_read( &(dmnp->xidRecoveryLk) )
+static inline void XID_RECOVERY_LOCK_READ( domainT *dmnp )
+{
+    rw_enter( &dmnp->xidRecoveryLk, RW_READER );
+}
 
-#define XID_RECOVERY_UNLOCK( dmnp ) \
-    lock_done( &(dmnp->xidRecoveryLk) )
+static inline void XID_RECOVERY_UNLOCK( domainT *dmnp )
+{
+    rw_exit( &dmnp->xidRecoveryLk );
+}
 
-#define XID_RECOVERY_LOCK_INIT(dmnp) \
-    lock_setup( &(dmnp)->xidRecoveryLk, ADVdomainT_xidRecoveryLk_info, TRUE)
+static inline void XID_RECOVERY_LOCK_INIT( domainT *dmnp )
+{
+    rw_init( &dmnp->xidRecoveryLk );
+}
 
-#define XID_RECOVERY_LOCK_DESTROY(dmnp) \
-    lock_terminate( &(dmnp)->xidRecoveryLk )
+static inline void XID_RECOVERY_LOCK_DESTROY( domainT *dmnp )
+{
+    rw_destroy( &dmnp->xidRecoveryLk );
+}
 
 /*
- * Macros for the rmvol-truncate lock
+ * Functions for the rmvol-truncate lock
  */
-#define RMVOL_TRUNC_LOCK_WRITE(dmnp) \
-    lock_write( &(dmnp)->rmvolTruncLk )
+static inline void RMVOL_TRUNC_LOCK_WRITE( domainT *dmnp )
+{
+    rw_enter( &dmnp->rmvolTruncLk, RW_WRITER );
+}
 
-#define RMVOL_TRUNC_LOCK_READ(dmnp) \
-    lock_read( &(dmnp)->rmvolTruncLk )
+static inline void RMVOL_TRUNC_LOCK_READ( domainT *dmnp )
+{
+    rw_enter( &dmnp->rmvolTruncLk, RW_WRITER );
+}
 
-#define RMVOL_TRUNC_UNLOCK(dmnp) \
-    lock_done( &(dmnp)->rmvolTruncLk )
+static inline void RMVOL_TRUNC_UNLOCK( domainT *dmnp )
+{
+    rw_exit( &dmnp->rmvolTruncLk );
+}
 
-#define RMVOL_TRUNC_LOCK_INIT(dmnp) \
-    lock_setup( &(dmnp)->rmvolTruncLk, ADVdomainT_rmvolTruncLk_info, TRUE )
+static inline void RMVOL_TRUNC_LOCK_INIT( domainT *dmnp )
+{
+    rw_init( &dmnp->rmvolTruncLk );
+}
 
-#define RMVOL_TRUNC_LOCK_DESTROY(dmnp) \
-    lock_terminate( &(dmnp)->rmvolTruncLk )
+static inline void RMVOL_TRUNC_LOCK_DESTROY( domainT *dmnp )
+{
+    rw_destroy( &dmnp->rmvolTruncLk );
+}
 
 /*
- * Macros for the service class table lock.
+ * Functions for the service class table lock.
  */
-#define SC_TBL_LOCK(dmnp) \
-    lock_write( &(dmnp)->scLock );
+static inline void SC_TBL_LOCK( domainT *dmnp )
+{
+    rw_enter( &dmnp->scLock, RW_WRITER );
+}
 
-#define SC_TBL_UNLOCK(dmnp) \
-    lock_done( &(dmnp)->scLock );
+static inline void SC_TBL_UNLOCK( domainT *dmnp)
+{
+    rw_exit( &dmnp->scLock );
+}
 
 /* Lock initialization for scLock. */
-#define SC_TBL_LOCK_INIT(dmnp) \
-    lock_setup( &(dmnp)->scLock, ADVdomainT_scLock_info, TRUE );
+static inline void SC_TBL_LOCK_INIT( domainT *dmnp )
+{
+    rw_init( &dmnp->scLock );
+}
 
 /* Lock destruction for scLock. */
-#define SC_TBL_LOCK_DESTROY(dmnp) \
-    lock_terminate( &(dmnp)->scLock );
+static inline void SC_TBL_LOCK_DESTROY( domainT *dmnp )
+{
+    rw_destroy( &dmnp->scLock );
+}
 
-/* Macros for BfSetTblLock  */
+/* Functions for BfSetTblLock  */
 
-#define BFSETTBL_LOCK_WRITE(dmnp) \
-    lock_write( &(dmnp)->BfSetTblLock.lock );
+static inline void BFSETTBL_LOCK_WRITE( domainT *dmnp )
+{
+    rw_enter( &dmnp->BfSetTblLock.lock, RW_WRITER );
+}
 
-#define BFSETTBL_LOCK_READ(dmnp) \
-    lock_read( &(dmnp)->BfSetTblLock.lock );
+static inline void BFSETTBL_LOCK_READ( domainT *dmnp )
+{
+    rw_enter( &dmnp->BfSetTblLock.lock, RW_READER );
+}
 
-#define BFSETTBL_UNLOCK(dmnp) \
-    lock_done( &(dmnp)->BfSetTblLock.lock );
+static inline void BFSETTBL_UNLOCK( domainT *dmnp )
+{
+    rw_exit( &dmnp->BfSetTblLock.lock );
+}
 
-#define BFSETTBL_LOCK_DESTROY(dmnp) \
-    lock_terminate( &(dmnp)->BfSetTblLock.lock );
+static inline void BFSETTBL_LOCK_DESTROY( domainT *dmnp )
+{
+    rw_destroy( &dmnp->BfSetTblLock.lock );
+}
 
 /* Macros for DmnTblLock */
 
-#define DMNTBL_LOCK_WRITE( sLk )  lock_write( sLk );
+static inline void DMNTBL_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_WRITER );
+}
 
-#define DMNTBL_LOCK_READ( sLk )  lock_read( sLk );
+static inline void DMNTBL_LOCK_READ( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_READER );
+}
 
-#define DMNTBL_UNLOCK( sLk )  lock_done( sLk );
+static inline void DMNTBL_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk );
+}
 
 extern krwlock_t DmnTblLock;
 
