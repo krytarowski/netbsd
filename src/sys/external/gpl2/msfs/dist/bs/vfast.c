@@ -41,6 +41,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/condvar.h>
+#include <sys/mutex.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 
@@ -383,8 +384,7 @@ ss_kern_init()
     int false=FALSE;
     int true =TRUE;
 
-    mutex_init3( &ssStoppedMutex, 0, "Smartstore global Mutex", 
-                 ADVssStoppedMutex_lockinfo );
+    mutex_init( &ssStoppedMutex, MUTEX_DEFAULT, IPL_NONE);
     cv_init( &ss_stopped_cv );
 
     SMARTSTORE_LOCK_INIT(&SSLock);
@@ -592,10 +592,8 @@ ss_boss_init( void )
 {
     extern task_t first_task;
 
-    mutex_init3(&ssListTpool.plock, 0, 
-                "ssListPoolLk", ADVssListTpool_lockinfo);
-    mutex_init3(&ssWorkTpool.plock, 0, 
-                "ssWorkPoolLk", ADVssWorkTpool_lockinfo);
+    mutex_init(&ssListTpool.plock, MUTEX_DEFAULT, IPL_NONE);
+    mutex_init(&ssWorkTpool.plock, MUTEX_DEFAULT, IPL_NONE);
 
     /* Create and start the boss thread.  */
     if (!kernel_thread( first_task, ss_boss_thread )) {
@@ -1828,10 +1826,8 @@ void
 ss_init_dmnInfo(domainT *dmnP)
 {
     bzero( (char *)&dmnP->ssDmnInfo, sizeof( struct ssDmnInfo ) );
-    mutex_init3(&dmnP->ssDmnInfo.ssDmnLk, 0, 
-                  "ssDmnLk", ADVdomainT_ssDmnLk_lockinfo);
-    mutex_init3(&dmnP->ssDmnInfo.ssDmnHotLk, 0, 
-                 "ssDmnHotLk", ADVdomainT_ssDmnHotLk_lockinfo);
+    mutex_init(&dmnP->ssDmnInfo.ssDmnLk, MUTEX_DEFAULT, IPL_NONE);
+    mutex_init(&dmnP->ssDmnInfo.ssDmnHotLk, MUTEX_DEFAULT, IPL_NONE);
 
     dmnP->ssDmnInfo.ssDmnState                  = SS_DEACTIVATED;
     dmnP->ssDmnInfo.ssFirstMountTime            = 0;
@@ -1887,12 +1883,9 @@ ss_init_dmnInfo(domainT *dmnP)
 void
 ss_init_vd(vdT *vdp)
 {
-    mutex_init3(&vdp->ssVolInfo.ssVdMsgLk, 0, 
-                 "ssVdMsgLk", ADVvdT_ssVdMsgLk_lockinfo);
-    mutex_init3(&vdp->ssVolInfo.ssVdMigLk, 0, 
-                 "ssVdMigLk", ADVvdT_ssVdMigLk_lockinfo);
-    mutex_init3(&vdp->ssVolInfo.ssFragLk, 0, 
-                 "ssFragLk", ADVvdT_ssFragLk_lockinfo);
+    mutex_init(&vdp->ssVolInfo.ssVdMsgLk, MUTEX_DEFAULT, IPL_NONE);
+    mutex_init(&vdp->ssVolInfo.ssVdMigLk, MUTEX_DEFAULT, IPL_NONE);
+    mutex_init(&vdp->ssVolInfo.ssFragLk, MUTEX_DEFAULT, IPL_NONE);
     mutex_lock( &vdp->ssVolInfo.ssVdMigLk );
     cv_init( &vdp->ssVolInfo.ssContMig_cv );
     vdp->ssVolInfo.ssVdMigState = SS_MIG_IDLE;
