@@ -44,6 +44,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/condvar.h>
+#include <sys/mutex.h>
 
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
@@ -179,7 +180,7 @@ msgq_create(
         return ENO_MORE_MEMORY;
     }
 
-    mutex_init3( &msgQ->mutex, 0, "msgQMutex", ADVmsgQT_mutex_lockinfo );
+    mutex_init( &msgQ->mutex, MUTEX_DEFAULT, IPL_NONE);
     cv_init( &msgQ->res );
 
     *msgQH = (msgQHT) msgQ;

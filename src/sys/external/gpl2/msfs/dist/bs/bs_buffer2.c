@@ -32,6 +32,7 @@
 #include <machine/param.h>
 #include <sys/buf.h>
 #include <sys/clock.h>
+#include <sys/mutex.h>
 #include <sys/syslog.h>
 #include <sys/time.h>
 #include <sys/vnode.h>
@@ -287,7 +288,7 @@ bs_get_bsbuf(int rad_id, int wait)
                                                            M_PREFER, rad_id);
 
     if (bp) {
-        mutex_init3(&bp->bufLock, 0, "bsBufLock", ADVbufLock_lockinfo);
+        mutex_init(&bp->bufLock, MUTEX_DEFAULT, IPL_NONE);
         lk_init( &bp->lock, &bp->bufLock, LKT_BUF, 0, LKU_BUFFER );
         bp->bufMagic = BUFMAGIC;
     }

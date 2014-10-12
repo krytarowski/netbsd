@@ -48,6 +48,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/mutex.h>
 #include <sys/time.h>
 
 #if defined( MSFS_CRASHTEST )
@@ -3155,7 +3156,7 @@ ftx_init(void)
     int f;
     struct ftx *ftxp;
 
-    mutex_init3(&FtxMutex, 0, "FtxMutex", ADVFtxMutex_lockinfo);
+    mutex_init(&FtxMutex, MUTEX_DEFAULT, IPL_NONE);
     cv_init( &FtxDynAlloc.res );
     FtxDynAlloc.waiters       = 0;
     FtxDynAlloc.currAllocated = 0;

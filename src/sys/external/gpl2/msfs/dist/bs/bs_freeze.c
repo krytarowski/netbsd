@@ -59,6 +59,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/mutex.h>
 
 #include "../msfs/ms_public.h"
 #include "../msfs/bs_public.h"
@@ -127,7 +128,7 @@ bs_init_freeze_thread( void )
 {
     extern task_t first_task;
 
-    mutex_init3(&AdvfsFreezeMsgsLock, 0, "AdvfsFreezeMsgsLock", ADVFreezeMsgs_lockinfo);
+    mutex_init(&AdvfsFreezeMsgsLock, MUTEX_DEFAULT, IPL_NONE);
     if (!kernel_thread( first_task, bs_freeze_thread )) {
         ADVFS_SAD0("The AdvFS freeze thread was not spawned.\n");
     }
