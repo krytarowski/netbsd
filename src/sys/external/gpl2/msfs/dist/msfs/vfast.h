@@ -43,7 +43,7 @@
 /*
  * Macros for the vfast SS_is_running lock.
  */
-extern lock_data_t SSLock;
+extern rwlock_t SSLock;
 #define SS_WRITE_LOCK(ssl) \
     lock_write( ssl );
 

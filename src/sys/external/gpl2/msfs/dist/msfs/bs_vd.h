@@ -160,7 +160,7 @@ typedef struct vd {
 
     ftxLkT del_list_lk;         /* protects global defered delete list */
 
-    lock_data_t ddlActiveLk;   /* Synchs processing of deferred-delete list entries */
+    rwlock_t ddlActiveLk;   /* Synchs processing of deferred-delete list entries */
                                 /* used with domain mutex */
     bfMCIdT ddlActiveWaitMCId;  /* If non-nil, a thread is waiting on this entry */
                                 /* Use domain mutex for synchronization */

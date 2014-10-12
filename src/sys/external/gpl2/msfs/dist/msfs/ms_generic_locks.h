@@ -134,7 +134,7 @@ typedef struct lkHdr {
 
 typedef struct ftxLk {
     lkHdrT hdr;               /* header used by ftx lock routines only */
-    lock_data_t  lock;        /* The OSF lock .  */
+    rwlock_t  lock;        /* The OSF lock .  */
     cv res;                   /* condition variable */
 } ftxLkT;
 
