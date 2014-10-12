@@ -389,11 +389,6 @@ extern advfsLockStatsT *AdvfsLockStats;
 #define mutex_lock( mp )    _mutex_lock( mp, __LINE__, __FILE__ )
 #define mutex_unlock( mp )  _mutex_unlock( mp, __LINE__, __FILE__ )
 
-#define real_mutex_lock_io( mp, s ) \
-    s = splbio(); \
-    (mp)->psw = s; \
-    _mutex_lock( mp, __LINE__, __FILE__ )
-
 #else
 
 #define mutex_lock( mp )   simple_lock( &((mp)->mutex) )
@@ -401,18 +396,7 @@ extern advfsLockStatsT *AdvfsLockStats;
 #define _mutex_lock( mp, ln, fn )   simple_lock( &((mp)->mutex) )
 #define _mutex_unlock( mp, ln, fn ) simple_unlock( &((mp)->mutex) )
 
-#define real_mutex_lock_io( mp, s ) \
-    s = splbio(); \
-    simple_lock( &((mp)->mutex) )
-
 #endif /* ADVFS_DEBUG */
-
-#define real_mutex_unlock_io( mp, s ) \
-    mutex_unlock( (mp) ); \
-    splx( (s) )
-
-#define mutex_lock_io( mp, s )      mutex_lock( mp )
-#define mutex_unlock_io( mp, s )    mutex_unlock( mp )
 
 #define lk_locked( lk )           (lk_is_locked(&(lk)))
 
