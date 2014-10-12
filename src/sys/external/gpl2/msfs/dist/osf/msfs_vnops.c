@@ -76,7 +76,7 @@ static int msfs_chown(struct vnode *vp, uid_t uid, gid_t gid, struct uucred *cre
                                                                                     \
     if ( NFS_SERVER_TSD != 0 ) {                                                    \
         domainT *dmnP = GETDOMAINP ( VTOMOUNT(vp) );                                \
-        mutex_lock( &(dmnP->dmnFreezeMutex) );                                      \
+        mutex_enter( &(dmnP->dmnFreezeMutex) );                                      \
         if ( dmnP->dmnFreezeFlags & (BFD_FREEZE_IN_PROGRESS + BFD_FROZEN) ) {       \
             mutex_exit( &dmnP->dmnFreezeMutex );                                  \
             return (NFS3ERR_JUKEBOX);                                               \
@@ -90,7 +90,7 @@ static int msfs_chown(struct vnode *vp, uid_t uid, gid_t gid, struct uucred *cre
                                                                                     \
     if ( NFS_SERVER_TSD != 0 ) {                                                    \
         domainT *dmnP = GETDOMAINP ( VTOMOUNT(vp) );                                \
-        mutex_lock( &dmnP->dmnFreezeMutex );                                        \
+        mutex_enter( &dmnP->dmnFreezeMutex );                                        \
         dmnP->dmnFreezeRefCnt--;                                                    \
         if ( dmnP->dmnFreezeWaiting && dmnP->dmnFreezeRefCnt == 0) {                \
             thread_wakeup( (vm_offset_t)&dmnP->dmnFreezeWaiting );                  \
@@ -759,7 +759,7 @@ msfs_access(
     }
 #endif
 
-    mutex_lock( &context_ptr->fsContext_mutex );
+    mutex_enter( &context_ptr->fsContext_mutex );
     udac.uid = udac.cuid = context_ptr->dir_stats.advfs_st_uid;
     udac.gid = udac.cgid = context_ptr->dir_stats.advfs_st_gid;
     udac.mode = context_ptr->dir_stats.advfs_st_mode & 0777;
@@ -816,7 +816,7 @@ msfs_getattr(
         /* meta data and fragbf have fake stats */
 
 
-        mutex_lock( &context_ptr->fsContext_mutex );
+        mutex_enter( &context_ptr->fsContext_mutex );
 
         vap->va_atime.tv_sec = 0;
         vap->va_atime.tv_usec = 0;
@@ -876,7 +876,7 @@ msfs_getattr(
      * copy the attributes from the stat structure in the file's
      * in-memory directory entry to the vap structure
      */
-    mutex_lock( &context_ptr->fsContext_mutex );
+    mutex_enter( &context_ptr->fsContext_mutex );
     /*
      * update the time fields if not readonly fs.
      * if readonly just read what's in fscontext
@@ -1081,7 +1081,7 @@ fs_setattr(
              * be in this code path.
              */
 
-            mutex_lock( &context_ptr->fsContext_mutex);
+            mutex_enter( &context_ptr->fsContext_mutex);
             if ((vap->va_atime.tv_sec != 0) || (vap->va_atime.tv_usec != 0)) {
                 context_ptr->dir_stats.advfs_st_atime = vap->va_atime.tv_sec;
                 context_ptr->dir_stats.advfs_st_uatime = vap->va_atime.tv_usec * 1000;
@@ -1122,7 +1122,7 @@ fs_setattr(
                 goto _exit;
             }
         }
-        mutex_lock( &context_ptr->fsContext_mutex);
+        mutex_enter( &context_ptr->fsContext_mutex);
         if (vap->va_atime.tv_sec != (int)VNOVAL) {
             context_ptr->dir_stats.advfs_st_atime = vap->va_atime.tv_sec;
             context_ptr->dir_stats.advfs_st_uatime = vap->va_atime.tv_usec * 1000;
@@ -1158,7 +1158,7 @@ fs_setattr(
         if (cred->cr_uid != iuid && (error = suser(cred, &u.u_acflag))) {
             goto _exit;
         }
-        mutex_lock( &context_ptr->fsContext_mutex);
+        mutex_enter( &context_ptr->fsContext_mutex);
         if (cred->cr_uid == 0) {
             context_ptr->dir_stats.advfs_st_flags = vap->va_flags;
         } else {
@@ -1221,7 +1221,7 @@ fs_setattr(
 
     if ( updateStats ) {
 
-            mutex_lock( &context_ptr->fsContext_mutex);
+            mutex_enter( &context_ptr->fsContext_mutex);
             context_ptr->fs_flag |= MOD_CTIME;
             context_ptr->dirty_stats = TRUE;
             mutex_exit( &context_ptr->fsContext_mutex);
@@ -1393,7 +1393,7 @@ fs_setattr_truncate( bfAccessT *bfap,
      *  with respect to any other write operations being done concurrently
      *  on this file.
      */
-    mutex_lock( &cp->fsContext_mutex );
+    mutex_enter( &cp->fsContext_mutex );
 
     /*
      *  Update the size and time fields.
@@ -1571,7 +1571,7 @@ fs_setattr_truncate( bfAccessT *bfap,
 
 notrunc:
     /* Get rid of the activeRange applied above. */
-    mutex_lock( &bfap->actRangeLock );
+    mutex_enter( &bfap->actRangeLock );
     remove_actRange_from_list( bfap, arp );
     mutex_exit( &bfap->actRangeLock );
     ms_free( arp );
@@ -2276,13 +2276,13 @@ remove_it_1:
          * same bmt page.
          */
         rbf_delete(VTOA(ndp->ni_vp), ftx_handle);
-        mutex_lock( &rem_context->fsContext_mutex );
+        mutex_enter( &rem_context->fsContext_mutex );
         rem_context->fs_flag |= M_DELETE;
         mutex_exit( &rem_context->fsContext_mutex );
         sts = remove_dir_ent( ndp, ftx_handle );
         if (sts != EOK) 
         {
-            mutex_lock( &rem_context->fsContext_mutex );
+            mutex_enter( &rem_context->fsContext_mutex );
             rem_context->fs_flag &= ~M_DELETE;
             mutex_exit( &rem_context->fsContext_mutex );
             goto _error_out;
@@ -2294,7 +2294,7 @@ remove_it_1:
         {
             goto _error_out;
         }
-        mutex_lock( &rem_context->fsContext_mutex );
+        mutex_enter( &rem_context->fsContext_mutex );
         rem_context->fs_flag |= MOD_CTIME;
         rem_context->dirty_stats = TRUE;
         mutex_exit( &rem_context->fsContext_mutex );
@@ -2757,7 +2757,7 @@ msfs_link(
      * update the ctime field of the existing file. This will also
      * write the up'ed link count to the file.
      */
-    mutex_lock( &file_context->fsContext_mutex );
+    mutex_enter( &file_context->fsContext_mutex );
     file_context->fs_flag |= MOD_CTIME;
     file_context->dirty_stats = TRUE;
     mutex_exit( &file_context->fsContext_mutex );
@@ -2766,7 +2766,7 @@ msfs_link(
         ADVFS_SAD1("Error from fs_udpate_stats in msfs_link", ret);
     }
     /* update the mtime and ctime fields for the dir */
-    mutex_lock( &dir_context->fsContext_mutex );
+    mutex_enter( &dir_context->fsContext_mutex );
     dir_context->fs_flag |= (MOD_CTIME | MOD_MTIME);
     dir_context->dirty_stats = TRUE;
     dir_context->dirstamp++;
@@ -3388,7 +3388,7 @@ call_namei:
          * update the parent dir tag in the stats
          */
         from_file_context->dir_stats.dir_tag = to_dir_context->bf_tag;
-        mutex_lock(&from_file_context->fsContext_mutex);
+        mutex_enter(&from_file_context->fsContext_mutex);
         from_file_context->fs_flag |= MOD_CTIME;
         from_file_context->dirty_stats = TRUE;
         mutex_exit(&from_file_context->fsContext_mutex);
@@ -3577,7 +3577,7 @@ call_namei:
         decr_link_count(to_vp, ftx_handle);
         if (to_file_context->dir_stats.st_nlink > 0) {
             to_accessp = VTOA(to_vp);
-            mutex_lock(&to_file_context->fsContext_mutex);
+            mutex_enter(&to_file_context->fsContext_mutex);
             to_file_context->fs_flag |= MOD_CTIME;
             to_file_context->dirty_stats = TRUE;
             mutex_exit(&to_file_context->fsContext_mutex);
@@ -3602,7 +3602,7 @@ call_namei:
     /*
      * update the ctime and mtime fields of the to-directory
      */
-    mutex_lock( &to_dir_context->fsContext_mutex );
+    mutex_enter( &to_dir_context->fsContext_mutex );
     to_dir_context->fs_flag |= (MOD_CTIME | MOD_MTIME);
     to_dir_context->dirty_stats = TRUE;
     mutex_exit( &to_dir_context->fsContext_mutex );
@@ -3840,7 +3840,7 @@ decr_link_count(
     }
     if (file_context->dir_stats.st_nlink == 0) {
         rbf_delete(VTOA(vp), ftx_handle);
-        mutex_lock( &file_context->fsContext_mutex );
+        mutex_enter( &file_context->fsContext_mutex );
         file_context->fs_flag |= M_DELETE;
         mutex_exit( &file_context->fsContext_mutex );
     }
@@ -4029,7 +4029,7 @@ msfs_rmdir(
      * decr the parent directory's link count
      */
     par_context->dir_stats.st_nlink--;
-    mutex_lock( &par_context->fsContext_mutex );
+    mutex_enter( &par_context->fsContext_mutex );
     par_context->dirty_stats = TRUE;
     mutex_exit( &par_context->fsContext_mutex );
     reset_par = TRUE;
@@ -4085,7 +4085,7 @@ msfs_rmdir(
 
     rbf_delete(VTOA(rvp), ftx_handle );
 
-    mutex_lock( &rem_context->fsContext_mutex );
+    mutex_enter( &rem_context->fsContext_mutex );
     rem_context->fs_flag |= M_DELETE;
     mutex_exit( &rem_context->fsContext_mutex );
 
@@ -4110,7 +4110,7 @@ msfs_rmdir(
                          ndp,
                          ftx_handle);
     if (ret != EOK) {
-        mutex_lock( &rem_context->fsContext_mutex );
+        mutex_enter( &rem_context->fsContext_mutex );
         rem_context->fs_flag &= ~M_DELETE;
         mutex_exit( &rem_context->fsContext_mutex );
         fail_ftx = TRUE;
@@ -4313,7 +4313,7 @@ msfs_readlink(
                             uiop
                             );
         }
-        mutex_lock( &context_ptr->fsContext_mutex );
+        mutex_enter( &context_ptr->fsContext_mutex );
         context_ptr->dirty_stats = TRUE;
         context_ptr->fs_flag |= MOD_ATIME;
         mutex_exit( &context_ptr->fsContext_mutex );
@@ -4826,7 +4826,7 @@ msfsspec_read(
 
 
     cp = VTOC(vp);
-    mutex_lock( &cp->fsContext_mutex );
+    mutex_enter( &cp->fsContext_mutex );
     cp->fs_flag |= MOD_ATIME;
     cp->dirty_stats = TRUE;
     mutex_exit( &cp->fsContext_mutex );
@@ -4853,7 +4853,7 @@ msfsspec_write(
     NFS_FREEZE_LOCK(vp);
 
     cp = VTOC(vp);
-    mutex_lock( &cp->fsContext_mutex );
+    mutex_enter( &cp->fsContext_mutex );
     cp->fs_flag |= MOD_CTIME | MOD_MTIME;
     cp->dirty_stats = TRUE;
     mutex_exit( &cp->fsContext_mutex );
@@ -4973,7 +4973,7 @@ msfsspec_revoke(
                         bfap->refCnt++;
                         mutex_exit( &bfap->bfaLock );
                         fs_update_stats(vp, bfap, FtxNilFtxH, 0);
-                        mutex_lock( &bfap->bfaLock );
+                        mutex_enter( &bfap->bfaLock );
                         DEC_REFCNT( bfap );
                     }
                 }
@@ -5033,7 +5033,7 @@ msfsfifo_read(
 
 
     cp = VTOC(vp);
-    mutex_lock( &cp->fsContext_mutex );
+    mutex_enter( &cp->fsContext_mutex );
     cp->fs_flag |= MOD_ATIME;
     cp->dirty_stats = TRUE;
     mutex_exit( &cp->fsContext_mutex );
@@ -5059,7 +5059,7 @@ msfsfifo_write(
     NFS_FREEZE_LOCK(vp);
 
     cp = VTOC(vp);
-    mutex_lock( &cp->fsContext_mutex );
+    mutex_enter( &cp->fsContext_mutex );
     cp->fs_flag |= MOD_CTIME | MOD_MTIME;
     cp->dirty_stats = TRUE;
     mutex_exit( &cp->fsContext_mutex );
@@ -5210,7 +5210,7 @@ msfs_chown(
     }
 
     if (setctime == SET_CTIME) {
-        mutex_lock( &file_context->fsContext_mutex );
+        mutex_enter( &file_context->fsContext_mutex );
         file_context->fs_flag |= MOD_CTIME;
         file_context->dirty_stats = TRUE;
         mutex_exit( &file_context->fsContext_mutex );
@@ -5240,7 +5240,7 @@ msfs_chmod(
     /*
      * lock the in-memory stat structure
      */
-    mutex_lock( &file_context->fsContext_mutex );
+    mutex_enter( &file_context->fsContext_mutex );
 
     /*
      * must be owner or suser
@@ -5938,7 +5938,7 @@ msfs_setvlocks(
 
     FILESETSTAT( vp, msfs_setvlocks );
 
-    mutex_lock( &context_ptr->fsContext_mutex );
+    mutex_enter( &context_ptr->fsContext_mutex );
     VN_LOCK(vp);
 
     if ((context_ptr->dir_stats.advfs_st_mode & S_ISGID) &&

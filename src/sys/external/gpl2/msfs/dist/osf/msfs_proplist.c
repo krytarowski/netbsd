@@ -1214,7 +1214,7 @@ msfs_setproplist_int(
 
         if (setctime)
         {
-	    mutex_lock( &context_ptr->fsContext_mutex);
+	    mutex_enter( &context_ptr->fsContext_mutex);
   	    context_ptr->fs_flag |= MOD_CTIME;
     	    context_ptr->dirty_stats = TRUE;
 	    mutex_exit( &context_ptr->fsContext_mutex);
@@ -3221,7 +3221,7 @@ start:
   } while (!RECCUR_ISNIL(hdr)); /* match items in list */
 
   if (setctime == SET_CTIME) {
-      mutex_lock( &rem_context->fsContext_mutex);
+      mutex_enter( &rem_context->fsContext_mutex);
       rem_context->fs_flag |= MOD_CTIME;
       rem_context->dirty_stats = TRUE;
       mutex_exit( &rem_context->fsContext_mutex);
@@ -5065,7 +5065,7 @@ start:
   } while (!RECCUR_ISNIL(hdr)); /* match items in list */
 
   if (setctime == SET_CTIME) {
-      mutex_lock( &rem_context->fsContext_mutex);
+      mutex_enter( &rem_context->fsContext_mutex);
       rem_context->fs_flag |= MOD_CTIME;
       rem_context->dirty_stats = TRUE;
       mutex_exit( &rem_context->fsContext_mutex);

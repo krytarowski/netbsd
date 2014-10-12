@@ -440,7 +440,7 @@ fs_post_no_storage_msg( struct vnode *vp,
      * Post EVM event and write to syslog/console only
      * once every fs_full_threshold.
      */
-    mutex_lock(&(bfap->dmnP->mutex));
+    mutex_enter(&(bfap->dmnP->mutex));
     if ((bfap->dmnP->fs_full_time == 0) ||
         (time.tv_sec - bfap->dmnP->fs_full_time >= fs_full_threshold)) {
         bfap->dmnP->fs_full_time = time.tv_sec;
@@ -676,7 +676,7 @@ fs_write(
      * from starting until the flush has finished.
      */
     if ( bfap->dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS ) {
-        mutex_lock( &bfap->dmnP->mutex );
+        mutex_enter( &bfap->dmnP->mutex );
         if ( bfap->dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS ) {
             assert_wait((vm_offset_t)(&bfap->dmnP->dmnFlag), FALSE);
             mutex_exit( &bfap->dmnP->mutex );
@@ -836,7 +836,7 @@ _retry:
 
            if ( arp ) {
                 /* Remove active range */
-                mutex_lock(&bfap->actRangeLock);
+                mutex_enter(&bfap->actRangeLock);
                 MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
                 remove_actRange_from_list(bfap, arp);
                 mutex_exit(&bfap->actRangeLock);
@@ -925,7 +925,7 @@ _retry_append_range:
              * re-get the range.
              */
             if ( bfap->file_size < old_size ) {
-                mutex_lock(&bfap->actRangeLock);
+                mutex_enter(&bfap->actRangeLock);
                 remove_actRange_from_list(bfap, arp);
                 mutex_exit(&bfap->actRangeLock);
                 goto _retry_append_range;
@@ -1102,7 +1102,7 @@ _retry_append_range:
     	    }
 	
 	    if (arp) {
-		mutex_lock(&bfap->actRangeLock);
+		mutex_enter(&bfap->actRangeLock);
 		remove_actRange_from_list(bfap, arp);
 		mutex_exit(&bfap->actRangeLock);
 		ms_free(arp);
@@ -1555,7 +1555,7 @@ _retry_append_range:
      */
     if ( directIO && arp && 
          (uio->uio_rw != UIO_AIORW || uio->uio_iov[2].iov_len == 0) ) {
-        mutex_lock(&bfap->actRangeLock);
+        mutex_enter(&bfap->actRangeLock);
         remove_actRange_from_list(bfap, arp);
         mutex_exit(&bfap->actRangeLock);
         ms_free( arp );
@@ -1578,7 +1578,7 @@ _retry_append_range:
      */
     vp->v_lastr = page_to_write;
 
-    mutex_lock( &contextp->fsContext_mutex );
+    mutex_enter( &contextp->fsContext_mutex );
 
     /*
      * update advfs_st_size and advfs_st_mtime in the file's stat structure
@@ -1855,7 +1855,7 @@ _error:
 
     /* release active range unless AIO has already begun */
     if (arp && (uio->uio_rw != UIO_AIORW || uio->uio_iov[2].iov_len == 0)) {
-        mutex_lock(&bfap->actRangeLock);
+        mutex_enter(&bfap->actRangeLock);
         remove_actRange_from_list(bfap, arp);
         mutex_exit(&bfap->actRangeLock);
         ms_free( arp );
@@ -1970,7 +1970,7 @@ fs_update_times(struct vnode *vp, int attr_flags)
     struct fsContext *contextp;
     contextp = VTOC(vp);
 
-    mutex_lock( &contextp->fsContext_mutex );
+    mutex_enter( &contextp->fsContext_mutex );
     if(attr_flags & AT_MTIME)
         contextp->fs_flag |= MOD_MTIME;
     if(attr_flags & AT_ATIME)
@@ -2598,7 +2598,7 @@ EXIT:
      * active range when the I/O completes.
      */
     if ( !arp_passed_in && !asynch_io_started ) {
-        mutex_lock(&bfap->actRangeLock);
+        mutex_enter(&bfap->actRangeLock);
         MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
         mutex_exit(&bfap->actRangeLock);
@@ -3198,7 +3198,7 @@ fs_read(
      * from starting until the flush has finished.
      */
     if ( bfap->dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS ) {
-        mutex_lock( &bfap->dmnP->mutex );
+        mutex_enter( &bfap->dmnP->mutex );
         if ( bfap->dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS ) {
             assert_wait((vm_offset_t)(&bfap->dmnP->dmnFlag), FALSE);
             mutex_exit( &bfap->dmnP->mutex );
@@ -3264,7 +3264,7 @@ _retry_map:
          */
 
         if (!(ioflag & IO_NOSTATUPDATE)) {
-            mutex_lock(&contextp->fsContext_mutex);
+            mutex_enter(&contextp->fsContext_mutex);
             contextp->fs_flag |= MOD_ATIME;
             if (!(vp->v_mount->m_flag & M_NOATIMES))
                 contextp->dirty_stats = TRUE;
@@ -3684,7 +3684,7 @@ _retry_map:
      * update advfs_st_atime in the file's stat structure
      */
     if (!(ioflag & IO_NOSTATUPDATE)) {
-        mutex_lock( &contextp->fsContext_mutex );
+        mutex_enter( &contextp->fsContext_mutex );
         contextp->fs_flag |= MOD_ATIME;
         if (!(vp->v_mount->m_flag & M_NOATIMES)) {
             contextp->dirty_stats = TRUE;
@@ -4096,7 +4096,7 @@ EXIT:
      */
     if ( !asynch_io_started || ret != EOK ) {
         /* cleanup if error or synchronous I/O */
-        mutex_lock(&bfap->actRangeLock);
+        mutex_enter(&bfap->actRangeLock);
         MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
         mutex_exit(&bfap->actRangeLock);

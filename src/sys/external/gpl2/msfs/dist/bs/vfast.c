@@ -356,13 +356,13 @@ ss_move_file(
 
 #define INC_SSTHDCNT( _dmnP )  \
     /* increment the dmn vfast thread count */  \
-    mutex_lock( &(_dmnP)->ssDmnInfo.ssDmnLk );  \
+    mutex_enter( &(_dmnP)->ssDmnInfo.ssDmnLk );  \
     (_dmnP)->ssDmnInfo.ssDmnSSThdCnt++;  \
     mutex_exit( &(_dmnP)->ssDmnInfo.ssDmnLk );
 
 #define DEC_SSTHDCNT( _dmnP )  \
         /* decrement the dmn vfast thread count */  \
-        mutex_lock( &(_dmnP)->ssDmnInfo.ssDmnLk );  \
+        mutex_enter( &(_dmnP)->ssDmnInfo.ssDmnLk );  \
         (_dmnP)->ssDmnInfo.ssDmnSSThdCnt--;  \
         if ((_dmnP)->ssDmnInfo.ssDmnSSThdCnt == 0 &&  \
             (_dmnP)->ssDmnInfo.ssDmnSSWaiters)  \
@@ -478,7 +478,7 @@ ss_kern_stop()
             msgq_send_msg(ssBossQH, msg);
         }
 
-        mutex_lock(&ssStoppedMutex );
+        mutex_enter(&ssStoppedMutex );
         cv_wait( &ss_stopped_cv, &ssStoppedMutex );
         mutex_exit(&ssStoppedMutex );
 
@@ -625,7 +625,7 @@ ss_boss_thread( void )
     ss_queues_create();
 
     /* create list thread pool workers */
-    mutex_lock(&ssListTpool.plock);
+    mutex_enter(&ssListTpool.plock);
     ssListTpool.threadCnt =0;
     ssListTpool.shutdown  =FALSE;
     mutex_exit(&ssListTpool.plock);
@@ -635,14 +635,14 @@ ss_boss_thread( void )
             ss_queues_destroy();
             return;
         } else {
-            mutex_lock(&ssListTpool.plock);
+            mutex_enter(&ssListTpool.plock);
             ssListTpool.threadCnt++;
             mutex_exit(&ssListTpool.plock);
         }
     }
 
     /* create vfast work thread pool workers */
-    mutex_lock(&ssWorkTpool.plock);
+    mutex_enter(&ssWorkTpool.plock);
     ssWorkTpool.threadCnt =0;
     ssWorkTpool.shutdown  =FALSE;
     mutex_exit(&ssWorkTpool.plock);
@@ -652,7 +652,7 @@ ss_boss_thread( void )
             ss_queues_destroy();
             return;
         } else {
-            mutex_lock(&ssListTpool.plock);
+            mutex_enter(&ssListTpool.plock);
             ssWorkTpool.threadCnt++;
             mutex_exit(&ssListTpool.plock);
         }
@@ -683,7 +683,7 @@ ss_boss_thread( void )
         bmsg = (ssBossMsgT *)msgq_recv_msg( ssBossQH );
         switch ( bmsg->msgType ) {
             case SS_ADD_LIST_THREAD:
-                mutex_lock(&ssListTpool.plock);
+                mutex_enter(&ssListTpool.plock);
                 if(ssListTpool.threadCnt >= SS_max_list_thds) {
                     mutex_exit(&ssListTpool.plock);
                     break;
@@ -692,13 +692,13 @@ ss_boss_thread( void )
                 mutex_exit(&ssListTpool.plock);
                 /* Can't hold lock over kernel_thread call */
                 if (!kernel_thread(first_task,ss_list_thd_pool)) {
-                    mutex_lock(&ssListTpool.plock);
+                    mutex_enter(&ssListTpool.plock);
                     ssListTpool.threadCnt--;
                     mutex_exit(&ssListTpool.plock);
                 }
                 break;
             case SS_ADD_WORK_THREAD:
-                mutex_lock(&ssWorkTpool.plock);
+                mutex_enter(&ssWorkTpool.plock);
                 if(ssWorkTpool.threadCnt >= SS_max_work_thds) {
                     mutex_exit(&ssWorkTpool.plock);
                     break;
@@ -707,7 +707,7 @@ ss_boss_thread( void )
                 mutex_exit(&ssWorkTpool.plock);
                 /* Can't hold lock over kernel_thread call */
                 if (!kernel_thread(first_task,ss_work_thd_pool)) {
-                    mutex_lock(&ssWorkTpool.plock);
+                    mutex_enter(&ssWorkTpool.plock);
                     ssWorkTpool.threadCnt--;
                     mutex_exit(&ssWorkTpool.plock);
                 }
@@ -915,7 +915,7 @@ ss_work_thd_pool ( void )
         if(ssWorkTpool.shutdown == TRUE) {
             ssBossMsgT *bmsg=NULL;
             msgq_free_msg( ssWorkQH, msg );
-            mutex_lock(&ssWorkTpool.plock);
+            mutex_enter(&ssWorkTpool.plock);
             ssWorkTpool.threadCnt--;
             mutex_exit(&ssWorkTpool.plock);
             if(ssWorkTpool.threadCnt > 0) {
@@ -976,7 +976,7 @@ ss_list_thd_pool ( void )
 
             msgq_free_msg( ssListQH, msg );
 
-            mutex_lock(&ssListTpool.plock);
+            mutex_enter(&ssListTpool.plock);
             ssListTpool.threadCnt--;
             mutex_exit(&ssListTpool.plock);
             if(ssListTpool.threadCnt > 0) {
@@ -1094,7 +1094,7 @@ ss_adj_msgs_flow_rate()
      * vfast activated.  Also total up the number of msgs sent 
      * to all the active dmns.
      */
-    mutex_lock( &DmnTblMutex );
+    mutex_enter( &DmnTblMutex );
 
     if(DmnSentinelP == NULL) {
         /* test for if all domains are deactivated */
@@ -1131,7 +1131,7 @@ ss_adj_msgs_flow_rate()
             dmnP->ssDmnInfo.ssDmnListMsgDropCnt = 0;
         }
 
-        mutex_lock( &DmnTblMutex );
+        mutex_enter( &DmnTblMutex );
         --dmnP->dmnAccCnt;
         if (dmnP->dmnAccCnt == 0 && dmnP->dmnRefWaiters) {
             dmnP->dmnRefWaiters = 0;
@@ -1158,7 +1158,7 @@ ss_adj_msgs_flow_rate()
      * average to decrease their msg output.
      */
     /* Regrab the starting point and get a reference to it. */
-    mutex_lock( &DmnTblMutex );
+    mutex_enter( &DmnTblMutex );
     if(DmnSentinelP == NULL) {
         /* test for if all domains are deactivated */
         mutex_exit( &DmnTblMutex );
@@ -1225,7 +1225,7 @@ ss_adj_msgs_flow_rate()
         /* reset for next sample period */
         dmnP->ssDmnInfo.ssDmnListMsgSendCnt = 0; 
 
-        mutex_lock( &DmnTblMutex );
+        mutex_enter( &DmnTblMutex );
         --dmnP->dmnAccCnt;
         if (dmnP->dmnAccCnt == 0 && dmnP->dmnRefWaiters) {
             dmnP->dmnRefWaiters = 0;
@@ -1278,7 +1278,7 @@ ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
     struct fragfiles *ffileHeadp=NULL;
     struct fragfiles *ffileNextp=NULL;
 
-    mutex_lock( &DmnTblMutex );
+    mutex_enter( &DmnTblMutex );
     if(DmnSentinelP == NULL) {
         /* test for if all domains are deactivated */
         mutex_exit( &DmnTblMutex );
@@ -1431,7 +1431,7 @@ ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
         }
 
         /* MUST complete this section for each domain! */
-        mutex_lock( &DmnTblMutex );
+        mutex_enter( &DmnTblMutex );
         --dmnP->dmnAccCnt;
         if (dmnP->dmnAccCnt == 0 && dmnP->dmnRefWaiters) {
             dmnP->dmnRefWaiters = 0;
@@ -1562,7 +1562,7 @@ ss_dmn_deactivate(domainT *dmnP, int flag)
     MS_SMP_ASSERT(dmnP);
 
     if(flag == TRUE) {
-        mutex_lock( &dmnP->ssDmnInfo.ssDmnLk );
+        mutex_enter( &dmnP->ssDmnInfo.ssDmnLk );
     }
 
     /* Notify any threads working on a files of shutdown. This is 
@@ -1577,11 +1577,11 @@ ss_dmn_deactivate(domainT *dmnP, int flag)
             continue;
         }
 
-        mutex_lock( &vdp->ssVolInfo.ssVdMsgLk );
+        mutex_enter( &vdp->ssVolInfo.ssVdMsgLk );
         vdp->ssVolInfo.ssVdMsgState = SS_STOP;
         mutex_exit( &vdp->ssVolInfo.ssVdMsgLk );
 
-        mutex_lock( &vdp->ssVolInfo.ssVdMigLk );
+        mutex_enter( &vdp->ssVolInfo.ssVdMigLk );
         vdp->ssVolInfo.ssVdMigState = SS_ABORT;
         mutex_exit( &vdp->ssVolInfo.ssVdMigLk );
 
@@ -1707,7 +1707,7 @@ ss_change_state(char *domain_name,    /* in */
         RAISE_EXCEPTION(EOK);
     }
 
-    mutex_lock( &dmnP->ssDmnInfo.ssDmnLk );
+    mutex_enter( &dmnP->ssDmnInfo.ssDmnLk );
     ssDmnLocked = TRUE;
 
     /* if this is first time activating, record the First mount time*/
@@ -1857,7 +1857,7 @@ ss_init_dmnInfo(domainT *dmnP)
     dmnP->ssDmnInfo.ssReserved1              = 0;
     dmnP->ssDmnInfo.ssReserved2              = 0;
 
-    mutex_lock( &dmnP->ssDmnInfo.ssDmnHotLk );
+    mutex_enter( &dmnP->ssDmnInfo.ssDmnHotLk );
     dmnP->ssDmnInfo.ssDmnHotHdr.ssHotFwd =
           (struct ssHotEntry *) (&dmnP->ssDmnInfo.ssDmnHotHdr);
     dmnP->ssDmnInfo.ssDmnHotHdr.ssHotBwd =
@@ -1886,7 +1886,7 @@ ss_init_vd(vdT *vdp)
     mutex_init(&vdp->ssVolInfo.ssVdMsgLk, MUTEX_DEFAULT, IPL_NONE);
     mutex_init(&vdp->ssVolInfo.ssVdMigLk, MUTEX_DEFAULT, IPL_NONE);
     mutex_init(&vdp->ssVolInfo.ssFragLk, MUTEX_DEFAULT, IPL_NONE);
-    mutex_lock( &vdp->ssVolInfo.ssVdMigLk );
+    mutex_enter( &vdp->ssVolInfo.ssVdMigLk );
     cv_init( &vdp->ssVolInfo.ssContMig_cv );
     vdp->ssVolInfo.ssVdMigState = SS_MIG_IDLE;
     mutex_exit( &vdp->ssVolInfo.ssVdMigLk );
@@ -2334,13 +2334,13 @@ ss_chk_fragratio (
             listmsg->frag.xtntCnt = totXtnts;
             msgq_send_msg(ssListQH, listmsg);
         } else {
-            mutex_lock( &bfap->dmnP->ssDmnInfo.ssDmnLk );
+            mutex_enter( &bfap->dmnP->ssDmnInfo.ssDmnLk );
             bfap->dmnP->ssDmnInfo.ssDmnListMsgDropCnt++;
             mutex_exit( &bfap->dmnP->ssDmnInfo.ssDmnLk );
         }
     }
 
-    mutex_lock( &bfap->dmnP->ssDmnInfo.ssDmnLk );
+    mutex_enter( &bfap->dmnP->ssDmnInfo.ssDmnLk );
     bfap->dmnP->ssDmnInfo.ssDmnListMsgSendCnt++;
 #ifdef DEBUG
     bfap->dmnP->ssDmnInfo.ssDmnMsgSendAttmptCntFrag++;
@@ -2436,7 +2436,7 @@ ss_insert_frag_onto_list( vdIndexT vdi,
     fp->ssFragRatio   = fragRatio;
     fp->ssXtntCnt     = xtntCnt;
 
-    mutex_lock(&vdp->ssVolInfo.ssFragLk);
+    mutex_enter(&vdp->ssVolInfo.ssFragLk);
     ss_delete_from_frag_list(vdp, tag, bfSetId);
 
     /* insert this new entry into correct order */
@@ -2574,7 +2574,7 @@ ss_select_frag_file(vdT *vdp)           /* in - vd */
     ssFragHdrT   *fhp;
 
     MS_SMP_ASSERT(vdp);
-    mutex_lock(&vdp->ssVolInfo.ssFragLk);
+    mutex_enter(&vdp->ssVolInfo.ssFragLk);
     fhp = &vdp->ssVolInfo.ssFragHdr;
     MS_SMP_ASSERT(fhp);
 
@@ -2611,7 +2611,7 @@ ss_dealloc_frag_list(vdT *vdp)           /* in */
     ssFragLLT *currp, *nextp;  /* entry pointer */
 
     MS_SMP_ASSERT(vdp);
-    mutex_lock(&vdp->ssVolInfo.ssFragLk);
+    mutex_enter(&vdp->ssVolInfo.ssFragLk);
     fhp = &vdp->ssVolInfo.ssFragHdr;
     MS_SMP_ASSERT(fhp);
 
@@ -2823,7 +2823,7 @@ ss_snd_hot (
                listmsg->bfSetId = bfSetId;
                msgq_send_msg(ssListQH, listmsg);
            } else {
-               mutex_lock( &bfap->dmnP->ssDmnInfo.ssDmnLk );
+               mutex_enter( &bfap->dmnP->ssDmnInfo.ssDmnLk );
                bfap->dmnP->ssDmnInfo.ssDmnListMsgDropCnt++;
                mutex_exit( &bfap->dmnP->ssDmnInfo.ssDmnLk );
            }
@@ -2850,7 +2850,7 @@ ss_snd_hot (
                 msgq_send_msg(ssListQH, listmsg);
 
             } else {
-                mutex_lock( &bfap->dmnP->ssDmnInfo.ssDmnLk );
+                mutex_enter( &bfap->dmnP->ssDmnInfo.ssDmnLk );
                 bfap->dmnP->ssDmnInfo.ssDmnListMsgDropCnt++;
                 mutex_exit( &bfap->dmnP->ssDmnInfo.ssDmnLk );
             }
@@ -2865,7 +2865,7 @@ ss_snd_hot (
      * many messages so that the number can be reduced on the correct
      * domain so that the end result is less messages sent to the q.
      */
-    mutex_lock( &bfap->dmnP->ssDmnInfo.ssDmnLk );
+    mutex_enter( &bfap->dmnP->ssDmnInfo.ssDmnLk );
     bfap->dmnP->ssDmnInfo.ssDmnListMsgSendCnt++;
     mutex_exit( &bfap->dmnP->ssDmnInfo.ssDmnLk );
     return;
@@ -3018,7 +3018,7 @@ ss_insert_hot_list(
         goto _cleanup;
     }
 
-    mutex_lock( &dmnP->ssDmnInfo.ssDmnHotLk );
+    mutex_enter( &dmnP->ssDmnInfo.ssDmnHotLk );
     hhp = &dmnP->ssDmnInfo.ssDmnHotHdr;
     currp = hhp->ssHotFwd;
 
@@ -3194,7 +3194,7 @@ ss_rmvol_from_hotlst( domainT *dmnP,   /* in */
      * any state.
      */
     MS_SMP_ASSERT(dmnP);
-    mutex_lock( &dmnP->ssDmnInfo.ssDmnHotLk );
+    mutex_enter( &dmnP->ssDmnInfo.ssDmnHotLk );
     hhp = &dmnP->ssDmnInfo.ssDmnHotHdr;
 
     /* check for a null list first! */
@@ -3287,7 +3287,7 @@ ss_del_from_hot_list(ssHotLLT *hp)
         goto _cleanup;
     } 
 
-    mutex_lock( &dmnP->ssDmnInfo.ssDmnHotLk );
+    mutex_enter( &dmnP->ssDmnInfo.ssDmnHotLk );
     hhp = &dmnP->ssDmnInfo.ssDmnHotHdr;
     currp = hhp->ssHotFwd;
 
@@ -3350,7 +3350,7 @@ ss_chk_hot_list ( domainT  *dmnP,       /* in */
     ssHotLLT  *hp=NULL;
     struct timeval new_time;
 
-    mutex_lock( &dmnP->ssDmnInfo.ssDmnHotLk );
+    mutex_enter( &dmnP->ssDmnInfo.ssDmnHotLk );
     hhp = &dmnP->ssDmnInfo.ssDmnHotHdr;
     MS_SMP_ASSERT(hhp);
     MS_SMP_ASSERT(flag != 0);
@@ -3455,7 +3455,7 @@ ss_dealloc_hot(domainT *dmnP)  /* in - pointer to header for list */
     ssHotHdrT *hhp;
     ssHotLLT *currp, *nextp;  /* entry pointer */
 
-    mutex_lock( &dmnP->ssDmnInfo.ssDmnHotLk );
+    mutex_enter( &dmnP->ssDmnInfo.ssDmnHotLk );
     hhp = &dmnP->ssDmnInfo.ssDmnHotHdr;
     MS_SMP_ASSERT(hhp);
     currp = hhp->ssHotFwd;
@@ -3514,7 +3514,7 @@ ss_startios(vdT *vdp)
          vdp->dmnP->ssDmnInfo.ssDmnDefragment == TRUE ||
          vdp->dmnP->ssDmnInfo.ssDmnBalance == TRUE) ) {
 
-        mutex_lock( &vdp->ssVolInfo.ssVdMsgLk );
+        mutex_enter( &vdp->ssVolInfo.ssVdMsgLk );
         if((vdp->ssVolInfo.ssVdMsgState == SS_MSG_IDLE) &&
            (vdp->ssVolInfo.ssFragHdr.ssFragListCnt)) {
             if((workmsg = (ssWorkMsgT *)msgq_alloc_msg(ssWorkQH)) != NULL) {
@@ -3567,7 +3567,7 @@ ss_block_and_wait(vdT *vdp)
      * vfast is being stopped before parking. 
      */
     lock_read(&SSLock);
-    mutex_lock( &vdp->ssVolInfo.ssVdMigLk );
+    mutex_enter( &vdp->ssVolInfo.ssVdMigLk );
     if((vdp->ssVolInfo.ssVdMigState == SS_ABORT) ||
        (SS_is_running == FALSE) ||
        (vdp->dmnP->ssDmnInfo.ssDmnState != SS_ACTIVATED) ) {
@@ -3654,7 +3654,7 @@ ss_open_file(
      * migrates it). msfs_unmount & advfs_mountfs wait if ssDmnSSThdCnt
      * is non zero. ss_close_file decrements ssDmnSSThdCnt and wakes a waiter.
      */
-    mutex_lock( &bfSetp->dmnP->mutex );
+    mutex_enter( &bfSetp->dmnP->mutex );
     if ( bfSetp->state == BFS_BUSY ) {
         mutex_exit( &bfSetp->dmnP->mutex );
         RAISE_EXCEPTION (E_NO_SUCH_BF_SET);
@@ -3815,7 +3815,7 @@ ss_move_file( vdIndexT vdi,      /* in */
     /* Potentially the thread works on vd for a long time,
      * Increment the volume vfast thread count
      */
-    mutex_lock( &svdp->ssVolInfo.ssVdMigLk );
+    mutex_enter( &svdp->ssVolInfo.ssVdMigLk );
     svdp->ssVolInfo.ssVdSSThdCnt++;
     mutex_exit( &svdp->ssVolInfo.ssVdMigLk );
 
@@ -3824,7 +3824,7 @@ ss_move_file( vdIndexT vdi,      /* in */
      * need moved. If no hot file is targeted at this vd default 
      * to the frag list check below.
      */
-    mutex_lock( &dmnP->ssDmnInfo.ssDmnLk );
+    mutex_enter( &dmnP->ssDmnInfo.ssDmnLk );
     if((dmnP->ssDmnInfo.ssDmnSmartPlace) &&
        (dmnP->ssDmnInfo.ssDmnHotWorking == FALSE) &&
        (!BS_BFTAG_EQL( svdp->ssVolInfo.ssVdHotTag, NilBfTag ))) {
@@ -3876,7 +3876,7 @@ ss_move_file( vdIndexT vdi,      /* in */
          */
         svdp->ssVolInfo.ssVdHotTag = NilBfTag;
         svdp->ssVolInfo.ssVdHotBfSetId = nilBfSetId;
-        mutex_lock( &dmnP->ssDmnInfo.ssDmnLk ); 
+        mutex_enter( &dmnP->ssDmnInfo.ssDmnLk ); 
         dmnP->ssDmnInfo.ssDmnHotWorking = FALSE;
         mutex_exit( &dmnP->ssDmnInfo.ssDmnLk );
         dmnP->ssDmnInfo.ssDmnHotPlaced = FALSE;
@@ -3900,7 +3900,7 @@ ss_move_file( vdIndexT vdi,      /* in */
          * will simply cause the list threads to put the entry back 
          * on the list.
          */
-        mutex_lock(&svdp->ssVolInfo.ssFragLk);
+        mutex_enter(&svdp->ssVolInfo.ssFragLk);
         ss_delete_from_frag_list(svdp, filetag, bfSetId);
         mutex_exit(&svdp->ssVolInfo.ssFragLk);
 
@@ -3957,7 +3957,7 @@ HANDLE_EXCEPTION:
         /* reset State to IDLE so that more messages can wake
          * up threads
          */
-        mutex_lock( &svdp->ssVolInfo.ssVdMsgLk );
+        mutex_enter( &svdp->ssVolInfo.ssVdMsgLk );
         if(svdp->ssVolInfo.ssVdMsgState != SS_STOP)
             svdp->ssVolInfo.ssVdMsgState = SS_MSG_IDLE;
         mutex_exit( &svdp->ssVolInfo.ssVdMsgLk );
@@ -3975,7 +3975,7 @@ HANDLE_EXCEPTION:
         }
 
         /* decrement the volume vfast thread count */
-        mutex_lock( &svdp->ssVolInfo.ssVdMigLk );
+        mutex_enter( &svdp->ssVolInfo.ssVdMigLk );
         svdp->ssVolInfo.ssVdSSThdCnt--;
         if (svdp->ssVolInfo.ssVdSSThdCnt == 0 &&
             svdp->ssVolInfo.ssVdSSWaiters) {
@@ -4670,7 +4670,7 @@ ss_vd_migrate( bfTagT   filetag,
     vdRefed = TRUE;
 
     /* Wait for any other threads to complete before continuing */
-    mutex_lock( &dvdp->ssVolInfo.ssVdMigLk );
+    mutex_enter( &dvdp->ssVolInfo.ssVdMigLk );
     dvdp->ssVolInfo.ssVdSSThdCnt++;    /* Potentially held for a long time */
     while ((dvdp->ssVolInfo.ssVdMigState == SS_PROCESSING) ||
            (dvdp->ssVolInfo.ssVdMigState == SS_PARKED)) {
@@ -4857,7 +4857,7 @@ ss_vd_migrate( bfTagT   filetag,
         if(srcPageOffset >= xmEndPage) {
             /* we are done with the file */
             if(wholeFile) {
-                mutex_lock( &dvdp->dmnP->ssDmnInfo.ssDmnLk );
+                mutex_enter( &dvdp->dmnP->ssDmnInfo.ssDmnLk );
                 dvdp->dmnP->ssDmnInfo.ssFilesDefraged++;
                 mutex_exit( &dvdp->dmnP->ssDmnInfo.ssDmnLk );
 
@@ -4873,12 +4873,12 @@ ss_vd_migrate( bfTagT   filetag,
 
                 if(alloc_hint == BS_ALLOC_MIG_SINGLEXTNT) {
                     /* record hot file move stat here */
-                    mutex_lock( &dvdp->dmnP->ssDmnInfo.ssDmnLk );
+                    mutex_enter( &dvdp->dmnP->ssDmnInfo.ssDmnLk );
                     dvdp->dmnP->ssDmnInfo.ssFilesIOBal++;
                     mutex_exit( &dvdp->dmnP->ssDmnInfo.ssDmnLk );
                 }
             }
-            mutex_lock( &dvdp->dmnP->ssDmnInfo.ssDmnLk );
+            mutex_enter( &dvdp->dmnP->ssDmnInfo.ssDmnLk );
             dvdp->dmnP->ssDmnInfo.ssExtentsConsol += extentCnt;
             mutex_exit( &dvdp->dmnP->ssDmnInfo.ssDmnLk );
 
@@ -4925,7 +4925,7 @@ HANDLE_EXCEPTION:
 
         /* delete entry from list, if there */
         if(!BS_BFS_EQL(bfSetId, nilBfSetId)) {
-            mutex_lock(&dvdp->ssVolInfo.ssFragLk);
+            mutex_enter(&dvdp->ssVolInfo.ssFragLk);
             ss_delete_from_frag_list(dvdp, filetag, bfSetId);
             mutex_exit(&dvdp->ssVolInfo.ssFragLk);
         }
@@ -4981,7 +4981,7 @@ HANDLE_EXCEPTION:
         /* unlock free space */
         sbm_lock_unlock_range (dvdp, 0, 0);
 
-        mutex_lock( &dvdp->ssVolInfo.ssVdMigLk );
+        mutex_enter( &dvdp->ssVolInfo.ssVdMigLk );
         /* reset State to IDLE and wake up waiting threads */
         if(dvdp->ssVolInfo.ssVdMigState != SS_ABORT)
                 dvdp->ssVolInfo.ssVdMigState = SS_MIG_IDLE;
@@ -4990,7 +4990,7 @@ HANDLE_EXCEPTION:
         cv_broadcast (&dvdp->ssVolInfo.ssContMig_cv);
 
         /* decrement the vd vfast thread count */
-        mutex_lock( &dvdp->ssVolInfo.ssVdMigLk );
+        mutex_enter( &dvdp->ssVolInfo.ssVdMigLk );
         dvdp->ssVolInfo.ssVdSSThdCnt--;
         if (dvdp->ssVolInfo.ssVdSSThdCnt == 0 &&
             dvdp->ssVolInfo.ssVdSSWaiters) {
@@ -5434,7 +5434,7 @@ ss_find_hot_target_vd(domainT *dmnP,         /* in */
 
     /* see if there is any work - keep this below sc_valid_vd for lock hier */
     TIME_READ(curr_time);
-    mutex_lock( &dmnP->ssDmnInfo.ssDmnHotLk );
+    mutex_enter( &dmnP->ssDmnInfo.ssDmnHotLk );
     hot_lock_taken = TRUE;
     hhp = &dmnP->ssDmnInfo.ssDmnHotHdr;
     if (( hhp->ssHotListCnt == 0)  || 

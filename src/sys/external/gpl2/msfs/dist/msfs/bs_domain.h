@@ -199,7 +199,7 @@ typedef struct ftxTblD {
  *      bfsQueueT *queue = &dmnp->bfSetHead;
  *      bfsQueueT *entry = &bfSetp->bfSetList;
  *      ...
- *      mutex_lock( &dmnp->mutex );
+ *      mutex_enter( &dmnp->mutex );
  *      BFSET_DMN_INSQ( dmnp, queue, entry );
  *      mutex_exit( &dmnp->mutex );
  *
@@ -209,7 +209,7 @@ typedef struct ftxTblD {
  *      bfsQueueT *queue = dmnp->bfSetHead.bfsQbck;
  *      bfsQueueT *entry = &bfSetp->bfSetList;
  *      ...
- *      mutex_lock( &dmnp->mutex );
+ *      mutex_enter( &dmnp->mutex );
  *      BFSET_DMN_INSQ( dmnp, queue, entry );
  *      mutex_exit( &dmnp->mutex );
  *
@@ -217,7 +217,7 @@ typedef struct ftxTblD {
  *      bfSetT *bfSetp;
  *      bfsQueueT *entry = &bfSetp->bfSetList;
  *      ...
- *      mutex_lock( &dmnp->mutex );
+ *      mutex_enter( &dmnp->mutex );
  *      BFSET_DMN_REMQ( dmnp, entry );
  *      mutex_exit( &dmnp->mutex );
  *
@@ -232,7 +232,7 @@ typedef struct ftxTblD {
  *      bfSetT *bfSetp;
  *      bfsQueueT *entry = dmnp->bfSetHead.bfsQfwd;
  *      ...
- *      mutex_lock( &dmnp->mutex );
+ *      mutex_enter( &dmnp->mutex );
  *      while( entry != &dmnp->bfSetHead ) {
  *          bfSetp = BFSET_QUEUE_TO_BFSETP( entry );
  *          ...do not do complex tasks holding the dmnp->mutex...
@@ -245,7 +245,7 @@ typedef struct ftxTblD {
  *      bfSetT *bfSetp;
  *      bfsQueueT *entry = dmnp->bfSetHead.bfsQbck;
  *      ...
- *      mutex_lock( &dmnp->mutex );
+ *      mutex_enter( &dmnp->mutex );
  *      while( entry != &dmnp->bfSetHead ) {
  *          bfSetp = BFSET_QUEUE_TO_BFSETP( entry );
  *          ...do not do complex tasks holding the dmnp->mutex...

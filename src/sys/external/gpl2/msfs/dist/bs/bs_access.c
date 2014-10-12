@@ -309,7 +309,7 @@ init_access(bfAccessT *bfap)
     mutex_init(&bfap->bfIoLock, MUTEX_DEFAULT, IPL_NONE);
     mutex_init(&bfap->bfaLock, MUTEX_DEFAULT, IPL_NONE);
     mutex_init(&bfap->actRangeLock, MUTEX_DEFAULT, IPL_NONE);
-    mutex_lock(&bfap->bfaLock);
+    mutex_enter(&bfap->bfaLock);
     lk_init( &bfap->stateLk, &bfap->bfaLock, LKT_STATE, 0, LKU_BF_STATE );
     bfap->stateLk.state = ACC_INVALID;
     ftx_lock_init( &bfap->xtntMap_lk,
@@ -375,7 +375,7 @@ init_access(bfAccessT *bfap)
      * use the ADD_ACC_FREELIST() macro because we also need
      * to increment NumAccess.
      */
-    mutex_lock(&BfAccessFreeLock);
+    mutex_enter(&BfAccessFreeLock);
     MS_SMP_ASSERT(FreeAcc.freeFwd);
     bfap->freeBwd = (bfAccessT *)&FreeAcc;
     bfap->freeFwd = FreeAcc.freeFwd;
@@ -445,7 +445,7 @@ cleanup_closed_list(clupClosedListTypeT clean_type)
     int ClosedAccCleanInProgress = 0;
     int ClosedAccCleanStatsInProgress = 0;
 
-    mutex_lock(&BfAccessFreeLock);
+    mutex_enter(&BfAccessFreeLock);
 
     switch (clean_type) {
         case CLEANUP_ANY:
@@ -510,7 +510,7 @@ _retry:
                 if (mutex_tryenter(&bfap->bfIoLock.mutex)) {
                     mutex_exit(&BfAccessFreeLock);
                     check_mv_bfap_to_free(bfap);
-                    mutex_lock(&BfAccessFreeLock);
+                    mutex_enter(&BfAccessFreeLock);
                     mutex_exit(&bfap->bfIoLock);
                 }
                 mutex_exit(&bfap->bfaLock);
@@ -564,7 +564,7 @@ _retry:
             if (mutex_tryenter(&bfap->bfIoLock.mutex)) {
                 mutex_exit(&BfAccessFreeLock);
                 check_mv_bfap_to_free(bfap);
-                mutex_lock(&BfAccessFreeLock);
+                mutex_enter(&BfAccessFreeLock);
                 mutex_exit(&bfap->bfIoLock);
             }
 
@@ -655,7 +655,7 @@ _retry:
                     assert_wait_mesg_timo(NULL, FALSE, "AdvFS delay", 1);
                     thread_block();
                 }
-                mutex_lock(&BfAccessFreeLock);
+                mutex_enter(&BfAccessFreeLock);
                 break;
             } else {
                 cleanup_saved_stats_processed++;
@@ -663,7 +663,7 @@ _retry:
                 bfap->saved_stats = NULL;
                 DEC_REFCNT(bfap);
                 mutex_exit(&bfap->bfaLock);
-                mutex_lock(&BfAccessFreeLock);
+                mutex_enter(&BfAccessFreeLock);
             }
 
             /* Be careful we don't walk off the list; this bfap may no
@@ -706,7 +706,7 @@ _retry:
                 mutex_exit(&bfap->bfaLock);
                 vgone(vp, VX_NOSLEEP, 0);
                 VN_UNLOCK(vp);
-                mutex_lock(&BfAccessFreeLock);
+                mutex_enter(&BfAccessFreeLock);
             } else {
                 mutex_exit(&bfap->bfaLock);
                 VN_UNLOCK(vp);
@@ -740,11 +740,11 @@ _retry:
             /* Don't relock FreeLock until after DEC_REFCNT since it will be
              * seized there when moving bfap to free list.
              */
-            mutex_lock(&bfap->bfaLock);
+            mutex_enter(&bfap->bfaLock);
             DEC_REFCNT(bfap);
             mutex_exit(&bfap->bfaLock);
             vrele(vp);
-            mutex_lock(&BfAccessFreeLock);
+            mutex_enter(&BfAccessFreeLock);
 
             if (ret == EWOULDBLOCK) {
                 /* All ftx slots used up; stop processing and wake waiters */
@@ -798,7 +798,7 @@ _retry:
             mutex_exit(&BfAccessFreeLock);
             assert_wait_mesg_timo(NULL, FALSE, "AdvFS delay", 1);
             thread_block();
-            mutex_lock(&BfAccessFreeLock);
+            mutex_enter(&BfAccessFreeLock);
 
             goto _retry;
         }
@@ -861,7 +861,7 @@ bfs_flush_dirty_stats(bfSetT *bfSetp,
     struct vnode *vp;
     
     
-    mutex_lock(&bfSetp->accessChainLock);
+    mutex_enter(&bfSetp->accessChainLock);
 
 restart:
 
@@ -877,7 +877,7 @@ restart:
             continue;
         }
                            
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         state = lk_get_state(bfap->stateLk);
         
         MS_SMP_ASSERT(state != ACC_INIT_TRANS);
@@ -899,17 +899,17 @@ restart:
             if (!vget(vp)) {
                 /* Update stats and (hopefully) move to freelist in DEC_REFCNT() */
                 RM_ACC_LIST(bfap);
-                mutex_lock(&bfap->bfaLock);
+                mutex_enter(&bfap->bfaLock);
                 bfap->refCnt++;
                 mutex_exit(&bfap->bfaLock);
 
                 ret = fs_update_stats(vp, bfap, ftxH, 0);
 
-                mutex_lock(&bfap->bfaLock);
+                mutex_enter(&bfap->bfaLock);
                 DEC_REFCNT(bfap);
                 mutex_exit(&bfap->bfaLock);
                 vrele(vp);
-                mutex_lock(&bfSetp->accessChainLock);
+                mutex_enter(&bfSetp->accessChainLock);
                 bfap = nextp;
                 if ( bfap == (bfAccessT*)&bfSetp->accessFwd ) {
                     break;
@@ -919,7 +919,7 @@ restart:
                 }
                 continue;
             }
-            mutex_lock(&bfSetp->accessChainLock);
+            mutex_enter(&bfSetp->accessChainLock);
              
         } 
                 
@@ -945,7 +945,7 @@ restart:
              * ClosedAcc.saved_stats_len).
              */
 
-            mutex_lock(&bfap->bfaLock);
+            mutex_enter(&bfap->bfaLock);
             RM_ACC_LIST(bfap);        /* take off closed list */
             bfap->refCnt++;
 
@@ -961,11 +961,11 @@ restart:
             ret = fs_flush_saved_stats(bfap, 0, ftxH);
             mutex_exit(&bfap->bfaLock);
             ms_free( bfap->saved_stats );
-            mutex_lock(&bfap->bfaLock);
+            mutex_enter(&bfap->bfaLock);
             bfap->saved_stats = NULL;
             DEC_REFCNT(bfap);
             mutex_exit(&bfap->bfaLock);
-            mutex_lock(&bfSetp->accessChainLock);
+            mutex_enter(&bfSetp->accessChainLock);
             bfap = nextp;
             if ( bfap == (bfAccessT*)&bfSetp->accessFwd ) {
                 break;
@@ -1027,7 +1027,7 @@ get_free_acc(int *retry,        /* In/Out - Retry or error status */
      * being subverted here.  Also, this is the only place in this routine
      * that actually returns a bfap.
      */
-    mutex_lock(&BfAccessFreeLock);
+    mutex_enter(&BfAccessFreeLock);
     bfap = FreeAcc.freeFwd;
     while( bfap != (bfAccessT *)&FreeAcc ) {
 
@@ -1147,7 +1147,7 @@ get_free_acc(int *retry,        /* In/Out - Retry or error status */
         assert_wait((vm_offset_t)(&BfapAllocInProgress), FALSE);
         mutex_exit(&BfAccessFreeLock);
         thread_block();
-        mutex_lock(&BfAccessFreeLock);
+        mutex_enter(&BfAccessFreeLock);
     }
 
     /*
@@ -1291,7 +1291,7 @@ restart:
                * regular files will have only one tag match per hash bucket.
                */
             {
-                mutex_lock(&findBfap->bfaLock);
+                mutex_enter(&findBfap->bfaLock);
                 MS_SMP_ASSERT( (BS_BFTAG_EQL(findBfap->tag, tag)) &&
                                findBfap->bfSetp == bfSetp );
                 if (lk_get_state(findBfap->stateLk) == ACC_RECYCLE) {
@@ -1335,7 +1335,7 @@ restart:
                 if ( ! BFSET_VALID(bfSetp) ) break;
                 if (BS_BFS_EQL( bfSetp->bfSetId,
                                  ((bfSetT *)findBfap->bfSetp)->bfSetId )) {
-                    mutex_lock(&findBfap->bfaLock);
+                    mutex_enter(&findBfap->bfaLock);
                     MS_SMP_ASSERT( (BS_BFTAG_EQL(findBfap->tag, tag)) &&
                                    findBfap->bfSetp == bfSetp );
                     if (lk_get_state(findBfap->stateLk) == ACC_RECYCLE) {
@@ -1397,7 +1397,7 @@ access_invalidate(struct bfSet *bfSetp)
 
 start:
 
-    mutex_lock(&bfSetp->accessChainLock);
+    mutex_enter(&bfSetp->accessChainLock);
     for (bfap = bfSetp->accessFwd;
          bfap != (bfAccessT *)(&bfSetp->accessFwd);
          bfap = nextbfap) {
@@ -1406,7 +1406,7 @@ start:
         /*
          * Lock the access structure.
          */
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         MS_SMP_ASSERT(bfap->bfSetp == bfSetp);
 
         /*
@@ -1500,7 +1500,7 @@ start:
     {
         bfap=nextbfap;
         BS_BFAH_LOCK(bfap->hashlinks.dh_key,NULL);
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         if( bfap->hashlinks.dh_links.dh_next != NULL ) /* you just never know */
         {
             BS_BFAH_REMOVE(bfap,FALSE);
@@ -1792,7 +1792,7 @@ bs_init_area()
     /*
      * Initialize the free list and the closed list.
      */
-    mutex_lock( &BfAccessFreeLock );
+    mutex_enter( &BfAccessFreeLock );
     FreeAcc.freeFwd = FreeAcc.freeBwd = (bfAccessT *)&FreeAcc;
     FreeAcc.len = 0;
     ClosedAcc.freeFwd = ClosedAcc.freeBwd = (bfAccessT *)&ClosedAcc;
@@ -2116,7 +2116,7 @@ bs_insmntque(
          * Synchronize with other bs_insmntque's & open/close using
          * ACC_INIT_TRANS (this comment for entire block)
          */
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
 
         /*
          * Ignore ACC_FTX_TRANS if we are the creator
@@ -2149,7 +2149,7 @@ bs_insmntque(
         /*
          * Restore previous state
          */
-        mutex_lock( &bfap->bfaLock );
+        mutex_enter( &bfap->bfaLock );
         if ( bfaccState != lk_get_state( bfap->stateLk) )
         {
             unlkAction = lk_set_state( &bfap->stateLk, bfaccState );
@@ -2475,7 +2475,7 @@ retry_clu_clone_access:
            (!got_clu_clone_vnode)) {
             mutex_exit(&bfap->bfaLock);
             sts = getnewvnode(VT_MSFS, &msfs_vnodeops, &vp);
-            mutex_lock(&bfap->bfaLock);
+            mutex_enter(&bfap->bfaLock);
             MS_SMP_ASSERT(bfap->refCnt > 0);
             MS_SMP_ASSERT(BS_BFTAG_EQL(tag, bfap->tag));
             MS_SMP_ASSERT(bfSetp == bfap->bfSetp);
@@ -2601,7 +2601,7 @@ retry_clu_clone_access:
            (!got_clu_clone_vnode)) {
             mutex_exit(&bfap->bfaLock);
             sts = getnewvnode(VT_MSFS, &msfs_vnodeops, &vp);
-            mutex_lock(&bfap->bfaLock);
+            mutex_enter(&bfap->bfaLock);
             MS_SMP_ASSERT(bfap->refCnt > 0);
             MS_SMP_ASSERT(BS_BFTAG_EQL(tag, bfap->tag));
             MS_SMP_ASSERT(bfSetp == bfap->bfSetp);
@@ -2768,7 +2768,7 @@ retry_clu_clone_access:
             }
         }
 
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
 
         /*
          * At this point, the bfAccess structure has been successfully
@@ -2918,7 +2918,7 @@ retry_clu_clone_access:
                     vp = *fsvp;
                 }
                 sts = get_n_setup_new_vnode( bfap, bfSetp, &vp );
-		mutex_lock(&bfap->bfaLock);
+		mutex_enter(&bfap->bfaLock);
                 if ( sts != EOK ) {
                     /*
                      * Could not get vnode.  Return system error.
@@ -3047,7 +3047,7 @@ retry_clu_clone_access:
                      */
                     mutex_exit(&bfap->bfaLock);
                     vrele(*fsvp);
-                    mutex_lock(&bfap->bfaLock);
+                    mutex_enter(&bfap->bfaLock);
                 }
             }
         }
@@ -3105,7 +3105,7 @@ retry_clu_clone_access:
                  */
                 bfAccessT *orgBfap = bfap->origAccp;
 
-                mutex_lock(&orgBfap->bfaLock);
+                mutex_enter(&orgBfap->bfaLock);
                 orgBfap->refCnt--;
                 if ( orgBfap->refCnt <= 0 ) {
                     ADVFS_SAD0( "orgBfap->refCnt <= 0" );
@@ -3210,7 +3210,7 @@ err_vrele:
 err_setinvalid:
 
     BS_BFAH_LOCK(bfap->hashlinks.dh_key, NULL);
-    mutex_lock(&bfap->bfaLock);
+    mutex_enter(&bfap->bfaLock);
     unlkAction = lk_set_state( &bfap->stateLk, ACC_INVALID );
 
     /* If entry was on a hash list, remove it.
@@ -3239,7 +3239,7 @@ err_setinvalid:
         bfap->bfObj->vu_object.ob_ref_count -= 1;
         mutex_exit(&bfap->bfaLock);
         ubc_object_free(bfap->bfObj);
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         bfap->bfObj = NULL;
     }
     bfap->bfVp = NULL;
@@ -3570,7 +3570,7 @@ lookup:
         msfs_flush_and_invalidate(bfap, INVALIDATE_ALL | INVALIDATE_QUOTA_FILES);
         bfap->bfObj->vu_object.ob_ref_count -= 1;
         ubc_object_free(bfap->bfObj);
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         bfap->bfObj = NULL;
         bfap->mapped = FALSE;
     }
@@ -3625,7 +3625,7 @@ lookup:
      * has been removed from all lists and is ACC_INVALID. We no
      * longer need the bfalock until we place it back on a list.
      */
-    mutex_lock(&bfap->bfaLock);
+    mutex_enter(&bfap->bfaLock);
     lk_signal(lk_set_state(&bfap->stateLk, ACC_INVALID), &bfap->stateLk);
     mutex_exit(&bfap->bfaLock);
 
@@ -3699,7 +3699,7 @@ lookup:
              * bfap->bfaLock has been dropped above. We need to get it before
              * moving the bfap to the free list.
              */
-            mutex_lock(&bfap->bfaLock);
+            mutex_enter(&bfap->bfaLock);
             ADD_ACC_FREELIST(bfap);
             mutex_exit(&bfap->bfaLock);
 
@@ -3924,10 +3924,10 @@ bs_close_one (
                 ss_chk_fragratio(bfap);
         }
 
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         fragFlag = fs_quick_frag_test (bfap);
     } else
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
 
     /* We now will allow the file to be fragged or trunced from
      * MSFS_INACTIVE callers even if the access cnt is > 1. This is
@@ -4061,7 +4061,7 @@ bs_close_one (
     /*
      *There is no need to take the migTruncLk of anything on a clone.
      */
-    mutex_lock(&bfap->bfaLock);
+    mutex_enter(&bfap->bfaLock);
 
     /*
      * Wait until the access struct is out of transition.
@@ -4302,7 +4302,7 @@ bs_close_one (
         mig_trunc_lock = FALSE;
     }
 
-    mutex_lock(&bfap->bfaLock);
+    mutex_enter(&bfap->bfaLock);
     lk_signal( lk_set_state (&(bfap->stateLk), prevState), &bfap->stateLk );
     mutex_exit(&bfap->bfaLock);
 
@@ -4363,14 +4363,14 @@ bs_close_one (
         ss_chk_fragratio(bfap);
     }
 
-    mutex_lock(&bfap->bfaLock);
+    mutex_enter(&bfap->bfaLock);
 
 _close_it:
     if ( trunc_xfer_lock ) {
         if ( setHeld ) {
             mutex_exit(&bfap->bfaLock);
             release_clu_clone_locks( bfap, cloneSetp, cloneap, token_flg );
-            mutex_lock(&bfap->bfaLock);
+            mutex_enter(&bfap->bfaLock);
         }
 
         TRUNC_XFER_UNLOCK(&bfap->trunc_xfer_lk);
@@ -4852,7 +4852,7 @@ bs_dealloc_access(bfAccessT *bfap)
         msfs_flush_and_invalidate(bfap, INVALIDATE_ALL | INVALIDATE_QUOTA_FILES);
         bfap->bfObj->vu_object.ob_ref_count -= 1;
         ubc_object_free(bfap->bfObj);
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         bfap->bfObj = NULL;
         bfap->mapped = FALSE;
     }
@@ -5027,7 +5027,7 @@ bs_access_alloc_thread(void)
          */
         msg = msgq_recv_msg(AccAllocMsgQH);
 
-        mutex_lock(&BfAccessFreeLock);
+        mutex_enter(&BfAccessFreeLock);
         BfapAllocInProgress = TRUE;
         freelockheld = TRUE;
 
@@ -5112,7 +5112,7 @@ bs_access_alloc_thread(void)
                         break;
                     }
                     else {
-                        mutex_lock(&BfAccessFreeLock);
+                        mutex_enter(&BfAccessFreeLock);
                         freelockheld = TRUE;
                     }
                 }
@@ -5219,7 +5219,7 @@ insert_actRange_onto_list( bfAccessT *bfap,
     actRangeT *carp = (actRangeT *)NULL;     /* conflicting active range */
     int        read_lock_held = 0;
 
-    mutex_lock(&bfap->actRangeLock);
+    mutex_enter(&bfap->actRangeLock);
 
     /* If there are actRanges waiting, then we must go to the end
      * of the wait list.  This avoids time-consuming overlap checks
@@ -5460,7 +5460,7 @@ limits_of_active_range(
 {
     actRangeT *ar;
 
-    mutex_lock(&bfap->actRangeLock);
+    mutex_enter(&bfap->actRangeLock);
     ar = page_to_active_range(bfap, pg);
  
     MS_SMP_ASSERT(ar);
