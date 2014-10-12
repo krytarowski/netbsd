@@ -31,42 +31,8 @@
 #include <sys/condvar.h>
 #include <sys/lock.h>
 #include <sys/kernel.h>
+#include <sys/mutex.h>
 #include <sys/time.h>
-
-/*
- * mutexT - This structure defines a file system mutex.  It contains an
- * actual (primitive/CMA/...).
- *
- * INITIALIZATION:
- *
- *    You must call mutex_init2() before using a mutexT variable.
- */
-
-typedef struct mutex {
-#ifdef _KERNEL
-    simple_lock_data_t mutex;
-#else /* _KERNEL */
-    pthread_mutex_t mutex;
-#endif /* _KERNEL */
-
-#ifdef ADVFS_DEBUG
-    /*
-     * The following are for debugging only.
-     */
-    int psw;                   /* save previous value when doing splxxx */
-    struct mutex *next_mutex;
-    void *locks;               /* head of lock list */
-    char name[64];
-    u_int locked; 
-    u_int lock_cnt;
-    u_int line_num;
-    /* try_line_num & try_file_name are not protected by the simple lock. */
-    /* They must be int or long, alpha does not do shorter writes atomically */
-    u_int try_line_num;
-    char *try_file_name;
-    char *file_name;
-#endif /* ADVFS_DEBUG */
-} mutexT;
 
 extern mutexT *MutexList;
 
@@ -482,13 +448,6 @@ extern advfsLockStatsT *AdvfsLockStats;
  ** Prototypes.
  */
 
-#ifdef ADVFS_DEBUG
-void _mutex_lock( mutexT *mp, int line_num, char *file_name );
-void _mutex_unlock( mutexT *mp, int ln, char *fn );
-#endif /* ADVFS_DEBUG */
-
-void mutex_init2( mutexT *mp, int num_cvs, char* name ) ;
-void mutex_destroy( mutexT *mp );
 void _lk_signal( unLkActionT action, void *lk, int ln, char *fn );
 int lk_is_locked( void *lock );
 void trace_hdr( void );
