@@ -177,13 +177,6 @@ static const wtPgDescT NilWtPgDesc = NULL_STRUCT;
 static const logDescT  NilLogDesc  = NULL_STRUCT;
 
 /*
- *** Global Variables
- */
-
-struct lockinfo *ADVlogDescT_descLock_info;
-struct lockinfo *ADVflushT_flushLock_info;
-
-/*
  *** Log Management Macros
  */
 #define lastPg wrtPgD[0]

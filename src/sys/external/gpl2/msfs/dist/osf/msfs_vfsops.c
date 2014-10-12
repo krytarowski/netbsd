@@ -153,8 +153,6 @@ extern void advfs_range_init(void);
  */
 
        lock_data_t  FilesetLock;
-struct lockinfo    *ADVFilesetLock_lockinfo;
-struct lockinfo    *ADVquotaInfoT_qiLock;
 
 
 /*
