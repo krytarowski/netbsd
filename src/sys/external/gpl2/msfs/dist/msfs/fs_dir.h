@@ -175,7 +175,7 @@ struct fsContext {
     int dirty_alloc;            /* set if stats from an allocating write
                                    are not on disk (ICHGMETA) */
 
-    rwlock_t file_lock;      /* Use an OSF complex lock (read_write_lock) */
+    krwlock_t file_lock;      /* Use an OSF complex lock (read_write_lock) */
 
     long dirstamp;              /* stamp to determine directory changes */
     kmutex_t fsContext_mutex;     /* mutex to take out locks on this structure */

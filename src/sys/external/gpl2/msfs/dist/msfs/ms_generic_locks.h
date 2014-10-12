@@ -32,6 +32,7 @@
 #include <sys/lock.h>
 #include <sys/kernel.h>
 #include <sys/mutex.h>
+#include <sys/rwlock.h>
 #include <sys/time.h>
 
 extern kmutex_t *MutexList;
@@ -134,7 +135,7 @@ typedef struct lkHdr {
 
 typedef struct ftxLk {
     lkHdrT hdr;               /* header used by ftx lock routines only */
-    rwlock_t  lock;        /* The OSF lock .  */
+    krwlock_t  lock;        /* The OSF lock .  */
     cv res;                   /* condition variable */
 } ftxLkT;
 
