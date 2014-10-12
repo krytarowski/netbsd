@@ -463,7 +463,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
      */
     if ( type == VCHR || type == VBLK || type == VFIFO ) {
         struct vm_ubc_object *obj;
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         if (obj = bfap->bfObj) {
             bfap->bfObj = NULL;
             VN_LOCK(nvp);
@@ -799,7 +799,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
      * indicate that the dir has changed
      */
 
-    mutex_lock( &dir_cp->fsContext_mutex );
+    mutex_enter( &dir_cp->fsContext_mutex );
     dir_cp->fs_flag |= (MOD_MTIME | MOD_CTIME);
     dir_cp->dirty_stats = TRUE;
     dir_cp->dirstamp++;
@@ -1032,7 +1032,7 @@ fs_update_stats(
      * store the utime field in microsecs instead of the
      * usual nanoseconds for future use.
      */
-    mutex_lock( &context_ptr->fsContext_mutex );
+    mutex_enter( &context_ptr->fsContext_mutex );
     if (context_ptr->fs_flag & (MOD_MTIME | MOD_ATIME | MOD_CTIME)) {
         TIME_READ(new_time);
         if (context_ptr->fs_flag & MOD_MTIME) {
@@ -1119,7 +1119,7 @@ fs_flush_saved_stats(
                           ftxH,
                           flags
                           );
-    mutex_lock(&bfap->bfaLock);
+    mutex_enter(&bfap->bfaLock);
 
     /* We don't deallocate the saved_stats structure here in case 
      * bmtr_update_rec() returns a 'cant start a transaction' error.

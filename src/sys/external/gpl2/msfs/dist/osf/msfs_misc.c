@@ -605,7 +605,7 @@ bf_get_l(
      * file is accessed via NFS V3 using asynchronous writes, and there is
      * a long time between the last write and the commit.
      */
-    mutex_lock(&bfap->bfaLock);
+    mutex_enter(&bfap->bfaLock);
     if ( bfap->saved_stats ) {
         saved_statsT *ssp = bfap->saved_stats;
         int flush_in_progress = (ssp->op_flags & SS_FLUSH_IN_PROGRESS);
@@ -822,7 +822,7 @@ finish_setup:
      */
     if ((nvp->v_type == VCHR || nvp->v_type == VBLK || nvp->v_type == VFIFO)
         && bfap->bfObj ) {
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         if (obj = bfap->bfObj) {
             bfap->bfObj = NULL;
             VN_LOCK(nvp);
@@ -1008,7 +1008,7 @@ msfs_inactive(
          * in bs_close(). This is needed until bfNode.accessp is cleared 
          * below.
          */
-        mutex_lock(&tempbfap->bfaLock);
+        mutex_enter(&tempbfap->bfaLock);
         tempbfap->refCnt++;
         mutex_exit(&tempbfap->bfaLock);
 
@@ -1054,7 +1054,7 @@ msfs_inactive(
      * problem with vnode lock
      */
     if (tempbfap) {
-        mutex_lock(&tempbfap->bfaLock);
+        mutex_enter(&tempbfap->bfaLock);
         DEC_REFCNT(tempbfap);
         mutex_exit(&tempbfap->bfaLock);
     }
@@ -1113,7 +1113,7 @@ msfs_reclaim(
         /*
          * RACE CONDITION
          *
-         * Between the call to bs_bfs_lookup_desc() above and the mutex_lock()
+         * Between the call to bs_bfs_lookup_desc() above and the mutex_enter()
          * below the set handle could have been reused for another bitfile
          * set.  This means that the find_bfap() below could find an
          * access struct belonging to another file.  No problem since
@@ -1131,7 +1131,7 @@ msfs_reclaim(
              * find_bfap to get to our bfap, so we'll get there the
              * most direct way...
              */
-            mutex_lock(&bfap->bfaLock);
+            mutex_enter(&bfap->bfaLock);
         } else {
             /* returns the requested access struct locked */
             bfap = find_bfap( bfSetp, bnp->tag, FALSE, NULL);
@@ -1187,7 +1187,7 @@ msfs_reclaim(
                     vp->v_op = &msfs_vnodeops;
                     mutex_exit(&bfap->bfaLock);
                     msfs_flush_and_invalidate(bfap, INVALIDATE_ALL);
-                    mutex_lock(&bfap->bfaLock);
+                    mutex_enter(&bfap->bfaLock);
                     vp->v_op = vnop_save;
                 }
             }
@@ -1237,7 +1237,7 @@ msfs_reclaim(
                         /* This should be the typical path */
                         mutex_exit( &bfap->bfaLock );
                         ssp = (saved_statsT *)ms_malloc( sizeof(saved_statsT) );
-                        mutex_lock( &bfap->bfaLock );
+                        mutex_enter( &bfap->bfaLock );
                     } else
                         ssp = bfap->saved_stats;
 
@@ -1400,7 +1400,7 @@ msfs_refer(vm_ubc_object_t vop)
 
     VREF(vop->vu_ap->bfVp);
 
-    mutex_lock( &vop->vu_ap->bfaLock);
+    mutex_enter( &vop->vu_ap->bfaLock);
     vop->vu_ap->mmapCnt++;
     mutex_exit( &vop->vu_ap->bfaLock);
 
@@ -1436,7 +1436,7 @@ msfs_release(vm_ubc_object_t vop)
      */
     if((bfap->bfVp->v_mount->m_flag & M_ADL)) {
         FS_FILE_WRITE_LOCK(contextp);
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         bfap->mmapCnt--;
         /*
          * If the mmapCnt is now zero (this was the last mmapper)
@@ -1450,7 +1450,7 @@ msfs_release(vm_ubc_object_t vop)
         mutex_exit(&bfap->bfaLock);
         FS_FILE_UNLOCK(contextp);
     } else {
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         bfap->mmapCnt--;
         mutex_exit(&bfap->bfaLock);
     }
@@ -1518,7 +1518,7 @@ msfs_putpage(
              * cannot be recycled since it has dirty pages.
              */
 
-            mutex_lock( &bfap->bfaLock );
+            mutex_enter( &bfap->bfaLock );
             MS_SMP_ASSERT(lk_get_state(bfap->stateLk) != ACC_INVALID);
             MS_SMP_ASSERT(bfap->bfState != BSRA_INVALID);
             decr_access = 1;
@@ -1543,7 +1543,7 @@ msfs_putpage(
         if (vp) {
             contextp = VTOC( vp );
 
-            mutex_lock( &contextp->fsContext_mutex );
+            mutex_enter( &contextp->fsContext_mutex );
             /*
              * advfs_st_ctime in the file's stat structure
              */
@@ -1566,7 +1566,7 @@ msfs_putpage(
             }
         }
         if( decr_access ) {
-            mutex_lock( &bfap->bfaLock );
+            mutex_enter( &bfap->bfaLock );
             DEC_REFCNT( bfap );
             mutex_exit( &bfap->bfaLock );
         }
@@ -1631,7 +1631,7 @@ msfs_putpage(
         res = bs_pinpg_put(plp, plcnt, flags);
         if (res != EOK) {
             if (decr_access) {
-                mutex_lock(&bfap->bfaLock);
+                mutex_enter(&bfap->bfaLock);
                 DEC_REFCNT( bfap );
                 mutex_exit(&bfap->bfaLock);
             }
@@ -1643,7 +1643,7 @@ msfs_putpage(
     }
 
     if( decr_access ) {
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         DEC_REFCNT( bfap );
         mutex_exit(&bfap->bfaLock);
     }
@@ -1903,7 +1903,7 @@ _error:
      * one page, because any successfully pin'd pages will get written.
      */
     if (writing && *pl) {
-        mutex_lock(&contextp->fsContext_mutex);
+        mutex_enter(&contextp->fsContext_mutex);
         contextp->fs_flag |= MOD_MTIME | MOD_CTIME;
         contextp->dirty_stats = TRUE;
         mutex_exit(&contextp->fsContext_mutex);
@@ -2238,7 +2238,7 @@ restart:
          * increment the mmapCnt also, but no matter. We'll decrement our 
          * increment on mmapCnt after the call to u_vp_create().
          */
-        mutex_lock( &bfap->bfaLock );
+        mutex_enter( &bfap->bfaLock );
         bfap->mmapCnt++;
         mutex_exit( &bfap->bfaLock );
 
@@ -2269,7 +2269,7 @@ restart:
                 /* Do not allow mmap() to turn off directIO. */
                 FS_FILE_UNLOCK(contextp);
                 locked = FALSE;
-                mutex_lock( &bfap->bfaLock );
+                mutex_enter( &bfap->bfaLock );
                 bfap->mmapCnt--;
                 mutex_exit( &bfap->bfaLock );
                 ret = ENOTSUP;
@@ -2297,7 +2297,7 @@ restart:
          */
         FS_FILE_WRITE_LOCK(contextp);
         locked = TRUE;
-        mutex_lock( &bfap->bfaLock );
+        mutex_enter( &bfap->bfaLock );
         bfap->mmapCnt--;
 
         /* If we still have this file mmapped (no error), set the
@@ -2335,7 +2335,7 @@ HANDLE_EXCEPTION:
      * writes of the stats on each sync() call hurting performance.
      */
     if (ret == 0) {
-        mutex_lock( &contextp->fsContext_mutex );
+        mutex_enter( &contextp->fsContext_mutex );
         contextp->fs_flag |= MOD_ATIME;
         if ( !(vp->v_mount->m_flag & (M_NOATIMES | M_RDONLY)) )
             contextp->dirty_stats = TRUE;
@@ -2432,7 +2432,7 @@ msfs_bread(register struct vnode *vp,
      */
 
     if (!bpp) {
-        mutex_lock(&cp->fsContext_mutex);
+        mutex_enter(&cp->fsContext_mutex);
         cp->fs_flag |= MOD_ATIME;
         if ( !(vp->v_mount->m_flag & M_NOATIMES) )
             cp->dirty_stats = TRUE;
@@ -2449,7 +2449,7 @@ msfs_bread(register struct vnode *vp,
     }
 
     /* Update status bits */
-    mutex_lock(&cp->fsContext_mutex);
+    mutex_enter(&cp->fsContext_mutex);
     cp->fs_flag |= MOD_ATIME;
     if ( !(vp->v_mount->m_flag & M_NOATIMES) )
         cp->dirty_stats = TRUE;

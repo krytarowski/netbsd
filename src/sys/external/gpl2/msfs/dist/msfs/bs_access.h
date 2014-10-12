@@ -557,7 +557,7 @@ limits_of_active_range(
  */
 #define ADD_ACC_CLOSEDLIST( bfap ) \
 { \
-    mutex_lock(&BfAccessFreeLock); \
+    mutex_enter(&BfAccessFreeLock); \
     MS_SMP_ASSERT(bfap->onFreeList == 0); \
     MS_SMP_ASSERT(ClosedAcc.freeBwd); \
     bfap->freeBwd = ClosedAcc.freeBwd; \
@@ -612,7 +612,7 @@ limits_of_active_range(
     extern msgQHT CleanupMsgQH; \
     extern int advfs_shutting_down; \
                                 \
-    mutex_lock(&BfAccessFreeLock); \
+    mutex_enter(&BfAccessFreeLock); \
     MS_SMP_ASSERT(bfap->onFreeList == 0); \
     MS_SMP_ASSERT(bfap->dirtyBufList.length == 0); \
     if ( bfap->stateLk.state == ACC_INVALID ) { \
@@ -684,7 +684,7 @@ limits_of_active_range(
  */
 #define RM_ACC_LIST( bfap ) \
 { \
-    mutex_lock(&BfAccessFreeLock); \
+    mutex_enter(&BfAccessFreeLock); \
     MS_SMP_ASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
     MS_SMP_ASSERT(bfap->freeFwd); \
     MS_SMP_ASSERT(bfap->freeBwd); \
@@ -712,7 +712,7 @@ limits_of_active_range(
  */
 #define RM_ACC_LIST_COND( bfap ) \
 { \
-    mutex_lock(&BfAccessFreeLock); \
+    mutex_enter(&BfAccessFreeLock); \
     if (bfap->freeFwd) { \
         MS_SMP_ASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
         MS_SMP_ASSERT(bfap->freeBwd);  \

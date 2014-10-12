@@ -1682,7 +1682,7 @@ HANDLE_EXCEPTION:
 
     /* We need to remove and free the actRange struct */
     if ( arp ) {
-        mutex_lock(&bfap->actRangeLock);
+        mutex_enter(&bfap->actRangeLock);
         MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
         mutex_exit(&bfap->actRangeLock);
@@ -2226,7 +2226,7 @@ HANDLE_EXCEPTION:
     
      /* We need to remove and free the actRange struct */
     if ( arp ) {
-        mutex_lock(&bfap->actRangeLock);
+        mutex_enter(&bfap->actRangeLock);
         MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
         mutex_exit(&bfap->actRangeLock);

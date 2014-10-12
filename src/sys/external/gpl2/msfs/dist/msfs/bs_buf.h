@@ -280,7 +280,7 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
 { \
     MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex)); \
     if (seize_bfiolock) \
-        mutex_lock(&bp->bfAccess->bfIoLock); \
+        mutex_enter(&bp->bfAccess->bfIoLock); \
     else \
         MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bfAccess->bfIoLock.mutex)); \
     bp->accListSeq++; \
@@ -299,7 +299,7 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
 { \
     MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex)); \
     if (seize_bfiolock) \
-        mutex_lock(&bp->bfAccess->bfIoLock); \
+        mutex_enter(&bp->bfAccess->bfIoLock); \
     else \
         MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bfAccess->bfIoLock.mutex)); \
     MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY); \
@@ -319,7 +319,7 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
 #define MS_VERIFY_IOQUEUE_INTEGRITY(qhdr,callerLocked) \
 { \
     if ( !(callerLocked) ) { \
-        mutex_lock(&(qhdr)->ioQLock); \
+        mutex_enter(&(qhdr)->ioQLock); \
     } \
     check_queue( qhdr ); \
     if ( !(callerLocked) ) { \
