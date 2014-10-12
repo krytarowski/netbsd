@@ -69,9 +69,6 @@ unsigned long AdvfsUbcHit = 0;
 unsigned long AdvfsUbcMiss = 0;
 int advfsstats = 0;
 
-/* lockinfo struct for bsBuf.bufLock */
-decl_simple_lock_info(, ADVbufLock_lockinfo)
-
 /*
  * Tracing vars
  */
