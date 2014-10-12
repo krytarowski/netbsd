@@ -119,26 +119,6 @@ trace_hdr(void)
 
 #endif /* _KERNEL */
 }
-   
-#ifdef _KERNEL
-char *
-strrchr( char *s, char c )
-{
-    int l = strlen( s );
-
-    if (l == 0) {
-        return 0;
-    }
-
-    for (l--; l >= 0; l--) {
-        if (s[l] == c) {
-            return &s[l];
-        }
-    }
-
-    return 0;
-}
-#endif
 
 /*
  * trace_lkcall
