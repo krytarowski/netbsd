@@ -97,37 +97,6 @@ struct bsMPg *GRpgp = NULL;
 
 vdDescT nilVdDesc = NULL_STRUCT;
 
-decl_simple_lock_info(, ADVDmnTblMutex_lockinfo )
-decl_simple_lock_info(, ADVdomainT_mutex_lockinfo )
-decl_simple_lock_info(, ADVdomainT_lsnLock_lockinfo )
-decl_simple_lock_info(, ADVdomainT_vdpTbl_lockinfo )
-decl_simple_lock_info(, ADVdomainT_freeze_lockinfo )
-decl_simple_lock_info(, ADVvdT_blockingQ_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_ubcReqQ_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_flushQ_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_waitLazyQ_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ0_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ1_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ2_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ3_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ4_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ5_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ6_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ7_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ8_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ9_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ10_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ11_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ12_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ13_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ14_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_smSyncQ15_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_tempQ_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_readyLazyQ_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_consolQ_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_devQ_ioQLock_info )
-decl_simple_lock_info(, ADVvdT_vdIoLock_info )
-decl_simple_lock_info(, ADVvdT_vdStateLock_info )
 struct lockinfo * ADVvdT_del_list_lk_info;
 struct lockinfo * ADVvdT_stgMap_lk_info;
 struct lockinfo * ADVvdT_mcell_lk_info;

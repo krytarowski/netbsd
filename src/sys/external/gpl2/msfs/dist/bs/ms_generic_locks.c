@@ -59,8 +59,6 @@ static lkHdrT *find_locked_lock(lkHdrT *lk);
 kmutex_t LockMgrMutex;
 kmutex_t* MutexList;
 
-decl_simple_lock_info(, msfs_lockmgrmutex_lockinfo )
-decl_simple_lock_info(, msfs_mp_mutex_lockinfo )
 
 typedef enum { 
     MUTEX_LOCK, MUTEX_UNLOCK, CV_WAIT, CV_DONEWAIT,

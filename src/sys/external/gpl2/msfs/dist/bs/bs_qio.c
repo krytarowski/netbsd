@@ -3842,7 +3842,6 @@ bs_bflush_sync(
     return( qlen );
 }
 
-decl_simple_lock_info(, ADVRangeFlushLock_info )
 
 /*
  * bfflush
