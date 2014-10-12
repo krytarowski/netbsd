@@ -168,10 +168,10 @@ bs_freeze_thread( void )
                 TIME_READ (curTime);
                 thread_set_timeout(hz * (freezeInfoP->frziTimeout - curTime.tv_sec) );
             }
-            mutex_unlock(&AdvfsFreezeMsgsLock);
+            mutex_exit(&AdvfsFreezeMsgsLock);
             thread_block();
         } else {
-            mutex_unlock(&AdvfsFreezeMsgsLock);
+            mutex_exit(&AdvfsFreezeMsgsLock);
         }
         check_for_timeout();
         check_for_new_msg();
@@ -226,12 +226,12 @@ check_for_new_msg( void )
 
     mutex_lock(&AdvfsFreezeMsgsLock);
     if (AdvfsFreezeMsgs == NULL) {
-        mutex_unlock(&AdvfsFreezeMsgsLock);
+        mutex_exit(&AdvfsFreezeMsgsLock);
         return;
     }
     msg = AdvfsFreezeMsgs;
     AdvfsFreezeMsgs = msg->frzmLink;
-    mutex_unlock(&AdvfsFreezeMsgsLock);
+    mutex_exit(&AdvfsFreezeMsgsLock);
 
     if ( msg->frzmFlags & FS_Q_FREEZE ) {
 
@@ -317,12 +317,12 @@ freeze_domain( advfsFreezeMsgT *msg )
         assert_wait_mesg( (vm_offset_t)&dmnP->dmnFreezeWaiting,
                            FALSE,
                            "bs_freeze" );
-        mutex_unlock(&dmnP->dmnFreezeMutex);
+        mutex_exit(&dmnP->dmnFreezeMutex);
         thread_block();
         dmnP->dmnFreezeWaiting--;
         MS_SMP_ASSERT(!dmnP->dmnFreezeRefCnt);
     } else {
-        mutex_unlock(&dmnP->dmnFreezeMutex);
+        mutex_exit(&dmnP->dmnFreezeMutex);
     }
 
     /*
@@ -385,7 +385,7 @@ freeze_domain( advfsFreezeMsgT *msg )
     if (sts != EOK) {
         mutex_lock(&dmnP->dmnFreezeMutex);
         dmnP->dmnFreezeFlags &= ~BFD_FREEZE_IN_PROGRESS;
-        mutex_unlock(&dmnP->dmnFreezeMutex);
+        mutex_exit(&dmnP->dmnFreezeMutex);
         ms_free (freezeInfoP);
         msg->frzmStatus = EIO;
         thread_wakeup( (vm_offset_t) &msg->frzmStatus );
@@ -403,7 +403,7 @@ freeze_domain( advfsFreezeMsgT *msg )
     mutex_lock(&dmnP->dmnFreezeMutex);
     dmnP->dmnFreezeFlags &= ~BFD_FREEZE_IN_PROGRESS;
     dmnP->dmnFreezeFlags |=  BFD_FROZEN;
-    mutex_unlock(&dmnP->dmnFreezeMutex);
+    mutex_exit(&dmnP->dmnFreezeMutex);
     TIME_READ (tv);
     if (freezeInfoP->frziTimeout < 0) {
         freezeInfoP->frziTimeout = 0x7FFFFFFF;
@@ -487,7 +487,7 @@ thaw_domain( advfsFreezeInfoT *freezeInfoP, int forced )
     ftx_done_n (freezeInfoP->frziFtxH, FTA_BS_FREEZE);
     mutex_lock(&dmnP->dmnFreezeMutex);
     dmnP->dmnFreezeFlags &= ~BFD_FROZEN;
-    mutex_unlock(&dmnP->dmnFreezeMutex);
+    mutex_exit(&dmnP->dmnFreezeMutex);
     ms_free (freezeInfoP);
 
     /*

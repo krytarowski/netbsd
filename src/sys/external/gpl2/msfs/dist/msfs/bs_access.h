@@ -570,7 +570,7 @@ limits_of_active_range(
         ClosedAcc.saved_stats_len++; \
     } \
     ACCMAX(ClosedAcc); \
-    mutex_unlock(&BfAccessFreeLock); \
+    mutex_exit(&BfAccessFreeLock); \
 }
 
 /* ADD_ACC_FREELIST adds access structures to the free list.
@@ -650,7 +650,7 @@ limits_of_active_range(
             msgq_send_msg(CleanupMsgQH, msg); \
         } \
     } \
-    mutex_unlock(&BfAccessFreeLock); \
+    mutex_exit(&BfAccessFreeLock); \
 }
 
 /* This does the underlying work for the RM_ACC_LIST macros. Do not
@@ -689,7 +689,7 @@ limits_of_active_range(
     MS_SMP_ASSERT(bfap->freeFwd); \
     MS_SMP_ASSERT(bfap->freeBwd); \
     RM_ACC_LIST_REAL_WORK( bfap ); \
-    mutex_unlock(&BfAccessFreeLock); \
+    mutex_exit(&BfAccessFreeLock); \
 }
 
 /* RM_ACC_LIST_NOLOCK is like RM_ACC_LIST, except that the BfAccessFreeLock
@@ -718,7 +718,7 @@ limits_of_active_range(
         MS_SMP_ASSERT(bfap->freeBwd);  \
         RM_ACC_LIST_REAL_WORK( bfap ); \
     } \
-    mutex_unlock(&BfAccessFreeLock); \
+    mutex_exit(&BfAccessFreeLock); \
 }
 
 #ifdef ADVFS_DEBUG

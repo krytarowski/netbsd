@@ -574,7 +574,7 @@ rbf_delete_int(
     delOpRec.prevBfState = bfap->bfState;
     bfap->bfState = BSRA_DELETING;
 
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     sts = FTX_START_N(FTA_BS_DEL_DELETE_V1, &subFtxH, ftxH, 
                       bfap->dmnP, 1);
@@ -707,7 +707,7 @@ bs_delete_undo_opx(
          * the bfState.
          */
         (void) lk_set_state(&bfap->stateLk, ACC_INIT_TRANS);
-        mutex_unlock(&bfap->bfaLock);
+        mutex_exit(&bfap->bfaLock);
 
         reset_ondisk_bf_state (
                                dmnP, 
@@ -723,7 +723,7 @@ bs_delete_undo_opx(
         /* This decrement is for the grab_bsacc */
         DEC_REFCNT( bfap );
 
-        mutex_unlock( &bfap->bfaLock );
+        mutex_exit( &bfap->bfaLock );
     } else {
         /*
          * Crash/recovery.
@@ -1427,9 +1427,9 @@ del_clean_mcell_list(
                      * This is because failover does not do a clean umount.
                      */
                     delete_this_mcell = TRUE;
-                    mutex_unlock(&bfap->bfaLock);
+                    mutex_exit(&bfap->bfaLock);
                 } else {
-                    mutex_unlock(&bfap->bfaLock);
+                    mutex_exit(&bfap->bfaLock);
                 }
             }
         } else delete_this_mcell = TRUE;
@@ -2053,11 +2053,11 @@ done:
         (pmcid.cell == pvdp->ddlActiveWaitMCId.cell)) {
 
         cond_signal(&pvdp->ddlActiveWaitCv);
-        mutex_unlock (&(dmnP->mutex));
+        mutex_exit (&(dmnP->mutex));
         mutexisLocked = 0;
     }
 
-    if ( mutexisLocked ) mutex_unlock (&(dmnP->mutex));
+    if ( mutexisLocked ) mutex_exit (&(dmnP->mutex));
 
     return (EOK);
 

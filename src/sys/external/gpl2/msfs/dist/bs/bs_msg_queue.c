@@ -208,7 +208,7 @@ msgq_alloc_msg(
 
     msg = ulmq_alloc_msg( msgQH );
 
-    mutex_unlock( &msgQ->mutex );
+    mutex_exit( &msgQ->mutex );
 
     return msg;
 } /* end msgq_alloc_msg */
@@ -232,7 +232,7 @@ msgq_send_msg(
 
     ulmq_send_msg( msgQH, msg );
 
-    mutex_unlock( &msgQ->mutex );
+    mutex_exit( &msgQ->mutex );
 } /* end msgq_send_msg */
 
 
@@ -254,7 +254,7 @@ msgq_recv_msg(
 
     msg = ulmq_recv_msg( msgQH, &msgQ->mutex );
 
-    mutex_unlock( &msgQ->mutex );
+    mutex_exit( &msgQ->mutex );
 
     return msg;
 } /* end msgq_recv_msg */
@@ -279,7 +279,7 @@ msgq_free_msg(
 
     ulmq_free_msg( msgQH, msg );
 
-    mutex_unlock( &msgQ->mutex );
+    mutex_exit( &msgQ->mutex );
 } /* end msgq_free_msg */
 
 
@@ -305,7 +305,7 @@ msgq_purge_msgs(
         msg = ulmq_recv_msg( msgQH, &msgQ->mutex );
         ulmq_free_msg( msgQH, msg );
     }
-    mutex_unlock( &msgQ->mutex );
+    mutex_exit( &msgQ->mutex );
 } /* end msgq_purge_msgs */
 
 
@@ -350,27 +350,27 @@ msgq_destroy(
     mutex_lock( &msgQ->mutex );
 
     if ( (msgQ->userMsgs != 0) ){
-        mutex_unlock( &msgQ->mutex );
+        mutex_exit( &msgQ->mutex );
         return 1;
     }
     if ( (msgQ->readyMsgs != 0) ){
-        mutex_unlock( &msgQ->mutex );
+        mutex_exit( &msgQ->mutex );
         return 2;
     }
     if ( (msgQ->waiters != 0) ){
-        mutex_unlock( &msgQ->mutex );
+        mutex_exit( &msgQ->mutex );
         return 3;
     }
     if ( (msgQ->freeMsgs != msgQ->maxMsgs) ){
         /* the list is corrupt!!! */
         MS_SMP_ASSERT( msgQ->freeMsgs == msgQ->maxMsgs );
-        mutex_unlock( &msgQ->mutex );
+        mutex_exit( &msgQ->mutex );
         return 4;
     }
 
     ulmq_destroy_freelist( msgQ );
 
-    mutex_unlock( &msgQ->mutex );
+    mutex_exit( &msgQ->mutex );
     mutex_destroy( &msgQ->mutex );
 
     ms_free( msgQ );

@@ -933,7 +933,7 @@ new_parent(
     mutex_lock(&s_context->fsContext_mutex);
     s_context->fs_flag |= MOD_MTIME;
     s_context->dirty_stats = TRUE;
-    mutex_unlock(&s_context->fsContext_mutex);
+    mutex_exit(&s_context->fsContext_mutex);
 
     return(0);
 }

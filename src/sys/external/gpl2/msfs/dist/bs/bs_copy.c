@@ -524,7 +524,7 @@ set_block_map (
                 bfAccess->migWait = maxMigrateUbcPgs/2;
                 cond_wait(&bfAccess->migWait, &bfAccess->bfIoLock);
             }
-            mutex_unlock(&bfAccess->bfIoLock);
+            mutex_exit(&bfAccess->bfIoLock);
         }
 
         PREEMPT_CHECK(current_thread());

@@ -446,7 +446,7 @@ fs_post_no_storage_msg( struct vnode *vp,
         bfap->dmnP->fs_full_time = time.tv_sec;
         set=1;
     }
-    mutex_unlock(&(bfap->dmnP->mutex));
+    mutex_exit(&(bfap->dmnP->mutex));
 
     if (set) {
         log(LOG_ERR, "%s: file system full\n",
@@ -679,10 +679,10 @@ fs_write(
         mutex_lock( &bfap->dmnP->mutex );
         if ( bfap->dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS ) {
             assert_wait((vm_offset_t)(&bfap->dmnP->dmnFlag), FALSE);
-            mutex_unlock( &bfap->dmnP->mutex );
+            mutex_exit( &bfap->dmnP->mutex );
             thread_block();
         } else {
-            mutex_unlock( &bfap->dmnP->mutex );
+            mutex_exit( &bfap->dmnP->mutex );
         }
     }
 
@@ -839,7 +839,7 @@ _retry:
                 mutex_lock(&bfap->actRangeLock);
                 MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
                 remove_actRange_from_list(bfap, arp);
-                mutex_unlock(&bfap->actRangeLock);
+                mutex_exit(&bfap->actRangeLock);
                 ms_free(arp);
                 arp = (struct actRange *)NULL;
            }
@@ -927,7 +927,7 @@ _retry_append_range:
             if ( bfap->file_size < old_size ) {
                 mutex_lock(&bfap->actRangeLock);
                 remove_actRange_from_list(bfap, arp);
-                mutex_unlock(&bfap->actRangeLock);
+                mutex_exit(&bfap->actRangeLock);
                 goto _retry_append_range;
             }
         } else {
@@ -1104,7 +1104,7 @@ _retry_append_range:
 	    if (arp) {
 		mutex_lock(&bfap->actRangeLock);
 		remove_actRange_from_list(bfap, arp);
-		mutex_unlock(&bfap->actRangeLock);
+		mutex_exit(&bfap->actRangeLock);
 		ms_free(arp);
 	    }
 
@@ -1557,7 +1557,7 @@ _retry_append_range:
          (uio->uio_rw != UIO_AIORW || uio->uio_iov[2].iov_len == 0) ) {
         mutex_lock(&bfap->actRangeLock);
         remove_actRange_from_list(bfap, arp);
-        mutex_unlock(&bfap->actRangeLock);
+        mutex_exit(&bfap->actRangeLock);
         ms_free( arp );
         arp = NULL;
     }
@@ -1625,7 +1625,7 @@ _retry_append_range:
         contextp->dir_stats.advfs_st_mode &= ~mask;
     }
 
-    mutex_unlock( &contextp->fsContext_mutex );
+    mutex_exit( &contextp->fsContext_mutex );
 
     if (noadd_execaccess &&
 #if SEC_PRIV
@@ -1857,7 +1857,7 @@ _error:
     if (arp && (uio->uio_rw != UIO_AIORW || uio->uio_iov[2].iov_len == 0)) {
         mutex_lock(&bfap->actRangeLock);
         remove_actRange_from_list(bfap, arp);
-        mutex_unlock(&bfap->actRangeLock);
+        mutex_exit(&bfap->actRangeLock);
         ms_free( arp );
     }
 
@@ -1988,7 +1988,7 @@ fs_update_times(struct vnode *vp, int attr_flags)
     } else {
         contextp->dirty_stats = TRUE;
     }
-    mutex_unlock( &contextp->fsContext_mutex );
+    mutex_exit( &contextp->fsContext_mutex );
 }
 
 
@@ -2601,7 +2601,7 @@ EXIT:
         mutex_lock(&bfap->actRangeLock);
         MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
-        mutex_unlock(&bfap->actRangeLock);
+        mutex_exit(&bfap->actRangeLock);
         ms_free(arp);
     }
 
@@ -3201,10 +3201,10 @@ fs_read(
         mutex_lock( &bfap->dmnP->mutex );
         if ( bfap->dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS ) {
             assert_wait((vm_offset_t)(&bfap->dmnP->dmnFlag), FALSE);
-            mutex_unlock( &bfap->dmnP->mutex );
+            mutex_exit( &bfap->dmnP->mutex );
             thread_block();
         } else {
-            mutex_unlock( &bfap->dmnP->mutex );
+            mutex_exit( &bfap->dmnP->mutex );
         }
     }
 
@@ -3268,7 +3268,7 @@ _retry_map:
             contextp->fs_flag |= MOD_ATIME;
             if (!(vp->v_mount->m_flag & M_NOATIMES))
                 contextp->dirty_stats = TRUE;
-            mutex_unlock(&contextp->fsContext_mutex);
+            mutex_exit(&contextp->fsContext_mutex);
         }
 
             error = 0;
@@ -3689,7 +3689,7 @@ _retry_map:
         if (!(vp->v_mount->m_flag & M_NOATIMES)) {
             contextp->dirty_stats = TRUE;
         }
-        mutex_unlock( &contextp->fsContext_mutex );
+        mutex_exit( &contextp->fsContext_mutex );
     }
 
     /*
@@ -4099,7 +4099,7 @@ EXIT:
         mutex_lock(&bfap->actRangeLock);
         MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
-        mutex_unlock(&bfap->actRangeLock);
+        mutex_exit(&bfap->actRangeLock);
         ms_free(arp);
     }
 
