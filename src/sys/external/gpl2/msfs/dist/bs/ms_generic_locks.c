@@ -86,38 +86,12 @@ advfsLockStatsT *AdvfsLockStats = NULL;
 void 
 trace_hdr(void)
 {
-#ifdef _KERNEL
     struct timeval hdrTime;
     int s;
     TIME_READ(hdrTime);
     log( LOG_MEGASAFE | LOG_INFO,
             "%2d.%3d %d ", hdrTime.tv_sec & 0x7f,
             hdrTime.tv_usec>>10, current_thread() );
-#else
-    struct timeval time;
-    struct timezone tzone;
-    pthread_t tid;
-    tid = pthread_self( );
-
-
-    if( gettimeofday( &time, &tzone ) < 0 )  {
-        perror( "gettimeofday" );
-        exit( 1 );
-    }
-
-#ifdef _OSF_SOURCE
-
-    ms_printf( "%2d.%3d %d ", time.tv_sec & 0x7f,
-            (time.tv_usec>>10),
-            tid );
-#else
-    ms_printf( "%2d.%3d %d ", time.tv_sec & 0x7f,
-            (time.tv_usec>>10),
-            ((uint32T)tid.field1 >> 4) & 0xfff );
-
-#endif /* _OSF_SOURCE */
-
-#endif /* _KERNEL */
 }
 
 /*
@@ -177,9 +151,7 @@ lk_init(
             stateLkT *lk = (void *)lkHdr;
             stateLkT nilStateLk = { LKT_STATE, 0 }; 
             *lk = nilStateLk;
-#ifndef _KERNEL
             cv_init( &lk->res );
-#endif
             }
             break;
 
@@ -188,9 +160,7 @@ lk_init(
             bufLkT *lk = (void *)lkHdr;
             bufLkT NilBufLk = { LKT_BUF, 0 };
             *lk = NilBufLk;
-#ifndef _KERNEL
             cv_init( &lk->bufCond );
-#endif
             }
             break;
 
