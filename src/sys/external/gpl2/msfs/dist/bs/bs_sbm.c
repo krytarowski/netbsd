@@ -292,7 +292,7 @@ bitmap_undo_opx (
 
         mutex_lock( &dmnP->mutex );
         UINT64T_ADD (dmnP->freeBlks, clustCnt * vdp->stgCluster);
-        mutex_unlock( &dmnP->mutex );
+        mutex_exit( &dmnP->mutex );
 
         break;
 
@@ -313,7 +313,7 @@ bitmap_undo_opx (
 
         mutex_lock( &dmnP->mutex );
         UINT64T_SUB (dmnP->freeBlks, clustCnt * vdp->stgCluster);
-        mutex_unlock( &dmnP->mutex );
+        mutex_exit( &dmnP->mutex );
 
         break;
 
@@ -1281,7 +1281,7 @@ sbm_remove_space (
     domain = vdp->dmnP;
     mutex_lock (&(domain->mutex));
     UINT64T_SUB (domain->freeBlks, clust * vdp->stgCluster);
-    mutex_unlock (&(domain->mutex));
+    mutex_exit (&(domain->mutex));
 
     remove_cache (
                   vdp,
@@ -1346,7 +1346,7 @@ sbm_return_space_no_sub_ftx (
     domain = virtualDiskp->dmnP;
     mutex_lock (&(domain->mutex));
     UINT64T_ADD (domain->freeBlks, clusterCnt * virtualDiskp->stgCluster);
-    mutex_unlock (&(domain->mutex));
+    mutex_exit (&(domain->mutex));
 
     return EOK;
 

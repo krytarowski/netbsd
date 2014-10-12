@@ -486,14 +486,14 @@ msfs_mount( struct mount *mp,           /* in */
          */
         mutex_lock(&dmnP->dmnFreezeMutex);
         if ( dmnP->dmnFreezeFlags & (BFD_FREEZE_IN_PROGRESS + BFD_FROZEN) ) {
-            mutex_unlock(&dmnP->dmnFreezeMutex);
+            mutex_exit(&dmnP->dmnFreezeMutex);
             error = EBUSY;
             goto cleanup;
         } else {
            dmnP->dmnFreezeRefCnt++;
            stopFreezefs++;
         }
-        mutex_unlock(&dmnP->dmnFreezeMutex);
+        mutex_exit(&dmnP->dmnFreezeMutex);
 
         /*
          * If a fileset was mounted in read-only mode because
@@ -910,7 +910,7 @@ cleanup:
         if ( dmnP->dmnFreezeWaiting && dmnP->dmnFreezeRefCnt == 0) {
             thread_wakeup( (vm_offset_t)&dmnP->dmnFreezeWaiting );
         }
-        mutex_unlock(&dmnP->dmnFreezeMutex);
+        mutex_exit(&dmnP->dmnFreezeMutex);
     }
 
 msfs_mount_exit:
@@ -1052,7 +1052,7 @@ advfs_mountfs(struct mount *mp)
         TIME_READ(new_time);
         dn->dmnP->ssDmnInfo.ssFirstMountTime = new_time.tv_sec;
     }
-    mutex_unlock( &dn->dmnP->ssDmnInfo.ssDmnLk );
+    mutex_exit( &dn->dmnP->ssDmnInfo.ssDmnLk );
 
     FILESET_UNLOCK(&FilesetLock );
 
@@ -1295,7 +1295,7 @@ advfs_mountfs(struct mount *mp)
     MS_SMP_ASSERT(setp->state == BFS_READY || setp->state == BFS_UNMOUNTED);
     /* Set this so ss_open_file won't start an op during this transistion. */
     setp->state = BFS_BUSY;
-    mutex_unlock(&setp->dmnP->mutex);
+    mutex_exit(&setp->dmnP->mutex);
 
     if ( setp->dmnP->ssDmnInfo.ssDmnState == SS_ACTIVATED ) {
 	/*
@@ -1352,7 +1352,7 @@ advfs_mountfs(struct mount *mp)
     
     setp->state = BFS_READY;  /* coordinate with ss_open_file */
 
-    mutex_unlock( &setp->dmnP->mutex );
+    mutex_exit( &setp->dmnP->mutex );
     
     if ( ss_was_activated == TRUE ) {
 	/*
@@ -1824,11 +1824,11 @@ msfs_unmount(
          */
         mutex_lock(&dmnP->dmnFreezeMutex);
         if ( dmnP->dmnFreezeFlags & (BFD_FREEZE_IN_PROGRESS + BFD_FROZEN) ) {
-            mutex_unlock(&dmnP->dmnFreezeMutex);
+            mutex_exit(&dmnP->dmnFreezeMutex);
             return(EBUSY);
         } else {
             dmnP->dmnFreezeRefCnt++;
-            mutex_unlock(&dmnP->dmnFreezeMutex);
+            mutex_exit(&dmnP->dmnFreezeMutex);
         }
 
     }
@@ -1836,7 +1836,7 @@ msfs_unmount(
     mutex_lock( &dmnP->mutex );
     /* Set this so ss_open_file won't start an op during this transition. */
     setp->state = BFS_BUSY;
-    mutex_unlock( &dmnP->mutex );
+    mutex_exit( &dmnP->mutex );
 
     if (dmnP->ssDmnInfo.ssDmnState == SS_ACTIVATED) {
         u_long dmnState = cfsState;
@@ -1942,7 +1942,7 @@ msfs_unmount(
     if (nonrdonly_mount == FALSE) {
         setp->dmnP->ssDmnInfo.ssFirstMountTime = 0;
     }
-    mutex_unlock( &dmnP->ssDmnInfo.ssDmnLk );
+    mutex_exit( &dmnP->ssDmnInfo.ssDmnLk );
 
     FILESET_UNLOCK(&FilesetLock );
 
@@ -1955,7 +1955,7 @@ msfs_unmount(
     mutex_lock( &dmnP->mutex );
     MS_SMP_ASSERT(setp->state == BFS_BUSY);
     setp->state = BFS_UNMOUNTED;
-    mutex_unlock( &dmnP->mutex );
+    mutex_exit( &dmnP->mutex );
 
     if (restart_vfast) {
         /* Tell vfast that it's OK to work on this domain again. */
@@ -1971,7 +1971,7 @@ msfs_unmount(
         if ( dmnP->dmnFreezeWaiting && dmnP->dmnFreezeRefCnt == 0) {
             thread_wakeup( (vm_offset_t)&dmnP->dmnFreezeWaiting );
         }
-        mutex_unlock(&dmnP->dmnFreezeMutex);
+        mutex_exit(&dmnP->dmnFreezeMutex);
     }
 
     /*
@@ -2025,7 +2025,7 @@ cleanup:
 
     mutex_lock(&dmnP->mutex);
     setp->state = bfs_state;
-    mutex_unlock(&dmnP->mutex);
+    mutex_exit(&dmnP->mutex);
 
     if (restart_vfast) {
         /* reset flag so smartstore can continue working */
@@ -2047,7 +2047,7 @@ cleanup:
         if ( dmnP->dmnFreezeWaiting && dmnP->dmnFreezeRefCnt == 0) {
             thread_wakeup( (vm_offset_t)&dmnP->dmnFreezeWaiting );
         }
-        mutex_unlock(&dmnP->dmnFreezeMutex);
+        mutex_exit(&dmnP->dmnFreezeMutex);
     }
 
     return error;
@@ -2471,11 +2471,11 @@ msfs_sync(
          */
         mutex_lock(&dmnP->dmnFreezeMutex);
         if ( dmnP->dmnFreezeFlags & (BFD_FREEZE_IN_PROGRESS + BFD_FROZEN) ) {
-            mutex_unlock(&dmnP->dmnFreezeMutex);
+            mutex_exit(&dmnP->dmnFreezeMutex);
             goto out;
         } else {
             dmnP->dmnFreezeRefCnt++;
-            mutex_unlock(&dmnP->dmnFreezeMutex);
+            mutex_exit(&dmnP->dmnFreezeMutex);
         }
 
         /*
@@ -2503,7 +2503,7 @@ msfs_sync(
         if ( dmnP->dmnFreezeWaiting && dmnP->dmnFreezeRefCnt == 0) {
             thread_wakeup( (vm_offset_t)&dmnP->dmnFreezeWaiting );
         }
-        mutex_unlock(&dmnP->dmnFreezeMutex);
+        mutex_exit(&dmnP->dmnFreezeMutex);
     }
 
 out:
@@ -2618,7 +2618,7 @@ msfs_sync_mmap(
             mutex_lock(&bfap->bfaLock);
             RM_ACC_LIST_COND(bfap);
             bfap->refCnt++;
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
         } else {
             bnp = (struct bfNode *)&vp->v_data[0];
             bfSetp = bs_bfs_lookup_desc( bnp->bfSetId );
@@ -2629,7 +2629,7 @@ msfs_sync_mmap(
                  */
                 RM_ACC_LIST_COND(bfap);
                 bfap->refCnt++;
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
             }
         }
 
@@ -2679,7 +2679,7 @@ msfs_sync_mmap(
                 if ( bfap->mmapCnt == 0 ) {
                     bfap->mmapFlush = 0;
                 }
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
             }
         }
 
@@ -2731,7 +2731,7 @@ getnext:
         if (bfap) {
             mutex_lock(&bfap->bfaLock);
             DEC_REFCNT(bfap);
-            mutex_unlock(&bfap->bfaLock);
+            mutex_exit(&bfap->bfaLock);
         }
         vrele(vp);
         if (nvp && vp != nvp )
@@ -3399,11 +3399,11 @@ u_int smsync_flag;             /* perform non-smooth'ed operations */
      */
     mutex_lock(&dmnP->dmnFreezeMutex);
     if ( dmnP->dmnFreezeFlags & (BFD_FREEZE_IN_PROGRESS + BFD_FROZEN) ) {
-        mutex_unlock(&dmnP->dmnFreezeMutex);
+        mutex_exit(&dmnP->dmnFreezeMutex);
         return(0);
     } else {
         dmnP->dmnFreezeRefCnt++;
-        mutex_unlock(&dmnP->dmnFreezeMutex);
+        mutex_exit(&dmnP->dmnFreezeMutex);
     }
 
  
@@ -3487,7 +3487,7 @@ u_int smsync_flag;             /* perform non-smooth'ed operations */
     if ( dmnP->dmnFreezeWaiting && dmnP->dmnFreezeRefCnt == 0) {
         thread_wakeup( (vm_offset_t)&dmnP->dmnFreezeWaiting );
     }
-    mutex_unlock(&dmnP->dmnFreezeMutex);
+    mutex_exit(&dmnP->dmnFreezeMutex);
 
     return(0);
 }
@@ -3536,29 +3536,29 @@ advfs_freezefs ( struct mount *mp,
     mutex_lock(&dmnP->dmnFreezeMutex);
     if (flags & FS_Q_FREEZE) {
         if (dmnP->dmnFreezeFlags & BFD_FREEZE_IN_PROGRESS) {
-            mutex_unlock(&dmnP->dmnFreezeMutex);
+            mutex_exit(&dmnP->dmnFreezeMutex);
             return EINPROGRESS;
         } else if ( dmnP->dmnFreezeFlags & BFD_FROZEN) {
-            mutex_unlock(&dmnP->dmnFreezeMutex);
+            mutex_exit(&dmnP->dmnFreezeMutex);
             return EALREADY;
         } else {
             dmnP->dmnFreezeFlags |= BFD_FREEZE_IN_PROGRESS;
         }
     } else if (flags & FS_Q_QUERY) {
         if (dmnP->dmnFreezeFlags & BFD_FROZEN) {
-            mutex_unlock(&dmnP->dmnFreezeMutex);
+            mutex_exit(&dmnP->dmnFreezeMutex);
             return -1;
 	} else {
-            mutex_unlock(&dmnP->dmnFreezeMutex);
+            mutex_exit(&dmnP->dmnFreezeMutex);
             return 0;
 	}
     } else {
         if ( !(dmnP->dmnFreezeFlags & (BFD_FREEZE_IN_PROGRESS + BFD_FROZEN)) ) {
-            mutex_unlock(&dmnP->dmnFreezeMutex);
+            mutex_exit(&dmnP->dmnFreezeMutex);
             return EALREADY;
         }
     }
-    mutex_unlock(&dmnP->dmnFreezeMutex);
+    mutex_exit(&dmnP->dmnFreezeMutex);
 
     /*
      *  Send a message to the background thread
@@ -3575,7 +3575,7 @@ advfs_freezefs ( struct mount *mp,
     AdvfsFreezeMsgs = msg;
     assert_wait_mesg( (vm_offset_t) &msg->frzmStatus, FALSE, "advfs_freeze_vfsop" );
     thread_wakeup( (vm_offset_t) &AdvfsFreezeMsgs );
-    mutex_unlock(&AdvfsFreezeMsgsLock);
+    mutex_exit(&AdvfsFreezeMsgsLock);
     thread_block();
     error = msg->frzmStatus;
     ms_free(msg);

@@ -1340,7 +1340,7 @@ lgr_writev_ftx(
             mutex_lock( &dmnP->lsnLock );
             bp->origLogRec = current_rec;
             add_lsn_list( bp, dmnP );
-            mutex_unlock( &dmnP->lsnLock );
+            mutex_exit( &dmnP->lsnLock );
         }
 
         bp->currentLogRec = current_rec;
@@ -1808,7 +1808,7 @@ getLogStats(domainT * dmnP, logStatT *logStatp)
     MS_SMP_ASSERT(logpages >= 0);
     dmnP->logStat.maxLogPgs = logpages;
     dmnP->logStat.minLogPgs = logpages;
-    mutex_unlock( &dmnP->lsnLock );
+    mutex_exit( &dmnP->lsnLock );
 
     ftxTDp = &dmnP->ftxTbld;
     mutex_lock( &FtxMutex );
@@ -1830,7 +1830,7 @@ getLogStats(domainT * dmnP, logStatT *logStatp)
     } else {
         dmnP->logStat.oldFtxTblAgent = 0;
     }
-    mutex_unlock( &FtxMutex );
+    mutex_exit( &FtxMutex );
 
     lock_write( &ldP->descLock );
 
@@ -4267,7 +4267,7 @@ lgr_switch_vol(
     mutex_lock( &dmnP->vdpTblLock );
     dmnP->logVdRadId = PA_TO_MID(vtop(current_processor(), 
                                  dmnP->vdpTbl[dmnP->logAccessp->xtnts.xtntMap->subXtntMap->vdIndex-1]));
-    mutex_unlock( &dmnP->vdpTblLock );
+    mutex_exit( &dmnP->vdpTblLock );
 
     /*
      * Close the old log.

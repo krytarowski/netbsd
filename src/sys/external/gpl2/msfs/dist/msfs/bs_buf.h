@@ -292,7 +292,7 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
     bp->bfAccess->dirtyBufList.accBwd = bp; \
     bp->bfAccess->dirtyBufList.length++; \
     if (seize_bfiolock) \
-        mutex_unlock(&bp->bfAccess->bfIoLock); \
+        mutex_exit(&bp->bfAccess->bfIoLock); \
 }
 
 #define RM_ACCESSLIST( bp, seize_bfiolock ) \
@@ -311,7 +311,7 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
     bp->accBwd->accFwd = bp->accFwd; \
     bp->accFwd = bp->accBwd = NULL; \
     if (seize_bfiolock) \
-        mutex_unlock(&bp->bfAccess->bfIoLock); \
+        mutex_exit(&bp->bfAccess->bfIoLock); \
 }
 
 #ifdef ADVFS_DEBUG
@@ -323,7 +323,7 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
     } \
     check_queue( qhdr ); \
     if ( !(callerLocked) ) { \
-        mutex_unlock(&(qhdr)->ioQLock); \
+        mutex_exit(&(qhdr)->ioQLock); \
     } \
 }
 

@@ -852,7 +852,7 @@ remove_dir_ent(
     dir_context->fs_flag |= (MOD_MTIME | MOD_CTIME);
     dir_context->dirty_stats = TRUE;
     dir_context->dirstamp++;
-    mutex_unlock( &dir_context->fsContext_mutex );
+    mutex_exit( &dir_context->fsContext_mutex );
     
     /*
      * update the dirs stats, release the dir vnode.

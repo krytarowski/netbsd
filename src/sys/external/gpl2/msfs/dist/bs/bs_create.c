@@ -251,7 +251,7 @@ rbf_int_create(
 
     unlkAction = lk_set_state( &bfap->stateLk, ACC_INIT_TRANS );
 
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     mcellUId.ut.bfsid = bfSetp->bfSetId;
 
@@ -273,7 +273,7 @@ rbf_int_create(
     lk_signal( unlkAction, &bfap->stateLk );
 
     DEC_REFCNT( bfap );
-    mutex_unlock(&bfap->bfaLock);
+    mutex_exit(&bfap->bfaLock);
 
     /* 
      * Note that the new mcell was initialized to the CREATING
@@ -306,7 +306,7 @@ HANDLE_EXCEPTION: ;
 
         DEC_REFCNT( bfap );
 
-        mutex_unlock( &bfap->bfaLock );
+        mutex_exit( &bfap->bfaLock );
     }
 
     ftx_fail( ftxH );
@@ -418,7 +418,7 @@ make_mcell_valid(
         ADVFS_SAD0("create_rtdn_opx: VALID bfAccess state is invalid!!");
     }
 
-    mutex_unlock( &bfap->bfaLock );
+    mutex_exit( &bfap->bfaLock );
 
     sts = rbf_pinpg(&pgref, (void*)&bmtp, vdp->bmtp,
                      mcelluid.mcell.page, BS_NIL, ftxH);
@@ -458,7 +458,7 @@ make_mcell_valid(
     }
 
     DEC_REFCNT( bfap );
-    mutex_unlock( &bfap->bfaLock );
+    mutex_exit( &bfap->bfaLock );
 }
 
 
@@ -735,7 +735,7 @@ kill_mcell(
         /* How could it have gotten to be VALID??? */
 
         DEC_REFCNT( bfap );
-        mutex_unlock( &bfap->bfaLock );
+        mutex_exit( &bfap->bfaLock );
         domain_panic(dmnP, "kill_mcell: VALID bfAccess state is invalid!!");
         return;
     }
@@ -749,7 +749,7 @@ kill_mcell(
          * Shadow bfaps of metadata files would have no object for example.
          */
         if (bfap->bfObj) {
-            mutex_unlock( &bfap->bfaLock );
+            mutex_exit( &bfap->bfaLock );
             bs_invalidate_pages(bfap, 0, 0, 0);
             mutex_lock( &bfap->bfaLock );
         }
@@ -760,7 +760,7 @@ kill_mcell(
     lk_signal( lk_set_state( &bfap->stateLk, ACC_INVALID ), &bfap->stateLk);
 
     DEC_REFCNT( bfap );
-    mutex_unlock( &bfap->bfaLock );
+    mutex_exit( &bfap->bfaLock );
     
     sts = dealloc_mcells (dmnP, vdp->vdIndex, mcelluidp->mcell, ftxH);
     if (sts != EOK) {

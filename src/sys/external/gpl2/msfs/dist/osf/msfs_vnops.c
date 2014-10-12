@@ -78,11 +78,11 @@ static int msfs_chown(struct vnode *vp, uid_t uid, gid_t gid, struct uucred *cre
         domainT *dmnP = GETDOMAINP ( VTOMOUNT(vp) );                                \
         mutex_lock( &(dmnP->dmnFreezeMutex) );                                      \
         if ( dmnP->dmnFreezeFlags & (BFD_FREEZE_IN_PROGRESS + BFD_FROZEN) ) {       \
-            mutex_unlock( &dmnP->dmnFreezeMutex );                                  \
+            mutex_exit( &dmnP->dmnFreezeMutex );                                  \
             return (NFS3ERR_JUKEBOX);                                               \
         } else {                                                                    \
             dmnP->dmnFreezeRefCnt++;                                                \
-            mutex_unlock(&dmnP->dmnFreezeMutex);                                    \
+            mutex_exit(&dmnP->dmnFreezeMutex);                                    \
         }                                                                           \
     }                                                                               \
 }
@@ -95,7 +95,7 @@ static int msfs_chown(struct vnode *vp, uid_t uid, gid_t gid, struct uucred *cre
         if ( dmnP->dmnFreezeWaiting && dmnP->dmnFreezeRefCnt == 0) {                \
             thread_wakeup( (vm_offset_t)&dmnP->dmnFreezeWaiting );                  \
         }                                                                           \
-        mutex_unlock( &dmnP->dmnFreezeMutex );                                      \
+        mutex_exit( &dmnP->dmnFreezeMutex );                                      \
     }                                                                               \
 }
 
@@ -763,7 +763,7 @@ msfs_access(
     udac.uid = udac.cuid = context_ptr->dir_stats.advfs_st_uid;
     udac.gid = udac.cgid = context_ptr->dir_stats.advfs_st_gid;
     udac.mode = context_ptr->dir_stats.advfs_st_mode & 0777;
-    mutex_unlock( &context_ptr->fsContext_mutex );
+    mutex_exit( &context_ptr->fsContext_mutex );
 
     results = sp_vnaccess(vp,  mode, &udac, cred);
 
@@ -846,7 +846,7 @@ msfs_getattr(
 
         vap->va_size = (off_t)bfap->file_size;
 
-        mutex_unlock( &context_ptr->fsContext_mutex );
+        mutex_exit( &context_ptr->fsContext_mutex );
 
         /*
          * Get the real number of bytes in the file.
@@ -956,7 +956,7 @@ no_update:
      * below grab all sorts of locks and they can go to sleep.
      */
 
-    mutex_unlock( &context_ptr->fsContext_mutex );
+    mutex_exit( &context_ptr->fsContext_mutex );
 
     /* the real number of bytes in the file */
     (void)bs_get_bf_page_cnt(bfap, &pageCnt);
@@ -1098,7 +1098,7 @@ fs_setattr(
                 context_ptr->fs_flag &= ~(MOD_CTIME);
             }
             context_ptr->dirty_stats = TRUE;
-            mutex_unlock( &context_ptr->fsContext_mutex);
+            mutex_exit( &context_ptr->fsContext_mutex);
 
             if (sts = fs_update_stats(vp, bfap, FtxNilFtxH, 0) != EOK) {
                 domain_panic(bfap->dmnP, "msfs_setattr: fs_update_stats (2) error, return code = %d",sts);
@@ -1134,7 +1134,7 @@ fs_setattr(
             context_ptr->fs_flag &= ~(MOD_MTIME);
         }
         context_ptr->dirty_stats = TRUE;
-        mutex_unlock( &context_ptr->fsContext_mutex);
+        mutex_exit( &context_ptr->fsContext_mutex);
         updateStats = 1;
     }
 
@@ -1165,7 +1165,7 @@ fs_setattr(
             context_ptr->dir_stats.advfs_st_flags &= 0xffff0000;
             context_ptr->dir_stats.advfs_st_flags |= vap->va_flags & 0xffff;
         }
-        mutex_unlock( &context_ptr->fsContext_mutex);
+        mutex_exit( &context_ptr->fsContext_mutex);
         updateStats = 1;
     }
 
@@ -1224,7 +1224,7 @@ fs_setattr(
             mutex_lock( &context_ptr->fsContext_mutex);
             context_ptr->fs_flag |= MOD_CTIME;
             context_ptr->dirty_stats = TRUE;
-            mutex_unlock( &context_ptr->fsContext_mutex);
+            mutex_exit( &context_ptr->fsContext_mutex);
 
         sts = fs_update_stats(vp, bfap, ftxH, 0);
         if (sts != EOK) {
@@ -1403,7 +1403,7 @@ fs_setattr_truncate( bfAccessT *bfap,
         cp->fs_flag |= (MOD_CTIME | MOD_MTIME);
     cp->dirty_stats = TRUE;
 
-    mutex_unlock( &cp->fsContext_mutex );
+    mutex_exit( &cp->fsContext_mutex );
 
     /*
      *  Update mode (don't clear enforcement mode lock bits).
@@ -1573,7 +1573,7 @@ notrunc:
     /* Get rid of the activeRange applied above. */
     mutex_lock( &bfap->actRangeLock );
     remove_actRange_from_list( bfap, arp );
-    mutex_unlock( &bfap->actRangeLock );
+    mutex_exit( &bfap->actRangeLock );
     ms_free( arp );
 
     TRUNC_XFER_UNLOCK( &bfap->trunc_xfer_lk );
@@ -2278,13 +2278,13 @@ remove_it_1:
         rbf_delete(VTOA(ndp->ni_vp), ftx_handle);
         mutex_lock( &rem_context->fsContext_mutex );
         rem_context->fs_flag |= M_DELETE;
-        mutex_unlock( &rem_context->fsContext_mutex );
+        mutex_exit( &rem_context->fsContext_mutex );
         sts = remove_dir_ent( ndp, ftx_handle );
         if (sts != EOK) 
         {
             mutex_lock( &rem_context->fsContext_mutex );
             rem_context->fs_flag &= ~M_DELETE;
-            mutex_unlock( &rem_context->fsContext_mutex );
+            mutex_exit( &rem_context->fsContext_mutex );
             goto _error_out;
         }
 
@@ -2297,7 +2297,7 @@ remove_it_1:
         mutex_lock( &rem_context->fsContext_mutex );
         rem_context->fs_flag |= MOD_CTIME;
         rem_context->dirty_stats = TRUE;
-        mutex_unlock( &rem_context->fsContext_mutex );
+        mutex_exit( &rem_context->fsContext_mutex );
 
         sts = fs_update_stats(ndp->ni_vp, VTOA(ndp->ni_vp), ftx_handle, 0);
         if (sts != EOK) {
@@ -2760,7 +2760,7 @@ msfs_link(
     mutex_lock( &file_context->fsContext_mutex );
     file_context->fs_flag |= MOD_CTIME;
     file_context->dirty_stats = TRUE;
-    mutex_unlock( &file_context->fsContext_mutex );
+    mutex_exit( &file_context->fsContext_mutex );
     ret = fs_update_stats(vp, bfap, ftx_handle, 0);
     if (ret != EOK) {
         ADVFS_SAD1("Error from fs_udpate_stats in msfs_link", ret);
@@ -2770,7 +2770,7 @@ msfs_link(
     dir_context->fs_flag |= (MOD_CTIME | MOD_MTIME);
     dir_context->dirty_stats = TRUE;
     dir_context->dirstamp++;
-    mutex_unlock( &dir_context->fsContext_mutex );
+    mutex_exit( &dir_context->fsContext_mutex );
 
     ret = fs_update_stats(dvp, VTOA(dvp), ftx_handle, 0);
     if (ret != EOK) {
@@ -3391,7 +3391,7 @@ call_namei:
         mutex_lock(&from_file_context->fsContext_mutex);
         from_file_context->fs_flag |= MOD_CTIME;
         from_file_context->dirty_stats = TRUE;
-        mutex_unlock(&from_file_context->fsContext_mutex);
+        mutex_exit(&from_file_context->fsContext_mutex);
 
         ret = fs_update_stats(from_vp, from_accessp, ftx_handle, 0);
         if (ret != EOK) {
@@ -3580,7 +3580,7 @@ call_namei:
             mutex_lock(&to_file_context->fsContext_mutex);
             to_file_context->fs_flag |= MOD_CTIME;
             to_file_context->dirty_stats = TRUE;
-            mutex_unlock(&to_file_context->fsContext_mutex);
+            mutex_exit(&to_file_context->fsContext_mutex);
             ret = fs_update_stats(to_vp, to_accessp, ftx_handle, 0);
             if (ret != EOK) {
                 domain_panic(dmnP, "msfs_rename: fs_udpate_stats failed with status %d", ret);
@@ -3605,7 +3605,7 @@ call_namei:
     mutex_lock( &to_dir_context->fsContext_mutex );
     to_dir_context->fs_flag |= (MOD_CTIME | MOD_MTIME);
     to_dir_context->dirty_stats = TRUE;
-    mutex_unlock( &to_dir_context->fsContext_mutex );
+    mutex_exit( &to_dir_context->fsContext_mutex );
 
     /*
      * put the to-dir stats out
@@ -3842,7 +3842,7 @@ decr_link_count(
         rbf_delete(VTOA(vp), ftx_handle);
         mutex_lock( &file_context->fsContext_mutex );
         file_context->fs_flag |= M_DELETE;
-        mutex_unlock( &file_context->fsContext_mutex );
+        mutex_exit( &file_context->fsContext_mutex );
     }
 }
 
@@ -4031,7 +4031,7 @@ msfs_rmdir(
     par_context->dir_stats.st_nlink--;
     mutex_lock( &par_context->fsContext_mutex );
     par_context->dirty_stats = TRUE;
-    mutex_unlock( &par_context->fsContext_mutex );
+    mutex_exit( &par_context->fsContext_mutex );
     reset_par = TRUE;
 
     /*
@@ -4087,7 +4087,7 @@ msfs_rmdir(
 
     mutex_lock( &rem_context->fsContext_mutex );
     rem_context->fs_flag |= M_DELETE;
-    mutex_unlock( &rem_context->fsContext_mutex );
+    mutex_exit( &rem_context->fsContext_mutex );
 
     /*
      * Remove the index if it is setup. We need to remove it now
@@ -4112,7 +4112,7 @@ msfs_rmdir(
     if (ret != EOK) {
         mutex_lock( &rem_context->fsContext_mutex );
         rem_context->fs_flag &= ~M_DELETE;
-        mutex_unlock( &rem_context->fsContext_mutex );
+        mutex_exit( &rem_context->fsContext_mutex );
         fail_ftx = TRUE;
         error = BSERRMAP(ret);
         goto _error_cleanup;
@@ -4316,7 +4316,7 @@ msfs_readlink(
         mutex_lock( &context_ptr->fsContext_mutex );
         context_ptr->dirty_stats = TRUE;
         context_ptr->fs_flag |= MOD_ATIME;
-        mutex_unlock( &context_ptr->fsContext_mutex );
+        mutex_exit( &context_ptr->fsContext_mutex );
         ms_free( buffer );
         goto _exit;
     }
@@ -4829,7 +4829,7 @@ msfsspec_read(
     mutex_lock( &cp->fsContext_mutex );
     cp->fs_flag |= MOD_ATIME;
     cp->dirty_stats = TRUE;
-    mutex_unlock( &cp->fsContext_mutex );
+    mutex_exit( &cp->fsContext_mutex );
 
     ret = spec_read(vp, uio, ioflag, cred);
 
@@ -4856,7 +4856,7 @@ msfsspec_write(
     mutex_lock( &cp->fsContext_mutex );
     cp->fs_flag |= MOD_CTIME | MOD_MTIME;
     cp->dirty_stats = TRUE;
-    mutex_unlock( &cp->fsContext_mutex );
+    mutex_exit( &cp->fsContext_mutex );
     ret = spec_write(vp, uio, ioflag, cred);
 
     NFS_FREEZE_UNLOCK(vp);
@@ -4971,13 +4971,13 @@ msfsspec_revoke(
 
                         RM_ACC_LIST_COND( bfap );
                         bfap->refCnt++;
-                        mutex_unlock( &bfap->bfaLock );
+                        mutex_exit( &bfap->bfaLock );
                         fs_update_stats(vp, bfap, FtxNilFtxH, 0);
                         mutex_lock( &bfap->bfaLock );
                         DEC_REFCNT( bfap );
                     }
                 }
-                mutex_unlock(&bfap->bfaLock);
+                mutex_exit(&bfap->bfaLock);
             }
             else {
                 /*
@@ -5036,7 +5036,7 @@ msfsfifo_read(
     mutex_lock( &cp->fsContext_mutex );
     cp->fs_flag |= MOD_ATIME;
     cp->dirty_stats = TRUE;
-    mutex_unlock( &cp->fsContext_mutex );
+    mutex_exit( &cp->fsContext_mutex );
     ret = fifo_read(vp, uio, ioflag, cred);
 
     return( ret );
@@ -5062,7 +5062,7 @@ msfsfifo_write(
     mutex_lock( &cp->fsContext_mutex );
     cp->fs_flag |= MOD_CTIME | MOD_MTIME;
     cp->dirty_stats = TRUE;
-    mutex_unlock( &cp->fsContext_mutex );
+    mutex_exit( &cp->fsContext_mutex );
     ret = fifo_write(vp, uio, ioflag, cred);
 
     NFS_FREEZE_UNLOCK(vp);
@@ -5213,7 +5213,7 @@ msfs_chown(
         mutex_lock( &file_context->fsContext_mutex );
         file_context->fs_flag |= MOD_CTIME;
         file_context->dirty_stats = TRUE;
-        mutex_unlock( &file_context->fsContext_mutex );
+        mutex_exit( &file_context->fsContext_mutex );
     }
 
     return (0);
@@ -5249,7 +5249,7 @@ msfs_chmod(
     if (cred->cr_uid !=
         file_context->dir_stats.advfs_st_uid &&
         (error = suser(cred, &u.u_acflag))) {
-        mutex_unlock( &file_context->fsContext_mutex );
+        mutex_exit( &file_context->fsContext_mutex );
         return (error);
     }
 
@@ -5267,7 +5267,7 @@ msfs_chmod(
 
     file_context->dir_stats.advfs_st_mode |= mode & 07777;
     file_context->dirty_stats = TRUE;
-    mutex_unlock( &file_context->fsContext_mutex );
+    mutex_exit( &file_context->fsContext_mutex );
 
     return (0);
 }
@@ -5945,7 +5945,7 @@ msfs_setvlocks(
         (!(context_ptr->dir_stats.advfs_st_mode & S_IXGRP))) {
         vp->v_flag |= VENF_LOCK;
     }
-    mutex_unlock( &context_ptr->fsContext_mutex );
+    mutex_exit( &context_ptr->fsContext_mutex );
 
     vp->v_flag |= VLOCKS;
 

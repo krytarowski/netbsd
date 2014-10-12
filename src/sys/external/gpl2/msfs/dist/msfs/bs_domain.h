@@ -201,7 +201,7 @@ typedef struct ftxTblD {
  *      ...
  *      mutex_lock( &dmnp->mutex );
  *      BFSET_DMN_INSQ( dmnp, queue, entry );
- *      mutex_unlock( &dmnp->mutex );
+ *      mutex_exit( &dmnp->mutex );
  *
  *  Insert Tail:
  *      domainT *dmnp;
@@ -211,7 +211,7 @@ typedef struct ftxTblD {
  *      ...
  *      mutex_lock( &dmnp->mutex );
  *      BFSET_DMN_INSQ( dmnp, queue, entry );
- *      mutex_unlock( &dmnp->mutex );
+ *      mutex_exit( &dmnp->mutex );
  *
  *  Remove Any:
  *      bfSetT *bfSetp;
@@ -219,7 +219,7 @@ typedef struct ftxTblD {
  *      ...
  *      mutex_lock( &dmnp->mutex );
  *      BFSET_DMN_REMQ( dmnp, entry );
- *      mutex_unlock( &dmnp->mutex );
+ *      mutex_exit( &dmnp->mutex );
  *
  *      Note:  The design of this queue and the BFSET_DMN_REMQ() MACRO is
  *             such that if an entry that has already been removed from the
@@ -238,7 +238,7 @@ typedef struct ftxTblD {
  *          ...do not do complex tasks holding the dmnp->mutex...
  *          entry = entry->bfsQfwd;
  *      }
- *      mutex_unlock( &dmnp->mutex );
+ *      mutex_exit( &dmnp->mutex );
  *
  *  Walk Backwards:
  *      domainT *dmnp;
@@ -251,7 +251,7 @@ typedef struct ftxTblD {
  *          ...do not do complex tasks holding the dmnp->mutex...
  *          entry = entry->bfsQbck;
  *      }
- *      mutex_unlock( &dmnp->mutex );
+ *      mutex_exit( &dmnp->mutex );
  */
 
 typedef struct bfsQueue {
