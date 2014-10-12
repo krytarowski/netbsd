@@ -1051,7 +1051,7 @@ fs_cleanup_thread(void)
                  * comes in to try again.
                  */
                 bfap = NULL;
-                mutex_lock(&BfAccessFreeLock);
+                mutex_enter(&BfAccessFreeLock);
                 if (((FreeAcc.len > 0) && (NumAccess > MaxAccess)) ||
                    ((FreeAcc.len > 2*AdvfsMinFreeAccess) &&
                  ((FreeAcc.len > (NumAccess *ADVFSMAXFREEACCESSPERCENT)/100) ||

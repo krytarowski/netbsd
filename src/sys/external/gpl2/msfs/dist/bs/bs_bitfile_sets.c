@@ -2232,14 +2232,14 @@ bs_bfs_flush (bfSetT *bfSetp  /* in - fileset to be flushed */)
 
     start:
 
-    mutex_lock(&bfSetp->accessChainLock);
+    mutex_enter(&bfSetp->accessChainLock);
 
     currbfap = bfSetp->accessFwd;
     while (currbfap != (bfAccessT *)(&bfSetp->accessFwd)) {
 
         MS_SMP_ASSERT(currbfap->bfSetp == bfSetp);
 
-        mutex_lock(&currbfap->bfaLock);
+        mutex_enter(&currbfap->bfaLock);
 
         /*
          * If the access structure state is invalid or
@@ -2302,8 +2302,8 @@ bs_bfs_flush (bfSetT *bfSetp  /* in - fileset to be flushed */)
         /*
          * Reseize the access structure and chain locks.
          */
-        mutex_lock(&bfSetp->accessChainLock);
-        mutex_lock(&currbfap->bfaLock);
+        mutex_enter(&bfSetp->accessChainLock);
+        mutex_enter(&currbfap->bfaLock);
 
         /*
          * Get a pointer to the next access structure in the fileset.
@@ -2353,7 +2353,7 @@ bfs_alloc(
     bfSetT *bfSetp;
     statusT sts;
 
-    mutex_lock( &LookupMutex ); /* bfs_lookup synchronization */
+    mutex_enter( &LookupMutex ); /* bfs_lookup synchronization */
     bfSetp = bfs_lookup( bfSetId );
 
     if ( BFSET_VALID(bfSetp) ) {
@@ -2419,7 +2419,7 @@ bfs_alloc(
     ftx_lock_init(&bfSetp->dirLock, &bfSetp->setMutex, ADVbfSetT_dirLock_info );
     ftx_lock_init(&bfSetp->fragLock, &bfSetp->setMutex, ADVbfSetT_fragLock_info );
     mutex_init(&bfSetp->cloneDelStateMutex, MUTEX_DEFAULT, IPL_NONE);
-    mutex_lock(&bfSetp->cloneDelStateMutex);
+    mutex_enter(&bfSetp->cloneDelStateMutex);
     lk_init(&bfSetp->cloneDelState, &bfSetp->cloneDelStateMutex, 
             LKT_STATE, 0, LKU_CLONE_DEL);
     (void)lk_set_state(&bfSetp->cloneDelState, CLONE_DEL_NORMAL);
@@ -2438,7 +2438,7 @@ bfs_alloc(
      * Link the bitfile-set descriptor into the domain's list of
      * bitfile-sets.
      */
-    mutex_lock( &bfSetp->dmnP->mutex );
+    mutex_enter( &bfSetp->dmnP->mutex );
     BFSET_DMN_INSQ(bfSetp->dmnP, &bfSetp->dmnP->bfSetHead, &bfSetp->bfSetList);
     mutex_exit( &bfSetp->dmnP->mutex );
 
@@ -2478,7 +2478,7 @@ bfs_dealloc(
     /*
      * There is no more freelist, but we are keeping the statistics for now.
      */
-    mutex_lock( &LookupMutex );
+    mutex_enter( &LookupMutex );
     BfsFreeListStats.freeCnt++;
     mutex_exit( &LookupMutex );
 
@@ -2507,7 +2507,7 @@ bfs_dealloc(
         /*
          * Remove this bitfile-set from the list in the domain structure.
          */
-        mutex_lock( &bfSetp->dmnP->mutex );
+        mutex_enter( &bfSetp->dmnP->mutex );
         BFSET_DMN_REMQ( bfSetp->dmnP, &bfSetp->bfSetList );
         mutex_exit( &bfSetp->dmnP->mutex );
 
@@ -2516,7 +2516,7 @@ bfs_dealloc(
          */
         BFSET_HASH_REMOVE( bfSetp, TRUE );
 
-        mutex_lock( &LookupMutex ); /* bfs_lookup synchronization */
+        mutex_enter( &LookupMutex ); /* bfs_lookup synchronization */
         BfsFreeListStats.descFreed++;
         BfsFreeListStats.allocCnt--;
         mutex_exit( &LookupMutex );
@@ -2554,7 +2554,7 @@ bs_bfs_lookup_desc(
 {
     bfSetT *bfSetp;
 
-    mutex_lock( &LookupMutex ); /* bfs_lookup synchronization */
+    mutex_enter( &LookupMutex ); /* bfs_lookup synchronization */
     bfSetp = bfs_lookup( bfSetId );
     mutex_exit( &LookupMutex );
 
@@ -3012,7 +3012,7 @@ bs_bfs_close(
      *     it can now wake up and continue the fileset deletion.
      */
     if (options & BFS_OP_XFER_XTNTS_TO_CLONE) {
-        mutex_lock(&bfSetp->cloneDelStateMutex);
+        mutex_enter(&bfSetp->cloneDelStateMutex);
 
         currentCloneDelState = lk_get_state(bfSetp->cloneDelState); 
         MS_SMP_ASSERT(currentCloneDelState == CLONE_DEL_XFER_STG ||
@@ -3109,7 +3109,7 @@ bfs_access(
     /*
      * Get a pointer to the bitfile-set's descriptor.
      */
-    mutex_lock( &LookupMutex ); /* bfs_lookup synchronization */
+    mutex_enter( &LookupMutex ); /* bfs_lookup synchronization */
     bfSetp = bfs_lookup( bfSetId );
     mutex_exit( &LookupMutex );
 
@@ -3206,7 +3206,7 @@ bfs_access(
 
         if (options & BFS_OP_XFER_XTNTS_TO_CLONE) 
         {
-            mutex_lock(&bfSetp->cloneDelStateMutex);
+            mutex_enter(&bfSetp->cloneDelStateMutex);
 
             MS_SMP_ASSERT(lk_get_state(bfSetp->cloneDelState) == CLONE_DEL_NORMAL);
             MS_SMP_ASSERT(bfSetp->xferThreads == 0);
@@ -3223,7 +3223,7 @@ bfs_access(
          */
 
         if (options & BFS_OP_XFER_XTNTS_TO_CLONE) {
-            mutex_lock(&bfSetp->cloneDelStateMutex);
+            mutex_enter(&bfSetp->cloneDelStateMutex);
             currentCloneDelState = lk_get_state(bfSetp->cloneDelState); 
 
             MS_SMP_ASSERT(currentCloneDelState == CLONE_DEL_NORMAL   ||
@@ -3285,7 +3285,7 @@ bfs_access(
      *    gone.
      */
     else if (options & BFS_OP_XFER_XTNTS_TO_CLONE) {
-        mutex_lock(&bfSetp->cloneDelStateMutex);
+        mutex_enter(&bfSetp->cloneDelStateMutex);
         currentCloneDelState = lk_get_state(bfSetp->cloneDelState); 
 
         MS_SMP_ASSERT(currentCloneDelState == CLONE_DEL_NORMAL   ||
@@ -4360,7 +4360,7 @@ unlink_clone(
     ** that this rmfset will continue to deallocating the bfSet structure
     ** while hold_cloneset is holding the domain mutex.
     */
-    mutex_lock( &origSetp->dmnP->mutex );
+    mutex_enter( &origSetp->dmnP->mutex );
     origSetp->cloneSetp = NULL;
     mutex_exit( &origSetp->dmnP->mutex );
 
@@ -4463,7 +4463,7 @@ bs_bfs_delete(
      * xfer_xtnts_to_clone() threads from accessing the clone fileset.
      */
     if (bfSetp->cloneId != BS_BFSET_ORIG) {
-        mutex_lock(&bfSetp->cloneDelStateMutex);
+        mutex_enter(&bfSetp->cloneDelStateMutex);
 
         currentCloneDelState = lk_get_state(bfSetp->cloneDelState); 
 
@@ -4484,7 +4484,7 @@ bs_bfs_delete(
         mutex_exit(&bfSetp->cloneDelStateMutex);
         restoreCloneDelState = TRUE;
 
-        mutex_lock(&dmnP->mutex);
+        mutex_enter(&dmnP->mutex);
         bfSetp->bfsDelPend = TRUE;
         /* Wait for current cows. All future cows will silently do nothing. */
         while ( bfSetp->bfsHoldCnt > 0 ) {
@@ -4492,7 +4492,7 @@ bs_bfs_delete(
             bfSetp->bfsOpWait = 1;
             thread_sleep( (vm_offset_t)&bfSetp->bfsHoldCnt,
                           &dmnP->mutex.mutex, FALSE );
-            mutex_lock( &dmnP->mutex );
+            mutex_enter( &dmnP->mutex );
         }
         mutex_exit(&dmnP->mutex);
     }
@@ -4742,12 +4742,12 @@ HANDLE_EXCEPTION:
     }
 
     if ( restoreCloneDelState ) {
-        mutex_lock(&bfSetp->cloneDelStateMutex);
+        mutex_enter(&bfSetp->cloneDelStateMutex);
         lk_set_state(&bfSetp->cloneDelState, CLONE_DEL_NORMAL);
         mutex_exit(&bfSetp->cloneDelStateMutex);
     }
 
-    mutex_lock(&dmnP->mutex);  /* bind bfsDelPend & BFS_OD_OUT_OF_SYNC */
+    mutex_enter(&dmnP->mutex);  /* bind bfsDelPend & BFS_OD_OUT_OF_SYNC */
     bfSetp->bfsDelPend = FALSE;
 
     if ( bfSetp->bfSetFlags & BFS_OD_OUT_OF_SYNC ) {
@@ -4953,7 +4953,7 @@ bs_bfs_clone(
     ** bfsOpPend is set from here to when numClones is incremented.
     ** So between the two, we know a clone operation is started or completed.
     */
-    mutex_lock( &dmnP->mutex );
+    mutex_enter( &dmnP->mutex );
 
     /* Racing bs_bfs_clone will see bfsOpPend or numClones and bail. */
     if ( origSetp->bfsOpPend || origSetp->numClones >= BS_MAX_CLONES) {
@@ -4974,7 +4974,7 @@ bs_bfs_clone(
         origSetp->bfsOpWait = 1;
         thread_sleep( (vm_offset_t)&origSetp->bfsHoldCnt,
                       &dmnP->mutex.mutex, FALSE );
-        mutex_lock( &dmnP->mutex );
+        mutex_enter( &dmnP->mutex );
     }
 
     mutex_exit( &dmnP->mutex );
@@ -5025,7 +5025,7 @@ bs_bfs_clone(
      * we synchronize with read, write, and other clonefsets using the
      * domain's BFD_DOMAIN_FLUSH_IN_PROGRESS flag.
      */
-    mutex_lock( &dmnP->mutex );
+    mutex_enter( &dmnP->mutex );
     if ( dmnP->dmnFlag & BFD_DOMAIN_FLUSH_IN_PROGRESS ) {
         /* The domain flush is being completed for us by a racing clonefset. */
         assert_wait((vm_offset_t)(&dmnP->dmnFlag), FALSE);
@@ -5039,7 +5039,7 @@ bs_bfs_clone(
         bs_bfdmn_flush( dmnP );
         (void) bs_bfdmn_flush_sync( dmnP );
 
-        mutex_lock( &dmnP->mutex );
+        mutex_enter( &dmnP->mutex );
         dmnP->dmnFlag &= ~BFD_DOMAIN_FLUSH_IN_PROGRESS;
         thread_wakeup((vm_offset_t)(&dmnP->dmnFlag));
         mutex_exit( &dmnP->mutex );
@@ -5092,7 +5092,7 @@ bs_bfs_clone(
         RAISE_EXCEPTION(E_DOMAIN_PANIC);
     }
 
-    mutex_lock( &dmnP->mutex );
+    mutex_enter( &dmnP->mutex );
 
     origSetAttrp->cloneCnt++;
     origSetp->cloneCnt++;
@@ -5338,7 +5338,7 @@ bs_bfs_out_of_sync(
     RBF_PIN_FIELD( fsetPgH, setAttrp->flags );
     setAttrp->flags |= BFS_OD_OUT_OF_SYNC;
 
-    mutex_lock(&bfSetp->bfSetMutex);
+    mutex_enter(&bfSetp->bfSetMutex);
     bfSetp->bfSetFlags |= BFS_OD_OUT_OF_SYNC;
     mutex_exit(&bfSetp->bfSetMutex);
     return;
@@ -5995,7 +5995,7 @@ clone(
      * for it.
      */
 
-    mutex_lock( &cloneBfAp->bfaLock );
+    mutex_enter( &cloneBfAp->bfaLock );
     lk_set_state( &cloneBfAp->stateLk, ACC_INIT_TRANS );
     mutex_exit( &cloneBfAp->bfaLock );
     initState = TRUE;
@@ -6149,7 +6149,7 @@ clone(
     ftx_special_done_mode( ftxH, FTXDONE_SKIP_SUBFTX_UNDO );
     ftx_done_n( ftxH, FTA_BS_BFS_CLONE_V1 );
 
-    mutex_lock( &cloneBfAp->bfaLock );
+    mutex_enter( &cloneBfAp->bfaLock );
     unlkAction = lk_set_state( &cloneBfAp->stateLk, ACC_VALID );
     lk_signal( unlkAction, &cloneBfAp->stateLk );
     mutex_exit( &cloneBfAp->bfaLock );
@@ -6163,7 +6163,7 @@ HANDLE_EXCEPTION:
     }
 
     if (initState) {
-        mutex_lock( &cloneBfAp->bfaLock );
+        mutex_enter( &cloneBfAp->bfaLock );
         unlkAction = lk_set_state( &cloneBfAp->stateLk, ACC_VALID );
         lk_signal( unlkAction, &cloneBfAp->stateLk );
         mutex_exit( &cloneBfAp->bfaLock );
@@ -6340,7 +6340,7 @@ hold_cloneset( bfAccessT *bfap, int waitFlg )
 
     MS_SMP_ASSERT(bfSetp->cloneId == BS_BFSET_ORIG);
 
-    mutex_lock( &dmnP->mutex );  /* protects bfSetp->cloneSetp */
+    mutex_enter( &dmnP->mutex );  /* protects bfSetp->cloneSetp */
 
     if ( waitFlg ) {
         /* Check to see if the clone set is being created. */
@@ -6351,7 +6351,7 @@ hold_cloneset( bfAccessT *bfap, int waitFlg )
             thread_sleep( (vm_offset_t)&bfSetp->bfsHoldWait,
                           &dmnP->mutex.mutex, FALSE );
             bfSetp->bfsHoldWait--;
-            mutex_lock( &dmnP->mutex );
+            mutex_enter( &dmnP->mutex );
         }
     }
 
@@ -6385,7 +6385,7 @@ hold_cloneset( bfAccessT *bfap, int waitFlg )
             thread_sleep( (vm_offset_t)&cloneSetp->bfsHoldWait,
                           &dmnP->mutex.mutex, FALSE );
             cloneSetp->bfsHoldWait--;
-            mutex_lock( &dmnP->mutex );
+            mutex_enter( &dmnP->mutex );
         }
     }
 
@@ -6413,7 +6413,7 @@ hold_cloneset( bfAccessT *bfap, int waitFlg )
 void
 release_cloneset( bfSetT *bfSetp )
 {
-    mutex_lock( &bfSetp->dmnP->mutex );
+    mutex_enter( &bfSetp->dmnP->mutex );
 
     MS_SMP_ASSERT(bfSetp->bfsHoldCnt > 0);
     bfSetp->bfsHoldCnt--;
@@ -6596,7 +6596,7 @@ try_again:
         }
 
         if ( *arp != NULL ) {
-            mutex_lock(&bfap->actRangeLock);
+            mutex_enter(&bfap->actRangeLock);
             remove_actRange_from_list(bfap, *arp);
             mutex_exit(&bfap->actRangeLock);
             ms_free(*arp);
@@ -7071,7 +7071,7 @@ cow_done:
     }
 
     if ( arp ) {
-        mutex_lock(&bfap->actRangeLock);
+        mutex_enter(&bfap->actRangeLock);
         remove_actRange_from_list(bfap, arp);
         mutex_exit(&bfap->actRangeLock);
         ms_free(arp);
@@ -7128,7 +7128,7 @@ error_exit:
     MS_SMP_ASSERT(!migTruncLocked);    
 
     if ( arp ) {
-        mutex_lock(&bfap->actRangeLock);
+        mutex_enter(&bfap->actRangeLock);
         remove_actRange_from_list(bfap, arp);
         mutex_exit(&bfap->actRangeLock);
         ms_free(arp);
@@ -7640,7 +7640,7 @@ rbf_set_bfset_params(
      * can still hold old information. If not, the value will
      * be changed.
      */
-    mutex_lock(&bfSetp->bfSetMutex);
+    mutex_enter(&bfSetp->bfSetMutex);
     bfSetp->bfSetFlags = bfSetParams->bfSetFlags;
     mutex_exit(&bfSetp->bfSetMutex);
 

@@ -1337,7 +1337,7 @@ lgr_writev_ftx(
              * the lsnLock guarantees the values of origLogRec for all
              * buffers on that list.
              */
-            mutex_lock( &dmnP->lsnLock );
+            mutex_enter( &dmnP->lsnLock );
             bp->origLogRec = current_rec;
             add_lsn_list( bp, dmnP );
             mutex_exit( &dmnP->lsnLock );
@@ -1798,7 +1798,7 @@ getLogStats(domainT * dmnP, logStatT *logStatp)
     logStatp->rsv3 = dmnP->logStat.rsv3;
     logStatp->rsv4 = dmnP->logStat.rsv4;
 
-    mutex_lock( &dmnP->lsnLock );
+    mutex_enter( &dmnP->lsnLock );
     logStatp->maxLogPgs = dmnP->logStat.maxLogPgs;
     logStatp->minLogPgs = dmnP->logStat.minLogPgs;
     logpages = (int)ldP->nextRec.page - (int)ldP->oldestPg;
@@ -1811,7 +1811,7 @@ getLogStats(domainT * dmnP, logStatT *logStatp)
     mutex_exit( &dmnP->lsnLock );
 
     ftxTDp = &dmnP->ftxTbld;
-    mutex_lock( &FtxMutex );
+    mutex_enter( &FtxMutex );
     logStatp->oldFtxTblAgent = dmnP->logStat.oldFtxTblAgent;
     logStatp->maxFtxTblSlots = dmnP->logStat.maxFtxTblSlots;
 
@@ -4264,7 +4264,7 @@ lgr_switch_vol(
     /* assert that the log has valid in-mem structures */
     MS_SMP_ASSERT(dmnP->logAccessp->xtnts.validFlag);
     /* then proceed to figure out which RAD the log's vd struct is on */
-    mutex_lock( &dmnP->vdpTblLock );
+    mutex_enter( &dmnP->vdpTblLock );
     dmnP->logVdRadId = PA_TO_MID(vtop(current_processor(), 
                                  dmnP->vdpTbl[dmnP->logAccessp->xtnts.xtntMap->subXtntMap->vdIndex-1]));
     mutex_exit( &dmnP->vdpTblLock );

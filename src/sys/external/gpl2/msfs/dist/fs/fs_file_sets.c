@@ -179,7 +179,7 @@ fs_fset_create(
         /* created: root, root tag, quota.group, quota.user, .tags . */
 
 start:
-        mutex_lock(&bfSetp->accessChainLock);
+        mutex_enter(&bfSetp->accessChainLock);
         for (bfap = bfSetp->accessFwd;
              bfap != (bfAccessT *)(&bfSetp->accessFwd);
              bfap = nextbfap) {
