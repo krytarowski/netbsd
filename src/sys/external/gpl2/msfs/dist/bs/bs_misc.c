@@ -3745,7 +3745,7 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
         if ( bfap->dmnP->vdpTbl[vdi] )
             vdCnt++;
     }
-    mutex_unlock( &bfap->dmnP->vdpTblLock );
+    mutex_exit( &bfap->dmnP->vdpTblLock );
 
     libBufp->getCludioXtntMap.volMax = vdi;
     
@@ -3795,10 +3795,10 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
                 vdCnt++;
             } else
                 libBufp->getCludioXtntMap.devtvec->device[vdi] = 0;
-            mutex_unlock( &vdp->vdStateLock );
+            mutex_exit( &vdp->vdStateLock );
         }
     }
-    mutex_unlock( &bfap->dmnP->vdpTblLock );
+    mutex_exit( &bfap->dmnP->vdpTblLock );
     libBufp->getCludioXtntMap.devtvec->devtCnt = vdCnt;
 
 _exit:
@@ -5052,7 +5052,7 @@ msfs_syscall_op_ss_get_fraglist(libParamsT *libBufp)
         fp = fp->ssFragRatFwd;
     }
     libBufp->ssGetFraglist.ssFragCnt = i;
-    mutex_unlock(&vdp->ssVolInfo.ssFragLk);
+    mutex_exit(&vdp->ssVolInfo.ssFragLk);
 
 HANDLE_EXCEPTION:
 
@@ -5145,7 +5145,7 @@ msfs_syscall_op_ss_get_hotlist(libParamsT *libBufp)
     }
     libBufp->ssGetHotlist.ssHotCnt = i;
 
-    mutex_unlock( &dmnP->ssDmnInfo.ssDmnHotLk );
+    mutex_exit( &dmnP->ssDmnInfo.ssDmnHotLk );
 
 HANDLE_EXCEPTION:
 

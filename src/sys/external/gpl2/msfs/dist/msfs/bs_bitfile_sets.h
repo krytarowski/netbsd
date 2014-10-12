@@ -343,7 +343,7 @@ bfset_trace( bfSetT  *bfsetp,
     else \
         bfSetp->accessFwd->setBwd = bfap; \
     bfSetp->accessFwd = bfap; \
-    mutex_unlock(&bfSetp->accessChainLock); \
+    mutex_exit(&bfSetp->accessChainLock); \
 }
 
 /* 
@@ -374,7 +374,7 @@ bfset_trace( bfSetT  *bfsetp,
         bfap->setFwd->setBwd = bfap->setBwd; \
     bfap->setFwd = bfap->setBwd = NULL; \
     if (lock_list) \
-        mutex_unlock(&bfSetp->accessChainLock); \
+        mutex_exit(&bfSetp->accessChainLock); \
 }
 
 statusT

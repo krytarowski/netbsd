@@ -395,7 +395,7 @@ _ftx_start_i(
 
             /* The caller doesn't want to wait */
             if (flag & FTX_NOWAIT) {
-                mutex_unlock( &FtxMutex );
+                mutex_exit( &FtxMutex );
 #ifdef ADVFS_SMP_ASSERT
                 lock_done(&dmnP->ftxSlotLock);
 #endif
@@ -456,7 +456,7 @@ _ftx_start_i(
         }
 
         /* Allocate a new ftx struct */
-        mutex_unlock( &FtxMutex );
+        mutex_exit( &FtxMutex );
         ftxp = newftx();
         mutex_lock( &FtxMutex );
 
@@ -589,7 +589,7 @@ _ftx_start_i(
             }
         }
 
-        mutex_unlock( &FtxMutex );
+        mutex_exit( &FtxMutex );
 
         /* Initialize the new root ftx. */
 
@@ -1216,7 +1216,7 @@ ftx_done_urdr(
     /* Now free the ftx struct allocated to the newly-available slot */
     ftx_free_2( ftxp );
 
-    mutex_unlock( &FtxMutex );
+    mutex_exit( &FtxMutex );
 }
 
 /*
@@ -1295,7 +1295,7 @@ ftx_quit(
     /* Now free the ftx struct allocated to the newly-available slot */
     ftx_free_2( ftxp );
 
-    mutex_unlock( &FtxMutex );
+    mutex_exit( &FtxMutex );
 
     return;
 }
@@ -1758,7 +1758,7 @@ free_ftx:
         /* Now free the ftx struct allocated to the newly-available slot */
         ftx_free_2( ftxp );
 
-        mutex_unlock( &FtxMutex );
+        mutex_exit( &FtxMutex );
     } else if ( lvl ) {
 
         /* If the level was non-zero reduce the ftx level */
@@ -2820,7 +2820,7 @@ do_ftx_continuations(
             }
 
             ++ftxTDp->noTrimCnt;
-            mutex_unlock( &FtxMutex );
+            mutex_exit( &FtxMutex );
 
         }
         if ( dmnP->state == BFD_RECOVER_CONTINUATIONS ) {
@@ -2934,7 +2934,7 @@ ftx_lock_write(
     mutex_lock( lk->hdr.mutex );
     lk->hdr.try_line_num = ln;
     lk->hdr.try_file_name = fn;
-    mutex_unlock( lk->hdr.mutex );
+    mutex_exit( lk->hdr.mutex );
 #endif /* ADVFS_DEBUG */
 
     lock_write( &(lk->lock) );
@@ -2953,7 +2953,7 @@ ftx_lock_write(
     lk->hdr.thread = *((int *)&(current_thread()));
     lk->hdr.lock_cnt++;
     lk->hdr.use_cnt++;
-    mutex_unlock( lk->hdr.mutex );
+    mutex_exit( lk->hdr.mutex );
 #endif /* ADVFS_DEBUG */
 }
 
@@ -2975,7 +2975,7 @@ ftx_lock_read(
     mutex_lock( lk->hdr.mutex );
     lk->hdr.try_line_num = ln;
     lk->hdr.try_file_name = fn;
-    mutex_unlock( lk->hdr.mutex );
+    mutex_exit( lk->hdr.mutex );
 #endif /* ADVFS_DEBUG */
 
     lock_read( &(lk->lock) );
@@ -2994,7 +2994,7 @@ ftx_lock_read(
     lk->hdr.thread = *((int *)&(current_thread()));
     lk->hdr.lock_cnt++;
     lk->hdr.use_cnt++;
-    mutex_unlock( lk->hdr.mutex );
+    mutex_exit( lk->hdr.mutex );
 #endif /* ADVFS_DEBUG */
 }
 
@@ -3018,7 +3018,7 @@ ftx_unlock(
             mutex_lock( lkHdr->mutex );
             lk_signal( lk_set_state( sLk, sLk->pendingState ), sLk );
             sLk->pendingState = LKW_NONE;
-            mutex_unlock( lkHdr->mutex );
+            mutex_exit( lkHdr->mutex );
             break;
 
         case LKT_FTX:
@@ -3032,7 +3032,7 @@ ftx_unlock(
 #ifdef ADVFS_DEBUG
     mutex_lock( lkHdr->mutex );
     lkHdr->lock_cnt--;
-    mutex_unlock( lkHdr->mutex );
+    mutex_exit( lkHdr->mutex );
 #endif /* ADVFS_DEBUG */
 
 } /* end ftx_unlock */
@@ -3417,7 +3417,7 @@ ftx_get_dirtybufla(
         dmnP->dirtyBufLa.read = thisread;
         dirtyBufLa = dmnP->dirtyBufLa.lgra[(thisread & 1)];
 
-        mutex_unlock( &dmnP->lsnLock );
+        mutex_exit( &dmnP->lsnLock );
     }
 
     return dirtyBufLa;
@@ -3464,7 +3464,7 @@ ftx_set_oldestftxla(
 
     oldftxlap->lgra[(updindex & 1)] = oldftxLa;
 
-    mutex_unlock( &FtxMutex );
+    mutex_exit( &FtxMutex );
 }
 
 /*
@@ -3502,7 +3502,7 @@ ftx_get_oldestftxla(
     oldftxlap->read = thisread;
     oldftxLa = oldftxlap->lgra[(thisread & 1)];
 
-    mutex_unlock( &FtxMutex );
+    mutex_exit( &FtxMutex );
 
     return oldftxLa;
 }
@@ -3550,7 +3550,7 @@ ftx_set_firstla(
         oldftxLa = oldftxlap->lgra[(updindex & 1)];
     }
 
-    mutex_unlock( &FtxMutex );
+    mutex_exit( &FtxMutex );
 
     return oldftxLa;
 }
@@ -3653,7 +3653,7 @@ checklogtrim:
          * Flush the log and wait for it.
          */
         dmnP->logStat.logTrims++;
-        mutex_unlock( &FtxMutex );
+        mutex_exit( &FtxMutex );
 
         lgr_flush( dmnP->ftxLogP );
         /*

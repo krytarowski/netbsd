@@ -1068,7 +1068,7 @@ fs_cleanup_thread(void)
                             access_structures_deallocated++;
                         }
                         else {
-                            mutex_unlock(&(FreeAcc.freeFwd->bfaLock));
+                            mutex_exit(&(FreeAcc.freeFwd->bfaLock));
                             failed_access_structure_deallocations++;
                         }
                     }
@@ -1076,7 +1076,7 @@ fs_cleanup_thread(void)
                         failed_access_structure_deallocations++;
                     }
                 }
-                mutex_unlock(&BfAccessFreeLock);
+                mutex_exit(&BfAccessFreeLock);
                 if (bfap) {
                     bs_dealloc_access(bfap);
                 }
