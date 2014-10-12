@@ -4253,28 +4253,10 @@ bs_find_page( struct bfAccess *bfap,          /* in */
 
 void
 _state_block(
-#ifndef ADVFS_DEBUG
     struct bsBuf *bp,   /* in - buffer on which to block */
     int *wait           /* in/out - waited previously? */
-#else
-    struct bsBuf *bp,   /* in - buffer on which to block */
-    int *wait,          /* in/out - waited previously? */
-    int ln,
-    char *fn
-#endif /* ADVFS_DEBUG */
     )
 {
-
-#ifdef ADVFS_DEBUG
-    if (!bp->bufLock.locked) {
-        printf( "_state_block: ln = %d, fn = %s\n", ln, fn );
-        ADVFS_SAD0( "_state_block: bsBuf.bufLock not locked" );
-    }
-
-    bp->lock.hdr.try_line_num = ln;
-    bp->lock.hdr.try_file_name = fn;
-#endif /* ADVFS_DEBUG */
-
     MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex));
     if (AdvfsLockStats) {
         if (*wait) {
@@ -4294,12 +4276,6 @@ _state_block(
     bp->lock.waiting++;
     cv_wait( &bp->lock.bufCond, &bp->bufLock );
     bp->lock.waiting--;
-
-#ifdef ADVFS_DEBUG
-    bp->lock.hdr.line_num = ln;
-    bp->lock.hdr.file_name = fn;
-    bp->lock.hdr.use_cnt++;
-#endif /* ADVFS_DEBUG */
 }
 
 
