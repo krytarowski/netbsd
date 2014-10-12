@@ -565,7 +565,7 @@ rbf_delete_int(
      * Put the state lock into the ACC_INIT_TRANS state.  This state will
      * become ACC_VALID when the transaction commits.
      */
-    mutex_lock(&bfap->bfaLock);
+    mutex_enter(&bfap->bfaLock);
 
     lk_wait_for (&(bfap->stateLk), &bfap->bfaLock, ACC_VALID);
     delOpRec.prevAccState = ACC_VALID;
@@ -716,7 +716,7 @@ bs_delete_undo_opx(
                                recp->prevBfState,
                                ftxH
                                );
-        mutex_lock(&bfap->bfaLock);
+        mutex_enter(&bfap->bfaLock);
         (void) lk_set_state(&bfap->stateLk, ACC_VALID);
         bfap->bfState = recp->prevBfState;
 
@@ -2046,7 +2046,7 @@ done:
      */
 
 
-    mutex_lock (&(dmnP->mutex));
+    mutex_enter (&(dmnP->mutex));
     mutexisLocked = 1;
 
     if ((pmcid.page == pvdp->ddlActiveWaitMCId.page) &&

@@ -204,7 +204,7 @@ msgq_alloc_msg(
     msgQT *msgQ = (msgQT *) msgQH;
     void *msg;
 
-    mutex_lock( &msgQ->mutex );
+    mutex_enter( &msgQ->mutex );
 
     msg = ulmq_alloc_msg( msgQH );
 
@@ -228,7 +228,7 @@ msgq_send_msg(
 {
     msgQT *msgQ = (msgQT *) msgQH;
 
-    mutex_lock( &msgQ->mutex );
+    mutex_enter( &msgQ->mutex );
 
     ulmq_send_msg( msgQH, msg );
 
@@ -250,7 +250,7 @@ msgq_recv_msg(
     msgQT *msgQ = (msgQT *) msgQH;
     void *msg;
 
-    mutex_lock( &msgQ->mutex );
+    mutex_enter( &msgQ->mutex );
 
     msg = ulmq_recv_msg( msgQH, &msgQ->mutex );
 
@@ -275,7 +275,7 @@ msgq_free_msg(
 {
     msgQT *msgQ = (msgQT *) msgQH;
 
-    mutex_lock( &msgQ->mutex );
+    mutex_enter( &msgQ->mutex );
 
     ulmq_free_msg( msgQH, msg );
 
@@ -299,7 +299,7 @@ msgq_purge_msgs(
     msgQT *msgQ = (msgQT *) msgQH;
     void *msg;
 
-    mutex_lock( &msgQ->mutex );
+    mutex_enter( &msgQ->mutex );
 
     while (msgQ->readyMsgs > 0) {
         msg = ulmq_recv_msg( msgQH, &msgQ->mutex );
@@ -347,7 +347,7 @@ msgq_destroy(
 {
     msgQT *msgQ = (msgQT *) msgQH;
 
-    mutex_lock( &msgQ->mutex );
+    mutex_enter( &msgQ->mutex );
 
     if ( (msgQ->userMsgs != 0) ){
         mutex_exit( &msgQ->mutex );

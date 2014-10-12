@@ -639,7 +639,7 @@ after_inactive:
                          * Compensate for artificially stuffing
                          * noTrimCnt to 1, as ftx_free will decrement it.
                          */
-                        mutex_lock( &FtxMutex );
+                        mutex_enter( &FtxMutex );
                         ++dmnP->ftxTbld.noTrimCnt;
 
                         if (CFS_XID(ftxp->lrh.ftxId)) {
@@ -715,7 +715,7 @@ logclose:
      * the activating fileset.
      */
     BFSETTBL_LOCK_WRITE( dmnP );
-    mutex_lock( &dmnP->mutex );
+    mutex_enter( &dmnP->mutex );
     while( dmnP->bfSetHead.bfsQfwd != &dmnP->bfSetHead ) {
         entry = dmnP->bfSetHead.bfsQfwd;
         BFSET_DMN_REMQ( dmnP, entry );
@@ -724,7 +724,7 @@ logclose:
         if (bfSetp->fsRefCnt == 0) {
             bfs_dealloc( bfSetp, TRUE );
         }    
-        mutex_lock( &dmnP->mutex );
+        mutex_enter( &dmnP->mutex );
     }
     mutex_exit( &dmnP->mutex );
     BFSETTBL_UNLOCK( dmnP );    
@@ -941,7 +941,7 @@ ftx_recovery_pass(
             MS_SMP_ASSERT( ftxp != NULL ); /* ms_malloc waits, it never fails */
 
             ftxTDp->tablep[ftxSlot].ftxp = ftxp;
-            mutex_lock(&FtxMutex);
+            mutex_enter(&FtxMutex);
             FtxDynAlloc.currAllocated++;
             if ( FtxDynAlloc.currAllocated > FtxDynAlloc.maxAllocated )
                 FtxDynAlloc.maxAllocated = FtxDynAlloc.currAllocated;
@@ -1166,7 +1166,7 @@ ftx_recovery_pass(
             /* Mark this slot available.  FtxMutex synchronizes updates
              * to FtxDynAlloc counters in ftx_free_2.
              */
-            mutex_lock(&FtxMutex);
+            mutex_enter(&FtxMutex);
             ftx_free( ftxSlot, ftxTDp );
 
             /* Now free the ftx struct allocated to the newly-available slot. */
@@ -1377,7 +1377,7 @@ ftx_recovery_pass(
 
                 /* FtxMutex synchronizes updates to FtxDynAlloc counters */
                 /* in ftx_free_2. */
-                mutex_lock(&FtxMutex);
+                mutex_enter(&FtxMutex);
                 ftx_free( ftxSlot, ftxTDp );
                 ftx_free_2( ftxp );
                 mutex_exit(&FtxMutex);

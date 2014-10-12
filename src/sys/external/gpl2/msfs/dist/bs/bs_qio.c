@@ -279,7 +279,7 @@ bs_q_blocking(
              */
             asm("ldl $31,0(%0)",(tmp->fwd->bsBuf));
         }
-        mutex_lock( &bp->bufLock );
+        mutex_enter( &bp->bufLock );
         MS_SMP_ASSERT( bp->lock.state & (IO_TRANS | BUSY) );
         if ( !(bp->lock.state & IO_COUNTED) ) {
             if (bp->lock.state & READING)
@@ -300,7 +300,7 @@ bs_q_blocking(
     u.u_tru.tru_inblock += read_count;
     u.u_tru.tru_oublock += write_count;
 
-    mutex_lock( &vdp->blockingQ.ioQLock );
+    mutex_enter( &vdp->blockingQ.ioQLock );
     /*
      * Add list to the end of the blocking queue.
      */
@@ -360,7 +360,7 @@ bs_q_flushq(
              */
             asm("ldl $31,0(%0)",(tmp->fwd->bsBuf));
         }
-        mutex_lock( &bp->bufLock );
+        mutex_enter( &bp->bufLock );
         MS_SMP_ASSERT( bp->lock.state & (IO_TRANS | BUSY) );
         if ( !(bp->lock.state & IO_COUNTED) ) {
             if (bp->lock.state & READING)
@@ -384,7 +384,7 @@ bs_q_flushq(
     u.u_tru.tru_oublock += write_count;
 
     /* Add list to the end of the flush queue */
-    mutex_lock( &vdp->flushQ.ioQLock );
+    mutex_enter( &vdp->flushQ.ioQLock );
     vdp->flushQ.ioQLen += count;
     vdp->flushQ.queue_cnt += count;
 
@@ -442,7 +442,7 @@ bs_q_ubcreq(
              */
             asm("ldl $31,0(%0)",(tmp->fwd->bsBuf));
         }
-        mutex_lock( &bp->bufLock );
+        mutex_enter( &bp->bufLock );
         MS_SMP_ASSERT( bp->lock.state & (IO_TRANS | BUSY) );
         if ( !(bp->lock.state & IO_COUNTED) ) {
             if (bp->lock.state & READING)
@@ -466,7 +466,7 @@ bs_q_ubcreq(
     u.u_tru.tru_oublock += write_count;
 
     /* Add list to the end of the ubcReq queue */
-    mutex_lock( &vdp->ubcReqQ.ioQLock );
+    mutex_enter( &vdp->ubcReqQ.ioQLock );
     vdp->ubcReqQ.ioQLen += count;
     vdp->ubcReqQ.queue_cnt += count;
 
@@ -699,7 +699,7 @@ bs_io_complete(
         MS_SMP_ASSERT(bp->accFwd && bp->lock.state & ACC_DIRTY);
 
         /* Seize file's bfIoLock while moving buffer around on dirty list.*/
-        mutex_lock( &bfap->bfIoLock );
+        mutex_enter( &bfap->bfIoLock );
 
         /* Notify any threads which are flushing this file 
          * that this buffer has been flushed. 
@@ -746,7 +746,7 @@ bs_io_complete(
     if ( bp->lsnFwd != NULL ) {
 
         /* Seize the domainT.lsnLock while manipulating the lsnList chain. */
-        mutex_lock(&dmnP->lsnLock);
+        mutex_enter(&dmnP->lsnLock);
 
         lsnp = &dmnP->lsnList;
 
@@ -914,7 +914,7 @@ clearSignal:
          * Decrement the # IOs outstanding in the range.
          */
         MS_SMP_ASSERT( bp->actRangep->arIosOutstanding > 0 );
-        mutex_lock( &bp->bfAccess->actRangeLock );
+        mutex_enter( &bp->bfAccess->actRangeLock );
         bp->actRangep->arIosOutstanding--;
         if (bp->directIO && bp->aio_bp) {
             /* An aio was completed; we need to release the lock
@@ -988,7 +988,7 @@ check_cont_bits( domainT *dmnP, int src )
         return;
     }
 
-    mutex_lock( &dmnP->lsnLock );
+    mutex_enter( &dmnP->lsnLock );
 
     if ( dmnP->contBits & CK_WAITQ ) {
 
@@ -1042,7 +1042,7 @@ bs_pinblock(
     lsnT lsnToWriteTo     /* in */
     )
 {
-    mutex_lock( &dmnP->lsnLock );
+    mutex_enter( &dmnP->lsnLock );
 
     if ( LSN_GT(lsnToWriteTo, dmnP->writeToLsn) ) {
 
@@ -1076,7 +1076,7 @@ bs_pinblock_sync(
     int blocked = 0,  wait = 0;
     struct processor *myprocessor;        /* used by mark_bio_wait */
 
-    mutex_lock( &dmnP->lsnLock );
+    mutex_enter( &dmnP->lsnLock );
 
     while( dmnP->lsnList.length &&
             LSN_LTE( dmnP->lsnList.lsnFwd->origLogRec.lsn, waitLsn ) ) {
@@ -1194,7 +1194,7 @@ loop:
              */
             if (couldnt_hold == UBC_GET_WAIT_EXCHANGE) {
                 ubc_fs_page_wait(bp->vmpage, &dmnP->lsnLock.mutex);
-                mutex_lock(&dmnP->lsnLock);
+                mutex_enter(&dmnP->lsnLock);
                 if (ioListp) {
                     /* Point to the last buffer on our accumulated list and
                      * continue on to the next buffer on the lsnlist, which
@@ -1220,8 +1220,8 @@ loop:
              * concerned about the buffer still being on the lsnList, however.
              */
             mutex_exit( &dmnP->lsnLock );
-            mutex_lock( &bp->bufLock );
-            mutex_lock( &dmnP->lsnLock );
+            mutex_enter( &bp->bufLock );
+            mutex_enter( &dmnP->lsnLock );
             if (!lsnp->lsnFwd ||
                  LSN_GT( bp->currentLogRec.lsn, logBfap->hiFlushLsn ) )
             {
@@ -1233,7 +1233,7 @@ loop:
                 if ( len ) {
                     mutex_exit( &dmnP->lsnLock );
                     bs_q_list( ioListp, len, bs_q_blocking );
-                    mutex_lock( &dmnP->lsnLock );   /* should get this OK */
+                    mutex_enter( &dmnP->lsnLock );   /* should get this OK */
                 }
                 /* Drop UBC page (pg_hold count) reference. */
                 ubc_page_release(bp->vmpage, B_WRITE);
@@ -1261,11 +1261,11 @@ loop:
             if ( len ) {
                 mutex_exit( &bp->bufLock );
                 bs_q_list( ioListp, len, bs_q_blocking );
-                mutex_lock( &bp->bufLock );
+                mutex_enter( &bp->bufLock );
                 if ( !(bp->lsnFwd) ||
                      !LSN_EQL(bp->origLogRec.lsn, origLsn) ) {
                     mutex_exit( &bp->bufLock );
-                    mutex_lock( &dmnP->lsnLock );
+                    mutex_enter( &dmnP->lsnLock );
                     /* Drop UBC page (pg_hold count) reference. */
                     ubc_page_release(bp->vmpage, B_WRITE);
                     goto loop;
@@ -1273,7 +1273,7 @@ loop:
             }
             wait_state ( bp, FLUSH | IO_TRANS);
             mutex_exit( &bp->bufLock );
-            mutex_lock( &dmnP->lsnLock );
+            mutex_enter( &dmnP->lsnLock );
             /* Drop UBC page (pg_hold count) reference. */
             ubc_page_release(bp->vmpage, B_WRITE);
             goto loop;
@@ -1310,7 +1310,7 @@ loop:
                 domain_panic(dmnP,
                              "lsn_io_list: advfs_page_get(%p) returned %x",
                              bp, sts);
-                mutex_lock(&bp->bufLock);
+                mutex_enter(&bp->bufLock);
 
                 /* Force advfs io completion to clean up our chains so
                  * we don't just have threads hanging.  The ubc page
@@ -1327,7 +1327,7 @@ loop:
                 ubc_page_release(bp->vmpage, B_WRITE);
                 if (len)
                     bs_q_list(ioListp, len, bs_q_blocking);
-                mutex_lock(&dmnP->lsnLock);
+                mutex_enter(&dmnP->lsnLock);
                 goto loop;
             }
 
@@ -1365,7 +1365,7 @@ loop:
          * fast since any we have moved to the blocking queue already will be 
          * marked BUSY and we will skip them.
          */
-        mutex_lock( &dmnP->lsnLock );
+        mutex_enter( &dmnP->lsnLock );
         if ( bp->lsnFwd && LSN_EQL(bp->origLogRec.lsn, origLsn) ) {
             nextbp = bp->lsnFwd;
             mutex_exit( &bp->bufLock );
@@ -1378,7 +1378,7 @@ loop:
             if ( len ) {
                 mutex_exit( &dmnP->lsnLock );
                 bs_q_list( ioListp, len, bs_q_blocking );
-                mutex_lock( &dmnP->lsnLock );
+                mutex_enter( &dmnP->lsnLock );
             }
             /* Drop UBC page (pg_hold count) reference. */
             ubc_page_release(bp->vmpage, B_WRITE);
@@ -1397,7 +1397,7 @@ loop:
     if ( len ) {
         mutex_exit( &dmnP->lsnLock );
         bs_q_list( ioListp, len, bs_q_blocking );
-        mutex_lock( &dmnP->lsnLock );
+        mutex_enter( &dmnP->lsnLock );
     }
 }
 
@@ -1434,7 +1434,7 @@ bs_lsnList_flush(struct domain *dmnP)   /* in */
     lsnT origLsn;
     int noqfnd;
 
-    mutex_lock( &dmnP->lsnLock );
+    mutex_enter( &dmnP->lsnLock );
 
     /* Only run one domain's metadata lsnList flush at a time. 
      * If a pinblock flush is in progress, then skip this flush.
@@ -1554,7 +1554,7 @@ loop:
                 domain_panic(dmnP,
                              "bs_lsnList_flush: advfs_page_get(%p) returned %x",
                              bp, sts);
-                mutex_lock(&bp->bufLock);
+                mutex_enter(&bp->bufLock);
 
                 /* Force advfs io completion to clean up our chains so
                  * we don't just have threads hanging.  The ubc page
@@ -1571,7 +1571,7 @@ loop:
                 ubc_page_release(bp->vmpage, B_WRITE);
                 if (len)
                     bs_q_list(ioListp, len, bs_q_blocking);
-                mutex_lock(&dmnP->lsnLock);
+                mutex_enter(&dmnP->lsnLock);
                 goto loop;
             }
 
@@ -1609,7 +1609,7 @@ loop:
          * fast since any we have moved to the blocking queue already will be 
          * marked BUSY and we will skip them.
          */
-        mutex_lock( &dmnP->lsnLock );
+        mutex_enter( &dmnP->lsnLock );
         if ( bp->lsnFwd && LSN_EQL(bp->origLogRec.lsn, origLsn) ) {
             nextbp = bp->lsnFwd;
             mutex_exit( &bp->bufLock );
@@ -1622,7 +1622,7 @@ loop:
             if ( len ) {
                 mutex_exit( &dmnP->lsnLock );
                 bs_q_list( ioListp, len, bs_q_blocking );
-                mutex_lock( &dmnP->lsnLock );
+                mutex_enter( &dmnP->lsnLock );
             }
             /* Drop UBC page (pg_hold count) reference. */
             ubc_page_release(bp->vmpage, B_WRITE);
@@ -1634,7 +1634,7 @@ loop:
     if ( len ) {
         mutex_exit( &dmnP->lsnLock );
         bs_q_list( ioListp, len, bs_q_blocking );
-        mutex_lock( &dmnP->lsnLock );
+        mutex_enter( &dmnP->lsnLock );
     }
  
     /* Reset the flush flag so another metadata flush can start. */
@@ -1687,7 +1687,7 @@ bs_q_lazy(
     i = len - 1;
     do {
         bp = tmp->bsBuf;
-        mutex_lock( &bp->bufLock );
+        mutex_enter( &bp->bufLock );
         MS_SMP_ASSERT( bp->lock.state & IO_TRANS );  /* I think this is true */
         if ( !(bp->lock.state & IO_COUNTED) ) {
             if (bp->lock.state & READING)
@@ -1769,7 +1769,7 @@ bs_q_lazy(
         if ( LSN_GT( ioListp->bsBuf->currentLogRec.lsn,
                     bfap->hiFlushLsn ) ) {
 
-            mutex_lock( &vdp->waitLazyQ.ioQLock );
+            mutex_enter( &vdp->waitLazyQ.ioQLock );
             for( count = len, iop = ioListp; count; count--, iop = iop->fwd ) {
                 iop->ioQ = WAIT_LAZY;
                 iop->bsBuf->bufDebug |= BSBUF_WAITQ; /* debug */
@@ -1820,7 +1820,7 @@ wait_to_readyq( struct vd *vdp )
     extern u_int smsync_period;
     tempQMarkerT *tempQ_marker = NULL;
 
-    mutex_lock( &vdp->waitLazyQ.ioQLock );
+    mutex_enter( &vdp->waitLazyQ.ioQLock );
 
     if ( vdp->waitLazyQ.ioQLen == 0 ) {
         mutex_exit( &vdp->waitLazyQ.ioQLock );
@@ -1871,7 +1871,7 @@ wait_to_readyq( struct vd *vdp )
                     mutex_exit(&vdp->waitLazyQ.ioQLock);
                     tempQ_marker = (tempQMarkerT *)
                         ms_malloc(sizeof(tempQMarkerT));
-                    mutex_lock(&vdp->waitLazyQ.ioQLock);
+                    mutex_enter(&vdp->waitLazyQ.ioQLock);
                     iop = vdp->waitLazyQ.fwd;
                     continue;
                 }
@@ -1899,7 +1899,7 @@ wait_to_readyq( struct vd *vdp )
             /* The waitLazy queue lock was dropped in add_to_smsync() or
              * sort_onto_readyq(), so reaquire it and reset the iop.
              */
-            mutex_lock( &vdp->waitLazyQ.ioQLock );
+            mutex_enter( &vdp->waitLazyQ.ioQLock );
             iop = vdp->waitLazyQ.fwd;
         } else {
             iop = iop->fwd;
@@ -1949,8 +1949,8 @@ ready_to_consolq( struct vd *vdp )
     ioList = NULL;
     ioListLen = 0;
 
-    mutex_lock( &vdp->readyLazyQ.ioQLock );
-    mutex_lock( &vdp->consolQ.ioQLock );
+    mutex_enter( &vdp->readyLazyQ.ioQLock );
+    mutex_enter( &vdp->consolQ.ioQLock );
     iop = vdp->readyLazyQ.fwd;
 
     /*
@@ -2206,7 +2206,7 @@ sort_onto_readyq(
      * is too much overhead to efficiently handle single-element chains.
      */
     if ( cnt == 1 ) {
-        mutex_lock( &vdp->readyLazyQ.ioQLock );
+        mutex_enter( &vdp->readyLazyQ.ioQLock );
         iop->ioQ = READY_LAZY;
         if ( vdp->readyLazyQ.ioQLen == 0 ) {
             /* ReadyLazyQ is empty; just add this one in. */
@@ -2313,7 +2313,7 @@ sort_onto_readyq(
          * legitimate queues, but will be safely able to remove the ioDesc
          * from the temporary queue.
          */
-        mutex_lock( &vdp->tempQ.ioQLock );
+        mutex_enter( &vdp->tempQ.ioQLock );
         adjust_temporary_queue_elements(tempQ_marker, chain_iop, cnt, vdp);
 
         if (incoming_lockp)
@@ -2321,7 +2321,7 @@ sort_onto_readyq(
 
         while ( chain_iop != (ioDescT *)tempQ_marker ) {
 
-            mutex_lock( &vdp->readyLazyQ.ioQLock );
+            mutex_enter( &vdp->readyLazyQ.ioQLock );
             chain_len = 0;
             sorted_list->fwd = (ioDescT *)&fake_header;
             sorted_list->bwd = (ioDescT *)&fake_header;
@@ -2367,7 +2367,7 @@ sort_onto_readyq(
              * this list by rm_ioq() or rm_from_lazyq() when the
              * temporary queue lock was dropped above.
              */
-            mutex_lock( &vdp->tempQ.ioQLock );
+            mutex_enter( &vdp->tempQ.ioQLock );
             chain_iop = tempQ_marker->fwd;
         }
 
@@ -2385,7 +2385,7 @@ sort_onto_readyq(
      */
     iop->bwd->fwd = NULL;                /* terminate incoming list */
 
-    mutex_lock( &vdp->readyLazyQ.ioQLock );
+    mutex_enter( &vdp->readyLazyQ.ioQLock );
     while ( chain_iop ) {                /* NULL when input chain processed */
         cum_added_here = 0;
         chain_len = 0;
@@ -2525,7 +2525,7 @@ cache_logflush( domainT *dmnP )
     struct bsBuf *tail;
     lsnT logPageLsn;
 
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
 
     if ( bfap->dirtyBufList.length ) {
 
@@ -2635,7 +2635,7 @@ call_logflush( domainT *dmnP, lsnT lsn, int wait )
                 if ( wait == TRUE ) {
                     sts = bfflush_sync(bfap, lsn);
                 }
-                mutex_lock( &bfap->bfIoLock );
+                mutex_enter( &bfap->bfIoLock );
                 return;
             }
         }
@@ -2653,7 +2653,7 @@ call_logflush( domainT *dmnP, lsnT lsn, int wait )
     if ( wait == TRUE ) {
         (void)lgr_flush_sync( dmnP->ftxLogP, lsn );
     }
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
 }
 
 /*
@@ -2673,7 +2673,7 @@ bs_logpage_dirty(
 {
     struct bsBuf *tail;
 
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
 
     /*
      * Determine if the desired logpage 
@@ -2726,7 +2726,7 @@ bs_logflush_start(
 
     struct bsBuf *tail;
 
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
 
     /*
      * Check for empty list.
@@ -2821,7 +2821,7 @@ restart:
              */
             if (couldnt_hold == UBC_GET_WAIT_EXCHANGE) {
                 ubc_fs_page_wait(bp->vmpage, &bfap->bfIoLock.mutex);
-                mutex_lock(&bfap->bfIoLock);
+                mutex_enter(&bfap->bfIoLock);
                 if (ioListp) {
                     /* Point to the last buffer on our accumulated list and
                      * continue on to the next buffer on the dirtyBufList.
@@ -2845,8 +2845,8 @@ restart:
          */
         if (!mutex_tryenter( &bp->bufLock.mutex )) {
             mutex_exit( &bfap->bfIoLock );
-            mutex_lock( &bp->bufLock );
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bp->bufLock );
+            mutex_enter( &bfap->bfIoLock );
             if (!(bp->lock.state & ACC_DIRTY) ||
                  (bp->lock.state & BUSY) || 
                  (bp->writeRef) ||
@@ -2887,7 +2887,7 @@ restart:
             domain_panic(bfap->dmnP,
                          "logflush_cont: advfs_page_get(%p) returned %x",
                          bp, sts);
-            mutex_lock(&bp->bufLock);
+            mutex_enter(&bp->bufLock);
 
             /* Force advfs io completion to clean up our chains so
              * we don't just have threads hanging.  The ubc page
@@ -2901,7 +2901,7 @@ restart:
             bp->ln = SET_LINE_AND_THREAD(__LINE__);
             bs_io_complete(bp, &sts);
             ubc_page_release(bp->vmpage, B_WRITE);
-            mutex_lock(&bfap->bfIoLock);
+            mutex_enter(&bfap->bfIoLock);
             goto restart;
         }
         bp->lock.state |= BUSY;
@@ -2961,7 +2961,7 @@ restart:
         /* Enter the buffers onto the blocking queue.  */
         mutex_exit( &bfap->bfIoLock );
         bs_q_list( ioListp, listLen, bs_q_blocking );
-        mutex_lock( &bfap->bfIoLock );
+        mutex_enter( &bfap->bfIoLock );
     }
 
     return;
@@ -3014,7 +3014,7 @@ bfflush_start(
 
     *seq = nilLSN;
 
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
 
     /*
      * Init the disk error result of this flush.
@@ -3085,12 +3085,12 @@ loop:
              * current file's bfIoLock before calling this routine.
              */
             mutex_exit( &bfap->bfIoLock );
-            mutex_lock( &logBfap->bfIoLock );
+            mutex_enter( &logBfap->bfIoLock );
 
             call_logflush( bfap->dmnP, hiCurrentLsn, TRUE );
 
             mutex_exit( &logBfap->bfIoLock );
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bfap->bfIoLock );
 
             /* since we released the file's bfIoLock, must restart the scan */
             goto loop;
@@ -3140,8 +3140,8 @@ loop:
          */
         if (!mutex_tryenter( &bp->bufLock.mutex )) {
             mutex_exit( &bfap->bfIoLock );
-            mutex_lock( &bp->bufLock );
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bp->bufLock );
+            mutex_enter( &bfap->bfIoLock );
             if (bp->accListSeq != savListSeq )  /* bp removed from acc list */
             {
                 /* buffer was removed from dirty list while we dropped the
@@ -3185,7 +3185,7 @@ loop:
                 mutex_exit( &bp->bufLock );
                 bs_q_list( ioList, listLen, 
                            useFlushCnt ? bs_q_ubcreq : bs_q_flushq );
-                mutex_lock( &bp->bufLock );
+                mutex_enter( &bp->bufLock );
                 if (bp->accListSeq != savListSeq )  /* bp removed from list */
                 {
                     /* We had to release both locks so make
@@ -3193,7 +3193,7 @@ loop:
                      * didn't get reused before waiting.
                      */
                     mutex_exit( &bp->bufLock );
-                    mutex_lock( &bfap->bfIoLock );
+                    mutex_enter( &bfap->bfIoLock );
                     /* Drop UBC page (pg_hold count) reference. */
                     ubc_page_release(bp->vmpage, B_WRITE);
                     goto loop;
@@ -3202,7 +3202,7 @@ loop:
 
             wait_state ( bp, FLUSH );
             mutex_exit( &bp->bufLock );
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bfap->bfIoLock );
             /* Drop UBC page (pg_hold count) reference. */
             ubc_page_release(bp->vmpage, B_WRITE);
             goto loop;
@@ -3267,7 +3267,7 @@ loop:
                     bs_q_list( ioList, listLen,
                                useFlushCnt ? bs_q_ubcreq : bs_q_flushq );
                 }
-                mutex_lock( &bfap->bfIoLock );
+                mutex_enter( &bfap->bfIoLock );
                 /* Drop UBC page (pg_hold count) reference. */
                 ubc_page_release(bp->vmpage, B_WRITE);
                 goto loop;
@@ -3285,7 +3285,7 @@ loop:
                 mutex_exit( &bp->bufLock );
                 bs_q_list( ioList, listLen,
                            useFlushCnt ? bs_q_ubcreq : bs_q_flushq );
-                mutex_lock( &bp->bufLock );
+                mutex_enter( &bp->bufLock );
                 if (bp->accListSeq != savListSeq )  /* bp removed from list */
                 {
                     /* We had to release both locks so make
@@ -3293,7 +3293,7 @@ loop:
                      * didn't get reused before waiting.
                      */
                     mutex_exit( &bp->bufLock );
-                    mutex_lock( &bfap->bfIoLock );
+                    mutex_enter( &bfap->bfIoLock );
                     /* Drop UBC page (pg_hold count) reference. */
                     ubc_page_release(bp->vmpage, B_WRITE);
                     goto loop;
@@ -3302,7 +3302,7 @@ loop:
 
             wait_state ( bp, IO_TRANS );
             mutex_exit( &bp->bufLock );
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bfap->bfIoLock );
             /* Drop UBC page (pg_hold count) reference. */
             ubc_page_release(bp->vmpage, B_WRITE);
             goto loop;
@@ -3378,7 +3378,7 @@ loop:
                     domain_panic(bfap->dmnP,
                              "bfflush_start: advfs_page_get(%p) returned %x",
                              bp, sts);
-                    mutex_lock(&bp->bufLock);
+                    mutex_enter(&bp->bufLock);
 
                     /* Force advfs io completion to clean up our chains so
                      * we don't just have threads hanging.  The ubc page
@@ -3395,7 +3395,7 @@ loop:
                     if (listLen)
                          bs_q_list(ioList, listLen,
                                    useFlushCnt ? bs_q_ubcreq : bs_q_flushq);
-                    mutex_lock(&bfap->bfIoLock);
+                    mutex_enter(&bfap->bfIoLock);
                     goto loop;
                 }
             } else {
@@ -3447,7 +3447,7 @@ loop:
                 bs_q_list( ioList, listLen,
                            useFlushCnt ? bs_q_ubcreq : bs_q_flushq );
             }
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bfap->bfIoLock );
             /* Drop UBC page (pg_hold count) reference. */
             ubc_page_release(bp->vmpage, B_WRITE);
             goto loop;
@@ -3455,7 +3455,7 @@ loop:
             clear_state( bp, IO_TRANS );
         }
 
-        mutex_lock( &bfap->bfIoLock );
+        mutex_enter( &bfap->bfIoLock );
         mutex_exit( &bp->bufLock );
 
         /* Drop UBC page (pg_hold count) reference. */
@@ -3575,7 +3575,7 @@ bfflush_sync(
     flushWaiter->waitLsn = waitLsn;
     flushWaiter->cnt = 1;
 
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
     
     /* Recheck if the target Lsn is already flushed. */
 
@@ -3703,7 +3703,7 @@ bs_bf_flush_nowait(
     bfflush_start( bfap, &waitLsn, MIGRATE, 0 );
 
     do {
-        mutex_lock(&bfap->bfIoLock);
+        mutex_enter(&bfap->bfIoLock);
 
         /* make this quick check as an optimization to see if
          * the buffer and all those before it have been flushed
@@ -3826,7 +3826,7 @@ bs_bflush_sync(
         /*
          * Wait for device to become quiescent.
          */
-        mutex_lock( &vdp->devQ.ioQLock );
+        mutex_enter( &vdp->devQ.ioQLock );
         mark_bio_wait;
         lk_wait_for( &vdp->active, &vdp->devQ.ioQLock, INACTIVE_DISK );
         unmark_bio_wait;
@@ -3900,7 +3900,7 @@ bfflush(
                    priority & FLUSH_INTERMEDIATE ||
                    priority & FLUSH_UBC);
 
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
 
     /*
      * Init the disk error result of this flush.
@@ -3978,7 +3978,7 @@ bfflush(
     rfp->firstPage = first_page;
     rfp->lastPage = last_page;
     rfp->outstandingIoCount = 0;
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
         
     /*
      * Scan the list of buffers creating a list of ioDesc
@@ -4032,12 +4032,12 @@ loop:
          */
         if (LSN_GT(hiCurrentLsn, logbfap->hiFlushLsn)) {
             mutex_exit(&bfap->bfIoLock);
-            mutex_lock(&logbfap->bfIoLock);
+            mutex_enter(&logbfap->bfIoLock);
 
             call_logflush( bfap->dmnP, hiCurrentLsn, TRUE );
 
             mutex_exit(&logbfap->bfIoLock);
-            mutex_lock(&bfap->bfIoLock);
+            mutex_enter(&bfap->bfIoLock);
         }
     }
 
@@ -4079,7 +4079,7 @@ loop:
              */
             if (couldnt_hold == UBC_GET_WAIT_EXCHANGE) {
                 ubc_fs_page_wait(bp->vmpage, &bfap->bfIoLock.mutex);
-                mutex_lock(&bfap->bfIoLock);
+                mutex_enter(&bfap->bfIoLock);
                 if (ioList) {
                     /* Point to the last buffer on our accumulated list and
                      * continue on to the next buffer on the dirtyBufList.
@@ -4136,13 +4136,13 @@ loop:
                     }
                     assert_wait_mesg_timo(NULL, FALSE, "AdvFS delay", 1);
                     thread_block();
-                    mutex_lock(&bfap->bfIoLock);
+                    mutex_enter(&bfap->bfIoLock);
                     goto loop;
                 }
                 rflp->rflFwd = bp->rflList;
                 rflp->rfp = rfp;
                 bp->rflList = rflp;
-                mutex_lock(&rfp->rangeFlushLock);
+                mutex_enter(&rfp->rangeFlushLock);
                 rfp->outstandingIoCount++;
                 bsBufsCounted++;
                 
@@ -4170,8 +4170,8 @@ loop:
          */
         if (!mutex_tryenter( &bp->bufLock.mutex )) {
             mutex_exit( &bfap->bfIoLock );
-            mutex_lock( &bp->bufLock );
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bp->bufLock );
+            mutex_enter( &bfap->bfIoLock );
             if (bp->accListSeq != savAccSeq) /* bp removed from list */
             {
                 /* buffer was removed from dirty list while we dropped the
@@ -4215,7 +4215,7 @@ loop:
             if ( listLen ) {
                 mutex_exit( &bp->bufLock );
                 bs_q_list( ioList, listLen, q_for_io );
-                mutex_lock( &bp->bufLock );
+                mutex_enter( &bp->bufLock );
                 if (bp->accListSeq != savAccSeq )  /* bp removed from list */
                 {
                     /* We had to release both locks so make
@@ -4223,7 +4223,7 @@ loop:
                      * didn't get reused before waiting.
                      */
                     mutex_exit( &bp->bufLock );
-                    mutex_lock( &bfap->bfIoLock );
+                    mutex_enter( &bfap->bfIoLock );
                     /* Drop UBC page (pg_hold count) reference. */
                     ubc_page_release(bp->vmpage, B_WRITE);
                     goto loop;
@@ -4232,7 +4232,7 @@ loop:
 
             wait_state(bp, FLUSH | IO_TRANS);
             mutex_exit( &bp->bufLock );
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bfap->bfIoLock );
             /* Drop UBC page (pg_hold count) reference. */
             ubc_page_release(bp->vmpage, B_WRITE);
             goto loop;
@@ -4287,13 +4287,13 @@ loop:
                     ubc_page_release(bp->vmpage, B_WRITE);
                     assert_wait_mesg_timo(NULL, FALSE, "AdvFS delay", 1);
                     thread_block();
-                    mutex_lock(&bfap->bfIoLock);
+                    mutex_enter(&bfap->bfIoLock);
                     goto loop;
                 }
                 rflp->rflFwd = bp->rflList;
                 rflp->rfp = rfp;
                 bp->rflList = rflp;
-                mutex_lock(&rfp->rangeFlushLock);
+                mutex_enter(&rfp->rangeFlushLock);
                 rfp->outstandingIoCount++;
                 bsBufsCounted++;
                 
@@ -4348,7 +4348,7 @@ loop:
                 if (listLen) {
                     bs_q_list(ioList, listLen, q_for_io);
                 }
-                mutex_lock(&bfap->bfIoLock);
+                mutex_enter(&bfap->bfIoLock);
                 /* Drop UBC page (pg_hold count) reference. */
                 ubc_page_release(bp->vmpage, B_WRITE);
                 goto loop;
@@ -4376,7 +4376,7 @@ loop:
         bp->lock.state &= ~FLUSH;
         mutex_exit( &bfap->bfIoLock );
         rm_from_lazyq( bp, &ioListPart, &listLenPart, &noqfnd );
-        mutex_lock( &bfap->bfIoLock );
+        mutex_enter( &bfap->bfIoLock );
 
         if (listLenPart || (noqfnd && (bp->lock.state & GETPAGE_WRITE))) {
             MS_SMP_ASSERT(bp->bfAccess == bfap);
@@ -4413,20 +4413,20 @@ loop:
                     if (listLen) {
                         bs_q_list( ioList, listLen, q_for_io );
                     }
-                    mutex_lock(&bp->bufLock);
+                    mutex_enter(&bp->bufLock);
                     clear_state( bp, IO_TRANS );
                     mutex_exit(&bp->bufLock);
                     /* Drop UBC page (pg_hold count) reference. */
                     ubc_page_release(bp->vmpage, B_WRITE);
                     assert_wait_mesg_timo(NULL, FALSE, "AdvFS delay", 1);
                     thread_block();
-                    mutex_lock(&bfap->bfIoLock);
+                    mutex_enter(&bfap->bfIoLock);
                     goto loop;
                 }
                 rflp->rflFwd = bp->rflList;
                 rflp->rfp = rfp;
                 bp->rflList = rflp;
-                mutex_lock(&rfp->rangeFlushLock);
+                mutex_enter(&rfp->rangeFlushLock);
                 rfp->outstandingIoCount++;
                 bsBufsCounted++;
 
@@ -4478,7 +4478,7 @@ loop:
                     domain_panic(bfap->dmnP,
                                  "bfflush: advfs_page_get(%p) returned %x",
                                  bp, sts);
-                    mutex_lock(&bp->bufLock);
+                    mutex_enter(&bp->bufLock);
 
                     /* Force advfs io completion to clean up our chains so
                      * we don't just have threads hanging.  The ubc page
@@ -4494,7 +4494,7 @@ loop:
                     ubc_page_release(bp->vmpage, B_WRITE);
                     if (listLen)
                         bs_q_list(ioList, listLen, q_for_io);
-                    mutex_lock(&bfap->bfIoLock);
+                    mutex_enter(&bfap->bfIoLock);
                     goto loop;
                 }
             } else {
@@ -4538,7 +4538,7 @@ loop:
                  */
                 mutex_exit( &bfap->bfIoLock );
                 bs_q_list( ioList, listLen, q_for_io );
-                mutex_lock( &bfap->bfIoLock );
+                mutex_enter( &bfap->bfIoLock );
             }
             /* Drop UBC page (pg_hold count) reference. */
             ubc_page_release(bp->vmpage, B_WRITE);
@@ -4579,13 +4579,13 @@ loop:
                         ubc_page_release(bp->vmpage, B_WRITE);
                         assert_wait_mesg_timo(NULL, FALSE, "AdvFS delay", 1);
                         thread_block();
-                        mutex_lock(&bfap->bfIoLock);
+                        mutex_enter(&bfap->bfIoLock);
                         goto loop;
                     }
                     rflp->rflFwd = bp->rflList;
                     rflp->rfp = rfp;
                     bp->rflList = rflp;
-                    mutex_lock(&rfp->rangeFlushLock);
+                    mutex_enter(&rfp->rangeFlushLock);
                     rfp->outstandingIoCount++;
                     bsBufsCounted++;
 
@@ -4620,10 +4620,10 @@ loop:
          */
         mutex_exit( &bfap->bfIoLock );
         bs_q_list( ioList, listLen, q_for_io );
-        mutex_lock( &bfap->bfIoLock );
+        mutex_enter( &bfap->bfIoLock );
     }
 
-    mutex_lock(&rfp->rangeFlushLock);
+    mutex_enter(&rfp->rangeFlushLock);
     while (rfp->outstandingIoCount) {
         assert_wait_mesg((vm_offset_t)&rfp->outstandingIoCount, FALSE, 
                          "rangeflushwait");
@@ -4632,8 +4632,8 @@ loop:
         mark_bio_wait;
         thread_block();
         unmark_bio_wait;
-        mutex_lock( &bfap->bfIoLock );
-        mutex_lock(&rfp->rangeFlushLock);
+        mutex_enter( &bfap->bfIoLock );
+        mutex_enter(&rfp->rangeFlushLock);
     }
     mutex_exit(&rfp->rangeFlushLock);
 
@@ -4850,10 +4850,10 @@ again:
                  * bfap.
                  */
 
-                mutex_lock( lockptr );
+                mutex_enter( lockptr );
                 lockflag = TRUE;
 
-                mutex_lock( &bp->bufLock );
+                mutex_enter( &bp->bufLock );
 
                 if ( bp->accListSeq != savListSeq ) {
                     /* IO got done while we waited for the lock. If we had 
@@ -5036,7 +5036,7 @@ again:
                 aprintf ( "rm_ioq:        bsBuf 0x%lx  vd 0x%lx\n", bp, vdp ));
 
             lockptr = &qhdr->ioQLock;
-            mutex_lock( lockptr );
+            mutex_enter( lockptr );
 
             /* Recheck the I/O queue the ioDesc is on since it may have
              * moved between the first check and obtaining the I/O queue
@@ -5134,7 +5134,7 @@ bs_raw_page( bfAccessT *bfap,           /* in */
     bs_q_blocking( iop, 1 );
 
     /* Wait for the I/O to complete. */
-    mutex_lock( &bp->bufLock );
+    mutex_enter( &bp->bufLock );
     wait = 0;
     mark_bio_wait;
     while( bp->lock.state & BUSY ) {
@@ -5266,7 +5266,7 @@ bs_io_thread( int radId )
                 if ((TEST_DMNP(dmnP) == EOK) && vdp) {
 
                     startiocalls[9]++;
-                    mutex_lock( &vdp->devQ.ioQLock );
+                    mutex_enter( &vdp->devQ.ioQLock );
 
                     /*
                      * In the normal case, we're called to refill the devQ,
@@ -5337,7 +5337,7 @@ bs_io_thread( int radId )
 
                 freeosfbuf( bp );
 
-                mutex_lock( &vdp->devQ.ioQLock );
+                mutex_enter( &vdp->devQ.ioQLock );
                 if ( iop->ioRetryCount < USHRT_MAX )
                     iop->ioRetryCount++;
                 if ( vdp->vdRetryCount < UINT_MAX )
@@ -5683,7 +5683,7 @@ add_to_smsync(
             iop->fwd->bwd = iop->bwd;
 
             smsyncq = get_smsyncq(vdp, stampq, &ioQ);
-            mutex_lock( &smsyncq->ioQLock );
+            mutex_enter( &smsyncq->ioQLock );
             iop->fwd = (ioDescT *)smsyncq;
             iop->bwd = smsyncq->bwd;
             iop->ioQ = ioQ;
@@ -5818,7 +5818,7 @@ smsync_to_readyq( struct vd *vdp, int flushFlag )
     for ( ; cnt--; from = (from+1)%SMSYNC_NQS ) {
 
         smsyncq = get_smsyncq(vdp, from, &ioQ);
-        mutex_lock( &smsyncq->ioQLock );
+        mutex_enter( &smsyncq->ioQLock );
         iop = smsyncq->fwd;
         qlen = smsyncq->ioQLen;
 
@@ -5826,7 +5826,7 @@ smsync_to_readyq( struct vd *vdp, int flushFlag )
          * sort_onto_readyq() or bs_startio().  Any racing thread
          * will know to start on the next queue.
          */
-        mutex_lock( &vdp->vdIoLock );
+        mutex_enter( &vdp->vdIoLock );
         vdp->syncQIndx = (from+1)%SMSYNC_NQS;
         mutex_exit( &vdp->vdIoLock );
 
@@ -5847,7 +5847,7 @@ smsync_to_readyq( struct vd *vdp, int flushFlag )
                 mutex_exit(&smsyncq->ioQLock);
                 tempQ_marker = (tempQMarkerT *)
                     ms_malloc(sizeof(tempQMarkerT));
-                mutex_lock(&smsyncq->ioQLock);
+                mutex_enter(&smsyncq->ioQLock);
                 iop = smsyncq->fwd;
                 qlen = smsyncq->ioQLen;
             }

@@ -930,7 +930,7 @@ new_parent(
                    );
     *tagp = new_parent_tag;
 
-    mutex_lock(&s_context->fsContext_mutex);
+    mutex_enter(&s_context->fsContext_mutex);
     s_context->fs_flag |= MOD_MTIME;
     s_context->dirty_stats = TRUE;
     mutex_exit(&s_context->fsContext_mutex);

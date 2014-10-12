@@ -978,7 +978,7 @@ bs_refpg_newpage(
                      * the page since the the page is not mapped to storage. 
                      */
                     ubc_page_zero(pp, 0, ADVFS_PGSZ);
-                    mutex_lock( &bp->bufLock );
+                    mutex_enter( &bp->bufLock );
                     bp->lock.state |= UNMAPPED;
                     bp->result = sts;
                     MS_SMP_ASSERT(bp->lsnFwd == NULL);
@@ -1004,7 +1004,7 @@ bs_refpg_newpage(
                  */
                 ubc_page_zero(pp,0,PAGE_SIZE);
             }
-            mutex_lock( &bp->bufLock );
+            mutex_enter( &bp->bufLock );
             bp->lock.state |= UNMAPPED;
             bp->result = EOK;
             sts = EOK;
@@ -1019,7 +1019,7 @@ bs_refpg_newpage(
              * the page is not mapped to storage. 
              */
             ubc_page_zero(pp, 0, ADVFS_PGSZ);
-            mutex_lock( &bp->bufLock );
+            mutex_enter( &bp->bufLock );
             bp->lock.state |= UNMAPPED;
             bp->result = (sts == E_PAGE_NOT_MAPPED) ? EOK : sts;
             MS_SMP_ASSERT(bp->lsnFwd == NULL);
@@ -1193,7 +1193,7 @@ bs_refpg_int(
         bfap->dmnP->bcStat.refHit++;
 
         bp = (struct bsBuf *)pp->pg_opfs;
-        mutex_lock( &bp->bufLock );
+        mutex_enter( &bp->bufLock );
 
         /* update in case the vm_page-to-bsBuf assignment changed */
         bp->vmpage = pp;
@@ -1686,7 +1686,7 @@ bs_refpg_direct(void *addr,                    /* in */
          */
         bp->actRangep = arp;
         bp->ln = SET_LINE_AND_THREAD(__LINE__);
-        mutex_lock( &bp->bfAccess->actRangeLock );
+        mutex_enter( &bp->bfAccess->actRangeLock );
         arp->arIosOutstanding++;
         mutex_exit( &bp->bfAccess->actRangeLock );
 
@@ -1711,7 +1711,7 @@ bs_refpg_direct(void *addr,                    /* in */
         /*
          * Wait for the I/O to complete
          */
-        mutex_lock(&bp->bufLock);
+        mutex_enter(&bp->bufLock);
         wait = 0;
         mark_bio_wait;
         while (bp->lock.state & (BUSY | IO_TRANS)) {
@@ -1835,7 +1835,7 @@ retry_lookup:
          * while we are flushing below and thinking it needs to flush.
          */
  
-        mutex_lock(&bp->bufLock);
+        mutex_enter(&bp->bufLock);
         set_state( bp, __LINE__, IO_TRANS );
 
         /*
@@ -1855,7 +1855,7 @@ retry_lookup:
             bp->ln = SET_LINE_AND_THREAD(__LINE__);
             mutex_exit( &bp->bufLock );
             blkMap( bp, bp->bfAccess );
-            mutex_lock( &bp->bufLock );
+            mutex_enter( &bp->bufLock );
             bp->lock.state &= ~REMAP;
         }
 
@@ -1924,7 +1924,7 @@ retry_lookup:
                  * GETPAGE_WRITE and DIRTY because we set KEEPDIRTY.
                  */
                 ubc_page_wait(bp->vmpage);
-                mutex_lock(&bp->bufLock);
+                mutex_enter(&bp->bufLock);
                 bp->ln = SET_LINE_AND_THREAD(__LINE__);
             }
             else {
@@ -2023,7 +2023,7 @@ bs_pinpg_put(vm_page_t plp,             /* in */
         bp =  (struct bsBuf *)curpg->pg_opfs;
         ioListp = NULL;
         listLen = 0;
-        mutex_lock( &bp->bufLock );
+        mutex_enter( &bp->bufLock );
     
         /* Wait for IO_TRANS state to clear, mainly for migrate. */
         prevLn = bp->ln;
@@ -2083,7 +2083,7 @@ bs_pinpg_put(vm_page_t plp,             /* in */
                 domain_panic(bp->bfAccess->dmnP,
                     "bs_pinpg_put(1): bad state %x bp %p ln %p pg %p sz %x\n",
                     dump_state, bp, prevLn, curpg, curpg->pg_size);
-                mutex_lock(&bp->bufLock);
+                mutex_enter(&bp->bufLock);
                 bp->lock.state |= (BUSY | WRITING);
                 bp->ubc_flags = ubc_flags;
                 bs_io_complete(bp, &s);
@@ -2122,7 +2122,7 @@ bs_pinpg_put(vm_page_t plp,             /* in */
                 /* The mmap path marked the bsbuf GETPAGE_WRITE so put
                  * it on the bfap->dirtyBuflist for AdvFS I/O.
                  */
-                mutex_lock( &bp->bfAccess->bfIoLock );
+                mutex_enter( &bp->bfAccess->bfIoLock );
                 LSN_INCR( bp->bfAccess->nextFlushSeq );
                 bp->flushSeq = bp->bfAccess->nextFlushSeq;
                 ADD_DIRTYACCESSLIST( bp, FALSE );
@@ -2147,7 +2147,7 @@ bs_pinpg_put(vm_page_t plp,             /* in */
                 domain_panic(bp->bfAccess->dmnP,
                     "bs_pinpg_put(2): bad state %x bp %p ln %p pg %p sz %x\n",
                     dump_state, bp, prevLn, curpg, curpg->pg_size);
-                mutex_lock(&bp->bufLock);
+                mutex_enter(&bp->bufLock);
                 bp->ln = SET_LINE_AND_THREAD(__LINE__);
                 clear_state(bp, IO_TRANS);
                 mutex_exit( &bp->bufLock );
@@ -2376,7 +2376,7 @@ bs_wakeup_flush_threads(struct bsBuf *bp,   /* in - Buffer being released */
         do {
             rflp = bp->rflList;
             rfp = rflp->rfp;
-            mutex_lock(&rfp->rangeFlushLock);
+            mutex_enter(&rfp->rangeFlushLock);
             MS_SMP_ASSERT(rfp->outstandingIoCount > 0);
 
 #ifdef ADVFS_SMP_ASSERT
@@ -2609,7 +2609,7 @@ bs_pinpg_found(
     bfap->dmnP->bcStat.ubcHit++;
     bfap->dmnP->bcStat.pinHit++;
 
-    mutex_lock( &bp->bufLock );
+    mutex_enter( &bp->bufLock );
 
     /* update in case the vm_page-to-bsBuf assignment changed */
     bp->vmpage = pp;
@@ -2683,7 +2683,7 @@ bs_pinpg_found(
     /* Wait for any pending I/O to complete. */
     mutex_exit(&bp->bufLock);
     ubc_page_wait(pp);
-    mutex_lock(&bp->bufLock);
+    mutex_enter(&bp->bufLock);
 
     /* Wait for any transition of bsBuf. */
     if (bp->lock.state & IO_TRANS) {
@@ -2715,7 +2715,7 @@ bs_pinpg_found(
         bp->ln = SET_LINE_AND_THREAD(__LINE__);
         mutex_exit( &bp->bufLock );
         rm_ioq( bp );
-        mutex_lock( &bp->bufLock );
+        mutex_enter( &bp->bufLock );
         bp->lock.state &= ~REMOVE_FROM_IOQ;
         clear_state( bp, IO_TRANS );
     }
@@ -2732,7 +2732,7 @@ bs_pinpg_found(
         mutex_exit( &bp->bufLock );
         sts = blkMap( bp, bfap );
         if (sts != EOK) {
-            mutex_lock( &bp->bufLock );
+            mutex_enter( &bp->bufLock );
             bp->writeRef--;
             if (flag & PINPG_SET_FLUSH) {
                 clear_state( bp, FLUSH);
@@ -2744,7 +2744,7 @@ bs_pinpg_found(
             *bfPageAddr = NULL;
             return(sts);
         } 
-        mutex_lock( &bp->bufLock );
+        mutex_enter( &bp->bufLock );
         bp->lock.state &= ~UNMAPPED;
         bp->result = EOK;
     }
@@ -2781,7 +2781,7 @@ bs_pinpg_found(
      */
     if(bfap->dmnP->logAccessp == bfap)
     {
-        mutex_lock( &bfap->bfIoLock );
+        mutex_enter( &bfap->bfIoLock );
         ADD_DIRTYACCESSLIST( bp, FALSE );  /* put at end of dirty list */
         bp->flushSeq = nilLSN;
         mutex_exit( &bfap->bfIoLock );
@@ -2874,8 +2874,8 @@ bs_pinpg_newpage(
 
     if (bfap->dmnP->logAccessp == bfap)
     {
-        mutex_lock( &bp->bufLock );
-        mutex_lock( &bfap->bfIoLock );
+        mutex_enter( &bp->bufLock );
+        mutex_enter( &bfap->bfIoLock );
         ADD_DIRTYACCESSLIST( bp, FALSE );  /* put at end of dirty list */
         bp->flushSeq = nilLSN;
         mutex_exit( &bfap->bfIoLock );
@@ -2887,7 +2887,7 @@ bs_pinpg_newpage(
          * page is not mapped to storage.
          */
         ubc_page_zero(pp, 0, ADVFS_PGSZ);
-        mutex_lock( &bp->bufLock );
+        mutex_enter( &bp->bufLock );
         bp->lock.state |= UNMAPPED;
         bp->lock.state &= ~FLUSH;
         bp->writeRef--;
@@ -2907,7 +2907,7 @@ bs_pinpg_newpage(
          * I/O, otherwise the BUSY condition would not be cleared and
          * waiters awoken.
          */
-        mutex_lock(&bp->bufLock);
+        mutex_enter(&bp->bufLock);
         bp->result = EOK;
         bs_io_complete( bp, &s );
 
@@ -2955,7 +2955,7 @@ bs_pinpg_newpage(
 
     /* If there is an IO error, drop the writeRef count and release the page.*/
     if ( bp->result != EOK ) {
-        mutex_lock(&bp->bufLock);
+        mutex_enter(&bp->bufLock);
         bp->writeRef--;
         /* We need to call clear_state here to wake up any waiters */
         if (flag & PINPG_SET_FLUSH) {
@@ -3410,7 +3410,7 @@ bs_pinpg_direct(void *addr,
         if ( arp != NULL ) {
             bp->actRangep = arp;
             bp->ln = SET_LINE_AND_THREAD(__LINE__);
-            mutex_lock( &bp->bfAccess->actRangeLock );
+            mutex_enter( &bp->bfAccess->actRangeLock );
             arp->arIosOutstanding++;
             mutex_exit( &bp->bfAccess->actRangeLock );
         }
@@ -3432,7 +3432,7 @@ bs_pinpg_direct(void *addr,
         }
 
         /* Wait for the I/O to complete. */
-        mutex_lock(&bp->bufLock);
+        mutex_enter(&bp->bufLock);
         wait = 0;
         mark_bio_wait;
         while (bp->lock.state & (BUSY | IO_TRANS)) {
@@ -3496,7 +3496,7 @@ bs_unpinpg(
         ADVFS_SAD0("bs_unpinpg: called with buffer not pinned");
     }
 
-    mutex_lock( &bp->bufLock );
+    mutex_enter( &bp->bufLock );
 
     if (SS_is_running &&
         bp->bfAccess->dmnP->ssDmnInfo.ssDmnSmartPlace &&
@@ -3542,7 +3542,7 @@ bs_unpinpg(
          * Assign a sequence number to the buffer, used in bitfile flush.
          */
         if (!bp->accFwd) {
-            mutex_lock( &bp->bfAccess->bfIoLock );
+            mutex_enter( &bp->bfAccess->bfIoLock );
             /* Is bp->accFwd still NULL? */
             if (!bp->accFwd) {
                 LSN_INCR( bp->bfAccess->nextFlushSeq );
@@ -3584,7 +3584,7 @@ bs_unpinpg(
                          "bs_unpinpg: %s advfs_page_get(%p) returned %x",
                          pgRlsMode==BS_MOD_DIRECT ? "DIRECT" : "SYNC",
                          bp, sts);
-                mutex_lock(&bp->bufLock);
+                mutex_enter(&bp->bufLock);
 
                 bp->writeRef--;
                 clear_state( bp, IO_TRANS );
@@ -3612,7 +3612,7 @@ bs_unpinpg(
             bp->ln = SET_LINE_AND_THREAD(__LINE__);
             mutex_exit( &bp->bufLock );
             sts = blkMap( bp, bp->bfAccess );
-            mutex_lock( &bp->bufLock );
+            mutex_enter( &bp->bufLock );
             bp->lock.state &= ~REMAP;
         }
 
@@ -3637,7 +3637,7 @@ bs_unpinpg(
          */
         if ( !LSN_EQ_NIL( bp->currentLogRec.lsn ) ) {
             logbfap = bp->bfAccess->dmnP->logAccessp;
-            mutex_lock( &logbfap->bfIoLock );
+            mutex_enter( &logbfap->bfIoLock );
 
             if ( LSN_GT( bp->currentLogRec.lsn,
                         logbfap->hiFlushLsn ) ) {
@@ -3684,7 +3684,7 @@ bs_unpinpg(
             bp->ln = SET_LINE_AND_THREAD(__LINE__);
             mutex_exit( &bp->bufLock );
             blkMap( bp, bp->bfAccess );
-            mutex_lock( &bp->bufLock );
+            mutex_enter( &bp->bufLock );
             bp->lock.state &= ~REMAP;
         }
 
@@ -3699,7 +3699,7 @@ bs_unpinpg(
          * if necessary.  Bitfile flush uses the sequence number.
          */
         if (!bp->accFwd) {
-            mutex_lock( &bp->bfAccess->bfIoLock );
+            mutex_enter( &bp->bfAccess->bfIoLock );
             /* Is bp->accFwd still NULL? */
             if (!bp->accFwd) {
                 LSN_INCR( bp->bfAccess->nextFlushSeq );
@@ -3730,7 +3730,7 @@ bs_unpinpg(
             else if (pgRlsMode == BS_MOD_LAZY)
                 q_fn = bs_q_lazy;
             else {
-                mutex_lock(&bp->bfAccess->bfIoLock);
+                mutex_enter(&bp->bfAccess->bfIoLock);
                 bp->bfAccess->migPagesPending++;
                 mutex_exit(&bp->bfAccess->bfIoLock);
                 bp->lock.state |= THROTTLE;
@@ -3748,7 +3748,7 @@ bs_unpinpg(
                 if ( !LSN_EQ_NIL( bp->currentLogRec.lsn ) ) {
                     mutex_exit( &bp->bufLock );
                     logbfap = bp->bfAccess->dmnP->logAccessp;
-                    mutex_lock( &logbfap->bfIoLock );
+                    mutex_enter( &logbfap->bfIoLock );
     
                     if ( LSN_GT( bp->currentLogRec.lsn,
                                 logbfap->hiFlushLsn ) ) {
@@ -3760,7 +3760,7 @@ bs_unpinpg(
                     MS_SMP_ASSERT(LSN_GTE(logbfap->hiFlushLsn,
                                           bp->currentLogRec.lsn));
                     mutex_exit( &logbfap->bfIoLock );
-                    mutex_lock( &bp->bufLock );
+                    mutex_enter( &bp->bufLock );
                 }
 
                 /* Setup UBC page for IO.  We can fail here because an
@@ -3795,7 +3795,7 @@ bs_unpinpg(
                         domain_panic(bp->bfAccess->dmnP,
                             "bs_unpinpg: %s advfs_page_get(%p) returned %x",
                             pgRlsMode==BS_MOD_COPY ? "COPY" : "LAZY", bp, sts);
-                        mutex_lock(&bp->bufLock);
+                        mutex_enter(&bp->bufLock);
 
                         bp->writeRef--;
                         clear_state( bp, IO_TRANS );
@@ -3819,7 +3819,7 @@ bs_unpinpg(
             bs_q_list( &bp->ioList.ioDesc[bp->ioList.write],
                 bp->ioList.writeCnt,
                 q_fn );
-            mutex_lock( &bp->bufLock );
+            mutex_enter( &bp->bufLock );
         }
 
         if( q_fn == bs_q_lazy ) {
@@ -3869,7 +3869,7 @@ bs_unpinpg(
                     if ( !LSN_EQ_NIL( bp->currentLogRec.lsn ) ) {
                         mutex_exit( &bp->bufLock );
                         logbfap = bp->bfAccess->dmnP->logAccessp;
-                        mutex_lock( &logbfap->bfIoLock );
+                        mutex_enter( &logbfap->bfIoLock );
         
                         if ( LSN_GT( bp->currentLogRec.lsn,
                                     logbfap->hiFlushLsn ) ) {
@@ -3881,7 +3881,7 @@ bs_unpinpg(
                         MS_SMP_ASSERT(LSN_GTE(logbfap->hiFlushLsn,
                                               bp->currentLogRec.lsn));
                         mutex_exit( &logbfap->bfIoLock );
-                        mutex_lock( &bp->bufLock );
+                        mutex_enter( &bp->bufLock );
                     }
 
                     /* Setup UBC page for IO.  We can fail here because an
@@ -3917,7 +3917,7 @@ bs_unpinpg(
                                 "bs_unpinpg: %s advfs_page_get(%p) returned %x",
                                 pgRlsMode==BS_NOMOD_DIRECT ?
                                 "DIO_NOMOD" : "NOMOD", bp, sts);
-                            mutex_lock(&bp->bufLock);
+                            mutex_enter(&bp->bufLock);
 
                             clear_state( bp, IO_TRANS );
                             bp->ln = SET_LINE_AND_THREAD(__LINE__);
@@ -3942,7 +3942,7 @@ bs_unpinpg(
                 bs_q_list( &bp->ioList.ioDesc[bp->ioList.write],
                     bp->ioList.writeCnt,
                     q_fn );
-                mutex_lock( &bp->bufLock );
+                mutex_enter( &bp->bufLock );
             }
             else {
                 /* Change UBC page to be clean without doing IO.  We can
@@ -3973,7 +3973,7 @@ bs_unpinpg(
                         "bs_unpinpg: %s CLEAN advfs_page_get(%p) returned %x",
                             pgRlsMode==BS_NOMOD_DIRECT ? "DIO_NOMOD" : "NOMOD",
                             bp, sts);
-                        mutex_lock(&bp->bufLock);
+                        mutex_enter(&bp->bufLock);
 
                         bp->lock.state &= ~DIO_REMOVING;
                         clear_state( bp, IO_TRANS );
@@ -4025,7 +4025,7 @@ bs_unpinpg(
             if( !(bp->lock.state & DIRTY) ) {
                 MS_SMP_ASSERT(bp->accFwd);
                 if ( bp->lock.state & ACC_DIRTY ) {
-                    mutex_lock( &bp->bfAccess->bfIoLock );
+                    mutex_enter( &bp->bfAccess->bfIoLock );
                     MS_SMP_ASSERT(bp->accFwd);
                     RM_ACCESSLIST( bp, FALSE );         /* take off dirty */
                     mutex_exit( &bp->bfAccess->bfIoLock );
@@ -4042,7 +4042,7 @@ bs_unpinpg(
                         domain_panic(bp->bfAccess->dmnP,
                         "bs_unpinpg: LOG CLEAN advfs_page_get(%p) returned %x",
                            bp, sts);
-                        mutex_lock(&bp->bufLock);
+                        mutex_enter(&bp->bufLock);
                         bp->ln = SET_LINE_AND_THREAD(__LINE__);
                         /* fall through, clean up, return success */
                     }
@@ -4074,7 +4074,7 @@ bs_unpinpg(
          * Assumes caller is properly ordering these unpins according to
          * increasing larger LSN values.
          */
-        mutex_lock( &bp->bfAccess->bfIoLock );
+        mutex_enter( &bp->bfAccess->bfIoLock );
 
         /* Give incoming LSN to page only if it is large than the
          * existing LSN. This could happen if at io completion we
@@ -4142,7 +4142,7 @@ bs_unpinpg(
                 domain_panic(bp->bfAccess->dmnP,
                              "bs_unpinpg: LOG advfs_page_get(%p) returned %x",
                              bp, sts);
-                mutex_lock(&bp->bufLock);
+                mutex_enter(&bp->bufLock);
 
                 clear_state( bp, IO_TRANS );
                 bp->ln = SET_LINE_AND_THREAD(__LINE__);
@@ -4325,7 +4325,7 @@ bs_set_bufstate(
     /* Convert the buffer handle. */
     bp = (struct bsBuf *)bfPageRefH;
 
-    mutex_lock( &bp->bufLock );
+    mutex_enter( &bp->bufLock );
 
     if (waitFlag != 0) {
         /*
@@ -4362,7 +4362,7 @@ bs_clear_bufstate(
 
     bp = (struct bsBuf *)bfPageRefH;
 
-    mutex_lock( &bp->bufLock );
+    mutex_enter( &bp->bufLock );
     clear_state (bp, stateBit);
     mutex_exit( &bp->bufLock );
 
@@ -4389,7 +4389,7 @@ bs_get_bufstate(
 
     bp = (struct bsBuf *)bfPageRefH;
 
-    mutex_lock( &bp->bufLock );
+    mutex_enter( &bp->bufLock );
     *stateBitValue = whichStateBit & bp->lock.state;
     mutex_exit( &bp->bufLock );
 
@@ -4522,7 +4522,7 @@ buf_remap(
         ms_free( bp->ioList.ioDesc );
     }
 
-    mutex_lock( &bp->bufLock );
+    mutex_enter( &bp->bufLock );
 
     bp->ioList.ioDesc = tmp;
     bp->ioList.read = blkMap->read;
@@ -4583,7 +4583,7 @@ seq_ahead_cont(
      */
     if (bsPage == 0)
         return;
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
     if (bsPage != bfap->raHitPage ) {
         mutex_exit( &bfap->bfIoLock );
         return;
@@ -4594,7 +4594,7 @@ seq_ahead_cont(
      * buffer's ioDesc.blkDesc while it is being modified in
      * buf_remap().
      */
-    mutex_lock( &bp->bufLock );
+    mutex_enter( &bp->bufLock );
     ioDescp = &bp->ioList.ioDesc[bp->ioList.read];
     local_vd_index = ioDescp->blkDesc.vdIndex;
     mutex_exit( &bp->bufLock );
@@ -4602,7 +4602,7 @@ seq_ahead_cont(
     vdp = VD_HTOP(local_vd_index, bfap->dmnP);
     rdmaxio = vdp->rdmaxio;
 
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
     if( bsPage != 0 && bsPage == bfap->raHitPage ) {
 
         /* We are at a trigger page; we need to read-ahead some more
@@ -4741,7 +4741,7 @@ seq_ahead_start(
      * buffer's ioDesc.blkDesc while it is being modified in
      * buf_remap().
      */
-    mutex_lock( &bp->bufLock );
+    mutex_enter( &bp->bufLock );
     ioDescp = &bp->ioList.ioDesc[bp->ioList.read];
     local_vd_index = ioDescp->blkDesc.vdIndex;
     mutex_exit( &bp->bufLock );
@@ -4749,7 +4749,7 @@ seq_ahead_start(
     vdp = VD_HTOP(local_vd_index, bfap->dmnP);
     rdmaxio = vdp->rdmaxio;
 
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
 
     /* Initially, the max # pages to read is the number that can be read
      * in a predefined number of consolidated I/Os for this disk.  Here
@@ -4985,7 +4985,7 @@ seq_ahead( struct bfAccess *bfap,       /* in */
 
         if ( sts != EOK ) {
             ubc_page_zero(pp, 0, ADVFS_PGSZ);
-            mutex_lock( &bp->bufLock );
+            mutex_enter( &bp->bufLock );
             bp->lock.state |= UNMAPPED;
             if ( sts == E_PAGE_NOT_MAPPED ) {
                 MS_SMP_ASSERT(bp->result == EOK);
@@ -4998,7 +4998,7 @@ seq_ahead( struct bfAccess *bfap,       /* in */
             return;
         }
 
-        mutex_lock( &bp->bufLock );
+        mutex_enter( &bp->bufLock );
 
         /*
          * Link together the I/O descriptors
@@ -5112,7 +5112,7 @@ bs_invalidate_pages (
 startover:
     skipped_buffers = 0;
     purge_buffer = NULL;
-    mutex_lock( &bfap->bfIoLock );
+    mutex_enter( &bfap->bfIoLock );
 
     for ( bp = bfap->dirtyBufList.accFwd;
           bp != (struct bsBuf *)&bfap->dirtyBufList;
@@ -5163,7 +5163,7 @@ startover:
          * the list so bp->accFwd is valid once we relock the bfIoLock.
          */
         if ( bp->lock.state & BUSY ) {
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bfap->bfIoLock );
             mutex_exit( &bp->bufLock );
             continue;
         }
@@ -5176,7 +5176,7 @@ startover:
          * have IO_TRANS clear.
          */
         if ( bp->lock.state & IO_TRANS ) {
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bfap->bfIoLock );
             mutex_exit( &bp->bufLock );
             skipped_buffers++;
             continue;
@@ -5195,7 +5195,7 @@ startover:
          * just continue processing the chain.
          */
         if (advfs_page_get(bp, UBC_GET_BUSY)) {
-            mutex_lock( &bfap->bfIoLock );
+            mutex_enter( &bfap->bfIoLock );
             mutex_exit( &bp->bufLock );
             continue;
         }
@@ -5229,7 +5229,7 @@ startover:
          * we must not touch either again.
          */
         if (purge_buffer) {
-           mutex_lock( &purge_buffer->bufLock );
+           mutex_enter( &purge_buffer->bufLock );
            MS_SMP_ASSERT(purge_buffer->lock.state & WRITING);
 #ifdef ADVFS_SMP_ASSERT
            purge_buffer->busyLn = SET_LINE_AND_THREAD(__LINE__);
@@ -5249,7 +5249,7 @@ startover:
             preempt_limit = *ptr_to_cpu_ticks + max_cpu_ticks;
         }
 
-        mutex_lock( &bfap->bfIoLock );
+        mutex_enter( &bfap->bfIoLock );
 
         /* stop looking if we found all we were suppose to do */
         found_pages++;
@@ -5265,7 +5265,7 @@ startover:
      */
     mutex_exit( &bfap->bfIoLock );
     if (purge_buffer) {
-       mutex_lock( &purge_buffer->bufLock );
+       mutex_enter( &purge_buffer->bufLock );
        MS_SMP_ASSERT(purge_buffer->lock.state & WRITING);
 #ifdef ADVFS_SMP_ASSERT
        purge_buffer->busyLn = SET_LINE_AND_THREAD(__LINE__);
@@ -5449,7 +5449,7 @@ msfs_flush_and_invalidate(
     }
 
     if (arp) {
-        mutex_lock(&bfap->actRangeLock);
+        mutex_enter(&bfap->actRangeLock);
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
         mutex_exit(&bfap->actRangeLock);
         ms_free(arp);

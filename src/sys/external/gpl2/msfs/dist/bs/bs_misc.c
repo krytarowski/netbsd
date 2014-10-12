@@ -3739,7 +3739,7 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
     /*
      * Get count of dev_t's
      */
-    mutex_lock( &bfap->dmnP->vdpTblLock );
+    mutex_enter( &bfap->dmnP->vdpTblLock );
     vdCnt = 0;
     for ( vdi = 0; vdCnt < bfap->dmnP->vdCnt && vdi < BS_MAX_VDI; vdi++ ) {
         if ( bfap->dmnP->vdpTbl[vdi] )
@@ -3778,7 +3778,7 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
      * the vdp->devVp->v_rdev deref is safe.
      */
 
-    mutex_lock( &bfap->dmnP->vdpTblLock );
+    mutex_enter( &bfap->dmnP->vdpTblLock );
     vdCnt = 0;
     for ( vdi = 0; vdCnt < bfap->dmnP->vdCnt && vdi < BS_MAX_VDI; vdi++ ) {
         if ( bfap->dmnP->vdpTbl[vdi] )
@@ -3787,7 +3787,7 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
 	if ( VDI_IS_VALID(vdi+1, bfap->dmnP) ) {
             vdT *vdp = bfap->dmnP->vdpTbl[vdi];
             MS_SMP_ASSERT( vdp->vdMagic == VDMAGIC );
-            mutex_lock( &vdp->vdStateLock );
+            mutex_enter( &vdp->vdStateLock );
             if (vdp->vdState == BSR_VD_MOUNTED)
             {
                 libBufp->getCludioXtntMap.devtvec->device[vdi] = 
@@ -5034,7 +5034,7 @@ msfs_syscall_op_ss_get_fraglist(libParamsT *libBufp)
     /*
      * Obtaining fraglist through vdp.
      */
-    mutex_lock(&vdp->ssVolInfo.ssFragLk);
+    mutex_enter(&vdp->ssVolInfo.ssFragLk);
 
     fhp = &vdp->ssVolInfo.ssFragHdr;
     fp = fhp->ssFragRatFwd;  /* entry pointer */
@@ -5108,7 +5108,7 @@ msfs_syscall_op_ss_get_hotlist(libParamsT *libBufp)
     }
     dmn_ref=TRUE;
 
-    mutex_lock( &dmnP->ssDmnInfo.ssDmnHotLk );
+    mutex_enter( &dmnP->ssDmnInfo.ssDmnHotLk );
 
     /*
      * Obtaining hotlist through dmnP.
