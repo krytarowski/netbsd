@@ -27,6 +27,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/condvar.h>
 #include <sys/buf.h>
 #include <sys/fcntl.h>          /* for MAXEND */
 #include <sys/mount.h>

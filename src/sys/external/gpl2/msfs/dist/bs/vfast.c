@@ -40,6 +40,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/condvar.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 
@@ -70,7 +71,7 @@ lock_data_t SSLock;   /* complex lock for SS_is_running */
 #endif
 
 mutexT ssStoppedMutex; /* global simple lock for ss_stopped_cv */
-cvT    ss_stopped_cv;  /* condition variable used when shutting ss system down */
+cv    ss_stopped_cv;  /* condition variable used when shutting ss system down */
 
 /* NUMA constants */
 #pragma extern_model save

@@ -43,6 +43,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/condvar.h>
 
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
@@ -87,7 +88,7 @@ typedef struct msgQEntry {
 
 typedef struct msgQ {
     mutexT mutex;                     /* synchronization mutex              */
-    cvT cv;                           /* synchronization condition variable */
+    cv res;                           /* synchronization condition variable */
     msgQEntryT *qHead;                /* msg queue head pointer             */
     msgQEntryT *qTail;                /* msq queue tail pointer             */
     msgQEntryT *freeMsgLst;           /* list of free message entries       */
@@ -179,7 +180,7 @@ msgq_create(
     }
 
     mutex_init3( &msgQ->mutex, 0, "msgQMutex", ADVmsgQT_mutex_lockinfo );
-    cv_init( &msgQ->cv );
+    cv_init( &msgQ->res );
 
     *msgQH = (msgQHT) msgQ;
 
@@ -556,13 +557,13 @@ ulmq_send_msg(
             AdvfsLockStats->msgQSignal++;
         }
 
-        cond_signal( &msgQ->cv );
+        cond_signal( &msgQ->res );
     } else if (msgQ->waiters > 1) {
         if (AdvfsLockStats) {
             AdvfsLockStats->msgQBroadcast++;
         }
 
-        cond_broadcast( &msgQ->cv );
+        cond_broadcast( &msgQ->res );
     }
 }
 
@@ -604,7 +605,7 @@ ulmq_recv_msg(
                 AdvfsLockStats->msgQWait++;
             }
 
-            cond_wait( &msgQ->cv, mutex );
+            cond_wait( &msgQ->res, mutex );
         }
 
         msgQ->waiters--;

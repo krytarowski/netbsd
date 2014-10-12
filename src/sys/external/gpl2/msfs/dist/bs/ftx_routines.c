@@ -450,7 +450,7 @@ _ftx_start_i(
         if ( FtxDynAlloc.currAllocated >= FtxDynAlloc.maxAllowed ) {
             FtxDynAlloc.sumWaits++;
             FtxDynAlloc.waiters++;
-            cond_wait( &FtxDynAlloc.cv, &FtxMutex );
+            cond_wait( &FtxDynAlloc.res, &FtxMutex );
             FtxDynAlloc.waiters--;    
         }
 
@@ -3156,7 +3156,7 @@ ftx_init(void)
     struct ftx *ftxp;
 
     mutex_init3(&FtxMutex, 0, "FtxMutex", ADVFtxMutex_lockinfo);
-    cv_init( &FtxDynAlloc.cv );
+    cv_init( &FtxDynAlloc.res );
     FtxDynAlloc.waiters       = 0;
     FtxDynAlloc.currAllocated = 0;
     FtxDynAlloc.maxAllocated  = 0;
@@ -3280,7 +3280,7 @@ ftx_free_2(
      */
     if ( FtxDynAlloc.waiters &&
          FtxDynAlloc.currAllocated < FtxDynAlloc.maxAllowed ) {
-        cond_signal( &FtxDynAlloc.cv );
+        cond_signal( &FtxDynAlloc.res );
     }
 }
 

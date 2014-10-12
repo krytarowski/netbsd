@@ -43,6 +43,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/condvar.h>
 #include <sys/syslog.h>
 #include <sys/time.h>
 
@@ -154,7 +155,7 @@ strrchr( char *s, char c )
 void
 trace_lkcall( 
              LkTraceActionT action,  /* in */
-             cvT *cvp,               /* in */ 
+             cv *resp,               /* in */ 
              mutexT *mp,             /* in */
              int ln,                 /* in */
              char *fn,               /* in */
@@ -190,12 +191,12 @@ trace_lkcall(
         case CV_WAIT:
         case CV_DONEWAIT:
             log( LOG_MEGASAFE | LOG_INFO, "%08x  %2d mtx %08x     cnd ", 
-                mp, mp->lock_cnt, cvp );
+                mp, mp->lock_cnt, resp );
             break;
 
         case CV_SIGNAL:
         case CV_BROADCAST:
-            log( LOG_MEGASAFE | LOG_INFO, "--------  --     %08x     cnd ", cvp );
+            log( LOG_MEGASAFE | LOG_INFO, "--------  --     %08x     cnd ", resp );
             break;
 
         case WAIT_FOR: 
@@ -580,111 +581,6 @@ _mutex_unlock(
 #endif /* ADVFS_DEBUG */
 
 /*
- * cond_wait
- */
-void
-_cond_wait( 
-           cvT *cvp,         /* in - condition variable */
-           mutexT *mp,       /* in - mutex */
-           int ln,           /* in */
-           char *fn          /* in */
-           )
-{
-#ifdef ADVFS_DEBUG
-    if (!mp->locked) {
-        printf( "cond_wait: ln = %d, fn = %s\n", ln, fn );
-        ADVFS_SAD0( "_cond_wait:  Mutex not locked!  Time to die!" );
-    }
-    mp->locked = FALSE;
-
-    if (TrFlags&trCond) trace_lkcall( CV_WAIT, cvp, mp, ln, fn, NULL );
-#endif /* ADVFS_DEBUG */
-
-    if (AdvfsLockStats) {
-        AdvfsLockStats->wait++;
-    }
-
-    /*
-     * Thread_sleep will give up the simple lock as it
-     * sleeps so we reacquire the lock when we awaken.
-     * Note that a simple_lock_t is a pointer.
-     * The cast should be to a long for alpha but
-     * the routine takes an int.
-     */
-    thread_sleep( (vm_offset_t)cvp, &mp->mutex, FALSE );
-    simple_lock( &mp->mutex );
-
-#ifdef ADVFS_DEBUG
-    if (mp->locked) {
-        printf( "cond_wait: ln = %d, fn = %s\n", ln, fn );
-        ADVFS_SAD0( "_cond_wait:  Mutex already locked!  Time to die!" );
-    }
-    mp->locked = TRUE;
-    mp->line_num = ln;
-    mp->file_name = fn;
-
-    if (TrFlags&trCond) {
-        trace_lkcall( CV_DONEWAIT, cvp, mp, ln, fn, NULL );
-    }
-#endif /* ADVFS_DEBUG */
-}
-/*
- * cond_signel
- */
-void
-_cond_signal( 
-             cvT *cvp,         /* in - condition variable */
-             int ln,           /* in */
-             char *fn          /* in */
-             )    
-{
-    if (AdvfsLockStats) {
-        AdvfsLockStats->signal++;
-    }
-
-    if (TrFlags&trCond) {
-        trace_lkcall( CV_SIGNAL, cvp, NULL, ln, fn, NULL );
-    }
-
-    /*
-     * The cast should be to a long for alpha but
-     * the routine takes an int.
-     */
-    thread_wakeup_one( (vm_offset_t)cvp );
-}
-/*
- * cond_broadcast
- */
-void
-_cond_broadcast( 
-                cvT *cvp,    /* in - condition variable */
-                int ln,      /* in */
-                char *fn     /* in */
-                ) 
-{
-    if (AdvfsLockStats) {
-        AdvfsLockStats->broadcast++;
-    }
-
-    if (TrFlags&trCond) {
-        trace_lkcall( CV_BROADCAST, cvp, NULL, ln, fn, NULL );
-    }
-
-    /*
-     * The cast should be to a long for alpha but
-     * the routine takes an int.
-     */
-    thread_wakeup( (vm_offset_t)cvp );
-}
-void
-cv_init( 
-         cvT *cvp
-         )
-{
-    *cvp = 0;
-}
-
-/*
  * lk_init
  *
  * Initializes a lock and adds it to its mutex's linked list of locks.
@@ -717,7 +613,7 @@ lk_init(
             stateLkT nilStateLk = { LKT_STATE, 0 }; 
             *lk = nilStateLk;
 #ifndef _KERNEL
-            cv_init( &lk->cv );
+            cv_init( &lk->res );
 #ifdef ADVFS_DEBUG
             lk->hdr.try_line_num = -1;
 #endif /* ADVFS_DEBUG */
@@ -836,13 +732,13 @@ _lk_signal(
                 AdvfsLockStats->usageStats[ lkHdr->lkUsage ].signal++;
                 AdvfsLockStats->stateSignal++;
             }
-            _cond_signal( &slk->cv, ln, fn );
+            cond_signal( &slk->res, ln, fn );
         } else if (action == UNLK_BROADCAST) {
             if (AdvfsLockStats) {
                 AdvfsLockStats->usageStats[ lkHdr->lkUsage ].broadcast++;
                 AdvfsLockStats->stateBroadcast++;
             }
-            _cond_broadcast( &slk->cv, ln, fn );
+            cond_broadcast( &slk->res, ln, fn );
         }
     }
 }
@@ -871,7 +767,7 @@ _lk_set_state(
 
 #ifdef ADVFS_DEBUG
     if (TrFlags&trLock) {
-        trace_lkcall( SET_STATE, &lk->cv, NULL, ln, fn, lk );
+        trace_lkcall( SET_STATE, &lk->res, NULL, ln, fn, lk );
     }
 #endif /* ADVFS_DEBUG */
 
@@ -924,7 +820,7 @@ _lk_wait_for(
     }
 
     if (TrFlags&trLock) {
-        trace_lkcall( WAIT_FOR, &lk->cv, lk_mutex,ln,fn, lk );
+        trace_lkcall( WAIT_FOR, &lk->res, lk_mutex,ln,fn, lk );
     }
 
     lk->hdr.try_line_num = ln;
@@ -952,7 +848,7 @@ _lk_wait_for(
         lk->waiters++;
 
         while (lk->state != waitState) {
-            _cond_wait( &lk->cv, lk_mutex, ln, fn );
+            cond_wait( &lk->res, lk_mutex, ln, fn );
         }
 
         lk->waiters--;
@@ -994,7 +890,7 @@ _lk_wait_for2(
     }
 
     if (TrFlags&trLock) {
-        trace_lkcall( WAIT_FOR, &lk->cv, lk_mutex,ln,fn, lk );
+        trace_lkcall( WAIT_FOR, &lk->res, lk_mutex,ln,fn, lk );
     }
 
     lk->hdr.try_line_num = ln;
@@ -1021,7 +917,7 @@ _lk_wait_for2(
 
         lk->waiters++;
 
-        _cond_wait( &lk->cv, lk_mutex, ln, fn );
+        cond_wait( &lk->res, lk_mutex, ln, fn );
 
         lk->waiters--;
     }
@@ -1061,7 +957,7 @@ _lk_wait_while(
     }
 
     if (TrFlags&trLock) {
-        trace_lkcall( WAIT_WHILE, &lk->cv, lk_mutex,ln,fn, lk );
+        trace_lkcall( WAIT_WHILE, &lk->res, lk_mutex,ln,fn, lk );
     }
 
     lk->hdr.try_line_num = ln;
@@ -1089,7 +985,7 @@ _lk_wait_while(
         lk->waiters++;
 
         while (lk->state == waitState) {
-            _cond_wait( &lk->cv, lk_mutex, ln, fn );
+            cond_wait( &lk->res, lk_mutex, ln, fn );
         }
 
         lk->waiters--;

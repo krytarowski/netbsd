@@ -164,7 +164,7 @@ typedef struct vd {
                                 /* used with domain mutex */
     bfMCIdT ddlActiveWaitMCId;  /* If non-nil, a thread is waiting on this entry */
                                 /* Use domain mutex for synchronization */
-    cvT ddlActiveWaitCv;        /* Used when waiting for active ddl entry */
+    cv ddlActiveWaitCv;        /* Used when waiting for active ddl entry */
 
     struct dStat dStat;      /* collect device statistics */
     long pad1[6];            /* pad to cache line boundary */
