@@ -728,7 +728,7 @@ bs_io_complete(
             --bfap->migPagesPending;
             if (bfap->migWait && bfap->migPagesPending <= bfap->migWait ) { 
                 bfap->migWait = 0;
-                cond_signal( &bfap->migWait );
+                cv_signal( &bfap->migWait );
             }
         }        
         
@@ -771,14 +771,14 @@ bs_io_complete(
                     AdvfsLockStats->pinBlockSignal++;
                 }
 
-                cond_signal( &dmnP->pinBlockCv );
+                cv_signal( &dmnP->pinBlockCv );
 
             } else if ( dmnP->pinBlockWait > 1 ) {
                 if (AdvfsLockStats) {
                     AdvfsLockStats->pinBlockBroadcast++;
                 }
 
-                cond_broadcast( &dmnP->pinBlockCv );
+                cv_broadcast( &dmnP->pinBlockCv );
             }
 
             /* The meta data for the oldest log entry just got written, */
@@ -864,14 +864,14 @@ clearSignal:
                 AdvfsLockStats->bufSignal++;
             }
 
-            cond_signal( &bp->lock.bufCond );
+            cv_signal( &bp->lock.bufCond );
         } else {
             if (AdvfsLockStats) {
                 AdvfsLockStats->usageStats[ bp->lock.hdr.lkUsage ].broadcast++;
                 AdvfsLockStats->bufBroadcast++;
             }
 
-            cond_broadcast( &bp->lock.bufCond );
+            cv_broadcast( &bp->lock.bufCond );
         }
     }
 
@@ -1098,7 +1098,7 @@ bs_pinblock_sync(
 
         dmnP->pinBlockWait++;
         mark_bio_wait;
-        cond_wait( &dmnP->pinBlockCv, &dmnP->lsnLock );
+        cv_wait( &dmnP->pinBlockCv, &dmnP->lsnLock );
         unmark_bio_wait;
         dmnP->pinBlockWait--;
         blocked = 1;

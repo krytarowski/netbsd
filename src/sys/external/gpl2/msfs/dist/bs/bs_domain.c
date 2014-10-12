@@ -4587,7 +4587,7 @@ wait_for_ddl_active_entry (
     /*
      * Wait for the entry to be processed.
      */
-    cond_wait(&vd->ddlActiveWaitCv, &(dmnP->mutex));
+    cv_wait(&vd->ddlActiveWaitCv, &(dmnP->mutex));
 
     vd->ddlActiveWaitMCId = bsNilMCId;
     mutex_unlock (&(dmnP->mutex));

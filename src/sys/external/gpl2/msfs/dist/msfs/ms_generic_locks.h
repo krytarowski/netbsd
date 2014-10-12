@@ -28,17 +28,10 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/condvar.h>
 #include <sys/lock.h>
 #include <sys/kernel.h>
 #include <sys/time.h>
-
-/*
- * cvT 
- *
- * Defines a condition variable.
- */
-
-typedef short cvT;
 
 /*
  * mutexT - This structure defines a file system mutex.  It contains an
@@ -247,8 +240,8 @@ typedef struct lkHdr {
 
 typedef struct ftxLk {
     lkHdrT hdr;               /* header used by ftx lock routines only */
-    lock_data_t  lock;        /* The OSF lock .  */
-    cvT cv;                   /* condition variable */
+    krwlock_t  lock;        /* The OSF lock .  */
+    kcondvar_t res;                   /* condition variable */
 } ftxLkT;
 
 /*
@@ -330,7 +323,7 @@ typedef struct stateLk {
     lkStatesT state;            /* current state */
     lkStatesT pendingState;     /* pending state - ftx lock routines only */
     u_short waiters;            /* num threads waiting on the cvp */
-    cvT cv;                     /* condition variable */
+    kcondvar_t res;                     /* condition variable */
 } stateLkT;
 
 /*
@@ -346,7 +339,7 @@ typedef struct stateLk {
 typedef struct bufLk {
     lkHdrT hdr;           /* header used by ftx lock routines only */
     unsigned state;         /* define'd flags in bs_buf.h */
-    cvT bufCond;          /* condition variable */
+    kcondvar_t bufCond;          /* condition variable */
     u_short waiting;      /* number of threads waiting on the lock */
 } bufLkT;
 
@@ -464,10 +457,6 @@ extern advfsLockStatsT *AdvfsLockStats;
 #define lk_get_state( lk )        ((lk).state)
 
 #ifndef ADVFS_DEBUG
-#define cond_wait( cvp, mp )  _cond_wait( cvp, mp, __LINE__, NULL )
-#define cond_signal( cvp )    _cond_signal( cvp, __LINE__, NULL )
-#define cond_broadcast( cvp ) _cond_broadcast( cvp, __LINE__, NULL )
-
 #define lk_signal( act, lkp ) _lk_signal( act, lkp, __LINE__, NULL )
 #define lk_set_state( lkp, state ) \
         _lk_set_state( lkp, state , __LINE__, NULL )
@@ -478,10 +467,6 @@ extern advfsLockStatsT *AdvfsLockStats;
 #define lk_wait_while( lkp, mp, state ) \
        _lk_wait_while( lkp, mp, state , __LINE__, NULL )
 #else /* ADVFS_DEBUG */
-#define cond_wait( cvp, mp )  _cond_wait( cvp, mp, __LINE__, __FILE__ )
-#define cond_signal( cvp )    _cond_signal( cvp, __LINE__, __FILE__ )
-#define cond_broadcast( cvp ) _cond_broadcast( cvp, __LINE__, __FILE__ )
-
 #define lk_signal( act, lkp ) _lk_signal( act, lkp, __LINE__, __FILE__ )
 #define lk_set_state( lkp, state ) \
         _lk_set_state( lkp, state , __LINE__, __FILE__ )
@@ -504,9 +489,6 @@ void _mutex_unlock( mutexT *mp, int ln, char *fn );
 
 void mutex_init2( mutexT *mp, int num_cvs, char* name ) ;
 void mutex_destroy( mutexT *mp );
-void _cond_wait( cvT *cvp, mutexT *mp, int line_num, char *file_name );
-void _cond_broadcast( cvT *cvp, int ln, char *fn );
-void _cond_signal( cvT *cvp, int ln, char *fn );
 void _lk_signal( unLkActionT action, void *lk, int ln, char *fn );
 int lk_is_locked( void *lock );
 void trace_hdr( void );
@@ -514,7 +496,6 @@ void bs_dump_locks( int locked );
 void lk_init( void *lkp, mutexT *mp, lkTypeT type, int res, lkUsageT usage);
 void lk_re_init(void *lkp, mutexT *mp, lkTypeT lkType, int res, lkUsageT usage);
 void lk_destroy( void *lk );
-void cv_init( cvT *cvp );
 
 void
 _lk_wait_while(

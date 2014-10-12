@@ -28,6 +28,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/condvar.h>
 #include <sys/rwlock.h>
 
 #include "../msfs/vfast.h"
@@ -87,9 +88,9 @@ typedef struct ftxTblD {
     int ftxWaiters;     /* num threads waiting on slot */
     int trimWaiters;    /* num threads waiting for log trim to finish */
     int excWaiters;     /* num threads waiting to start exclusive ftx */
-    cvT slotCv;         /* condition variable for slot waiters */
-    cvT trimCv;         /* condition variable for trim waiters */
-    cvT excCv;          /* condition variable for exc waiters */
+    kcondvar_t slotCv;         /* condition variable for slot waiters */
+    kcondvar_t trimCv;         /* condition variable for trim waiters */
+    kcondvar_t excCv;          /* condition variable for exc waiters */
     lsnT logTrimLsn;    /* lsn to trim log up to */
     int nextNewSlot;    /* next never-used slot */
     ftxCRLAT oldestFtxLa; /* oldest outstanding ftx logrecaddr */
@@ -421,7 +422,7 @@ typedef struct domain {
     struct bsBufHdr lsnList; /* Dirty transactional buffers to be written */
     lsnT writeToLsn;         /* pin block until up to this lsn is written */
     uint16T pinBlockWait;
-    cvT pinBlockCv;
+    kcondvar_t pinBlockCv;
     int pinBlockRunning;     /* boolean; TRUE if lsn_io_list is running */
     enum contBits contBits;  /* check if log flush or pinblock cont needed */
     int lsnListFlushing;     /* boolean: TRUE if bs_lsnList_flush running */
