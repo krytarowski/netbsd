@@ -47,6 +47,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/file.h>
+#include <sys/mutex.h>
 #include <sys/syslog.h>
 
 #include "../msfs/ms_public.h"
@@ -3973,8 +3974,7 @@ bfflush(
      */
     mutex_unlock( &bfap->bfIoLock );
     rfp = (rangeFlushT *)(ms_malloc(sizeof(rangeFlushT)));
-    mutex_init3(&rfp->rangeFlushLock, 0, "rangeFlushLock", 
-                ADVRangeFlushLock_info);
+    mutex_init(&rfp->rangeFlushLock, MUTEX_DEFAULT, IPL_NONE);
     rfp->firstPage = first_page;
     rfp->lastPage = last_page;
     rfp->outstandingIoCount = 0;
