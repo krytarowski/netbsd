@@ -90,7 +90,7 @@ typedef struct {
 #define SS_FLUSH_IN_PROGRESS       0x0001  /* flushing saved_stats to disk */
 #define SS_STATS_COPIED_TO_CONTEXT 0x0002  /* saved_stats have been copied */
 
-extern mutexT BfAccessFreeLock;  /* guards access free & closed lists */
+extern kmutex_t BfAccessFreeLock;  /* guards access free & closed lists */
 
 struct bfSet;
 
@@ -194,7 +194,7 @@ typedef struct bfAccess {
                                 /* guard next two with bfSetT.accessChainLock */
     struct bfAccess *setFwd;    /* fileset chaining */
     struct bfAccess *setBwd;
-    mutexT bfaLock;             /* lock for many of fields in this struct */
+    kmutex_t bfaLock;             /* lock for many of fields in this struct */
                                 /* next 3 guarded by bfaLock */
     int accessCnt;              /* number of bitfile accesses */
     int refCnt;                 /* number of access structure references */
@@ -219,7 +219,7 @@ typedef struct bfAccess {
     /*
      * Following fields are protected by bfIoLock
      */
-    mutexT bfIoLock;            /* lock for I/O related fields in this struct */
+    kmutex_t bfIoLock;            /* lock for I/O related fields in this struct */
     statusT dkResult;           /* Disk error field - used in flush */
     statusT miDkResult;         /* Disk error field - used in migrate flush */
     struct bsBufHdr dirtyBufList; /* List of modified buffers. */
@@ -331,7 +331,7 @@ typedef struct bfAccess {
      * preventing other threads from simultaneously manipulating differing 
      * regions.
      */
-    mutexT actRangeLock;                /* protects actRangeList chain */
+    kmutex_t actRangeLock;                /* protects actRangeList chain */
     struct actRangeHdr actRangeList;    /* chain of actRange structs */
     long bfap_free_time;
 

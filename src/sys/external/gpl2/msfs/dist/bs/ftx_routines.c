@@ -269,7 +269,7 @@ ftx_register_agent_n2(ftxAgentIdT agentId, /* in - agent id */
  * *******EOCOSMIC ASSUMPTION*******.
  */
 
-mutexT FtxMutex;         /* protects ftx tables & FtxDynAlloc */
+kmutex_t FtxMutex;         /* protects ftx tables & FtxDynAlloc */
 
 /* Structure to control the dynamic allocation and deallocation of
  * the ftxStateT structs.  Manipulation of this struct is guarded 
@@ -2886,7 +2886,7 @@ get_perlvl_p(
 void
 ftx_lock_init(
     ftxLkT *lk,            /* in - pointer to the lock */
-    mutexT *mutex,         /* in - pointer to the lock's mutex */
+    kmutex_t *mutex,         /* in - pointer to the lock's mutex */
     struct lockinfo *Plinfo/* in - the lockinfo for this lock class */
     )
 {
@@ -3066,7 +3066,7 @@ _ftx_add_lock(
 void
 _ftx_set_state(
     stateLkT *lk,
-    mutexT *lk_mutex,
+    kmutex_t *lk_mutex,
     lkStatesT newState,
     ftxHT ftxH,
     int ln,

@@ -175,7 +175,7 @@ int TestXtntsFlg = 0;
 
 unsigned TrFlags = 0;
 
-mutexT BfAccessFreeLock;  /* guards access free & closed lists */
+kmutex_t BfAccessFreeLock;  /* guards access free & closed lists */
 extern int vm_managed_pages;
 extern ulong access_structures_allocated;
 extern msgQHT CleanupMsgQH;

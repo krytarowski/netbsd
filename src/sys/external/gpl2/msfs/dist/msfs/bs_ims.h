@@ -94,7 +94,7 @@ typedef struct {
 typedef struct ioDescHdr {
     ioDescT *fwd;    /* doubly linked I/O queue */
     ioDescT *bwd;
-    mutexT ioQLock;  /* simple lock to protect struct fields */
+    kmutex_t ioQLock;  /* simple lock to protect struct fields */
     int ioQLen;
     int lenLimit;
     ulong queue_cnt; /* cumulative count of ioDescs placed onto queue */

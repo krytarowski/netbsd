@@ -71,7 +71,7 @@ typedef struct {
 typedef struct tempQMarker {
     struct ioDesc *fwd;      /* next ioDesc chained off this marker */
     struct ioDesc *bwd;      /* prev ioDesc chained off this marker */
-    mutexT ioQLock;          /* used only in the I/O queue header */
+    kmutex_t ioQLock;          /* used only in the I/O queue header */
     struct tempQMarker *mfwd; /* next marker in list of tempQMarkers */
     struct tempQMarker *mbwd; /* prev marker in list of tempQMarkers */
     struct thread *thd_id;
@@ -124,7 +124,7 @@ typedef struct vd {
     struct thread *vdSetupThd;  /* Thread Id of the thread setting up vdT */
     uint32T     vdRefCnt;       /* # threads actively using this volume */
     uint32T     vdRefWaiters;   /* # threads waiting for vdRefCnt to goto 0 */
-    mutexT      vdStateLock;    /* lock for above 4 fields */   
+    kmutex_t      vdStateLock;    /* lock for above 4 fields */   
 
     /* 
      * The following fields are protected by the vdScLock semaphore
@@ -218,7 +218,7 @@ typedef struct vd {
     int wrmaxio;              /* in a consolidated I/O */
 
     /* These fields are protected by the vdIoLock */
-    mutexT vdIoLock;          /* simple lock for guarding I/O fields */
+    kmutex_t vdIoLock;          /* simple lock for guarding I/O fields */
     u_int syncQIndx;          /* next smsync queue to be processed */
     u_int vdRetryCount;       /* count of AdvFS initiated retries */
 #ifdef ADVFS_DEBUG

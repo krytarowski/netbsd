@@ -61,8 +61,8 @@ static lkHdrT *find_locked_lock(lkHdrT *lk);
  * Used to protect global Lock Manager structures (mainly the mutex
  * linked list).
  */
-mutexT LockMgrMutex;
-mutexT* MutexList;
+kmutex_t LockMgrMutex;
+kmutex_t* MutexList;
 
 decl_simple_lock_info(, msfs_lockmgrmutex_lockinfo )
 decl_simple_lock_info(, msfs_mp_mutex_lockinfo )
@@ -156,7 +156,7 @@ void
 trace_lkcall( 
              LkTraceActionT action,  /* in */
              cv *resp,               /* in */ 
-             mutexT *mp,             /* in */
+             kmutex_t *mp,             /* in */
              int ln,                 /* in */
              char *fn,               /* in */
              void *lk                /* in */
@@ -244,7 +244,7 @@ bs_lock_mgr_init( void )
 void
 lk_init(
     void *lk,           /* in - pointer to the lock */
-    mutexT *mutex,      /* in - pointer to the lock's mutex */
+    kmutex_t *mutex,      /* in - pointer to the lock's mutex */
     lkTypeT lkType,     /* in - lock's type (generic, state, etc.) */
     int resources,      /* in - number of resources for a generic lock */
     lkUsageT usage      /* in - lock's usage */
@@ -458,7 +458,7 @@ _lk_set_state(
 void
 _lk_wait_for(
     stateLkT *lk,
-    mutexT *lk_mutex,
+    kmutex_t *lk_mutex,
     lkStatesT waitState,
     int ln,
     char *fn
@@ -527,7 +527,7 @@ _lk_wait_for(
 void
 _lk_wait_for2(
     stateLkT *lk,
-    mutexT *lk_mutex,
+    kmutex_t *lk_mutex,
     lkStatesT waitState1,
     lkStatesT waitState2,
     int ln,
@@ -595,7 +595,7 @@ _lk_wait_for2(
 void
 _lk_wait_while(
     stateLkT *lk,
-    mutexT *lk_mutex,
+    kmutex_t *lk_mutex,
     lkStatesT waitState,
     int ln,
     char *fn
@@ -702,7 +702,7 @@ void
 bs_dump_locks( int locked )
 {
 #ifdef ADVFS_DEBUG
-    mutexT *mp = NULL;
+    kmutex_t *mp = NULL;
     lkHdrT *lkHdr = NULL;
 
     mp = MutexList;

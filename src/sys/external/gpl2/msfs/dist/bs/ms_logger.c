@@ -1774,7 +1774,7 @@ getLogStats(domainT * dmnP, logStatT *logStatp)
     int slots;
     ftxTblDT *ftxTDp;
     ftxStateT *ftxp;
-    extern mutexT FtxMutex;
+    extern kmutex_t FtxMutex;
     DEFINE_LOCK_FLAGS;
 
 

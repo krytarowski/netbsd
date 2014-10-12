@@ -157,7 +157,7 @@ sort_onto_readyq(
     struct vd *vdp,             /* in */
     ioDescT *iop,               /* in */
     int cnt,                    /* in */
-    mutexT *ioQLock,            /* in */
+    kmutex_t *ioQLock,            /* in */
     tempQMarkerT *tempQ_marker  /* in */
     );
 
@@ -166,7 +166,7 @@ add_to_smsync(
     struct vd *vdp,             /* in */
     ioDescT *ioListp,           /* in */
     u_int len,                  /* in */
-    mutexT *ioQLock,            /* in */
+    kmutex_t *ioQLock,            /* in */
     tempQMarkerT *tempQ_marker  /* in */
     );
 
@@ -2181,7 +2181,7 @@ sort_onto_readyq(
     struct vd *vdp,             /* in */
     ioDescT *iop,               /* in */
     int cnt,                    /* in */
-    mutexT *incoming_lockp,     /* in */
+    kmutex_t *incoming_lockp,     /* in */
     tempQMarkerT *tempQ_marker  /* in */
     )
 {
@@ -4793,7 +4793,7 @@ rm_from_lazyq( struct bsBuf *bp,
     domainT *dmnp = bp->bfAccess->dmnP;
     u_long savListSeq = bp->accListSeq;
     int noq_cnt = 0, on_lazyq = FALSE, lockflag = FALSE;
-    mutexT *lockptr;
+    kmutex_t *lockptr;
 
     *ioList = NULL;
     *listLen = 0;
@@ -5003,7 +5003,7 @@ rm_ioq( struct bsBuf *bp )
     int first, last, i, on_lazyq = FALSE;
     ioDescT *iop;
     ioDescHdrT *qhdr = NULL, *new_qhdr = NULL;
-    mutexT *lockptr;
+    kmutex_t *lockptr;
     struct vd *vdp;
     extern u_int smsync_step;
     extern u_int smsync_period;
@@ -5614,7 +5614,7 @@ add_to_smsync(
     struct vd *vdp,             /* in */
     ioDescT *ioListp,           /* in */
     u_int len,                  /* in */
-    mutexT *incoming_lockp,     /* in */
+    kmutex_t *incoming_lockp,     /* in */
     tempQMarkerT *tempQ_marker  /* in */
     )
 {

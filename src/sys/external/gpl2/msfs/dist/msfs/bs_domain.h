@@ -365,7 +365,7 @@ typedef struct bfDmnDesc {
 } bfDmnDescT;
 
 typedef struct domain {
-    mutexT mutex;               /* protects vd.mcell_lk, vd.stgMap_lk, */
+    kmutex_t mutex;               /* protects vd.mcell_lk, vd.stgMap_lk, */
                                 /* totalBlks, freeBlks */
                                 /* vd.ddlActiveWaitMCId */
                                 /* bfSetHead, bfSetList */
@@ -418,7 +418,7 @@ typedef struct domain {
      * lsnLock also guards bsBuf.lsnFwd and .lsnBwd fields of any buffers
      * on this domain's lsnList.
      */
-    mutexT lsnLock;
+    kmutex_t lsnLock;
     struct bsBufHdr lsnList; /* Dirty transactional buffers to be written */
     lsnT writeToLsn;         /* pin block until up to this lsn is written */
     uint16T pinBlockWait;
@@ -438,7 +438,7 @@ typedef struct domain {
      * vdpTblLock, so eventually the use of DmnTblLock will be able to 
      * be reduced.
      */
-    mutexT     vdpTblLock;          /* protects next 2 fields   */
+    kmutex_t     vdpTblLock;          /* protects next 2 fields   */
     int maxVds;                     /* Maximum allowed vds */
     int vdCnt;                      /* number of vd's in vdpTbl */
     struct vd* vdpTbl[BS_MAX_VDI];  /* table of vd ptrs */
@@ -460,7 +460,7 @@ typedef struct domain {
     struct bsMPg *metaPagep;    /* ptr to page 0 buffer */
     int fs_full_time;           /* last time fs full msg logged */
 
-    mutexT  dmnFreezeMutex;     /* protects dmnFreezeFlags, dmnFreezeWaiting and dmnFreezeRefCnt */
+    kmutex_t  dmnFreezeMutex;     /* protects dmnFreezeFlags, dmnFreezeWaiting and dmnFreezeRefCnt */
     uint32T dmnFreezeFlags;     /* freezefs status */
     uint32T dmnFreezeWaiting;   /* Freeze thread is waiting to freeze this domain */
     uint32T dmnFreezeRefCnt;    /* Count of threads currently blocking the start of a freeze */

@@ -181,7 +181,7 @@ typedef struct bfSet {
     int fsRefCnt;           /* current number of bfs_access() accessors */
     domainT *dmnP;          /* pointer to BF-set's domain structure */
     bfsQueueT bfSetList;    /* list of bfSetT's associated with this domain */
-    mutexT accessChainLock; /* protects the next two fields */
+    kmutex_t accessChainLock; /* protects the next two fields */
     bfAccessT *accessFwd;   /* list of access structures for this fileset */
     bfAccessT *accessBwd;
     dev_t dev;              /* set's dev_t; used for statfs() and stat() */
@@ -200,7 +200,7 @@ typedef struct bfSet {
      * a clone fileset and the transfer of extents from files in the original
      * fileset to files in the clone fileset.
      */
-    mutexT   cloneDelStateMutex;  /* Protects cloneDelState and xferThreads */
+    kmutex_t   cloneDelStateMutex;  /* Protects cloneDelState and xferThreads */
     stateLkT cloneDelState;       /* State of clone fileset deletion        */
     int     xferThreads;          /* Number of threads doing transfer of    */
                                   /* storage from an original file to a     */
@@ -208,7 +208,7 @@ typedef struct bfSet {
 
     uint32T infoLoaded;     /* true if correct tagdir info has been loaded */
 
-    mutexT setMutex;        /* protects dirLock & fragLock lock header fields */
+    kmutex_t setMutex;        /* protects dirLock & fragLock lock header fields */
 
     ftxLkT dirLock;         /* tag dir lock */
 
@@ -239,7 +239,7 @@ typedef struct bfSet {
     fragGrpT fragGrps[BF_FRAG_MAX]; /* array of frag group list heads */
     struct fileSetNode *fsnp; /* file set node pointer */
 
-    mutexT  bfSetMutex;     /* protect bfSetFlags */
+    kmutex_t  bfSetMutex;     /* protect bfSetFlags */
     uint32T bfSetFlags;     /* The high-order 16-bits of this field holds */
                             /* in-memory attributes and the low-order */
                             /* 16-bits holds on-disk flags */

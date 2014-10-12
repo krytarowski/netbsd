@@ -88,7 +88,7 @@ typedef struct msgQEntry {
  */
 
 typedef struct msgQ {
-    mutexT mutex;                     /* synchronization mutex              */
+    kmutex_t mutex;                     /* synchronization mutex              */
     cv res;                           /* synchronization condition variable */
     msgQEntryT *qHead;                /* msg queue head pointer             */
     msgQEntryT *qTail;                /* msq queue tail pointer             */
@@ -580,7 +580,7 @@ ulmq_send_msg(
 void *
 ulmq_recv_msg(
     msgQHT msgQH, /* in - message queue handle */
-    mutexT *mutex
+    kmutex_t *mutex
     )
 {
     msgQT *msgQ = (msgQT *) msgQH;
