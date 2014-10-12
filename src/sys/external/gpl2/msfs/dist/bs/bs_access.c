@@ -235,7 +235,7 @@ void
 tag_trace(uint hash, uint qual, uint16T module, uint16T line, void *value)
 {
     register tagTraceElmtT *te;
-    extern simple_lock_data_t TraceLock;
+    extern kmutex_t TraceLock;
     extern int TraceSequence;
     tagTraceT *tt;
 
@@ -271,7 +271,7 @@ access_trace(
              )
 {
     register AccessTraceElmtT *te;
-    extern simple_lock_data_t TraceLock;
+    extern kmutex_t TraceLock;
     extern int TraceSequence;
 
     simple_lock(&TraceLock);
