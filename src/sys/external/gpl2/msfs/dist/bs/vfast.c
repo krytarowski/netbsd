@@ -97,9 +97,6 @@ _ int SS_const_data_pad_1[4] = {0};
 
 #pragma extern_model restore
 
-
-struct lockinfo * ADV_SSLock_lk_info;
-
 typedef enum {
     SS_ADD_LIST_THREAD,
     SS_ADD_WORK_THREAD,
