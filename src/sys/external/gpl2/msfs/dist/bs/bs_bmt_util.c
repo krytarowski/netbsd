@@ -1879,7 +1879,7 @@ bmt_alloc_prim_mcell(
     struct bsMC* mcp;
     rbfPgRefHT pgref;
 
-    MS_SMP_ASSERT(rw_lock_held(&vdp->mcell_lk.lock));
+    MS_SMP_ASSERT(rw_write_held(&vdp->mcell_lk.lock));
     sts = alloc_mcell (
                        vdp,
                        ftxH,
