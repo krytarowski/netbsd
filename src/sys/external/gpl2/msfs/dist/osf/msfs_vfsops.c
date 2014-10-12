@@ -54,6 +54,7 @@
 #include <sys/lock.h>
 #include <sys/malloc.h>
 #include <sys/mount.h>
+#include <sys/mutex.h>
 #include <sys/stat.h>
 #include <sys/systm.h>
 #include <sys/time.h>
@@ -1083,7 +1084,7 @@ advfs_mountfs(struct mount *mp)
      * Initialize the locks and mutexes in the fileSetNode structure.
      */
 
-    mutex_init3(&dn->filesetMutex, 0, "filesetMutex", ADVfilesetMutex_lockinfo);
+    mutex_init(&dn->filesetMutex, MUTEX_DEFAULT, IPL_NONE);
     for (qip = &dn->qi[0]; qip < &dn->qi[MAXQUOTAS]; qip++) {
         lock_setup( &(qip->qiLock), ADVquotaInfoT_qiLock, TRUE );
     }

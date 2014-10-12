@@ -44,6 +44,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/lock.h>
+#include <sys/mutex.h>
 #include <sys/ucred.h>
 
 #include "../msfs/ms_public.h"
@@ -1839,7 +1840,7 @@ filesetnode_init( bfSetT *bfSetp, fileSetNodeT **fsnpA )
     fsnp->qi[GRPQUOTA].qiTag.num = bfSetParamsp->fsContext[4 + 2 * GRPQUOTA];
     fsnp->qi[GRPQUOTA].qiTag.seq = bfSetParamsp->fsContext[5 + 2 * GRPQUOTA];
 
-    mutex_init3(&fsnp->filesetMutex, 0, "filesetMutex", ADVfilesetMutex_lockinfo);
+    mutex_init(&fsnp->filesetMutex, MUTEX_DEFAULT, IPL_NONE);
     for ( qip = &fsnp->qi[0]; qip < &fsnp->qi[MAXQUOTAS]; qip++ ) {
         lock_setup( &qip->qiLock, ADVquotaInfoT_qiLock, TRUE );
     }
