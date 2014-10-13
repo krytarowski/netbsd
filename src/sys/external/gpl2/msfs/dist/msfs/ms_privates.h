@@ -26,92 +26,48 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define FRAG_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
-#define FRAG_LOCK_READ( sLk ) \
-    lock_read( sLk.lock );
-#define FRAG_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
+#include <sys/param.h>
+#include <sys/types.h>
+#include <sys/rwlock.h>
 
-#define MCELL_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
-#define MCELL_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
+struct ftxLk;
 
-#define STGMAP_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
-#define STGMAP_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
-
-#define MCELLIST_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
-#define MCELLIST_LOCK_READ( sLk ) \
-    lock_read( sLk.lock );
-#define MCELLIST_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
-
-#define XTNMAP_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
-#define XTNMAP_LOCK_READ( sLk ) \
-    lock_read( sLk.lock );
-#define XTNMAP_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
-#define XTNMAP_LOCK_DOWNGRADE( sLk ) \
-    lock_write_to_read( sLk.lock );
-
-#define COW_READ_LOCK_RECURSIVE( sLk ) \
-    lock_read_recursive( sLk );
-#define COW_READ_UNLOCK_RECURSIVE( sLk ) \
-    lock_read_done_recursive(sLk);
-#define COW_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define COW_LOCK_READ( sLk ) \
-    lock_read( sLk );
-#define COW_UNLOCK( sLk ) \
-    lock_done( sLk );
-
-#define CLU_CLXTNT_READ_LOCK_RECURSIVE(sLk) \
-    lock_read_recursive(sLk);
-#define CLU_CLXTNT_UNLOCK_RECURSIVE(sLk) \
-    lock_read_done_recursive(sLk);
-#define CLU_CLXTNT_WRITE( sLk) \
-    lock_write( sLk );
-#define CLU_CLXTNT_READ( sLk ) \
-    lock_read( sLk );
-#define CLU_CLXTNT_TRY_READ( sLk ) \
-    lock_try_read( sLk )
-#define CLU_CLXTNT_UNLOCK( sLk) \
-    lock_done( sLk );
-
-#define RAWBUFREE_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define RAWBUFREE_UNLOCK( sLk ) \
-    lock_done( sLk );
-
-#define MIGTRUNC_LOCK_READ( sLk ) \
-    lock_read( sLk );
-#define MIGTRUNC_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define MIGTRUNC_UNLOCK( sLk ) \
-    lock_done( sLk );
-
-#define  DDLACTIVE_LOCK_READ( sLk ) \
-    lock_read( sLk );
-#define  DDLACTIVE_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define DDLACTIVE_UNLOCK( sLk ) \
-    lock_done( sLk );
-
-#define TRUNC_XFER_READ_LOCK_RECURSIVE( sLk ) \
-    lock_read_recursive( sLk );
-#define TRUNC_XFER_UNLOCK_RECURSIVE(sLk) \
-    lock_read_done_recursive(sLk);
-#define TRUNC_XFER_LOCK_READ( sLk ) \
-    lock_read( sLk );
-#define  TRUNC_XFER_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define TRUNC_XFER_UNLOCK( sLk ) \
-    lock_done( sLk );
+void FRAG_LOCK_WRITE( struct ftxLk *sLk );
+void FRAG_LOCK_READ( struct ftxLk *sLk );
+void FRAG_UNLOCK( struct ftxLk *sLk );
+void MCELL_LOCK_WRITE( struct ftxLk *sLk );
+void MCELL_UNLOCK( struct ftxLk *sLk );
+void STGMAP_LOCK_WRITE( struct ftxLk *sLk );
+void STGMAP_UNLOCK( struct ftxLk *sLk );
+void MCELLIST_LOCK_WRITE( struct ftxLk *sLk );
+void MCELLIST_LOCK_READ( struct ftxLk *sLk );
+void MCELLIST_UNLOCK( struct ftxLk *sLk );
+void XTNMAP_LOCK_WRITE( struct ftxLk *sLk );
+void XTNMAP_LOCK_READ( struct ftxLk *sLk );
+void XTNMAP_UNLOCK( struct ftxLk *sLk );
+void XTNMAP_LOCK_DOWNGRADE( struct ftxLk *sLk );
+void COW_LOCK_WRITE( krwlock_t *sLk );
+void COW_LOCK_READ( krwlock_t *sLk );
+void COW_UNLOCK( krwlock_t *sLk );
+void CLU_CLXTNT_READ_LOCK_RECURSIVE( krwlock_t *sLk );
+void CLU_CLXTNT_UNLOCK_RECURSIVE( krwlock_t *sLk );
+void CLU_CLXTNT_WRITE( krwlock_t *sLk );
+void CLU_CLXTNT_READ( krwlock_t *sLk );
+void CLU_CLXTNT_TRY_READ( krwlock_t *sLk );
+void CLU_CLXTNT_UNLOCK( krwlock_t *sLk );
+void RAWBUFREE_LOCK_WRITE( struct ftxLk *sLk );
+void RAWBUFREE_UNLOCK( struct ftxLk *sLk );
+void MIGTRUNC_LOCK_READ( krwlock_t *sLk );
+void MIGTRUNC_LOCK_WRITE( krwlock_t *sLk );
+void MIGTRUNC_UNLOCK( krwlock_t *sLk );
+void DDLACTIVE_LOCK_READ( krwlock_t *sLk );
+void DDLACTIVE_LOCK_WRITE( krwlock_t *sLk );
+void DDLACTIVE_UNLOCK( krwlock_t *sLk );
+void TRUNC_XFER_READ_LOCK_RECURSIVE( krwlock_t *sLk );
+void TRUNC_XFER_UNLOCK_RECURSIVE( krwlock_t *sLk );
+void TRUNC_XFER_LOCK_READ( krwlock_t *sLk );
+void TRUNC_XFER_LOCK_WRITE( krwlock_t *sLk );
+void TRUNC_XFER_UNLOCK( krwlock_t *sLk );
 
 /*
  * Some private definitions
