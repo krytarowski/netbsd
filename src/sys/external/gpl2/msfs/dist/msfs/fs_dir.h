@@ -241,17 +241,37 @@ struct undel_dir_rec {
  * Handy macros for locking the fsContext structure. 
  */
 
-#define FS_FILE_READ_LOCK(cp)  lock_read(&((cp)->file_lock))
+static inline void FS_FILE_READ_LOCK(struct fsContext *cp)
+{
+    rw_enter(&cp->file_lock, RW_READER);
+}
 
-#define FS_FILE_READ_LOCK_RECURSIVE(cp)  lock_read_recursive(&((cp)->file_lock))
+static inline void FS_FILE_READ_LOCK_RECURSIVE(struct fsContext *cp)
+{
+    /* lock_read_recursive(&cp->file_lock); */
+    panic("lock_read_recursive() not implemented");
+}
 
-#define FS_FILE_WRITE_LOCK(cp)  lock_write(&((cp)->file_lock))
+static inline void FS_FILE_WRITE_LOCK(struct fsContext *cp)
+{
+    rw_enter(&cp->file_lock, RW_WRITER);
+}
 
-#define FS_FILE_UNLOCK(cp)  lock_done(&((cp)->file_lock))
+static inline void FS_FILE_UNLOCK(struct fsContext *cp)
+{
+    rw_exit(&cp->file_lock);
+}
 
-#define FS_FILE_UNLOCK_RECURSIVE(cp)  lock_read_done_recursive(&((cp)->file_lock))
+static inline void FS_FILE_UNLOCK_RECURSIVE(struct fsContext *cp)
+{
+    /* lock_read_done_recursive(&cp->file_lock); */
+    panic("lock_read_done_recursive() not implemented");
+}
 
-#define FS_FILE_READ_TO_WRITE_LOCK(cp)  lock_read_to_write(&((cp)->file_lock))
+static inline int FS_FILE_READ_TO_WRITE_LOCK(struct fsContext *cp)
+{
+    return rw_tryupgrade(&cp->file_lock);
+}
 
 /*
  * Macros used to acquire the vm map lock in AdvFS routines.
