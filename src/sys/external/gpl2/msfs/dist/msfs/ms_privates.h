@@ -26,92 +26,189 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#define FRAG_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
-#define FRAG_LOCK_READ( sLk ) \
-    lock_read( sLk.lock );
-#define FRAG_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
+#include <sys/params.h>
+#include <sys/types.h>
+#include <sys/rwlock.h>
 
-#define MCELL_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
-#define MCELL_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
+static inline void FRAG_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk.lock, RW_WRITER );
+}
 
-#define STGMAP_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
-#define STGMAP_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
+static inline void FRAG_LOCK_READ( krwlock_t *sLk )
+{
+    rw_enter( sLk.lock, RW_READER );
+}
 
-#define MCELLIST_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
-#define MCELLIST_LOCK_READ( sLk ) \
-    lock_read( sLk.lock );
-#define MCELLIST_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
+static inline void FRAG_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk.lock );
+}
 
-#define XTNMAP_LOCK_WRITE( sLk ) \
-    lock_write( sLk.lock );
-#define XTNMAP_LOCK_READ( sLk ) \
-    lock_read( sLk.lock );
-#define XTNMAP_UNLOCK( sLk ) \
-    lock_done( sLk.lock );
-#define XTNMAP_LOCK_DOWNGRADE( sLk ) \
-    lock_write_to_read( sLk.lock );
+static inline void MCELL_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk.lock, RW_WRITER );
+}
 
-#define COW_READ_LOCK_RECURSIVE( sLk ) \
-    lock_read_recursive( sLk );
-#define COW_READ_UNLOCK_RECURSIVE( sLk ) \
-    lock_read_done_recursive(sLk);
-#define COW_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define COW_LOCK_READ( sLk ) \
-    lock_read( sLk );
-#define COW_UNLOCK( sLk ) \
-    lock_done( sLk );
+static inline void MCELL_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk.lock );
+}
 
-#define CLU_CLXTNT_READ_LOCK_RECURSIVE(sLk) \
+static inline void STGMAP_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk.lock, RW_WRITER );
+}
+
+static inline void STGMAP_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk.lock );
+}
+
+static inline void MCELLIST_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk.lock, RW_WRITER );
+}
+
+static inline void MCELLIST_LOCK_READ( krwlock_t *sLk )
+{
+    rw_enter( sLk.lock, RW_READER );
+}
+
+static inline void MCELLIST_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk.lock );
+}
+
+static inline void XTNMAP_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk.lock, RW_WRITER );
+}
+
+static inline void XTNMAP_LOCK_READ( krwlock_t *sLk )
+{
+    rw_enter( sLk.lock, RW_READER );
+}
+
+static inline void XTNMAP_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk.lock );
+}
+
+static inline void XTNMAP_LOCK_DOWNGRADE( krwlock_t *sLk )
+{
+    rw_downgrade( sLk.lock );
+}
+
+static inline void COW_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_WRITER );
+}
+
+static inline void COW_LOCK_READ( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_READER );
+}
+
+static inline void COW_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk );
+}
+
+static inline void CLU_CLXTNT_READ_LOCK_RECURSIVE( krwlock_t *sLk )
+{
     lock_read_recursive(sLk);
-#define CLU_CLXTNT_UNLOCK_RECURSIVE(sLk) \
+}
+
+static inline void CLU_CLXTNT_UNLOCK_RECURSIVE( krwlock_t *sLk )
+{
     lock_read_done_recursive(sLk);
-#define CLU_CLXTNT_WRITE( sLk) \
-    lock_write( sLk );
-#define CLU_CLXTNT_READ( sLk ) \
-    lock_read( sLk );
-#define CLU_CLXTNT_TRY_READ( sLk ) \
+}
+
+static inline void CLU_CLXTNT_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_WRITER );
+}
+
+static inline void CLU_CLXTNT_READ( krwlock_t *Lk )
+{
+    rw_enter( sLk, RW_READER );
+}
+
+static inline void CLU_CLXTNT_TRY_READ( krwlock_t *sLk )
+{
     lock_try_read( sLk )
-#define CLU_CLXTNT_UNLOCK( sLk) \
-    lock_done( sLk );
+}
 
-#define RAWBUFREE_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define RAWBUFREE_UNLOCK( sLk ) \
-    lock_done( sLk );
+static inline void CLU_CLXTNT_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk );
+}
 
-#define MIGTRUNC_LOCK_READ( sLk ) \
-    lock_read( sLk );
-#define MIGTRUNC_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define MIGTRUNC_UNLOCK( sLk ) \
-    lock_done( sLk );
+static inline void RAWBUFREE_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_WRITER );
+}
 
-#define  DDLACTIVE_LOCK_READ( sLk ) \
-    lock_read( sLk );
-#define  DDLACTIVE_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define DDLACTIVE_UNLOCK( sLk ) \
-    lock_done( sLk );
+static inline void RAWBUFREE_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk );
+}
 
-#define TRUNC_XFER_READ_LOCK_RECURSIVE( sLk ) \
+static inline void MIGTRUNC_LOCK_READ( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_READER );
+}
+
+static inline void MIGTRUNC_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_WRITER );
+}
+
+static inline void MIGTRUNC_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk );
+}
+
+static inline void DDLACTIVE_LOCK_READ( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_READER );
+}
+
+static inline void DDLACTIVE_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_WRITER );
+}
+
+static inline void DDLACTIVE_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk );
+}
+
+static inline void TRUNC_XFER_READ_LOCK_RECURSIVE( krwlock_t *sLk )
+{
     lock_read_recursive( sLk );
-#define TRUNC_XFER_UNLOCK_RECURSIVE(sLk) \
+}
+
+static inline void TRUNC_XFER_UNLOCK_RECURSIVE( krwlock_t *sLk )
+{
     lock_read_done_recursive(sLk);
-#define TRUNC_XFER_LOCK_READ( sLk ) \
-    lock_read( sLk );
-#define  TRUNC_XFER_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define TRUNC_XFER_UNLOCK( sLk ) \
-    lock_done( sLk );
+}
+
+static inline void TRUNC_XFER_LOCK_READ( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_READER );
+}
+
+static inline void TRUNC_XFER_LOCK_WRITE( krwlock_t *sLk )
+{
+    rw_enter( sLk, RW_WRITER );
+}
+
+static inline void TRUNC_XFER_UNLOCK( krwlock_t *sLk )
+{
+    rw_exit( sLk );
+}
 
 /*
  * Some private definitions
