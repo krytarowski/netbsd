@@ -3325,10 +3325,10 @@ vd_alloc(
         return (ENO_MORE_MEMORY);
     }
 
-    ftx_lock_init(&vdp->del_list_lk, &dmnP->mutex, ADVvdT_del_list_lk_info );
-    ftx_lock_init( &vdp->stgMap_lk, &dmnP->mutex, ADVvdT_stgMap_lk_info);
-    ftx_lock_init( &vdp->mcell_lk, &dmnP->mutex, ADVvdT_mcell_lk_info );
-    ftx_lock_init(&vdp->rbmt_mcell_lk,&dmnP->mutex,ADVvdT_rbmt_mcell_lk_info);
+    ftx_lock_init(&vdp->del_list_lk, &dmnP->mutex);
+    ftx_lock_init(&vdp->stgMap_lk, &dmnP->mutex);
+    ftx_lock_init(&vdp->mcell_lk, &dmnP->mutex);
+    ftx_lock_init(&vdp->rbmt_mcell_lk,&dmnP->mutex);
     lock_setup( &vdp->ddlActiveLk, ADVvdT_ddlActiveLk_info, TRUE );
     mutex_init(&vdp->vdIoLock, MUTEX_DEFAULT, IPL_NONE);
     mutex_init(&vdp->vdStateLock, MUTEX_DEFAULT, IPL_NONE);
@@ -5676,7 +5676,7 @@ dmn_alloc(
     rootBfSetId.domainId = domainId;
     rootBfSetId.dirTag = dirTag;
 
-    ftx_lock_init( &dmnP->BfSetTblLock, &dmnP->mutex, ADVBfSetTblLock_info);
+    ftx_lock_init(&dmnP->BfSetTblLock, &dmnP->mutex);
 
     dmnP->bfSetHead.bfsQfwd = &dmnP->bfSetHead;
     dmnP->bfSetHead.bfsQbck = &dmnP->bfSetHead;
