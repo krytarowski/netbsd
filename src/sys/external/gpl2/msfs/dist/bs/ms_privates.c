@@ -138,3 +138,183 @@ char *msfs_filenames[] = {
     "msfs_proplist.c",
     "bs_index.c"
 };
+
+void FRAG_LOCK_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk.lock, RW_WRITER );
+}
+
+void FRAG_LOCK_READ( struct ftxLk *sLk )
+{
+    rw_enter( &sLk.lock, RW_READER );
+}
+
+void FRAG_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk.lock );
+}
+
+void MCELL_LOCK_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk.lock, RW_WRITER );
+}
+
+void MCELL_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk.lock );
+}
+
+void STGMAP_LOCK_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk.lock, RW_WRITER );
+}
+
+void STGMAP_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk.lock );
+}
+
+void MCELLIST_LOCK_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk.lock, RW_WRITER );
+}
+
+void MCELLIST_LOCK_READ( struct ftxLk *sLk )
+{
+    rw_enter( &sLk.lock, RW_READER );
+}
+
+void MCELLIST_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk.lock );
+}
+
+void XTNMAP_LOCK_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk.lock, RW_WRITER );
+}
+
+void XTNMAP_LOCK_READ( struct ftxLk *sLk )
+{
+    rw_enter( &sLk.lock, RW_READER );
+}
+
+void XTNMAP_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk.lock );
+}
+
+void XTNMAP_LOCK_DOWNGRADE( struct ftxLk *sLk )
+{
+    rw_downgrade( &sLk.lock );
+}
+
+void COW_LOCK_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_WRITER );
+}
+
+void COW_LOCK_READ( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_READER );
+}
+
+void COW_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk );
+}
+
+void CLU_CLXTNT_READ_LOCK_RECURSIVE( struct ftxLk *sLk )
+{
+    lock_read_recursive(&sLk);
+}
+
+void CLU_CLXTNT_UNLOCK_RECURSIVE( struct ftxLk *sLk )
+{
+    lock_read_done_recursive(&sLk);
+}
+
+void CLU_CLXTNT_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_WRITER );
+}
+
+void CLU_CLXTNT_READ( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_READER );
+}
+
+void CLU_CLXTNT_TRY_READ( struct ftxLk *sLk )
+{
+    lock_try_read( &sLk )
+}
+
+void CLU_CLXTNT_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk );
+}
+
+void RAWBUFREE_LOCK_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_WRITER );
+}
+
+void RAWBUFREE_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk );
+}
+
+void MIGTRUNC_LOCK_READ( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_READER );
+}
+
+void MIGTRUNC_LOCK_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_WRITER );
+}
+
+void MIGTRUNC_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk );
+}
+
+void DDLACTIVE_LOCK_READ( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_READER );
+}
+
+void DDLACTIVE_LOCK_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_WRITER );
+}
+
+void DDLACTIVE_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk );
+}
+
+void TRUNC_XFER_READ_LOCK_RECURSIVE( struct ftxLk *sLk )
+{
+    lock_read_recursive( &sLk );
+}
+
+void TRUNC_XFER_UNLOCK_RECURSIVE( struct ftxLk *sLk )
+{
+    lock_read_done_recursive(&sLk);
+}
+
+void TRUNC_XFER_LOCK_READ( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_READER );
+}
+
+void TRUNC_XFER_LOCK_WRITE( struct ftxLk *sLk )
+{
+    rw_enter( &sLk, RW_WRITER );
+}
+
+void TRUNC_XFER_UNLOCK( struct ftxLk *sLk )
+{
+    rw_exit( &sLk );
+}
