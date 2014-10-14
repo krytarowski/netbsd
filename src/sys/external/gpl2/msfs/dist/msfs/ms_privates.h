@@ -26,7 +26,7 @@
 #ifndef MS_PRIVATES
 #define MS_PRIVATES
 
-#include <sys/params.h>
+#include <sys/param.h>
 #include <sys/types.h>
 #include <sys/rwlock.h>
 
