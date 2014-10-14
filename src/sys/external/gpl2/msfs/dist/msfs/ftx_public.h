@@ -672,6 +672,12 @@ rbf_set_bfset_params(
 }
 
 void
+ftx_lock_init(
+    ftxLkT *lk,            /* in - pointer to the lock */
+    kmutex_t *mutex         /* in - pointer to the lock's mutex */
+    );
+
+void
 ftx_lock_write(
     ftxLkT *lk,      /* in */
     ftxHT ftxH,      /* in */
