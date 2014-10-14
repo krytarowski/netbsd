@@ -248,7 +248,8 @@ static inline void FS_FILE_READ_LOCK(struct fsContext *cp)
 
 static inline void FS_FILE_READ_LOCK_RECURSIVE(struct fsContext *cp)
 {
-    lock_read_recursive(&cp->file_lock);
+    /* lock_read_recursive(&cp->file_lock); */
+    panic("lock_read_recursive() not implemented");
 }
 
 static inline void FS_FILE_WRITE_LOCK(struct fsContext *cp)
@@ -263,7 +264,8 @@ static inline void FS_FILE_UNLOCK(struct fsContext *cp)
 
 static inline void FS_FILE_UNLOCK_RECURSIVE(struct fsContext *cp)
 {
-    lock_read_done_recursive(&cp->file_lock);
+    /* lock_read_done_recursive(&cp->file_lock); */
+    panic("lock_read_done_recursive() not implemented");
 }
 
 static inline int FS_FILE_READ_TO_WRITE_LOCK(struct fsContext *cp)
