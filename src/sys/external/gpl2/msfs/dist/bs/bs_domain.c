@@ -5498,7 +5498,7 @@ dmn_dealloc(
 
     MS_SMP_ASSERT( BFSET_VALID(dmnP->bfSetDirp) ) 
 
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
 
     bfs_dealloc( dmnP->bfSetDirp, TRUE );
     dmnP->bfSetDirp = 0;     
