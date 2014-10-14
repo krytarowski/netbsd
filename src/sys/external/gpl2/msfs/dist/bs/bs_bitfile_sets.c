@@ -2798,7 +2798,7 @@ rbf_bfs_create(
 
     ftxStarted = TRUE;
 
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
     lkLocked = TRUE;
 
     sts = bfs_create( dmnP,
@@ -3084,7 +3084,7 @@ bfs_access(
      */
 
     if (!rw_lock_held(&dmnP->BfSetTblLock.lock)) {
-        BFSETTBL_LOCK_WRITE( dmnP )
+        BFSETTBL_LOCK_WRITE( dmnP );
         tblLocked = TRUE;
     }
 
@@ -3405,8 +3405,13 @@ bfs_open(
         RAISE_EXCEPTION( sts );
     }
 
+<<<<<<< HEAD
     if (!rw_lock_held(&bfSetp->dmnP->BfSetTblLock.lock)) {
         BFSETTBL_LOCK_WRITE( bfSetp->dmnP )
+=======
+    if (!mutex_owned(&bfSetp->dmnP->BfSetTblLock.lock)) {
+        BFSETTBL_LOCK_WRITE( bfSetp->dmnP );
+>>>>>>> d7746c7... ADVFS: Add missing semicolon after BFSETTBL_LOCK_WRITE()
         tblLocked = TRUE;
     }
 
@@ -4577,7 +4582,7 @@ bs_bfs_delete(
     }
 
     ftxStarted = TRUE;
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
 
     /*
      * Open only the set we are deleting again to keep its set desc
@@ -4614,7 +4619,7 @@ bs_bfs_delete(
      * bfsettbl lock.
      */
 
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
     
     while (setp->fsRefCnt > 0) {
         setp->fsRefCnt--;
@@ -4661,7 +4666,7 @@ bs_bfs_delete(
      * that the fileset is going away.
      */
 
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
     bfs_dealloc( setp, TRUE );
     BFSETTBL_UNLOCK( dmnP )
 
@@ -4694,7 +4699,7 @@ bs_bfs_delete(
 
 	    CC_CFS_CLONE_NOTIFY(fsid, CLONE_DELETE);
 	}
-        BFSETTBL_LOCK_WRITE( dmnP )
+        BFSETTBL_LOCK_WRITE( dmnP );
         bfs_close( origSetp, ftxH );
         BFSETTBL_UNLOCK( dmnP )
     }
@@ -4727,7 +4732,7 @@ HANDLE_EXCEPTION:
     }
 
     if (deletingClone) {
-        BFSETTBL_LOCK_WRITE( dmnP )
+        BFSETTBL_LOCK_WRITE( dmnP );
         bfs_close( origSetp, ftxH );
         BFSETTBL_UNLOCK( dmnP )
     }
@@ -4975,7 +4980,7 @@ bs_bfs_clone(
     }
     ftxStarted = TRUE;
 
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
     lkLocked = TRUE;
 
 #if 0
@@ -5173,7 +5178,7 @@ bs_bfs_clone(
      * must be open the same number times we close both here.
      */
 
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
 
     bfs_close( cloneSetp, ftxH );
     bfs_close( origSetp, ftxH );
@@ -5201,13 +5206,13 @@ HANDLE_EXCEPTION:
 
     if ( BFSET_VALID(origSetp) ) {
         origSetp->bfsOpPend = 0;
-        BFSETTBL_LOCK_WRITE( dmnP )
+        BFSETTBL_LOCK_WRITE( dmnP );
         bfs_close( origSetp, ftxH );
         BFSETTBL_UNLOCK( dmnP )
     }
 
     if ( BFSET_VALID(cloneSetp) ) {
-        BFSETTBL_LOCK_WRITE( dmnP )
+        BFSETTBL_LOCK_WRITE( dmnP );
         bfs_close( cloneSetp, ftxH );
         BFSETTBL_UNLOCK( dmnP )
     }
@@ -5402,7 +5407,7 @@ bs_bfs_add_root(
     statusT sts;
     bfSetT *bfSetp;
 
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
 
     sts = bfs_alloc( bfSetDirId, dmnP, &bfSetp );
 
@@ -7587,7 +7592,7 @@ rbf_set_bfset_params(
          * BfSetTblLock locked so we don't need to lock it here.
          */
 
-        BFSETTBL_LOCK_WRITE( bfSetp->dmnP )
+        BFSETTBL_LOCK_WRITE( bfSetp->dmnP );
         bfSetTblLocked = TRUE;
     }
 

@@ -503,7 +503,7 @@ create_undo_opx(ftxHT ftxH,     /* in - ftx handle */
      * Ensure we donot already hold the lock before grabbing it.
      */
     if (!rw_lock_held(&dmnP->BfSetTblLock.lock)) {
-       BFSETTBL_LOCK_WRITE( bfSetp->dmnP )
+       BFSETTBL_LOCK_WRITE( bfSetp->dmnP );
     }
 
     tagdir_tag_to_freelist(bfSetp, &undoRp->ut.tag, ftxH, TRUE);

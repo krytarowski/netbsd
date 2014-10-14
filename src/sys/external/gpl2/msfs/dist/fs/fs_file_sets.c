@@ -871,7 +871,7 @@ fs_fset_name_change(
         RAISE_EXCEPTION (sts);
     }
     setAccess = TRUE;
-    BFSETTBL_LOCK_WRITE( bfSetp->dmnP )
+    BFSETTBL_LOCK_WRITE( bfSetp->dmnP );
     tblLocked = TRUE;
 
     if (bfSetp->cloneId != BS_BFSET_ORIG) {
