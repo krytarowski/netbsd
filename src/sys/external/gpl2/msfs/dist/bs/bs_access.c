@@ -295,17 +295,13 @@ init_access(bfAccessT *bfap)
     mutex_enter(&bfap->bfaLock);
     lk_init( &bfap->stateLk, &bfap->bfaLock, LKT_STATE, 0, LKU_BF_STATE );
     bfap->stateLk.state = ACC_INVALID;
-    ftx_lock_init( &bfap->xtntMap_lk,
-                   &bfap->bfaLock,
-                   ADVbfAccessT_xtntMap_lk_info);
+    ftx_lock_init(&bfap->xtntMap_lk, &bfap->bfaLock);
     lock_setup( &bfap->trunc_xfer_lk, ADVbfAccessT_trunc_xfer_lk_info,TRUE);
     lock_setup( &bfap->cow_lk, ADVbfAccessT_cow_lk_info,TRUE);
     lock_setup( &bfap->clu_clonextnt_lk,
                 ADVbfAccessT_clu_clonextnt_lk_info,
                 TRUE);
-    ftx_lock_init( &bfap->mcellList_lk,
-                   &bfap->bfaLock,
-                   ADVbfAccessT_mcellList_lk_info);
+    ftx_lock_init(&bfap->mcellList_lk, &bfap->bfaLock);
     lock_setup( &bfap->xtnts.migTruncLk,
                 ADVbsInMemXtntT_migTruncLk_info,
                 TRUE);

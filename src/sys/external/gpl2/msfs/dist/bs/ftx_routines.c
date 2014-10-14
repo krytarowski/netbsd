@@ -49,6 +49,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/mutex.h>
+#include <sys/rwlock.h>
 #include <sys/time.h>
 
 #if defined( MSFS_CRASHTEST )
@@ -2877,19 +2878,18 @@ get_perlvl_p(
 void
 ftx_lock_init(
     ftxLkT *lk,            /* in - pointer to the lock */
-    kmutex_t *mutex,         /* in - pointer to the lock's mutex */
-    struct lockinfo *Plinfo/* in - the lockinfo for this lock class */
+    kmutex_t *mutex         /* in - pointer to the lock's mutex */
     )
 {
-    lkHdrT *lkHdr = (lkHdrT *) lk;
-    ftxLkT nilLk = { {LKT_FTX},0 };
-    *lk = nilLk;
+    lkHdrT *lkHdr = lk->hdr;
+
+    bzero(lk, sizeof(ftxLkT));
+    lkHdr->lkType = LKT_FTX;
 
     lkHdr->mutex = mutex;
-    lock_setup( &(lk->lock), Plinfo, TRUE);
+    rw_init(&lk->lock);
 
 } /* end ftx_lock_init */
-
 
 void
 ftx_lock_write(
