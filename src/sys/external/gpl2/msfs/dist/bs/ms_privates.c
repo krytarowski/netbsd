@@ -44,6 +44,7 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/systm.h>
+#include <sys/rwlock.h>
 
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
@@ -267,17 +268,17 @@ void RAWBUFREE_UNLOCK( struct ftxLk *sLk )
     rw_exit( &sLk );
 }
 
-void MIGTRUNC_LOCK_READ( struct ftxLk *sLk )
+void MIGTRUNC_LOCK_READ( krwlock_t *sLk )
 {
     rw_enter( &sLk, RW_READER );
 }
 
-void MIGTRUNC_LOCK_WRITE( struct ftxLk *sLk )
+void MIGTRUNC_LOCK_WRITE( krwlock_t *sLk )
 {
     rw_enter( &sLk, RW_WRITER );
 }
 
-void MIGTRUNC_UNLOCK( struct ftxLk *sLk )
+void MIGTRUNC_UNLOCK( krwlock_t *sLk )
 {
     rw_exit( &sLk );
 }
