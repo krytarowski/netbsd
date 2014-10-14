@@ -1328,7 +1328,7 @@ void bmtr_put_rec_undo_opx(
      * Later, when we call bs_bfs_close() we will already
      * have the lock.
      */
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
 
     FTX_LOCKWRITE( &bfap->mcellList_lk, ftxH )
 
