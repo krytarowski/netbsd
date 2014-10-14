@@ -211,17 +211,17 @@ void XTNMAP_LOCK_DOWNGRADE( struct ftxLk *sLk )
     rw_downgrade( &sLk.lock );
 }
 
-void COW_LOCK_WRITE( struct ftxLk *sLk )
+void COW_LOCK_WRITE( krwlock_t *sLk )
 {
     rw_enter( &sLk, RW_WRITER );
 }
 
-void COW_LOCK_READ( struct ftxLk *sLk )
+void COW_LOCK_READ( krwlock_t *sLk )
 {
     rw_enter( &sLk, RW_READER );
 }
 
-void COW_UNLOCK( struct ftxLk *sLk )
+void COW_UNLOCK( krwlock_t *sLk )
 {
     rw_exit( &sLk );
 }
