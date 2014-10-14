@@ -2407,8 +2407,8 @@ bfs_alloc(
 
     mutex_init(&bfSetp->setMutex, MUTEX_DEFAULT, IPL_NONE);
     mutex_init(&bfSetp->accessChainLock, MUTEX_DEFAULT, IPL_NONE);
-    ftx_lock_init(&bfSetp->dirLock, &bfSetp->setMutex, ADVbfSetT_dirLock_info );
-    ftx_lock_init(&bfSetp->fragLock, &bfSetp->setMutex, ADVbfSetT_fragLock_info );
+    ftx_lock_init(&bfSetp->dirLock, &bfSetp->setMutex);
+    ftx_lock_init(&bfSetp->fragLock, &bfSetp->setMutex);
     mutex_init(&bfSetp->cloneDelStateMutex, MUTEX_DEFAULT, IPL_NONE);
     mutex_enter(&bfSetp->cloneDelStateMutex);
     lk_init(&bfSetp->cloneDelState, &bfSetp->cloneDelStateMutex, 
