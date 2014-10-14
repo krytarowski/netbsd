@@ -191,49 +191,83 @@ static const logDescT  NilLogDesc  = NULL_STRUCT;
  *** Lock macros
  */
 
-/* This needs to be a single line !*/
+static inline void DESCRIPTOR_LOCK(logDescT *ldP, int *descLocked)
+{
+    KDASSERT(ldP);
+    KDASSERT(descLocked);
+    KASSERT(*descLocked == 0);
 
-#define DEFINE_LOCK_FLAGS int flushLocked=0, descLocked=0;
-
-#define DESCRIPTOR_WRITE_LOCK { \
-    lock_write( &ldP->descLock ); \
-    descLocked = 1; \
+    mutex_enter( &ldP->descLock, RW_WRITER );
+    *descLocked = 1;
 }
 
-#define FLUSH_WRITE_LOCK  { \
-    lock_write( &ldP->flushLock ); \
-    flushLocked = 1; \
+static inline int DESCRIPTOR_TRY_LOCK(logDescT *ldP, int *descLocked)
+{
+    KDASSERT(ldP);
+    KDASSERT(descLocked);
+    KASSERT(*descLocked == 0);
+
+    /* If lock succeeds, set descLocked to 1 and return non-zero value;
+     * otherwise lock is not held so return 0.
+     */
+
+    return (mutex_tryenter(&ldP->descLock) ? (*descLocked = 1) : 0);
 }
 
-int AdvfsSpinTryCount = 0;
 
-#define FLUSH_TRY_WRITE_LOCK \
-    ( lock_try_write( &ldP->flushLock ) ? (flushLocked = 1) : 0)
+static inline void FLUSH_LOCK(logDescT *ldP, int *flushLocked)
+{
+    KDASSERT(ldP);
+    KDASSERT(flushLocked);
+    KASSERT(*flushLocked == 0);
 
-/* If lock succeeds, set descLocked to 1 and return non-zero value;
- * otherwise lock is not held so return 0.
- */
-#define DESCRIPTOR_TRY_WRITE_LOCK  \
-    ( lock_try_write(&ldP->descLock) ? (descLocked = 1) : 0 )
-
-#define DESCRIPTOR_UNLOCK { \
-    lock_done(  &ldP->descLock ); \
-    descLocked = 0; \
-}
-#define FLUSH_UNLOCK { \
-    lock_done(  &ldP->flushLock ); \
-    flushLocked = 0; \
+    mutex_enter(&ldP->flushLock, RW_WRITER);
+    *flushLocked = 1;
 }
 
-#define RELEASE_LOCKS { \
-    if (descLocked) { \
-        DESCRIPTOR_UNLOCK; \
-    } \
-    if (flushLocked) { \
-        FLUSH_UNLOCK; \
-    } \
+static inline void DESCRIPTOR_UNLOCK(logDescT *ldP, int *descLocked)
+{
+    KDASSERT(ldP);
+    KDASSERT(descLocked);
+    KASSERT(*descLocked == 1);
+    KASSERT(mutex_owned(&ldP->descLock));
+
+    mutex_exit(&ldP->descLock);
+    *descLocked = 0;
 }
 
+static inline void FLUSH_UNLOCK(logDescT *ldP, int *flushLocked)
+{
+    KDASSERT(ldP);
+    KDASSERT(flushLocked);
+    KASSERT(*flushLocked == 1);
+    KASSERT(mutex_owned(&ldP->flushLock));
+
+    mutex_exit(&ldP->flushLock);
+    *flushLocked = 0;
+}
+
+static inline void RELEASE_DESCRIPTOR_LOCK(logDescT *ldP, int *descLocked)
+{
+    KDASSERT(ldP);
+    KDASSERT(descLocked);
+
+    if (*descLocked) {
+        KASSERT(mutex_owned(&ldP->descLock));
+        DESCRIPTOR_UNLOCK(ldP, descLocked);
+    }
+}
+
+static inline void RELEASE_FLUSH_LOCK(logDescT *ldP, int *flushLocked)
+{
+    KDASSERT(ldP);
+    KDASSERT(flushLocked);
+
+    if (*flushLocked) {
+        KASSERT(mutex_owned(&ldP->flushLock));
+        FLUSH_UNLOCK(ldP, flushLocked);
+    }
+}
 
 /*
  * LSN management routines.
@@ -1081,8 +1115,7 @@ lgr_writev_ftx(
     int pli;
     logRecAddrT oldestftxla, dirtybufla;
 
-    DEFINE_LOCK_FLAGS;
-
+    int flushLocked = 0, descLocked = 0;
 
     if (bufCnt <= 0) {
         RAISE_EXCEPTION( EBAD_PARAMS );
@@ -1100,17 +1133,7 @@ lgr_writev_ftx(
     if (ldP == NULL)
         {RAISE_EXCEPTION( E_INVALID_LOG_DESC_POINTER );}
 
-    if ( AdvfsSpinTryCount ) {
-        int try_count = AdvfsSpinTryCount;
-        while( DESCRIPTOR_TRY_WRITE_LOCK == 0) {
-            if( try_count-- == 0 ) {
-                DESCRIPTOR_WRITE_LOCK;
-                break;
-            }
-        }
-    } else {
-        DESCRIPTOR_WRITE_LOCK;
-    }
+    DESCRIPTOR_LOCK(ldP, &descLocked);
 
     dmnP->logStat.transactions++;
     if ( bufWords > dmnP->logStat.maxFtxWords ) {
@@ -1134,17 +1157,7 @@ lgr_writev_ftx(
         /* We must obtain the FLUSH write lock to protect the fields in the
          * descriptor that govern which log pages are being written.
          */
-        if( AdvfsSpinTryCount ) {
-            int try_count = AdvfsSpinTryCount;
-            while( FLUSH_TRY_WRITE_LOCK == 0 ) {
-                if( try_count-- == 0 ) {
-                    FLUSH_WRITE_LOCK;
-                    break;
-                }
-            }
-        } else {
-            FLUSH_WRITE_LOCK;
-        }
+        FLUSH_LOCK(ldP, &flushLocked);
         
         /* Never allow a record to cross a page boundary unless the record */
         /* (plus header) is larger than a page. 
@@ -1214,7 +1227,7 @@ lgr_writev_ftx(
          * unpin any old log pages.
          */
 
-        FLUSH_UNLOCK;
+        FLUSH_UNLOCK(ldP, &flushLocked);
         
         segWdsToWrite = MIN( bufWords - totWdsWritten,
                              DATA_WORDS_PG - ldP->nextRec.offset - REC_HDR_WORDS );
@@ -1361,7 +1374,7 @@ lgr_writev_ftx(
     /* We have reserved our spot in the log. Now we are free to let other
      * writers in to claim their space.
      */
-    DESCRIPTOR_UNLOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
 
     totWdsWritten = 0;
     segment = 0;
@@ -1463,17 +1476,7 @@ lgr_writev_ftx(
         /* 
          * We are done with this page. We need to determine if we should unpin.
          */
-        if( AdvfsSpinTryCount ) {
-            int try_count = AdvfsSpinTryCount;
-            while( FLUSH_TRY_WRITE_LOCK == 0 ) {
-                if ( try_count-- == 0 ) {
-                    FLUSH_WRITE_LOCK;
-                    break;
-                }
-            }
-        } else {
-            FLUSH_WRITE_LOCK;
-        }
+        FLUSH_LOCK(ldP, &flushLocked);
         
         if (ldP->lastPg.num != current_log_page)
         {
@@ -1496,7 +1499,7 @@ lgr_writev_ftx(
                             &ldP->wrtPgD[index]);
 
                 if (sts != EOK) {
-                    FLUSH_UNLOCK;
+                    FLUSH_UNLOCK(ldP, &flushLocked);
                     domain_panic(ldP->dmnP, "lgr_writev_ftx: unpinpg failed");
                     return sts;
                 }
@@ -1539,7 +1542,7 @@ lgr_writev_ftx(
                                    &ldP->lastPg );
                 
                 if (sts != EOK) {
-                    FLUSH_UNLOCK;
+                    FLUSH_UNLOCK(ldP, &flushLocked);
                     domain_panic(ldP->dmnP, "lgr_writev_ftx: unpinpg failed");
                     return sts;
                 }
@@ -1589,10 +1592,11 @@ lgr_writev_ftx(
             }
                 
         }
-        FLUSH_UNLOCK;
+        FLUSH_UNLOCK(ldP, &flushLocked);
     }
 
-    RELEASE_LOCKS;
+    RELEASE_FLUSH_LOCK(ldP, &flushLocked);
+    RELEASE_DESCRIPTOR_LOCK(ldP, &descLocked);
 
     /*
      * Now that we've written the log record we need to determine if the
@@ -1610,7 +1614,9 @@ lgr_writev_ftx(
 
 HANDLE_EXCEPTION:
     
-    RELEASE_LOCKS;
+    RELEASE_FLUSH_LOCK(ldP, &flushLocked);
+    RELEASE_DESCRIPTOR_LOCK(ldP, &flushLocked);
+
     return sts;
 }
 
@@ -1768,8 +1774,7 @@ getLogStats(domainT * dmnP, logStatT *logStatp)
     ftxTblDT *ftxTDp;
     ftxStateT *ftxp;
     extern kmutex_t FtxMutex;
-    DEFINE_LOCK_FLAGS;
-
+    int descLocked = 0;
 
     if (dmnP == NULL){
         return EBAD_DOMAIN_POINTER;
@@ -1825,13 +1830,12 @@ getLogStats(domainT * dmnP, logStatT *logStatp)
     }
     mutex_exit( &FtxMutex );
 
-    lock_write( &ldP->descLock );
-
+    DESCRIPTOR_LOCK(ldP, &descLock);
     logStatp->maxFtxWords = dmnP->logStat.maxFtxWords;
     logStatp->maxFtxAgent = dmnP->logStat.maxFtxAgent;
     dmnP->logStat.maxFtxWords = 0;
     dmnP->logStat.maxFtxAgent = 0;
-    lock_done( &ldP->descLock );
+    DESCRIPTOR_UNLOCK(ldP, &descLock);
 
     return EOK;
 }
@@ -1997,8 +2001,7 @@ lgr_read_open(
     int rddesc, newRdDesc = 0;
     statusT sts;
     rdPgDescT *rdP;
-    DEFINE_LOCK_FLAGS;
-
+    int descLocked = 0;
 
     if (ldP == NULL)
         RAISE_EXCEPTION( E_INVALID_LOG_DESC_POINTER );
@@ -2011,17 +2014,7 @@ lgr_read_open(
     *rdP = NilRdPgDesc;
 
 RETRY:
-    if ( AdvfsSpinTryCount ) {
-        int try_count = AdvfsSpinTryCount;
-        while( DESCRIPTOR_TRY_WRITE_LOCK == 0 ) {
-            if( try_count-- == 0 ) {
-                DESCRIPTOR_WRITE_LOCK;
-                break;
-            }
-        }
-    } else {
-        DESCRIPTOR_WRITE_LOCK;
-    }
+    DESCRIPTOR_LOCK(ldP, &descLocked);
 
     /* Allocate a read page descriptor */
 
@@ -2037,12 +2030,12 @@ RETRY:
          * Wait for lgr_read_close() to free a read page descriptor.
          */
         assert_wait((vm_offset_t)ldP,FALSE);
-        DESCRIPTOR_UNLOCK;
+        DESCRIPTOR_UNLOCK(ldP, &descLocked);
         thread_block();
         goto RETRY;
     }
 
-    DESCRIPTOR_UNLOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
 
     logRdH->ldP = ldP;
     logRdH->rdH = newRdDesc;
@@ -2092,8 +2085,7 @@ lgr_read_close(
     logDescT *ldP = logRdH.ldP;
     rdPgDescT *rdP; /* read_page descriptor pointer */
     statusT sts;
-    DEFINE_LOCK_FLAGS;
-
+    int descLocked = 0;
 
     if (ldP == NULL)
         {RAISE_EXCEPTION( E_INVALID_LOG_DESC_POINTER );
@@ -2106,7 +2098,7 @@ lgr_read_close(
     rdP = ldP->rdPgD[logRdH.rdH - 1];
     if (rdP == NULL) {RAISE_EXCEPTION( EINVALID_HANDLE );}
 
-    DESCRIPTOR_WRITE_LOCK;
+    DESCRIPTOR_LOCK(ldP, &descLocked);
 
     if (rdP->refed) {
         /* Release referenced log pages */
@@ -2115,7 +2107,7 @@ lgr_read_close(
     }
 
     ldP->rdPgD[logRdH.rdH - 1] = NULL;
-    DESCRIPTOR_UNLOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
 
     /* Deallocate the descriptor */
     ms_free( rdP );
@@ -2128,7 +2120,7 @@ lgr_read_close(
 
 HANDLE_EXCEPTION:
 
-    RELEASE_LOCKS;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
     return sts;
 }
 
@@ -2171,7 +2163,7 @@ lgr_read(
     lsnT rec_lsn = recAddr->lsn;
     uint32T rec_segment;
 
-    DEFINE_LOCK_FLAGS;
+    int descLocked = 0, flushLocked = 0;
 
 
     *buf=NULL; /* Initialize to NULL for testing at exception time */
@@ -2204,8 +2196,8 @@ lgr_read(
      * accessing a records data at a time.
      */
 
-    DESCRIPTOR_WRITE_LOCK;
-    FLUSH_WRITE_LOCK;
+    DESCRIPTOR_LOCK(ldP, &descLocked);
+    FLUSH_LOCK(ldP, &flushLocked);
 
     if ((rdP->num != rec_pg) && (rdP->refed))
     {
@@ -2431,13 +2423,14 @@ lgr_read(
         }
         break;
     }
-    FLUSH_UNLOCK;
-    DESCRIPTOR_UNLOCK;
+    FLUSH_UNLOCK(ldP, &flushLocked);
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
     return sts;
 
 HANDLE_EXCEPTION:
-
-    RELEASE_LOCKS;
+    /* Explicitly preserve proper order of unlocking */
+    FLUSH_UNLOCK(ldP, &flushLocked);
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
 
     if (*buf != NULL)
     {
@@ -3117,7 +3110,6 @@ lgr_open(
     bsBfAttrT *attrp;
     struct bfAccess *mdap;
     logDescT *new_ldP = NULL;
-    DEFINE_LOCK_FLAGS;
 
 
     /* Initialize the log descriptor */
@@ -3129,8 +3121,8 @@ lgr_open(
     }
 
     *new_ldP = NilLogDesc;
-    lock_setup( &(new_ldP->descLock) , ADVlogDescT_descLock_info, TRUE);
-    lock_setup( &(new_ldP->flushLock) ,ADVflushT_flushLock_info, TRUE);
+    mutex_init(&new_ldP->descLock, MUTEX_DEFAULT, IPL_NONE);
+    mutex_init(&new_ldP->flushLock, MUTEX_DEFAULT, IPL_NONE);
     /* Open the log's bitfile */
     MS_SMP_ASSERT(BS_BFTAG_RSVD(logtag));
     sts = bfm_open_ms(&logAccP, dmnP, BS_BFTAG_VDI(logtag), BFM_FTXLOG);
@@ -3284,11 +3276,11 @@ lgr_close(
 {
     statusT sts;
     int rdDesc;
-    DEFINE_LOCK_FLAGS;
+    int descLocked = 0;
 
     MS_SMP_ASSERT(ldP);
 
-    DESCRIPTOR_WRITE_LOCK;
+    DESCRIPTOR_LOCK(ldP, &descLocked);
     log_flush_sync( ldP, ldP->flushLsn);
 
     /*
@@ -3299,7 +3291,7 @@ lgr_close(
             if (ldP->rdPgD[rdDesc]->refed) {
                 sts = bs_derefpg( ldP->rdPgD[rdDesc]->refH, BS_CACHE_IT );
                 if (sts != EOK) {
-                    DESCRIPTOR_UNLOCK;
+                    DESCRIPTOR_UNLOCK(ldP, &descLocked);
                     domain_panic(ldP->dmnP, "lgr_close: derefpg failed");
                     return sts;
                 }
@@ -3320,7 +3312,7 @@ lgr_close(
      * Must unlock the log descriptor (and the log mutex) before
      * calling bs_close(), and lgr_print_stats().
      */
-    DESCRIPTOR_UNLOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
 
     /*
      * Close the log bitfile.
@@ -3330,8 +3322,8 @@ lgr_close(
 
     /* Free the log descriptor */
 
-    lock_terminate( &ldP->descLock );
-    lock_terminate( &ldP->flushLock);
+    mutex_destroy(&ldP->descLock);
+    mutex_destroy(&ldP->flushLock);
 
     if ( !(ldP->switching) ) ldP->dmnP->ftxLogP = NULL;
 
@@ -3356,14 +3348,14 @@ lgr_flush(
     logDescT *ldP          /* in - pointer to an open log */
     )
 {
-    DEFINE_LOCK_FLAGS;
+    int descLocked = 0;
 
     MS_SMP_ASSERT(ldP);
 
-    DESCRIPTOR_WRITE_LOCK;
+    DESCRIPTOR_LOCK(ldP, &descLocked);
     log_flush( ldP );
 
-    DESCRIPTOR_UNLOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
 }
 
 
@@ -3385,7 +3377,7 @@ lgr_flush_start(
 {
     statusT sts;
     lsnT flush_lsn = lsn;
-    DEFINE_LOCK_FLAGS;
+    int descLocked = 0, flushLocked = 0;
 
     MS_SMP_ASSERT(ldP);
 
@@ -3394,12 +3386,12 @@ lgr_flush_start(
          * This prevents a deadlock if the calling thread already has a
          * logDescT already locked.
          */
-        if (!DESCRIPTOR_TRY_WRITE_LOCK){
+        if (!DESCRIPTOR_TRY_LOCK(ldP, &descLocked)){
             return E_WOULD_BLOCK;
         }
     } else {
-        DESCRIPTOR_WRITE_LOCK;
-     }
+        DESCRIPTOR_LOCK(ldP, &descLocked);
+    }
 
     /* If the flushing bit is already set then we know the last page
      * is being flushed. Thus we can skip starting the flush since
@@ -3417,7 +3409,7 @@ lgr_flush_start(
         /*
          * We need to flush some portion of the log.
          */
-        FLUSH_WRITE_LOCK;
+        FLUSH_LOCK(ldP, &flushLocked);
 
         if ((ldP->lastPg.pinned) &&
             ((LSN_EQ_NIL( flush_lsn )) ||
@@ -3442,7 +3434,8 @@ lgr_flush_start(
                                    ldP->lastRec,
                                    &ldP->lastPg );
                 if (sts != EOK) {
-                    RELEASE_LOCKS;
+                    FLUSH_UNLOCK(ldP, &flushLocked);
+                    DESCRIPTOR_UNLOCK(ldP, &descLocked);
                     domain_panic(ldP->dmnP, "lgr_flush_start: unpinpg failed");
                     return sts;
                 }
@@ -3475,10 +3468,10 @@ lgr_flush_start(
             ldP->flushLsn = flush_lsn;
         }
 
-        FLUSH_UNLOCK;
+        FLUSH_UNLOCK(ldP, &flushLocked);
     }
 
-    DESCRIPTOR_UNLOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
     return EOK;
 }
 
@@ -3498,11 +3491,11 @@ lgr_flush_sync(
      lsnT lsn
      )
 {
-    DEFINE_LOCK_FLAGS;
+    int descLocked = 0;
 
     MS_SMP_ASSERT(ldP);
 
-    DESCRIPTOR_WRITE_LOCK;
+    DESCRIPTOR_LOCK(ldP, &descLocked);
 
     log_flush_sync( ldP, lsn );
 
@@ -3528,9 +3521,9 @@ log_flush(
     )
 {
     statusT sts;
-    DEFINE_LOCK_FLAGS;
+    int flushLocked = 0;
 
-    FLUSH_WRITE_LOCK;
+    FLUSH_LOCK(ldP, &flushLocked);
 
     if ((ldP->lastPg.pinned) ||
         (LSN_GT(ldP->lastRec.lsn, ldP->logAccP->hiFlushLsn)))
@@ -3549,7 +3542,7 @@ log_flush(
                                    ldP->lastRec,
                                    &ldP->lastPg );
                 if (sts != EOK) {
-                    FLUSH_UNLOCK;
+                    FLUSH_UNLOCK(ldP, &flushLocked);
                     domain_panic(ldP->dmnP, "log_flush: unpinpg error");
                     return ;
                 }
@@ -3560,7 +3553,7 @@ log_flush(
     } else {
         /* Nothing to flush */
 
-        FLUSH_UNLOCK;
+        FLUSH_UNLOCK(ldP, &flushLocked);
 
         return;
     }
@@ -3570,7 +3563,7 @@ log_flush(
     ldP->flushing = TRUE;
     ldP->flushLsn = ldP->lastRec.lsn;
 
-    FLUSH_UNLOCK;
+    FLUSH_UNLOCK(ldP, &flushLocked);
 
     log_flush_sync( ldP, ldP->lastRec.lsn );
 
@@ -3598,12 +3591,12 @@ log_flush_sync(
     )
 {
     statusT sts;
-    DEFINE_LOCK_FLAGS;
+    int flushLocked = 0, descLocked = 0;
+    KASSERT(mutex_owned(&ldP->descLock));
 
-
-    DESCRIPTOR_UNLOCK;
-    sts = bfflush_sync(ldP->logAccP, lsn );
-    DESCRIPTOR_WRITE_LOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
+    sts = bfflush_sync(ldP->logAccP, lsn);
+    DESCRIPTOR_LOCK(ldP, &descLocked);
 
     /* We need to be careful here. This sync may have already been serviced
      * by a previous thread and a new flush may have been started. We must
@@ -3612,11 +3605,11 @@ log_flush_sync(
      * We will know this by checking the current flushLsn.
      */
 
-    FLUSH_WRITE_LOCK;
+    FLUSH_LOCK(ldP, &flushLocked);
     if (LSN_LT(lsn,ldP->flushLsn))
     {
 
-        FLUSH_UNLOCK;
+        FLUSH_UNLOCK(ldP, &flushLocked);
         return;
     }
 
@@ -3652,7 +3645,7 @@ log_flush_sync(
         ldP->flushing = FALSE;
     }
 
-    FLUSH_UNLOCK;
+    FLUSH_UNLOCK(ldP, &flushLocked);
 }
 
 
@@ -3670,13 +3663,12 @@ lgr_get_last_rec(
     )
 {
     statusT sts;
-    DEFINE_LOCK_FLAGS;
-
+    int descLocked = 0;
 
     if (ldP == NULL)
         {RAISE_EXCEPTION( E_INVALID_LOG_DESC_POINTER );}
 
-    DESCRIPTOR_WRITE_LOCK;
+    DESCRIPTOR_LOCK(ldP, &descLocked);
 
     if (LOG_EMPTY( ldP )) {
         sts = E_LOG_EMPTY;
@@ -3689,12 +3681,9 @@ lgr_get_last_rec(
         sts = EOK;
     }
 
-    DESCRIPTOR_UNLOCK;
-    return( sts );
-
 HANDLE_EXCEPTION:
 
-    RELEASE_LOCKS;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
     return( sts );
 }
 
@@ -3731,13 +3720,12 @@ lgr_get_first_rec(
     )
 {
     statusT sts;
-    DEFINE_LOCK_FLAGS;
-
+    int descLocked = 0;
 
     if (ldP == NULL)
         return E_INVALID_LOG_DESC_POINTER;
 
-    DESCRIPTOR_WRITE_LOCK;
+    DESCRIPTOR_LOCK(ldP, &descLocked);
 
     if (LOG_EMPTY( ldP )) {
         sts = E_LOG_EMPTY;
@@ -3746,7 +3734,7 @@ lgr_get_first_rec(
         sts = EOK;
     }
 
-    DESCRIPTOR_UNLOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
     return( sts );
 }
 
@@ -3789,7 +3777,7 @@ lgr_dmn_get_pseudo_first_rec(
     int pgReferenced = 0;
     bfPageRefHT pgRef;
     logPgT *logPgP;
-    DEFINE_LOCK_FLAGS;
+    int descLocked = 0;
 
 
     if (dmnP == NULL){
@@ -3799,7 +3787,7 @@ lgr_dmn_get_pseudo_first_rec(
     if (ldP == NULL)
         {RAISE_EXCEPTION( E_INVALID_LOG_DESC_POINTER );}
 
-    DESCRIPTOR_WRITE_LOCK;
+    DESCRIPTOR_LOCK(ldP, &descLocked);
 
     if (!ldP->logWrapStateKnown) {
         /*
@@ -3870,7 +3858,7 @@ lgr_dmn_get_pseudo_first_rec(
         pgReferenced = 0;
     }
 
-    DESCRIPTOR_UNLOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
     return( EOK );
 
 HANDLE_EXCEPTION:
@@ -3879,7 +3867,7 @@ HANDLE_EXCEPTION:
         (void )bs_derefpg( pgRef, BS_CACHE_IT );
     }
 
-    RELEASE_LOCKS;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
     return( sts );
 }
 
@@ -3963,20 +3951,20 @@ lgr_switch_vol(
     int srcVdpBumped = 0;
     int dstVdpBumped = 0;
 
-    DEFINE_LOCK_FLAGS;
+    int descLocked = 0;
 
     MS_SMP_ASSERT(ldP);
 
-    DESCRIPTOR_WRITE_LOCK;
+    DESCRIPTOR_LOCK(ldP, &descLocked);
 
     if (ldP->switching) {
-        DESCRIPTOR_UNLOCK;
+        DESCRIPTOR_UNLOCK(ldP, &descLocked);
         return( E_ALREADY_SWITCHING_LOGS );
     }
 
     ldP->switching = TRUE;
 
-    DESCRIPTOR_UNLOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
 
     logAccP = ldP->logAccP;
     dmnP = logAccP->dmnP;
@@ -4310,9 +4298,9 @@ HANDLE_EXCEPTION:
         bs_close(newAccP, 0);
     }
 
-    DESCRIPTOR_WRITE_LOCK;
+    DESCRIPTOR_LOCK(ldP, &descLocked);
     ldP->switching = FALSE;
-    DESCRIPTOR_UNLOCK;
+    DESCRIPTOR_UNLOCK(ldP, &descLocked);
 
     if ( srcVdpBumped ) {
         vd_dec_refcnt( vdP );
