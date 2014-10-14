@@ -329,7 +329,7 @@ bs_deferred_delete_undo_opx(
      * will acquire mcellList_lk.  Later, when we call
      * bs_bfs_close() we will already have the lock.
      */
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
 
     sts = bmtr_get_rec_n_lk( bfap,
                              BSR_ATTR, 
@@ -834,7 +834,7 @@ bs_delete_rtdn_opx(
          * Later, when we call bs_bfs_close() we will already
          * have the lock.
          */
-        BFSETTBL_LOCK_WRITE( dmnP )
+        BFSETTBL_LOCK_WRITE( dmnP );
     }
 
     tagdir_remove_tag( bfSetp, &recp->tag, ftxH );
@@ -2366,7 +2366,7 @@ xfer_xtnts_to_clone (
 
     /* open the clone fileset */
 
-    BFSETTBL_LOCK_WRITE( dmnP )
+    BFSETTBL_LOCK_WRITE( dmnP );
 
     sts = rbf_bfs_open(&bfSetp, bfSetId, 
                        BFS_OP_XFER_XTNTS_TO_CLONE, FtxNilFtxH);
