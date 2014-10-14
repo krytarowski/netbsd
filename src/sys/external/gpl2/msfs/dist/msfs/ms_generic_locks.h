@@ -49,7 +49,7 @@ typedef enum {
     LKT_INVALID,
     LKT_STATE,          /* state lock */
     LKT_BUF,            /* buffer lock */
-    LKT_FTX		/* ftx lock */
+    LKT_FTX            /* ftx lock */
 } lkTypeT;
 
 /*
@@ -135,8 +135,7 @@ typedef struct lkHdr {
 
 typedef struct ftxLk {
     lkHdrT hdr;               /* header used by ftx lock routines only */
-    krwlock_t  lock;        /* The OSF lock .  */
-    kcondvar_t res;                   /* condition variable */
+    krwlock_t lock;           /* r/w lock.  */
 } ftxLkT;
 
 /*
