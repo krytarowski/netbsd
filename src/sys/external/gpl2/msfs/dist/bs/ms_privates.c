@@ -43,6 +43,7 @@
 
 #include <sys/param.h>
 #include <sys/types.h>
+#include <sys/systm.h>
 
 #include "../msfs/ms_public.h"
 #include "../msfs/ms_privates.h"
@@ -226,12 +227,14 @@ void COW_UNLOCK( struct ftxLk *sLk )
 
 void CLU_CLXTNT_READ_LOCK_RECURSIVE( struct ftxLk *sLk )
 {
-    lock_read_recursive(&sLk);
+    /* lock_read_recursive(&sLk); */
+    panic("lock_read_recursive() not implemented");
 }
 
 void CLU_CLXTNT_UNLOCK_RECURSIVE( struct ftxLk *sLk )
 {
-    lock_read_done_recursive(&sLk);
+    /* lock_read_done_recursive(&sLk); */
+    panic("lock_done_recursive() not implemented");
 }
 
 void CLU_CLXTNT_WRITE( struct ftxLk *sLk )
@@ -246,7 +249,7 @@ void CLU_CLXTNT_READ( struct ftxLk *sLk )
 
 void CLU_CLXTNT_TRY_READ( struct ftxLk *sLk )
 {
-    lock_try_read( &sLk )
+    rw_tryenter( &sLk, RW_READER );
 }
 
 void CLU_CLXTNT_UNLOCK( struct ftxLk *sLk )
@@ -296,12 +299,14 @@ void DDLACTIVE_UNLOCK( struct ftxLk *sLk )
 
 void TRUNC_XFER_READ_LOCK_RECURSIVE( struct ftxLk *sLk )
 {
-    lock_read_recursive( &sLk );
+    /* lock_read_recursive( &sLk ); */
+    panic("lock_read_recursive() not implemented");
 }
 
 void TRUNC_XFER_UNLOCK_RECURSIVE( struct ftxLk *sLk )
 {
-    lock_read_done_recursive(&sLk);
+    /* lock_read_done_recursive(&sLk); */
+    panic("lock_read_done_recursive() not implemented");
 }
 
 void TRUNC_XFER_LOCK_READ( struct ftxLk *sLk )
