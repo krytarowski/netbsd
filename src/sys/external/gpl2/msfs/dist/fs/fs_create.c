@@ -1087,7 +1087,7 @@ fs_flush_saved_stats(
     statusT ret = EOK;
     struct timeval new_time;
 
-    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock));
 
     /*
      * if any time fields need to be updated, do it now...
