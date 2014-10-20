@@ -384,7 +384,7 @@ init_access(bfAccessT *bfap)
 
 #define CHECK_ACC_CLEAN(bfap) \
 { \
-    MS_DBG_ASSERT(mutex_owned(&bfap->bfaLock.mutex)); \
+    MS_DBG_ASSERT(mutex_owned(&bfap->bfaLock)); \
     MS_DBG_ASSERT(bfap->dirtyBufList.length == 0); \
     MS_DBG_ASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_dirtypl == NULL); \
     MS_DBG_ASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_dirtywpl == NULL); \
@@ -458,7 +458,7 @@ _retry:
          * Basically, if we can't get a lock on a given access struct, we
          * skip it.
          */
-        if ( !mutex_tryenter(&bfap->bfaLock.mutex) ) {
+        if ( !mutex_tryenter(&bfap->bfaLock) ) {
             bfap = bfap->freeFwd;
             cleanup_structs_skipped++;
             continue;
@@ -490,7 +490,7 @@ _retry:
                  * Try to lock the bfIoLock out-of-order.  If this fails,
                  * just skip this access structure.
                  */
-                if (mutex_tryenter(&bfap->bfIoLock.mutex)) {
+                if (mutex_tryenter(&bfap->bfIoLock)) {
                     mutex_exit(&BfAccessFreeLock);
                     check_mv_bfap_to_free(bfap);
                     mutex_enter(&BfAccessFreeLock);
@@ -544,7 +544,7 @@ _retry:
             nextp = bfap->freeFwd;
             /* Make sure index file access structs make it
               * to the free list */
-            if (mutex_tryenter(&bfap->bfIoLock.mutex)) {
+            if (mutex_tryenter(&bfap->bfIoLock)) {
                 mutex_exit(&BfAccessFreeLock);
                 check_mv_bfap_to_free(bfap);
                 mutex_enter(&BfAccessFreeLock);
@@ -1017,7 +1017,7 @@ get_free_acc(int *retry,        /* In/Out - Retry or error status */
         /* Lock the bfap before proceeding, being careful not to deadlock
          * with threads locking in the conventional order.
          */
-        if ( !mutex_tryenter(&bfap->bfaLock.mutex) ) {
+        if ( !mutex_tryenter(&bfap->bfaLock) ) {
             bfap = bfap->freeFwd;
             continue;
         }
@@ -1354,7 +1354,7 @@ restart:
     findBfap = NULL;
 
 return_it:
-    MS_SMP_ASSERT(findBfap ? mutex_owned(&findBfap->bfaLock.mutex) : 1);
+    MS_SMP_ASSERT(findBfap ? mutex_owned(&findBfap->bfaLock) : 1);
     MS_SMP_ASSERT(findBfap ? lk_get_state(findBfap->stateLk) != ACC_RECYCLE :1);
     if (!hold_hashlock)
         BS_BFAH_UNLOCK(hash_key);
@@ -4470,7 +4470,7 @@ free_acc_struct(
 {
     int added_bfap_to_list = FALSE;
 
-    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock));
 
     MS_SMP_ASSERT(bfap->accessCnt == 0);
     if ( bfap->refCnt < 0 ) {
@@ -4494,7 +4494,7 @@ free_acc_struct(
      * take that lock, pull a bsBuf off the dirtyBufList
      * and then release the lock.
      */
-    if (!mutex_tryenter(&bfap->bfIoLock.mutex)) {
+    if (!mutex_tryenter(&bfap->bfIoLock)) {
         ADD_ACC_CLOSEDLIST(bfap);
         added_bfap_to_list = TRUE;
     } 
@@ -4557,8 +4557,8 @@ check_mv_bfap_to_free(bfAccessT* bfap)
     struct vnode *vp = bfap->bfVp;
     struct vm_ubc_object *obj = bfap->bfObj;
 
-    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock.mutex));
-    MS_SMP_ASSERT(mutex_owned(&bfap->bfIoLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfIoLock));
 
     /* Check following conditions; if any prevail, then do not move to
      * free list.
@@ -4744,7 +4744,7 @@ bs_dealloc_access(bfAccessT *bfap)
      * Sanity checks.
      */
     MS_SMP_ASSERT(bfap->accMagic == ACCMAGIC);
-    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock));
     MS_SMP_ASSERT(!bfap->onFreeList);
 
     /*

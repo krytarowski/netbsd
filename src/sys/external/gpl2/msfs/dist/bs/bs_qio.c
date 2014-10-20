@@ -667,7 +667,7 @@ bs_io_complete(
     int radId = 0;
     int ubc_flags;
 
-    MS_SMP_ASSERT(mutex_owned(&bp->bufLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bp->bufLock));
 
     /*
      * Raw I/O's that do not have UBC pages come through this
@@ -1135,7 +1135,7 @@ lsn_io_list( struct domain *dmnP) /* in */
     lsnT origLsn;
     int noqfnd, couldnt_hold;
 
-    MS_SMP_ASSERT(mutex_owned(&dmnP->lsnLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&dmnP->lsnLock));
 
     /* we only run one lsn_io_list at a time - before this check was in
      * bs_pinblock, but there was a window where lsn_io_list could end 
@@ -1193,7 +1193,7 @@ loop:
              * there are no guarantees the page will be valid on wake up.
              */
             if (couldnt_hold == UBC_GET_WAIT_EXCHANGE) {
-                ubc_fs_page_wait(bp->vmpage, &dmnP->lsnLock.mutex);
+                ubc_fs_page_wait(bp->vmpage, &dmnP->lsnLock);
                 mutex_enter(&dmnP->lsnLock);
                 if (ioListp) {
                     /* Point to the last buffer on our accumulated list and
@@ -2578,7 +2578,7 @@ call_logflush( domainT *dmnP, lsnT lsn, int wait )
     struct bsBuf *tail;
     lsnT logPageLsn;
 
-    MS_SMP_ASSERT(mutex_owned(&bfap->bfIoLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfIoLock));
     /*
      * Since pinned pages do not have valid lsns (flushSeq)
      * we can only look at unpinned pages (the flushSeq is 
@@ -2777,7 +2777,7 @@ logflush_cont( struct bfAccess *bfap )     /* in - bfap for log */
     bufCnt = 0;
 
 restart:
-    MS_SMP_ASSERT(mutex_owned(&bfap->bfIoLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfIoLock));
 
     head = bfap->dirtyBufList.accFwd;
     tail = bfap->dirtyBufList.accBwd;
@@ -2820,7 +2820,7 @@ restart:
              * there are no guarantees the page will be valid on wake up.
              */
             if (couldnt_hold == UBC_GET_WAIT_EXCHANGE) {
-                ubc_fs_page_wait(bp->vmpage, &bfap->bfIoLock.mutex);
+                ubc_fs_page_wait(bp->vmpage, &bfap->bfIoLock);
                 mutex_enter(&bfap->bfIoLock);
                 if (ioListp) {
                     /* Point to the last buffer on our accumulated list and
@@ -3740,7 +3740,7 @@ bs_bf_flush_nowait(
              * and no locks are held on return.
              */
             mark_bio_wait;
-            ubc_fs_page_wait(bp->vmpage, &bfap->bfIoLock.mutex);
+            ubc_fs_page_wait(bp->vmpage, &bfap->bfIoLock);
             unmark_bio_wait;
         } /* else bp==NULL, while ends with bfIoLock still held */
 
@@ -4077,7 +4077,7 @@ loop:
              * there are no guarantees the page will be valid on wake up.
              */
             if (couldnt_hold == UBC_GET_WAIT_EXCHANGE) {
-                ubc_fs_page_wait(bp->vmpage, &bfap->bfIoLock.mutex);
+                ubc_fs_page_wait(bp->vmpage, &bfap->bfIoLock);
                 mutex_enter(&bfap->bfIoLock);
                 if (ioList) {
                     /* Point to the last buffer on our accumulated list and
@@ -4113,7 +4113,7 @@ loop:
              *        disappear, so it's critical at this place that
              *        the bfap->bfIoLock is held by this thread.
              */
-            MS_SMP_ASSERT(mutex_owned(&bfap->bfIoLock.mutex));
+            MS_SMP_ASSERT(mutex_owned(&bfap->bfIoLock));
 
             for (rflp = bp->rflList;
                  rflp && rflp->rfp != rfp;
@@ -4804,7 +4804,7 @@ rm_from_lazyq( struct bsBuf *bp,
     MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY);
 
     /* The ioList is protected by bufLock. */
-    MS_SMP_ASSERT(mutex_owned(&bp->bufLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bp->bufLock));
     first = bp->ioList.write;
     last = bp->ioList.write + bp->ioList.writeCnt;
 
