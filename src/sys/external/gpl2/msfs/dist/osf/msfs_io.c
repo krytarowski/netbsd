@@ -1168,8 +1168,8 @@ consecutive_list_io(
  
     MS_VERIFY_IOQUEUE_INTEGRITY( qhdr, TRUE );
      
-    MS_SMP_ASSERT(SLOCK_HOLDER(&vdp->devQ.ioQLock.mutex));
-    MS_SMP_ASSERT(SLOCK_HOLDER(&qhdr->ioQLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&vdp->devQ.ioQLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&qhdr->ioQLock.mutex));
     MS_SMP_ASSERT(locks_held[qindex] != 0);
 
     /* Position ourselves to point to first ioDesc that can have IO done. */
@@ -1647,7 +1647,7 @@ get_locks( ioDescHdrT *qhdr, vdT *vdp, qtypeT qindex, int *locks_held )
 {
     errT error = OK;
 
-    MS_SMP_ASSERT(SLOCK_HOLDER(&vdp->devQ.ioQLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&vdp->devQ.ioQLock.mutex));
     if ( !mutex_tryenter(&qhdr->ioQLock.mutex) ) {
 
         mutex_exit( &vdp->devQ.ioQLock );
