@@ -2266,7 +2266,7 @@ dir_trunc_start( struct vnode *dvp,
 
     /* Be sure that there is a write lock held on the dir */
     contextp = VTOC(dvp);
-    MS_SMP_ASSERT(lock_holder(&contextp->file_lock));
+    MS_SMP_ASSERT(rw_lock_held(&contextp->file_lock));
 
     /* update the size of the file in the bfAccess */
     old_file_size = bfap->file_size;

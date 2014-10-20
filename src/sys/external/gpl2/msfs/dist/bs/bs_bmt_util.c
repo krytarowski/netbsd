@@ -1879,7 +1879,7 @@ bmt_alloc_prim_mcell(
     struct bsMC* mcp;
     rbfPgRefHT pgref;
 
-    MS_SMP_ASSERT(lock_holder(&vdp->mcell_lk.lock));
+    MS_SMP_ASSERT(rw_write_held(&vdp->mcell_lk.lock));
     sts = alloc_mcell (
                        vdp,
                        ftxH,
@@ -2217,10 +2217,10 @@ bmt_alloc_mcell (
          * Take the BMT's extent map lock, if we don't already
          * have it, to avoid a possible lock hierarchy violation.  
          */
-        if ( !lock_holder(&vd->bmtp->xtntMap_lk.lock) ) {
+        if ( !rw_lock_held(&vd->bmtp->xtntMap_lk.lock) ) {
             FTX_LOCKWRITE(&vd->bmtp->xtntMap_lk, ftx)
         }
-        if ( !lock_holder(&vd->rbmt_mcell_lk.lock) ) {
+        if ( !rw_lock_held(&vd->rbmt_mcell_lk.lock) ) {
             FTX_LOCKWRITE(&vd->rbmt_mcell_lk, ftx)
         }
 
@@ -2675,7 +2675,7 @@ alloc_mcell(
     domainT* dmnP = vd->dmnP;
     int bad_pages_found = 0;
 
-    MS_SMP_ASSERT(lock_holder(&vd->mcell_lk.lock));
+    MS_SMP_ASSERT(rw_lock_held(&vd->mcell_lk.lock));
 
 start:
 
@@ -3109,7 +3109,7 @@ alloc_rbmt_mcell (
     rbfPgRefHT pgPin;
     statusT sts;
 
-    MS_SMP_ASSERT(lock_holder(&vd->rbmt_mcell_lk.lock));
+    MS_SMP_ASSERT(rw_lock_held(&vd->rbmt_mcell_lk.lock));
 
     /*
      * Pin current RBMT page
@@ -3229,7 +3229,7 @@ alloc_page0_mcell (
     rbfPgRefHT pgPin;
     statusT sts;
 
-    MS_SMP_ASSERT(lock_holder(&vd->rbmt_mcell_lk.lock));
+    MS_SMP_ASSERT(rw_lock_held(&vd->rbmt_mcell_lk.lock));
     /*
      * Pinning page 0 serves a couple of purposes.  It gets us the bmt
      * address and it gets us a reference to the new mcell's page.
@@ -3866,7 +3866,7 @@ link_unlink_mcells_undo (
      * remember whether we need to unlock it on return, or let the caller
      * unlock it.
      */
-        if ( !lock_holder(&bfap->xtntMap_lk.lock) ) {
+        if ( !rw_lock_held(&bfap->xtntMap_lk.lock) ) {
             XTNMAP_LOCK_WRITE( &bfap->xtntMap_lk );
         } else {
             keep_lock = 1;
@@ -4302,7 +4302,7 @@ bmt_free_mcell(
     bsMRT *rec;
     domainT* dmnP = vdp->dmnP;
 
-    MS_SMP_ASSERT(lock_holder(&vdp->mcell_lk.lock));
+    MS_SMP_ASSERT(rw_lock_held(&vdp->mcell_lk.lock));
 
     if (mcid.page != bmtpgp->pageId) {
         ADVFS_SAD0( "bmt_free_mcell: page id does not agree with mcid" );
