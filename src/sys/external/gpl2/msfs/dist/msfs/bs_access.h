@@ -117,7 +117,7 @@ struct bfSet;
 
 #define BS_BFAH_INSERT( _bfap, _laction)                \
 {                                                       \
-    MS_SMP_ASSERT(mutex_owned(&_bfap->bfaLock.mutex)); \
+    MS_SMP_ASSERT(mutex_owned(&_bfap->bfaLock)); \
     dyn_hash_insert( BsAccessHashTbl, _bfap, _laction); \
 }
 
@@ -546,7 +546,7 @@ limits_of_active_range(
 
 #define DEC_REFCNT( bfap ) \
 { \
-    MS_SMP_ASSERT(mutex_owned(&(bfap)->bfaLock.mutex)); \
+    MS_SMP_ASSERT(mutex_owned(&(bfap)->bfaLock)); \
     if ( --bfap->refCnt <= 0 ) \
         free_acc_struct( bfap ); \
 }
@@ -698,7 +698,7 @@ limits_of_active_range(
  */
 #define RM_ACC_LIST_NOLOCK( bfap ) \
 { \
-    MS_SMP_ASSERT(mutex_owned(&BfAccessFreeLock.mutex)); \
+    MS_SMP_ASSERT(mutex_owned(&BfAccessFreeLock)); \
     MS_SMP_ASSERT(bfap->onFreeList == 1 || bfap->onFreeList == -1); \
     MS_SMP_ASSERT(bfap->freeFwd); \
     MS_SMP_ASSERT(bfap->freeBwd); \
