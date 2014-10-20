@@ -384,7 +384,7 @@ init_access(bfAccessT *bfap)
 
 #define CHECK_ACC_CLEAN(bfap) \
 { \
-    MS_DBG_ASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex)); \
+    MS_DBG_ASSERT(mutex_owned(&bfap->bfaLock.mutex)); \
     MS_DBG_ASSERT(bfap->dirtyBufList.length == 0); \
     MS_DBG_ASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_dirtypl == NULL); \
     MS_DBG_ASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_dirtywpl == NULL); \
@@ -1354,7 +1354,7 @@ restart:
     findBfap = NULL;
 
 return_it:
-    MS_SMP_ASSERT(findBfap ? SLOCK_HOLDER(&findBfap->bfaLock.mutex) : 1);
+    MS_SMP_ASSERT(findBfap ? mutex_owned(&findBfap->bfaLock.mutex) : 1);
     MS_SMP_ASSERT(findBfap ? lk_get_state(findBfap->stateLk) != ACC_RECYCLE :1);
     if (!hold_hashlock)
         BS_BFAH_UNLOCK(hash_key);
@@ -4470,7 +4470,7 @@ free_acc_struct(
 {
     int added_bfap_to_list = FALSE;
 
-    MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock.mutex));
 
     MS_SMP_ASSERT(bfap->accessCnt == 0);
     if ( bfap->refCnt < 0 ) {
@@ -4557,8 +4557,8 @@ check_mv_bfap_to_free(bfAccessT* bfap)
     struct vnode *vp = bfap->bfVp;
     struct vm_ubc_object *obj = bfap->bfObj;
 
-    MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
-    MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfIoLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfIoLock.mutex));
 
     /* Check following conditions; if any prevail, then do not move to
      * free list.
@@ -4744,7 +4744,7 @@ bs_dealloc_access(bfAccessT *bfap)
      * Sanity checks.
      */
     MS_SMP_ASSERT(bfap->accMagic == ACCMAGIC);
-    MS_SMP_ASSERT(SLOCK_HOLDER(&bfap->bfaLock.mutex));
+    MS_SMP_ASSERT(mutex_owned(&bfap->bfaLock.mutex));
     MS_SMP_ASSERT(!bfap->onFreeList);
 
     /*

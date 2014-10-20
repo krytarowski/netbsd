@@ -2513,7 +2513,7 @@ ss_delete_from_frag_list(vdT *vdp,   /* in */
     statusT sts;
 
     MS_SMP_ASSERT(vdp);
-    MS_SMP_ASSERT(SLOCK_HOLDER(&vdp->ssVolInfo.ssFragLk.mutex));
+    MS_SMP_ASSERT(mutex_owned(&vdp->ssVolInfo.ssFragLk.mutex));
     fhp = &vdp->ssVolInfo.ssFragHdr;
 
     /* check for a null list first! */
