@@ -2176,7 +2176,7 @@ alloc_append_stg (
     bsInMemSubXtntMapT *subXtntMap;
 
 
-    MS_SMP_ASSERT( lock_holder(&bfap->xtntMap_lk.lock) );
+    MS_SMP_ASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
 
     xtntMap->origStart = mapIndex;
     xtntMap->origEnd = mapIndex;
@@ -2306,7 +2306,7 @@ alloc_append_stg (
      * try to merge contiguous extents
      */
     if (alloc_hint == BS_ALLOC_NFS) {
-        MS_SMP_ASSERT( lock_holder(&bfap->xtntMap_lk.lock) );
+        MS_SMP_ASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
         (void) imm_compress_subxtnt_map(&bfap->xtnts, bfap->bfPageSz);
     }
 
@@ -2640,7 +2640,7 @@ alloc_hole_stg (
     bfMCIdT reuseMcellId = bsNilMCId;
 
 
-    MS_SMP_ASSERT( lock_holder(&bfap->xtntMap_lk.lock) );
+    MS_SMP_ASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
 
     xtntMap->origStart = mapIndex;
     xtntMap->origEnd = mapIndex;
@@ -2994,7 +2994,7 @@ alloc_hole_stg (
      * try to merge contiguous extents
      */
     if (alloc_hint == BS_ALLOC_NFS) {
-        MS_SMP_ASSERT( lock_holder(&bfap->xtntMap_lk.lock) );
+        MS_SMP_ASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
         (void) imm_compress_subxtnt_map(&bfap->xtnts, bfap->bfPageSz);
     }
 
@@ -6773,7 +6773,7 @@ x_page_to_blkmap (
            this_is_tagdir   || 
            this_is_rbmt )) {
 
-        if ( lock_holder(&bfap->xtntMap_lk.lock) ) {
+        if ( rw_lock_held(&bfap->xtntMap_lk.lock) ) {
 
             this_is_v3_bmt = !RBMT_THERE(bfap->dmnP) &&
                              BS_IS_TAG_OF_TYPE(bfap->tag, BFM_BMT_V3);
@@ -7130,7 +7130,7 @@ page_is_mapped(
         this_is_v3_bmt = !RBMT_THERE(bfap->dmnP) && 
                           BS_IS_TAG_OF_TYPE(bfap->tag, BFM_BMT_V3);
         if ( this_is_v3_bmt &&
-             lock_holder(&bfap->xtntMap_lk.lock) ) {
+             rw_lock_held(&bfap->xtntMap_lk.lock) ) {
              MS_SMP_ASSERT( bfap->xtnts.validFlag );
         } else {
             sts = x_load_inmem_xtnt_map( bfap, X_LOAD_REFERENCE);

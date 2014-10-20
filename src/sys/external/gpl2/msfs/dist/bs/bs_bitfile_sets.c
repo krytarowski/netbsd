@@ -1477,7 +1477,7 @@ bs_frag_dealloc(
         ADVFS_SAD0( "no parent ftx" );
     }
 
-    if ( !lock_holder(&setp->fragLock.lock) ) {
+    if ( !rw_lock_held(&setp->fragLock.lock) ) {
         FTX_LOCKWRITE(&setp->fragLock, ftxH)
     }
 
@@ -2464,7 +2464,7 @@ bfs_dealloc(
 
     MS_SMP_ASSERT( BFSET_VALID(bfSetp) );
     MS_SMP_ASSERT( bfSetp->fsRefCnt == 0 );
-    MS_SMP_ASSERT(lock_holder(&bfSetp->dmnP->BfSetTblLock.lock));
+    MS_SMP_ASSERT(rw_lock_held(&bfSetp->dmnP->BfSetTblLock.lock));
 
     /*
      * There is no more freelist, but we are keeping the statistics for now.
@@ -2858,7 +2858,7 @@ HANDLE_EXCEPTION:
     /*
      * a transaction failure may release BfSetTblLock
      */
-    if (lkLocked && lock_holder(&dmnP->BfSetTblLock.lock)) {
+    if (lkLocked && rw_lock_held(&dmnP->BfSetTblLock.lock)) {
         BFSETTBL_UNLOCK( dmnP )
     }
 
@@ -2943,12 +2943,12 @@ bs_bfs_close(
 
     /*
      * Here is where we grab BfSetTblLock.  Now we have to call 
-     * lock_holder() first to see if we already have this locked 
+     * rw_lock_held() first to see if we already have this locked 
      * since some undo and rtdn routines now acquire this lock 
      * early to prevent a hierarchy violation.
      */
 
-    if (!lock_holder(&dmnP->BfSetTblLock.lock)) {
+    if (!rw_lock_held(&dmnP->BfSetTblLock.lock)) {
         BFSETTBL_LOCK_WRITE( dmnP );
     }
     
@@ -3083,7 +3083,7 @@ bfs_access(
      * Lock the domain's bitfile-set lock if not already locked.
      */
 
-    if (!lock_holder(&dmnP->BfSetTblLock.lock)) {
+    if (!rw_lock_held(&dmnP->BfSetTblLock.lock)) {
         BFSETTBL_LOCK_WRITE( dmnP )
         tblLocked = TRUE;
     }
@@ -3405,7 +3405,7 @@ bfs_open(
         RAISE_EXCEPTION( sts );
     }
 
-    if (!lock_holder(&bfSetp->dmnP->BfSetTblLock.lock)) {
+    if (!rw_lock_held(&bfSetp->dmnP->BfSetTblLock.lock)) {
         BFSETTBL_LOCK_WRITE( bfSetp->dmnP )
         tblLocked = TRUE;
     }
@@ -5191,7 +5191,7 @@ HANDLE_EXCEPTION:
     /*
      * transaction failure may release BfSetTblLock
      */
-    if (lkLocked && lock_holder(&dmnP->BfSetTblLock.lock)) {
+    if (lkLocked && rw_lock_held(&dmnP->BfSetTblLock.lock)) {
         BFSETTBL_UNLOCK( dmnP )
     }
 
@@ -6461,7 +6461,7 @@ try_again:
          * stack (eg fs_setattr) has already purged other node's cached
          * xtnt maps and acquired the tokens.
          */
-        if ( clu_is_ready() && !lock_holder(&cloneap->clu_clonextnt_lk) ) {
+        if ( clu_is_ready() && !rw_lock_held(&cloneap->clu_clonextnt_lk) ) {
             fsid_t fsid;
             BS_GET_FSID( cloneap->bfSetp, fsid );
 
@@ -6477,7 +6477,7 @@ try_again:
                 /* The CFS DIO token should be in the lock (resource) */
                 /* hierarchy and is higher than ftx or file_lock. */
                 MS_SMP_ASSERT(parentFtxHA->hndl == 0);
-                MS_SMP_ASSERT(!lock_holder(&VTOC(bfap->bfVp)->file_lock));
+                MS_SMP_ASSERT(!rw_lock_held(&VTOC(bfap->bfVp)->file_lock));
                 if ( !CC_CFS_COW_MODE_ENTER(fsid, cloneap->tag) ) {
                     token_taken |= CLU_TOKEN_TAKEN; 
                     cloneap->cloneXtntsRetrieved = 0;
@@ -6490,7 +6490,7 @@ try_again:
          * directIO mode while the cow is in progress.  This lock may
          * already be held if we are being called from bs_pinpg().
          */
-        if (!lock_holder( &VTOC(bfap->bfVp)->file_lock) ) {
+        if (!rw_lock_held( &VTOC(bfap->bfVp)->file_lock) ) {
             FS_FILE_READ_LOCK_RECURSIVE( VTOC(bfap->bfVp) );
             token_taken |= FILE_LOCK_TAKEN; 
         }
@@ -6560,7 +6560,7 @@ try_again:
 
     if ( cloneap->cloneXtntsRetrieved &&
          !(token_taken & CLU_TOKEN_TAKEN) &&
-         !lock_holder(&cloneap->clu_clonextnt_lk) )
+         !rw_lock_held(&cloneap->clu_clonextnt_lk) )
     {
         cloneap->cloneXtntsRetrieved = 0;
 
@@ -7581,7 +7581,7 @@ rbf_set_bfset_params(
 
     ftxStarted = TRUE;
 
-    if (!lock_holder(&bfSetp->dmnP->BfSetTblLock.lock)) {
+    if (!rw_lock_held(&bfSetp->dmnP->BfSetTblLock.lock)) {
         /*
          * fs_fset_name_change() calls this routine with the
          * BfSetTblLock locked so we don't need to lock it here.
