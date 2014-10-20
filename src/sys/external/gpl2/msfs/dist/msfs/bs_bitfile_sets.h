@@ -361,7 +361,7 @@ bfset_trace( bfSetT  *bfsetp,
     if (lock_list) \
         mutex_enter(&bfSetp->accessChainLock); \
     else \
-        MS_SMP_ASSERT(SLOCK_HOLDER(&bfSetp->accessChainLock.mutex)); \
+        MS_SMP_ASSERT(mutex_owned(&bfSetp->accessChainLock.mutex)); \
     MS_SMP_ASSERT(bfap->setFwd != NULL); \
     MS_SMP_ASSERT(bfap->setBwd != NULL); \
     if (bfSetp->accessFwd == bfap) \

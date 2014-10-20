@@ -260,7 +260,7 @@ typedef struct bfsQueue {
 } bfsQueueT;
 
 #define BFSET_DMN_INSQ( _dmnp, _queue, _entry ) {               \
-    MS_SMP_ASSERT(SLOCK_HOLDER(&((_dmnp)->mutex.mutex)));       \
+    MS_SMP_ASSERT(mutex_owned(&((_dmnp)->mutex.mutex)));       \
     (_entry)->bfsQfwd = (_queue)->bfsQfwd;                      \
     (_entry)->bfsQbck = (_queue);                               \
     (_queue)->bfsQfwd->bfsQbck = (_entry);                      \
@@ -268,7 +268,7 @@ typedef struct bfsQueue {
 }
 
 #define BFSET_DMN_REMQ( _dmnp, _entry ) {                       \
-    MS_SMP_ASSERT(SLOCK_HOLDER(&((_dmnp)->mutex.mutex)));       \
+    MS_SMP_ASSERT(mutex_owned(&((_dmnp)->mutex.mutex)));       \
     (_entry)->bfsQfwd->bfsQbck = (_entry)->bfsQbck;             \
     (_entry)->bfsQbck->bfsQfwd = (_entry)->bfsQfwd;             \
     (_entry)->bfsQfwd = (_entry);                               \
