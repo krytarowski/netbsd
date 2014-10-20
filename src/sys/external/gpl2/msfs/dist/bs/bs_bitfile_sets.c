@@ -2160,7 +2160,7 @@ bfs_lookup(
     bfSetT *bfSetp_start;
     ulong key;
 
-    MS_SMP_ASSERT(SLOCK_HOLDER(&LookupMutex.mutex));
+    MS_SMP_ASSERT(mutex_owned(&LookupMutex.mutex));
 
     /*
      * calculate the hash key using the bitfile-set ID as input to the hash

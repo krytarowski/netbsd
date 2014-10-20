@@ -5754,7 +5754,7 @@ domain_lookup(
     domainT *dmnP_start, *dmnP;
 
     MS_SMP_ASSERT((flag & M_GLOBAL_ROOT) ? 1 : 
-                   SLOCK_HOLDER(&DmnTblMutex.mutex) || rw_lock_held(&DmnTblLock));
+                   mutex_owned(&DmnTblMutex.mutex) || rw_lock_held(&DmnTblLock));
 
     key = DOMAIN_GET_HASH_KEY( bfDomainId );
     dmnP_start = DOMAIN_HASH_LOCK( key, NULL);  /* get bucket */
