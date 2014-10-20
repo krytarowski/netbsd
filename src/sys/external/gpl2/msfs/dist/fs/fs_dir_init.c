@@ -832,7 +832,7 @@ fs_insert_undo(
     MS_SMP_ASSERT(ATOV(dir_accessp));
     context_ptr = VTOC (ATOV (dir_accessp));
     MS_SMP_ASSERT((dmnP->state != BFD_ACTIVATED) ||
-                  (lock_holder(&context_ptr->file_lock)));
+                  (rw_lock_held(&context_ptr->file_lock)));
 
     sts = rbf_pinpg(
                     &page_ref,

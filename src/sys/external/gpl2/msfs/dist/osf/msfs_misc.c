@@ -531,7 +531,7 @@ bf_get_l(
         if ((file_context->dir_stats.advfs_st_mode & S_IFMT) == S_IFDIR)
         {
             /* don't get the lock if we already obtained it in lookup */
-            if ( !lock_holder( &file_context->file_lock ) ) {
+            if ( !rw_lock_held( &file_context->file_lock ) ) {
                 FS_FILE_WRITE_LOCK( file_context );
                 unlockFlag = TRUE;
             }
@@ -1713,7 +1713,7 @@ msfs_getpage(
         bs_cow( bfap, COW_PINPG, page, pageCnt, FtxNilFtxH );
     }
 
-    if (lock_holder(&contextp->file_lock)) {
+    if (rw_lock_held(&contextp->file_lock)) {
         /* This is an uncommon, but possible, path. */
         have_write_lock = TRUE;
     } else {

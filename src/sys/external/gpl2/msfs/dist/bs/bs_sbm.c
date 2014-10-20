@@ -1876,7 +1876,7 @@ load_x_cache(
 
     ++AdvfsLoadXCache;
 
-    MS_SMP_ASSERT(lock_holder(&vdp->stgMap_lk.lock));
+    MS_SMP_ASSERT(rw_lock_held(&vdp->stgMap_lk.lock));
 
     /*
      * The list is simply built in scan order, and the add_cache
@@ -2253,7 +2253,7 @@ sbm_lock_unlock_range (
      * in the cache that overlap the new reserved range.
      */
     if (startClust || numClust) {
-        MS_SMP_ASSERT(lock_holder(&vdp->stgMap_lk.lock));
+        MS_SMP_ASSERT(rw_lock_held(&vdp->stgMap_lk.lock));
         next_desc = cur_desc = vdp->freeStgLst;
         while ((cur_desc != NULL) ) {
             cur_desc_end = cur_desc->start_clust+cur_desc->num_clust;

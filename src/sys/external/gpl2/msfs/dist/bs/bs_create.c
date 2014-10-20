@@ -502,7 +502,7 @@ create_undo_opx(ftxHT ftxH,     /* in - ftx handle */
      * have the lock.
      * Ensure we donot already hold the lock before grabbing it.
      */
-    if (!lock_holder(&dmnP->BfSetTblLock.lock)) {
+    if (!rw_lock_held(&dmnP->BfSetTblLock.lock)) {
        BFSETTBL_LOCK_WRITE( bfSetp->dmnP )
     }
 

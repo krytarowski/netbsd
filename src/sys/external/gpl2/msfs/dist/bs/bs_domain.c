@@ -1903,7 +1903,7 @@ bs_bfdmn_activate(
     extern int MountWriteDelay;
     bfDmnStatesT orig_dmnP_state;
 
-    MS_SMP_ASSERT((flag & M_GLOBAL_ROOT) ? 1 : lock_holder(&DmnTblLock));
+    MS_SMP_ASSERT((flag & M_GLOBAL_ROOT) ? 1 : rw_lock_held(&DmnTblLock));
     if( (dmnP = domain_lookup( domainId, flag )) == 0 ) {
         return( ENO_SUCH_DOMAIN );
     }
@@ -2912,7 +2912,7 @@ setup_vd(
     extern int max_iosize_read;         /* default system-wide max read size */
     extern long lbolt;
 
-    MS_SMP_ASSERT((flag & M_GLOBAL_ROOT) ? 1 : lock_holder(&DmnTblLock));
+    MS_SMP_ASSERT((flag & M_GLOBAL_ROOT) ? 1 : rw_lock_held(&DmnTblLock));
 
     if ((sts = vd_alloc(&vdp, dmnP)) != EOK) {
         return sts;
@@ -4805,7 +4805,7 @@ set_disk_attrs (
     int mcell_index;
     struct bfAccess *mdap;
 
-    MS_SMP_ASSERT(lock_holder(&DmnTblLock));
+    MS_SMP_ASSERT(rw_lock_held(&DmnTblLock));
     vdIndex = BS_BFTAG_VDI (dmnP->ftxLogTag);
     vd = VD_HTOP(vdIndex, dmnP);
 
@@ -5754,7 +5754,7 @@ domain_lookup(
     domainT *dmnP_start, *dmnP;
 
     MS_SMP_ASSERT((flag & M_GLOBAL_ROOT) ? 1 : 
-                   SLOCK_HOLDER(&DmnTblMutex.mutex) || lock_holder(&DmnTblLock));
+                   SLOCK_HOLDER(&DmnTblMutex.mutex) || rw_lock_held(&DmnTblLock));
 
     key = DOMAIN_GET_HASH_KEY( bfDomainId );
     dmnP_start = DOMAIN_HASH_LOCK( key, NULL);  /* get bucket */
