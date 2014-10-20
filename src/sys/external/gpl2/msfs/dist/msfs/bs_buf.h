@@ -278,11 +278,11 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
 
 #define ADD_DIRTYACCESSLIST( bp, seize_bfiolock ) \
 { \
-    MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex)); \
+    MS_SMP_ASSERT(mutex_owned(&bp->bufLock.mutex)); \
     if (seize_bfiolock) \
         mutex_enter(&bp->bfAccess->bfIoLock); \
     else \
-        MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bfAccess->bfIoLock.mutex)); \
+        MS_SMP_ASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex)); \
     bp->accListSeq++; \
     MS_SMP_ASSERT(!(bp->lock.state & ACC_DIRTY)); \
     bp->lock.state |= ACC_DIRTY; \
@@ -297,11 +297,11 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
 
 #define RM_ACCESSLIST( bp, seize_bfiolock ) \
 { \
-    MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bufLock.mutex)); \
+    MS_SMP_ASSERT(mutex_owned(&bp->bufLock.mutex)); \
     if (seize_bfiolock) \
         mutex_enter(&bp->bfAccess->bfIoLock); \
     else \
-        MS_SMP_ASSERT(SLOCK_HOLDER(&bp->bfAccess->bfIoLock.mutex)); \
+        MS_SMP_ASSERT(mutex_owned(&bp->bfAccess->bfIoLock.mutex)); \
     MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY); \
     bp->bfAccess->dirtyBufList.length--; \
     MS_SMP_ASSERT(bp->bfAccess->dirtyBufList.length >= 0); \
