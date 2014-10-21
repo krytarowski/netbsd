@@ -2478,7 +2478,7 @@ vd_extend(struct vd *vdp)
         /* The code to grow the SBM requires locks that must be taken here */
         /* to preserve lock hierarchy. */
         XTNMAP_LOCK_WRITE( &vdp->bmtp->xtntMap_lk );  /* for hierarchy */
-        lock_write( &vdp->rbmt_mcell_lk.lock );
+        rw_enter( &vdp->rbmt_mcell_lk.lock, RW_WRITER );
         otherLksLocked = TRUE;
         STGMAP_LOCK_WRITE( &vdp->stgMap_lk ); /* protect vd_size, vd_Clusters */
         stgMapLocked = TRUE;
