@@ -393,7 +393,7 @@ _ftx_start_i(
             if (flag & FTX_NOWAIT) {
                 mutex_exit( &FtxMutex );
 #ifdef ADVFS_SMP_ASSERT
-                lock_done(&dmnP->ftxSlotLock);
+                rw_exit(&dmnP->ftxSlotLock);
 #endif
                 return EWOULDBLOCK;
             }
@@ -1033,7 +1033,7 @@ ftx_done_urdr(
     /***************************************************/
 
 #ifdef ADVFS_SMP_ASSERT
-    lock_done(&dmnP->ftxSlotLock);
+    rw_exit(&dmnP->ftxSlotLock);
 #endif
 
     if (TrFlags&trFtx) {
@@ -1265,7 +1265,7 @@ ftx_quit(
     }
 
 #ifdef ADVFS_SMP_ASSERT
-    lock_done(&dmnP->ftxSlotLock);
+    rw_exit(&dmnP->ftxSlotLock);
 #endif
 
     ftxp->undoBackLink = logEndOfRecords;
@@ -1368,7 +1368,7 @@ ftx_fail_2(
 
 #ifdef ADVFS_SMP_ASSERT
     if (!lvl)
-        lock_done(&dmnP->ftxSlotLock);
+        rw_exit(&dmnP->ftxSlotLock);
 #endif
 
     clvlp = &ftxp->cLvl[lvl];
@@ -2969,7 +2969,7 @@ ftx_unlock(
             break;
 
         case LKT_FTX:
-            lock_done( &(fLk->lock) );
+            rw_exit( &(fLk->lock) );
             break;
 
         default:
