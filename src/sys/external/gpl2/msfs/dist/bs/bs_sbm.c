@@ -412,24 +412,24 @@ sbm_set_pg_bits (
     mask = allSet<<(bitOffset - wordBit);
     if (firstInt == lastInt) {
         mask &= allSet>>((wordBit + 31) - endBit);
-        MS_DBG_ASSERT((sbmPg->mapInt[firstInt] & mask) == 0);
+        KDASSERT((sbmPg->mapInt[firstInt] & mask) == 0);
         sbmPg->mapInt[firstInt] |= mask;
         sbmPg->xor ^= mask;
         return;
     }
 
-    MS_DBG_ASSERT((sbmPg->mapInt[firstInt] & mask) == 0);
+    KDASSERT((sbmPg->mapInt[firstInt] & mask) == 0);
     sbmPg->mapInt[firstInt] |= mask;
     sbmPg->xor ^= mask;
 
     for (i = firstInt + 1; i < lastInt; i++) {
-        MS_DBG_ASSERT((sbmPg->mapInt[i]) == 0);
+        KDASSERT((sbmPg->mapInt[i]) == 0);
         sbmPg->mapInt[i] = allSet;
         sbmPg->xor ^= allSet;
     }
     wordBit = lastInt * 32;  /* first bit of last word */
     mask = allSet>>((wordBit + 31) - endBit);
-    MS_DBG_ASSERT((sbmPg->mapInt[lastInt]) == 0);
+    KDASSERT((sbmPg->mapInt[lastInt]) == 0);
     sbmPg->mapInt[lastInt] |= mask;
     sbmPg->xor ^= mask;
 }
