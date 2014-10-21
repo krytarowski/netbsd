@@ -526,7 +526,7 @@ add_stg_undo (
 
             goto HANDLE_EXCEPTION;
         }
-        MS_SMP_ASSERT(bfSetp->bfSetMagic == SETMAGIC);
+        KASSERT(bfSetp->bfSetMagic == SETMAGIC);
     }
 
     sts = bs_access (&bfap, undoRec->tag, bfSetp, ftxH, 0, NULLMT, &nullvp);
@@ -679,7 +679,7 @@ remove_stg_undo (
     } else {
         /* Just lookup the bitfile set handle.  */
         bfSetp = bs_bfs_lookup_desc( undoRec.setId );
-        MS_SMP_ASSERT( BFSET_VALID(bfSetp) );
+        KASSERT( BFSET_VALID(bfSetp) );
     }
 
     sts = bs_access (&bfap, undoRec.tag, bfSetp, ftxH, 0, NULLMT, &nullvp);
@@ -869,7 +869,7 @@ rbf_add_overlapping_stg(
     /* Make sure that we catch all the rogue add/remove stg places that
      * don't take the migtrunc lock.
      */
-    MS_SMP_ASSERT(lock_rwholder(&(bfap->xtnts.migTruncLk)));
+    KASSERT(lock_rwholder(&(bfap->xtnts.migTruncLk)));
 
     if (VD_HTOP(bfap->primVdIndex, bfap->dmnP)->bmtp == bfap) {
         /*
@@ -949,13 +949,13 @@ rbf_add_overlapping_clone_stg(
     bsInMemXtntT *xtnts;
     int xtntMap_locked = 0;
 
-    MS_SMP_ASSERT(!BS_BFTAG_RSVD(bfap->tag));
+    KASSERT(!BS_BFTAG_RSVD(bfap->tag));
 
 
     /* Make sure that we catch all the rogue add/remove stg places that
      * don't take the migtrunc lock.
      */
-    MS_SMP_ASSERT(lock_rwholder(&(bfap->xtnts.migTruncLk)));
+    KASSERT(lock_rwholder(&(bfap->xtnts.migTruncLk)));
 
     /*
      * first extent change: add storage
@@ -985,7 +985,7 @@ retry:
         failFtxFlag = 1;
 
         /* bs_cow_pg opened the clone and loaded the extent map. */
-        MS_SMP_ASSERT(xtnts->validFlag != 0);
+        KASSERT(xtnts->validFlag != 0);
 
         FTX_LOCKWRITE(&bfap->mcellList_lk, ftxH)
 
@@ -1067,7 +1067,7 @@ retry:
         uint32T segSize;
         bsInMemXtntMapT *xtntMap;
 
-        MS_SMP_ASSERT(xtnts->type == BSXMT_STRIPE);
+        KASSERT(xtnts->type == BSXMT_STRIPE);
         segCnt = xtnts->stripeXtntMap->cnt;
         segSize = xtnts->stripeXtntMap->segmentSize;
 
@@ -1185,7 +1185,7 @@ rbf_add_stg(
      * don't take the migtrunc lock.
      */
     if (checkmigtrunclock) {
-      MS_SMP_ASSERT(lock_rwholder(&(bfap->xtnts.migTruncLk)));
+      KASSERT(lock_rwholder(&(bfap->xtnts.migTruncLk)));
     }
 
     if (VD_HTOP(bfap->primVdIndex, bfap->dmnP)->bmtp == bfap) {
@@ -2176,7 +2176,7 @@ alloc_append_stg (
     bsInMemSubXtntMapT *subXtntMap;
 
 
-    MS_SMP_ASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
+    KASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
 
     xtntMap->origStart = mapIndex;
     xtntMap->origEnd = mapIndex;
@@ -2271,7 +2271,7 @@ alloc_append_stg (
         if (vdp->stgCluster == BS_CLUSTSIZE) {
              fileClust = (bfPageCnt * bfap->bfPageSz) / BS_CLUSTSIZE;
         } else {
-             MS_SMP_ASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
+             KASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
              fileClust = (bfPageCnt * bfap->bfPageSz) / BS_CLUSTSIZE_V3;
         }
 
@@ -2306,7 +2306,7 @@ alloc_append_stg (
      * try to merge contiguous extents
      */
     if (alloc_hint == BS_ALLOC_NFS) {
-        MS_SMP_ASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
+        KASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
         (void) imm_compress_subxtnt_map(&bfap->xtnts, bfap->bfPageSz);
     }
 
@@ -2393,7 +2393,7 @@ get_first_mcell (
         }
 
         /* add to skip list so we try to allocate from another disk */
-        MS_SMP_ASSERT(vdIndex != (vdIndexT) -1)
+        KASSERT(vdIndex != (vdIndexT) -1)
         SET_VD_SKIP(vd_skip_list, vdIndex);
         vdIndex = 0; /* do normal selection */
 
@@ -2427,8 +2427,8 @@ imm_try_combine_submaps(
     /* see if enough free slots to hold extents in prevOldSubXtntMap */
     if( prevOldSubXtntMap->vdIndex == newSubXtntMap->vdIndex ) {
 
-        MS_SMP_ASSERT(newSubXtntMap->type == BSR_XTRA_XTNTS);
-        MS_SMP_ASSERT(newSubXtntMap->onDiskMaxCnt == BMT_XTRA_XTNTS);
+        KASSERT(newSubXtntMap->type == BSR_XTRA_XTNTS);
+        KASSERT(newSubXtntMap->onDiskMaxCnt == BMT_XTRA_XTNTS);
 
         curr_avail_slots = newSubXtntMap->maxCnt - newSubXtntMap->cnt;
         if(curr_avail_slots < prevOldSubXtntMap->cnt) {
@@ -2443,7 +2443,7 @@ imm_try_combine_submaps(
                         return(sts);
                     }
                 }
-                MS_SMP_ASSERT(newSubXtntMap->maxCnt == 
+                KASSERT(newSubXtntMap->maxCnt == 
                                   newSubXtntMap->onDiskMaxCnt);
             } else {
                     return(ENO_SPACE_IN_MCELL);
@@ -2455,7 +2455,7 @@ imm_try_combine_submaps(
     }
 
     /* should be enough slots now to combine extents into 1 subxtntmap */
-    MS_SMP_ASSERT(newSubXtntMap->maxCnt >= 
+    KASSERT(newSubXtntMap->maxCnt >= 
                       (newSubXtntMap->cnt + prevOldSubXtntMap->cnt));
         
     /*save off the extents to tmp that are currently in the new subxtntmap*/
@@ -2640,7 +2640,7 @@ alloc_hole_stg (
     bfMCIdT reuseMcellId = bsNilMCId;
 
 
-    MS_SMP_ASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
+    KASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
 
     xtntMap->origStart = mapIndex;
     xtntMap->origEnd = mapIndex;
@@ -2679,7 +2679,7 @@ alloc_hole_stg (
      * extent map.
      */
     newSubXtntMap->cnt = descIndex + 1;
-    MS_SMP_ASSERT(newSubXtntMap->cnt <= newSubXtntMap->maxCnt);
+    KASSERT(newSubXtntMap->cnt <= newSubXtntMap->maxCnt);
 
 
     /* set the sub-xtnt updateStart */
@@ -2690,7 +2690,7 @@ alloc_hole_stg (
     /* step 3: alloc the storage on any volume (tries last vd alloc first) */
     bfSetDesc = bfap->bfSetp;
     if (bfap->xtnts.type != BSXMT_STRIPE) {
-       MS_SMP_ASSERT(bfVdIndex == (vdIndexT)-1);
+       KASSERT(bfVdIndex == (vdIndexT)-1);
     }  
 
     if (bfVdIndex == (vdIndexT)(-1)) {
@@ -2714,7 +2714,7 @@ alloc_hole_stg (
         if (vdp->stgCluster == BS_CLUSTSIZE) {
              fileClust = (bfPageCnt * bfap->bfPageSz) / BS_CLUSTSIZE;
         } else {
-             MS_SMP_ASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
+             KASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
              fileClust = (bfPageCnt * bfap->bfPageSz) / BS_CLUSTSIZE_V3;
         }
 
@@ -2782,7 +2782,7 @@ alloc_hole_stg (
             /* Since this only occurs with an extent that starts
              * with a hole we know we have a previous sub xtnt.
              */
-            MS_SMP_ASSERT(xtntMap->origStart > 0);
+            KASSERT(xtntMap->origStart > 0);
 
             sts= bmt_unlink_mcells(bfap->dmnP,
                                    bfap->tag,
@@ -2935,9 +2935,9 @@ alloc_hole_stg (
         ** the leading hole) from the mapIndex subxtntMap.
         */
         oldSubXtntMap = &xtntMap->subXtntMap[mapIndex];
-        MS_SMP_ASSERT(newSubXtntMap->mcellState == NEW_MCELL);
-        MS_SMP_ASSERT(!MCID_EQL(oldSubXtntMap->mcellId, newSubXtntMap->mcellId));
-        MS_SMP_ASSERT(oldSubXtntMap->vdIndex == newSubXtntMap->vdIndex);
+        KASSERT(newSubXtntMap->mcellState == NEW_MCELL);
+        KASSERT(!MCID_EQL(oldSubXtntMap->mcellId, newSubXtntMap->mcellId));
+        KASSERT(oldSubXtntMap->vdIndex == newSubXtntMap->vdIndex);
         /* Delete newly alloced mcell, we'll keep the old (mapIndex) mcell. */
         sts = deferred_free_mcell( VD_HTOP(newSubXtntMap->vdIndex, bfap->dmnP),
                                    newSubXtntMap->mcellId,
@@ -2994,7 +2994,7 @@ alloc_hole_stg (
      * try to merge contiguous extents
      */
     if (alloc_hint == BS_ALLOC_NFS) {
-        MS_SMP_ASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
+        KASSERT( rw_lock_held(&bfap->xtntMap_lk.lock) );
         (void) imm_compress_subxtnt_map(&bfap->xtnts, bfap->bfPageSz);
     }
 
@@ -3183,7 +3183,7 @@ stg_alloc_from_svc_class (
         if (vdp->stgCluster == BS_CLUSTSIZE) {
             vdp->allocClust -= requestedBlkCnt / BS_CLUSTSIZE;
         } else {
-            MS_SMP_ASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
+            KASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
             vdp->allocClust -= requestedBlkCnt / BS_CLUSTSIZE_V3;
         }
         SC_TBL_UNLOCK(bfap->dmnP);
@@ -3197,7 +3197,7 @@ stg_alloc_from_svc_class (
 
         totalPageCnt = totalPageCnt + pageCnt;
         /* add to skip list so we try to allocate from another disk */
-        MS_SMP_ASSERT(vdIndex != (vdIndexT) -1)
+        KASSERT(vdIndex != (vdIndexT) -1)
         SET_VD_SKIP(vd_skip_list, vdIndex);
         vdIndex = 0; /* do normal selection */
 
@@ -3249,8 +3249,8 @@ cp_stg_alloc_from_svc_class (
     NEW_VD_SKIP(vd_skip_list);
 
 
-    MS_SMP_ASSERT(bfap->bfPageSz == xtntMap->blksPerPage);
-    MS_SMP_ASSERT(bfap->dmnP == xtntMap->domain);
+    KASSERT(bfap->bfPageSz == xtntMap->blksPerPage);
+    KASSERT(bfap->dmnP == xtntMap->domain);
 
     while ( totalPageCnt < bfPageCnt ) {
 
@@ -3318,7 +3318,7 @@ cp_stg_alloc_from_svc_class (
         if (vdp->stgCluster == BS_CLUSTSIZE) {
             vdp->allocClust -= requestedBlkCnt / BS_CLUSTSIZE;
         } else {
-            MS_SMP_ASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
+            KASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
             vdp->allocClust -= requestedBlkCnt / BS_CLUSTSIZE_V3;
         }
         SC_TBL_UNLOCK(bfap->dmnP);
@@ -3332,7 +3332,7 @@ cp_stg_alloc_from_svc_class (
         totalPageCnt = totalPageCnt + pageCnt;
 
         /* add to skip list so we try to allocate from another disk */
-        MS_SMP_ASSERT(vdIndex != (vdIndexT) -1);
+        KASSERT(vdIndex != (vdIndexT) -1);
         SET_VD_SKIP(vd_skip_list, vdIndex);
 
     }  /* end while */
@@ -3532,7 +3532,7 @@ stg_alloc_from_one_disk (
          * next page after the last page mapped by the previous sub extent
          * map.
          */
-        MS_SMP_ASSERT(prevSubXtntMap->pageOffset + prevSubXtntMap->pageCnt <= max_page + 1);
+        KASSERT(prevSubXtntMap->pageOffset + prevSubXtntMap->pageCnt <= max_page + 1);
         sts = imm_init_sub_xtnt_map( subXtntMap,
                                      (prevSubXtntMap->pageOffset +
                                       prevSubXtntMap->pageCnt),
@@ -3670,8 +3670,8 @@ cp_stg_alloc_from_one_disk (
     vdIndexT delVdIndex;
     vdIndexT allocVdIndex;
 
-    MS_SMP_ASSERT(bfap->bfPageSz == xtntMap->blksPerPage);
-    MS_SMP_ASSERT(bfap->dmnP == xtntMap->domain);
+    KASSERT(bfap->bfPageSz == xtntMap->blksPerPage);
+    KASSERT(bfap->dmnP == xtntMap->domain);
 
     ftxH.hndl = 0;  /* flag that a ftx has or has not been started */
 
@@ -3891,7 +3891,7 @@ cp_stg_alloc_from_one_disk (
          * want to free the resources for this pass thru.
          */
         
-        MS_SMP_ASSERT((pageCnt > 0) || (sts2 == ENO_MORE_BLKS));
+        KASSERT((pageCnt > 0) || (sts2 == ENO_MORE_BLKS));
 
         if ( sts2 == ENO_MORE_BLKS )
         {
@@ -4239,7 +4239,7 @@ done:
     subXtntMap->updateEnd = i;
 
     subXtntMap->cnt = i + 1;
-    MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+    KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
 
     pageCnt = subXtntMap->bsXA[subXtntMap->cnt - 1].bsPage -
                                                     subXtntMap->bsXA[0].bsPage;
@@ -4258,7 +4258,7 @@ HANDLE_EXCEPTION:
 
     subXtntMap->bsXA[subXtntMap->updateStart] = termDesc;
     subXtntMap->cnt = subXtntMap->updateStart + 1;
-    MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+    KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
     subXtntMap->updateStart = subXtntMap->cnt;
 
     if (sts == EXTND_FAILURE) {
@@ -4317,10 +4317,10 @@ cp_stg_alloc_in_one_mcell(
     vdT *vdp;
     int pinCnt = FTX_MX_PINP - 1;
 
-    MS_SMP_ASSERT(bfPageCnt);   /* don't call this routine w/o a request */
-    MS_SMP_ASSERT(subXtntMap->cnt == 1);
-    MS_SMP_ASSERT(subXtntMap->bsXA[0].bsPage == subXtntMap->pageOffset);
-    MS_SMP_ASSERT(bfPageOffset >= subXtntMap->pageOffset);
+    KASSERT(bfPageCnt);   /* don't call this routine w/o a request */
+    KASSERT(subXtntMap->cnt == 1);
+    KASSERT(subXtntMap->bsXA[0].bsPage == subXtntMap->pageOffset);
+    KASSERT(bfPageOffset >= subXtntMap->pageOffset);
 
     dmnP = bfap->dmnP;
 
@@ -4398,13 +4398,13 @@ cp_stg_alloc_in_one_mcell(
     /* mcell. Wrap it up. */
     xI++;
     subXtntMap->bsXA[xI].bsPage = bfPageOffset + totalPageCnt;
-    MS_SMP_ASSERT(subXtntMap->bsXA[xI].bsPage <= max_page + 1);
+    KASSERT(subXtntMap->bsXA[xI].bsPage <= max_page + 1);
     subXtntMap->bsXA[xI].vdBlk = XTNT_TERM;
 
     subXtntMap->updateEnd = xI;
 
     subXtntMap->cnt = xI + 1;
-    MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+    KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
 
     pageCnt = subXtntMap->bsXA[subXtntMap->cnt - 1].bsPage -
                                                     subXtntMap->bsXA[0].bsPage;
@@ -4426,7 +4426,7 @@ HANDLE_EXCEPTION:
 
     subXtntMap->bsXA[subXtntMap->updateStart] = termDesc;
     subXtntMap->cnt = subXtntMap->updateStart + 1;
-    MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+    KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
     subXtntMap->updateStart = subXtntMap->cnt;
 
     if ( sts == EXTND_FAILURE ) {
@@ -4463,10 +4463,10 @@ cp_hole_alloc_in_one_mcell(
     statusT sts = EOK;
     uint32T totalPageCnt = 0;
 
-    MS_SMP_ASSERT(bfPageCnt);   /* don't call this routine w/o a request */
-    MS_SMP_ASSERT(subXtntMap->cnt == 1);
-    MS_SMP_ASSERT(subXtntMap->bsXA[0].bsPage == subXtntMap->pageOffset);
-    MS_SMP_ASSERT(bfPageOffset >= subXtntMap->pageOffset);
+    KASSERT(bfPageCnt);   /* don't call this routine w/o a request */
+    KASSERT(subXtntMap->cnt == 1);
+    KASSERT(subXtntMap->bsXA[0].bsPage == subXtntMap->pageOffset);
+    KASSERT(bfPageOffset >= subXtntMap->pageOffset);
 
     /* Currently we are only ever coming in here with a new mcell.
      * but this is coded to handle a partially full subextent map.
@@ -4506,13 +4506,13 @@ cp_hole_alloc_in_one_mcell(
     xI++;
 
     subXtntMap->bsXA[xI].bsPage = bfPageOffset + bfPageCnt;
-    MS_SMP_ASSERT(subXtntMap->bsXA[xI].bsPage <= max_page + 1);
+    KASSERT(subXtntMap->bsXA[xI].bsPage <= max_page + 1);
     subXtntMap->bsXA[xI].vdBlk = XTNT_TERM;
 
     subXtntMap->updateEnd = xI;
 
     subXtntMap->cnt = xI + 1;
-    MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+    KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
 
     pageCnt = subXtntMap->bsXA[subXtntMap->cnt - 1].bsPage -
                                                     subXtntMap->bsXA[0].bsPage;
@@ -4529,7 +4529,7 @@ HANDLE_EXCEPTION:
      * Restore the sub extent map to its previous state.
      */
 
-    MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+    KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
 
     if ( sts == EXTND_FAILURE ) {
         /*
@@ -4569,10 +4569,10 @@ add_extent(
     uint32T subPgCnt;
     statusT sts;
 
-    MS_SMP_ASSERT(pgOff <= max_page);
-    MS_SMP_ASSERT(pgCnt <= max_page + 1);
-    MS_SMP_ASSERT(pgOff + pgCnt <= max_page + 1);
-    MS_SMP_ASSERT(*xIp < subXtntMap->maxCnt - 2);
+    KASSERT(pgOff <= max_page);
+    KASSERT(pgCnt <= max_page + 1);
+    KASSERT(pgOff + pgCnt <= max_page + 1);
+    KASSERT(*xIp < subXtntMap->maxCnt - 2);
 
     /* Add the extent just obtained, possibly merging with the previous. */
     if ( *xIp == 0 ) {
@@ -4600,7 +4600,7 @@ add_extent(
         subXtntMap->bsXA[*xIp + 1].vdBlk = XTNT_TERM;
         subXtntMap->updateEnd = *xIp + 1;
         subXtntMap->cnt = *xIp + 2;
-        MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+        KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
         sts = update_xtnt_rec(bfap->dmnP, bfap->tag, subXtntMap, *ftxHp);
         ftx_done_n (*ftxHp, FTA_BS_STG_ALLOC_MCELL_V1);
 
@@ -4608,7 +4608,7 @@ add_extent(
         /* deferred list. Now lets start a new transaction and add */
         /* more storage. */
         subXtntMap->cnt = *xIp + 1;
-        MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+        KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
         subXtntMap->updateStart = *xIp + 1;
         *termDescp = subXtntMap->bsXA[*xIp + 1];
         subPgCnt = subXtntMap->bsXA[*xIp + 1].bsPage -
@@ -4660,11 +4660,11 @@ stg_alloc_one_xtnt(
     statusT sts;
     int bfPageSize = bfap->bfPageSz;
 
-    MS_SMP_ASSERT(ftxH.hndl <= FTX_MAX_FTXH && ftxH.hndl > 0);
-    MS_SMP_ASSERT(ftxH.dmnP);
+    KASSERT(ftxH.hndl <= FTX_MAX_FTXH && ftxH.hndl > 0);
+    KASSERT(ftxH.dmnP);
 
     dmnP = bfap->dmnP;
-    MS_SMP_ASSERT(dmnP == ftxH.dmnP);
+    KASSERT(dmnP == ftxH.dmnP);
 
     /*
      * Try to find space for the requested number of pages.
@@ -4724,7 +4724,7 @@ retry:
     sbm_howmany_blks( *allocBlkOffp, &blkCnt, pinCntp, vdp, bfPageSize);
 
     if ( blkCnt != requestedBlkCnt ) {
-        MS_SMP_ASSERT(blkCnt < requestedBlkCnt);
+        KASSERT(blkCnt < requestedBlkCnt);
 
         /*
          * Round the page and block counts down so that they are
@@ -4823,7 +4823,7 @@ xfer_stg (
     XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) )
     xtntMap_locked = 1;
 
-    MS_SMP_ASSERT(BS_BFTAG_RSVD(bfap->tag) == 0);
+    KASSERT(BS_BFTAG_RSVD(bfap->tag) == 0);
     sts = xfer_stg_to_bf( bfap,
                           bfPageOffset,
                           bfPageCnt,
@@ -4984,8 +4984,8 @@ xfer_stg_to_xtnts (
                                 FALSE,   /* perm hole returns E_PAGE_HOLE */
                                 &descIndex);
         /* we know the page is not mapped but is within this subextent */
-        MS_SMP_ASSERT( sts != EOK );
-        MS_SMP_ASSERT( sts != E_PAGE_NOT_MAPPED );
+        KASSERT( sts != EOK );
+        KASSERT( sts != E_PAGE_NOT_MAPPED );
         if ( sts == E_PAGE_HOLE ) {
             /*
              * The page is mapped by the sub extent map and the extent
@@ -5177,7 +5177,7 @@ xfer_hole_stg (
      */
     /* truncate extent map, only those subs thru the modified sub are valid */
     newSubXtntMap->cnt = descIndex + 1;
-    MS_SMP_ASSERT(newSubXtntMap->cnt <= newSubXtntMap->maxCnt);
+    KASSERT(newSubXtntMap->cnt <= newSubXtntMap->maxCnt);
 
     /* update will start after the modified sub extent */
     newSubXtntMap->updateStart = newSubXtntMap->cnt;
@@ -5212,7 +5212,7 @@ xfer_hole_stg (
      * Test for new maps added by comparing saved mapcnt above with new mapcnt.
      */
     if(savedMapCnt == xtntMap->cnt) {
-        MS_SMP_ASSERT(newSubXtntMap->cnt >= 2);
+        KASSERT(newSubXtntMap->cnt >= 2);
         if (newSubXtntMap->bsXA[newSubXtntMap->cnt-2].vdBlk == PERM_HOLE_START) {
             added_perm_hole=1;
         }
@@ -5245,7 +5245,7 @@ xfer_hole_stg (
             /* Since this only occurs with an extent that starts
              * with a hole we know we have a previous sub xtnt.
              */
-            MS_SMP_ASSERT(xtntMap->origStart > 0);
+            KASSERT(xtntMap->origStart > 0);
 
             sts= bmt_unlink_mcells(bfap->dmnP,
                                    bfap->tag,
@@ -5454,7 +5454,7 @@ xfer_stg_on_one_disk (
     uint32T totalPageCnt = 0;
     uint32T updateStart;
 
-    MS_SMP_ASSERT(parentFtx.hndl != 0);
+    KASSERT(parentFtx.hndl != 0);
 
     updateStart = xtntMap->cnt - 1;
 
@@ -5668,7 +5668,7 @@ xfer_stg_in_one_subxtnt (
                     }
                 }
                 /* bsPage at bsXA[i] will be modified below. */
-                MS_SMP_ASSERT(!((subXtntMap->bsXA[i-1].vdBlk == PERM_HOLE_START) &&
+                KASSERT(!((subXtntMap->bsXA[i-1].vdBlk == PERM_HOLE_START) &&
                               (blkOff == PERM_HOLE_START)));
                 subXtntMap->bsXA[i].vdBlk = blkOff;
                 i++;
@@ -5713,7 +5713,7 @@ xfer_stg_in_one_subxtnt (
                 RAISE_EXCEPTION(EXTND_FAILURE);
             }
         }
-        MS_SMP_ASSERT(subXtntMap->bsXA[i].vdBlk == XTNT_TERM);
+        KASSERT(subXtntMap->bsXA[i].vdBlk == XTNT_TERM);
         i++;
         subXtntMap->bsXA[i].bsPage = bfPageOffset;
         subXtntMap->bsXA[i].vdBlk = blkOff;
@@ -5726,7 +5726,7 @@ xfer_stg_in_one_subxtnt (
     subXtntMap->updateEnd = i;
 
     subXtntMap->cnt = i + 1;
-    MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+    KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
 
     pageCnt = subXtntMap->bsXA[subXtntMap->cnt - 1].bsPage -
               subXtntMap->bsXA[0].bsPage;
@@ -5743,7 +5743,7 @@ HANDLE_EXCEPTION:
 
     subXtntMap->bsXA[subXtntMap->updateStart] = termDesc;
     subXtntMap->cnt = subXtntMap->updateStart + 1;
-    MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+    KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
     subXtntMap->updateStart = subXtntMap->cnt;
 
     return sts;
@@ -5859,18 +5859,18 @@ make_perm_hole( bfAccessT *cloneap,
     addStgUndoRecT undoRec;
     int updateFlg;
 
-    MS_SMP_ASSERT(cloneap->origAccp);
-    MS_SMP_ASSERT(page < cloneap->maxClonePgs); 
+    KASSERT(cloneap->origAccp);
+    KASSERT(page < cloneap->maxClonePgs); 
     origap = cloneap->origAccp;
-    MS_SMP_ASSERT(origap->nextCloneAccp == cloneap);
+    KASSERT(origap->nextCloneAccp == cloneap);
     origXtnts = &origap->xtnts;
     cloneXtnts = &cloneap->xtnts;
-    MS_SMP_ASSERT(origXtnts->validFlag != 0);
-    MS_SMP_ASSERT(cloneXtnts->validFlag != 0);
+    KASSERT(origXtnts->validFlag != 0);
+    KASSERT(cloneXtnts->validFlag != 0);
 
     /* Find the start and end of the hole in the original file. */
     if ( origXtnts->type == BSXMT_APPEND ) {
-        MS_SMP_ASSERT(cloneXtnts->type == BSXMT_APPEND);
+        KASSERT(cloneXtnts->type == BSXMT_APPEND);
 
         origXtntMap = origXtnts->xtntMap;
         cloneXtntMap = cloneXtnts->xtntMap;
@@ -5879,8 +5879,8 @@ make_perm_hole( bfAccessT *cloneap,
 
         if ( xtntDesc.volIndex ) {
             /* If the page is mapped in the orig, it must be a hole. */
-            MS_SMP_ASSERT(xtntDesc.pageCnt != 0);
-            MS_SMP_ASSERT(xtntDesc.blkOffset == XTNT_TERM);
+            KASSERT(xtntDesc.pageCnt != 0);
+            KASSERT(xtntDesc.blkOffset == XTNT_TERM);
             holeStart = xtntDesc.pageOffset;
             holeEnd = holeStart + xtntDesc.pageCnt;
         } else {
@@ -5896,13 +5896,13 @@ make_perm_hole( bfAccessT *cloneap,
             updateFlg = FALSE;
         }
     } else {  /* striped file */
-        MS_SMP_ASSERT(origXtnts->type == BSXMT_STRIPE);
+        KASSERT(origXtnts->type == BSXMT_STRIPE);
         segCnt = origXtnts->stripeXtntMap->cnt;
         segSize = origXtnts->stripeXtntMap->segmentSize;
 
-        MS_SMP_ASSERT(cloneap->xtnts.type == BSXMT_STRIPE);
-        MS_SMP_ASSERT(cloneXtnts->stripeXtntMap->cnt == segCnt);
-        MS_SMP_ASSERT(cloneXtnts->stripeXtntMap->segmentSize == segSize);
+        KASSERT(cloneap->xtnts.type == BSXMT_STRIPE);
+        KASSERT(cloneXtnts->stripeXtntMap->cnt == segCnt);
+        KASSERT(cloneXtnts->stripeXtntMap->segmentSize == segSize);
 
         stripeIndex = BFPAGE_TO_MAP( page, segCnt, segSize);
         bfPage = page;
@@ -5916,8 +5916,8 @@ make_perm_hole( bfAccessT *cloneap,
 
         if ( xtntDesc.volIndex == bsNilVdIndex ) {
             /* There'll be a subextent for this stripe even if it has no stg. */
-            MS_SMP_ASSERT(origXtntMap->validCnt);
-            MS_SMP_ASSERT(origXtntMap->cnt);
+            KASSERT(origXtntMap->validCnt);
+            KASSERT(origXtntMap->cnt);
 
             /* The hole starts after the last block in this stripe. */
             subXtntMap = &origXtntMap->subXtntMap[origXtntMap->cnt - 1];
@@ -5926,8 +5926,8 @@ make_perm_hole( bfAccessT *cloneap,
              * stripe, the hole ends at the end of the stripe. */
             holeEnd = page + (segSize - page % segSize);
         } else {
-            MS_SMP_ASSERT(xtntDesc.pageCnt != 0);
-            MS_SMP_ASSERT(xtntDesc.blkOffset == XTNT_TERM);
+            KASSERT(xtntDesc.pageCnt != 0);
+            KASSERT(xtntDesc.blkOffset == XTNT_TERM);
             holeStart = xtntDesc.pageOffset;
             holeEnd = holeStart + xtntDesc.pageCnt;
         }
@@ -5940,7 +5940,7 @@ make_perm_hole( bfAccessT *cloneap,
     }
 
     holeEnd = MIN(holeEnd, cloneap->maxClonePgs);
-    MS_SMP_ASSERT(holeStart < holeEnd);
+    KASSERT(holeStart < holeEnd);
 
     imm_get_xtnt_desc( holeStart,
                        cloneXtntMap,
@@ -5959,7 +5959,7 @@ make_perm_hole( bfAccessT *cloneap,
                                 ftxH);
     } else {
         /* There are descriptors before and after the hole. */
-        MS_SMP_ASSERT(xtntDesc.pageCnt != 0);
+        KASSERT(xtntDesc.pageCnt != 0);
         if ( xtntDesc.blkOffset == PERM_HOLE_START ) {
               /* The clone already has a perm hole here. Nothing to do. */
               RAISE_EXCEPTION(EOK);
@@ -6031,31 +6031,31 @@ append_perm_hole( bfAccessT *bfap,
     statusT sts;
     bsInMemSubXtntMapT *subXtntMap;
 
-    MS_SMP_ASSERT(bfap->origAccp);   /* this file is a clone */
+    KASSERT(bfap->origAccp);   /* this file is a clone */
 
     bfSetp = bfap->bfSetp;
     if ( updateFlg ) {
         /* We already have an update subextent from add_stg */
-        MS_SMP_ASSERT(xtntMap->cnt > xtntMap->validCnt);
-        MS_SMP_ASSERT(xtntMap->updateStart >= xtntMap->validCnt);
-        MS_SMP_ASSERT(xtntMap->updateStart < xtntMap->cnt);
+        KASSERT(xtntMap->cnt > xtntMap->validCnt);
+        KASSERT(xtntMap->updateStart >= xtntMap->validCnt);
+        KASSERT(xtntMap->updateStart < xtntMap->cnt);
         /* Just checking. */
-        MS_SMP_ASSERT(xtntMap->updateEnd >= xtntMap->updateStart);
-        MS_SMP_ASSERT(xtntMap->origStart <= xtntMap->origEnd);
-        MS_SMP_ASSERT(xtntMap->origEnd < xtntMap->validCnt);
+        KASSERT(xtntMap->updateEnd >= xtntMap->updateStart);
+        KASSERT(xtntMap->origStart <= xtntMap->origEnd);
+        KASSERT(xtntMap->origEnd < xtntMap->validCnt);
 
         uSubI = xtntMap->updateEnd;
         subXtntMap = &xtntMap->subXtntMap[uSubI];
-        MS_SMP_ASSERT(holeStart = subXtntMap->bsXA[subXtntMap->cnt -1].bsPage);
+        KASSERT(holeStart = subXtntMap->bsXA[subXtntMap->cnt -1].bsPage);
     } else {
         /* No stg was added. We have to setup update subextents here. */
         /* Just checking. */
         /* This should be true except when actively changing the xtntMap. */
-        MS_SMP_ASSERT(xtntMap->cnt == xtntMap->validCnt);
+        KASSERT(xtntMap->cnt == xtntMap->validCnt);
 
         lSubI = xtntMap->validCnt - 1;
         /* holeStart is after this subextent. */
-        MS_SMP_ASSERT(holeStart >= xtntMap->subXtntMap[lSubI].pageOffset +
+        KASSERT(holeStart >= xtntMap->subXtntMap[lSubI].pageOffset +
                                xtntMap->subXtntMap[lSubI].pageCnt);
 
         xtntMap->origStart = lSubI;
@@ -6083,7 +6083,7 @@ append_perm_hole( bfAccessT *bfap,
         subXtntMap = &xtntMap->subXtntMap[uSubI];
 
         if ( (subXtntMap->cnt == 1) && (uSubI == 1) ) {
-            MS_SMP_ASSERT(subXtntMap->bsXA[0].vdBlk == XTNT_TERM);
+            KASSERT(subXtntMap->bsXA[0].vdBlk == XTNT_TERM);
             /*
              * This file has one subextent with one descriptor.
              * It is a normal bitfile and it does not have any storage
@@ -6098,7 +6098,7 @@ append_perm_hole( bfAccessT *bfap,
             {
                 if ( bfap->xtnts.type == BSXMT_STRIPE ) {
                     /* Get a new mcell on the correct volume for this stripe. */
-                    MS_SMP_ASSERT(xtntMap->allocVdIndex != -1);
+                    KASSERT(xtntMap->allocVdIndex != -1);
                     sts = stg_alloc_new_mcell( bfap,
                                                bfSetp->dirTag,
                                                bfap->tag,
@@ -6177,19 +6177,19 @@ insert_perm_hole( bfAccessT *bfap,
     statusT sts;
     bsXtntT *oldbsXA;
 
-    MS_SMP_ASSERT(bfap->origAccp);   /* This is a clone file. */
+    KASSERT(bfap->origAccp);   /* This is a clone file. */
     bfSetp = bfap->bfSetp;
 
-    MS_SMP_ASSERT(xtntDescId.subXtntMapIndex < xtntMap->cnt);
+    KASSERT(xtntDescId.subXtntMapIndex < xtntMap->cnt);
     if ( !updateFlg ) {
         xtntMap->updateStart = xtntMap->cnt;
         xtntMap->origStart = xtntDescId.subXtntMapIndex;
         xtntMap->origEnd = xtntDescId.subXtntMapIndex;
     } else {
-        MS_SMP_ASSERT(xtntMap->updateStart <= xtntDescId.subXtntMapIndex);
-        MS_SMP_ASSERT(xtntDescId.subXtntMapIndex <= xtntMap->updateEnd);
-        MS_SMP_ASSERT(xtntMap->origEnd < xtntMap->cnt);
-        MS_SMP_ASSERT(xtntMap->cnt <= xtntMap->maxCnt);
+        KASSERT(xtntMap->updateStart <= xtntDescId.subXtntMapIndex);
+        KASSERT(xtntDescId.subXtntMapIndex <= xtntMap->updateEnd);
+        KASSERT(xtntMap->origEnd < xtntMap->cnt);
+        KASSERT(xtntMap->cnt <= xtntMap->maxCnt);
         updateStart = xtntMap->updateStart;
         xtntMap->updateStart = xtntMap->cnt;
         for ( i = updateStart; i < xtntDescId.subXtntMapIndex; i++ ) {
@@ -6224,7 +6224,7 @@ insert_perm_hole( bfAccessT *bfap,
      * to save the storage allocation information.  If all goes well, the
      * maps are later merged with the valid maps.
      */
-    MS_SMP_ASSERT(xtntMap->cnt <= xtntMap->maxCnt);
+    KASSERT(xtntMap->cnt <= xtntMap->maxCnt);
     if ( xtntMap->cnt == xtntMap->maxCnt ) {
         sts = imm_extend_xtnt_map(xtntMap);
         if ( sts != EOK ) {
@@ -6247,20 +6247,20 @@ insert_perm_hole( bfAccessT *bfap,
 
     xtntMap->cnt++;
 
-    MS_SMP_ASSERT(xtntDescId.xtntDescIndex + 1 < newSubXtntMap->cnt);
+    KASSERT(xtntDescId.xtntDescIndex + 1 < newSubXtntMap->cnt);
     newSubXtntMap->cnt = xtntDescId.xtntDescIndex + 1;
-    MS_SMP_ASSERT(newSubXtntMap->cnt <= newSubXtntMap->maxCnt);
+    KASSERT(newSubXtntMap->cnt <= newSubXtntMap->maxCnt);
     if ( updateFlg ) {
         newSubXtntMap->updateStart = oldSubXtntMap->updateStart;
         newSubXtntMap->mcellState = oldSubXtntMap->mcellState;
     }
 
     /* The hole to be inserted overlaps a hole extent. */
-    MS_SMP_ASSERT(holeStart >=
+    KASSERT(holeStart >=
                   newSubXtntMap->bsXA[xtntDescId.xtntDescIndex].bsPage);
-    MS_SMP_ASSERT(newSubXtntMap->bsXA[xtntDescId.xtntDescIndex].vdBlk ==
+    KASSERT(newSubXtntMap->bsXA[xtntDescId.xtntDescIndex].vdBlk ==
                   XTNT_TERM);
-    MS_SMP_ASSERT(holeEnd <=
+    KASSERT(holeEnd <=
                   newSubXtntMap->bsXA[xtntDescId.xtntDescIndex + 1].bsPage);
 
     sts = add_hole_extent(bfap, xtntMap, holeStart, holeEnd, updateFlg, ftxH);
@@ -6462,7 +6462,7 @@ add_hole_extent( bfAccessT *bfap,
     uint32T lastPage;
 
     subXtntMap = &xtntMap->subXtntMap[xtntMap->cnt - 1];
-    MS_SMP_ASSERT(subXtntMap->cnt > 0);
+    KASSERT(subXtntMap->cnt > 0);
     xI = subXtntMap->cnt - 1;
     if ( !updateFlg )
         subXtntMap->updateStart = xI;
@@ -6475,7 +6475,7 @@ add_hole_extent( bfAccessT *bfap,
             sts = imm_extend_sub_xtnt_map(subXtntMap);
             if ( sts == EXTND_FAILURE ) {
                 /* subXtntMap is full. Get a new one. */
-                MS_SMP_ASSERT(subXtntMap->bsXA[subXtntMap->cnt - 1].vdBlk ==
+                KASSERT(subXtntMap->bsXA[subXtntMap->cnt - 1].vdBlk ==
                               XTNT_TERM);
 
                 if ( !updateFlg ) {
@@ -6512,7 +6512,7 @@ add_hole_extent( bfAccessT *bfap,
             }
         }
     } else {
-        MS_SMP_ASSERT(holeStart > subXtntMap->bsXA[xI].bsPage);
+        KASSERT(holeStart > subXtntMap->bsXA[xI].bsPage);
         /* The hole starts beyond the last extent. We need 2 more descriptors */
         /* to describe the hole, a hole start and a terminator. */
         xI++;
@@ -6522,11 +6522,11 @@ add_hole_extent( bfAccessT *bfap,
                 /* There are at least 2 descs left in this subextent (mcell). */
                 /* Extend it knowing we will get at least 2 more. */
                 sts = imm_extend_sub_xtnt_map(subXtntMap);
-                MS_SMP_ASSERT(xI + 1 < subXtntMap->maxCnt);
+                KASSERT(xI + 1 < subXtntMap->maxCnt);
             } else {
                 /* There is not enough room in the subextent (mcell), get */
                 /* a new one. */
-                MS_SMP_ASSERT(subXtntMap->bsXA[subXtntMap->cnt - 1].vdBlk ==
+                KASSERT(subXtntMap->bsXA[subXtntMap->cnt - 1].vdBlk ==
                               XTNT_TERM);
                 lastPage = subXtntMap->bsXA[subXtntMap->cnt - 1].bsPage;
 
@@ -6567,7 +6567,7 @@ add_hole_extent( bfAccessT *bfap,
     subXtntMap->bsXA[xI].vdBlk = XTNT_TERM;
     subXtntMap->updateEnd = xI;
     subXtntMap->cnt = xI + 1;
-    MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+    KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
     subXtntMap->pageCnt = subXtntMap->bsXA[subXtntMap->cnt - 1].bsPage -
                           subXtntMap->bsXA[0].bsPage;
 
@@ -6603,7 +6603,7 @@ new_sub(bfAccessT *bfap, bsInMemXtntMapT *xtntMap, ftxHT ftxH)
     prevSubXtntMap = &xtntMap->subXtntMap[xtntMap->cnt - 1];
     subXtntMap = &xtntMap->subXtntMap[xtntMap->cnt];
     if ( bfap->xtnts.type == BSXMT_STRIPE ) {
-        MS_SMP_ASSERT(xtntMap->allocVdIndex != -1);
+        KASSERT(xtntMap->allocVdIndex != -1);
         /* get the mcell on the specified volume */
         sts = stg_alloc_new_mcell( bfap,
                                    bfSetp->dirTag,
@@ -6778,7 +6778,7 @@ x_page_to_blkmap (
             this_is_v3_bmt = !RBMT_THERE(bfap->dmnP) &&
                              BS_IS_TAG_OF_TYPE(bfap->tag, BFM_BMT_V3);
             if ( this_is_v3_bmt ) {
-                    MS_SMP_ASSERT( bfap->xtnts.validFlag );
+                    KASSERT( bfap->xtnts.validFlag );
             } else {
                 if ( !( bfap->xtnts.validFlag )) {
                     return (E_XTNT_MAP_NOT_FOUND);
@@ -7131,7 +7131,7 @@ page_is_mapped(
                           BS_IS_TAG_OF_TYPE(bfap->tag, BFM_BMT_V3);
         if ( this_is_v3_bmt &&
              rw_lock_held(&bfap->xtntMap_lk.lock) ) {
-             MS_SMP_ASSERT( bfap->xtnts.validFlag );
+             KASSERT( bfap->xtnts.validFlag );
         } else {
             sts = x_load_inmem_xtnt_map( bfap, X_LOAD_REFERENCE);
             if ( sts != EOK ) {
@@ -7150,7 +7150,7 @@ page_is_mapped(
             break;
         }
 
-        MS_SMP_ASSERT(xtnts->xtntMap->validCnt > i);
+        KASSERT(xtnts->xtntMap->validCnt > i);
         subXtntMap = &(xtnts->xtntMap->subXtntMap[i]);
         sts = imm_page_to_xtnt( pg,
                                 subXtntMap,
@@ -7164,7 +7164,7 @@ page_is_mapped(
         }
 
         if ( nextPage ) {
-            MS_SMP_ASSERT(subXtntMap->cnt > i + 1);
+            KASSERT(subXtntMap->cnt > i + 1);
             *nextPage = subXtntMap->bsXA[i + 1].bsPage;
         }
 
@@ -7253,7 +7253,7 @@ page_is_mapped_local(
         goto end;
     }
 
-    MS_SMP_ASSERT(stripeHdr->xtntMap[strIndex]->validCnt > i);
+    KASSERT(stripeHdr->xtntMap[strIndex]->validCnt > i);
     subXtntMap = &(stripeHdr->xtntMap[strIndex]->subXtntMap[i]);
     sts = imm_page_to_xtnt( stripePg,
                             subXtntMap,
@@ -7267,7 +7267,7 @@ page_is_mapped_local(
     }
 
     if ( nextPage ) {
-        MS_SMP_ASSERT(subXtntMap->cnt > i + 1);
+        KASSERT(subXtntMap->cnt > i + 1);
         *nextPage = XMPAGE_TO_BFPAGE( strIndex,
                                       subXtntMap->bsXA[i + 1].bsPage,
                                       stripeHdr->cnt,
@@ -7349,7 +7349,7 @@ stg_remove_stg_start (
     /* Make sure that we catch all the rogue add/remove storage places that
      * don't take the migtrunc lock.
      */
-    MS_SMP_ASSERT(lock_rwholder(&(bfap->xtnts.migTruncLk)));
+    KASSERT(lock_rwholder(&(bfap->xtnts.migTruncLk)));
 
     *delCnt = 0;
     *delList = NULL;
@@ -7382,7 +7382,7 @@ stg_remove_stg_start (
 
     /* We are setting up and UNDO so we better be part of a root ftx */
 
-    MS_SMP_ASSERT (parentFtx.hndl);
+    KASSERT(parentFtx.hndl);
 
     sts = FTX_START_N(FTA_BS_STG_REMOVE_V1, &ftx, parentFtx, bfap->dmnP, 0);
 
@@ -7848,7 +7848,7 @@ dealloc_stg (
              * is not the PRIMARY otherwise the indexes would have matched
              */
             uint32T rType = xtntMap->subXtntMap[xtntMap->origStart].type;
-            MS_SMP_ASSERT((rType != BSR_XTNTS) && (rType != BSR_SHADOW_XTNTS));
+            KASSERT((rType != BSR_XTNTS) && (rType != BSR_SHADOW_XTNTS));
             reuseIndex = 0;
         }
         else
@@ -7864,7 +7864,7 @@ dealloc_stg (
          * Allocate mcells for the "updateStart" + 1 thru "updateEnd" sub extent
          * maps.
          */
-        MS_SMP_ASSERT(xtntMap->updateEnd - xtntMap->updateStart < 4);
+        KASSERT(xtntMap->updateEnd - xtntMap->updateStart < 4);
         for (i = xtntMap->updateStart + reuseIndex; i <= xtntMap->updateEnd; i++) {
             subXtntMap = &(xtntMap->subXtntMap[i]);
             sts = stg_alloc_new_mcell( bfap,
@@ -7929,7 +7929,7 @@ dealloc_stg (
             }
         }
 
-        MS_SMP_ASSERT(xtntMap->origStart > 0);
+        KASSERT(xtntMap->origStart > 0);
 
         /*
          * Include the previous sub extent map in the to-be-modified range by
@@ -8230,7 +8230,7 @@ clip_del_xtnt_map (
         }
         subXtntMap->bsXA[descIndex + 1].vdBlk = -1;
         subXtntMap->cnt = descIndex + 2;
-        MS_SMP_ASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
+        KASSERT(subXtntMap->cnt <= subXtntMap->maxCnt);
 
         subXtntMap->pageOffset = subXtntMap->bsXA[0].bsPage;
         subXtntMap->pageCnt = subXtntMap->bsXA[subXtntMap->cnt - 1].bsPage -
@@ -8531,7 +8531,7 @@ merge_sub_xtnt_maps (
                            xtntMap->subXtntMap[xtntMap->validCnt - 1].pageCnt) -
                                 xtntMap->subXtntMap[0].pageOffset;
 
-    MS_SMP_ASSERT(imm_check_xtnt_map(xtntMap) == EOK);
+    KASSERT(imm_check_xtnt_map(xtntMap) == EOK);
 
     return;
 

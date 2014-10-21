@@ -462,7 +462,7 @@ bf_get_l(
         BS_BFTAG_IDX(real_tag) = BS_BFTAG_IDX(bf_tag);
         BS_BFTAG_SEQ(real_tag) = BS_BFTAG_SEQ(bf_tag) & ~BS_PSEUDO_TAG;
         if (bfap->real_bfap) {
-            MS_SMP_ASSERT(BS_BFTAG_EQL(bfap->real_bfap->tag, real_tag));
+            KASSERT(BS_BFTAG_EQL(bfap->real_bfap->tag, real_tag));
         }
         else {
             /*
@@ -1387,12 +1387,12 @@ msfs_refer(vm_ubc_object_t vop)
 {
     struct fsContext *contextp;
 
-    MS_SMP_ASSERT(vop->vu_ap);        /* we have an access structure */
-    MS_SMP_ASSERT(vop->vu_ap->bfVp);    /* that has a vnode */
+    KASSERT(vop->vu_ap);        /* we have an access structure */
+    KASSERT(vop->vu_ap->bfVp);    /* that has a vnode */
     /* vnode and access point to the same object */
-    MS_SMP_ASSERT(vop->vu_ap->bfObj == vop->vu_ap->bfVp->v_object);
+    KASSERT(vop->vu_ap->bfObj == vop->vu_ap->bfVp->v_object);
     contextp = VTOC(vop->vu_ap->bfVp);
-    MS_SMP_ASSERT(contextp != NULL);
+    KASSERT(contextp != NULL);
 
     VREF(vop->vu_ap->bfVp);
 
@@ -1413,12 +1413,12 @@ msfs_release(vm_ubc_object_t vop)
     struct fsContext *contextp;
     bfAccessT *bfap = vop->vu_ap;
 
-    MS_SMP_ASSERT(bfap);        /* we have an access structure */
-    MS_SMP_ASSERT(bfap->bfVp);    /* that has a vnode */
+    KASSERT(bfap);        /* we have an access structure */
+    KASSERT(bfap->bfVp);    /* that has a vnode */
     /* vnode and access point to the same object */
-    MS_SMP_ASSERT(bfap->bfObj == bfap->bfVp->v_object);
+    KASSERT(bfap->bfObj == bfap->bfVp->v_object);
     contextp = VTOC(bfap->bfVp);
-    MS_SMP_ASSERT(contextp != NULL);
+    KASSERT(contextp != NULL);
 
     /*
      * The access structure mmapCnt accurately reflects the
@@ -1493,7 +1493,7 @@ msfs_putpage(
     int klusterPages;
 
     bfap = vop->vu_ap;
-    MS_SMP_ASSERT(bfap);
+    KASSERT(bfap);
     vp = bfap->bfVp;
 
     /*
@@ -1515,15 +1515,15 @@ msfs_putpage(
              */
 
             mutex_enter( &bfap->bfaLock );
-            MS_SMP_ASSERT(lk_get_state(bfap->stateLk) != ACC_INVALID);
-            MS_SMP_ASSERT(bfap->bfState != BSRA_INVALID);
+            KASSERT(lk_get_state(bfap->stateLk) != ACC_INVALID);
+            KASSERT(bfap->bfState != BSRA_INVALID);
             decr_access = 1;
             RM_ACC_LIST_COND( bfap );
             bfap->refCnt++;
             mutex_exit(&bfap->bfaLock);
         }
         else {
-            MS_SMP_ASSERT(tempbfap == bfap);
+            KASSERT(tempbfap == bfap);
         }
     }
 
@@ -1576,7 +1576,7 @@ msfs_putpage(
         }
 
         pp = *pl;
-        MS_SMP_ASSERT(pp && pp->pg_busy && (pp->pg_reserved & VPP_UBCIO));
+        KASSERT(pp && pp->pg_busy && (pp->pg_reserved & VPP_UBCIO));
 
         /* Temporary race condition check, previously we purged the page
          * if ((pp->pg_reserved & VPP_INVALID) && !(flags & B_INVAL))
@@ -1589,7 +1589,7 @@ msfs_putpage(
          * paths.  It should be "no harm, no foul" to either throw the
          * page away or write it, but maybe there is a path I missed... so
          */
-        MS_SMP_ASSERT( !(pp->pg_reserved & VPP_INVALID) || (flags & B_INVAL) );
+        KASSERT( !(pp->pg_reserved & VPP_INVALID) || (flags & B_INVAL) );
 
         /*
          * bf page number
@@ -1679,7 +1679,7 @@ msfs_getpage(
 
     bfap = vop->vu_ap;
     vp = bfap->bfVp;
-    MS_SMP_ASSERT(vp);
+    KASSERT(vp);
     /*
      * If this file is open for direct I/O, we cannot support VM/UBC
      * based accesses to this file (i.e. NFS).  Returning EOPNOTSUPP
@@ -1691,7 +1691,7 @@ msfs_getpage(
     FILESETSTAT( vp, msfs_getpage );
 
     contextp = VTOC( vp );
-    MS_SMP_ASSERT(contextp->initialized);
+    KASSERT(contextp->initialized);
 
     writing = !(ubc_flags & B_READ);
 
@@ -1761,7 +1761,7 @@ msfs_getpage(
     if (bfap->origAccp) {
         if (writing) {
             /* clones are read-only */
-            MS_SMP_ASSERT(0); /* so we can punish the guilty */
+            KASSERT(0); /* so we can punish the guilty */
             error = KERN_INVALID_ARGUMENT;
             goto _error;
         }
@@ -1796,7 +1796,7 @@ msfs_getpage(
             error = bs_refpg_get(bfap, page, refHint,
                                  pl, vmp, offset, len, ubc_flags);
             if (error) {
-                MS_SMP_ASSERT(error != E_PAGE_NOT_MAPPED);
+                KASSERT(error != E_PAGE_NOT_MAPPED);
                 break;
             }
             if (protp) {
@@ -2001,7 +2001,7 @@ msfs_fs_replicate(vm_page_t pp) /*In:Copy of vm_page's fs private field.*/
 
     bp->ln = SET_LINE_AND_THREAD(__LINE__);
     bp->lock.state = origbp->lock.state;
-    MS_SMP_ASSERT(!(bp->lock.state&IO_TRANS));
+    KASSERT(!(bp->lock.state&IO_TRANS));
 
     bp->bfPgNum = origbp->bfPgNum;
     bp->bfAccess = origbp->bfAccess;
@@ -2193,8 +2193,8 @@ msfs_mmap( register struct vnode *vp,
 
     contextp = VTOC(vp);
     bfap = VTOA(vp);
-    MS_SMP_ASSERT(contextp != NULL);
-    MS_SMP_ASSERT(bfap != NULL);
+    KASSERT(contextp != NULL);
+    KASSERT(bfap != NULL);
 
 restart:
     FS_FILE_WRITE_LOCK(contextp);
@@ -2557,7 +2557,7 @@ msfs_log_and_meta_flush(vm_ubc_object_t vop,
     bfAccessT *bfap;
 
     bfap = vop->vu_ap;
-    MS_SMP_ASSERT(bfap);
+    KASSERT(bfap);
     
 /* Revision 1*/
     /* Flush the domain's log to disk before flushing metadata.

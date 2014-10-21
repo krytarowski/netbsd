@@ -321,7 +321,7 @@ add_stg:
 
     curr_pages = howmany(dir_access->file_size, ADVFS_PGSZ);
 
-    MS_SMP_ASSERT((IDX_INDEXING_ENABLED(dir_access)) ||
+    KASSERT((IDX_INDEXING_ENABLED(dir_access)) ||
                   (insert_page == curr_pages-1));
 
     ret = rbf_add_stg(dir_access, curr_pages, 1, ins_ftx_handle, TRUE);
@@ -698,7 +698,7 @@ remove_dir_ent(
         ms_uaprintf("Bad dir format in remove_dir_ent dir tag = %d, file tag = %d\n",
                     dir_context->bf_tag.num,
                     file_context->bf_tag.num);
-        MS_SMP_ASSERT(0);  /* Force a panic in-house */
+        KASSERT(0);  /* Force a panic in-house */
         return(EIO);
     } 
 
@@ -792,7 +792,7 @@ remove_dir_ent(
                  * Since we are about to lose this space turn off any glomming. 
                  */
                 
-                MS_SMP_ASSERT(!(glom_flags & SPACE_NEEDS_GLOMMING) ||
+                KASSERT(!(glom_flags & SPACE_NEEDS_GLOMMING) ||
                               (glom_flags & LOST_SPACE_FOUND));
 
                 glom_flags &= ~(SPACE_NEEDS_GLOMMING);
@@ -834,7 +834,7 @@ remove_dir_ent(
         if (glom_flags & LOST_SPACE_FOUND)
         {
             /* Keep some stats */
-            MS_SMP_ASSERT(IDX_INDEXING_ENABLED(dir_access));
+            KASSERT(IDX_INDEXING_ENABLED(dir_access));
             recovered_filename_space++;
         }
 
@@ -1091,7 +1091,7 @@ seq_search(
          * page (ie a non-existant page).
          */
 
-        MS_SMP_ASSERT(saved_offset >= 0);
+        KASSERT(saved_offset >= 0);
         if (saved_page >= last_page || saved_offset < 0) {
             saved_page = saved_offset = 0;
             seq_search_stats.bad_save++;
@@ -1674,7 +1674,7 @@ remove_entry(
     /* this is called from verify so the fileset is already mounted.
      */
     fsnp = dir_access->bfSetp->fsnp;
-    MS_SMP_ASSERT(fsnp != NULL);
+    KASSERT(fsnp != NULL);
     /* Need the quota locks because of call chain
      * idx_directory_insert_space --> idx_directory_insert_space_int -->
      * idx_index_get_free_pgs_int --> chk_blk_quota --> dqsync -->
@@ -1823,7 +1823,7 @@ remove_entry(
                  * we could have this situation.  Since we are about
                  * to lose this space turn off any glomming.  */
                   
-                MS_SMP_ASSERT(!(glom_flags & SPACE_NEEDS_GLOMMING) ||
+                KASSERT(!(glom_flags & SPACE_NEEDS_GLOMMING) ||
                               (glom_flags & LOST_SPACE_FOUND));
 
                 glom_flags &= ~(SPACE_NEEDS_GLOMMING);
@@ -1858,7 +1858,7 @@ remove_entry(
         if (glom_flags & LOST_SPACE_FOUND)
         {
             /* Keep some stats */
-            MS_SMP_ASSERT(IDX_INDEXING_ENABLED(dir_access));
+            KASSERT(IDX_INDEXING_ENABLED(dir_access));
             recovered_filename_space++;
         }
 
@@ -2057,7 +2057,7 @@ setup_for_glom_dir_entries(
             if (!skip_glom)
             {
                 *entry_size += prev_p_size;
-                MS_SMP_ASSERT((*entry_size <= DIRBLKSIZ) && (*entry_size > 0));
+                KASSERT((*entry_size <= DIRBLKSIZ) && (*entry_size > 0));
 
                 /* if the newly-deleted entry was the last entry and
                  * we just glom'ed it, then inform the caller we need
@@ -2167,7 +2167,7 @@ setup_for_glom_dir_entries(
             if (!skip_glom)
             {
                 *entry_size += post_p_size;
-                MS_SMP_ASSERT((*entry_size <= DIRBLKSIZ) && (*entry_size > 0));
+                KASSERT((*entry_size <= DIRBLKSIZ) && (*entry_size > 0));
 
                 /*
                  * if it was the last entry, reset the last entry offset...
@@ -2266,7 +2266,7 @@ dir_trunc_start( struct vnode *dvp,
 
     /* Be sure that there is a write lock held on the dir */
     contextp = VTOC(dvp);
-    MS_SMP_ASSERT(rw_lock_held(&contextp->file_lock));
+    KASSERT(rw_lock_held(&contextp->file_lock));
 
     /* update the size of the file in the bfAccess */
     old_file_size = bfap->file_size;
