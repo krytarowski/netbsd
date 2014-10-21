@@ -1830,7 +1830,7 @@ bs_set_dmn_params(
                      logvdp,
                      &mcid,
                      mdap->tag);
-    lock_done( &mdap->mcellList_lk.lock );
+    rw_exit( &mdap->mcellList_lk.lock );
     if ( sts != EOK ) {
         goto finished_set_dmn;
     }
@@ -1986,7 +1986,7 @@ bs_get_vd_params(
                      vdp,
                      &mcid,
                      mdap->tag);
-    lock_done( &mdap->mcellList_lk.lock );
+    rw_exit( &mdap->mcellList_lk.lock );
     if ( sts != EOK ) {
         vd_dec_refcnt( vdp );
         return sts;

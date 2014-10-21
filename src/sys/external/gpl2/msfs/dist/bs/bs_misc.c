@@ -100,7 +100,7 @@ event_t MsfsDbgEvent;
         lock_write( Lk );
 
 #define INITLOCK_UNLOCK(Lk) \
-        lock_done( Lk );
+        rw_exit( Lk );
 
 #define SUSER (suser(u.u_cred, &u.u_acflag) == 0)
 
