@@ -2946,7 +2946,7 @@ ftx_lock_read(
 }
 
 
-static void
+void
 ftx_unlock(
     void *lk               /* in */
     )
