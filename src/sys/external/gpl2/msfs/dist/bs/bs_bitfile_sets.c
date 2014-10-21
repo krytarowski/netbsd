@@ -813,7 +813,7 @@ frag_list_extend(
         grpHdrT *grpHdrp;
     } grps[INIT_GRPS];
 
-    MS_SMP_ASSERT(lock_islocked(&(setp->fragBfAp->xtnts.migTruncLk)));
+    KASSERT(rw_lock_held(&(setp->fragBfAp->xtnts.migTruncLk)));
 
     if ((setp->fragGrps[ fragType ].firstFreeGrp != BF_FRAG_EOG) ||
         (setp->fragGrps[ fragType ].lastFreeGrp != BF_FRAG_EOG)) {
