@@ -578,7 +578,7 @@ _ftx_start_i(
                  * run.
                  */
                 if ( trimwait ) {
-                    cond_broadcast( &ftxTDp->slotCv );
+                    cv_broadcast( &ftxTDp->slotCv );
                 } else {
                     cv_signal( &ftxTDp->slotCv );
                 }
@@ -3627,7 +3627,7 @@ checklogtrim:
             if (AdvfsLockStats) {
                 AdvfsLockStats->ftxTrimBroadcast++;
             }
-            cond_broadcast( &ftxTDp->trimCv );
+            cv_broadcast( &ftxTDp->trimCv );
         }
     }
 

@@ -4454,7 +4454,7 @@ clear_state (
                     AdvfsLockStats->bufBroadcast++;
                 }
 
-                cond_broadcast( &bp->lock.bufCond );
+                cv_broadcast( &bp->lock.bufCond );
             }
         }
     }

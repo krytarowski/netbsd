@@ -563,7 +563,7 @@ ulmq_send_msg(
             AdvfsLockStats->msgQBroadcast++;
         }
 
-        cond_broadcast( &msgQ->res );
+        cv_broadcast( &msgQ->res );
     }
 }
 

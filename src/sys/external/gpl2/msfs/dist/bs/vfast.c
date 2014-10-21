@@ -451,7 +451,7 @@ ss_kern_stop()
                     continue;
                 }
 
-                cond_broadcast (&vdp->ssVolInfo.ssContMig_cv);
+                cv_broadcast (&vdp->ssVolInfo.ssContMig_cv);
 
                 vdCnt++;
                 vd_dec_refcnt( vdp );
@@ -742,7 +742,7 @@ ss_boss_thread( void )
                     ss_queues_destroy();
 
                     /* notify message sender that shutdown is completed */
-                    cond_broadcast (&ss_stopped_cv);
+                    cv_broadcast (&ss_stopped_cv);
 
                     /* hari-kari */
                     (void) thread_terminate(current_thread());
@@ -1574,7 +1574,7 @@ ss_dmn_deactivate(domainT *dmnP, int flag)
         vdp->ssVolInfo.ssVdMigState = SS_ABORT;
         mutex_exit( &vdp->ssVolInfo.ssVdMigLk );
 
-        cond_broadcast (&vdp->ssVolInfo.ssContMig_cv);
+        cv_broadcast (&vdp->ssVolInfo.ssContMig_cv);
         SS_TRACE(vdp,0,0,0,0);
         vd_dec_refcnt( vdp );
         vdCnt++;
@@ -3517,7 +3517,7 @@ ss_startios(vdT *vdp)
         mutex_exit( &vdp->ssVolInfo.ssVdMsgLk );
 
         if (vdp->ssVolInfo.ssVdMigState == SS_PARKED) {
-            cond_broadcast (&vdp->ssVolInfo.ssContMig_cv);
+            cv_broadcast (&vdp->ssVolInfo.ssContMig_cv);
         }
 
     } /* end if vfast is enabled */
@@ -4672,7 +4672,7 @@ ss_vd_migrate( bfTagT   filetag,
        (bfap->dmnP->ssDmnInfo.ssDmnState != SS_ACTIVATED) ) {
         mutex_exit( &dvdp->ssVolInfo.ssVdMigLk );
         /* re-broadcast in case there are more threads waiting */
-        cond_broadcast (&dvdp->ssVolInfo.ssContMig_cv);
+        cv_broadcast (&dvdp->ssVolInfo.ssContMig_cv);
         RAISE_EXCEPTION(E_WOULD_BLOCK);
     }
 
@@ -4976,7 +4976,7 @@ HANDLE_EXCEPTION:
                 dvdp->ssVolInfo.ssVdMigState = SS_MIG_IDLE;
         mutex_exit( &dvdp->ssVolInfo.ssVdMigLk );
 
-        cond_broadcast (&dvdp->ssVolInfo.ssContMig_cv);
+        cv_broadcast (&dvdp->ssVolInfo.ssContMig_cv);
 
         /* decrement the vd vfast thread count */
         mutex_enter( &dvdp->ssVolInfo.ssVdMigLk );

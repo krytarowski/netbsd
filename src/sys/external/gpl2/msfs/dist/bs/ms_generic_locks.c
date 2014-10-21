@@ -220,7 +220,7 @@ _lk_signal(
                 AdvfsLockStats->usageStats[ lkHdr->lkUsage ].broadcast++;
                 AdvfsLockStats->stateBroadcast++;
             }
-            cond_broadcast( &slk->res, ln, fn );
+            cv_broadcast( &slk->res, ln, fn );
         }
     }
 }

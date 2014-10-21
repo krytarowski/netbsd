@@ -779,7 +779,7 @@ bs_io_complete(
                     AdvfsLockStats->pinBlockBroadcast++;
                 }
 
-                cond_broadcast( &dmnP->pinBlockCv );
+                cv_broadcast( &dmnP->pinBlockCv );
             }
 
             /* The meta data for the oldest log entry just got written, */
@@ -872,7 +872,7 @@ clearSignal:
                 AdvfsLockStats->bufBroadcast++;
             }
 
-            cond_broadcast( &bp->lock.bufCond );
+            cv_broadcast( &bp->lock.bufCond );
         }
     }
 
