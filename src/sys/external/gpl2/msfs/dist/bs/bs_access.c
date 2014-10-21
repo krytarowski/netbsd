@@ -1541,9 +1541,9 @@ bs_invalidate_rsvd_access_struct(
      * XXX - Cleanup access structure lockinfo
      *  See bfm_open_ms()
      */
-    lock_terminate( &bfap->mcellList_lk.lock );
+    rw_destroy( &bfap->mcellList_lk.lock );
     rw_init( &bfap->mcellList_lk.lock );
-    lock_terminate( &bfap->xtntMap_lk.lock );
+    rw_destroy( &bfap->xtntMap_lk.lock );
     rw_init( &bfap->xtntMap_lk.lock );
 
     /*
@@ -2172,16 +2172,16 @@ bfm_open_ms(
         if ( RBMT_THERE(dmnP) ) {
             if (bfMIndex == BFM_BMT  ||
                 bfMIndex == BFM_RBMT) {
-                lock_terminate( &(*outbfap)->mcellList_lk.lock );
+                rw_destroy( &(*outbfap)->mcellList_lk.lock );
                 rw_init( &(*outbfap)->mcellList_lk.lock );
-                lock_terminate( &(*outbfap)->xtntMap_lk.lock );
+                rw_destroy( &(*outbfap)->xtntMap_lk.lock );
                 rw_init( &(*outbfap)->xtntMap_lk.lock );
             }
         } else {
             if (bfMIndex == BFM_BMT_V3) {
-                lock_terminate( &(*outbfap)->mcellList_lk.lock );
+                rw_destroy( &(*outbfap)->mcellList_lk.lock );
                 rw_init( &(*outbfap)->mcellList_lk.lock );
-                lock_terminate( &(*outbfap)->xtntMap_lk.lock );
+                rw_destroy( &(*outbfap)->xtntMap_lk.lock );
                 rw_init( &(*outbfap)->xtntMap_lk.lock );
             }
         }
@@ -3697,11 +3697,11 @@ lookup:
      */
     KASSERT(bfap->bfSetp == NULL);
     if (bfSetp->cloneId == BS_BFSET_ORIG) {
-        lock_terminate(&(bfap->xtnts.migTruncLk));
+        rw_destroy(&(bfap->xtnts.migTruncLk));
         rw_init(&(bfap->xtnts.migTruncLk));
     }
     else {
-        lock_terminate(&(bfap->xtnts.migTruncLk));
+        rw_destroy(&(bfap->xtnts.migTruncLk));
         rw_init(&(bfap->xtnts.migTruncLk));
     }
 
@@ -4897,17 +4897,17 @@ bs_dealloc_access(bfAccessT *bfap)
     /*
      * Complex locks.
      */
-    lock_terminate(&bfap->trunc_xfer_lk);
-    lock_terminate(&bfap->cow_lk);
-    lock_terminate(&bfap->clu_clonextnt_lk);
-    lock_terminate(&bfap->xtnts.migTruncLk);
+    rw_destroy(&bfap->trunc_xfer_lk);
+    rw_destroy(&bfap->cow_lk);
+    rw_destroy(&bfap->clu_clonextnt_lk);
+    rw_destroy(&bfap->xtnts.migTruncLk);
 
     /*
      * FTX locks.
      */
-    lock_terminate(&bfap->mcellList_lk.lock);
+    rw_destroy(&bfap->mcellList_lk.lock);
     lk_destroy(&bfap->mcellList_lk);
-    lock_terminate(&bfap->xtntMap_lk.lock);
+    rw_destroy(&bfap->xtntMap_lk.lock);
     lk_destroy(&bfap->xtntMap_lk);
 
     /*

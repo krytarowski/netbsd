@@ -3621,11 +3621,11 @@ vd_free(
     mutex_destroy( &vdp->tempQ.ioQLock );
     
 
-    lock_terminate( &vdp->stgMap_lk.lock );
-    lock_terminate(&vdp->mcell_lk.lock);
-    lock_terminate(&vdp->rbmt_mcell_lk.lock);
-    lock_terminate(&vdp->del_list_lk.lock);
-    lock_terminate( &vdp->ddlActiveLk );
+    rw_destroy( &vdp->stgMap_lk.lock );
+    rw_destroy(&vdp->mcell_lk.lock);
+    rw_destroy(&vdp->rbmt_mcell_lk.lock);
+    rw_destroy(&vdp->del_list_lk.lock);
+    rw_destroy( &vdp->ddlActiveLk );
 
     vdp->vdMagic |= MAGIC_DEALLOC;
     ms_free( vdp );
@@ -5524,7 +5524,7 @@ dmn_dealloc(
     mutex_destroy( &dmnP->vdpTblLock );
     mutex_destroy( &dmnP->dmnFreezeMutex );
 #ifdef ADVFS_SMP_ASSERT
-    lock_terminate(&dmnP->ftxSlotLock);
+    rw_destroy(&dmnP->ftxSlotLock);
 #endif
 
     if (clu_is_ready()) 
