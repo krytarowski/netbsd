@@ -4271,7 +4271,7 @@ _state_block(
      * Block until condition variable is signaled.
      */
     bp->lock.waiting++;
-    cond_wait( &bp->lock.bufCond, &bp->bufLock );
+    cv_wait( &bp->lock.bufCond, &bp->bufLock );
     bp->lock.waiting--;
 }
 

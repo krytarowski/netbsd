@@ -411,7 +411,7 @@ _ftx_start_i(
                   wait = 1;
                 }
                 ftxTDp->ftxWaiters++;
-                cond_wait( &ftxTDp->slotCv, &FtxMutex );
+                cv_wait( &ftxTDp->slotCv, &FtxMutex );
                 ftxTDp->ftxWaiters--;
             }
 
@@ -433,7 +433,7 @@ _ftx_start_i(
                 }
 
                 ftxTDp->ftxWaiters++;
-                cond_wait( &ftxTDp->slotCv, &FtxMutex );
+                cv_wait( &ftxTDp->slotCv, &FtxMutex );
                 ftxTDp->ftxWaiters--;
             }
         }
@@ -447,7 +447,7 @@ _ftx_start_i(
         if ( FtxDynAlloc.currAllocated >= FtxDynAlloc.maxAllowed ) {
             FtxDynAlloc.sumWaits++;
             FtxDynAlloc.waiters++;
-            cond_wait( &FtxDynAlloc.res, &FtxMutex );
+            cv_wait( &FtxDynAlloc.res, &FtxMutex );
             FtxDynAlloc.waiters--;    
         }
 
@@ -524,7 +524,7 @@ _ftx_start_i(
             }
 
             ftxTDp->excWaiters++;
-            cond_wait( &ftxTDp->excCv, &FtxMutex );
+            cv_wait( &ftxTDp->excCv, &FtxMutex );
             ftxTDp->excWaiters--;
         }
 
@@ -544,7 +544,7 @@ _ftx_start_i(
 
             trimwait = 1;
             ftxTDp->trimWaiters++;
-            cond_wait( &ftxTDp->trimCv, &FtxMutex );
+            cv_wait( &ftxTDp->trimCv, &FtxMutex );
             ftxTDp->trimWaiters--;
         }
 
@@ -2807,7 +2807,7 @@ do_ftx_continuations(
                 }
 
                 ftxTDp->trimWaiters++;
-                cond_wait( &ftxTDp->trimCv, &FtxMutex );
+                cv_wait( &ftxTDp->trimCv, &FtxMutex );
                 ftxTDp->trimWaiters--;
             }
 

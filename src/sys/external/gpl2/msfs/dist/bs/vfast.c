@@ -468,7 +468,7 @@ ss_kern_stop()
         }
 
         mutex_enter(&ssStoppedMutex );
-        cond_wait( &ss_stopped_cv, &ssStoppedMutex );
+        cv_wait( &ss_stopped_cv, &ssStoppedMutex );
         mutex_exit(&ssStoppedMutex );
 
         /* Now free the vfast lists */
@@ -3569,7 +3569,7 @@ ss_block_and_wait(vdT *vdp)
      * broadcast from io thd. 
      */
     vdp->ssVolInfo.ssVdMigState = SS_PARKED;
-    cond_wait( &vdp->ssVolInfo.ssContMig_cv, &vdp->ssVolInfo.ssVdMigLk );
+    cv_wait( &vdp->ssVolInfo.ssContMig_cv, &vdp->ssVolInfo.ssVdMigLk );
     SS_UNLOCK(&SSLock);
     SS_TRACE(vdp,0,0,0,0);
 
@@ -4664,7 +4664,7 @@ ss_vd_migrate( bfTagT   filetag,
     while ((dvdp->ssVolInfo.ssVdMigState == SS_PROCESSING) ||
            (dvdp->ssVolInfo.ssVdMigState == SS_PARKED)) {
         /* must be another thread got here first, simply wait for my turn */
-        cond_wait( &dvdp->ssVolInfo.ssContMig_cv, &dvdp->ssVolInfo.ssVdMigLk );
+        cv_wait( &dvdp->ssVolInfo.ssContMig_cv, &dvdp->ssVolInfo.ssVdMigLk );
     }
 
     if((dvdp->ssVolInfo.ssVdMigState == SS_ABORT) ||

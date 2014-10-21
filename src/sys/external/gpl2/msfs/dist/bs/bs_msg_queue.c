@@ -605,7 +605,7 @@ ulmq_recv_msg(
                 AdvfsLockStats->msgQWait++;
             }
 
-            cond_wait( &msgQ->res, mutex );
+            cv_wait( &msgQ->res, mutex );
         }
 
         msgQ->waiters--;

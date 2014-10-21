@@ -310,7 +310,7 @@ _lk_wait_for(
         lk->waiters++;
 
         while (lk->state != waitState) {
-            cond_wait( &lk->res, lk_mutex, ln, fn );
+            cv_wait( &lk->res, lk_mutex, ln, fn );
         }
 
         lk->waiters--;
@@ -359,7 +359,7 @@ _lk_wait_for2(
 
         lk->waiters++;
 
-        cond_wait( &lk->res, lk_mutex, ln, fn );
+        cv_wait( &lk->res, lk_mutex, ln, fn );
 
         lk->waiters--;
     }
@@ -407,7 +407,7 @@ _lk_wait_while(
         lk->waiters++;
 
         while (lk->state == waitState) {
-            cond_wait( &lk->res, lk_mutex, ln, fn );
+            cv_wait( &lk->res, lk_mutex, ln, fn );
         }
 
         lk->waiters--;

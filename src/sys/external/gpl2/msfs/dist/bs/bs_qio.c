@@ -1099,7 +1099,7 @@ bs_pinblock_sync(
 
         dmnP->pinBlockWait++;
         mark_bio_wait;
-        cond_wait( &dmnP->pinBlockCv, &dmnP->lsnLock );
+        cv_wait( &dmnP->pinBlockCv, &dmnP->lsnLock );
         unmark_bio_wait;
         dmnP->pinBlockWait--;
         blocked = 1;
