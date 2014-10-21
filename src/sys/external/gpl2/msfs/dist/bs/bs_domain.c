@@ -2605,10 +2605,10 @@ read_n_chk_last_rbmt_pg( vdT *vdp )
          */
         /* Setting this flags is protected by the rbmt_mcell_lk */
         vdp->rbmtFlags |= RBMT_EXTENSION_IN_PROGRESS;
-        lock_done( &vdp->rbmt_mcell_lk.lock );
+        rw_exit( &vdp->rbmt_mcell_lk.lock );
         (void)rbmt_extend( vdp->dmnP, vdp->vdIndex );
     } else {
-        lock_done( &vdp->rbmt_mcell_lk.lock );
+        rw_exit( &vdp->rbmt_mcell_lk.lock );
     }
 }
 
