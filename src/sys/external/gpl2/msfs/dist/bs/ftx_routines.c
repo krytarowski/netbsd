@@ -2911,7 +2911,7 @@ ftx_lock_write(
         ADVFS_SAD0( "ftx_lock_write: bad ftx handle" );
     }
 
-    lock_write( &(lk->lock) );
+    rw_enter( &(lk->lock), RW_WRITER );
 
     /* 
      *  Mutex locking unnecessary because of single threaded ftx structure
