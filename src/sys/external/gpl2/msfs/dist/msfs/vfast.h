@@ -44,19 +44,28 @@
  * Macros for the vfast SS_is_running lock.
  */
 extern krwlock_t SSLock;
-#define SS_WRITE_LOCK(ssl) \
-    lock_write( ssl );
 
-#define SS_UNLOCK(ssl) \
-    lock_done( ssl );
+static inline void SS_WRITE_LOCK(krwlock_t *ssl)
+{
+    rw_enter(ssl, RW_WRITER);
+}
+
+static inline void SS_UNLOCK(krwlock_t *ssl)
+{
+    rw_exit(ssl);
+}
 
 /* Lock initialization for SSLock. */
-#define SMARTSTORE_LOCK_INIT(ssl) \
-    rw_init( ssl );
+static inline void SMARTSTORE_LOCK_INIT(krwlock_t *ssl)
+{
+    rw_init(ssl);
+}
 
 /* Lock destruction for SSLock. */
-#define SMARTSTORE_LOCK_DESTROY(ssl) \
-    lock_terminate( ssl );
+static inline void SMARTSTORE_LOCK_DESTROY(krwlock_t *ssl)
+{
+    rw_destroy(ssl);
+}
 
 /* Defaults */
 #define SS_INIT_PCT_MSGQ_MORE_THDS 80 /* % of msg Q filled before more thds */
