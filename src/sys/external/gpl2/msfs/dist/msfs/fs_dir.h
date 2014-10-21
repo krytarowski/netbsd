@@ -354,7 +354,7 @@ static inline int FS_FILE_READ_TO_WRITE_LOCK(struct fsContext *cp)
         if (u.utask->uu_file_state.utask_need_to_lock &&                \
             current_task()->map != kernel_map ) {                       \
                 lock_clear_recursive(&(current_task()->map)->vm_lock);  \
-                lock_write_done(&(current_task()->map)->vm_lock);       \
+                rw_exit(&(current_task()->map)->vm_lock);       \
         }
 
 /*
