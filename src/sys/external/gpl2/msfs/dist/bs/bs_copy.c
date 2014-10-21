@@ -520,7 +520,7 @@ set_block_map (
         if (bfAccess->migPagesPending >= maxMigrateUbcPgs) {
             mutex_enter(&bfAccess->bfIoLock);
             if (bfAccess->migPagesPending >= maxMigrateUbcPgs) {
-                MS_SMP_ASSERT( maxMigrateUbcPgs/2 <= 0x7fff );
+                KASSERT( maxMigrateUbcPgs/2 <= 0x7fff );
                 bfAccess->migWait = maxMigrateUbcPgs/2;
                 cond_wait(&bfAccess->migWait, &bfAccess->bfIoLock);
             }

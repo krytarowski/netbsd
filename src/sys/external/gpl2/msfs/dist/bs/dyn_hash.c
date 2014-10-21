@@ -229,7 +229,7 @@ dyn_lock_bucket (dyn_hashtableT* hashtable,
         size = hashtable->current_buckets;
         DYN_KEY_TO_BUCKET_PTR(hashtable,tmp_key,size,bptr);
         controlling_bptr= bptr->siblingp;
-        MS_SMP_ASSERT(controlling_bptr->siblingp == controlling_bptr);
+        KASSERT(controlling_bptr->siblingp == controlling_bptr);
         while(TRUE)
         {
             ADVSMP_DYNHASH_BUCKETLOCK_LOCK(&controlling_bptr->bucket_lock);
@@ -340,7 +340,7 @@ dyn_hash_insert( void *hashtable,
                               ((dyn_hashtableT *)hashtable)->current_buckets,
                               controlling_bptr);
         controlling_bptr=controlling_bptr->siblingp;
-        MS_SMP_ASSERT(ADVSMP_DYNHASH_BUCKETLOCK_OWNED(&controlling_bptr->bucket_lock));
+        KASSERT(ADVSMP_DYNHASH_BUCKETLOCK_OWNED(&controlling_bptr->bucket_lock));
     }
     if (controlling_bptr->chainp == NULL)
     {
@@ -469,7 +469,7 @@ dyn_hash_remove( void * hashtable,
                               ((dyn_hashtableT *) hashtable)->current_buckets,
                               bptr);
         bptr=bptr->siblingp;
-        MS_SMP_ASSERT(ADVSMP_DYNHASH_BUCKETLOCK_OWNED(&bptr->bucket_lock));
+        KASSERT(ADVSMP_DYNHASH_BUCKETLOCK_OWNED(&bptr->bucket_lock));
     }
     
     next_links = (dyn_hashlinksT *) 
@@ -494,7 +494,7 @@ dyn_hash_remove( void * hashtable,
     }
     bptr->element_count--;
     hash_links->dh_next = hash_links->dh_prev = NULL;
-    MS_SMP_ASSERT((long)bptr->element_count >= 0);
+    KASSERT((long)bptr->element_count >= 0);
 #   ifdef DYN_HASH_DEBUG
         dyn_hash_stats.element_removed++;
 #   endif
@@ -576,8 +576,8 @@ dyn_hashthread()
         hashtable = msg->hashtable;
         table_split_count = msb(hashtable->current_buckets) - 
             hashtable->initial_index_shift - 1;
-        MS_SMP_ASSERT(msg->dh_bucket->split_count <= msg->dh_bucket->split_count);
-        MS_SMP_ASSERT(msg->dh_bucket == msg->dh_bucket->siblingp);
+        KASSERT(msg->dh_bucket->split_count <= msg->dh_bucket->split_count);
+        KASSERT(msg->dh_bucket == msg->dh_bucket->siblingp);
         if (msg->dh_bucket->element_count <= hashtable->max_chain_length)
         { /* Make sure a deletion hasn't brought us below the threshold 
              or a split was already done */
@@ -770,9 +770,9 @@ dyn_split_chain( dyn_hashtableT * hashtable,
         /* The following macro will not dereference siblingp.
          */
         DYN_KEY_TO_BUCKET_PTR(hashtable,key,size,sbptr);
-        MS_SMP_ASSERT(sbptr != bucketp);
-        MS_SMP_ASSERT(sbptr->controlling_bkno == bucket_number);
-        MS_SMP_ASSERT(sbptr->siblingp == bucketp);
+        KASSERT(sbptr != bucketp);
+        KASSERT(sbptr->controlling_bkno == bucket_number);
+        KASSERT(sbptr->siblingp == bucketp);
 
         sbptr->element_count=0;
         sbptr->split_count=split_count;

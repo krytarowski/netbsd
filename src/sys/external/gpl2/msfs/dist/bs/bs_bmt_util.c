@@ -876,7 +876,7 @@ bmtr_scan_mcells(
              * the new volumes's RBMT since the RBMT only
              * maps the BMT and the BMT doesn't span volumes.
              */
-            MS_SMP_ASSERT(!BS_BFTAG_RSVD(tag));
+            KASSERT(!BS_BFTAG_RSVD(tag));
             mdap = (*vdp)->bmtp;
         }
 
@@ -1879,7 +1879,7 @@ bmt_alloc_prim_mcell(
     struct bsMC* mcp;
     rbfPgRefHT pgref;
 
-    MS_SMP_ASSERT(rw_write_held(&vdp->mcell_lk.lock));
+    KASSERT(rw_write_held(&vdp->mcell_lk.lock));
     sts = alloc_mcell (
                        vdp,
                        ftxH,
@@ -2179,7 +2179,7 @@ bmt_alloc_mcell (
 
     vd = vd_htop_if_valid(poolVdIndex, dmnP, TRUE, FALSE);
 
-    MS_SMP_ASSERT(poolType == BMT_NORMAL_MCELL || poolType == RBMT_MCELL);
+    KASSERT(poolType == BMT_NORMAL_MCELL || poolType == RBMT_MCELL);
     if (poolType == BMT_NORMAL_MCELL) {
         sts = FTX_START_META (FTA_BS_BMT_ALLOC_MCELL_V1, &ftx, parentFtx,
                               dmnP, 1);
@@ -2257,7 +2257,7 @@ deferred_free_mcell ( vdT *vd,
     statusT sts;
     ftxHT ftxH;
     allocMcellUndoRecT rdRec;
-    MS_SMP_ASSERT(vd);
+    KASSERT(vd);
 
     sts = FTX_START_META (FTA_BS_BMT_DEFERRED_MCELL_FREE, &ftxH, pftxH,
                           vd->dmnP, 1);
@@ -2675,7 +2675,7 @@ alloc_mcell(
     domainT* dmnP = vd->dmnP;
     int bad_pages_found = 0;
 
-    MS_SMP_ASSERT(rw_lock_held(&vd->mcell_lk.lock));
+    KASSERT(rw_lock_held(&vd->mcell_lk.lock));
 
 start:
 
@@ -3109,7 +3109,7 @@ alloc_rbmt_mcell (
     rbfPgRefHT pgPin;
     statusT sts;
 
-    MS_SMP_ASSERT(rw_lock_held(&vd->rbmt_mcell_lk.lock));
+    KASSERT(rw_lock_held(&vd->rbmt_mcell_lk.lock));
 
     /*
      * Pin current RBMT page
@@ -3229,7 +3229,7 @@ alloc_page0_mcell (
     rbfPgRefHT pgPin;
     statusT sts;
 
-    MS_SMP_ASSERT(rw_lock_held(&vd->rbmt_mcell_lk.lock));
+    KASSERT(rw_lock_held(&vd->rbmt_mcell_lk.lock));
     /*
      * Pinning page 0 serves a couple of purposes.  It gets us the bmt
      * address and it gets us a reference to the new mcell's page.
@@ -4302,7 +4302,7 @@ bmt_free_mcell(
     bsMRT *rec;
     domainT* dmnP = vdp->dmnP;
 
-    MS_SMP_ASSERT(rw_lock_held(&vdp->mcell_lk.lock));
+    KASSERT(rw_lock_held(&vdp->mcell_lk.lock));
 
     if (mcid.page != bmtpgp->pageId) {
         ADVFS_SAD0( "bmt_free_mcell: page id does not agree with mcid" );
@@ -4663,9 +4663,9 @@ check_xtnt_in_range(
     int retryFlg = 0;
     uint32T pg1, pg2;
 
-    MS_SMP_ASSERT(cRangeBeginBlk < vdp->vdSize); 
-    MS_SMP_ASSERT(cRangeEndBlk <= vdp->vdSize); 
-    MS_SMP_ASSERT(cRangeEndBlk > cRangeBeginBlk);
+    KASSERT(cRangeBeginBlk < vdp->vdSize); 
+    KASSERT(cRangeEndBlk <= vdp->vdSize); 
+    KASSERT(cRangeEndBlk > cRangeBeginBlk);
 
     /* mcell contents might have changed while reading them. 
      * check the mcell again.
@@ -4801,10 +4801,10 @@ check_xtnt_in_range(
             migEndBlk = MIN(cRangeEndBlk,extentEndBlk);
 
 	    /* Use local copy rather than reading disk */
-	    MS_SMP_ASSERT(migStartBlk >= extentBeginBlk); 
+	    KASSERT(migStartBlk >= extentBeginBlk); 
 	    xmPageOffset = pg1 + ( migStartBlk - extentBeginBlk ) 
 	                                    / ADVFS_PGSZ_IN_BLKS; 
-	    MS_SMP_ASSERT(migEndBlk > migStartBlk); 
+	    KASSERT(migEndBlk > migStartBlk); 
 	    xmPageCnt = ( migEndBlk - migStartBlk ) / ADVFS_PGSZ_IN_BLKS;
 
 

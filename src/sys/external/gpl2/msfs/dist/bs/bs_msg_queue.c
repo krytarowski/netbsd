@@ -362,7 +362,7 @@ msgq_destroy(
     }
     if ( (msgQ->freeMsgs != msgQ->maxMsgs) ){
         /* the list is corrupt!!! */
-        MS_SMP_ASSERT( msgQ->freeMsgs == msgQ->maxMsgs );
+        KASSERT( msgQ->freeMsgs == msgQ->maxMsgs );
         mutex_exit( &msgQ->mutex );
         return 4;
     }
@@ -446,7 +446,7 @@ ulmq_alloc_msg(
      * Get the next free buffer 
      */
     newMsg = msgQ->freeMsgLst;
-    MS_SMP_ASSERT( newMsg->msgSize == msgQ->maxMsgSize );
+    KASSERT( newMsg->msgSize == msgQ->maxMsgSize );
 
     msgQ->freeMsgLst = msgQ->freeMsgLst->nextMsg;
     msgQ->freeMsgs--;

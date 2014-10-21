@@ -525,7 +525,7 @@ msfs_pl_get_locks(
              * original's bfap not the clone's */
 
             orig_bfap=bfap->origAccp;
-            MS_SMP_ASSERT(orig_bfap);
+            KASSERT(orig_bfap);
 
             if (clu_is_ready()) {
                 /* Since we are going to use the original access structure
@@ -1384,7 +1384,7 @@ msfs_pl_set_entry(
       /* get name portion */
       entry_size = MSFS_PL_ENTRY_SIZE(hdr_rec->namelen, hdr_rec->valuelen);
       valuelen = ALLIGN(hdr_rec->valuelen);
-      MS_SMP_ASSERT(valuelen <= MSFS_PROPLIST_VALUE_MAX);
+      KASSERT(valuelen <= MSFS_PROPLIST_VALUE_MAX);
       large = (entry_size > BSR_PL_MAX_SMALL);
       page  = (entry_size > BSR_PL_MAX_LARGE);
 
@@ -2584,7 +2584,7 @@ msfs_pl_get_entry(
         goto out;
   }
 
-  MS_SMP_ASSERT(REC_TO_MREC(hdr_rec)->type == BSR_PROPLIST_HEAD);
+  KASSERT(REC_TO_MREC(hdr_rec)->type == BSR_PROPLIST_HEAD);
   if (FLAGS_READ(rdflags,hdr_rec->flags) & BSR_PL_DELETED) {
     goto out;
   }
@@ -2734,7 +2734,7 @@ msfs_pl_get_name(
       return sts;
   }
 
-  MS_SMP_ASSERT(REC_TO_MREC(hdr_rec)->type == BSR_PROPLIST_HEAD);
+  KASSERT(REC_TO_MREC(hdr_rec)->type == BSR_PROPLIST_HEAD);
   resid = namelen = ALLIGN(hdr_rec->namelen);
   xfer = MIN(resid, cell_size - BSR_PROPLIST_HEAD_SIZE);
   bcopy(hdr_rec->buffer, buffer, xfer);
@@ -2749,7 +2749,7 @@ msfs_pl_get_name(
     if (sts != EOK) break;
     dat_rec = msfs_pl_cur_to_pnt(domain, hdr, &sts);
     if (sts != EOK) break;
-    MS_SMP_ASSERT(REC_TO_MREC(dat_rec)->type == BSR_PROPLIST_DATA);
+    KASSERT(REC_TO_MREC(dat_rec)->type == BSR_PROPLIST_DATA);
 
     xfer = MIN(resid, cell_size-NUM_SEG_SIZE);
     bcopy(
@@ -2805,7 +2805,7 @@ msfs_pl_get_data(
   /*
    * get portion in header record
    */
-  MS_SMP_ASSERT(!RECCUR_ISNIL(*hdr));
+  KASSERT(!RECCUR_ISNIL(*hdr));
   hdr_rec = msfs_pl_cur_to_pnt(domain, hdr, &sts);
   if (sts != EOK) {
       return sts;
@@ -2867,7 +2867,7 @@ msfs_pl_get_data(
       if (error != EOK) {
           return error;
       }
-      MS_SMP_ASSERT(!RECCUR_ISNIL(*hdr));
+      KASSERT(!RECCUR_ISNIL(*hdr));
     }
     dat_rec = msfs_pl_cur_to_pnt(domain, hdr, &sts);
     if (sts != EOK) {
@@ -3641,7 +3641,7 @@ msfs_pl_set_entry_v3(
       /* get name portion */
       entry_size = MSFS_PL_ENTRY_SIZE(hdr_rec->namelen, hdr_rec->valuelen);
       valuelen = ALLIGN(hdr_rec->valuelen);
-      MS_SMP_ASSERT(valuelen <= MSFS_PROPLIST_VALUE_MAX);
+      KASSERT(valuelen <= MSFS_PROPLIST_VALUE_MAX);
       large = (entry_size > BSR_PL_MAX_SMALL);
       page  = (entry_size > BSR_PL_MAX_LARGE);
       cell_size = (large ? 
@@ -4487,7 +4487,7 @@ msfs_pl_get_entry_v3(
       goto out;
   }
 
-  MS_SMP_ASSERT(REC_TO_MREC(hdr_rec)->type == BSR_PROPLIST_HEAD);
+  KASSERT(REC_TO_MREC(hdr_rec)->type == BSR_PROPLIST_HEAD);
   if (FLAGS_READ(rdflags,hdr_rec->flags) & BSR_PL_DELETED) {
     goto out;
   }
@@ -4630,7 +4630,7 @@ msfs_pl_get_name_v3(
   if (sts != EOK) {
       goto end;
   }
-  MS_SMP_ASSERT(REC_TO_MREC(hdr_rec)->type == BSR_PROPLIST_HEAD);
+  KASSERT(REC_TO_MREC(hdr_rec)->type == BSR_PROPLIST_HEAD);
   resid = namelen = ALLIGN(hdr_rec->namelen);
   xfer = MIN(resid, cell_size - BSR_PROPLIST_HEAD_SIZE_V3);
   bcopy(hdr_rec->buffer, buffer, xfer);
@@ -4648,7 +4648,7 @@ msfs_pl_get_name_v3(
     if (sts != EOK) 
         goto end;
 
-    MS_SMP_ASSERT(REC_TO_MREC(dat_rec)->type == BSR_PROPLIST_DATA);
+    KASSERT(REC_TO_MREC(dat_rec)->type == BSR_PROPLIST_DATA);
     xfer = MIN(resid, cell_size);
     bcopy(
 	  dat_rec->buffer, 
@@ -4699,7 +4699,7 @@ msfs_pl_get_data_v3(
   /*
    * get portion in header record
    */
-  MS_SMP_ASSERT(!RECCUR_ISNIL(*hdr));
+  KASSERT(!RECCUR_ISNIL(*hdr));
   hdr_rec = msfs_pl_cur_to_pnt(domain, hdr, &sts);
   if (sts != EOK) {
     return sts;
@@ -4762,7 +4762,7 @@ msfs_pl_get_data_v3(
         return sts;
       }
 
-      MS_SMP_ASSERT(!RECCUR_ISNIL(*hdr));
+      KASSERT(!RECCUR_ISNIL(*hdr));
     }
     dat_rec = msfs_pl_cur_to_pnt(domain, hdr, &sts);
     if (sts != EOK) {

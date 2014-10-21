@@ -1143,9 +1143,9 @@ pre_reset_block_map_special( bfAccessT *bfap )
     struct vnode *nullvp = NULL;
     uint32T numPgs;
 
-    MS_SMP_ASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
+    KASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
     cloneSetp = bfap->bfSetp->cloneSetp;
-    MS_SMP_ASSERT(cloneSetp->bfsHoldCnt > 0);  /* this set is held */
+    KASSERT(cloneSetp->bfsHoldCnt > 0);  /* this set is held */
 
     /* This next block identifies migration of a normal file
      * who has a clone. It then calls reset_block_map_special
@@ -1205,7 +1205,7 @@ pre_reset_block_map_special( bfAccessT *bfap )
          * and therefore subsequent readers of those pages
          * may hit the panic
          */
-         MS_SMP_ASSERT(sts == E_OUT_OF_SYNC_CLONE);
+         KASSERT(sts == E_OUT_OF_SYNC_CLONE);
          bs_invalidate_pages(cloneap,0, 0, 0);
          sts = EOK;
     }
@@ -1377,7 +1377,7 @@ get_copy_storage:
         if (holeRange.pageCnt) {
             startPg = MIN(pageRange[0].pageOffset, holeRange.pageOffset);
         } else {
-            MS_SMP_ASSERT(srcPageOffset == pageRange[0].pageOffset);
+            KASSERT(srcPageOffset == pageRange[0].pageOffset);
         }
         
         sts = alloc_copy_stg (
@@ -1439,7 +1439,7 @@ get_copy_storage:
         MIGTRUNC_LOCK_WRITE( &(bfap->xtnts.migTruncLk) )
         unlkmigTrunc = 1;
         if (savedCowPgCount != bfap->cowPgCount) {
-            MS_SMP_ASSERT(bfap->cowPgCount > savedCowPgCount);
+            KASSERT(bfap->cowPgCount > savedCowPgCount);
             MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) )
             unlkmigTrunc = 0;
             startedFtxFlag = 0;
@@ -1638,7 +1638,7 @@ HANDLE_EXCEPTION:
     }
 
     if ( truncXferFlg ) {
-        MS_SMP_ASSERT( bfap->origAccp != NULL );
+        KASSERT( bfap->origAccp != NULL );
         TRUNC_XFER_UNLOCK(&bfap->origAccp->trunc_xfer_lk);
     }
 
@@ -1683,7 +1683,7 @@ HANDLE_EXCEPTION:
     /* We need to remove and free the actRange struct */
     if ( arp ) {
         mutex_enter(&bfap->actRangeLock);
-        MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
+        KASSERT( arp->arIosOutstanding == 0 );
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
         mutex_exit(&bfap->actRangeLock);
         ms_free(arp);
@@ -1942,7 +1942,7 @@ get_copy_storage:
         MIGTRUNC_LOCK_WRITE( &(bfap->xtnts.migTruncLk) )
         unlkmigTrunc = 1;
         if (savedCowPgCount != bfap->cowPgCount) {
-            MS_SMP_ASSERT(bfap->cowPgCount > savedCowPgCount);
+            KASSERT(bfap->cowPgCount > savedCowPgCount);
             MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) )
             unlkmigTrunc = 0;
             ftx_fail(ftxH);
@@ -2193,7 +2193,7 @@ HANDLE_EXCEPTION:
         MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) )
     }
     if ( truncXferFlg ) {
-        MS_SMP_ASSERT( bfap->origAccp != NULL );
+        KASSERT( bfap->origAccp != NULL );
         TRUNC_XFER_UNLOCK(&bfap->origAccp->trunc_xfer_lk);
     }
 
@@ -2227,7 +2227,7 @@ HANDLE_EXCEPTION:
      /* We need to remove and free the actRange struct */
     if ( arp ) {
         mutex_enter(&bfap->actRangeLock);
-        MS_SMP_ASSERT( arp->arIosOutstanding == 0 );
+        KASSERT( arp->arIosOutstanding == 0 );
         remove_actRange_from_list(bfap, arp);   /* also wakes waiters */
         mutex_exit(&bfap->actRangeLock);
         ms_free(arp);
@@ -2326,7 +2326,7 @@ get_xm_page_range_info (
 
     /* Get the extent mapping the beginning of the range */
 
-    MS_SMP_ASSERT(xtntMap != NULL);
+    KASSERT(xtntMap != NULL);
     imm_get_xtnt_desc (xmPageOffset, xtntMap, 0, &xtntDescId, &xtntDesc);
     if (xtntDesc.pageCnt == 0) {
         return E_PAGE_NOT_MAPPED;
@@ -2465,7 +2465,7 @@ get_xm_page_range_info (
         endPageOffset = endXtntDesc.pageOffset - 1;
     }
 
-    MS_SMP_ASSERT(xtntDesc.pageCnt > 0);
+    KASSERT(xtntDesc.pageCnt > 0);
 
     cnt = 0;
     maxCnt = 1;
@@ -2551,7 +2551,7 @@ get_xm_page_range_info (
             }
 
             if (pageRange[cnt].pageType != NOSTG) {
-                MS_SMP_ASSERT(pageRange[cnt].pageType == STG);
+                KASSERT(pageRange[cnt].pageType == STG);
                 /* This is a range in progress. Terminate it
                  * and start a new one.
                  */
@@ -2607,7 +2607,7 @@ get_xm_page_range_info (
 
                 pageRange[cnt].pageType = STG;
             } else {
-                MS_SMP_ASSERT(pageRange[cnt].pageType == STG);
+                KASSERT(pageRange[cnt].pageType == STG);
                 if ( last_extent ) {
                     pageRange[cnt].pageCnt += 
                         ((endPageOffset - xtntDesc.pageOffset) + 1);
@@ -2623,7 +2623,7 @@ get_xm_page_range_info (
         
         xtntEndPageOffset += xtntDesc.pageCnt;
         imm_get_next_xtnt_desc (xtntMap, &xtntDescId, &xtntDesc);
-        MS_SMP_ASSERT(xtntDesc.volIndex != bsNilVdIndex);
+        KASSERT(xtntDesc.volIndex != bsNilVdIndex);
     }
     
     *xmPageRange = pageRange;
@@ -3363,11 +3363,11 @@ move_metadata (
         if ((localVdIndex != xtntMapp->hdrVdIndex) ||
             (newMcellId.page != xtntMapp->hdrMcellId.page) ||
             (newMcellId.cell != xtntMapp->hdrMcellId.cell)) {
-            MS_SMP_ASSERT(xtntMapp->hdrVdIndex == 
+            KASSERT(xtntMapp->hdrVdIndex == 
                           xtntMapp->subXtntMap[0].vdIndex);
-            MS_SMP_ASSERT(xtntMapp->hdrMcellId.page == 
+            KASSERT(xtntMapp->hdrMcellId.page == 
                           xtntMapp->subXtntMap[0].mcellId.page);
-            MS_SMP_ASSERT(xtntMapp->hdrMcellId.cell == 
+            KASSERT(xtntMapp->hdrMcellId.cell == 
                           xtntMapp->subXtntMap[0].mcellId.cell);
             xtntMapp->hdrVdIndex = 
             xtntMapp->subXtntMap[0].vdIndex = localVdIndex;
@@ -3383,11 +3383,11 @@ move_metadata (
             if ((cloneBfap != NULL) && (delFlag == 0)) {
                 xtntMapp = cloneBfap->xtnts.xtntMap;
                 XTNMAP_LOCK_WRITE(&(cloneBfap->xtntMap_lk))
-                MS_SMP_ASSERT(xtntMapp->hdrVdIndex == 
+                KASSERT(xtntMapp->hdrVdIndex == 
                               xtntMapp->subXtntMap[0].vdIndex);
-                MS_SMP_ASSERT(xtntMapp->hdrMcellId.page == 
+                KASSERT(xtntMapp->hdrMcellId.page == 
                               xtntMapp->subXtntMap[0].mcellId.page);
-                MS_SMP_ASSERT(xtntMapp->hdrMcellId.cell == 
+                KASSERT(xtntMapp->hdrMcellId.cell == 
                               xtntMapp->subXtntMap[0].mcellId.cell);
                 xtntMapp->hdrVdIndex = 
                 xtntMapp->subXtntMap[0].vdIndex = localVdIndex;
@@ -3633,7 +3633,7 @@ alloc_copy_stg (
     bsInMemXtntMapT *xtntMap = NULL;
     vdT *vdp = NULL;
 
-    MS_SMP_ASSERT(startPage <= xmPageRange[0].pageOffset);
+    KASSERT(startPage <= xmPageRange[0].pageOffset);
 
     sts = imm_create_xtnt_map( bfap->bfPageSz,
                                bfap->dmnP,
@@ -3670,7 +3670,7 @@ alloc_copy_stg (
                 fileClust = (xmPageRange[i].pageCnt * bfap->bfPageSz) /
                                    BS_CLUSTSIZE;
             } else {
-                MS_SMP_ASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
+                KASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
                 fileClust = (xmPageRange[i].pageCnt * bfap->bfPageSz) /
                                    BS_CLUSTSIZE_V3;
             }
@@ -4005,7 +4005,7 @@ mig_get_stripe_bfpage_list (
         xtntPg = pXtntp->ssPackPageOffset;
         maxCnt = 1;
         pageRange = (pageRangeT *)ms_malloc( sizeof(pageRangeT) * maxCnt );
-        MS_SMP_ASSERT(pageRange != NULL);  /* ms_malloc waits */
+        KASSERT(pageRange != NULL);  /* ms_malloc waits */
 
         bfPage = XMPAGE_TO_BFPAGE ( mapIndex, xtntPg, segCnt, segSz );
 
@@ -4028,7 +4028,7 @@ mig_get_stripe_bfpage_list (
                 cnt++;
                 if ( cnt == maxCnt ) {
                     sts = extend_page_range_list( &maxCnt, &pageRange );
-                    MS_SMP_ASSERT(sts == EOK);  /* ms_malloc waits */
+                    KASSERT(sts == EOK);  /* ms_malloc waits */
                 }
                 pageRange[cnt].pageOffset = bfPage;
                 pageRange[cnt].pageCnt = 1;
@@ -4110,7 +4110,7 @@ mig_pack_vd_range (
     int delFlag;
     int fsetMounted;
 
-    MS_SMP_ASSERT(vdp);
+    KASSERT(vdp);
     *newcRangeBeginBlk = 0;
     nextcRangeBeginBlk = dstBlkOffset = cRangeBeginBlk;
 
@@ -4209,11 +4209,11 @@ mig_pack_vd_range (
                 if (sts != EOK) {
                     goto _cleanup;
                 }
-                MS_SMP_ASSERT(pXtntp->ssPackStartXtBlock >= cRangeBeginBlk);
-                MS_SMP_ASSERT(pXtntp->ssPackEndXtBlock <= cRangeEndBlk);
-                MS_SMP_ASSERT(pXtntp->ssPackStartXtBlock <= 
+                KASSERT(pXtntp->ssPackStartXtBlock >= cRangeBeginBlk);
+                KASSERT(pXtntp->ssPackEndXtBlock <= cRangeEndBlk);
+                KASSERT(pXtntp->ssPackStartXtBlock <= 
                               pXtntp->ssPackEndXtBlock);
-                MS_SMP_ASSERT(pXtntp->ssPackPageCnt <=
+                KASSERT(pXtntp->ssPackPageCnt <=
                        (cRangeEndBlk - cRangeBeginBlk) / ADVFS_PGSZ_IN_BLKS);
                 switch (inwayBfap->xtnts.type) {
                   case BSXMT_APPEND:

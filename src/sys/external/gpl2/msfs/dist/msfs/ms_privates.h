@@ -82,7 +82,7 @@ void TRUNC_XFER_UNLOCK( struct ftxLk *sLk );
 #ifdef _KERNEL
 
 #include "../msfs/ms_assert.h"
-#define ASSERT_NO_LOCKS()     MS_SMP_ASSERT(current_thread()->lock_count == 0)
+#define ASSERT_NO_LOCKS()     KASSERT(current_thread()->lock_count == 0)
 
 #endif
 
