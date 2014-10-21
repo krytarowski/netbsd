@@ -6020,7 +6020,6 @@ bs_domain_init(
                                         DOMAIN_HASH_ELEMENTS_TO_BUCKETS,
                                         DOMAIN_HASH_USECS_BETWEEN_SPLITS,
                                         offsetof(domainT, dmnHashlinks),
-                                        ADVDomainHashChainLock_lockinfo,
                                         NULL);
 
     if (DomainHashTbl == NULL)
