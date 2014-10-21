@@ -52,7 +52,7 @@ extern krwlock_t SSLock;
 
 /* Lock initialization for SSLock. */
 #define SMARTSTORE_LOCK_INIT(ssl) \
-    lock_setup( ssl, ADV_SSLock_lk_info, TRUE );
+    rw_init( ssl );
 
 /* Lock destruction for SSLock. */
 #define SMARTSTORE_LOCK_DESTROY(ssl) \

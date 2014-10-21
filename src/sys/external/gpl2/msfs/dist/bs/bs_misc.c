@@ -385,7 +385,7 @@ extern kmutex_t LockMgrMutex;
     bs_lock_mgr_init();
 #endif
 
-    lock_setup( &InitLock, ADVInitLock_info, TRUE );
+    rw_init( &InitLock );
     event_init( &MsfsDbgEvent );
 }
 

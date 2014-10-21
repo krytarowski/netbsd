@@ -118,7 +118,7 @@ getosfbuf(void)
     bzero((char *)bp, sizeof(*bp));
     event_init( &bp->b_iocomplete );
 
-    /* We do not lock_setup(b_lock), this is not used in our paths.
+    /* We do not rw_init(b_lock), this is not used in our paths.
      * A driver could check state is not valid and do the init.
      */
     return( bp );

@@ -1082,7 +1082,7 @@ advfs_mountfs(struct mount *mp)
 
     mutex_init(&dn->filesetMutex, MUTEX_DEFAULT, IPL_NONE);
     for (qip = &dn->qi[0]; qip < &dn->qi[MAXQUOTAS]; qip++) {
-        lock_setup( &(qip->qiLock), ADVquotaInfoT_qiLock, TRUE );
+        rw_init( &(qip->qiLock) );
     }
     locks_init = TRUE;
 
@@ -2877,7 +2877,7 @@ msfs_init(void)
 {
     void bs_kernel_pre_init();
 
-    lock_setup(&FilesetLock, ADVFilesetLock_lockinfo, TRUE);
+    rw_init(&FilesetLock);
 
     bs_kernel_pre_init();
     quota_init();
