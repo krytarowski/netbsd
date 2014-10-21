@@ -1428,7 +1428,7 @@ cleanup:
 
     	if (locks_init) {
         	for (qip = &dn->qi[0]; qip < &dn->qi[MAXQUOTAS]; qip++) {
-            		lock_terminate( &qip->qiLock );
+            		rw_destroy( &qip->qiLock );
         	}
         	mutex_destroy(&dn->filesetMutex);
     	}
@@ -1990,7 +1990,7 @@ msfs_unmount(
      * Destroy the locks and mutexes in the fileSetNode structure.
      */
     for (qip = &fsnp->qi[0]; qip < &fsnp->qi[MAXQUOTAS]; qip++) {
-        lock_terminate( &qip->qiLock );
+        rw_destroy( &qip->qiLock );
     }
     mutex_destroy( &fsnp->filesetMutex );
 

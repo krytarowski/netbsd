@@ -1732,7 +1732,7 @@ cleanup:
         }
 
         for (qip = &fsnp->qi[0]; qip < &fsnp->qi[MAXQUOTAS]; qip++) {
-            lock_terminate( &qip->qiLock );
+            rw_destroy( &qip->qiLock );
         }
         mutex_destroy(&fsnp->filesetMutex);
 
