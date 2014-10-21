@@ -118,7 +118,7 @@ bs_lock_mgr_init( void )
     /*
      * Initialize the Lock Mgr's mutex.
      */
-    simple_lock_setup( &LockMgrMutex.mutex, msfs_lockmgrmutex_lockinfo );
+    mutex_init( &LockMgrMutex.mutex, MUTEX_DEFAULT, IPL_NONE );
 
     AdvfsLockStats = (advfsLockStatsT *)ms_malloc( sizeof( advfsLockStatsT ) );
     if (AdvfsLockStats != NULL) {
