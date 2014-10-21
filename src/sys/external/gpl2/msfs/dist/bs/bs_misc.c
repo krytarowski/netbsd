@@ -97,7 +97,7 @@ krwlock_t InitLock;
 event_t MsfsDbgEvent;
 
 #define INITLOCK_LOCK_WRITE(Lk) \
-        lock_write( Lk );
+        rw_enter( Lk, RW_WRITER );
 
 #define INITLOCK_UNLOCK(Lk) \
         rw_exit( Lk );
