@@ -372,7 +372,7 @@ ftx_fail_2(
            unsigned int atomicRPass /* recovery pass */
            );
 
-static void
+void
 ftx_unlock(
            void *lk               /* in */
            );
