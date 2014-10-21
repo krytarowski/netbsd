@@ -336,7 +336,7 @@ static inline int FS_FILE_READ_TO_WRITE_LOCK(struct fsContext *cp)
 #define VM_MAP_LOCK_WRITE_RECURSIVE()                                   \
         if (u.utask->uu_file_state.utask_need_to_lock &&                \
             current_task()->map != kernel_map ) {                       \
-                lock_write(&(current_task()->map)->vm_lock);            \
+                rw_enter(&(current_task()->map)->vm_lock, RW_WRITER);            \
                 lock_set_recursive(&(current_task()->map)->vm_lock);    \
         }
 

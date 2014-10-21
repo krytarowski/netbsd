@@ -86,7 +86,7 @@
 
 static inline void DELLIST_LOCK_WRITE(krwlock_t *lk)
 {
-    lock_write( lk.lock );
+    rw_enter( lk.lock, RW_WRITER );
 }
 
 static inline void DELLIST_UNLOCK(krwlock_t *lk)

@@ -2589,7 +2589,7 @@ read_n_chk_last_rbmt_pg( vdT *vdp )
         return;
     }
 
-    lock_write( &vdp->rbmt_mcell_lk.lock );
+    rw_enter( &vdp->rbmt_mcell_lk.lock, RW_WRITER );
 
     nextfreeMCId = bmtpgp->nextfreeMCId;
 
