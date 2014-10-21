@@ -2527,7 +2527,7 @@ vd_extend(struct vd *vdp)
 
     if ( otherLksLocked ) {
         XTNMAP_UNLOCK( &vdp->bmtp->xtntMap_lk );
-        lock_done( &vdp->rbmt_mcell_lk.lock );
+        rw_exit( &vdp->rbmt_mcell_lk.lock );
     }
     STGMAP_UNLOCK( &vdp->stgMap_lk );
     XTNMAP_UNLOCK( &sbmBfap->xtntMap_lk );
@@ -2553,7 +2553,7 @@ error:
 
     if ( otherLksLocked ) {
         XTNMAP_UNLOCK( &vdp->bmtp->xtntMap_lk );
-        lock_done( &vdp->rbmt_mcell_lk.lock );
+        rw_exit( &vdp->rbmt_mcell_lk.lock );
     }
 
     if ( stgMapLocked ) {
