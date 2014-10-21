@@ -41,7 +41,7 @@
 #include "../msfs/bs_vd.h"
 
 #ifdef ADVFS_SMP_ASSERT
-/* This var allows MS_SMP_ASSERT() to be disabled on the fly; default is ON */
+/* This var allows KASSERT() to be disabled on the fly; default is ON */
 unsigned int AdvfsEnableAsserts = 1;
 
 /* 
