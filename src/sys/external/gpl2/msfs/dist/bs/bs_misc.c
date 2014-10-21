@@ -374,7 +374,7 @@ extern kmutex_t LockMgrMutex;
     /*
      * Initialize the Lock Mgr's mutex.
      */
-    simple_lock_setup( &LockMgrMutex.mutex, msfs_lockmgrmutex_lockinfo );
+    mutex_init( &LockMgrMutex.mutex, MUTEX_DEFAULT, IPL_NONE );
 #endif
 
     MsfsSyscallp = msfs_real_syscall;
