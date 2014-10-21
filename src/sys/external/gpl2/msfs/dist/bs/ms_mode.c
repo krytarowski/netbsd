@@ -87,9 +87,9 @@ _ms_malloc(
     struct msHdr *hdr;
     long amt = size + sizeof( struct msHdr );
     if (flag & M_WAITOK) {
-        MS_SMP_ASSERT(!SLOCK_COUNT);
+        KASSERT(!SLOCK_COUNT);
     }
-    MS_SMP_ASSERT(size != 0);
+    KASSERT(size != 0);
 
     if (flag & (M_INSIST | M_PREFER)) {
         RAD_MALLOC(hdr,struct msHdr *,amt,M_ADVFS,flag, rad_id);
@@ -132,8 +132,8 @@ _ms_free(
     
     hdr = (struct msHdr *)((char *)ptr - sizeof( struct msHdr ));
 
-    MS_SMP_ASSERT( hdr->magic == ALLOC_MAGIC );
-	MS_SMP_ASSERT( hdr->size != 0xdeadbeef );  /* already freed? */
+    KASSERT( hdr->magic == ALLOC_MAGIC );
+	KASSERT( hdr->size != 0xdeadbeef );  /* already freed? */
 
     if ( TrFlags & trMem )
          mem_trace( "free  ", hdr->size, ln, fn );

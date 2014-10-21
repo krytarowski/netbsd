@@ -1203,7 +1203,7 @@ found_vd:
                         if (vdp->stgCluster == BS_CLUSTSIZE) {
                             vdp->allocClust += desiredBlks / BS_CLUSTSIZE;
                         } else {
-                            MS_SMP_ASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
+                            KASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
                             vdp->allocClust += desiredBlks / BS_CLUSTSIZE_V3;
                         }
                     }
@@ -1287,7 +1287,7 @@ found_vd:
             if (vdp->stgCluster == BS_CLUSTSIZE) {
                 vdp->allocClust += desiredBlks / BS_CLUSTSIZE;
             } else {
-                MS_SMP_ASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
+                KASSERT(vdp->stgCluster == BS_CLUSTSIZE_V3);
                 vdp->allocClust += desiredBlks / BS_CLUSTSIZE_V3;
             }
         }

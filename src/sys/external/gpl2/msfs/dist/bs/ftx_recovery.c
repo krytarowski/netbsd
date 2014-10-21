@@ -103,7 +103,7 @@ ftx_metameta_rec_redo(
     }
 
     rbmtidx = ptag % BFM_RSVD_TAGS;
-    MS_SMP_ASSERT(rbmtidx == BFM_RBMT );
+    KASSERT(rbmtidx == BFM_RBMT );
 
     vdi = ptag / BFM_RSVD_TAGS;
     /* During recovery we don't need to worry about the vdp being removed,
@@ -456,7 +456,7 @@ ftx_bfdmn_recovery(
 
     if (clu_is_ready()) {
 
-        MS_SMP_ASSERT(dmnP->xidRecovery.head == NULL);
+        KASSERT(dmnP->xidRecovery.head == NULL);
 
         /* 
          * Read the inactive log for CFS xid status
@@ -938,7 +938,7 @@ ftx_recovery_pass(
             /* Allocate an ftx struct; no limit check in recovery.
              * FtxMutex synchronizes updates to FtxDynAlloc counters. */
             ftxp = newftx();
-            MS_SMP_ASSERT( ftxp != NULL ); /* ms_malloc waits, it never fails */
+            KASSERT( ftxp != NULL ); /* ms_malloc waits, it never fails */
 
             ftxTDp->tablep[ftxSlot].ftxp = ftxp;
             mutex_enter(&FtxMutex);
@@ -993,7 +993,7 @@ ftx_recovery_pass(
 
             /* ???? The manipulation of dlrp here is scary ???*/
 
-            MS_SMP_ASSERT(sizeof(ftxDoneLRT) <= (totwordcnt<<2));
+            KASSERT(sizeof(ftxDoneLRT) <= (totwordcnt<<2));
 
             ftx_set_continuation( ftxH, dlrp->contOrUndoRBcnt,
                                  (char*)dlrp +
@@ -1007,7 +1007,7 @@ ftx_recovery_pass(
 
         /* ???? The manipulation of dlrp here is scary ???*/
 
-        MS_SMP_ASSERT((lrrtdnloff) <= totwordcnt);
+        KASSERT((lrrtdnloff) <= totwordcnt);
 
         /* 
          * Buffer all rootdone records on the first pass
@@ -1061,7 +1061,7 @@ ftx_recovery_pass(
 
             /* ???? The manipulation of dlrp here is scary ???*/
 
-            MS_SMP_ASSERT((redoloff) <= totwordcnt);
+            KASSERT((redoloff) <= totwordcnt);
 
             redoloff += sizeof(ftxRecRedoT)/4;
             for ( i = 0; i < pgredop->pgdesc.numXtnts; i++ ) {
@@ -1084,7 +1084,7 @@ ftx_recovery_pass(
                  * with the correct pass #
                  */
                 if ( dlrp->atomicRPass == META_META_PASS ) {
-                    MS_SMP_ASSERT( BS_BFTAG_RSVD(pgredop->pgdesc.tag)  &&
+                    KASSERT( BS_BFTAG_RSVD(pgredop->pgdesc.tag)  &&
                                    BS_BFTAG_RBMT(pgredop->pgdesc.tag) );
                     sts = ftx_metameta_rec_redo( dmnP, pgredop );
                     if ( sts != EOK ) {
@@ -1130,7 +1130,7 @@ ftx_recovery_pass(
 
             /* ???? The manipulation of dlrp here is scary ???*/
 
-            MS_SMP_ASSERT((lrrtdnloff + rdwords) <= totwordcnt);
+            KASSERT((lrrtdnloff + rdwords) <= totwordcnt);
 
             if ( (dlrp->agentId > FTX_MAX_AGENTS) ||
                 !(opxp = FtxAgents[dlrp->agentId].redoOpX) )
@@ -1416,9 +1416,9 @@ num_of_log_recs(
     int nrecs = 9999;
     int endoflog = 0;
     
-    MS_SMP_ASSERT(dmnP->ftxLogP != NULL);
+    KASSERT(dmnP->ftxLogP != NULL);
     sts = lgr_read_open( dmnP->ftxLogP, &logrh );
-    MS_SMP_ASSERT(sts == EOK);
+    KASSERT(sts == EOK);
 
     sts = lgr_get_last_rec( dmnP->ftxLogP, &lastlogaddr );
     if ( sts == E_LOG_EMPTY ) {
