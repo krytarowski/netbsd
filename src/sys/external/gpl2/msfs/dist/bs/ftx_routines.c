@@ -580,7 +580,7 @@ _ftx_start_i(
                 if ( trimwait ) {
                     cond_broadcast( &ftxTDp->slotCv );
                 } else {
-                    cond_signal( &ftxTDp->slotCv );
+                    cv_signal( &ftxTDp->slotCv );
                 }
             }
         }
@@ -3169,7 +3169,7 @@ ftx_free(
         if (AdvfsLockStats) {
             AdvfsLockStats->ftxSlotSignalFree++;
         }
-        cond_signal( &ftxTDp->slotCv );
+        cv_signal( &ftxTDp->slotCv );
     }
 
     /* Now wake up anyone waiting for an exclusive transaction */
@@ -3178,7 +3178,7 @@ ftx_free(
         if (AdvfsLockStats) {
             AdvfsLockStats->ftxExcSignal++;
         }
-        cond_signal( &ftxTDp->excCv );
+        cv_signal( &ftxTDp->excCv );
     }
 
 }
@@ -3221,7 +3221,7 @@ ftx_free_2(
      */
     if ( FtxDynAlloc.waiters &&
          FtxDynAlloc.currAllocated < FtxDynAlloc.maxAllowed ) {
-        cond_signal( &FtxDynAlloc.res );
+        cv_signal( &FtxDynAlloc.res );
     }
 }
 
@@ -3615,7 +3615,7 @@ checklogtrim:
             if (AdvfsLockStats) {
                 AdvfsLockStats->ftxExcSignal++;
             }
-            cond_signal( &ftxTDp->excCv );
+            cv_signal( &ftxTDp->excCv );
         }
 
         /*

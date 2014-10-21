@@ -214,7 +214,7 @@ _lk_signal(
                 AdvfsLockStats->usageStats[ lkHdr->lkUsage ].signal++;
                 AdvfsLockStats->stateSignal++;
             }
-            cond_signal( &slk->res, ln, fn );
+            cv_signal( &slk->res, ln, fn );
         } else if (action == UNLK_BROADCAST) {
             if (AdvfsLockStats) {
                 AdvfsLockStats->usageStats[ lkHdr->lkUsage ].broadcast++;

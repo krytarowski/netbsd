@@ -557,7 +557,7 @@ ulmq_send_msg(
             AdvfsLockStats->msgQSignal++;
         }
 
-        cond_signal( &msgQ->res );
+        cv_signal( &msgQ->res );
     } else if (msgQ->waiters > 1) {
         if (AdvfsLockStats) {
             AdvfsLockStats->msgQBroadcast++;

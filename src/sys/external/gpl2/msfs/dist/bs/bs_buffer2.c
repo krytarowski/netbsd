@@ -4447,7 +4447,7 @@ clear_state (
                     AdvfsLockStats->bufSignal++;
                 }
 
-                cond_signal( &bp->lock.bufCond );
+                cv_signal( &bp->lock.bufCond );
             } else {
                 if (AdvfsLockStats) {
                     AdvfsLockStats->usageStats[ bp->lock.hdr.lkUsage ].broadcast++;

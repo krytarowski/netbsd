@@ -2053,7 +2053,7 @@ done:
     if ((pmcid.page == pvdp->ddlActiveWaitMCId.page) &&
         (pmcid.cell == pvdp->ddlActiveWaitMCId.cell)) {
 
-        cond_signal(&pvdp->ddlActiveWaitCv);
+        cv_signal(&pvdp->ddlActiveWaitCv);
         mutex_exit (&(dmnP->mutex));
         mutexisLocked = 0;
     }
