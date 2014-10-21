@@ -158,7 +158,7 @@ void
 fscontext_lock_init( struct fsContext* fscp )
 {
     mutex_init( &fscp->fsContext_mutex, MUTEX_DEFAULT, IPL_NONE);
-    lock_setup( &fscp->file_lock, ADVfsContext_file_lock_info, TRUE);
+    rw_init( &fscp->file_lock );
 }
 
 /*
