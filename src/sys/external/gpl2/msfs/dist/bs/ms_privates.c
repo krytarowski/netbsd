@@ -298,29 +298,29 @@ void DDLACTIVE_UNLOCK( krwlock_t *sLk )
     rw_exit( &sLk );
 }
 
-void TRUNC_XFER_READ_LOCK_RECURSIVE( struct ftxLk *sLk )
+void TRUNC_XFER_READ_LOCK_RECURSIVE( krwlock_t *sLk )
 {
     /* lock_read_recursive( &sLk ); */
     panic("lock_read_recursive() not implemented");
 }
 
-void TRUNC_XFER_UNLOCK_RECURSIVE( struct ftxLk *sLk )
+void TRUNC_XFER_UNLOCK_RECURSIVE( krwlock_t *sLk )
 {
     /* lock_read_done_recursive(&sLk); */
     panic("lock_read_done_recursive() not implemented");
 }
 
-void TRUNC_XFER_LOCK_READ( struct ftxLk *sLk )
+void TRUNC_XFER_LOCK_READ( krwlock_t *sLk )
 {
     rw_enter( &sLk, RW_READER );
 }
 
-void TRUNC_XFER_LOCK_WRITE( struct ftxLk *sLk )
+void TRUNC_XFER_LOCK_WRITE( krwlock_t *sLk )
 {
     rw_enter( &sLk, RW_WRITER );
 }
 
-void TRUNC_XFER_UNLOCK( struct ftxLk *sLk )
+void TRUNC_XFER_UNLOCK( krwlock_t *sLk )
 {
     rw_exit( &sLk );
 }

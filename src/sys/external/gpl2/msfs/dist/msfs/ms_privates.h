@@ -63,11 +63,11 @@ void MIGTRUNC_UNLOCK( krwlock_t *sLk );
 void DDLACTIVE_LOCK_READ( krwlock_t *sLk );
 void DDLACTIVE_LOCK_WRITE( krwlock_t *sLk );
 void DDLACTIVE_UNLOCK( krwlock_t *sLk );
-void TRUNC_XFER_READ_LOCK_RECURSIVE( struct ftxLk *sLk );
-void TRUNC_XFER_UNLOCK_RECURSIVE( struct ftxLk *sLk );
-void TRUNC_XFER_LOCK_READ( struct ftxLk *sLk );
-void TRUNC_XFER_LOCK_WRITE( struct ftxLk *sLk );
-void TRUNC_XFER_UNLOCK( struct ftxLk *sLk );
+void TRUNC_XFER_READ_LOCK_RECURSIVE( krwlock_t *sLk );
+void TRUNC_XFER_UNLOCK_RECURSIVE( krwlock_t *sLk );
+void TRUNC_XFER_LOCK_READ( krwlock_t *sLk );
+void TRUNC_XFER_LOCK_WRITE( krwlock_t *sLk );
+void TRUNC_XFER_UNLOCK( krwlock_t *sLk );
 
 /*
  * Some private definitions
