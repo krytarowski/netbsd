@@ -171,7 +171,7 @@ fscontext_lock_destroy( struct fsContext* fscp )
      * mutex_destroy will run down all locks
      */
     mutex_destroy( &fscp->fsContext_mutex );
-    lock_terminate(&fscp->file_lock);
+    rw_destroy(&fscp->file_lock);
 }
 
 /***************************************************************
