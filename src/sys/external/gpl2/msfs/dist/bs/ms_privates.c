@@ -283,17 +283,17 @@ void MIGTRUNC_UNLOCK( krwlock_t *sLk )
     rw_exit( &sLk );
 }
 
-void DDLACTIVE_LOCK_READ( struct ftxLk *sLk )
+void DDLACTIVE_LOCK_READ( krwlock_t *sLk )
 {
     rw_enter( &sLk, RW_READER );
 }
 
-void DDLACTIVE_LOCK_WRITE( struct ftxLk *sLk )
+void DDLACTIVE_LOCK_WRITE( krwlock_t *sLk )
 {
     rw_enter( &sLk, RW_WRITER );
 }
 
-void DDLACTIVE_UNLOCK( struct ftxLk *sLk )
+void DDLACTIVE_UNLOCK( krwlock_t *sLk )
 {
     rw_exit( &sLk );
 }
