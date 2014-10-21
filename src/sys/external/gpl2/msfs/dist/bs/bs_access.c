@@ -1790,7 +1790,6 @@ bs_init_area()
                                         BS_BFAH_ELEMENTS_TO_BUCKETS,
                                         BS_BFAH_USECS_BETWEEN_SPLITS,
                                         offsetof(bfAccessT,hashlinks),
-                                        ADVBfAccessHashChainLock_lockinfo,
                                         NULL);
     if (BsAccessHashTbl == NULL) {
         ADVFS_SAD0("bs_init_area: can't get space for hash table");
