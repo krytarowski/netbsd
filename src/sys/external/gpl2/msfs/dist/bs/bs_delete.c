@@ -88,7 +88,7 @@
     lock_write( lk.lock );\
 }
 #define  DELLIST_UNLOCK( lk ) { \
-    lock_done( lk.lock );\
+    rw_exit( lk.lock );\
 }
 
 /* Internal Types */
