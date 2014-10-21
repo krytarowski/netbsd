@@ -96,11 +96,6 @@ struct bsMPg *GRpgp = NULL;
 
 vdDescT nilVdDesc = NULL_STRUCT;
 
-#define  DMNTBL_LOCK_WRITE( sLk ) \
-    lock_write( sLk );
-#define DMNTBL_UNLOCK( sLk ) \
-    lock_done( sLk );
-
 /* flags for vd_remove */
 #define VD_STATE_CHANGE         0x1
 #define VD_REMOVE_PERM          0x10
