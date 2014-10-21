@@ -374,21 +374,20 @@ init_access(bfAccessT *bfap)
     return;
 }
 
-#define CHECK_ACC_CLEAN(bfap) \
-{ \
-    KDASSERT(mutex_owned(&bfap->bfaLock)); \
-    KDASSERT(bfap->dirtyBufList.length == 0); \
-    KDASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_dirtypl == NULL); \
-    KDASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_dirtywpl == NULL); \
-    KDASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_putpages == 0); \
-    KDASSERT(lk_get_state(bfap->stateLk) != ACC_INIT_TRANS); \
-    KDASSERT(lk_get_state(bfap->stateLk) != ACC_FTX_TRANS); \
-    KDASSERT( !lock_readers( &(bfap->cow_lk) ) ); \
-    KDASSERT( !lock_locked( &(bfap->cow_lk) ) ); \
-    KDASSERT(!lk_locked(bfap->mcellList_lk)); \
-    KDASSERT(!lk_locked(bfap->xtntMap_lk)); \
-    KDASSERT(bfap->refCnt == 0); \
-    KDASSERT(bfap->saved_stats == NULL); \
+static inline void CHECK_ACC_CLEAN(bfAccessT *bfap)
+{
+    KDASSERT(mutex_owned(&bfap->bfaLock));
+    KDASSERT(bfap->dirtyBufList.length == 0);
+    KDASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_dirtypl == NULL);
+    KDASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_dirtywpl == NULL);
+    KDASSERT(bfap->bfObj == NULL || bfap->bfObj->vu_putpages == 0);
+    KDASSERT(lk_get_state(bfap->stateLk) != ACC_INIT_TRANS);
+    KDASSERT(lk_get_state(bfap->stateLk) != ACC_FTX_TRANS);
+    KDASSERT(!rw_lock_held( &(bfap->cow_lk) ) );
+    KDASSERT(!lk_locked(bfap->mcellList_lk));
+    KDASSERT(!lk_locked(bfap->xtntMap_lk));
+    KDASSERT(bfap->refCnt == 0);
+    KDASSERT(bfap->saved_stats == NULL);
 }
 
 /*
