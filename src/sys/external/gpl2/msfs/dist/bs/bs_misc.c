@@ -441,20 +441,20 @@ void
 bs_init(int doingRoot)
 {
 
-    MS_SMP_ASSERT( sizeof(bsTDirPgT) == ADVFS_PGSZ );
-    MS_SMP_ASSERT( sizeof(bsStgBmT) == ADVFS_PGSZ );
-    MS_SMP_ASSERT( sizeof(bsMPgT) == ADVFS_PGSZ );
-    MS_SMP_ASSERT ((ADVFS_PGSZ_IN_BLKS % BS_CLUSTSIZE) == 0);
+    KASSERT( sizeof(bsTDirPgT) == ADVFS_PGSZ );
+    KASSERT( sizeof(bsStgBmT) == ADVFS_PGSZ );
+    KASSERT( sizeof(bsMPgT) == ADVFS_PGSZ );
+    KASSERT((ADVFS_PGSZ_IN_BLKS % BS_CLUSTSIZE) == 0);
 
     /* We have some code (not enough) to allow our bitfile page size */
     /* (ADVFS_PGSZ) to be a multiple of the UBC page size (PAGE_SIZE). */
     /* We have no code to allow ADVFS_PGSZ to be < PAGE_SIZE. */
     /* See the comment in page_lookup. */
-    MS_SMP_ASSERT( ADVFS_PGSZ == PAGE_SIZE );
+    KASSERT( ADVFS_PGSZ == PAGE_SIZE );
 
     /* To maintain compatibility between our concept of a disk block */
     /* and the CAM driver concept. (See comment in bs_public.h) */
-    MS_SMP_ASSERT( BS_BLKSIZE == DEV_BSIZE );
+    KASSERT( BS_BLKSIZE == DEV_BSIZE );
 
     validate_syscall_structs();
 
@@ -3662,7 +3662,7 @@ msfs_syscall_op_get_bf_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
          */
          
         fromBfap=bfap->origAccp;
-        MS_SMP_ASSERT(fromBfap);
+        KASSERT(fromBfap);
     }
 
     sts = bs_get_bf_xtnt_map (fromBfap,
@@ -3782,7 +3782,7 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
 
 	if ( VDI_IS_VALID(vdi+1, bfap->dmnP) ) {
             vdT *vdp = bfap->dmnP->vdpTbl[vdi];
-            MS_SMP_ASSERT( vdp->vdMagic == VDMAGIC );
+            KASSERT( vdp->vdMagic == VDMAGIC );
             mutex_enter( &vdp->vdStateLock );
             if (vdp->vdState == BSR_VD_MOUNTED)
             {
@@ -4718,7 +4718,7 @@ msfs_syscall_op_rem_volume(libParamsT *libBufp, opIndexT opIndex)
          */
         sts2 = bs_bfs_get_info( &setIdx, &bfsetParams, dmnP, &userId );
 
-        MS_SMP_ASSERT(sts2 == EOK);
+        KASSERT(sts2 == EOK);
         if (sts2 == EOK) {
             bfSetId = bfsetParams.bfSetId;
             bfSetp = bs_bfs_lookup_desc(bfSetId);
@@ -5017,7 +5017,7 @@ msfs_syscall_op_ss_get_fraglist(libParamsT *libBufp)
     dmnOpen=TRUE;
 
     volIndex = libBufp->ssGetFraglist.volIndex;
-    MS_SMP_ASSERT(volIndex > 0);
+    KASSERT(volIndex > 0);
     if ( !(vdp = vd_htop_if_valid(volIndex, dmnP, TRUE, FALSE)) ) {
         /*
          * This can happen when we a disk is removed from service
@@ -5220,7 +5220,7 @@ msfs_syscall_op_add_rem_vol_svc_class(libParamsT *libBufp)
 
         sts2 = bs_bfs_get_info( &setIdx, &bfsetParams, dmnP, &userId );
 
-        MS_SMP_ASSERT(sts2 == EOK);
+        KASSERT(sts2 == EOK);
         if (sts2 == EOK) {
             bfSetId = bfsetParams.bfSetId;
             bfSetp = bs_bfs_lookup_desc(bfSetId);
@@ -5710,7 +5710,7 @@ retry:
                     dmn_name = buf->setBfSetParamsActivate.dmnName;
                     break;
                 default:
-                    MS_SMP_ASSERT(0);
+                    KASSERT(0);
                     get_domain_lock = 0;
                     break;
                 }
@@ -5768,7 +5768,7 @@ retry:
                     dmn_id = buf->ssGetHotlist.bfDomainId;
                     break;
                 default:
-                    MS_SMP_ASSERT(0);
+                    KASSERT(0);
                     get_domain_lock = 0;
                     break;
             }
@@ -5812,7 +5812,7 @@ retry:
                     file_path = buf->undelGet.dirName;
                     break;
                 default:
-                    MS_SMP_ASSERT(0);
+                    KASSERT(0);
                     get_domain_lock = 0;
                     break;
             }
@@ -5874,7 +5874,7 @@ retry:
                     fd = buf->setBfNextAllocVol.fd;
                     break;
                 default:
-                    MS_SMP_ASSERT(0);
+                    KASSERT(0);
                     get_domain_lock = 0;
                     break;
             }
@@ -6236,7 +6236,7 @@ advfs_post_kernel_event(char *evname, advfs_ev *advfs_event)
      * in the event code.  If we are, the path that hits this assertion
      * should be changed to call EvmEventPostImmedVa().
      */
-    MS_SMP_ASSERT(!AT_INTR_LVL());
+    KASSERT(!AT_INTR_LVL());
 
     if ((status = EvmEventCreateVa(&ev, EvmITEM_NAME,evname,
            EvmITEM_NONE)) != EvmERROR_NONE) {

@@ -367,11 +367,11 @@ noclone:
     if ( cloneap ) {
         COW_LOCK_WRITE( &bfap->cow_lk )
 
-        MS_SMP_ASSERT(cloneap->xtnts.type == BSXMT_APPEND)
+        KASSERT(cloneap->xtnts.type == BSXMT_APPEND)
         if ( cloneap->xtnts.xtntMap->cnt == 1 &&
              cloneap->xtnts.xtntMap->subXtntMap[0].pageCnt == 0 ) {
             sts = str_stripe_clone( cloneap, &bfap->xtnts, ftxH);
-            MS_SMP_ASSERT(sts == EOK ||
+            KASSERT(sts == EOK ||
                           sts == ENO_MORE_BLKS);
         }
 
@@ -672,9 +672,9 @@ stripe_zero_size_clone (
     int allDisksRefed = FALSE;
     vdT *vdp;
 
-    MS_SMP_ASSERT(oXtntp->validFlag);
-    MS_SMP_ASSERT(oXtntp->type == BSXMT_STRIPE);
-    MS_SMP_ASSERT(oXtntp->stripeXtntMap);
+    KASSERT(oXtntp->validFlag);
+    KASSERT(oXtntp->type == BSXMT_STRIPE);
+    KASSERT(oXtntp->stripeXtntMap);
     segmentCnt = oXtntp->stripeXtntMap->cnt;
 
     disk = (vdIndexT *) ms_malloc (segmentCnt * sizeof(vdIndexT));
@@ -683,7 +683,7 @@ stripe_zero_size_clone (
     }
 
     for (i = 0; i < segmentCnt; i++) {
-        MS_SMP_ASSERT(oXtntp->stripeXtntMap->xtntMap[i]);
+        KASSERT(oXtntp->stripeXtntMap->xtntMap[i]);
         disk[i] = oXtntp->stripeXtntMap->xtntMap[i]->allocVdIndex;
         vdp = vd_htop_if_valid(disk[i], bfap->dmnP, TRUE, FALSE);
         if ( vdp == NULL ) {
@@ -702,7 +702,7 @@ stripe_zero_size_clone (
     bfSetDesc = bfap->bfSetp;
 
     /* can't stripe reserved files, pass BMT_NORMAL_MCELL to bmt_alloc_mcell */
-    MS_SMP_ASSERT (BS_BFTAG_REG(bfap->tag));
+    KASSERT(BS_BFTAG_REG(bfap->tag));
     for (i = 0; i < segmentCnt; i++) {
         sts = imm_create_xtnt_map ( bfap->bfPageSz,
                                     bfap->dmnP,

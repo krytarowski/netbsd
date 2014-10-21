@@ -175,7 +175,7 @@ bs_get_bf_xtnt_map(
     while (mapIndex < xtntMap->validCnt) {
 
         /* This should not change while we have xtntMap_lk seized */
-        MS_SMP_ASSERT( xtntMap->subXtntMap == subXtntBase );
+        KASSERT( xtntMap->subXtntMap == subXtntBase );
 
         if ( startXtnt < (cnt + xtntMap->subXtntMap[mapIndex].cnt) ) {
             break;  /* out of while */
@@ -253,7 +253,7 @@ bs_get_bf_xtnt_map(
     }  /* end while */
 
     /* This should not change while we have xtntMap_lk seized */
-    MS_SMP_ASSERT( xtntMap->subXtntMap == subXtntBase );
+    KASSERT( xtntMap->subXtntMap == subXtntBase );
 
     *xtntCnt = dst;
 
@@ -386,7 +386,7 @@ bs_get_clone_xtnt_map(
         clone_xtntMap = clone_bfap->xtnts.xtntMap;
         if(orig_bfap->xtnts.type != BSXMT_APPEND) 
         {
-            MS_SMP_ASSERT(orig_bfap->xtnts.type == BSXMT_STRIPE);
+            KASSERT(orig_bfap->xtnts.type == BSXMT_STRIPE);
 
             /*
              * This is the case where the file had storage and was
@@ -872,7 +872,7 @@ get_stripe_next_page( bfAccessT *bfap, uint32T pg, int cloned,
         ret = page_is_mapped_local(bfap, pg, nextPageP, FALSE,
                                    vdIndexP, vdBlkP, start_pgP, TRUE);
 
-        MS_SMP_ASSERT(clone_nextPage <= bfap->maxClonePgs);
+        KASSERT(clone_nextPage <= bfap->maxClonePgs);
         if (ret == FALSE) {   /* hole or permanent hole or not mapped*/
             /* Permanent holes return TRUE */
             ret = page_is_mapped_local(bfap, pg, nextPageP, TRUE,
@@ -997,7 +997,7 @@ bs_get_bkup_xtnt_map(
                     }
 
                     fromBfap=bfap->origAccp;
-                    MS_SMP_ASSERT(fromBfap);
+                    KASSERT(fromBfap);
                 }
 
               sts = bs_get_bf_xtnt_map( fromBfap,
@@ -1061,7 +1061,7 @@ bs_get_bkup_xtnt_map(
                     }
 
                     fromBfap=bfap->origAccp;
-                    MS_SMP_ASSERT(fromBfap);
+                    KASSERT(fromBfap);
                 }
 
                 cloned = FALSE;

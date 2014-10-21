@@ -824,7 +824,7 @@ frag_list_extend(
     }
 
     if (setp->fragGrps[ BF_FRAG_FREE_GRPS ].firstFreeGrp == BF_FRAG_EOG ) {
-        MS_SMP_ASSERT(setp->fragGrps[ BF_FRAG_FREE_GRPS ].lastFreeGrp ==
+        KASSERT(setp->fragGrps[ BF_FRAG_FREE_GRPS ].lastFreeGrp ==
                       BF_FRAG_EOG);
 
         /* Make sure the extents are valid before calling imm_get_first_hole.
@@ -1917,8 +1917,8 @@ bs_fragbf_open(
     statusT sts;
     struct vnode *nullvp = NULL;
 
-    MS_SMP_ASSERT( BFSET_VALID(bfSetp) );
-    MS_SMP_ASSERT( bfSetp->fsRefCnt != 0 );
+    KASSERT( BFSET_VALID(bfSetp) );
+    KASSERT( bfSetp->fsRefCnt != 0 );
 
     FRAG_LOCK_WRITE( &bfSetp->fragLock )
 
@@ -1947,8 +1947,8 @@ bs_fragbf_close(
 {
     statusT sts;
 
-    MS_SMP_ASSERT( BFSET_VALID(bfSetp) );
-    MS_SMP_ASSERT( bfSetp->fsRefCnt != 0 );
+    KASSERT( BFSET_VALID(bfSetp) );
+    KASSERT( bfSetp->fsRefCnt != 0 );
 
     FRAG_LOCK_WRITE( &bfSetp->fragLock )
 
@@ -2159,7 +2159,7 @@ bfs_lookup(
     bfSetT *bfSetp_start;
     ulong key;
 
-    MS_SMP_ASSERT(mutex_owned(&LookupMutex));
+    KASSERT(mutex_owned(&LookupMutex));
 
     /*
      * calculate the hash key using the bitfile-set ID as input to the hash
@@ -2227,7 +2227,7 @@ bs_bfs_flush (bfSetT *bfSetp  /* in - fileset to be flushed */)
     currbfap = bfSetp->accessFwd;
     while (currbfap != (bfAccessT *)(&bfSetp->accessFwd)) {
 
-        MS_SMP_ASSERT(currbfap->bfSetp == bfSetp);
+        KASSERT(currbfap->bfSetp == bfSetp);
 
         mutex_enter(&currbfap->bfaLock);
 
@@ -2351,7 +2351,7 @@ bfs_alloc(
         /*
          * Set the dmnP to the current domain
          */
-        MS_SMP_ASSERT( bfSetp->dmnP == dmnP );
+        KASSERT( bfSetp->dmnP == dmnP );
         
         BFSET_TRACE( bfSetp, 0 );
 
@@ -2461,9 +2461,9 @@ bfs_dealloc(
 
     statusT sts;
 
-    MS_SMP_ASSERT( BFSET_VALID(bfSetp) );
-    MS_SMP_ASSERT( bfSetp->fsRefCnt == 0 );
-    MS_SMP_ASSERT(rw_lock_held(&bfSetp->dmnP->BfSetTblLock.lock));
+    KASSERT( BFSET_VALID(bfSetp) );
+    KASSERT( bfSetp->fsRefCnt == 0 );
+    KASSERT(rw_lock_held(&bfSetp->dmnP->BfSetTblLock.lock));
 
     /*
      * There is no more freelist, but we are keeping the statistics for now.
@@ -2492,7 +2492,7 @@ bfs_dealloc(
         /*
          * Let's make sure it did what it's supposed to do.
          */
-        MS_SMP_ASSERT(bfSetp->accessFwd ==  (bfAccessT *)(&bfSetp->accessFwd));
+        KASSERT(bfSetp->accessFwd ==  (bfAccessT *)(&bfSetp->accessFwd));
 
         /*
          * Remove this bitfile-set from the list in the domain structure.
@@ -2884,8 +2884,8 @@ bfs_close(
 {
     domainT *dmnP = bfSetp->dmnP;
         
-    MS_SMP_ASSERT( BFSET_VALID(bfSetp) );
-    MS_SMP_ASSERT( bfSetp->fsRefCnt != 0 );
+    KASSERT( BFSET_VALID(bfSetp) );
+    KASSERT( bfSetp->fsRefCnt != 0 );
 
     bfSetp->fsRefCnt--;
 
@@ -2951,8 +2951,8 @@ bs_bfs_close(
         BFSETTBL_LOCK_WRITE( dmnP );
     }
     
-    MS_SMP_ASSERT( BFSET_VALID(bfSetp));
-    MS_SMP_ASSERT( bfSetp->fsRefCnt != 0 );
+    KASSERT( BFSET_VALID(bfSetp));
+    KASSERT( bfSetp->fsRefCnt != 0 );
 
     /*
      ** Get a pointer to the original set's descriptor.
@@ -3005,9 +3005,9 @@ bs_bfs_close(
         mutex_enter(&bfSetp->cloneDelStateMutex);
 
         currentCloneDelState = lk_get_state(bfSetp->cloneDelState); 
-        MS_SMP_ASSERT(currentCloneDelState == CLONE_DEL_XFER_STG ||
+        KASSERT(currentCloneDelState == CLONE_DEL_XFER_STG ||
                       currentCloneDelState == CLONE_DEL_PENDING);
-        MS_SMP_ASSERT(bfSetp->xferThreads > 0);
+        KASSERT(bfSetp->xferThreads > 0);
 
         if (--bfSetp->xferThreads == 0) {
             if (currentCloneDelState == CLONE_DEL_XFER_STG) {
@@ -3016,7 +3016,7 @@ bs_bfs_close(
             else {
                 unLkAction = lk_set_state(&bfSetp->cloneDelState,
                                           CLONE_DEL_DELETING);
-                MS_SMP_ASSERT(unLkAction == UNLK_SIGNAL);
+                KASSERT(unLkAction == UNLK_SIGNAL);
                 lk_signal(unLkAction, &bfSetp->cloneDelState);
             }
         }
@@ -3030,7 +3030,7 @@ bs_bfs_close(
      * all that needs to be cowed 
      */
     if( BFSET_VALID(setp) ) {
-        MS_SMP_ASSERT(setp->cloneId != BS_BFSET_ORIG);
+        KASSERT(setp->cloneId != BS_BFSET_ORIG);
         bfs_close( setp, ftxH );
     }
 
@@ -3198,8 +3198,8 @@ bfs_access(
         {
             mutex_enter(&bfSetp->cloneDelStateMutex);
 
-            MS_SMP_ASSERT(lk_get_state(bfSetp->cloneDelState) == CLONE_DEL_NORMAL);
-            MS_SMP_ASSERT(bfSetp->xferThreads == 0);
+            KASSERT(lk_get_state(bfSetp->cloneDelState) == CLONE_DEL_NORMAL);
+            KASSERT(bfSetp->xferThreads == 0);
 
             (void)lk_set_state(&bfSetp->cloneDelState, CLONE_DEL_XFER_STG);
             bfSetp->xferThreads = 1;
@@ -3216,11 +3216,11 @@ bfs_access(
             mutex_enter(&bfSetp->cloneDelStateMutex);
             currentCloneDelState = lk_get_state(bfSetp->cloneDelState); 
 
-            MS_SMP_ASSERT(currentCloneDelState == CLONE_DEL_NORMAL   ||
+            KASSERT(currentCloneDelState == CLONE_DEL_NORMAL   ||
                           currentCloneDelState == CLONE_DEL_DELETING);
             
             if (currentCloneDelState == CLONE_DEL_NORMAL) {
-                MS_SMP_ASSERT(bfSetp->xferThreads == 0);
+                KASSERT(bfSetp->xferThreads == 0);
                 (void)lk_set_state(&bfSetp->cloneDelState, CLONE_DEL_XFER_STG);
                 bfSetp->xferThreads = 1;
             }
@@ -3278,24 +3278,24 @@ bfs_access(
         mutex_enter(&bfSetp->cloneDelStateMutex);
         currentCloneDelState = lk_get_state(bfSetp->cloneDelState); 
 
-        MS_SMP_ASSERT(currentCloneDelState == CLONE_DEL_NORMAL   ||
+        KASSERT(currentCloneDelState == CLONE_DEL_NORMAL   ||
                       currentCloneDelState == CLONE_DEL_XFER_STG ||
                       currentCloneDelState == CLONE_DEL_PENDING ||
                       currentCloneDelState == CLONE_DEL_DELETING);
 
         if (currentCloneDelState == CLONE_DEL_NORMAL) {
-            MS_SMP_ASSERT(bfSetp->xferThreads == 0);
+            KASSERT(bfSetp->xferThreads == 0);
             (void)lk_set_state(&bfSetp->cloneDelState, CLONE_DEL_XFER_STG);
             bfSetp->xferThreads = 1;
         }
         else if (currentCloneDelState == CLONE_DEL_XFER_STG) {
-            MS_SMP_ASSERT(bfSetp->xferThreads > 0);
+            KASSERT(bfSetp->xferThreads > 0);
             bfSetp->xferThreads++;
         }
         else if ((currentCloneDelState == CLONE_DEL_PENDING) ||
                  (currentCloneDelState == CLONE_DEL_DELETING)) {
 
-            MS_SMP_ASSERT((currentCloneDelState != CLONE_DEL_PENDING) ||
+            KASSERT((currentCloneDelState != CLONE_DEL_PENDING) ||
                           (lk_waiters(bfSetp->cloneDelState) > 0));
 
             mutex_exit(&bfSetp->cloneDelStateMutex);
@@ -4421,7 +4421,7 @@ bs_bfs_delete(
      */
     refCnt += bfSetp->xferThreads;
 
-    MS_SMP_ASSERT(refCnt > 0);
+    KASSERT(refCnt > 0);
     if ( bfSetp->fsRefCnt > refCnt ) {
         /* fileset is accessed by another thread */
         RAISE_EXCEPTION( E_TOO_MANY_ACCESSORS );
@@ -4457,17 +4457,17 @@ bs_bfs_delete(
 
         currentCloneDelState = lk_get_state(bfSetp->cloneDelState); 
 
-        MS_SMP_ASSERT(currentCloneDelState == CLONE_DEL_NORMAL   ||
+        KASSERT(currentCloneDelState == CLONE_DEL_NORMAL   ||
                       currentCloneDelState == CLONE_DEL_XFER_STG);
 
         if (currentCloneDelState == CLONE_DEL_XFER_STG) {
-            MS_SMP_ASSERT(bfSetp->xferThreads > 0);
+            KASSERT(bfSetp->xferThreads > 0);
             lk_set_state(&bfSetp->cloneDelState, CLONE_DEL_PENDING);
             lk_wait_for(&bfSetp->cloneDelState, &bfSetp->cloneDelStateMutex,
                         CLONE_DEL_DELETING);
         }
         else {
-            MS_SMP_ASSERT(bfSetp->xferThreads == 0);
+            KASSERT(bfSetp->xferThreads == 0);
             lk_set_state(&bfSetp->cloneDelState, CLONE_DEL_DELETING);
         }
 
@@ -4478,7 +4478,7 @@ bs_bfs_delete(
         bfSetp->bfsDelPend = TRUE;
         /* Wait for current cows. All future cows will silently do nothing. */
         while ( bfSetp->bfsHoldCnt > 0 ) {
-            MS_SMP_ASSERT(bfSetp->bfsOpWait == 0);
+            KASSERT(bfSetp->bfsOpWait == 0);
             bfSetp->bfsOpWait = 1;
             thread_sleep( (vm_offset_t)&bfSetp->bfsHoldCnt,
                           &dmnP->mutex.mutex, FALSE );
@@ -4959,7 +4959,7 @@ bs_bfs_clone(
         ** No other thread can have set bfsOpWait. We can't be waiting
         ** in bs_bfs_delete or advfs_mountfs.
         */
-        MS_SMP_ASSERT(origSetp->bfsOpWait == 0);
+        KASSERT(origSetp->bfsOpWait == 0);
         origSetp->bfsOpWait = 1;
         thread_sleep( (vm_offset_t)&origSetp->bfsHoldCnt,
                       &dmnP->mutex.mutex, FALSE );
@@ -5097,9 +5097,9 @@ bs_bfs_clone(
     /*
      ** Link new clone into linked list of clones.
      */
-    MS_SMP_ASSERT(BS_BFTAG_EQL(origSetAttrp->nextCloneSetTag, NilBfTag));
+    KASSERT(BS_BFTAG_EQL(origSetAttrp->nextCloneSetTag, NilBfTag));
     cloneSetAttrp->nextCloneSetTag = origSetAttrp->nextCloneSetTag;
-    MS_SMP_ASSERT(cloneSetp->cloneSetp == NULL);
+    KASSERT(cloneSetp->cloneSetp == NULL);
     origSetAttrp->nextCloneSetTag  = cloneSetp->dirTag;
 
     origSetp->cloneSetp = cloneSetp;
@@ -5156,7 +5156,7 @@ bs_bfs_clone(
          ** RAISE_EXCEPTION, ftx_fail() will cause a domain_panic.  ftx_fail
          ** will domain_panic because there are pinned records.
          */
-        MS_SMP_ASSERT(sts == EOK);
+        KASSERT(sts == EOK);
         if (sts != EOK) {
             RAISE_EXCEPTION( sts );
         }
@@ -5236,7 +5236,7 @@ bs_bf_out_of_sync(
     ftxHT ftxH;
     statusT sts;
 
-    MS_SMP_ASSERT(cloneap->bfSetp->cloneId != BS_BFSET_ORIG);
+    KASSERT(cloneap->bfSetp->cloneId != BS_BFSET_ORIG);
 
     if (!cloneap->outOfSyncClone)
     {
@@ -6327,7 +6327,7 @@ hold_cloneset( bfAccessT *bfap, int waitFlg )
     domainT *dmnP = bfSetp->dmnP;
     bfSetT *cloneSetp;
 
-    MS_SMP_ASSERT(bfSetp->cloneId == BS_BFSET_ORIG);
+    KASSERT(bfSetp->cloneId == BS_BFSET_ORIG);
 
     mutex_enter( &dmnP->mutex );  /* protects bfSetp->cloneSetp */
 
@@ -6335,7 +6335,7 @@ hold_cloneset( bfAccessT *bfap, int waitFlg )
         /* Check to see if the clone set is being created. */
         while ( bfSetp->bfsOpPend > 0 ) {
             /* Wait for bs_bfs_clone in progress. */
-            MS_SMP_ASSERT(bfSetp->bfsOpPend == 1);
+            KASSERT(bfSetp->bfsOpPend == 1);
             bfSetp->bfsHoldWait++;
             thread_sleep( (vm_offset_t)&bfSetp->bfsHoldWait,
                           &dmnP->mutex.mutex, FALSE );
@@ -6369,7 +6369,7 @@ hold_cloneset( bfAccessT *bfap, int waitFlg )
         /* Check to see if the clone set is being mounted. */
         while ( cloneSetp->bfsOpPend > 0 ) {
             /* Wait for advfs_mountfs in progress. */
-            MS_SMP_ASSERT(cloneSetp->bfsOpPend == 1);
+            KASSERT(cloneSetp->bfsOpPend == 1);
             cloneSetp->bfsHoldWait++;
             thread_sleep( (vm_offset_t)&cloneSetp->bfsHoldWait,
                           &dmnP->mutex.mutex, FALSE );
@@ -6385,7 +6385,7 @@ hold_cloneset( bfAccessT *bfap, int waitFlg )
     */
     cloneSetp->bfsHoldCnt++;
     mutex_exit( &dmnP->mutex );
-    MS_SMP_ASSERT(cloneSetp->bfSetMagic == SETMAGIC);
+    KASSERT(cloneSetp->bfSetMagic == SETMAGIC);
 
     return cloneSetp;
 }
@@ -6404,12 +6404,12 @@ release_cloneset( bfSetT *bfSetp )
 {
     mutex_enter( &bfSetp->dmnP->mutex );
 
-    MS_SMP_ASSERT(bfSetp->bfsHoldCnt > 0);
+    KASSERT(bfSetp->bfsHoldCnt > 0);
     bfSetp->bfsHoldCnt--;
 
     if ( bfSetp->bfsHoldCnt == 0 && bfSetp->bfsOpWait ) {
         /* Only one thread can be waiting on bfsOpWait. */
-        MS_SMP_ASSERT(bfSetp->bfsOpWait == 1);
+        KASSERT(bfSetp->bfsOpWait == 1);
         bfSetp->bfsOpWait = 0;
         thread_wakeup_one( (vm_offset_t)&bfSetp->bfsHoldCnt );
     }
@@ -6444,7 +6444,7 @@ cow_get_locks( bfAccessT *cloneap,
     int ftxStarted = FALSE;
     statusT sts;
 
-    MS_SMP_ASSERT(*arp == NULL);
+    KASSERT(*arp == NULL);
 
 try_again:
     /* No need to do special locking for metadata files */
@@ -6475,8 +6475,8 @@ try_again:
             if ( cloneap->bfSetp->fsnp ) {
                 /* The CFS DIO token should be in the lock (resource) */
                 /* hierarchy and is higher than ftx or file_lock. */
-                MS_SMP_ASSERT(parentFtxHA->hndl == 0);
-                MS_SMP_ASSERT(!rw_lock_held(&VTOC(bfap->bfVp)->file_lock));
+                KASSERT(parentFtxHA->hndl == 0);
+                KASSERT(!rw_lock_held(&VTOC(bfap->bfVp)->file_lock));
                 if ( !CC_CFS_COW_MODE_ENTER(fsid, cloneap->tag) ) {
                     token_taken |= CLU_TOKEN_TAKEN; 
                     cloneap->cloneXtntsRetrieved = 0;
@@ -6687,8 +6687,8 @@ cow_get_page_range( bfAccessT *cloneap, bsPageT pg,
          * overlaps pages that are already cowed, but the first page
          * must not already exist.
          */
-        MS_SMP_ASSERT(arPg + arCnt > pg);  /* active range covers pg */
-        MS_SMP_ASSERT(arPg < pg + cnt);  /* active range covers pg */
+        KASSERT(arPg + arCnt > pg);  /* active range covers pg */
+        KASSERT(arPg < pg + cnt);  /* active range covers pg */
         while ( arPg < pg ) {
             if ( !page_is_mapped(cloneap, arPg, &nextPg, TRUE) ) {
                 break;
@@ -6711,7 +6711,7 @@ cow_get_page_range( bfAccessT *cloneap, bsPageT pg,
 
         if ( page_is_mapped(bfap, holePg, &nextPg, TRUE) == TRUE ) {
             /* nextPg is the page beyond the current extent. */
-            MS_SMP_ASSERT(nextPg > holePg);
+            KASSERT(nextPg > holePg);
             holePg = nextPg;
             continue;
         }
@@ -6808,7 +6808,7 @@ bs_cow_pg(
     actRangeT *arp = NULL;
     uint32T nextPage = 0;
 
-    MS_SMP_ASSERT(cloneSetp->bfsHoldCnt > 0);
+    KASSERT(cloneSetp->bfsHoldCnt > 0);
 
     if (bfap->noClone) {
         /*
@@ -6842,7 +6842,7 @@ bs_cow_pg(
     cloneOp = TRUE;
     cloneap->origAccp = bfap;
     
-    MS_SMP_ASSERT(cloneap->onFreeList == 0);
+    KASSERT(cloneap->onFreeList == 0);
 
     if (cloneap->outOfSyncClone){
         /* clone bfset exists but file is out of sync with the orig */
@@ -6927,7 +6927,7 @@ bs_cow_pg(
         goto error_exit;
     }
 
-    MS_SMP_ASSERT(cloneap->xtnts.type == bfap->xtnts.type);
+    KASSERT(cloneap->xtnts.type == bfap->xtnts.type);
     sts = rbf_add_overlapping_clone_stg( cloneap,
                                          pg,
                                          cnt,
@@ -7114,7 +7114,7 @@ error_exit:
     }
 
     /* it should not be locked by bs_cow_pg if we get here */
-    MS_SMP_ASSERT(!migTruncLocked);    
+    KASSERT(!migTruncLocked);    
 
     if ( arp ) {
         mutex_enter(&bfap->actRangeLock);
@@ -7247,7 +7247,7 @@ bs_cow(
              goto error_exit;
         }
 
-        MS_SMP_ASSERT(cloneSetp == bfSetp->cloneSetp);
+        KASSERT(cloneSetp == bfSetp->cloneSetp);
 
         /*
          * Open the clone.
@@ -7862,7 +7862,7 @@ get_clu_clone_locks( bfAccessT *bfap, struct fsContext *cp,
     bfAccessT *cloneap;
     statusT sts;
 
-    MS_SMP_ASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
+    KASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
 
     *cloneapA = NULL;
     clonesetp = hold_cloneset( bfap, TRUE );
@@ -7909,7 +7909,7 @@ get_clu_clone_locks( bfAccessT *bfap, struct fsContext *cp,
         goto lock;
     }
 
-    MS_SMP_ASSERT(cloneap->onFreeList == 0);
+    KASSERT(cloneap->onFreeList == 0);
 
     if ( cloneap->dataSafety == BFD_FTX_AGENT ||
          cloneap->dataSafety == BFD_FTX_AGENT_TEMPORARY )

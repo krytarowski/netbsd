@@ -452,8 +452,8 @@ msfs_mount( struct mount *mp,           /* in */
         domainT *dmnP;
 
         /* We want to update file set dev on disk without verification. */
-        MS_SMP_ASSERT(fsId == 0);
-        MS_SMP_ASSERT(chk_fsdev_flag == FALSE);
+        KASSERT(fsId == 0);
+        KASSERT(chk_fsdev_flag == FALSE);
 
         dmnP = GETDOMAINP(mp);
 
@@ -1288,7 +1288,7 @@ advfs_mountfs(struct mount *mp)
     }
 
     mutex_enter(&setp->dmnP->mutex);
-    MS_SMP_ASSERT(setp->state == BFS_READY || setp->state == BFS_UNMOUNTED);
+    KASSERT(setp->state == BFS_READY || setp->state == BFS_UNMOUNTED);
     /* Set this so ss_open_file won't start an op during this transistion. */
     setp->state = BFS_BUSY;
     mutex_exit(&setp->dmnP->mutex);
@@ -1329,7 +1329,7 @@ advfs_mountfs(struct mount *mp)
         /* Wait for current holds. */
         while ( setp->bfsHoldCnt > 0 ) {
             /* Only one thread can be waiting on bfsOpWait. */
-            MS_SMP_ASSERT(setp->bfsOpWait == 0);
+            KASSERT(setp->bfsOpWait == 0);
             setp->bfsOpWait = 1;
             thread_sleep( (vm_offset_t)&setp->bfsHoldCnt,
                           &setp->dmnP->mutex.mutex, FALSE );
@@ -1451,7 +1451,7 @@ cleanup:
     
     	if (domain_open) {
         	FILESET_WRITE_LOCK(&FilesetLock);
-        	MS_SMP_ASSERT(dn->dmnP->mountCnt > 0);
+        	KASSERT(dn->dmnP->mountCnt > 0);
         	dn->dmnP->mountCnt--;
         	FILESET_UNLOCK(&FilesetLock )
         	bs_domain_close( dn->dmnP );
@@ -1662,7 +1662,7 @@ check_vd_sizes(struct fileSetNode *fsnp)
                              * something is very wrong, probably this search
                              * algorithm.
                              */
-                            MS_SMP_ASSERT(in_use_bits > 0);
+                            KASSERT(in_use_bits > 0);
                             if (in_use_bits <= 0) {
                                 bs_derefpg(pgref, BS_RECYCLE_IT);
                                 ms_uprintf("Cannot find last in-use block.\n");
@@ -1679,7 +1679,7 @@ check_vd_sizes(struct fileSetNode *fsnp)
                          * Release the SBM page.
                          */
                         sts = bs_derefpg(pgref, BS_RECYCLE_IT);
-                        MS_SMP_ASSERT(sts == EOK);
+                        KASSERT(sts == EOK);
                         if (sts != EOK) {
                             ms_uprintf("Could not release SBM page.\n");
                             corrupt_vd_found = TRUE;
@@ -1923,7 +1923,7 @@ msfs_unmount(
     if (fsnp->fsNext != NULL) {
         fsnp->fsNext->fsPrev = fsnp->fsPrev;
     }
-    MS_SMP_ASSERT(dmnP->mountCnt > 0);
+    KASSERT(dmnP->mountCnt > 0);
     dmnP->mountCnt--;
 
     /* reset the vfast first mount time if no other mounted filesets writable */
@@ -1949,7 +1949,7 @@ msfs_unmount(
 
     /* coordiate with ss_open_file */
     mutex_enter( &dmnP->mutex );
-    MS_SMP_ASSERT(setp->state == BFS_BUSY);
+    KASSERT(setp->state == BFS_BUSY);
     setp->state = BFS_UNMOUNTED;
     mutex_exit( &dmnP->mutex );
 
@@ -1994,7 +1994,7 @@ msfs_unmount(
     }
     mutex_destroy( &fsnp->filesetMutex );
 
-    MS_SMP_ASSERT(fsnp->filesetMagic == FSMAGIC);
+    KASSERT(fsnp->filesetMagic == FSMAGIC);
     fsnp->filesetMagic |= MAGIC_DEALLOC;
     ms_free( fsnp );
 
@@ -2918,7 +2918,7 @@ advfs_range_init(void)
     virtualZeroRangeP = vm_alloc_kva( MAX_VIRT_VM_PAGE_RNG * ADVFS_PGSZ );
         if ( virtualZeroRangeP == NULL ) {
             /* This should never occur.  */
-            MS_SMP_ASSERT(0);   /* We should not get here. */
+            KASSERT(0);   /* We should not get here. */
             return;
         } else {
             if (pmap_svatophys(vm_kern_zero_page, &phys) != KERN_SUCCESS) {
@@ -2927,7 +2927,7 @@ advfs_range_init(void)
                  * to a physical address, we will not use a virtual memory
                  * address range.
                  */
-                MS_SMP_ASSERT(0);   /* We should not get here. */
+                KASSERT(0);   /* We should not get here. */
                 virtualZeroRangeP = NULL;
                 return;
             }

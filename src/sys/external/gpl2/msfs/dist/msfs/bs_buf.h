@@ -278,13 +278,13 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
 
 #define ADD_DIRTYACCESSLIST( bp, seize_bfiolock ) \
 { \
-    MS_SMP_ASSERT(mutex_owned(&bp->bufLock)); \
+    KASSERT(mutex_owned(&bp->bufLock)); \
     if (seize_bfiolock) \
         mutex_enter(&bp->bfAccess->bfIoLock); \
     else \
-        MS_SMP_ASSERT(mutex_owned(&bp->bfAccess->bfIoLock)); \
+        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock)); \
     bp->accListSeq++; \
-    MS_SMP_ASSERT(!(bp->lock.state & ACC_DIRTY)); \
+    KASSERT(!(bp->lock.state & ACC_DIRTY)); \
     bp->lock.state |= ACC_DIRTY; \
     bp->accFwd = (struct bsBuf *)&bp->bfAccess->dirtyBufList; \
     bp->accBwd = bp->bfAccess->dirtyBufList.accBwd; \
@@ -297,14 +297,14 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
 
 #define RM_ACCESSLIST( bp, seize_bfiolock ) \
 { \
-    MS_SMP_ASSERT(mutex_owned(&bp->bufLock)); \
+    KASSERT(mutex_owned(&bp->bufLock)); \
     if (seize_bfiolock) \
         mutex_enter(&bp->bfAccess->bfIoLock); \
     else \
-        MS_SMP_ASSERT(mutex_owned(&bp->bfAccess->bfIoLock)); \
-    MS_SMP_ASSERT(bp->lock.state & ACC_DIRTY); \
+        KASSERT(mutex_owned(&bp->bfAccess->bfIoLock)); \
+    KASSERT(bp->lock.state & ACC_DIRTY); \
     bp->bfAccess->dirtyBufList.length--; \
-    MS_SMP_ASSERT(bp->bfAccess->dirtyBufList.length >= 0); \
+    KASSERT(bp->bfAccess->dirtyBufList.length >= 0); \
     bp->lock.state &= ~ACC_DIRTY; \
     bp->accListSeq++; \
     bp->accFwd->accBwd = bp->accBwd; \
