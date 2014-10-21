@@ -3937,7 +3937,7 @@ msfs_syscall_op_get_dmnname_params(libParamsT *libBufp)
                     libBufp->getDmnNameParams.domain,
                     &ess_error);
         if (ess_error != 0) {
-           DMNTBL_LOCK_WRITE( &DmnTblLock )
+           DMNTBL_LOCK_WRITE( &DmnTblLock );
            if (essdmnP = domain_name_lookup(libBufp->getDmnNameParams.domain,0))
                domain_panic (essdmnP, "ESS generated domain_panic");
            DMNTBL_UNLOCK( &DmnTblLock )
@@ -6340,7 +6340,7 @@ msfs_process_deferred_delete_list(
     struct mount *mp;
 
     if (!(flag & M_GLOBAL_ROOT))
-        DMNTBL_LOCK_WRITE( &DmnTblLock )    
+        DMNTBL_LOCK_WRITE( &DmnTblLock );    
     dmnP = domain_name_lookup(dmnName, flag);
     if (TEST_DMNP(dmnP) != EOK) {
         if (!(flag & M_GLOBAL_ROOT))

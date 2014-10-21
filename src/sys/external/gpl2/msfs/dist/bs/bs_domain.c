@@ -405,7 +405,7 @@ bs_bfdmn_id_activate(
      */
     bs_kernel_init(FALSE);
 
-    DMNTBL_LOCK_WRITE( &DmnTblLock )
+    DMNTBL_LOCK_WRITE( &DmnTblLock );
 
     dmnP = domain_lookup( bfDomainId, 0 );
 
@@ -494,7 +494,7 @@ start:
     bs_kernel_init(isRoot);
 
     if(!(flag & M_GLROOT_OTHER)) {
-        DMNTBL_LOCK_WRITE( &DmnTblLock )
+        DMNTBL_LOCK_WRITE( &DmnTblLock );
         dmnTblLocked = TRUE;
     }
 
@@ -1649,7 +1649,7 @@ bs_bfdmn_deactivate(
      * for root causes deadlocks during global root failover.
      */
     if (!(flag & M_GLOBAL_ROOT)) {
-        DMNTBL_LOCK_WRITE( &DmnTblLock )
+        DMNTBL_LOCK_WRITE( &DmnTblLock );
         tblLocked = TRUE;
     }
 
@@ -3181,7 +3181,7 @@ bs_vd_add_active(
      * This lock must be held across the calls to get_raw_vd_attrs and
      * setup_vd because the global buffer "Dpg" is used by both.
      */
-    DMNTBL_LOCK_WRITE( &DmnTblLock )
+    DMNTBL_LOCK_WRITE( &DmnTblLock );
 
     /*
      * Now that the domain is opened and accessed, some parameters
@@ -3725,7 +3725,7 @@ bs_vd_remove_active (
         ss_was_activated = TRUE;
     }
 
-    DMNTBL_LOCK_WRITE( &DmnTblLock )
+    DMNTBL_LOCK_WRITE( &DmnTblLock );
     dmntbl_lock = 1;
     /* coordinate with truncation */
     RMVOL_TRUNC_LOCK_WRITE(dmnP);
@@ -3858,7 +3858,7 @@ bs_vd_add_rem_vol_done (
     bfPageRefHT pgPin;
     struct nameidata *ndp = &u.u_nd;
 
-    DMNTBL_LOCK_WRITE( &DmnTblLock )
+    DMNTBL_LOCK_WRITE( &DmnTblLock );
 
     vdIndex = BS_BFTAG_VDI (dmnP->ftxLogTag);
     vd = VD_HTOP(vdIndex, dmnP);
