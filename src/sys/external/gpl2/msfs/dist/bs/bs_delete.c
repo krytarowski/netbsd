@@ -1840,7 +1840,7 @@ filesetnode_init( bfSetT *bfSetp, fileSetNodeT **fsnpA )
 
     mutex_init(&fsnp->filesetMutex, MUTEX_DEFAULT, IPL_NONE);
     for ( qip = &fsnp->qi[0]; qip < &fsnp->qi[MAXQUOTAS]; qip++ ) {
-        lock_setup( &qip->qiLock, ADVquotaInfoT_qiLock, TRUE );
+        rw_init( &qip->qiLock );
     }
 
     fsnp->rootAccessp = NULL;
