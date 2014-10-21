@@ -296,15 +296,11 @@ init_access(bfAccessT *bfap)
     lk_init( &bfap->stateLk, &bfap->bfaLock, LKT_STATE, 0, LKU_BF_STATE );
     bfap->stateLk.state = ACC_INVALID;
     ftx_lock_init(&bfap->xtntMap_lk, &bfap->bfaLock);
-    lock_setup( &bfap->trunc_xfer_lk, ADVbfAccessT_trunc_xfer_lk_info,TRUE);
-    lock_setup( &bfap->cow_lk, ADVbfAccessT_cow_lk_info,TRUE);
-    lock_setup( &bfap->clu_clonextnt_lk,
-                ADVbfAccessT_clu_clonextnt_lk_info,
-                TRUE);
+    rw_init( &bfap->trunc_xfer_lk );
+    rw_init( &bfap->cow_lk );
+    rw_init( &bfap->clu_clonextnt_lk );
     ftx_lock_init(&bfap->mcellList_lk, &bfap->bfaLock);
-    lock_setup( &bfap->xtnts.migTruncLk,
-                ADVbsInMemXtntT_migTruncLk_info,
-                TRUE);
+    rw_init( &bfap->xtnts.migTruncLk );
     bfap->mapped = FALSE;
     bfap->freeFwd = bfap->freeBwd = NULL;
     bfap->onFreeList = 0;
@@ -1547,13 +1543,9 @@ bs_invalidate_rsvd_access_struct(
      *  See bfm_open_ms()
      */
     lock_terminate( &bfap->mcellList_lk.lock );
-    lock_setup( &bfap->mcellList_lk.lock,
-                ADVbfAccessT_mcellList_lk_info,
-                TRUE );
+    rw_init( &bfap->mcellList_lk.lock );
     lock_terminate( &bfap->xtntMap_lk.lock );
-    lock_setup( &bfap->xtntMap_lk.lock,
-                ADVbfAccessT_xtntMap_lk_info,
-                TRUE );
+    rw_init( &bfap->xtntMap_lk.lock );
 
     /*
      * Close to clean up any access structure stuff.
@@ -2183,24 +2175,16 @@ bfm_open_ms(
             if (bfMIndex == BFM_BMT  ||
                 bfMIndex == BFM_RBMT) {
                 lock_terminate( &(*outbfap)->mcellList_lk.lock );
-                lock_setup( &(*outbfap)->mcellList_lk.lock,
-                    ADV_BMT_bfAccessT_mcellList_lk_info,
-                    TRUE );
+                rw_init( &(*outbfap)->mcellList_lk.lock );
                 lock_terminate( &(*outbfap)->xtntMap_lk.lock );
-                lock_setup( &(*outbfap)->xtntMap_lk.lock,
-                    ADV_BMT_bfAccessT_xtntMap_lk_info,
-                    TRUE );
+                rw_init( &(*outbfap)->xtntMap_lk.lock );
             }
         } else {
             if (bfMIndex == BFM_BMT_V3) {
                 lock_terminate( &(*outbfap)->mcellList_lk.lock );
-                lock_setup( &(*outbfap)->mcellList_lk.lock,
-                    ADV_BMT_bfAccessT_mcellList_lk_info,
-                    TRUE );
+                rw_init( &(*outbfap)->mcellList_lk.lock );
                 lock_terminate( &(*outbfap)->xtntMap_lk.lock );
-                lock_setup( &(*outbfap)->xtntMap_lk.lock,
-                    ADV_BMT_bfAccessT_xtntMap_lk_info,
-                    TRUE );
+                rw_init( &(*outbfap)->xtntMap_lk.lock );
             }
         }
     }
@@ -3716,15 +3700,11 @@ lookup:
     MS_SMP_ASSERT(bfap->bfSetp == NULL);
     if (bfSetp->cloneId == BS_BFSET_ORIG) {
         lock_terminate(&(bfap->xtnts.migTruncLk));
-        lock_setup(&(bfap->xtnts.migTruncLk), 
-                   ADVbsInMemXtntT_migTruncLk_info,
-                   TRUE);
+        rw_init(&(bfap->xtnts.migTruncLk));
     }
     else {
         lock_terminate(&(bfap->xtnts.migTruncLk));
-        lock_setup(&(bfap->xtnts.migTruncLk), 
-                   ADVClonebsInMemXtntT_migTruncLk_info,
-                   TRUE);
+        rw_init(&(bfap->xtnts.migTruncLk));
     }
 
     bfap->accessCnt     = 0;

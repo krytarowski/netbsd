@@ -3329,7 +3329,7 @@ vd_alloc(
     ftx_lock_init(&vdp->stgMap_lk, &dmnP->mutex);
     ftx_lock_init(&vdp->mcell_lk, &dmnP->mutex);
     ftx_lock_init(&vdp->rbmt_mcell_lk,&dmnP->mutex);
-    lock_setup( &vdp->ddlActiveLk, ADVvdT_ddlActiveLk_info, TRUE );
+    rw_init( &vdp->ddlActiveLk );
     mutex_init(&vdp->vdIoLock, MUTEX_DEFAULT, IPL_NONE);
     mutex_init(&vdp->vdStateLock, MUTEX_DEFAULT, IPL_NONE);
 
@@ -5601,7 +5601,7 @@ dmn_alloc(
 
     SC_TBL_LOCK_INIT(dmnP);
 #ifdef ADVFS_SMP_ASSERT
-    lock_setup(&dmnP->ftxSlotLock, ADVdomainT_ftxSlotLock_lk_info, TRUE);
+    rw_init(&dmnP->ftxSlotLock);
 #endif
     dmnP->lsnList.lsnFwd = (struct bsBuf *)&dmnP->lsnList;
     dmnP->lsnList.lsnBwd = (struct bsBuf *)&dmnP->lsnList;
@@ -6012,7 +6012,7 @@ bs_domain_init(
                )
 {
     mutex_init( &DmnTblMutex, MUTEX_DEFAULT, IPL_NONE);
-    lock_setup( &DmnTblLock, ADVDmnTblLock_info, TRUE );
+    rw_init( &DmnTblLock );
 
     /* create and init dynamic hash table */
     DomainHashTbl = dyn_hashtable_init( DOMAIN_HASH_INITIAL_SIZE,
