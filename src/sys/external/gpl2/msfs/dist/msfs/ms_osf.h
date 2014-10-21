@@ -183,12 +183,21 @@ typedef struct fileSetNode {
 extern struct fileSetNode *FilesetHead;   /* head of the fileset list */
 
 extern krwlock_t FilesetLock;
-#define FILESET_WRITE_LOCK( fsl ) \
-    lock_write( fsl );
-#define FILESET_READ_LOCK( fsl ) \
-    lock_read( fsl );
-#define FILESET_UNLOCK( fsl ) \
-    lock_done( fsl );
+
+static inline void FILESET_WRITE_LOCK(krwlock_t *fsl)
+{
+    rw_enter(fsl, RW_WRITER);
+}
+
+static inline void FILESET_READ_LOCK(krwlock_t *fsl)
+{
+    rw_enter(fsl, RW_READER);
+}
+
+static inline void FILESET_UNLOCK(krwlock_t *fsl)
+{
+    rw_exit( fsl );
+}
 
 /*
  * Define some macros to get pointers and things out of structures
