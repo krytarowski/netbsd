@@ -84,14 +84,14 @@
  */
 #define MCIDEQL(i1, i2) (((i1).page == (i2).page) && ((i1).cell == (i2).cell))
 
-static inline void DELLIST_LOCK_WRITE(krwlock_t *lk)
+static inline void DELLIST_LOCK_WRITE(ftxLkT *lk)
 {
-    rw_enter( lk.lock, RW_WRITER );
+    rw_enter( &lk->lock, RW_WRITER );
 }
 
-static inline void DELLIST_UNLOCK(krwlock_t *lk)
+static inline void DELLIST_UNLOCK(ftxLkT *lk)
 {
-    rw_exit( lk.lock );
+    rw_exit( &lk->lock );
 }
 
 /* Internal Types */
