@@ -987,7 +987,7 @@ retry:
         /* bs_cow_pg opened the clone and loaded the extent map. */
         KASSERT(xtnts->validFlag != 0);
 
-        FTX_LOCKWRITE(&bfap->mcellList_lk, ftxH)
+        FTX_LOCKWRITE(&bfap->mcellList_lk, ftxH);
 
         /* Need to lock this here; add_stg() can extend the subXtntMap
          * array which involves reallocating the subXtntMap array, copying
@@ -1027,7 +1027,7 @@ retry:
             RAISE_EXCEPTION(sts);
         }
         failFtxFlag = 1;
-        FTX_LOCKWRITE(&bfap->mcellList_lk, ftxH)
+        FTX_LOCKWRITE(&bfap->mcellList_lk, ftxH);
         XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk)   
         xtntMap_locked = 1;
     }
@@ -1400,7 +1400,7 @@ stg_add_stg_no_cow (
         /* Add this lock to our transaction list so it can be released
          * when the transaction completes.
          */
-        FTX_ADD_LOCK(&(bfap->mcellList_lk), ftx)
+        FTX_ADD_LOCK(&(bfap->mcellList_lk), ftx);
 
         /* Need to lock this before we modify any of the extents or 
          * subextents for this file in add_stg().
@@ -1676,7 +1676,7 @@ stg_set_alloc_disk (
         RAISE_EXCEPTION (sts);
     }
 
-    FTX_ADD_LOCK(&(bfap->mcellList_lk), ftxH)
+    FTX_ADD_LOCK(&(bfap->mcellList_lk), ftxH);
 
     /*
      * Find the extent map that matches the caller's specified vdIndex.
@@ -4815,7 +4815,7 @@ xfer_stg (
     /* Add this lock to our transaction list so it can be released
      * when the transaction completes.
      */
-    FTX_ADD_LOCK(&(bfap->mcellList_lk), ftxH)
+    FTX_ADD_LOCK(&(bfap->mcellList_lk), ftxH);
 
     /* Need to lock this before we modify any of the extents or
      * subextents for this file in merge_xtnt_maps().

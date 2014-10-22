@@ -295,7 +295,7 @@ noclone:
     }
 
     /* Put this lock on list to be released when transaction completes. */
-    FTX_ADD_LOCK(&bfap->mcellList_lk, ftxH)
+    FTX_ADD_LOCK(&bfap->mcellList_lk, ftxH);
 
     /* 
      * Recheck under the protection of the mcellList_lk that
@@ -351,7 +351,7 @@ noclone:
     /*
      * Update the in-memory extent map.
      */
-    FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH)
+    FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH);
     bfap->xtnts.type = BSXMT_STRIPE;
     imm_delete_xtnt_map(bfap->xtnts.xtntMap);
     bfap->xtnts.xtntMap = NULL;
@@ -454,7 +454,7 @@ str_stripe_clone (
     /*
      * Update the in-memory extent map.
      */
-    FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH)
+    FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH);
     bfap->xtnts.type = BSXMT_STRIPE;
     imm_delete_xtnt_map (bfap->xtnts.xtntMap);
     bfap->xtnts.xtntMap = NULL;
