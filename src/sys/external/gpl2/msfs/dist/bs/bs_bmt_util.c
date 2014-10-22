@@ -660,7 +660,7 @@ bmtr_create_rec(
          * because the extent chain for the rbmt MUST go there.
          */
         if((file_is_rbmt) && (newcell == RBMT_RSVD_CELL)) {
-            MS_SMP_ASSERT (rType == BSR_XTRA_XTNTS)
+            KASSERT(rType == BSR_XTRA_XTNTS)
         }
     }
 
@@ -747,7 +747,7 @@ bmtr_create_rec(
          * to cell 27 but instead allocate a non-cell 27 mcell.
          */
         if((file_is_rbmt) && (mcid->cell == RBMT_RSVD_CELL)) {
-            MS_SMP_ASSERT (rType == BSR_XTRA_XTNTS)
+            KASSERT(rType == BSR_XTRA_XTNTS)
         }
 
         rPtr = bmtr_assign_rec( rType, rSize, mcp, pgref );

@@ -702,7 +702,7 @@ stripe_zero_size_clone (
     bfSetDesc = bfap->bfSetp;
 
     /* can't stripe reserved files, pass BMT_NORMAL_MCELL to bmt_alloc_mcell */
-    MS_SMP_ASSERT (BS_BFTAG_REG(bfap->tag));
+    KASSERT(BS_BFTAG_REG(bfap->tag));
     for (i = 0; i < segmentCnt; i++) {
         sts = imm_create_xtnt_map ( bfap->bfPageSz,
                                     bfap->dmnP,

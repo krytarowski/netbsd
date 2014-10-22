@@ -7382,7 +7382,7 @@ stg_remove_stg_start (
 
     /* We are setting up and UNDO so we better be part of a root ftx */
 
-    MS_SMP_ASSERT (parentFtx.hndl);
+    KASSERT(parentFtx.hndl);
 
     sts = FTX_START_N(FTA_BS_STG_REMOVE_V1, &ftx, parentFtx, bfap->dmnP, 0);
 

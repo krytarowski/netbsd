@@ -444,7 +444,7 @@ bs_init(int doingRoot)
     KASSERT( sizeof(bsTDirPgT) == ADVFS_PGSZ );
     KASSERT( sizeof(bsStgBmT) == ADVFS_PGSZ );
     KASSERT( sizeof(bsMPgT) == ADVFS_PGSZ );
-    MS_SMP_ASSERT ((ADVFS_PGSZ_IN_BLKS % BS_CLUSTSIZE) == 0);
+    KASSERT((ADVFS_PGSZ_IN_BLKS % BS_CLUSTSIZE) == 0);
 
     /* We have some code (not enough) to allow our bitfile page size */
     /* (ADVFS_PGSZ) to be a multiple of the UBC page size (PAGE_SIZE). */

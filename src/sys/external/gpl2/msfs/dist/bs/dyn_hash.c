@@ -730,9 +730,9 @@ dyn_split_chain( dyn_hashtableT * hashtable,
     dyn_hashlinksT *hash_links,*next_links,*head_links,*tail_links;
     void *elementp;
     ADVSMP_DYNHASH_BUCKETLOCK_LOCK(&bucketp->bucket_lock);
-    MS_SMP_ASSERT (msb(hashtable->current_buckets) - 
+    KASSERT(msb(hashtable->current_buckets) - 
             hashtable->initial_index_shift -1 > 0);
-    MS_SMP_ASSERT (bucketp->siblingp == bucketp);
+    KASSERT(bucketp->siblingp == bucketp);
     if (bucketp->element_count <= hashtable->max_chain_length)
     { /* Make sure a deletion hasn't brought us below the threshold */ 
 #       ifdef DYN_HASH_DEBUG
@@ -752,7 +752,7 @@ dyn_split_chain( dyn_hashtableT * hashtable,
             dyn_hash_stats.largest_missed_splits=missed_splits    ;
 #   endif
     
-    MS_SMP_ASSERT (missed_splits> 0);
+    KASSERT(missed_splits> 0);
     siblings = (1<<missed_splits)- 1;
     /* the increment is equal to the size of the hashtable the last
        time the bucket was split
@@ -802,7 +802,7 @@ dyn_split_chain( dyn_hashtableT * hashtable,
                                hash_links,
                                elementp);
         DYN_KEY_TO_BUCKET_PTR (hashtable,key,size,sbptr);
-        MS_SMP_ASSERT (sbptr->siblingp == bucketp);
+        KASSERT(sbptr->siblingp == bucketp);
         if (sbptr->chainp == NULL)
         {
             hash_links->dh_next = hash_links->dh_prev = elementp;

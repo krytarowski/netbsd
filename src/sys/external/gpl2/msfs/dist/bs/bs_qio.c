@@ -5249,7 +5249,7 @@ bs_io_thread( int radId )
                 /* Check to see if the domain and the vd are still there.
                  * It should no longer be possible to have the domain
                  * and vd go away while a START_MORE_IO message is queued.
-                 * The MS_SMP_ASSERT is here to test this theory and should
+                 * The KASSERT is here to test this theory and should
                  * eventually be removed (along with the TEST_DMNP).
                  *
                  * For this reason also we do not bump the refCnt on the vd;

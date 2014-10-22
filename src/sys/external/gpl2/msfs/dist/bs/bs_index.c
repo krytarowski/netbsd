@@ -5402,7 +5402,7 @@ idx_prune_btree_int (
          * we only need to remove it from this node
          */
 
-        MS_SMP_ASSERT (index < dst_node_ptr->total_elements-1);
+        KASSERT(index < dst_node_ptr->total_elements-1);
 
         /* This node needs updating, Lets reuse some of our local
          * variables */

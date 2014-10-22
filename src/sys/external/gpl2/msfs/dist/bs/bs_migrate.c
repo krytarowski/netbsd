@@ -2489,7 +2489,7 @@ get_xm_page_range_info (
              * a leading hole and (maybe impossible) adjacent holes
              */
             if (last_extent) {
-                /* This is probably an MS_SMP_ASSERT situation, but 
+                /* This is probably an KASSERT situation, but 
                  * two consective holes at the end of the file will be
                  * handled. We already dealt with a single hole at the
                  * end of the file by reducing out range. Do it again
