@@ -4003,7 +4003,7 @@ msfs_syscall_op_set_bfset_params(libParamsT *libBufp)
 
     if (clu_is_ready()) {
 
-        BFSETTBL_LOCK_READ( bfSetp->dmnP )
+        BFSETTBL_LOCK_READ( bfSetp->dmnP );
 
         if (bfSetp->fsnp != NULL) {
            struct fileSetNode *fsnp = bfSetp->fsnp;
@@ -4080,7 +4080,7 @@ msfs_syscall_op_set_bfset_params_activate(libParamsT *libBufp)
 
     if (clu_is_ready()) {
 
-        BFSETTBL_LOCK_READ( bfSetp->dmnP )
+        BFSETTBL_LOCK_READ( bfSetp->dmnP );
 
         if (bfSetp->fsnp != NULL) {
            struct fileSetNode *fsnp = bfSetp->fsnp;
@@ -4449,7 +4449,7 @@ msfs_syscall_op_tag_stat(libParamsT *libBufp)
 	RAISE_EXCEPTION( E_NO_SUCH_BF_SET );
     }
 
-    BFSETTBL_LOCK_READ( bfSetp->dmnP ) 
+    BFSETTBL_LOCK_READ( bfSetp->dmnP );
     bfs_lock = 1;
 
     /* Verify the bitfile set is available. */
