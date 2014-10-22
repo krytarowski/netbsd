@@ -656,21 +656,6 @@ rbf_set_bfset_params(
 #define ftx_set_state( lkp, mp, s, ftxh ) \
        _ftx_set_state( lkp, mp, s, ftxh, __LINE__, __FILE__ )
 
-/*
- * Lock shortcut macros
- */
-
-#define FTX_LOCKREAD( lkp, ftxh ) { \
-    ftx_lock_read( (lkp), (ftxh), __LINE__, __FILE__ ); \
-}
-#define FTX_LOCKWRITE( lkp, ftxh ) { \
-    ftx_lock_write( (lkp), (ftxh), __LINE__, __FILE__ ); \
-}
-
-#define FTX_ADD_LOCK( lkp, ftxh ) {\
-       _ftx_add_lock( lkp, ftxh, __LINE__, __FILE__ ); \
-}
-
 void
 ftx_lock_init(
     ftxLkT *lk,            /* in - pointer to the lock */
@@ -680,25 +665,38 @@ ftx_lock_init(
 void
 ftx_lock_write(
     ftxLkT *lk,      /* in */
-    ftxHT ftxH,      /* in */
-    int ln,          /* in */
-    const char *fn         /* in */
+    ftxHT ftxH      /* in */
     );
 
 void
 ftx_lock_read(
     ftxLkT *lk,      /* in */
-    ftxHT ftxH,      /* in */
-    int ln,          /* in */
-    const char *fn         /* in */
+    ftxHT ftxH      /* in */
     );
 
 void
-_ftx_add_lock(
+ftx_add_lock(
               ftxLkT *lk,      /* in */
-              ftxHT ftxH,      /* in */
-              int ln,          /* in */
-              const char *fn         /* in */
+              ftxHT ftxH      /* in */
               );
+
+/*
+ * Lock shortcut macros
+ */
+
+static inline void FTX_LOCKREAD(ftxLkT *lkp, ftxHT ftxh)
+{
+    ftx_lock_read(lkp, ftxh);
+}
+
+static inline void FTX_LOCKWRITE(ftxLkT *lkp, ftxHT ftxh)
+{
+    ftx_lock_write(lkp, ftxh);
+}
+
+static inline void FTX_ADD_LOCK(ftxLkT *lkp, ftxHT ftxh)
+{
+    ftx_add_lock(lkp, ftxh);
+}
 
 #endif  /* FTX_PUBLIC */
