@@ -1012,7 +1012,7 @@ retry:
              * It can happen when we a disk is removed from service
              * while we are allocating storage.
              */
-            XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+            XTNMAP_UNLOCK(&bfap->xtntMap_lk);
             xtntMap_locked = 0;
             ftx_fail(ftxH);
             goto retry;
@@ -1094,7 +1094,7 @@ retry:
 
     xtnts->allocPageCnt = xtnts->allocPageCnt + grantedPageCnt;
 
-    XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+    XTNMAP_UNLOCK(&bfap->xtntMap_lk);
     xtntMap_locked = 0;
 
     undoRec.nextPage = bfap->nextPage;
@@ -1112,7 +1112,7 @@ retry:
 
 HANDLE_EXCEPTION:
     if ( xtntMap_locked ) {
-        XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+        XTNMAP_UNLOCK(&bfap->xtntMap_lk);
         xtntMap_locked = 0;
     }
 
@@ -1427,7 +1427,7 @@ stg_add_stg_no_cow (
                      * It can happen when we a disk is removed from service
                      * while we are allocating storage.
                      */
-                    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+                    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
                     xtntMap_locked = 0;
                     ftx_fail (ftx);
                 } else {
@@ -1463,7 +1463,7 @@ stg_add_stg_no_cow (
 
     xtnts->allocPageCnt = xtnts->allocPageCnt + pageCnt;
 
-    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
     xtntMap_locked = 0;
 
     undoRec.nextPage = bfap->nextPage;
@@ -1484,7 +1484,7 @@ stg_add_stg_no_cow (
 
 HANDLE_EXCEPTION:
     if ( xtntMap_locked ) {
-        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
         xtntMap_locked = 0;
     }
 
@@ -4843,7 +4843,7 @@ xfer_stg (
 
     xtnts->allocPageCnt += bfPageCnt;
 
-    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
     xtntMap_locked = 0;
 
     undoRec.nextPage = bfap->nextPage;
@@ -4863,7 +4863,7 @@ xfer_stg (
 HANDLE_EXCEPTION:
 
     if ( xtntMap_locked ) {
-        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
         xtntMap_locked = 0;
     }
 
@@ -6870,7 +6870,7 @@ x_page_to_blkmap (
 HANDLE_EXCEPTION:
 
     if ( unlock_xtnt_map ) {
-        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
     }
     return sts;
 
@@ -7188,13 +7188,13 @@ page_is_mapped(
 
       default:
         if ( unlock_xtnt_map ) {
-            XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+            XTNMAP_UNLOCK(&bfap->xtntMap_lk);
         }
         ADVFS_SAD1 ("page_is_mapped --- bad extent map type", xtnts->type);
     }  /* end switch */
 
     if ( unlock_xtnt_map ) {
-        XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+        XTNMAP_UNLOCK(&bfap->xtntMap_lk);
     }
     return results;
 }
@@ -7294,7 +7294,7 @@ page_is_mapped_local(
     }
 
 end:
-    XTNMAP_UNLOCK(&bfap->xtntMap_lk)
+    XTNMAP_UNLOCK(&bfap->xtntMap_lk);
     return results;
 }
 

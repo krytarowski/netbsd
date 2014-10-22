@@ -2351,7 +2351,7 @@ x_load_inmem_xtnt_map (
              * xtntMap lock gets write-locked.  Check to see if we got to 
              * valid in the meantime, however.
              */
-            XTNMAP_UNLOCK( &(bfap->xtntMap_lk))  
+            XTNMAP_UNLOCK( &(bfap->xtntMap_lk));
             lock_read( &(bfap->mcellList_lk.lock) );
             XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) )
             if (xtnts->validFlag) {
@@ -2370,7 +2370,7 @@ x_load_inmem_xtnt_map (
         XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) )
         if (xtnts->validFlag) {
             /* If extents are valid, just return with mcellList locked */
-            XTNMAP_UNLOCK( &(bfap->xtntMap_lk))  
+            XTNMAP_UNLOCK( &(bfap->xtntMap_lk));
             return EOK;
         }
         /* otherwise fall thru and reload the extent maps */
@@ -2440,7 +2440,7 @@ x_load_inmem_xtnt_map (
         MCELLIST_UNLOCK(&(bfap->mcellList_lk))   /* was read-locked */
     } else if (lock_request == X_LOAD_UPDATE) {
         /* McellList_lk is already write-locked in this case */
-        XTNMAP_UNLOCK( &(bfap->xtntMap_lk))
+        XTNMAP_UNLOCK( &(bfap->xtntMap_lk));
     }
     /* else if (lock_request == X_LOAD_LOCKSOWNED)
      *    we don't release either lock.
@@ -2457,7 +2457,7 @@ HANDLE_EXCEPTION:
      * the only routine that calls here with X_LOAD_LOCKSOWNED set.
      */
     if (lock_request != X_LOAD_LOCKSOWNED) {
-        XTNMAP_UNLOCK( &(bfap->xtntMap_lk))
+        XTNMAP_UNLOCK( &(bfap->xtntMap_lk));
         MCELLIST_UNLOCK(&(bfap->mcellList_lk));
     }
 
