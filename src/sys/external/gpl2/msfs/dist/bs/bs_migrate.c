@@ -1315,7 +1315,7 @@ get_copy_storage:
      * out-of-date.  But the code didn't detect that and at the end of the
      * migration, the pages that had been added to the hole were lost.
      */
-    MIGTRUNC_LOCK_WRITE( &(bfap->xtnts.migTruncLk) )
+    MIGTRUNC_LOCK_WRITE( &(bfap->xtnts.migTruncLk) );
     unlkmigTrunc = 1;
 
     /*
@@ -1365,7 +1365,7 @@ get_copy_storage:
      */
     if (is_clone) {
         savedCowPgCount = bfap->cowPgCount;
-        MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) )
+        MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
         unlkmigTrunc = 0;
     }
 
@@ -1436,11 +1436,11 @@ get_copy_storage:
             RAISE_EXCEPTION (sts);
         }
         startedFtxFlag = 1;
-        MIGTRUNC_LOCK_WRITE( &(bfap->xtnts.migTruncLk) )
+        MIGTRUNC_LOCK_WRITE( &(bfap->xtnts.migTruncLk) );
         unlkmigTrunc = 1;
         if (savedCowPgCount != bfap->cowPgCount) {
             KASSERT(bfap->cowPgCount > savedCowPgCount);
-            MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) )
+            MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
             unlkmigTrunc = 0;
             startedFtxFlag = 0;
             ftx_fail(ftxH);
@@ -1634,7 +1634,7 @@ HANDLE_EXCEPTION:
     }
 
     if ( unlkmigTrunc ) {
-        MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) )
+        MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
     }
 
     if ( truncXferFlg ) {
@@ -1844,7 +1844,7 @@ get_copy_storage:
      * out-of-date.  But the code didn't detect that and at the end of the
      * migration, the pages that had been added to the hole were lost.
      */
-    MIGTRUNC_LOCK_WRITE( &(bfap->xtnts.migTruncLk) )
+    MIGTRUNC_LOCK_WRITE( &(bfap->xtnts.migTruncLk) );
     unlkmigTrunc = 1;
 
     sts = mig_verify_stripe_page_range (
@@ -1883,7 +1883,7 @@ get_copy_storage:
      */
     if (is_clone) {
         savedCowPgCount = bfap->cowPgCount;
-        MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) )
+        MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
         unlkmigTrunc = 0;
     }
 
@@ -1939,11 +1939,11 @@ get_copy_storage:
             RAISE_EXCEPTION (sts);
         }
         startedFtxFlag = 1;
-        MIGTRUNC_LOCK_WRITE( &(bfap->xtnts.migTruncLk) )
+        MIGTRUNC_LOCK_WRITE( &(bfap->xtnts.migTruncLk) );
         unlkmigTrunc = 1;
         if (savedCowPgCount != bfap->cowPgCount) {
             KASSERT(bfap->cowPgCount > savedCowPgCount);
-            MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) )
+            MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
             unlkmigTrunc = 0;
             ftx_fail(ftxH);
             startedFtxFlag = 0;
@@ -2190,7 +2190,7 @@ HANDLE_EXCEPTION:
     }
 
     if ( unlkmigTrunc ) {
-        MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) )
+        MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
     }
     if ( truncXferFlg ) {
         KASSERT( bfap->origAccp != NULL );
