@@ -1350,7 +1350,6 @@ del_clean_mcell_list(
     bfSetT *bfSetp;
     bfAccessT* bfap;
     int delete_this_mcell, ftxStarted;
-    extern bfAccessT *find_bfap();
     ftxHT ftxH;
     
     if ( RBMT_THERE(vdp->bmtp->dmnP) ) {
