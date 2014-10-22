@@ -5498,7 +5498,7 @@ dmn_dealloc(
     bfs_dealloc( dmnP->bfSetDirp, TRUE );
     dmnP->bfSetDirp = 0;     
 
-    BFSETTBL_UNLOCK(dmnP )
+    BFSETTBL_UNLOCK(dmnP );
 
     if (dmnP->scTbl != NULL) {
         scTbl = dmnP->scTbl;
