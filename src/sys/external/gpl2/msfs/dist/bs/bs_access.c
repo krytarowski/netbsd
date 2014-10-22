@@ -5246,7 +5246,7 @@ put_onto_waitlist:
                      PZERO,               /* not interruptible */
                      "actRangeWaiter",
                      FALSE,               /* no timeout */
-                     simple_lock_addr(bfap->actRangeLock),
+                     &(bfap->actRangeLock),
                      MS_LOCK_SIMPLE | MS_LOCK_ON_ERROR );
     
     /* When we wake up, our actRange is on the active range list.  
