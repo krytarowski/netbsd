@@ -454,7 +454,7 @@ set_block_map (
                                         i,
                                         &blkMap);
 
-            XTNMAP_UNLOCK( &(bfAccess->xtntMap_lk) )
+            XTNMAP_UNLOCK( &(bfAccess->xtntMap_lk) );
 
             if (sts != EOK) {
                 RAISE_EXCEPTION (sts);
