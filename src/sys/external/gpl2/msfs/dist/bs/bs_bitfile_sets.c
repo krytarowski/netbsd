@@ -2846,7 +2846,7 @@ rbf_bfs_create(
     bfSetp->fragBfTag = fragBfTag;
 
     bfs_close( bfSetp, ftxH );
-    BFSETTBL_UNLOCK( dmnP )
+    BFSETTBL_UNLOCK( dmnP );
 
     ftx_done_n( ftxH, FTA_BFS_CREATE_2 );
 
@@ -2858,7 +2858,7 @@ HANDLE_EXCEPTION:
      * a transaction failure may release BfSetTblLock
      */
     if (lkLocked && rw_lock_held(&dmnP->BfSetTblLock.lock)) {
-        BFSETTBL_UNLOCK( dmnP )
+        BFSETTBL_UNLOCK( dmnP );
     }
 
     if (ftxStarted) {
@@ -3038,7 +3038,7 @@ bs_bfs_close(
      * Unlock the table.
      */
 
-    BFSETTBL_UNLOCK( dmnP )
+    BFSETTBL_UNLOCK( dmnP );
 
     return;
 }
@@ -3334,7 +3334,7 @@ bfs_access(
     bfSetp->fsRefCnt++;
 
     if (tblLocked) {
-        BFSETTBL_UNLOCK( dmnP )
+        BFSETTBL_UNLOCK( dmnP );
     }
     *retBfSetp = bfSetp;
 
@@ -3347,7 +3347,7 @@ HANDLE_EXCEPTION:
     }
 
     if (tblLocked) {
-        BFSETTBL_UNLOCK( dmnP )
+        BFSETTBL_UNLOCK( dmnP );
     }
 
     if (tagDirOpen) {
@@ -3512,7 +3512,7 @@ bfs_open(
      */
 
     if (tblLocked) {
-      BFSETTBL_UNLOCK( bfSetp->dmnP )
+      BFSETTBL_UNLOCK( bfSetp->dmnP );
     }
 
     *retBfSetp = bfSetp;
@@ -3522,7 +3522,7 @@ bfs_open(
 HANDLE_EXCEPTION:
 
     if (tblLocked) {
-        BFSETTBL_UNLOCK( bfSetp->dmnP )
+        BFSETTBL_UNLOCK( bfSetp->dmnP );
     }
 
     /* Tell caller that no bitfile set was opened.*/
@@ -4601,7 +4601,7 @@ bs_bfs_delete(
         }
     }
 
-    BFSETTBL_UNLOCK( dmnP )
+    BFSETTBL_UNLOCK( dmnP );
 
     /* Close the sets. */
 
@@ -4633,7 +4633,7 @@ bs_bfs_delete(
         unlink_clone( origSetp, ftxH );
     }
 
-    BFSETTBL_UNLOCK( dmnP )
+    BFSETTBL_UNLOCK( dmnP );
 
     bfs_delete_pending_list_remove(dirBfAp, ftxH);
 
@@ -4662,7 +4662,7 @@ bs_bfs_delete(
 
     BFSETTBL_LOCK_WRITE( dmnP );
     bfs_dealloc( setp, TRUE );
-    BFSETTBL_UNLOCK( dmnP )
+    BFSETTBL_UNLOCK( dmnP );
 
     /* in a cluster ensure removing a clone fset cannot be undone if 
      * the server fails because we are about to notify all cluster
@@ -4695,7 +4695,7 @@ bs_bfs_delete(
 	}
         BFSETTBL_LOCK_WRITE( dmnP );
         bfs_close( origSetp, ftxH );
-        BFSETTBL_UNLOCK( dmnP )
+        BFSETTBL_UNLOCK( dmnP );
     }
 
     if( (flag & M_FAILOVER) && (flag & M_GLOBAL_ROOT) ) {
@@ -4728,7 +4728,7 @@ HANDLE_EXCEPTION:
     if (deletingClone) {
         BFSETTBL_LOCK_WRITE( dmnP );
         bfs_close( origSetp, ftxH );
-        BFSETTBL_UNLOCK( dmnP )
+        BFSETTBL_UNLOCK( dmnP );
     }
 
     if ( restoreCloneDelState ) {
@@ -5162,7 +5162,7 @@ bs_bfs_clone(
         }
     }
 
-    BFSETTBL_UNLOCK( dmnP )
+    BFSETTBL_UNLOCK( dmnP );
 
     ftx_done_n( ftxH, FTA_BFS_CLONE );
 
@@ -5177,7 +5177,7 @@ bs_bfs_clone(
     bfs_close( cloneSetp, ftxH );
     bfs_close( origSetp, ftxH );
 
-    BFSETTBL_UNLOCK( dmnP )
+    BFSETTBL_UNLOCK( dmnP );
 
     ms_free( origDirParamsp );
     ms_free( cloneSetAttrp );
@@ -5191,7 +5191,7 @@ HANDLE_EXCEPTION:
      * transaction failure may release BfSetTblLock
      */
     if (lkLocked && rw_lock_held(&dmnP->BfSetTblLock.lock)) {
-        BFSETTBL_UNLOCK( dmnP )
+        BFSETTBL_UNLOCK( dmnP );
     }
 
     if (ftxStarted) {
@@ -5202,13 +5202,13 @@ HANDLE_EXCEPTION:
         origSetp->bfsOpPend = 0;
         BFSETTBL_LOCK_WRITE( dmnP );
         bfs_close( origSetp, ftxH );
-        BFSETTBL_UNLOCK( dmnP )
+        BFSETTBL_UNLOCK( dmnP );
     }
 
     if ( BFSET_VALID(cloneSetp) ) {
         BFSETTBL_LOCK_WRITE( dmnP );
         bfs_close( cloneSetp, ftxH );
-        BFSETTBL_UNLOCK( dmnP )
+        BFSETTBL_UNLOCK( dmnP );
     }
 
     if (origDirParamsp != NULL) {
@@ -5410,7 +5410,7 @@ bs_bfs_add_root(
         *retBfSetDirp = bfSetp;
     }
 
-    BFSETTBL_UNLOCK( dmnP )
+    BFSETTBL_UNLOCK( dmnP );
     return sts;
 }
 
@@ -7752,7 +7752,7 @@ rbf_set_bfset_params(
     mcellListLocked = FALSE;
 
     if (bfSetTblLocked) {
-        BFSETTBL_UNLOCK( bfSetp->dmnP )
+        BFSETTBL_UNLOCK( bfSetp->dmnP );
         bfSetTblLocked = FALSE;
     }
 
@@ -7762,7 +7762,7 @@ rbf_set_bfset_params(
 the_end:
 
     if (bfSetTblLocked) {
-        BFSETTBL_UNLOCK( bfSetp->dmnP )
+        BFSETTBL_UNLOCK( bfSetp->dmnP );
     }
 
     if (mcellListLocked) {
@@ -7806,7 +7806,7 @@ set_bfset_flag(bfAccessT *bfap)
                             NULL );
 
     if (sts != EOK) {
-        BFSETTBL_UNLOCK( bfSetp->dmnP )
+        BFSETTBL_UNLOCK( bfSetp->dmnP );
         return sts;
     }
 
@@ -7816,7 +7816,7 @@ set_bfset_flag(bfAccessT *bfap)
 
     ftx_done_n( ftxH, FTA_SET_BFSET_FLAG );
 
-    BFSETTBL_UNLOCK( bfSetp->dmnP )
+    BFSETTBL_UNLOCK( bfSetp->dmnP );
     return EOK;
 }
 
