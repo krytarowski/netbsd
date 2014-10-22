@@ -4098,10 +4098,6 @@ mig_pack_vd_range (
     ssPackHdrT   *php=NULL;
     ssPackLLT *pXtntp=NULL;
     int another_scan_required;
-    extern ss_open_file();
-    extern ss_close_file();
-    extern ss_block_and_wait();
-    extern print_pack_list();
     extern REPLICATED int SSPageCnt;
     struct mount *mp;
     pageRangeT *bfPageRange = NULL;
