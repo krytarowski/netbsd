@@ -1497,7 +1497,7 @@ fs_setattr_truncate( bfAccessT *bfap,
             domain_panic( bfap->dmnP,
                   "msfs_setattr: fs_delete_frag error, return code = %d", sts );
             ftx_done_fs( ftxH, FTA_OSF_SETATTR_1, 0 );
-            MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) )
+            MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
             error = EIO;             /* E_DOMAIN_PANIC */
             goto notrunc;
         }
@@ -1548,7 +1548,7 @@ fs_setattr_truncate( bfAccessT *bfap,
         domain_panic( bfap->dmnP,
              "msfs_setattr: fs_update_stats (1) error, return code = %d", sts );
         ftx_done_fs( ftxH, FTA_OSF_SETATTR_1, 0 );
-        MIGTRUNC_UNLOCK( &bfap->xtnts.migTruncLk )
+        MIGTRUNC_UNLOCK( &bfap->xtnts.migTruncLk );
         error = EIO;                 /* E_DOMAIN_PANIC */
         goto notrunc;
     }
