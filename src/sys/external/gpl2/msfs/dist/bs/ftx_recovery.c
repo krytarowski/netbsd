@@ -727,7 +727,7 @@ logclose:
         mutex_enter( &dmnP->mutex );
     }
     mutex_exit( &dmnP->mutex );
-    BFSETTBL_UNLOCK( dmnP );    
+    BFSETTBL_UNLOCK( dmnP );
 
 freexid:
     /*
