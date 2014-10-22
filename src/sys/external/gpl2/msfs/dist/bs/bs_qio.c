@@ -3661,7 +3661,7 @@ bfflush_sync(
                       PZERO /*not interruptible*/,
                       "flushWaiter",
                       FALSE /*no timeout*/,
-                      simple_lock_addr(bfap->bfIoLock),
+                      &(bfap->bfIoLock),
                       MS_LOCK_SIMPLE|MS_LOCK_ON_ERROR);
         unmark_bio_wait;
 
