@@ -2373,7 +2373,7 @@ xfer_xtnts_to_clone (
     sts = rbf_bfs_open(&bfSetp, bfSetId, 
                        BFS_OP_XFER_XTNTS_TO_CLONE, FtxNilFtxH);
 
-    BFSETTBL_UNLOCK( dmnP)
+    BFSETTBL_UNLOCK( dmnP);
 
     if ( sts == EOK ) {
         KASSERT(bfSetp->cloneId > 0);

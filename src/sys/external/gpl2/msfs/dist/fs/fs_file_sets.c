@@ -915,7 +915,7 @@ fs_fset_name_change(
         RAISE_EXCEPTION (sts);
     }
 
-    BFSETTBL_UNLOCK( bfSetp->dmnP )
+    BFSETTBL_UNLOCK( bfSetp->dmnP );
     tblLocked = FALSE;
 
     ms_free( setParamsp );
@@ -934,7 +934,7 @@ fs_fset_name_change(
 HANDLE_EXCEPTION:
 
     if (tblLocked) {
-        BFSETTBL_UNLOCK( bfSetp->dmnP )
+        BFSETTBL_UNLOCK( bfSetp->dmnP );
     }
 
     if (setParamsp != NULL) {
