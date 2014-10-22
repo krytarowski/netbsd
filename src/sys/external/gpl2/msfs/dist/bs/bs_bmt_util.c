@@ -1330,7 +1330,7 @@ void bmtr_put_rec_undo_opx(
      */
     BFSETTBL_LOCK_WRITE( dmnP );
 
-    FTX_LOCKWRITE( &bfap->mcellList_lk, ftxH )
+    FTX_LOCKWRITE( &bfap->mcellList_lk, ftxH );
 
     sts = rbf_pinpg( &pgref, (void*)&bmtp,
                      vdp->bmtp, undoRec.mcid.page, BS_NIL, ftxH );
@@ -1948,7 +1948,7 @@ alloc_mcell_undo (
     dmnP = ftx.dmnP;
     vd = VD_HTOP(undoRec->newVdIndex, dmnP);
 
-    FTX_LOCKWRITE(&(vd->mcell_lk), ftx)
+    FTX_LOCKWRITE(&(vd->mcell_lk), ftx);
 
     /*
      * Pin the mcell's page and free the mcell.
@@ -2036,7 +2036,7 @@ alloc_rbmt_mcell_undo (
         mdap = vd->bmtp;
     }
 
-    FTX_LOCKWRITE(&(vd->rbmt_mcell_lk), ftx)
+    FTX_LOCKWRITE(&(vd->rbmt_mcell_lk), ftx);
 
     /*
      * Pin the mcell's page and free the mcell.
@@ -2187,7 +2187,7 @@ bmt_alloc_mcell (
             vd_dec_refcnt(vd);
             return sts;
         }
-        FTX_LOCKWRITE(&(vd->mcell_lk), ftx)
+        FTX_LOCKWRITE(&(vd->mcell_lk), ftx);
         sts = alloc_mcell (
                            vd,
                            ftx,
@@ -2218,10 +2218,10 @@ bmt_alloc_mcell (
          * have it, to avoid a possible lock hierarchy violation.  
          */
         if ( !rw_lock_held(&vd->bmtp->xtntMap_lk.lock) ) {
-            FTX_LOCKWRITE(&vd->bmtp->xtntMap_lk, ftx)
+            FTX_LOCKWRITE(&vd->bmtp->xtntMap_lk, ftx);
         }
         if ( !rw_lock_held(&vd->rbmt_mcell_lk.lock) ) {
-            FTX_LOCKWRITE(&vd->rbmt_mcell_lk, ftx)
+            FTX_LOCKWRITE(&vd->rbmt_mcell_lk, ftx);
         }
 
         if ( RBMT_THERE(dmnP) ) {
@@ -2348,7 +2348,7 @@ alloc_link_mcell_undo (
 
     vd = VD_HTOP(undoRec->newVdIndex, dmnP);
 
-    FTX_LOCKWRITE(&(vd->mcell_lk), ftx)
+    FTX_LOCKWRITE(&(vd->mcell_lk), ftx);
 
     sts = rbf_pinpg (
                      &newPgPin,
@@ -2440,7 +2440,7 @@ bmt_alloc_link_mcell (
 
     if ((poolType == BMT_NORMAL_MCELL) ||
         (poolType == BMT_NORMAL_MCELL_PAGE)) {
-        FTX_LOCKWRITE(&(poolVd->mcell_lk), ftx)
+        FTX_LOCKWRITE(&(poolVd->mcell_lk), ftx);
     } else {
         ftx_fail (ftx);
         return EBAD_PARAMS;
@@ -5548,7 +5548,7 @@ free_mcell_chains_opx(
     pinRecs = 0;
 
     vdp = VD_HTOP(vdIndex, dmnP);
-    FTX_LOCKWRITE(&vdp->mcell_lk, ftxH)
+    FTX_LOCKWRITE(&vdp->mcell_lk, ftxH);
 
 delchain:
     if ( ++pinPages > FTX_MX_PINP ) {

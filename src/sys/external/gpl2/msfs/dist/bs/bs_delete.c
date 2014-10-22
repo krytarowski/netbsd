@@ -2189,7 +2189,7 @@ del_xtnt_array(
 
     pinPages = DEL_MAX_PAGES - 1; /* One page pinned by del_ftx_start */
 
-    FTX_LOCKWRITE( &vdp->stgMap_lk, dsc.ftxH)
+    FTX_LOCKWRITE( &vdp->stgMap_lk, dsc.ftxH);
 
     for (xp = fxp + dsc.rstIndex; xp <= fxp + xCnt - 2; xp++) {
         uint32T sp;     /* start page */
@@ -2261,7 +2261,7 @@ del_xtnt_array(
             del_ftx_done(&dsc);
             del_ftx_start(pmcid, pvdp, &dsc);
 
-            FTX_LOCKWRITE( &vdp->stgMap_lk, dsc.ftxH)
+            FTX_LOCKWRITE( &vdp->stgMap_lk, dsc.ftxH);
 
             /*
              * Reset maximum number of pages that may be pinned.
@@ -2819,7 +2819,7 @@ del_part_xtnt( bfMCIdT pmcid,     /* in - mcell ID of primary mcell */
 
     pinPages = DEL_MAX_PAGES - 1; /* One page pinned by del_ftx_start */
 
-    FTX_LOCKWRITE( &vdp->stgMap_lk, dscp->ftxH)
+    FTX_LOCKWRITE( &vdp->stgMap_lk, dscp->ftxH);
 
     startblk = fxp->vdBlk;
     /* This extent maps real storage, not a hole. */
@@ -2852,7 +2852,7 @@ del_part_xtnt( bfMCIdT pmcid,     /* in - mcell ID of primary mcell */
         del_ftx_done(dscp);
         del_ftx_start(pmcid, pvdp, dscp);
 
-        FTX_LOCKWRITE( &vdp->stgMap_lk, dscp->ftxH)
+        FTX_LOCKWRITE( &vdp->stgMap_lk, dscp->ftxH);
 
         /*
          * Reset maximum number of pages that may be pinned.

@@ -265,7 +265,7 @@ bitmap_undo_opx (
 
     clustCnt = (undoRecp->endBit - undoRecp->startBit) + 1;
 
-    FTX_LOCKWRITE( &vdp->stgMap_lk, ftxH )
+    FTX_LOCKWRITE( &vdp->stgMap_lk, ftxH );
 
     /*
      * Note: The vd and domain count adjustments are accurate only during

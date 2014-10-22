@@ -2733,7 +2733,7 @@ switch_stg (
     }
     failFtxFlag = 1;
 
-    FTX_LOCKWRITE(&(bfap->mcellList_lk), ftxH)
+    FTX_LOCKWRITE(&(bfap->mcellList_lk), ftxH);
 
     /*
      * Get the original extent map's address from the location that points
@@ -2820,7 +2820,7 @@ switch_stg (
         RAISE_EXCEPTION (sts);
     }
 
-    FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH)
+    FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH);
 
     /*
      * Update the original's and copy's in-memory maps so they map the
@@ -2965,7 +2965,7 @@ bs_move_metadata (
              * clone did not have its own metadata and the clone was deleted.
              */
 
-            FTX_LOCKWRITE(&(bfap->mcellList_lk), ftxH)
+            FTX_LOCKWRITE(&(bfap->mcellList_lk), ftxH);
 
             sts = move_metadata (bfap, NULL, vdp->vdIndex, ftxH);
             if (sts != EOK) {
@@ -2991,8 +2991,8 @@ bs_move_metadata (
             }
             closeCloneFlag = 1;
 
-            FTX_LOCKWRITE(&(bfap->mcellList_lk), ftxH)
-            FTX_LOCKWRITE(&(cloneBfap->mcellList_lk), ftxH)
+            FTX_LOCKWRITE(&(bfap->mcellList_lk), ftxH);
+            FTX_LOCKWRITE(&(cloneBfap->mcellList_lk), ftxH);
 
             sts = move_metadata (bfap, cloneBfap, vdp->vdIndex, ftxH);
             if (sts != EOK) {
@@ -3024,7 +3024,7 @@ bs_move_metadata (
              * The clone has its own metadata.
              */
 
-            FTX_LOCKWRITE(&(cloneBfap->mcellList_lk), ftxH)
+            FTX_LOCKWRITE(&(cloneBfap->mcellList_lk), ftxH);
 
             sts = move_metadata (cloneBfap, NULL, vdp->vdIndex, ftxH);
             if (sts != EOK) {
