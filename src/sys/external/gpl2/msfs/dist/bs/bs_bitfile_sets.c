@@ -378,7 +378,7 @@ bs_fragbf_thread( void )
             }
 
 
-            FTX_LOCKWRITE( &bfSetp->fragLock, ftxH )
+            FTX_LOCKWRITE( &bfSetp->fragLock, ftxH );
 
             grpPg = bfSetp->fragGrps[ BF_FRAG_FREE_GRPS ].firstFreeGrp;
 
@@ -1106,7 +1106,7 @@ bs_frag_alloc(
         ADVFS_SAD0( "invalid frag type" );
     }
 
-    FTX_LOCKWRITE( &setp->fragLock, ftxH )
+    FTX_LOCKWRITE( &setp->fragLock, ftxH );
 
     while (have_not_found_frag) {
 
@@ -1478,7 +1478,7 @@ bs_frag_dealloc(
     }
 
     if ( !rw_lock_held(&setp->fragLock.lock) ) {
-        FTX_LOCKWRITE(&setp->fragLock, ftxH)
+        FTX_LOCKWRITE(&setp->fragLock, ftxH);
     }
 
 
@@ -3956,7 +3956,7 @@ del_list_remove_undo(
         ADVFS_SAD1( "del_list_remove_undo: bs_access failed", sts );
     }
 
-    FTX_LOCKWRITE( &dmnP->BfSetTblLock, ftxH )
+    FTX_LOCKWRITE( &dmnP->BfSetTblLock, ftxH );
 
     bfs_delete_pending_list_add(tagDirBfap, dmnP, ftxH );
 
@@ -4000,7 +4000,7 @@ bfs_delete_pending_list_remove(
         ADVFS_SAD1( "bfs_delete_pending_list_remove: ftx_start failed", sts );
     }
 
-    FTX_LOCKWRITE( &dmnP->BfSetTblLock, ftxH )
+    FTX_LOCKWRITE( &dmnP->BfSetTblLock, ftxH );
 
     sts = bmtr_get_rec_ptr( dirBfAp,
                             ftxH,
@@ -4259,7 +4259,7 @@ unlink_clone_undo(
         ADVFS_SAD1( "unlink_clone_undo: bs_access failed", sts );
     }
 
-    FTX_LOCKWRITE( &dmnP->BfSetTblLock, ftxH )
+    FTX_LOCKWRITE( &dmnP->BfSetTblLock, ftxH );
 
     sts = bmtr_get_rec_ptr( tagDirBfap,
                             ftxH,
@@ -4494,7 +4494,7 @@ bs_bfs_delete(
     ftxStarted = TRUE;
 
 
-    FTX_LOCKWRITE( &dmnP->BfSetTblLock, ftxH )
+    FTX_LOCKWRITE( &dmnP->BfSetTblLock, ftxH );
 
     if (bfSetp->fsRefCnt > ((bfSetp->cloneId != BS_BFSET_ORIG) ? bfSetp->origSetp->fsRefCnt + 1: 1)) {
         /*
@@ -6026,7 +6026,7 @@ clone(
 
     bfAttr.maxClonePgs = origBfAp->nextPage;
 
-    FTX_LOCKWRITE( &cloneBfAp->mcellList_lk, ftxH )
+    FTX_LOCKWRITE( &cloneBfAp->mcellList_lk, ftxH );
 
     /* Get a new primary mcell for the clone and init it */
 

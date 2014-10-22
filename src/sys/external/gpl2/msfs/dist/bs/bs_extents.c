@@ -1005,7 +1005,7 @@ odm_rewrite_xtnt_map (
     /* Place the lock returned on our list of locks to release when the
      * transaction ends.
      */
-    FTX_ADD_LOCK(&(bfap->mcellList_lk), ftxH)
+    FTX_ADD_LOCK(&(bfap->mcellList_lk), ftxH);
 
     switch (bfap->xtnts.type) {
 
@@ -1225,7 +1225,7 @@ odm_rewrite_xtnt_map (
         vd_dec_refcnt(vdp);
     }
 
-    FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH)
+    FTX_LOCKWRITE(&(bfap->xtntMap_lk), ftxH);
 
     /*
      * Switch the new and the old sub extent maps.
