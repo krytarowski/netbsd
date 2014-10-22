@@ -3404,13 +3404,8 @@ bfs_open(
         RAISE_EXCEPTION( sts );
     }
 
-<<<<<<< HEAD
     if (!rw_lock_held(&bfSetp->dmnP->BfSetTblLock.lock)) {
-        BFSETTBL_LOCK_WRITE( bfSetp->dmnP )
-=======
-    if (!mutex_owned(&bfSetp->dmnP->BfSetTblLock.lock)) {
         BFSETTBL_LOCK_WRITE( bfSetp->dmnP );
->>>>>>> d7746c7... ADVFS: Add missing semicolon after BFSETTBL_LOCK_WRITE()
         tblLocked = TRUE;
     }
 
