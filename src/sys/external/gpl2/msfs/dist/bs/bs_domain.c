@@ -417,7 +417,7 @@ bs_bfdmn_id_activate(
 
         dmnP->activateCnt++;
 
-        DMNTBL_UNLOCK( &DmnTblLock )
+        DMNTBL_UNLOCK( &DmnTblLock );
         return EOK;
 
     } else {
@@ -425,7 +425,7 @@ bs_bfdmn_id_activate(
         /*
          * The domain is not active so return an error.
          */
-        DMNTBL_UNLOCK( &DmnTblLock )
+        DMNTBL_UNLOCK( &DmnTblLock );
         return ENO_SUCH_DOMAIN;
     }
 }
@@ -513,14 +513,14 @@ start:
         *bfDomainId = dmnP->domainId;
         dmnP->activateCnt++;
         if (dmnTblLocked)
-            DMNTBL_UNLOCK( &DmnTblLock )
+            DMNTBL_UNLOCK( &DmnTblLock );
         return EOK;
     }
     
     dmntbl = (bfDmnDescT *)ms_malloc( sizeof( bfDmnDescT ) );
     if( dmntbl == NULL ) {
         if (dmnTblLocked)
-            DMNTBL_UNLOCK( &DmnTblLock )
+            DMNTBL_UNLOCK( &DmnTblLock );
         return ENO_MORE_MEMORY;
     }
 
@@ -902,7 +902,7 @@ start:
     }
 
     if (dmnTblLocked)
-        DMNTBL_UNLOCK( &DmnTblLock )
+        DMNTBL_UNLOCK( &DmnTblLock );
     dmnP->dmnFlag = BFD_NORMAL; /* Clear all bits */
     *bfDomainId = domainId;
     if (volPathName != NULL) {
@@ -965,7 +965,7 @@ get_attrs_error:
 
 get_table_error:
     if (dmnTblLocked) {
-        DMNTBL_UNLOCK( &DmnTblLock )
+        DMNTBL_UNLOCK( &DmnTblLock );
     }
 
     if (dmntbl != NULL) {
@@ -1845,7 +1845,7 @@ bs_bfdmn_deactivate(
 
 HANDLE_EXCEPTION:
     if (tblLocked) {
-        DMNTBL_UNLOCK( &DmnTblLock )
+        DMNTBL_UNLOCK( &DmnTblLock );
     }
     return sts;
 }
@@ -3286,7 +3286,7 @@ bs_vd_add_active(
      */
 
 exit:
-    DMNTBL_UNLOCK( &DmnTblLock )
+    DMNTBL_UNLOCK( &DmnTblLock );
     bs_domain_close(dmnP);
 
 err_deactivate:
@@ -3783,7 +3783,7 @@ bs_vd_remove_active (
     ss_rmvol_from_hotlst(dmnP,vdIndex);
 
     RMVOL_TRUNC_UNLOCK(dmnP);
-    DMNTBL_UNLOCK( &DmnTblLock )
+    DMNTBL_UNLOCK( &DmnTblLock );
     dmntbl_lock = 0;
 
     if(ss_was_activated == TRUE) {
@@ -3872,7 +3872,7 @@ bs_vd_add_rem_vol_done (
     }
     sts = bs_pinpg (&pgPin, (void*)&bmtPage, mdap, 0, BS_NIL);
     if (sts != EOK) {
-        DMNTBL_UNLOCK( &DmnTblLock )
+        DMNTBL_UNLOCK( &DmnTblLock );
         return sts;
     }
 
@@ -3881,7 +3881,7 @@ bs_vd_add_rem_vol_done (
 
     if (dmnTAttr == NULL) {
         bs_unpinpg (pgPin, logNilRecord, BS_DIRTY); /* Ignore status. */
-        DMNTBL_UNLOCK( &DmnTblLock )
+        DMNTBL_UNLOCK( &DmnTblLock );
         return EBMTR_NOT_FOUND;
     }
 
@@ -3897,7 +3897,7 @@ bs_vd_add_rem_vol_done (
 
         if ((sts = (statusT) namei(ndp))) {
             bs_unpinpg (pgPin, logNilRecord, BS_DIRTY); /* Ignore status. */
-            DMNTBL_UNLOCK( &DmnTblLock )
+            DMNTBL_UNLOCK( &DmnTblLock );
             return sts;
         }
 
@@ -3906,7 +3906,7 @@ bs_vd_add_rem_vol_done (
          */
         if ( (dmnTAttr->dev != ndp->ni_vp->v_rdev) || (dmnTAttr->op != op) ) {
             bs_unpinpg (pgPin, logNilRecord, BS_DIRTY); /* Ignore status. */
-            DMNTBL_UNLOCK( &DmnTblLock )
+            DMNTBL_UNLOCK( &DmnTblLock );
             return E_RDEV_MISMATCH;
         }
 
@@ -3919,7 +3919,7 @@ bs_vd_add_rem_vol_done (
     }
 
 done:
-    DMNTBL_UNLOCK( &DmnTblLock )
+    DMNTBL_UNLOCK( &DmnTblLock );
 
     return sts;
 }

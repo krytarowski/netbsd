@@ -3940,7 +3940,7 @@ msfs_syscall_op_get_dmnname_params(libParamsT *libBufp)
            DMNTBL_LOCK_WRITE( &DmnTblLock );
            if (essdmnP = domain_name_lookup(libBufp->getDmnNameParams.domain,0))
                domain_panic (essdmnP, "ESS generated domain_panic");
-           DMNTBL_UNLOCK( &DmnTblLock )
+           DMNTBL_UNLOCK( &DmnTblLock );
         }
     }
 #endif
@@ -6344,7 +6344,7 @@ msfs_process_deferred_delete_list(
     dmnP = domain_name_lookup(dmnName, flag);
     if (TEST_DMNP(dmnP) != EOK) {
         if (!(flag & M_GLOBAL_ROOT))
-            DMNTBL_UNLOCK( &DmnTblLock )
+            DMNTBL_UNLOCK( &DmnTblLock );
         return(EBAD_DOMAIN_POINTER);
     }
 
@@ -6374,7 +6374,7 @@ msfs_process_deferred_delete_list(
         entry = entry->bfsQfwd;
     }
     if (!(flag & M_GLOBAL_ROOT))
-        DMNTBL_UNLOCK( &DmnTblLock )
+        DMNTBL_UNLOCK( &DmnTblLock );
     return 0;
 }
 
