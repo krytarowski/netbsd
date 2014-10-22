@@ -414,7 +414,7 @@ fs_fset_get_stats(
 
     bfSetp = NULL;
     if (TEST_DMNP(dmnP) == EOK) {
-        BFSETTBL_LOCK_READ( dmnP )
+        BFSETTBL_LOCK_READ( dmnP );
         entry = dmnP->bfSetHead.bfsQfwd;
         while (entry!= &dmnP->bfSetHead) {
             temp = BFSET_QUEUE_TO_BFSETP(entry);
