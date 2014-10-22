@@ -257,7 +257,7 @@ bs_get_bf_xtnt_map(
 
     *xtntCnt = dst;
 
-    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
 
     return EOK;
 
@@ -266,7 +266,7 @@ HANDLE_EXCEPTION:
     if (unloadFlag != 0) {
         imm_unload_sub_xtnt_map (subXtntMap);
     }
-    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
 
     return sts;
 
@@ -458,8 +458,8 @@ bs_get_clone_xtnt_map(
                               clone_xtntMap,
                               &newxtntmap);
     if (sts != EOK) {
-        XTNMAP_UNLOCK( &(orig_bfap->xtntMap_lk) )
-        XTNMAP_UNLOCK( &(clone_bfap->xtntMap_lk) )
+        XTNMAP_UNLOCK( &(orig_bfap->xtntMap_lk) );
+        XTNMAP_UNLOCK( &(clone_bfap->xtntMap_lk) );
         COW_UNLOCK( &(orig_bfap->cow_lk) )
         TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
         if (clonextnt_locked) 
@@ -594,8 +594,8 @@ bs_get_clone_xtnt_map(
         CLU_CLXTNT_UNLOCK(&clone_bfap->clu_clonextnt_lk);
     }
 
-    XTNMAP_UNLOCK( &(orig_bfap->xtntMap_lk) )
-    XTNMAP_UNLOCK( &(clone_bfap->xtntMap_lk) )
+    XTNMAP_UNLOCK( &(orig_bfap->xtntMap_lk) );
+    XTNMAP_UNLOCK( &(clone_bfap->xtntMap_lk) );
     COW_UNLOCK( &(orig_bfap->cow_lk) )
     TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
 
@@ -610,8 +610,8 @@ bs_get_clone_xtnt_map(
 
 HANDLE_EXCEPTION:
 
-    XTNMAP_UNLOCK( &(orig_bfap->xtntMap_lk) )
-    XTNMAP_UNLOCK( &(clone_bfap->xtntMap_lk) )
+    XTNMAP_UNLOCK( &(orig_bfap->xtntMap_lk) );
+    XTNMAP_UNLOCK( &(clone_bfap->xtntMap_lk) );
     COW_UNLOCK( &(orig_bfap->cow_lk) )
     TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
     if (clonextnt_locked) 
@@ -1232,7 +1232,7 @@ bs_get_bf_params(
     bfParams->numPages     = bfap->xtnts.allocPageCnt;
     bfParams->nextPage     = bfap->nextPage;
     bfParams->cl.extendSize   = bfap->extendSize;
-    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
     bfParams->type         = bfap->xtnts.type;
     bfParams->pageSize     = ADVFS_PGSZ_IN_BLKS;
     bfParams->cl.reqServices  = bfap->reqServices; 
@@ -1251,7 +1251,7 @@ bs_get_bf_params(
         }
         bfParams->segmentCnt = bfap->xtnts.stripeXtntMap->cnt;
         bfParams->segmentSize = bfap->xtnts.stripeXtntMap->segmentSize;
-        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
     } else {
         bfParams->segmentCnt = 0;
         bfParams->segmentSize = 0;
@@ -1371,7 +1371,7 @@ bs_set_bf_params(
         bfap->reqServices = bfParams->cl.reqServices;  /* req service class */
         bfap->optServices = bfParams->cl.optServices;  /* opt service class */
 
-        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
     }
 
     bfattr.cl.rsvd1 = 0;
@@ -2142,7 +2142,7 @@ bs_get_avail_mcells(
 
             availMcells += bmtap->nextPage * BSPG_CELLS + potentialMcells;
 
-            XTNMAP_UNLOCK( &(bmtap->xtntMap_lk) )
+            XTNMAP_UNLOCK( &(bmtap->xtntMap_lk) );
 
             /* decrement vdRefCnt on vdp before going on to next disk */
             vd_dec_refcnt( vdp );

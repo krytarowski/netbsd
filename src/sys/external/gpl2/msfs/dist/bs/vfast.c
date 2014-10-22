@@ -2291,7 +2291,7 @@ ss_chk_fragratio (
     allocPageCnt = bfap->xtnts.allocPageCnt;
     /* go get the number of not contiguous extents in the file */
     totXtnts = ss_xtnt_counter(bfap);
-    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
 
     if (totXtnts <= 1) {  /* cant do any better than 1, eh? */
         RAISE_EXCEPTION (EOK);
@@ -4519,7 +4519,7 @@ ss_get_vd_most_free(bfAccessT *bfap,
 
         requestedBlkCnt = bfap->xtnts.allocPageCnt * bfap->bfPageSz;
 
-        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+        XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
         if (requestedBlkCnt < 1) {
             vd_dec_refcnt( vdp );
             RAISE_EXCEPTION (E_NOT_ENOUGH_XTNTS);
@@ -4693,7 +4693,7 @@ ss_vd_migrate( bfTagT   filetag,
     reqPageCnt = bfap->xtnts.allocPageCnt;
     pageSize = bfap->bfPageSz;
     xmTotalPageCnt = bfap->nextPage;
-    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
 
     if (!reqPageCnt) {
         /* no pages to migrate in this file */
@@ -5036,7 +5036,7 @@ ss_blks_on_vd(bfAccessT *bfap,       /* in */
         }
     }  /* end for */
 
-    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) )
+    XTNMAP_UNLOCK( &(bfap->xtntMap_lk) );
     return(tot_blks_on_vd);
 }
 
