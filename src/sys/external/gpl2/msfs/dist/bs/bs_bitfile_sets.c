@@ -6533,7 +6533,7 @@ try_again:
      * the migTruncLk because the migrate paths use this order.
      */
     MIGTRUNC_LOCK_READ( &cloneap->xtnts.migTruncLk );
-    COW_LOCK_WRITE( &bfap->cow_lk )
+    COW_LOCK_WRITE( &bfap->cow_lk );
 
     /* Lets do the cluster clone shuffle:
      *
@@ -7217,7 +7217,7 @@ bs_cow(
          * than once under the same ftx; deadlock city!
          */
 
-        COW_LOCK_WRITE( &(bfap->cow_lk) )
+        COW_LOCK_WRITE( &(bfap->cow_lk) );
         lkLocked = TRUE;
 
         if (bfap->cloneCnt == bfSetp->cloneCnt) {
@@ -7880,7 +7880,7 @@ get_clu_clone_locks( bfAccessT *bfap, struct fsContext *cp,
         goto lock;
     }
 
-    COW_LOCK_WRITE( &bfap->cow_lk )
+    COW_LOCK_WRITE( &bfap->cow_lk );
 
     if ( tagdir_lookup( clonesetp, &bfap->tag, &mcid, &vdi ) != EOK ) {
         bfap->noClone = TRUE;
