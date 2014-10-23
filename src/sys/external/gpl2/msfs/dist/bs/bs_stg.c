@@ -995,7 +995,7 @@ retry:
          * Racing threads that have seized the xtntMap lock expect this 
          * pointer to stay sane while walking through the subXtntMap array.
          */
-        XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk)
+        XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk);
         xtntMap_locked = 1;
 
         sts = add_stg( bfap,
@@ -1028,7 +1028,7 @@ retry:
         }
         failFtxFlag = 1;
         FTX_LOCKWRITE(&bfap->mcellList_lk, ftxH);
-        XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk)   
+        XTNMAP_LOCK_WRITE(&bfap->xtntMap_lk);
         xtntMap_locked = 1;
     }
 
@@ -1405,7 +1405,7 @@ stg_add_stg_no_cow (
         /* Need to lock this before we modify any of the extents or 
          * subextents for this file in add_stg().
          */
-        XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) )
+        XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) );
         xtntMap_locked = 1;
 
         if (BS_BFTAG_RSVD (bfap->tag) == 0) {
@@ -4820,7 +4820,7 @@ xfer_stg (
     /* Need to lock this before we modify any of the extents or
      * subextents for this file in merge_xtnt_maps().
      */
-    XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) )
+    XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) );
     xtntMap_locked = 1;
 
     KASSERT(BS_BFTAG_RSVD(bfap->tag) == 0);
