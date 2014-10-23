@@ -1364,7 +1364,7 @@ bs_set_bf_params(
     if (!SC_EQL( bfattr.cl.reqServices, bfParams->cl.reqServices ) ||
         !SC_EQL( bfattr.cl.optServices, bfParams->cl.optServices )) {
 
-        XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) ) 
+        XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) );
 
         bfattr.cl.reqServices = bfParams->cl.reqServices; /* req serv class */
         bfattr.cl.optServices = bfParams->cl.optServices; /* opt serv class */
