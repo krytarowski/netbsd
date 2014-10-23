@@ -418,7 +418,7 @@ mig_verify_stripe_page_range (
      * field.  You must hold the on-disk lock when using this field.  This lock
      * also prevents the in-mem map from changing.
      */
-    MCELLIST_LOCK_WRITE(&(bfap->mcellList_lk) )
+    MCELLIST_LOCK_WRITE(&(bfap->mcellList_lk) );
     unlockFlag = 1;
 
     stripeHdrLocal = bfap->xtnts.stripeXtntMap;

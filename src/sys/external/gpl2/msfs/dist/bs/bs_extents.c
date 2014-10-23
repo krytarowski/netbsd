@@ -2366,7 +2366,7 @@ x_load_inmem_xtnt_map (
         }
     } else if (lock_request == X_LOAD_UPDATE ) {
         /* UPDATE locking was requested, so WRITE lock both locks.  */
-        MCELLIST_LOCK_WRITE( &(bfap->mcellList_lk) )
+        MCELLIST_LOCK_WRITE( &(bfap->mcellList_lk) );
         XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) )
         if (xtnts->validFlag) {
             /* If extents are valid, just return with mcellList locked */
