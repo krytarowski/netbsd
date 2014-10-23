@@ -3763,7 +3763,7 @@ delete_clone_set_tags(
          ** Delete or close the original.
          */
         if (origExists) {
-            COW_LOCK_READ( &origap->cow_lk )
+            COW_LOCK_READ( &origap->cow_lk );
             if (origap->deleteWithClone) {
                 /*
                  ** The orignal was 'deleted' while this clone existed.  The
