@@ -101,13 +101,6 @@ int MsfsPlMaxLen = BSR_PL_MAX_LARGE;
    BSC_R_SZ + sizeof(bsMRT))
 
 /*
- * lock/unlock primary mcell chain, using access pnt & "unlock_action"
- */
-#define LOCK_MCELL_CHAIN(x1)                          \
-
-#define UNLOCK_MCELL_CHAIN(x1,x2)                     \
-
-/*
  * to manipulate 64 bit flags field within 32 bit aligned records
  */
 /* load x1 from x2; x1 must be long-word aligned; return x1 */
