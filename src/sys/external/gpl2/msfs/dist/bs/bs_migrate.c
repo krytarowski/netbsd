@@ -564,7 +564,7 @@ mig_migrate (
         if (origBfap->cloneCnt != origBfSet->cloneCnt) {
             noMetadataFlag = 1;
         }
-        COW_UNLOCK( &(srcBfap->cow_lk) )
+        COW_UNLOCK( &(srcBfap->cow_lk) );
 
         if (noMetadataFlag != 0) {
             return E_NO_CLONE_STG;

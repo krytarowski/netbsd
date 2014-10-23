@@ -3771,7 +3771,7 @@ delete_clone_set_tags(
                  ** on the orignal (for some or all pages).  So, we delete
                  ** the original now.
                  */
-                COW_UNLOCK( &origap->cow_lk )
+                COW_UNLOCK( &origap->cow_lk );
                 sts = rbf_delete_int( origap, ftxH );
                 if (sts != EOK) {
                     domain_panic(origap->dmnP, "delete_clone_set_tags: rbf_delete_int returned: %d", sts );
@@ -3779,7 +3779,7 @@ delete_clone_set_tags(
                 }
             }
             else
-                COW_UNLOCK( &origap->cow_lk )
+                COW_UNLOCK( &origap->cow_lk );
         }
 
         ftx_done_n( ftxH, FTA_BFS_DELETE_CLONE );
@@ -7083,7 +7083,7 @@ cow_done:
     }
 
     if (cowLkLocked) {
-        COW_UNLOCK( &(bfap->cow_lk) )
+        COW_UNLOCK( &(bfap->cow_lk) );
     }
 
     return( pgsAdded );
@@ -7135,7 +7135,7 @@ error_exit:
     }
 
     if (cowLkLocked) {
-        COW_UNLOCK( &(bfap->cow_lk) )
+        COW_UNLOCK( &(bfap->cow_lk) );
     }
     return( 0 ); /* error occurred; caller should not try to cow more pgs */
 }
@@ -7233,7 +7233,7 @@ bs_cow(
             }
 
             if (lkLocked) {
-                COW_UNLOCK( &(bfap->cow_lk) )
+                COW_UNLOCK( &(bfap->cow_lk) );
             }
             goto _finish;
         }
@@ -7334,7 +7334,7 @@ bs_cow(
         }
 
         if (lkLocked) {
-            COW_UNLOCK( &(bfap->cow_lk) )
+            COW_UNLOCK( &(bfap->cow_lk) );
         }
     }
 
@@ -7377,7 +7377,7 @@ error_exit:
     }
 
     if (lkLocked) {
-        COW_UNLOCK( &(bfap->cow_lk) )
+        COW_UNLOCK( &(bfap->cow_lk) );
     }
     return;
 }
@@ -7884,11 +7884,11 @@ get_clu_clone_locks( bfAccessT *bfap, struct fsContext *cp,
 
     if ( tagdir_lookup( clonesetp, &bfap->tag, &mcid, &vdi ) != EOK ) {
         bfap->noClone = TRUE;
-        COW_UNLOCK( &(bfap->cow_lk) )
+        COW_UNLOCK( &(bfap->cow_lk) );
         goto lock;
     }
 
-    COW_UNLOCK( &(bfap->cow_lk) )
+    COW_UNLOCK( &(bfap->cow_lk) );
 
     sts = bs_access_one( &cloneap,
                          bfap->tag,
