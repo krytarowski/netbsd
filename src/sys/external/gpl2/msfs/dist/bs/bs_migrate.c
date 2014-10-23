@@ -1477,7 +1477,7 @@ get_copy_storage:
      * mapped to both the original's and the copy's storage.
      */
 
-    XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) )
+    XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) );
 
     cp_insert_onto_xtnt_map_list (
                                   &(bfap->xtnts.copyXtntMap),
@@ -1553,7 +1553,7 @@ get_copy_storage:
     imm_set_next_valid_copy_page (&copyXtnts, 0);
 
 
-    XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) )
+    XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) );
 
     sts2 = cp_remove_from_xtnt_map_list (
                                          &(bfap->xtnts.copyXtntMap),
@@ -2026,7 +2026,7 @@ get_copy_storage:
      * mapped to both the original's and the copy's storage.
      */
 
-    XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) )
+    XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) );
 
     cp_insert_onto_xtnt_map_list (
                                   &(bfap->xtnts.copyXtntMap),
@@ -2101,7 +2101,7 @@ get_copy_storage:
 
     imm_set_next_valid_copy_page (&copyXtnts, 0);
 
-    XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) )
+    XTNMAP_LOCK_WRITE( &(bfap->xtntMap_lk) );
 
     sts2 = cp_remove_from_xtnt_map_list (
                                          &(bfap->xtnts.copyXtntMap),
@@ -3359,7 +3359,7 @@ move_metadata (
      */
     if (FIRST_XTNT_IN_PRIM_MCELL(domain->dmnVersion, bfap->xtnts.type)) {
         xtntMapp = bfap->xtnts.xtntMap;
-        XTNMAP_LOCK_WRITE(&(bfap->xtntMap_lk))
+        XTNMAP_LOCK_WRITE(&(bfap->xtntMap_lk));
         if ((localVdIndex != xtntMapp->hdrVdIndex) ||
             (newMcellId.page != xtntMapp->hdrMcellId.page) ||
             (newMcellId.cell != xtntMapp->hdrMcellId.cell)) {
@@ -3382,7 +3382,7 @@ move_metadata (
              */
             if ((cloneBfap != NULL) && (delFlag == 0)) {
                 xtntMapp = cloneBfap->xtnts.xtntMap;
-                XTNMAP_LOCK_WRITE(&(cloneBfap->xtntMap_lk))
+                XTNMAP_LOCK_WRITE(&(cloneBfap->xtntMap_lk));
                 KASSERT(xtntMapp->hdrVdIndex == 
                               xtntMapp->subXtntMap[0].vdIndex);
                 KASSERT(xtntMapp->hdrMcellId.page == 
