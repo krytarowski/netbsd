@@ -1641,7 +1641,7 @@ msfs_pl_set_entry(
   SEC_PROP_DATA_FREE(sec_info);
 
   if(cow_read_locked==TRUE) {
-      COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
+      COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) );
       cow_read_locked=FALSE;
   }
   if(trunc_xfer_locked==TRUE) {
@@ -2436,7 +2436,7 @@ msfs_getproplist_int(
             msfs_pl_deref_cur(&hdr);
             MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
             if(cow_read_locked==TRUE) {
-                COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
+                COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) );
                 cow_read_locked=FALSE;
             }
             if(trunc_xfer_locked==TRUE) {
@@ -2506,7 +2506,7 @@ msfs_getproplist_int(
 	MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
 
         if(cow_read_locked==TRUE) {
-            COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
+            COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) );
             cow_read_locked=FALSE;
         }
         if(trunc_xfer_locked==TRUE) {
@@ -3203,7 +3203,7 @@ start:
       msfs_pl_deref_cur(&hdr);
 
       if(cow_read_locked==TRUE) {
-          COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
+          COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) );
           cow_read_locked=FALSE;
       }
       if(trunc_xfer_locked==TRUE) {
@@ -3247,7 +3247,7 @@ start:
   MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
 
   if(cow_read_locked==TRUE) {
-      COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
+      COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) );
       cow_read_locked=FALSE;
   }
   if(trunc_xfer_locked==TRUE) {
@@ -3850,7 +3850,7 @@ msfs_pl_set_entry_v3(
   } 
 
   if(cow_read_locked==TRUE) {
-      COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
+      COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) );
       cow_read_locked=FALSE;
   }
   if(trunc_xfer_locked==TRUE) {
@@ -4360,7 +4360,7 @@ msfs_getproplist_int_v3(
 	    msfs_pl_deref_cur(&hdr);
             MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
             if(cow_read_locked==TRUE) {
-                COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
+                COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) );
                 cow_read_locked=FALSE;
             }
             if(trunc_xfer_locked==TRUE) {
@@ -4420,7 +4420,7 @@ msfs_getproplist_int_v3(
 	MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
 
         if(cow_read_locked==TRUE) {
-            COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
+            COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) );
             cow_read_locked=FALSE;
         }
         if(trunc_xfer_locked==TRUE) {
@@ -5046,7 +5046,7 @@ start:
       msfs_pl_deref_cur(&hdr);
 
       if(cow_read_locked==TRUE) {
-          COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
+          COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) );
           cow_read_locked=FALSE;
       }
       if(trunc_xfer_locked==TRUE) {
@@ -5081,7 +5081,7 @@ start:
   MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
 
   if(cow_read_locked==TRUE) {
-      COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
+      COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) );
       cow_read_locked=FALSE;
   }
   if(trunc_xfer_locked==TRUE) {
