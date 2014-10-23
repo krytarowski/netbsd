@@ -3944,7 +3944,7 @@ scan_rsvd_file_xtnt_map (
     bsXtntDescT xtntDesc;
     bsInMemXtntDescIdT xtntDescId;
 
-    XTNMAP_LOCK_READ(&(bfAccess->xtntMap_lk))
+    XTNMAP_LOCK_READ(&(bfAccess->xtntMap_lk));
 
     /*
      * FIX - This function assumes that reserved files are not shadowed.  This

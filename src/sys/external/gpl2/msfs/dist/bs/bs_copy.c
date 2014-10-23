@@ -443,7 +443,7 @@ set_block_map (
              * be written to both the copy and the original.
              */
 
-            XTNMAP_LOCK_READ( &(bfAccess->xtntMap_lk) )
+            XTNMAP_LOCK_READ( &(bfAccess->xtntMap_lk) );
 
             /*
              * NOTE: If multiple copy operations  are in-progress, the block map
