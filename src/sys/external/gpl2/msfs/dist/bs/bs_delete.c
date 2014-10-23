@@ -414,7 +414,7 @@ rbf_delete(
         ftxH = parentFtxH;
     }
     
-    COW_LOCK_WRITE( &bfap->cow_lk )
+    COW_LOCK_WRITE( &bfap->cow_lk );
     if (bs_have_clone( bfap->tag, bfSetp->cloneSetp, ftxH )) {
 
         /*
