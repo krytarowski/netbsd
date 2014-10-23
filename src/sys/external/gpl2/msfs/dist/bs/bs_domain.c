@@ -4313,7 +4313,7 @@ clear_bmt (
 
                     ddlVd = VD_HTOP(vdIndex, dmnP);
 
-                    DDLACTIVE_LOCK_WRITE( &(ddlVd->ddlActiveLk) )
+                    DDLACTIVE_LOCK_WRITE( &(ddlVd->ddlActiveLk) );
                     unlockFlag = 1;
 
                     sts = del_find_del_entry (
@@ -4440,7 +4440,7 @@ find_del_entry (
             continue;
         }
 
-        DDLACTIVE_LOCK_WRITE( &(vd->ddlActiveLk) )
+        DDLACTIVE_LOCK_WRITE( &(vd->ddlActiveLk) );
 
         sts = del_find_del_entry( dmnP,
                                   vd->vdIndex,

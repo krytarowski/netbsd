@@ -4172,7 +4172,7 @@ mig_pack_vd_range (
                     /* File was deleted, or being deleted.
                      * Find out which one.
                      */
-                    DDLACTIVE_LOCK_WRITE( &(vdp->ddlActiveLk) )
+                    DDLACTIVE_LOCK_WRITE( &(vdp->ddlActiveLk) );
                     sts = del_find_del_entry ( vdp->dmnP,
                                                vdp->vdIndex,
                                                pXtntp->ssPackBfSetId.dirTag,
@@ -4256,7 +4256,7 @@ mig_pack_vd_range (
                                   /* File was deleted, or being deleted.
                                    * Find out which one.
                                    */
-                                  DDLACTIVE_LOCK_WRITE( &(vdp->ddlActiveLk) )
+                                  DDLACTIVE_LOCK_WRITE( &(vdp->ddlActiveLk) );
                                   sts = del_find_del_entry (
                                                      vdp->dmnP,
                                                      vdp->vdIndex,
@@ -4416,7 +4416,7 @@ mig_pack_vd_range (
                                       /* File was deleted, or being deleted.
                                        * Find out which one.
                                        */
-                                      DDLACTIVE_LOCK_WRITE(&(vdp->ddlActiveLk))
+                                      DDLACTIVE_LOCK_WRITE(&(vdp->ddlActiveLk));
                                       sts = del_find_del_entry (
                                                          vdp->dmnP,
                                                          vdp->vdIndex,
