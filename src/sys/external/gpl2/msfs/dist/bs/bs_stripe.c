@@ -365,7 +365,7 @@ noclone:
      */
 
     if ( cloneap ) {
-        COW_LOCK_WRITE( &bfap->cow_lk )
+        COW_LOCK_WRITE( &bfap->cow_lk );
 
         KASSERT(cloneap->xtnts.type == BSXMT_APPEND)
         if ( cloneap->xtnts.xtntMap->cnt == 1 &&
