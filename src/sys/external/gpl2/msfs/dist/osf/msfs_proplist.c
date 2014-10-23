@@ -2417,7 +2417,7 @@ msfs_getproplist_int(
                            &cow_read_locked,
                            &trunc_xfer_locked);
 
-        MCELLIST_LOCK_READ( &(bfAccess->mcellList_lk) )
+        MCELLIST_LOCK_READ( &(bfAccess->mcellList_lk) );
 
 	/*
 	 * search mcell chain for name
@@ -4350,7 +4350,7 @@ msfs_getproplist_int_v3(
                            &cow_read_locked,
                            &trunc_xfer_locked);
 
-        MCELLIST_LOCK_READ( &(bfAccess->mcellList_lk) )
+        MCELLIST_LOCK_READ( &(bfAccess->mcellList_lk) );
 
 	/*
 	 * search mcell chain for name

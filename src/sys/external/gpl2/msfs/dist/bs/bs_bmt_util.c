@@ -1178,7 +1178,7 @@ bmtr_get_rec_n_lk(
      * multiple readers concurrently.
      */
     if (lk == BMTR_NO_LOCK) {
-        MCELLIST_LOCK_READ( &bfap->mcellList_lk )
+        MCELLIST_LOCK_READ( &bfap->mcellList_lk );
     }
     else {
         MCELLIST_LOCK_WRITE( &bfap->mcellList_lk );
