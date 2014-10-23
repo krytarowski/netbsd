@@ -1453,7 +1453,7 @@ cleanup:
         	FILESET_WRITE_LOCK(&FilesetLock);
         	KASSERT(dn->dmnP->mountCnt > 0);
         	dn->dmnP->mountCnt--;
-        	FILESET_UNLOCK(&FilesetLock )
+        	FILESET_UNLOCK(&FilesetLock );
         	bs_domain_close( dn->dmnP );
     	}
     	if (dmn_active) {
