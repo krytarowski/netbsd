@@ -1029,7 +1029,7 @@ bmtr_get_rec_ptr(
         ADVFS_SAD0( "bmtr_get_rec_ptr: missing ftxH" );
     }
 
-    MCELLIST_LOCK_WRITE( &bfap->mcellList_lk )
+    MCELLIST_LOCK_WRITE( &bfap->mcellList_lk );
     lkLocked = TRUE;
 
     /*
@@ -1181,7 +1181,7 @@ bmtr_get_rec_n_lk(
         MCELLIST_LOCK_READ( &bfap->mcellList_lk )
     }
     else {
-        MCELLIST_LOCK_WRITE( &bfap->mcellList_lk )
+        MCELLIST_LOCK_WRITE( &bfap->mcellList_lk );
     }
     mcellListLocked = TRUE;
 
@@ -1470,7 +1470,7 @@ bmtr_put_rec_n_unlk_int(
     ftxStarted = TRUE;
 
     if (lk == BMTR_NO_LOCK) {
-        MCELLIST_LOCK_WRITE( &bfap->mcellList_lk )
+        MCELLIST_LOCK_WRITE( &bfap->mcellList_lk );
         lkLocked = TRUE;
     }
 
@@ -1765,7 +1765,7 @@ bmtr_update_rec_int(
     }
 
     if (lk == BMTR_NO_LOCK) {
-        MCELLIST_LOCK_WRITE( &bfap->mcellList_lk )
+        MCELLIST_LOCK_WRITE( &bfap->mcellList_lk );
         lkLocked = TRUE;
     }
 
