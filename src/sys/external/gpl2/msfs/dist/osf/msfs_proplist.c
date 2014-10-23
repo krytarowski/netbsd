@@ -533,7 +533,7 @@ msfs_pl_get_locks(
                  CLU_CLXTNT_READ_LOCK_RECURSIVE(&bfap->clu_clonextnt_lk);
                  *clu_clxtnt_locked=TRUE;
             }
-            COW_READ_LOCK_RECURSIVE(&(orig_bfap->cow_lk) )
+            COW_READ_LOCK_RECURSIVE(&(orig_bfap->cow_lk) );
             *cow_read_locked=TRUE;
         }
 
@@ -553,7 +553,7 @@ msfs_pl_get_locks(
         TRUNC_XFER_READ_LOCK_RECURSIVE(&orig_bfap->trunc_xfer_lk);
         *trunc_xfer_locked=TRUE;
 
-        COW_READ_LOCK_RECURSIVE( &(orig_bfap->cow_lk) )
+        COW_READ_LOCK_RECURSIVE( &(orig_bfap->cow_lk) );
         *cow_read_locked=TRUE;
     }
     /* else file is a normal file and no locks are taken */
