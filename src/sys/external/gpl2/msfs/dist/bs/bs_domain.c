@@ -4200,7 +4200,7 @@ clear_bmt (
                          * deferred-delete list.
                          */
                         unlockFlag = 0;
-                        DDLACTIVE_UNLOCK( &(ddlVd->ddlActiveLk) )
+                        DDLACTIVE_UNLOCK( &(ddlVd->ddlActiveLk) );
                         migFlag = 1;
                     } else {
                         /*
@@ -4380,7 +4380,7 @@ clear_bmt (
 
 HANDLE_EXCEPTION:
     if (unlockFlag != 0) {
-        DDLACTIVE_UNLOCK( &(ddlVd->ddlActiveLk) )
+        DDLACTIVE_UNLOCK( &(ddlVd->ddlActiveLk) );
     }
 
     if (closeBitfileFlag != 0) {
@@ -4456,7 +4456,7 @@ find_del_entry (
             }
         }
 
-        DDLACTIVE_UNLOCK( &(vd->ddlActiveLk) )
+        DDLACTIVE_UNLOCK( &(vd->ddlActiveLk) );
 
         vdCnt++;
         vd = NULL;
