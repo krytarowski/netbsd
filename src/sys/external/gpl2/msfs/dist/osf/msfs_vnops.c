@@ -72,31 +72,32 @@ static int msfs_chown(struct vnode *vp, uid_t uid, gid_t gid, struct uucred *cre
  *  domain.
  */
 
-#define NFS_FREEZE_LOCK(vp) {                                                       \
-                                                                                    \
-    if ( NFS_SERVER_TSD != 0 ) {                                                    \
-        domainT *dmnP = GETDOMAINP ( VTOMOUNT(vp) );                                \
-        mutex_enter( &(dmnP->dmnFreezeMutex) );                                      \
-        if ( dmnP->dmnFreezeFlags & (BFD_FREEZE_IN_PROGRESS + BFD_FROZEN) ) {       \
-            mutex_exit( &dmnP->dmnFreezeMutex );                                  \
-            return (NFS3ERR_JUKEBOX);                                               \
-        } else {                                                                    \
-            dmnP->dmnFreezeRefCnt++;                                                \
-            mutex_exit(&dmnP->dmnFreezeMutex);                                    \
-        }                                                                           \
-    }                                                                               \
+static inline void NFS_FREEZE_LOCK(struct vnode *vp)
+{
+    if ( NFS_SERVER_TSD != 0 ) {
+        domainT *dmnP = GETDOMAINP ( VTOMOUNT(vp) );
+        mutex_enter( &(dmnP->dmnFreezeMutex) );
+        if ( dmnP->dmnFreezeFlags & (BFD_FREEZE_IN_PROGRESS + BFD_FROZEN) ) {
+            mutex_exit( &dmnP->dmnFreezeMutex );
+            return (NFS3ERR_JUKEBOX);
+        } else {
+            dmnP->dmnFreezeRefCnt++;
+            mutex_exit(&dmnP->dmnFreezeMutex);
+        }
+    }
 }
-#define NFS_FREEZE_UNLOCK(vp)  {                                                    \
-                                                                                    \
-    if ( NFS_SERVER_TSD != 0 ) {                                                    \
-        domainT *dmnP = GETDOMAINP ( VTOMOUNT(vp) );                                \
-        mutex_enter( &dmnP->dmnFreezeMutex );                                        \
-        dmnP->dmnFreezeRefCnt--;                                                    \
-        if ( dmnP->dmnFreezeWaiting && dmnP->dmnFreezeRefCnt == 0) {                \
-            thread_wakeup( (vm_offset_t)&dmnP->dmnFreezeWaiting );                  \
-        }                                                                           \
-        mutex_exit( &dmnP->dmnFreezeMutex );                                      \
-    }                                                                               \
+
+static inline void NFS_FREEZE_UNLOCK(struct vnode *vp)
+{
+    if ( NFS_SERVER_TSD != 0 ) {
+        domainT *dmnP = GETDOMAINP ( VTOMOUNT(vp) );
+        mutex_enter( &dmnP->dmnFreezeMutex );
+        dmnP->dmnFreezeRefCnt--;
+        if ( dmnP->dmnFreezeWaiting && dmnP->dmnFreezeRefCnt == 0) {
+            thread_wakeup( (vm_offset_t)&dmnP->dmnFreezeWaiting );
+        }
+        mutex_exit( &dmnP->dmnFreezeMutex );
+    }
 }
 
 int
