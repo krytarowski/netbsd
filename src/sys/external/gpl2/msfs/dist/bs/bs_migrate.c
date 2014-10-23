@@ -505,7 +505,7 @@ mig_verify_stripe_page_range (
 HANDLE_EXCEPTION:
 
     if (unlockFlag != 0) {
-        MCELLIST_UNLOCK(&(bfap->mcellList_lk) )
+        MCELLIST_UNLOCK(&(bfap->mcellList_lk) );
     }
     return sts;
 
@@ -2174,7 +2174,7 @@ HANDLE_EXCEPTION:
     }
 
     if (unlockFlag != 0) {
-        MCELLIST_UNLOCK(&(bfap->mcellList_lk) )
+        MCELLIST_UNLOCK(&(bfap->mcellList_lk) );
     }
     if (xmPageRange != NULL) {
         ms_free (xmPageRange);
