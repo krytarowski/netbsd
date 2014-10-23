@@ -2993,7 +2993,7 @@ del_find_del_entry (
 
     vd = VD_HTOP(vdIndex, domain);
 
-    DELLIST_LOCK_WRITE(&(vd->del_list_lk) )
+    DELLIST_LOCK_WRITE(&(vd->del_list_lk) );
 
     unlockFlag = 1;
 
