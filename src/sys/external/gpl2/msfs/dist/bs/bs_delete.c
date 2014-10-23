@@ -3074,7 +3074,7 @@ del_find_del_entry (
     }  /* end while */
 
     unlockFlag = 0;
-    DELLIST_UNLOCK(&(vd->del_list_lk) )
+    DELLIST_UNLOCK(&(vd->del_list_lk) );
 
     if ((mcellId.page == bsNilMCId.page) && (mcellId.cell == bsNilMCId.cell)) {
         sts = ENO_MORE_MCELLS;
@@ -3092,7 +3092,7 @@ HANDLE_EXCEPTION:
         bs_derefpg(pgRef, BS_CACHE_IT);
     }
     if (unlockFlag != 0) {
-        DELLIST_UNLOCK(&(vd->del_list_lk) )
+        DELLIST_UNLOCK(&(vd->del_list_lk) );
     }
 
     return sts;
