@@ -2039,7 +2039,7 @@ del_dealloc_stg(
 done:
     bmt_free_bf_mcells( pvdp, pmcid, FtxNilFtxH, TRUE );
 
-    DDLACTIVE_UNLOCK( &(pvdp->ddlActiveLk) )
+    DDLACTIVE_UNLOCK( &(pvdp->ddlActiveLk) );
 
     /*
      * If a thread is waiting on the completion of this entry, wake it.
