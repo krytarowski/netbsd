@@ -96,11 +96,15 @@ extern void bs_lock_mgr_init( void );
 krwlock_t InitLock;
 event_t MsfsDbgEvent;
 
-#define INITLOCK_LOCK_WRITE(Lk) \
-        rw_enter( Lk, RW_WRITER );
+static inline void INITLOCK_LOCK_WRITE(krwlock_t *Lk)
+{
+        rw_enter(Lk, RW_WRITER);
+}
 
-#define INITLOCK_UNLOCK(Lk) \
-        rw_exit( Lk );
+static inline void INITLOCK_UNLOCK(krwlock_t *Lk)
+{
+        rw_exit(Lk);
+}
 
 #define SUSER (suser(u.u_cred, &u.u_acflag) == 0)
 
