@@ -7766,7 +7766,7 @@ the_end:
     }
 
     if (mcellListLocked) {
-        MCELLIST_UNLOCK( &(bfSetp->dirBfAp->mcellList_lk) )
+        MCELLIST_UNLOCK( &(bfSetp->dirBfAp->mcellList_lk) );
     }
 
     if (ftxStarted) {
