@@ -2358,7 +2358,7 @@ x_load_inmem_xtnt_map (
                 /* If extents are now valid, release  mcellList lock, and 
                  * downgrade the xtntMap to a READ lock.
                  */
-                XTNMAP_LOCK_DOWNGRADE(&(bfap->xtntMap_lk))  
+                XTNMAP_LOCK_DOWNGRADE(&(bfap->xtntMap_lk));
                 MCELLIST_UNLOCK(&(bfap->mcellList_lk));
                 return EOK;
             }
@@ -2436,7 +2436,7 @@ x_load_inmem_xtnt_map (
      * return with just the mcellList lock held.
      */
     if (lock_request == X_LOAD_REFERENCE) {
-        XTNMAP_LOCK_DOWNGRADE(&(bfap->xtntMap_lk))  
+        XTNMAP_LOCK_DOWNGRADE(&(bfap->xtntMap_lk));
         MCELLIST_UNLOCK(&(bfap->mcellList_lk));   /* was read-locked */
     } else if (lock_request == X_LOAD_UPDATE) {
         /* McellList_lk is already write-locked in this case */
