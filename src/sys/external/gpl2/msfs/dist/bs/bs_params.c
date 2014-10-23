@@ -358,7 +358,7 @@ bs_get_clone_xtnt_map(
      */
     sts = x_load_inmem_xtnt_map( orig_bfap, X_LOAD_REFERENCE);
     if (sts != EOK) {
-        COW_UNLOCK( &(orig_bfap->cow_lk) )
+        COW_UNLOCK( &(orig_bfap->cow_lk) );
         TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
         if (clonextnt_locked) 
             CLU_CLXTNT_UNLOCK(&clone_bfap->clu_clonextnt_lk);
@@ -371,7 +371,7 @@ bs_get_clone_xtnt_map(
     sts = x_load_inmem_xtnt_map( clone_bfap, X_LOAD_REFERENCE);
     if (sts != EOK) {
         XTNMAP_UNLOCK( &(orig_bfap->xtntMap_lk) );
-        COW_UNLOCK( &(orig_bfap->cow_lk) )
+        COW_UNLOCK( &(orig_bfap->cow_lk) );
         TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
         if (clonextnt_locked) 
             CLU_CLXTNT_UNLOCK(&clone_bfap->clu_clonextnt_lk);
@@ -460,7 +460,7 @@ bs_get_clone_xtnt_map(
     if (sts != EOK) {
         XTNMAP_UNLOCK( &(orig_bfap->xtntMap_lk) );
         XTNMAP_UNLOCK( &(clone_bfap->xtntMap_lk) );
-        COW_UNLOCK( &(orig_bfap->cow_lk) )
+        COW_UNLOCK( &(orig_bfap->cow_lk) );
         TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
         if (clonextnt_locked) 
             CLU_CLXTNT_UNLOCK(&clone_bfap->clu_clonextnt_lk);
@@ -596,7 +596,7 @@ bs_get_clone_xtnt_map(
 
     XTNMAP_UNLOCK( &(orig_bfap->xtntMap_lk) );
     XTNMAP_UNLOCK( &(clone_bfap->xtntMap_lk) );
-    COW_UNLOCK( &(orig_bfap->cow_lk) )
+    COW_UNLOCK( &(orig_bfap->cow_lk) );
     TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
 
     /* if the newxtntmap was not set to the clone(fragment only)
@@ -612,7 +612,7 @@ HANDLE_EXCEPTION:
 
     XTNMAP_UNLOCK( &(orig_bfap->xtntMap_lk) );
     XTNMAP_UNLOCK( &(clone_bfap->xtntMap_lk) );
-    COW_UNLOCK( &(orig_bfap->cow_lk) )
+    COW_UNLOCK( &(orig_bfap->cow_lk) );
     TRUNC_XFER_UNLOCK(&orig_bfap->trunc_xfer_lk);
     if (clonextnt_locked) 
         CLU_CLXTNT_UNLOCK(&clone_bfap->clu_clonextnt_lk);

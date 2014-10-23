@@ -455,7 +455,7 @@ rbf_delete(
                                  sizeof( bfAttr ),
                                  BMTR_LOCK );
         if (sts != EOK) {
-            COW_UNLOCK( &bfap->cow_lk )
+            COW_UNLOCK( &bfap->cow_lk );
             domain_panic(bfap->dmnP, "rbf_delete: bmtr_get_rec_n_lk failed, return code = %d", sts);
             if ( ftxStarted )
                 ftx_fail(ftxH);
@@ -465,7 +465,7 @@ rbf_delete(
         defDelOpRec.prevDeleteWithClone = bfAttr.deleteWithClone;
         bfap->deleteWithClone = TRUE;
         bfAttr.deleteWithClone = TRUE;
-        COW_UNLOCK( &bfap->cow_lk )
+        COW_UNLOCK( &bfap->cow_lk );
  
         sts = bmtr_put_rec_n_unlk_int( bfap, 
                                        BSR_ATTR, 
@@ -490,7 +490,7 @@ rbf_delete(
         return EOK;
 
     } else {
-        COW_UNLOCK( &bfap->cow_lk )
+        COW_UNLOCK( &bfap->cow_lk );
         if (ftxStarted) {
             ftx_quit( ftxH );
         }
