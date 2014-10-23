@@ -1270,7 +1270,7 @@ bs_refpg_int(
     }
 exit:
     if (cowLkLocked) {
-        COW_UNLOCK( &(origBfAp->cow_lk) )
+        COW_UNLOCK( &(origBfAp->cow_lk) );
     }
 
     if (sts) {
