@@ -1588,7 +1588,7 @@ msfs_pl_set_entry(
           ftx_special_done_mode(ftx, FTXDONE_LOGSYNC);
       }
       ftx_done_urd(ftx, FTA_MSFS_SETPROPLIST, 0, NULL, 0, NULL);
-      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
     }
 
     else if (error != EOK) {
@@ -1596,7 +1596,7 @@ msfs_pl_set_entry(
        * NO mcells were allocated by FTA_MSFS_ALLOC_MCELL.
        */
       ftx_fail(ftx);
-      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
     }
 
     else if (root_done) {
@@ -1617,7 +1617,7 @@ msfs_pl_set_entry(
           ftx_special_done_mode(ftx, FTXDONE_LOGSYNC);
       }
       ftx_done_u(ftx, FTA_MSFS_SETPROPLIST, 0, NULL);
-      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
     }
   } 
 
@@ -2434,7 +2434,7 @@ msfs_getproplist_int(
               ms_uaprintf("         Current Mcell: %d, Previous Mcell: %d\n",hdr.MC.cell,hdr.prevMC.cell);
             }  
             msfs_pl_deref_cur(&hdr);
-            MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+            MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
             if(cow_read_locked==TRUE) {
                 COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
                 cow_read_locked=FALSE;
@@ -2503,7 +2503,7 @@ msfs_getproplist_int(
         }  
 
 	msfs_pl_deref_cur(&hdr);
-	MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+	MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
 
         if(cow_read_locked==TRUE) {
             COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
@@ -3244,7 +3244,7 @@ start:
    * cancel final xac
    */
   ftx_quit(ftx);
-  MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+  MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
 
   if(cow_read_locked==TRUE) {
       COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
@@ -3818,7 +3818,7 @@ msfs_pl_set_entry_v3(
       DEBUG(1,
 	    printf("msfs_pl_set_entry_v3: deleting alloc'ed mcells\n"));
       ftx_done_urd(ftx, FTA_MSFS_SETPROPLIST, 0, NULL, 0, NULL);
-      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
     }
 
     else if (error != EOK) {
@@ -3826,7 +3826,7 @@ msfs_pl_set_entry_v3(
        * NO mcells were allocated by FTA_MSFS_ALLOC_MCELL.
        */
       ftx_fail(ftx);
-      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
     }
 
     else if (root_done) {
@@ -3843,7 +3843,7 @@ msfs_pl_set_entry_v3(
       /* success - no old property list chain to clean up. */
 
       ftx_done_u(ftx, FTA_MSFS_SETPROPLIST, 0, NULL);
-      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+      MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
 
     }
 
@@ -4358,7 +4358,7 @@ msfs_getproplist_int_v3(
 	error = msfs_pl_init_cur(&hdr, bfAccess->primVdIndex, bfAccess->primMCId);
         if(error != EOK) {
 	    msfs_pl_deref_cur(&hdr);
-            MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+            MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
             if(cow_read_locked==TRUE) {
                 COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
                 cow_read_locked=FALSE;
@@ -4417,7 +4417,7 @@ msfs_getproplist_int_v3(
 	} while (!RECCUR_ISNIL(hdr));
 
 	msfs_pl_deref_cur(&hdr);
-	MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+	MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
 
         if(cow_read_locked==TRUE) {
             COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
@@ -5078,7 +5078,7 @@ start:
    * cancel final xac
    */
   ftx_quit(ftx);
-  MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) )
+  MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
 
   if(cow_read_locked==TRUE) {
       COW_READ_UNLOCK_RECURSIVE( &(bfAccess->origAccp->cow_lk) )
