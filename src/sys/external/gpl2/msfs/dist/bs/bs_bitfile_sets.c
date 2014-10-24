@@ -358,7 +358,7 @@ bs_fragbf_thread( void )
              * lock before starting the transaction since that is the same
              * order that code in the migrate path does it.
              */
-            MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+            MIGTRUNC_LOCK_READ(&(bfap->xtnts));
 
             /* No need to take the quota mt locks here. Storage is only
              * added to the quota files at file creation, chown, and
@@ -465,7 +465,7 @@ bs_fragbf_thread( void )
 
             ftx_done_n( ftxH, FTA_FRAG_GRP_DEALLOC );
 
-            MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+            MIGTRUNC_UNLOCK(&(bfap->xtnts));
             migtrunc_locked = FALSE;
 
             stg_remove_stg_finish( bfap->dmnP, delCnt, delListp );
@@ -473,7 +473,7 @@ bs_fragbf_thread( void )
 
 close_fragbf:
         if (migtrunc_locked) {
-            MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+            MIGTRUNC_UNLOCK(&(bfap->xtnts));
             migtrunc_locked = FALSE;
         }
         bs_close(bfap, 0);
@@ -6532,7 +6532,7 @@ try_again:
      * file's extent map.  We need to take the cow_lk after taking
      * the migTruncLk because the migrate paths use this order.
      */
-    MIGTRUNC_LOCK_READ( &cloneap->xtnts.migTruncLk );
+    MIGTRUNC_LOCK_READ( &cloneap->xtnts );
     COW_LOCK_WRITE( &bfap->cow_lk );
 
     /* Lets do the cluster clone shuffle:
@@ -6577,7 +6577,7 @@ try_again:
         }
 
         COW_UNLOCK( &bfap->cow_lk );
-        MIGTRUNC_UNLOCK( &cloneap->xtnts.migTruncLk );
+        MIGTRUNC_UNLOCK( &cloneap->xtnts );
 
         if ( token_taken & FILE_LOCK_TAKEN ) {
             FS_FILE_UNLOCK_RECURSIVE( VTOC(bfap->bfVp) );
@@ -6900,7 +6900,7 @@ bs_cow_pg(
      */
     if (cloneSetp->bfSetFlags & BFS_OD_OUT_OF_SYNC) {
         /* clone bfset exists but is out of sync with the orig */
-        MIGTRUNC_UNLOCK(&(cloneap->xtnts.migTruncLk));
+        MIGTRUNC_UNLOCK(&(cloneap->xtnts));
         migTruncLocked = FALSE;
         bfap->noClone = TRUE;
         bs_bf_out_of_sync(cloneap,parentFtxH);
@@ -6919,7 +6919,7 @@ bs_cow_pg(
      */
     ret = cow_get_page_range( cloneap, pg, &pg, &cnt, &p );
     if ( ret ) {
-        MIGTRUNC_UNLOCK( &cloneap->xtnts.migTruncLk );
+        MIGTRUNC_UNLOCK( &cloneap->xtnts );
         migTruncLocked = FALSE;
         bfap->noClone = TRUE;
         bs_bf_out_of_sync( cloneap, ftxH );
@@ -6938,7 +6938,7 @@ bs_cow_pg(
         cloneap->cowPgCount++;
     }
 
-    MIGTRUNC_UNLOCK(&(cloneap->xtnts.migTruncLk));
+    MIGTRUNC_UNLOCK(&(cloneap->xtnts));
     migTruncLocked = FALSE;
 
     if (sts != EOK) {
@@ -7056,7 +7056,7 @@ bs_cow_pg(
 cow_done:
 
     if (migTruncLocked) {
-        MIGTRUNC_UNLOCK(&(cloneap->xtnts.migTruncLk));
+        MIGTRUNC_UNLOCK(&(cloneap->xtnts));
     }
 
     if ( arp ) {

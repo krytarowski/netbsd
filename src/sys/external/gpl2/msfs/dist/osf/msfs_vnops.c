@@ -1190,7 +1190,7 @@ fs_setattr(
             if (!quota_page_is_mapped(context_ptr->fileSetNode->qi[type].qiAccessp,
                                       ids[type])) {
                 MIGTRUNC_LOCK_READ( &(context_ptr->fileSetNode->
-                                      qi[type].qiAccessp->xtnts.migTruncLk) );
+                                      qi[type].qiAccessp->xtnts) );
                 quota_mig_trunc_lock[type] = TRUE;
             }
         }
@@ -1211,7 +1211,7 @@ fs_setattr(
             for (type = 0; type < MAXQUOTAS; type++) {
                 if (quota_mig_trunc_lock[type]) {
                     MIGTRUNC_UNLOCK( &(context_ptr->fileSetNode->
-                                       qi[type].qiAccessp->xtnts.migTruncLk) );
+                                       qi[type].qiAccessp->xtnts) );
                     quota_mig_trunc_lock[type] = FALSE;
                 }
             }
@@ -1241,7 +1241,7 @@ fs_setattr(
         for (type = 0; type < MAXQUOTAS; type++) {
             if (quota_mig_trunc_lock[type]) {
                 MIGTRUNC_UNLOCK( &(context_ptr->fileSetNode->
-                                   qi[type].qiAccessp->xtnts.migTruncLk) );
+                                   qi[type].qiAccessp->xtnts) );
                 quota_mig_trunc_lock[type] = FALSE;
             }
         }
@@ -1474,7 +1474,7 @@ fs_setattr_truncate( bfAccessT *bfap,
      */
     /* can't be a clone */
     KASSERT(bfap->bfSetp->cloneId == BS_BFSET_ORIG);
-    MIGTRUNC_LOCK_READ( &bfap->xtnts.migTruncLk );
+    MIGTRUNC_LOCK_READ( &bfap->xtnts );
 
     /* No need to take the quota lock here. Storage is only
      * added to the quota files at file creation, chown
@@ -1498,7 +1498,7 @@ fs_setattr_truncate( bfAccessT *bfap,
             domain_panic( bfap->dmnP,
                   "msfs_setattr: fs_delete_frag error, return code = %d", sts );
             ftx_done_fs( ftxH, FTA_OSF_SETATTR_1, 0 );
-            MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
+            MIGTRUNC_UNLOCK( &(bfap->xtnts) );
             error = EIO;             /* E_DOMAIN_PANIC */
             goto notrunc;
         }
@@ -1549,7 +1549,7 @@ fs_setattr_truncate( bfAccessT *bfap,
         domain_panic( bfap->dmnP,
              "msfs_setattr: fs_update_stats (1) error, return code = %d", sts );
         ftx_done_fs( ftxH, FTA_OSF_SETATTR_1, 0 );
-        MIGTRUNC_UNLOCK( &bfap->xtnts.migTruncLk );
+        MIGTRUNC_UNLOCK( &bfap->xtnts );
         error = EIO;                 /* E_DOMAIN_PANIC */
         goto notrunc;
     }
@@ -1564,7 +1564,7 @@ fs_setattr_truncate( bfAccessT *bfap,
         setHeld = FALSE;
     }
 
-    MIGTRUNC_UNLOCK( &bfap->xtnts.migTruncLk );
+    MIGTRUNC_UNLOCK( &bfap->xtnts );
 
     if ( delCnt ) {
         stg_remove_stg_finish( bfap->dmnP, delCnt, delList );
@@ -2230,7 +2230,7 @@ remove_it_1:
      */
     IDX_GET_BFAP(bfap, idx_bfap);
     if (idx_bfap != NULL) { 
-        MIGTRUNC_LOCK_READ( &(idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_LOCK_READ( &(idx_bfap->xtnts) );
     }
 
     /* No need to take the quota locks here. Storage is added
@@ -2313,7 +2313,7 @@ remove_it_1:
     ftx_done_fs(ftx_handle, FTA_OSF_REMOVE_V1, 0);
 
     if (idx_bfap != NULL) {
-        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts) );
     }
 
     /*
@@ -2347,7 +2347,7 @@ _error_out:
     ftx_fail(ftx_handle);
 
     if (idx_bfap != NULL) {
-        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts) );
     }
 
     FS_FILE_UNLOCK(rem_context);
@@ -2667,7 +2667,7 @@ msfs_link(
      * chain
      * insert_seq --> rbf_add_stg
      */
-    MIGTRUNC_LOCK_READ( &(dir_bfap->xtnts.migTruncLk) );
+    MIGTRUNC_LOCK_READ( &(dir_bfap->xtnts) );
 
     /* Need to take the fileset tag directory lock because
      * of the call chain
@@ -2676,7 +2676,7 @@ msfs_link(
      * idx_create_index_file_int --> rbf_create --> rbf_int_create -->
      * tagdir_alloc_tag --> init_next_tag_page-->rbf_add_stg
      */
-    MIGTRUNC_LOCK_READ( &(dir_bfap->bfSetp->dirBfAp->xtnts.migTruncLk) );
+    MIGTRUNC_LOCK_READ( &(dir_bfap->bfSetp->dirBfAp->xtnts) );
 
     /* Need to take the index lock because of the call
      * chain
@@ -2687,7 +2687,7 @@ msfs_link(
 
     IDX_GET_BFAP(dir_bfap, idx_bfap);
     if (idx_bfap != NULL) { 
-        MIGTRUNC_LOCK_READ( &(idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_LOCK_READ( &(idx_bfap->xtnts) );
     }
 
     /* No need to take the quota locks. The link may add space
@@ -2740,10 +2740,10 @@ msfs_link(
         FS_FILE_UNLOCK(dir_context);
 
         if (idx_bfap != NULL) {
-            MIGTRUNC_UNLOCK( &(idx_bfap->xtnts.migTruncLk) );
+            MIGTRUNC_UNLOCK( &(idx_bfap->xtnts) );
         }
-        MIGTRUNC_UNLOCK( &(dir_bfap->bfSetp->dirBfAp->xtnts.migTruncLk) );
-        MIGTRUNC_UNLOCK( &(dir_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(dir_bfap->bfSetp->dirBfAp->xtnts) );
+        MIGTRUNC_UNLOCK( &(dir_bfap->xtnts) );
 
         vrele(dvp);
 
@@ -2781,10 +2781,10 @@ msfs_link(
     ftx_done_fs(ftx_handle, FTA_OSF_LINK_V1, 0);
 
     if (idx_bfap != NULL) {
-        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts) );
     }
-    MIGTRUNC_UNLOCK( &(dir_bfap->bfSetp->dirBfAp->xtnts.migTruncLk) );
-    MIGTRUNC_UNLOCK( &(dir_bfap->xtnts.migTruncLk) );
+    MIGTRUNC_UNLOCK( &(dir_bfap->bfSetp->dirBfAp->xtnts) );
+    MIGTRUNC_UNLOCK( &(dir_bfap->xtnts) );
 
     /* finish any directory truncation that might have started in insert_seq */
 
@@ -3243,7 +3243,7 @@ call_namei:
          * remember that we have taken it, so we can unlock it at
          * the end.
          */
-        MIGTRUNC_LOCK_READ( &(to_dir_accessp->xtnts.migTruncLk) );
+        MIGTRUNC_LOCK_READ( &(to_dir_accessp->xtnts) );
 
         /* Need to take the lock on the ``to'' fileset tag directory
          * because of the call chain
@@ -3252,7 +3252,7 @@ call_namei:
          * init_next_tag_page --> rbf_add_stg
          */
         MIGTRUNC_LOCK_READ( &(to_dir_accessp->bfSetp->dirBfAp->
-                              xtnts.migTruncLk) );
+                              xtnts) );
         /* Need to take the migtrunc lock on the ``to'' directory index
          * (if it exists), because of the call chain
          * insert_seq --> idx_insert_filename --> idx_insert_filename_int -->
@@ -3260,7 +3260,7 @@ call_namei:
          */
         IDX_GET_BFAP(to_dir_accessp, to_idx_bfap);
         if (to_idx_bfap != NULL) { 
-            MIGTRUNC_LOCK_READ( &(to_idx_bfap->xtnts.migTruncLk) );
+            MIGTRUNC_LOCK_READ( &(to_idx_bfap->xtnts) );
         }
         /* this flag remembers all three ``to'' mt locks */
         to_dir_mig_trunc_lock = TRUE;
@@ -3274,7 +3274,7 @@ call_namei:
          */
         IDX_GET_BFAP(from_dir_accessp, from_idx_bfap);
         if ((from_idx_bfap != NULL) && (from_idx_bfap != to_idx_bfap)) { 
-            MIGTRUNC_LOCK_READ( &(from_idx_bfap->xtnts.migTruncLk) );
+            MIGTRUNC_LOCK_READ( &(from_idx_bfap->xtnts) );
             from_dir_mig_trunc_lock = TRUE;
         }
 
@@ -3473,7 +3473,7 @@ call_namei:
          */
         IDX_GET_BFAP(from_dir_accessp, from_idx_bfap);
         if (from_idx_bfap != NULL) { 
-            MIGTRUNC_LOCK_READ( &(from_idx_bfap->xtnts.migTruncLk) );
+            MIGTRUNC_LOCK_READ( &(from_idx_bfap->xtnts) );
             from_dir_mig_trunc_lock = TRUE;
         }
 
@@ -3649,15 +3649,15 @@ call_namei:
     ftx_done_fs(ftx_handle, FTA_OSF_RENAME_V1, 0);
 
     if (from_dir_mig_trunc_lock) {
-        MIGTRUNC_UNLOCK( &(from_idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(from_idx_bfap->xtnts) );
     }
 
     if (to_dir_mig_trunc_lock) {
-        MIGTRUNC_UNLOCK( &(to_dir_accessp->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(to_dir_accessp->xtnts) );
         MIGTRUNC_UNLOCK( &(to_dir_accessp->bfSetp->dirBfAp->
-                           xtnts.migTruncLk) );
+                           xtnts) );
         if (to_idx_bfap != NULL) {
-            MIGTRUNC_UNLOCK( &(to_idx_bfap->xtnts.migTruncLk) );
+            MIGTRUNC_UNLOCK( &(to_idx_bfap->xtnts) );
         }
         to_dir_mig_trunc_lock = FALSE;
     }
@@ -3741,14 +3741,14 @@ err_fail_ftx:
     FS_FILE_UNLOCK(from_file_context);
 
     if (from_dir_mig_trunc_lock) { 
-        MIGTRUNC_UNLOCK( &(from_idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(from_idx_bfap->xtnts) );
     }
     if (to_dir_mig_trunc_lock) {
-        MIGTRUNC_UNLOCK( &(to_dir_accessp->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(to_dir_accessp->xtnts) );
         MIGTRUNC_UNLOCK( &(to_dir_accessp->bfSetp->dirBfAp->
-                           xtnts.migTruncLk) );
+                           xtnts) );
         if (to_idx_bfap != NULL) {
-            MIGTRUNC_UNLOCK( &(to_idx_bfap->xtnts.migTruncLk) );
+            MIGTRUNC_UNLOCK( &(to_idx_bfap->xtnts) );
         }
         to_dir_mig_trunc_lock = FALSE;
     }
@@ -4053,7 +4053,7 @@ msfs_rmdir(
      */
     IDX_GET_BFAP(par_access, idx_bfap);
     if (idx_bfap != NULL) { 
-        MIGTRUNC_LOCK_READ( &(idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_LOCK_READ( &(idx_bfap->xtnts) );
     }
 
     /* No need to take the quota locks. rbf_delete will NOT
@@ -4141,7 +4141,7 @@ msfs_rmdir(
     }
 
     if (idx_bfap != NULL) {
-        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts) );
     }
 
     ndp->ni_dvp = NULL;
@@ -4178,7 +4178,7 @@ _error_cleanup:
 
     if (idx_mig_trunc_lock) {
         if (idx_bfap != NULL) {
-            MIGTRUNC_UNLOCK( &(idx_bfap->xtnts.migTruncLk) );
+            MIGTRUNC_UNLOCK( &(idx_bfap->xtnts) );
         }
     }
 

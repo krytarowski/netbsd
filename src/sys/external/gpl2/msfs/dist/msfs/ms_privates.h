@@ -31,6 +31,7 @@
 #include <sys/rwlock.h>
 
 struct ftxLk;
+struct bsInMemXtnt;
 
 void FRAG_LOCK_WRITE( struct ftxLk *sLk );
 void FRAG_LOCK_READ( struct ftxLk *sLk );
@@ -57,9 +58,9 @@ void CLU_CLXTNT_TRY_READ( struct ftxLk *sLk );
 void CLU_CLXTNT_UNLOCK( struct ftxLk *sLk );
 void RAWBUFREE_LOCK_WRITE( struct ftxLk *sLk );
 void RAWBUFREE_UNLOCK( struct ftxLk *sLk );
-void MIGTRUNC_LOCK_READ( krwlock_t *sLk );
-void MIGTRUNC_LOCK_WRITE( krwlock_t *sLk );
-void MIGTRUNC_UNLOCK( krwlock_t *sLk );
+void MIGTRUNC_LOCK_READ( struct bsInMemXtnt *sLk );
+void MIGTRUNC_LOCK_WRITE( struct bsInMemXtnt *sLk );
+void MIGTRUNC_UNLOCK( struct bsInMemXtnt *sLk );
 void DDLACTIVE_LOCK_READ( krwlock_t *sLk );
 void DDLACTIVE_LOCK_WRITE( krwlock_t *sLk );
 void DDLACTIVE_UNLOCK( krwlock_t *sLk );

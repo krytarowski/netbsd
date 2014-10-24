@@ -234,6 +234,7 @@ typedef struct bsInMemXtnt {
     bsStripeHdrT *stripeXtntMap;   /* Link to stripe extent maps */
     bsInMemXtntMapT *copyXtntMap;  /* Link to copy extent maps */
     krwlock_t migTruncLk;        /* Serialize migrate and truncate */
+    volatile unsigned int migTruncLkWriteWaiters; /* Number of threads sleeping on write lock */
     bsXtntMapTypeT type;           /* The type of extent maps */
     uint32T allocPageCnt;          /* Number of allocated pages */
 } bsInMemXtntT;
