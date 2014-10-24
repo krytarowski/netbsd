@@ -806,7 +806,7 @@ _retry:
             /* Need the bfap lock because of call chain
              * bf_setup_truncation --> stg_remove_stg_start
              */
-            MIGTRUNC_LOCK_READ ( &(bfap->xtnts.migTruncLk) );
+            MIGTRUNC_LOCK_READ ( &(bfap->xtnts) );
 
             /* No need to take the quota locks here because
              * the quota entry already exists. It's only when
@@ -832,7 +832,7 @@ _retry:
 
            ftx_done_fs (ftxH, FTA_FS_WRITE_TRUNC, 0);
 
-           MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
+           MIGTRUNC_UNLOCK( &(bfap->xtnts) );
 
            if ( arp ) {
                 /* Remove active range */
@@ -1878,7 +1878,7 @@ _error:
             uint32T delCnt;
             void *delList;
     
-            MIGTRUNC_LOCK_READ ( &(bfap->xtnts.migTruncLk) );
+            MIGTRUNC_LOCK_READ ( &(bfap->xtnts) );
             FTX_START_N (
                          FTA_FS_WRITE_TRUNC,
                          &ftxH,
@@ -1889,7 +1889,7 @@ _error:
             bfap->trunc = FALSE;
 
             ftx_done_fs (ftxH, FTA_FS_WRITE_TRUNC, 0);
-            MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
+            MIGTRUNC_UNLOCK( &(bfap->xtnts) );
             FS_FILE_UNLOCK( contextp );
     
             if (delCnt) {
@@ -2793,7 +2793,7 @@ fs_write_add_stg(
      */
 
     /* Need to lock the bfap because of call to stg_add_stg_no_cow. */
-    MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+    MIGTRUNC_LOCK_READ(&(bfap->xtnts));
 
     /* No need to lock the quota locks. Storage is only
      * added to them at file creation, chown and explicit
@@ -3088,7 +3088,7 @@ fs_write_add_stg(
         ftx_done_n( ftxH, FTA_FS_WRITE_ADD_STG_V1 );
     }
     if (locked_migtrunc_here) {
-        MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+        MIGTRUNC_UNLOCK(&(bfap->xtnts));
     }
 
     if ( pgs_allocated )
@@ -3102,7 +3102,7 @@ _error_exit:
         ftx_fail( ftxH );
     }
     if (locked_migtrunc_here) {
-        MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+        MIGTRUNC_UNLOCK(&(bfap->xtnts));
     }
 
     if ( pgs_allocated )
