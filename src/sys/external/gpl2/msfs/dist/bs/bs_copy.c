@@ -68,7 +68,7 @@ set_block_map (
                uint32T bfPageCnt,        /* in */
                bsInMemXtntT *copyXtnts,  /* in */
                uint32T copyXferSize,     /* in */
-               int *abortFlag            /* in */
+               uint32T forceFlag            /* in */
                );
 
 static
@@ -78,7 +78,7 @@ verify_page_write (
                    uint32T bfPageOffset,  /* in */
                    uint32T bfPageCnt,  /* in */
                    bsInMemXtntT *copyXtnts,  /* in */
-                   int *abortFlag  /* in */
+                   uint32T forceFlag  /* in */
                    );
 
 static
@@ -97,7 +97,7 @@ compare_copies (
                 uint32T bfPageOffset,  /* in */
                 uint32T bfPageCnt,  /* in */
                 bsInMemXtntT *copyXtnts,  /* in */
-                int *abortFlag  /* in */
+                uint32T forceFlag  /* in */
                 );
 
 static int cp_debug = 0;
@@ -156,7 +156,6 @@ cp_copy_page_range (
 {
     uint32T i;
     statusT sts;
-    int flag = 0;
 
     /* FIX - if log, can't do */
 
@@ -172,7 +171,7 @@ cp_copy_page_range (
                                   bfPageRange[i].pageCnt, 
                                   copyXtnts,
                                   copyXferSize,
-                                  (forceFlag ? &flag : &(bfAccess->xtnts.migTruncLk.l_wait_writers) )
+                                  forceFlag
                 );
             /* 
              * It seems like a foul thing to do, to pass in the address of a 
@@ -222,7 +221,7 @@ cp_copy_page_range (
                                       bfPageRange[i].pageOffset,
                                       bfPageRange[i].pageCnt,
                                       copyXtnts,
-                                      (forceFlag ? &flag : &(bfAccess->xtnts.migTruncLk.l_wait_writers) )
+                                      forceFlag
                 );
             if (sts != EOK) {
                 return sts;
@@ -238,7 +237,7 @@ cp_copy_page_range (
                                        bfPageRange[i].pageOffset,
                                        bfPageRange[i].pageCnt,
                                        copyXtnts,
-                                       (forceFlag ? &flag : &(bfAccess->xtnts.migTruncLk.l_wait_writers) )
+                                       forceFlag
                     );
                 PREEMPT_CHECK(current_thread());
             }
@@ -312,7 +311,7 @@ set_block_map (
                uint32T bfPageCnt,        /* in */
                bsInMemXtntT *copyXtnts,  /* in */
                uint32T copyXferSize,     /* in */
-               int *abortFlag            /* in */
+               uint32T forceFlag            /* in */
                )
 {
     blkDescT blkDesc[BLKDESC_CNT];
@@ -353,7 +352,7 @@ set_block_map (
 
     for (i = bfPageOffset; i < (bfPageOffset + bfPageCnt); i++) {
 
-        if (*abortFlag != 0) {
+        if (forceFlag == 0 && copyXtnts->migTruncLkWriteWaiters > 0) {
             RAISE_EXCEPTION (E_INVOLUNTARY_ABORT);
         }
 
@@ -563,7 +562,7 @@ verify_page_write (
                    uint32T bfPageOffset,  /* in */
                    uint32T bfPageCnt,  /* in */
                    bsInMemXtntT *copyXtnts,  /* in */
-                   int *abortFlag  /* in */
+                   uint32T forceFlag  /* in */
                    )
 {
     int blkCnt;
@@ -593,7 +592,7 @@ verify_page_write (
 
     for (i = bfPageOffset; i < (bfPageOffset + bfPageCnt); i++) {
 
-        if (*abortFlag != 0) {
+        if (forceFlag == 0 && copyXtnts->migTruncLkWriteWaiters > 0) {
             RAISE_EXCEPTION (E_INVOLUNTARY_ABORT);
         }
 
@@ -774,7 +773,7 @@ compare_copies (
                 uint32T bfPageOffset,  /* in */
                 uint32T bfPageCnt,  /* in */
                 bsInMemXtntT *copyXtnts,  /* in */
-                int *abortFlag  /* in */
+                uint32T forceFlag  /* in */
                 )
 {
     int blkCnt;
@@ -830,7 +829,7 @@ compare_copies (
 
     for (i = bfPageOffset; i < (bfPageOffset + bfPageCnt); i++) {
 
-        if (*abortFlag != 0) {
+        if (forceFlag == 0 && copyXtnts->migTruncLkWriteWaiters > 0) {
             RAISE_EXCEPTION (E_INVOLUNTARY_ABORT);
         }
 
