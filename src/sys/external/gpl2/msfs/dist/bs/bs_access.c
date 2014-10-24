@@ -300,6 +300,7 @@ init_access(bfAccessT *bfap)
     rw_init( &bfap->cow_lk );
     rw_init( &bfap->clu_clonextnt_lk );
     ftx_lock_init(&bfap->mcellList_lk, &bfap->bfaLock);
+    bfap->xtnts.migTruncLkWriteWaiters = 0;
     rw_init( &bfap->xtnts.migTruncLk );
     bfap->mapped = FALSE;
     bfap->freeFwd = bfap->freeBwd = NULL;
@@ -3987,7 +3988,7 @@ bs_close_one (
          * bf_setup_truncation --> stg_remove_stg_start
          */
 
-        MIGTRUNC_LOCK_READ( &(bfap->xtnts.migTruncLk) );
+        MIGTRUNC_LOCK_READ( &(bfap->xtnts) );
         mig_trunc_lock = TRUE;
 
         /* Need to take the frag file lock because of the call
@@ -3996,7 +3997,7 @@ bs_close_one (
          * rbf_add_stg
          */
         if (fragFlag && (bfap->bfSetp->fragBfAp != NULL)) {
-            MIGTRUNC_LOCK_READ(&(bfap->bfSetp->fragBfAp->xtnts.migTruncLk));
+            MIGTRUNC_LOCK_READ(&(bfap->bfSetp->fragBfAp->xtnts));
             frag_mig_trunc_lock = TRUE;
         }
 
@@ -4252,10 +4253,10 @@ bs_close_one (
 
     if (mig_trunc_lock) {
         if (frag_mig_trunc_lock) {
-            MIGTRUNC_UNLOCK(&(bfap->bfSetp->fragBfAp->xtnts.migTruncLk));
+            MIGTRUNC_UNLOCK(&(bfap->bfSetp->fragBfAp->xtnts));
             frag_mig_trunc_lock = FALSE;
         }
-        MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(bfap->xtnts) );
         mig_trunc_lock = FALSE;
     }
 
@@ -4336,10 +4337,10 @@ _close_it:
 
     if (mig_trunc_lock) {
         if (frag_mig_trunc_lock) {
-            MIGTRUNC_UNLOCK(&(bfap->bfSetp->fragBfAp->xtnts.migTruncLk));
+            MIGTRUNC_UNLOCK(&(bfap->bfSetp->fragBfAp->xtnts));
             frag_mig_trunc_lock = FALSE;
         }
-        MIGTRUNC_UNLOCK( &(bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(bfap->xtnts) );
         mig_trunc_lock = FALSE;
     }
 

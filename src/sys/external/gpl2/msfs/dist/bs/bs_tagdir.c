@@ -1076,17 +1076,17 @@ tagdir_set_next_tag(
     for ( pg = bfSetp->tagUnInPg; pg <= tagPg; pg += 1 ) {
 
         /* Prevent races with migrate code paths */
-        MIGTRUNC_LOCK_READ( &(bfSetp->dirBfAp->xtnts.migTruncLk) );
+        MIGTRUNC_LOCK_READ( &(bfSetp->dirBfAp->xtnts) );
         sts = FTX_START_N( FTA_BS_SET_NEXT_TAG_V1, &ftxH, FtxNilFtxH,
                     bfSetp->dmnP, 2);
         if ( sts != EOK ) {
-            MIGTRUNC_UNLOCK( &(bfSetp->dirBfAp->xtnts.migTruncLk) );
+            MIGTRUNC_UNLOCK( &(bfSetp->dirBfAp->xtnts) );
             return sts;
         }
         TAG_DIR_LOCK(bfSetp, ftxH)
 
         sts = init_next_tag_page( pg, bfSetp, bfSetp->dirBfAp, ftxH, 1 );
-        MIGTRUNC_UNLOCK( &(bfSetp->dirBfAp->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(bfSetp->dirBfAp->xtnts) );
 
         ftx_done_n( ftxH, FTA_BS_SET_NEXT_TAG_V1 );
         if ( sts != EOK ) {
