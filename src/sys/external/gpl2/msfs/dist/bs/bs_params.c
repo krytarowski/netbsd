@@ -1342,7 +1342,7 @@ bs_set_bf_params(
     FS_FILE_WRITE_LOCK(contextp);
     file_lock_held = TRUE;
 
-    MIGTRUNC_LOCK_READ(&(bfap->xtnts.migTruncLk));
+    MIGTRUNC_LOCK_READ(&(bfap->xtnts));
     migtrunc_lock_held = TRUE;
 
     sts = FTX_START_N( FTA_NULL, &ftxH, FtxNilFtxH, bfap->dmnP, 1 );
@@ -1482,7 +1482,7 @@ bs_set_bf_params(
             RAISE_EXCEPTION(sts);
         }
     }
-    MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+    MIGTRUNC_UNLOCK(&(bfap->xtnts));
     migtrunc_lock_held = FALSE;
 
     FS_FILE_UNLOCK(contextp);
@@ -1497,7 +1497,7 @@ HANDLE_EXCEPTION:
     }
 
     if (migtrunc_lock_held) {
-        MIGTRUNC_UNLOCK(&(bfap->xtnts.migTruncLk));
+        MIGTRUNC_UNLOCK(&(bfap->xtnts));
     }
 
     if (file_lock_held) {

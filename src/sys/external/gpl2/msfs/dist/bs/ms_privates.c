@@ -268,19 +268,29 @@ void RAWBUFREE_UNLOCK( struct ftxLk *sLk )
     rw_exit( &sLk );
 }
 
-void MIGTRUNC_LOCK_READ( krwlock_t *sLk )
+void MIGTRUNC_LOCK_READ( struct bsInMemXtnt *sLk )
 {
-    rw_enter( &sLk, RW_READER );
+    rw_enter( &sLk->migTruncLk, RW_READER );
 }
 
-void MIGTRUNC_LOCK_WRITE( krwlock_t *sLk )
+void MIGTRUNC_LOCK_WRITE( struct bsInMemXtnt *sLk )
 {
-    rw_enter( &sLk, RW_WRITER );
+    /*
+     * Walk-around to resolve missing migTruncLk.l_wait_writers
+     * used as an condition in the original Tru64 code.
+     *
+     * The concept of checking for number of waiters is inherently
+     * misdesign and ought to be refactored later. Currently don't
+     * improve the code, just make it working.
+     */
+    atomic_inc_uint(&sLk->migTruncLkWriteWaiters);
+    rw_enter( &sLk->migTruncLk, RW_WRITER );
+    atomic_dec_uint(&sLk->migTruncLkWriteWaiters);
 }
 
-void MIGTRUNC_UNLOCK( krwlock_t *sLk )
+void MIGTRUNC_UNLOCK( struct bsInMemXtnt *sLk )
 {
-    rw_exit( &sLk );
+    rw_exit( &sLk->migTruncLk );
 }
 
 void DDLACTIVE_LOCK_READ( krwlock_t *sLk )

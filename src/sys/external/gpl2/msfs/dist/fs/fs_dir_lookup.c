@@ -1668,7 +1668,7 @@ remove_entry(
      */
     IDX_GET_BFAP(dir_access, idx_bfap);
     if (idx_bfap != NULL) {
-        MIGTRUNC_LOCK_READ( &(idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_LOCK_READ( &(idx_bfap->xtnts) );
     }
 
     /* this is called from verify so the fileset is already mounted.
@@ -1685,7 +1685,7 @@ remove_entry(
      * file might be broken too and not contain the appropriate entry.  
      */
     for (type = 0; type < MAXQUOTAS; type++) {
-        MIGTRUNC_LOCK_READ( &(fsnp->qi[type].qiAccessp->xtnts.migTruncLk) );
+        MIGTRUNC_LOCK_READ( &(fsnp->qi[type].qiAccessp->xtnts) );
     }
 
     ret = FTX_START_N(
@@ -1877,11 +1877,11 @@ remove_entry(
                );
 
     for (type = 0; type < MAXQUOTAS; type++) {
-        MIGTRUNC_UNLOCK( &(fsnp->qi[type].qiAccessp->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(fsnp->qi[type].qiAccessp->xtnts) );
     }
 
     if (idx_bfap != NULL) {
-        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts) );
     }
 
     ms_free(ndp);
@@ -1891,10 +1891,10 @@ remove_entry(
 
 out:
     for (type = 0; type < MAXQUOTAS; type++) {
-        MIGTRUNC_UNLOCK( &(fsnp->qi[type].qiAccessp->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(fsnp->qi[type].qiAccessp->xtnts) );
     }
     if (idx_bfap != NULL) {
-        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts.migTruncLk) );
+        MIGTRUNC_UNLOCK( &(idx_bfap->xtnts) );
     }
     ms_free(ndp);
     ftx_fail(ftx_handle);
