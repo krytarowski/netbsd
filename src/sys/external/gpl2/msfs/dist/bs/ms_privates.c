@@ -226,36 +226,36 @@ void COW_UNLOCK( krwlock_t *sLk )
     rw_exit( &sLk );
 }
 
-void CLU_CLXTNT_READ_LOCK_RECURSIVE( struct ftxLk *sLk )
+void CLU_CLXTNT_READ_LOCK_RECURSIVE( krwlock_t *sLk )
 {
     /* lock_read_recursive(&sLk); */
     panic("lock_read_recursive() not implemented");
 }
 
-void CLU_CLXTNT_UNLOCK_RECURSIVE( struct ftxLk *sLk )
+void CLU_CLXTNT_UNLOCK_RECURSIVE( krwlock_t *sLk )
 {
     /* lock_read_done_recursive(&sLk); */
     panic("lock_done_recursive() not implemented");
 }
 
-void CLU_CLXTNT_WRITE( struct ftxLk *sLk )
+void CLU_CLXTNT_WRITE( krwlock_t *sLk )
 {
-    rw_enter( &sLk, RW_WRITER );
+    rw_enter( sLk, RW_WRITER );
 }
 
-void CLU_CLXTNT_READ( struct ftxLk *sLk )
+void CLU_CLXTNT_READ( krwlock_t *sLk )
 {
-    rw_enter( &sLk, RW_READER );
+    rw_enter( sLk, RW_READER );
 }
 
-void CLU_CLXTNT_TRY_READ( struct ftxLk *sLk )
+void CLU_CLXTNT_TRY_READ( krwlock_t *sLk )
 {
-    rw_tryenter( &sLk, RW_READER );
+    rw_tryenter( sLk, RW_READER );
 }
 
-void CLU_CLXTNT_UNLOCK( struct ftxLk *sLk )
+void CLU_CLXTNT_UNLOCK( krwlock_t *sLk )
 {
-    rw_exit( &sLk );
+    rw_exit( sLk );
 }
 
 void RAWBUFREE_LOCK_WRITE( struct ftxLk *sLk )
