@@ -213,17 +213,17 @@ void XTNMAP_LOCK_DOWNGRADE( struct ftxLk *sLk )
 
 void COW_LOCK_WRITE( krwlock_t *sLk )
 {
-    rw_enter( &sLk, RW_WRITER );
+    rw_enter( sLk, RW_WRITER );
 }
 
 void COW_LOCK_READ( krwlock_t *sLk )
 {
-    rw_enter( &sLk, RW_READER );
+    rw_enter( sLk, RW_READER );
 }
 
 void COW_UNLOCK( krwlock_t *sLk )
 {
-    rw_exit( &sLk );
+    rw_exit( sLk );
 }
 
 void CLU_CLXTNT_READ_LOCK_RECURSIVE( krwlock_t *sLk )
@@ -295,7 +295,7 @@ void MIGTRUNC_UNLOCK( struct bsInMemXtnt *sLk )
 
 void DDLACTIVE_LOCK_READ( krwlock_t *sLk )
 {
-    rw_enter( &sLk, RW_READER );
+    rw_enter( sLk, RW_READER );
 }
 
 void DDLACTIVE_LOCK_WRITE( krwlock_t *sLk )
@@ -305,7 +305,7 @@ void DDLACTIVE_LOCK_WRITE( krwlock_t *sLk )
 
 void DDLACTIVE_UNLOCK( krwlock_t *sLk )
 {
-    rw_exit( &sLk );
+    rw_exit( sLk );
 }
 
 void TRUNC_XFER_READ_LOCK_RECURSIVE( krwlock_t *sLk )
@@ -322,15 +322,15 @@ void TRUNC_XFER_UNLOCK_RECURSIVE( krwlock_t *sLk )
 
 void TRUNC_XFER_LOCK_READ( krwlock_t *sLk )
 {
-    rw_enter( &sLk, RW_READER );
+    rw_enter( sLk, RW_READER );
 }
 
 void TRUNC_XFER_LOCK_WRITE( krwlock_t *sLk )
 {
-    rw_enter( &sLk, RW_WRITER );
+    rw_enter( sLk, RW_WRITER );
 }
 
 void TRUNC_XFER_UNLOCK( krwlock_t *sLk )
 {
-    rw_exit( &sLk );
+    rw_exit( sLk );
 }
