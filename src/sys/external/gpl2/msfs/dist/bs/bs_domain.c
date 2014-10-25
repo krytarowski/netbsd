@@ -89,7 +89,7 @@ void *DomainHashTbl;
 int DomainCnt = 0;
 
 kmutex_t DmnTblMutex;              /* protects table and counter */
-lock_data_t DmnTblLock;          /* syncs activation/deactivation */
+krwlock_t DmnTblLock;          /* syncs activation/deactivation */
 
 struct bsMPg *Dpgp = NULL;
 struct bsMPg *GRpgp = NULL;
