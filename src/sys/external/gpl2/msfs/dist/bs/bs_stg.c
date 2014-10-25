@@ -59,7 +59,7 @@
 #include "../msfs/ftx_privates.h"    /* for FTX_MX_PINP */
 #include "../msfs/bs_ods.h"        /* needed for BS_IS_TAG_OF_TYPE() */
 
-extern mutexT IoQueueMutex;
+extern kmutex_t IoQueueMutex;
 
 #define ADVFS_MODULE BS_STG
 

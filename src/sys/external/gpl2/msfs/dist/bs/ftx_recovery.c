@@ -67,7 +67,7 @@ typedef struct {
 } pageredoT;
 
 extern unsigned TrFlags;
-extern mutexT FtxMutex;
+extern kmutex_t FtxMutex;
 extern ftxAgentT FtxAgents [FTX_MAX_AGENTS];
 extern struct ftx_dyn_alloc FtxDynAlloc;
 

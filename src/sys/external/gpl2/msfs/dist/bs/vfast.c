@@ -71,7 +71,7 @@ lock_data_t SSLock;   /* complex lock for SS_is_running */
 #define REPLICATED const
 #endif
 
-mutexT ssStoppedMutex; /* global simple lock for ss_stopped_cv */
+kmutex_t ssStoppedMutex; /* global simple lock for ss_stopped_cv */
 cv    ss_stopped_cv;  /* condition variable used when shutting ss system down */
 
 /* NUMA constants */
@@ -1086,7 +1086,7 @@ ss_adj_msgs_flow_rate()
     int desiredAveMsgCnt = 0;
     int totListMsgSendCnt = 0;
     int totListMsgDropCnt = 0;
-    extern mutexT DmnTblMutex;
+    extern kmutex_t DmnTblMutex;
     extern domainT *DmnSentinelP;
 
 
@@ -1253,7 +1253,7 @@ static
 statusT
 ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
 {
-    extern mutexT DmnTblMutex;
+    extern kmutex_t DmnTblMutex;
     extern domainT *DmnSentinelP;
     domainT *dmnP;
     vdIndexT dstVdIndex = -1;
