@@ -103,7 +103,7 @@ thaw_domain( advfsFreezeInfoT *freezeInfoP, int forced );
      */ 
     decl_simple_lock_info(, ADVFreezeMsgs_lockinfo)
 
-    mutexT            AdvfsFreezeMsgsLock;
+    kmutex_t            AdvfsFreezeMsgsLock;
     advfsFreezeMsgT  *AdvfsFreezeMsgs = NULL;     /* List of freeze messages */
 
     /*

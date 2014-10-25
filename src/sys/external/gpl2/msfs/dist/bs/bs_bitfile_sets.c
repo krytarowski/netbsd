@@ -1890,7 +1890,7 @@ struct bfsFreeListStats {
     int descFreed;
 } BfsFreeListStats = {0, 0, 0, 0};
 
-static mutexT LookupMutex;        /* protects the insertion/deletion of desc */
+static kmutex_t LookupMutex;        /* protects the insertion/deletion of desc */
 
 /* This is the dynamic hashtable for BfSet access structures */
 void * BfSetHashTbl;

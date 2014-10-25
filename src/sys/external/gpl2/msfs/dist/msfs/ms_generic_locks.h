@@ -34,7 +34,7 @@
 #include <sys/mutex.h>
 #include <sys/time.h>
 
-extern mutexT *MutexList;
+extern kmutex_t *MutexList;
 
 /*
  * lkTypeT
@@ -186,7 +186,7 @@ typedef struct lkHdr {
      * The following are used only for/by ftx locks.
      */
     void *nxtFtxLk;
-    mutexT *mutex;
+    kmutex_t *mutex;
     lkUsageT lkUsage;
 
 #ifdef ADVFS_DEBUG
@@ -452,14 +452,14 @@ void _lk_signal( unLkActionT action, void *lk, int ln, char *fn );
 int lk_is_locked( void *lock );
 void trace_hdr( void );
 void bs_dump_locks( int locked );
-void lk_init( void *lkp, mutexT *mp, lkTypeT type, int res, lkUsageT usage);
-void lk_re_init(void *lkp, mutexT *mp, lkTypeT lkType, int res, lkUsageT usage);
+void lk_init( void *lkp, kmutex_t *mp, lkTypeT type, int res, lkUsageT usage);
+void lk_re_init(void *lkp, kmutex_t *mp, lkTypeT lkType, int res, lkUsageT usage);
 void lk_destroy( void *lk );
 
 void
 _lk_wait_while(
     stateLkT *lk,
-    mutexT *lk_mutex,
+    kmutex_t *lk_mutex,
     lkStatesT waitState,
     int ln,
     char *fn
@@ -468,7 +468,7 @@ _lk_wait_while(
 void
 _lk_wait_for(
     stateLkT *lk,
-    mutexT *lk_mutex,
+    kmutex_t *lk_mutex,
     lkStatesT waitState,
     int ln,
     char *fn
@@ -477,7 +477,7 @@ _lk_wait_for(
 void
 _lk_wait_for2(
     stateLkT *lk,
-    mutexT *lk_mutex,
+    kmutex_t *lk_mutex,
     lkStatesT waitState1,
     lkStatesT waitState2,
     int ln,

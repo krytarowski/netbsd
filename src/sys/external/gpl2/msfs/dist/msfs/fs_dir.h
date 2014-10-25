@@ -178,7 +178,7 @@ struct fsContext {
     lock_data_t file_lock;      /* Use an OSF complex lock (read_write_lock) */
 
     long dirstamp;              /* stamp to determine directory changes */
-    mutexT fsContext_mutex;     /* mutex to take out locks on this structure */
+    kmutex_t fsContext_mutex;     /* mutex to take out locks on this structure */
 #ifdef ADVFS_DEBUG
     char file_name[30];         /* first 29 chars of file name */
 #endif
