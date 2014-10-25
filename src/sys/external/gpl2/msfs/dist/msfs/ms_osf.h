@@ -60,7 +60,7 @@ typedef struct quotaInfo {
      * This lock is protected by the filesetMutex in the fileSetNode.
      * The lock itself serializes adding storage to the quota file.
      */
-    lock_data_t qiLock;
+    krwlock_t qiLock;
 } quotaInfoT;
 
 typedef struct fileSetStats {
@@ -182,7 +182,7 @@ typedef struct fileSetNode {
 
 extern struct fileSetNode *FilesetHead;   /* head of the fileset list */
 
-extern lock_data_t FilesetLock;
+extern krwlock_t FilesetLock;
 #define FILESET_WRITE_LOCK( fsl ) \
     lock_write( fsl );
 #define FILESET_READ_LOCK( fsl ) \

@@ -32,6 +32,7 @@
 #include <sys/lock.h>
 #include <sys/kernel.h>
 #include <sys/mutex.h>
+#include <sys/rwlock.h>
 #include <sys/time.h>
 
 extern kmutex_t *MutexList;
