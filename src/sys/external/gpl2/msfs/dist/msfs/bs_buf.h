@@ -56,7 +56,7 @@ typedef struct {
 typedef struct rangeFlush {
     unsigned long firstPage;           /* First page in range (static)        */
     unsigned long lastPage;            /* Last page in range (static)         */
-    mutexT rangeFlushLock;             /* Guards outstandingIoCount field     */
+    kmutex_t rangeFlushLock;             /* Guards outstandingIoCount field     */
     unsigned long outstandingIoCount;  /* # of I/O's still to be completed    */
 } rangeFlushT;
 
@@ -83,7 +83,7 @@ struct bsBuf {
     rangeFlushLinkT *rflList;     /* List of connectors to rangeFlushT's    */
                                   /* that include this bsBuf in their range */
                                   /* rflList is protected by bsBuf.bufLock  */
-    mutexT bufLock;
+    kmutex_t bufLock;
 
     /* Next fields protected by bsBuf.bufLock */
     bufLkT lock;                  /* See state flags below for values */

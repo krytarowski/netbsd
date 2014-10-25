@@ -3504,7 +3504,7 @@ u_int smsync_flag;             /* perform non-smooth'ed operations */
  */
 
     extern advfsFreezeMsgT  *AdvfsFreezeMsgs;
-    extern mutexT            AdvfsFreezeMsgsLock;
+    extern kmutex_t            AdvfsFreezeMsgsLock;
 
 int
 advfs_freezefs ( struct mount *mp,

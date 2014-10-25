@@ -135,7 +135,7 @@ typedef struct fileSetNode {
     long filesUsed;                 /* number of bitfiles used */
     time_t blkTLimit;               /* time limit for excessive disk blk use */
     time_t fileTLimit;              /* time limit for excessive file use */
-    mutexT filesetMutex;            /* protect next two fields */
+    kmutex_t filesetMutex;            /* protect next two fields */
     quotaInfoT qi[2];
     fileSetStatsT fileSetStats;
 } fileSetNodeT;

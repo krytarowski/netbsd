@@ -372,7 +372,7 @@ bs_kernel_pre_init(void)
         int           parmBufLen
         );
 #ifdef ADVFS_DEBUG
-extern mutexT LockMgrMutex;
+extern kmutex_t LockMgrMutex;
 extern struct lockinfo *msfs_lockmgrmutex_lockinfo;
     /*
      * Initialize the Lock Mgr's mutex.
