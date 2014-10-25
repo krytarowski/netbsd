@@ -1,0 +1,107 @@
+- CURRENT_UC() -> uvmexp (extern from uvm_extern.h)
+- CURRENT_UC()->ubc_pages -> uvmexp.npages ?
+- CURRENT_UC()->ubc_maxpages -> uvmexp.wiredmax ?
+- CURRENT_UC()->vm_free_count -> uvmexp.free ?
+- vm_ubc_object_t => struct uvm_object ?
+- ubc_load
+- ubc_fs_page_get
+- ubc_page_release
+- ubc_object_allocate -> uvm_obj_init ?
+- ubc_object_free -> uvm_obj_destroy ?
+- ubc_page_wait -> uvm_wait ?
+- ubc_flags
+- ubc_load -> ubc_release
+- ubc_lookup -> uvn_findpages ?
+- ubc_invalidate
+- ubc_flush_dirty -> vflushbuf asyncronous ?
+- vm_policy_t -> drop it! NUMA allocation policy
+- vm_offset_t -> voff_t ?
+- vm_size_t -> voff_t ?
+- vm_map_t -> struct vm_map*
+- vm_map_pageable -> uvm_map_pageable ?
+- vm_object_type
+- vm_object_lock -> uvm_obj_setlock ?
+- vm_object_unlock -> uvm_obj_destroy ?
+- vm_page_t -> struct vm_page*
+
+Tru64 model
+
+                                            +-------------+
+               +-----------++-------------->| pmap        |
+               |Task A     | vm_map         | (arch dep)  |
+     +---------+           +-------+        +-------------+
+     |         +-+---------+       |
+     |           |                 |
+     |           |                 |
+     |           |                 |
+     v     +-->  v       +---->    v
+ vm_map_entry vm_map_entry   vm_map_entry
+     +     <--+  +       <----+    +
+     v           v                 v
+ vm_object     vm_object     vm_object
+
+
+vm_map and vm_map_netry are doubly linked list
+
+                    +---------------+
+   +--------------> |  vm_map       |+-------------------------+
+   | +------------+ |               |<-----------------------+ |
+   | |              +---------------+                        | |
+   | |                                                       | |
+   | |                                                       | |
+   | +------>         +----->          +---->        +-------+ |
+   |       +-------------+ +-------------+ +------------+      |
+   |       | vm_map_entry| | vm_map_entry| |vm_map_entry|      |
+   |       +-------------+ +-------------+ +------------+      |
+   +--------+         <-----+          <----+          <-------+
+
+
+vm_map_entry:
+- wired count    <-- incremented by 1, if >0 then page in must not be paged out
+- inheritance    <= how this range shuld be inherited by a child (i.e. via fork) [share copy, none]
+- maximum protection <-- maximum and currently permitted access, combination of R, W, X (not all possible)
+- current protection <-----
+- object type    <=== share map, submap and vm_object
+- offset         <--- offset into object
+- object         <=== reference to an object, vm_object or vm_map
+- flags          <--- copy-on-write information
+- previous entry <== links in chain of vm_map_entry
+- next entry     <====
+- start address  <-(range of addresses represented in this entry)
+- end address    <----
+
+vm_map:
+- size               <-- virtual size of mapped region
+- pmap               <== pointer to pmap for this mapping
+- hint               <-- pointer to last vm_map_entry that was encountered in a lookup (a good plac to start for the next lookup)
+- number of entries  <== number of vm_map_entry'ies in list
+- timestamp          <-- time of last change to map (used to determine if anything has changed since the object was unlocked)
+- free-space hint    <=== pointer to the first hole in the address space
+- main map?          <--- whether it is the top-level map of a task
+- reference count
+- lock               <--- a blocking lock protecting this data structure
+- previous entry
+- next entry
+- start address
+- end address
+
+vm_object:
+- flags                  <--- various
+- size                   <=== object's size if it's an internal object
+- page count             <--- number of incore pages
+- shadow object          <=== link to backing object for copy-on-write
+- lock                   <--- lock (mutex(9)) for mutual exclusion
+- copy object            <=== link to object that should receive copies of the modified pages (used for copy-on-write with permanent memory objects)
+- memory list            <--- list of incore pages assigned to this object
+- reference count
+- pager                  <--- the memory object manager (send rights to memory object port, offset into the memory object)
+
+vm_page: 56-byte data structure
+- pageq
+- hashq
+- listq
+- flags
+- etc
+
+
+vm_page_buckets: system-wide hash table to fine a particular page
