@@ -133,7 +133,7 @@ extern lock_data_t SSLock;
 /* thread pool stuff */
 
 typedef struct tpool {
-     mutexT       plock;     /* locks next field */
+     kmutex_t       plock;     /* locks next field */
      int          threadCnt; /* thread count for this pool */
      int          shutdown;  /* flag used in vfast shutdown */
 } tpoolT;
@@ -263,7 +263,7 @@ typedef struct ssPackHdr {
 } ssPackHdrT;
 
 typedef struct ssDmnInfo {
-    mutexT     ssDmnLk; /* protects ssDmnHotWorking, Msg Counts,
+    kmutex_t     ssDmnLk; /* protects ssDmnHotWorking, Msg Counts,
                          * output variables, ssDmnSSThdCnt, ssDmnSSWaiters
                          */
     int        ssDmnSSThdCnt;  /* current number of vfast threads in dmn */
@@ -276,7 +276,7 @@ typedef struct ssDmnInfo {
     /* internal used params */
     time_t     ssFirstMountTime;   /* time domain first had a WRITE mount */
     int        ssPctIOs;       /* pct of ios allowed to ss when IO queues busy */
-    mutexT     ssDmnHotLk;     /* protects the domain hot list */
+    kmutex_t     ssDmnHotLk;     /* protects the domain hot list */
     ssHotHdrT  ssDmnHotHdr;    /* header for hot list */
     int        ssDmnHotWorking;  /* TRUE,FALSE indicates that a thread is 
                                   * processing this domain's hot file.  Other 
@@ -331,17 +331,17 @@ typedef struct ssDmnInfo {
 } ssDmnInfoT;
 
 typedef struct ssVolInfo {
-    mutexT     ssVdMigLk; /* locks the following 5 fields */
+    kmutex_t     ssVdMigLk; /* locks the following 5 fields */
     ssMigOpT   ssVdMigState;  /* state the migrate is in for this volume */
     kcondvar_t        ssContMig_cv;  /* cv used to manage single thd/volume migrates */
     int        ssVdSSThdCnt;  /* current number of vfast threads in vd */
     int        ssVdSSWaiters; /* number of waiters on ssVdSSThdCnt */
 
-    mutexT     ssVdMsgLk;     /* locks the following 1 field */
+    kmutex_t     ssVdMsgLk;     /* locks the following 1 field */
     ssMsgOpT   ssVdMsgState;  /* state of the vd with regard to work messages */
 
     ssPackHdrT ssPackHdr;  /* not-locked, single work thread access */
-    mutexT     ssFragLk;   /* protects frag list from collisions by 
+    kmutex_t     ssFragLk;   /* protects frag list from collisions by 
                             * work and list thds */
     ssFragHdrT ssFragHdr;  /* list of ssFragLLT structs */
     bfTagT     ssVdHotTag; /* tag of file to move to this volume 

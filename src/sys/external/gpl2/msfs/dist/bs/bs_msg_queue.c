@@ -580,7 +580,7 @@ ulmq_send_msg(
 void *
 ulmq_recv_msg(
     msgQHT msgQH, /* in - message queue handle */
-    mutexT *mutex
+    kmutex_t *mutex
     )
 {
     msgQT *msgQ = (msgQT *) msgQH;
