@@ -240,38 +240,6 @@ tag_trace(uint hash, uint qual, uint16T module, uint16T line, void *value)
 }
 #endif
 
-#ifdef ADVFS_ACCESS_TRACE
-
-/*
- * Ignored for SMP
- */
-void
-access_trace(
-             bfAccessT *bfap,
-             uint16T module,
-             uint16T line,
-             void *value
-             )
-{
-    register AccessTraceElmtT *te;
-    extern kmutex_t TraceLock;
-    extern int TraceSequence;
-
-    simple_lock(&TraceLock);
-
-    bfap->trace_ptr = (bfap->trace_ptr + 1) % ACCESS_TRACE_HISTORY;
-    te = &bfap->trace_buf[bfap->trace_ptr];
-    te->thd = (struct thread *)(((long)current_cpu() << 36) |
-                                 (long)current_thread() & 0xffffffff);
-    te->seq = TraceSequence++;
-    te->mod = module;
-    te->ln = line;
-    te->val = value;
-
-    simple_unlock(&TraceLock);
-}
-#endif /* ADVFS_ACCESS_TRACE */
-
 /*
  * init_access
  *
@@ -3673,8 +3641,6 @@ lookup:
     }
     bfap->idx_params=NULL;
     bfap->idxQuotaBlks=0;
-
-    ACCESS_TRACE(bfap, tag.num);
 
     /*
      * We need to be able to lock a clone file's migTruncLk
