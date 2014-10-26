@@ -88,8 +88,6 @@ typedef struct dyn_hashtable {
     volatile uint64_t  current_buckets;        /* current number of buckets */
     uint64_t           max_chain_length;       /* max. elements in a chain  */
     uint64_t           offset_hash_links;      /* offset within element     */
-    uint64_t           (*hash_function) (void *);   /* pointer to hash      */
-                                                    /* function             */
     uint32_t           initial_index_shift;         /* index calculation    */
                                                     /* optimization         */
     int                element_to_bucket_ratio;     /* condition for        */

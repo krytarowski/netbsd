@@ -37,8 +37,7 @@ dyn_hashtable_init(uint64_t initial_bucket_count,
                    uint64_t bucket_length_threshold,
                    int      bucket_to_element_ratio,
                    uint64_t split_interval,
-                   uint64_t offset_to_hashlinks,
-                   uint64_t (*hash_function) () );
+                   uint64_t offset_to_hashlinks);
 
 extern void 
 dyn_hashtable_destroy( void *hashtable);
@@ -66,5 +65,3 @@ extern void
 dyn_kernel_thread_setup();
 
 #endif  /* _E_KERN_DYN_HASH_H_ */
-
-

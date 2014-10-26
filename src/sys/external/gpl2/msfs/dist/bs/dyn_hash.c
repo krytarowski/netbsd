@@ -96,8 +96,7 @@ dyn_hashtable_init( uint64_t initial_bucket_count,
                     uint64_t bucket_length_threshold,
                     int      element_to_bucket_ratio,
                     uint64_t split_interval,
-                    uint64_t offset_to_hashlinks,
-                    uint64_t (*hash_function) ()
+                    uint64_t offset_to_hashlinks
     )
 {
     dyn_hashtableT *tablep;
@@ -126,7 +125,6 @@ dyn_hashtable_init( uint64_t initial_bucket_count,
     tablep->current_buckets     = initial_bucket_count;
     tablep->max_chain_length    = bucket_length_threshold;
     tablep->offset_hash_links   = offset_to_hashlinks;
-    tablep->hash_function       = hash_function;
     tablep->element_to_bucket_ratio = element_to_bucket_ratio;
     tablep->split_interval      = split_interval * HZ / 1000000; 
     /* Convert usec to ticks */
