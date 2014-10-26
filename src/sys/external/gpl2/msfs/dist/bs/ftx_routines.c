@@ -2998,13 +2998,11 @@ ftx_add_lock(
 *********************************************************************/
 
 void
-_ftx_set_state(
+ftx_set_state(
     stateLkT *lk,
     kmutex_t *lk_mutex,
     lkStatesT newState,
-    ftxHT ftxH,
-    int ln,
-    char *fn
+    ftxHT ftxH
     )
 {
     perlvlT *clvlp;

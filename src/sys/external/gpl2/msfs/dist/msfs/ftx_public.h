@@ -653,8 +653,13 @@ rbf_set_bfset_params(
 
 #define FTX_LOCKS
 
-#define ftx_set_state( lkp, mp, s, ftxh ) \
-       _ftx_set_state( lkp, mp, s, ftxh, __LINE__, __FILE__ )
+void
+ftx_set_state(
+    stateLkT *lk,
+    kmutex_t *lk_mutex,
+    lkStatesT newState,
+    ftxHT ftxH
+    );
 
 void
 ftx_lock_init(
