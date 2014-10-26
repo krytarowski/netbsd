@@ -180,7 +180,7 @@ msgq_create(
     }
 
     mutex_init( &msgQ->mutex, MUTEX_DEFAULT, IPL_NONE);
-    cv_init( &msgQ->res );
+    cv_init( &msgQ->res, "msgQres" );
 
     *msgQH = (msgQHT) msgQ;
 

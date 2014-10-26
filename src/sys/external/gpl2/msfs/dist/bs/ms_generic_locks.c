@@ -151,7 +151,7 @@ lk_init(
             stateLkT *lk = (void *)lkHdr;
             stateLkT nilStateLk = { LKT_STATE, 0 }; 
             *lk = nilStateLk;
-            cv_init( &lk->res );
+            cv_init( &lk->res, "lkHdrCv" );
             }
             break;
 
@@ -160,7 +160,7 @@ lk_init(
             bufLkT *lk = (void *)lkHdr;
             bufLkT NilBufLk = { LKT_BUF, 0 };
             *lk = NilBufLk;
-            cv_init( &lk->bufCond );
+            cv_init( &lk->bufCond, "lkHdrbuf" );
             }
             break;
 

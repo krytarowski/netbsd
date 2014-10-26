@@ -374,7 +374,7 @@ ss_kern_init()
     int true =TRUE;
 
     mutex_init( &ssStoppedMutex, MUTEX_DEFAULT, IPL_NONE);
-    cv_init( &ss_stopped_cv );
+    cv_init( &ss_stopped_cv, "ss_stopp" );
 
     SMARTSTORE_LOCK_INIT(&SSLock);
     SS_WRITE_LOCK(&SSLock );
@@ -1876,7 +1876,7 @@ ss_init_vd(vdT *vdp)
     mutex_init(&vdp->ssVolInfo.ssVdMigLk, MUTEX_DEFAULT, IPL_NONE);
     mutex_init(&vdp->ssVolInfo.ssFragLk, MUTEX_DEFAULT, IPL_NONE);
     mutex_enter( &vdp->ssVolInfo.ssVdMigLk );
-    cv_init( &vdp->ssVolInfo.ssContMig_cv );
+    cv_init( &vdp->ssVolInfo.ssContMig_cv, "ssContMi" );
     vdp->ssVolInfo.ssVdMigState = SS_MIG_IDLE;
     mutex_exit( &vdp->ssVolInfo.ssVdMigLk );
     vdp->ssVolInfo.ssVdMsgState = SS_MSG_IDLE;

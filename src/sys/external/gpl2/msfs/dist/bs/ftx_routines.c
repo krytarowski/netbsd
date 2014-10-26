@@ -3091,7 +3091,7 @@ ftx_init(void)
     struct ftx *ftxp;
 
     mutex_init(&FtxMutex, MUTEX_DEFAULT, IPL_NONE);
-    cv_init( &FtxDynAlloc.res );
+    cv_init( &FtxDynAlloc.res, "FtxDynAl" );
     FtxDynAlloc.waiters       = 0;
     FtxDynAlloc.currAllocated = 0;
     FtxDynAlloc.maxAllocated  = 0;
