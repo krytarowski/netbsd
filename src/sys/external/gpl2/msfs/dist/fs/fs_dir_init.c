@@ -367,12 +367,12 @@ fs_create_file_set(
     ftxHT ftxH;
 
 
-    bfSetParamsp  = (bfSetParamsT *) ms_malloc( sizeof( bfSetParamsT ));
+    bfSetParamsp  = (bfSetParamsT *) ms_malloc_waitok( sizeof( bfSetParamsT ));
     if (bfSetParamsp == NULL) {
         sts = ENOMEM;
         goto _error;
     }
-    bfParamsp  = (bfParamsT *) ms_malloc( sizeof( bfParamsT ));
+    bfParamsp  = (bfParamsT *) ms_malloc_waitok( sizeof( bfParamsT ));
     if (bfParamsp == NULL) {
         sts = ENOMEM;
         goto _error;
@@ -619,7 +619,7 @@ create_root_file(
 
     statusT bs_inherit_init(bfAccessT *bfap, ftxHT ftxH);
 
-    dir_stats = (statT *)ms_malloc( sizeof(statT) );
+    dir_stats = (statT *)ms_malloc_waitok( sizeof(statT) );
     if (dir_stats == NULL) {
         sts = ENOMEM;
         return sts;

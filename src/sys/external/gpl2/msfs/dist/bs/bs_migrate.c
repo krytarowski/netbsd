@@ -1282,8 +1282,8 @@ migrate_normal (
      * while a migrate is running has proven that to be unreliable so
      * now we always lock the backdoor ourselves.
      */
-    arp = (actRangeT *)(ms_malloc( sizeof(actRangeT) ));
-    /* Initialize fields; ms_malloc() inited struct to zeros.  */
+    arp = (actRangeT *)(ms_malloc_waitok( sizeof(actRangeT) ));
+    /* Initialize fields; ms_malloc_waitok() inited struct to zeros.  */
     arp->arStartBlock = srcPageOffset * bfap->bfPageSz;
     arp->arEndBlock = ((srcPageOffset + srcPageCnt) * bfap->bfPageSz) - 1;
     arp->arState = AR_MIGRATE;
@@ -1812,8 +1812,8 @@ migrate_stripe (
      * while a migrate is running has proven that to be unreliable so
      * now we always lock the backdoor ourselves.
      */
-    arp = (actRangeT *)(ms_malloc( sizeof(actRangeT) ));
-    /* Initialize fields; ms_malloc() inited struct to zeros.  */
+    arp = (actRangeT *)(ms_malloc_waitok( sizeof(actRangeT) ));
+    /* Initialize fields; ms_malloc_waitok() inited struct to zeros.  */
     arp->arStartBlock = srcPageOffset * bfap->bfPageSz;
     arp->arEndBlock = ((srcPageOffset + srcPageCnt) * bfap->bfPageSz) - 1;
     arp->arState = AR_MIGRATE;
@@ -4004,7 +4004,7 @@ mig_get_stripe_bfpage_list (
 
         xtntPg = pXtntp->ssPackPageOffset;
         maxCnt = 1;
-        pageRange = (pageRangeT *)ms_malloc( sizeof(pageRangeT) * maxCnt );
+        pageRange = (pageRangeT *)ms_malloc_waitok( sizeof(pageRangeT) * maxCnt );
         KASSERT(pageRange != NULL);  /* ms_malloc waits */
 
         bfPage = XMPAGE_TO_BFPAGE ( mapIndex, xtntPg, segCnt, segSz );

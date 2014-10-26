@@ -2358,7 +2358,7 @@ bfs_alloc(
      * Allocate bitfile set descriptor
      */
 
-    bfSetp = (bfSetT *) ms_malloc( sizeof( bfSetT ) );
+    bfSetp = (bfSetT *) ms_malloc_waitok( sizeof( bfSetT ) );
     if (bfSetp == NULL) {
         sts = ENO_MORE_MEMORY;
         goto EXIT_BFS_ALLOC;
@@ -2574,19 +2574,19 @@ bfs_create(
      * Minimize stack usage.
      * TODO:  We could do one ms_malloc and manage it ourselves.
      */
-    setParamsp = (bfSetParamsT *) ms_malloc( sizeof( bfSetParamsT ));
+    setParamsp = (bfSetParamsT *) ms_malloc_waitok( sizeof( bfSetParamsT ));
     if (setParamsp == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
-    bfsAttrp = (bsBfSetAttrT *) ms_malloc( sizeof( bsBfSetAttrT ));
+    bfsAttrp = (bsBfSetAttrT *) ms_malloc_waitok( sizeof( bsBfSetAttrT ));
     if (bfsAttrp == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
-    tagDirParamsp = (bfParamsT *) ms_malloc( sizeof( bfParamsT ));
+    tagDirParamsp = (bfParamsT *) ms_malloc_waitok( sizeof( bfParamsT ));
     if (tagDirParamsp == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
-    quotaAttrp = (bsQuotaAttrT *) ms_malloc( sizeof( bsQuotaAttrT ));
+    quotaAttrp = (bsQuotaAttrT *) ms_malloc_waitok( sizeof( bsQuotaAttrT ));
     if (quotaAttrp == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
@@ -4888,15 +4888,15 @@ bs_bfs_clone(
      * Minimize stack usage.
      */
 
-    origSetAttrp = (bsBfSetAttrT *) ms_malloc( sizeof( bsBfSetAttrT ));
+    origSetAttrp = (bsBfSetAttrT *) ms_malloc_waitok( sizeof( bsBfSetAttrT ));
     if (origSetAttrp == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
-    cloneSetAttrp = (bsBfSetAttrT *) ms_malloc( sizeof( bsBfSetAttrT ));
+    cloneSetAttrp = (bsBfSetAttrT *) ms_malloc_waitok( sizeof( bsBfSetAttrT ));
     if (cloneSetAttrp == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
-    origDirParamsp = (bfParamsT *) ms_malloc( sizeof( bfParamsT ));
+    origDirParamsp = (bfParamsT *) ms_malloc_waitok( sizeof( bfParamsT ));
     if (origDirParamsp == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
@@ -5567,7 +5567,7 @@ bs_bfs_get_info(
         RAISE_EXCEPTION(EBAD_DOMAIN_POINTER);
     }
 
-    setAttrp = (bsBfSetAttrT *) ms_malloc( sizeof( bsBfSetAttrT ));
+    setAttrp = (bsBfSetAttrT *) ms_malloc_waitok( sizeof( bsBfSetAttrT ));
     if (setAttrp == NULL) {
         RAISE_EXCEPTION(ENO_MORE_MEMORY);
     }
@@ -6472,7 +6472,7 @@ try_again:
          * This range must be seized before the root transaction is started.
          */
         if ( bfap->bfVp->v_flag & VDIRECTIO ) {
-            *arp = (actRangeT *)(ms_malloc( sizeof(actRangeT) ));
+            *arp = (actRangeT *)(ms_malloc_waitok( sizeof(actRangeT) ));
 
             (*arp)->arStartBlock = pg * bfap->bfPageSz;
             (*arp)->arEndBlock   = ((pg + pgCnt) * bfap->bfPageSz) - 1;

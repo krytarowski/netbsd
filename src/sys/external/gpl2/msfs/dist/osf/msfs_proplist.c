@@ -955,7 +955,7 @@ msfs_setproplist_int(
         }
 
 	proplist_headp = 
-	       (struct proplist_head *)ms_malloc(sizeof(struct proplist_head));
+	       (struct proplist_head *)ms_malloc_waitok(sizeof(struct proplist_head));
 	prop_data = (char *)0;
 
 	error = 0;
@@ -1030,7 +1030,7 @@ msfs_setproplist_int(
 
 		if (proplist_headp->pl_valuelen) {
 
-			prop_data = (char *)ms_malloc(ALLIGN(proplist_headp->pl_valuelen));
+			prop_data = (char *)ms_malloc_waitok(ALLIGN(proplist_headp->pl_valuelen));
 
 			if (error = uiomove(prop_data,
 					    ALLIGN(proplist_headp->pl_valuelen),
@@ -1079,7 +1079,7 @@ msfs_setproplist_int(
                                  * different than bfap->dataSafety will
                                  * succeed.
                                  */
-                                bfattrp = (mlBfAttributesT *)ms_malloc(
+                                bfattrp = (mlBfAttributesT *)ms_malloc_waitok(
                                            sizeof( mlBfAttributesT ));
 
                                 if (advfs_op->operation == ADVFS_AW_DATA_LOGGING) {
@@ -1099,7 +1099,7 @@ msfs_setproplist_int(
                              * structure so we don't use too much stack.
                              */
                             bfparamsp = 
-                                     (bfParamsT *) ms_malloc(sizeof(bfParamsT));
+                                     (bfParamsT *) ms_malloc_waitok(sizeof(bfParamsT));
         
                             /*
                              * Get the current bitfile parameters.
@@ -1305,9 +1305,9 @@ msfs_pl_set_entry(
 
   sec_info.sec_type = NULL;
 
-  hdr_image = (char *) ms_malloc( BSR_PROPLIST_PAGE_SIZE );
+  hdr_image = (char *) ms_malloc_waitok( BSR_PROPLIST_PAGE_SIZE );
 
-  name_buf = (char *) ms_malloc( PROPLIST_NAME_MAX + 1 );
+  name_buf = (char *) ms_malloc_waitok( PROPLIST_NAME_MAX + 1 );
 
   /*
    * start transaction
@@ -1825,7 +1825,7 @@ msfs_pl_findhead_setdata(
   *mcells_alloced = 0;
 
   if (large) {
-    dat_rec = (bsPropListPageT *) ms_malloc(sizeof(bsPropListPageT));
+    dat_rec = (bsPropListPageT *) ms_malloc_waitok(sizeof(bsPropListPageT));
   }
 
   /*
@@ -1938,7 +1938,7 @@ msfs_pl_findhead_setdata(
        * no spot in existing cell, create record in new cell
        */
 
-      hdr_rec = (bsPropListHeadT *) ms_malloc(size);
+      hdr_rec = (bsPropListHeadT *) ms_malloc_waitok(size);
 
       FLAGS_ASSIGN(hdr_rec->flags,BSR_PL_DELETED);
       sts = msfs_pl_init_cur(hdr, org.VD, org.MC);
@@ -2282,7 +2282,7 @@ msfs_getproplist(
          * Get some storage for the bitfile parameters
          * structure so we don't use too much stack.
          */
-         bfparamsp = (bfParamsT *) ms_malloc(sizeof(bfParamsT));
+         bfparamsp = (bfParamsT *) ms_malloc_waitok(sizeof(bfParamsT));
 
 	/*
          * Get the current bitfile parameters.
@@ -2393,7 +2393,7 @@ msfs_getproplist_int(
          * If we're just sizing the property list, don't malloc any storage.
 	 */
         if (uiop->uio_iov->iov_len > 0) {
-            bbuf = ms_malloc(uiop->uio_iov->iov_len);
+            bbuf = ms_malloc_waitok(uiop->uio_iov->iov_len);
         }
 	iovLcl.iov_base = bbuf;
 	iovLcl.iov_len = uiop->uio_iov->iov_len;
@@ -2820,7 +2820,7 @@ msfs_pl_get_data(
 
 
   if(sec_info->sec_type) {
-	sec_buff = (char *) ms_malloc(nbytes);
+	sec_buff = (char *) ms_malloc_waitok(nbytes);
   }
 
   if (REC_TO_MREC(hdr_rec)->type == BSR_PROPLIST_HEAD) {
@@ -3022,7 +3022,7 @@ msfs_delproplist_int(
   DEBUG(1,
 	printf("msfs_pl_delproplist_int\n"));
 
-  name_buf = (char *) ms_malloc( PROPLIST_NAME_MAX + 1);
+  name_buf = (char *) ms_malloc_waitok( PROPLIST_NAME_MAX + 1);
 
   sec_info.sec_struct = (void *) NULL;
   bnp = (struct bfNode *)&vp->v_data[0];
@@ -3581,9 +3581,9 @@ msfs_pl_set_entry_v3(
 
   sec_info.sec_type = NULL;
 
-  hdr_image = (char *) ms_malloc( BSR_PROPLIST_PAGE_SIZE );
+  hdr_image = (char *) ms_malloc_waitok( BSR_PROPLIST_PAGE_SIZE );
 
-  name_buf = (char *) ms_malloc( PROPLIST_NAME_MAX + 1 );
+  name_buf = (char *) ms_malloc_waitok( PROPLIST_NAME_MAX + 1 );
 
   /*
    * start transaction
@@ -3959,7 +3959,7 @@ msfs_pl_findhead_setdata_v3(
   *mcells_alloced = 0;
 
   if (large) {
-    dat_rec = (bsPropListPageT_v3 *) ms_malloc(sizeof(bsPropListPageT_v3));
+    dat_rec = (bsPropListPageT_v3 *) ms_malloc_waitok(sizeof(bsPropListPageT_v3));
   }
 
   /*
@@ -4078,7 +4078,7 @@ msfs_pl_findhead_setdata_v3(
        * no spot in existing cell, create record in new cell
        */
 
-      hdr_rec = (bsPropListHeadT_v3 *) ms_malloc(size);
+      hdr_rec = (bsPropListHeadT_v3 *) ms_malloc_waitok(size);
 
       FLAGS_ASSIGN(hdr_rec->flags,BSR_PL_DELETED);
       error = msfs_pl_init_cur(hdr, org.VD, org.MC);
@@ -4326,7 +4326,7 @@ msfs_getproplist_int_v3(
          * If we're just sizing the property list, don't malloc any storage.
 	 */
         if (uiop->uio_iov->iov_len > 0) {
-            bbuf = ms_malloc(uiop->uio_iov->iov_len);
+            bbuf = ms_malloc_waitok(uiop->uio_iov->iov_len);
         }
 	iovLcl.iov_base = bbuf;
 	iovLcl.iov_len = uiop->uio_iov->iov_len;
@@ -4714,7 +4714,7 @@ msfs_pl_get_data_v3(
 
 
   if(sec_info->sec_type) {
-	sec_buff = (char *) ms_malloc(nbytes);
+	sec_buff = (char *) ms_malloc_waitok(nbytes);
   }
 
   if (REC_TO_MREC(hdr_rec)->type == BSR_PROPLIST_HEAD) {
@@ -4870,7 +4870,7 @@ msfs_delproplist_int_v3(
   DEBUG(1,
 	printf("msfs_pl_delproplist_int_v3\n"));
 
-  name_buf = (char *) ms_malloc( PROPLIST_NAME_MAX + 1);
+  name_buf = (char *) ms_malloc_waitok( PROPLIST_NAME_MAX + 1);
 
   sec_info.sec_struct = (void *) NULL;
   bnp = (struct bfNode *)&vp->v_data[0];

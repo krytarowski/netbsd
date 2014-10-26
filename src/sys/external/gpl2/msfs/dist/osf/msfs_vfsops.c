@@ -213,7 +213,7 @@ msfs_mountroot(mp, vpp)
          * from global_rootdev and initialize global_rootdev_count
          * vnodes.
          */
-        GlobalRootVpp = (struct vnode **)ms_malloc(global_rootdev_count *
+        GlobalRootVpp = (struct vnode **)ms_malloc_waitok(global_rootdev_count *
                                              sizeof(struct vnode *));
 	/* note ms_malloc never fails, it doesn't return until success*/
 
@@ -524,12 +524,12 @@ msfs_mount( struct mount *mp,           /* in */
 
         if (mp == pmp) {
 	    /* ms_malloc never fails, it doesn't return until success*/
-            dmntbl = (bfDmnDescT *)ms_malloc( sizeof( bfDmnDescT ) );
+            dmntbl = (bfDmnDescT *)ms_malloc_waitok( sizeof( bfDmnDescT ) );
             bzero( (char *)dmntbl, sizeof( bfDmnDescT ) );
 
-            dmnName = ms_malloc( MAX_MNT_PATHLEN );
+            dmnName = ms_malloc_waitok( MAX_MNT_PATHLEN );
 
-            tmp = ms_malloc( MAX_MNT_PATHLEN );
+            tmp = ms_malloc_waitok( MAX_MNT_PATHLEN );
 
             error = copyinstr(args.fspec, tmp, MAX_MNT_PATHLEN, (int *)&size);
             if (error != 0) {
@@ -953,13 +953,13 @@ advfs_mountfs(struct mount *mp)
      * size of a domain name.  Caller could be passing in
      * a bogus domain name longer than the allowed maximum.
      */
-    dmnName = ms_malloc(strlen( mp->m_stat.f_mntfromname) + 1);
+    dmnName = ms_malloc_waitok(strlen( mp->m_stat.f_mntfromname) + 1);
 
-    dn = (struct fileSetNode *)ms_malloc( sizeof( struct fileSetNode ) );
+    dn = (struct fileSetNode *)ms_malloc_waitok( sizeof( struct fileSetNode ) );
 
     dn->filesetMagic = FSMAGIC;
 
-    bfSetParamsp = (bfSetParamsT *) ms_malloc( sizeof( bfSetParamsT ));
+    bfSetParamsp = (bfSetParamsT *) ms_malloc_waitok( sizeof( bfSetParamsT ));
 
     /* Extract the set name and the domain name */
 
@@ -1580,7 +1580,7 @@ check_vd_sizes(struct fileSetNode *fsnp)
                      */
                     done = FALSE;
                     if (lastBlkp == NULL) {
-                        lastBlkp = (caddr_t) ms_malloc(BS_BLKSIZE +
+                        lastBlkp = (caddr_t) ms_malloc_waitok(BS_BLKSIZE +
                                                        sizeof(struct uio) +
                                                        sizeof(struct iovec));
                         uiop = (struct uio *)(lastBlkp + BS_BLKSIZE);
@@ -2156,7 +2156,7 @@ advfs_quotactl(
         return( EINVAL );
     }
 
-    dmnName = ms_malloc( MAX_MNT_PATHLEN );
+    dmnName = ms_malloc_waitok( MAX_MNT_PATHLEN );
     setName = toke_it( mp->m_stat.f_mntfromname, '#', dmnName );
 
     switch (cmd) {
@@ -3510,7 +3510,7 @@ advfs_freezefs ( struct mount *mp,
      *  Send a message to the background thread
      *  and wait for it to be processed
      */
-    msg = (advfsFreezeMsgT *) ms_malloc( sizeof(advfsFreezeMsgT) );
+    msg = (advfsFreezeMsgT *) ms_malloc_waitok( sizeof(advfsFreezeMsgT) );
     msg->frzmDomainId    = dmnP->domainId;
     msg->frzmFlags       = flags;
     msg->frzmTimeout     = timeout;

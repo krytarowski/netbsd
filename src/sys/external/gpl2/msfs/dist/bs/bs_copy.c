@@ -576,7 +576,7 @@ verify_page_write (
     bsUnpinModeT unpinMode;
 
     blkCnt = bfAccess->bfPageSz;
-    buf = (unsigned char *) ms_malloc (blkCnt * BS_BLKSIZE);
+    buf = (unsigned char *) ms_malloc_waitok(blkCnt * BS_BLKSIZE);
     if (buf == NULL) {
         return ENO_MORE_MEMORY;
     }

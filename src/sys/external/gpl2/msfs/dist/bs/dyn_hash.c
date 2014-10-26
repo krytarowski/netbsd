@@ -110,7 +110,7 @@ dyn_hashtable_init( uint64_t initial_bucket_count,
         dyn_init_hashthread();
     }
     ADVMTX_DYNHASHTHREAD_UNLOCK(&DynHashThreadLock);
-    tablep =(dyn_hashtableT *) ms_malloc( sizeof(dyn_hashtableT));
+    tablep =(dyn_hashtableT *) ms_malloc_waitok( sizeof(dyn_hashtableT));
     /* Round up to next power of 2 */
     for(RoundUp2=1,shift=0;
         RoundUp2<initial_bucket_count;
@@ -118,7 +118,7 @@ dyn_hashtable_init( uint64_t initial_bucket_count,
     
     initial_bucket_count=RoundUp2;
     
-    tablep->index[0] =(dyn_bucketT *) ms_malloc(sizeof(dyn_bucketT)*initial_bucket_count);
+    tablep->index[0] =(dyn_bucketT *) ms_malloc_waitok(sizeof(dyn_bucketT)*initial_bucket_count);
     
     /* Set up the Hashtable itself */
     tablep->initial_buckets     = initial_bucket_count;
@@ -882,7 +882,7 @@ dyn_double_hashtable(dyn_hashtableT * hashtable)
      * ----> This was a MALLOC_VAR with M_TIMEDWAIT, more research needed
      */
 #   endif /* Tru64_to_HPUX_Port_Comments */
-    hashtable->index[next_idx] = (dyn_bucketT *)ms_malloc(sizeof(dyn_bucketT)*hashtable->current_buckets);
+    hashtable->index[next_idx] = (dyn_bucketT *)ms_malloc_waitok(sizeof(dyn_bucketT)*hashtable->current_buckets);
     newbucket = hashtable->index[next_idx];
     buckets = hashtable->initial_buckets;
     for (i=0;i<next_idx;i++)

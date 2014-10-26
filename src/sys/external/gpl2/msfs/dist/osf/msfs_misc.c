@@ -207,7 +207,7 @@ vnode_fscontext_allocate(
              */
 
             VN_UNLOCK( vp );
-            fscp = (struct fsContext*)ms_malloc(sizeof(struct fsContext));
+            fscp = (struct fsContext*)ms_malloc_waitok(sizeof(struct fsContext));
             if ( fscp == 0 ) {
                 ADVFS_SAD0("vnode_fscontext_allocate: ms_malloc failed");
             }
@@ -1232,7 +1232,7 @@ msfs_reclaim(
                     if ( !bfap->saved_stats ) {
                         /* This should be the typical path */
                         mutex_exit( &bfap->bfaLock );
-                        ssp = (saved_statsT *)ms_malloc( sizeof(saved_statsT) );
+                        ssp = (saved_statsT *)ms_malloc_waitok( sizeof(saved_statsT) );
                         mutex_enter( &bfap->bfaLock );
                     } else
                         ssp = bfap->saved_stats;

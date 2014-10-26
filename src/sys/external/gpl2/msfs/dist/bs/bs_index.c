@@ -376,7 +376,7 @@ idx_create_index_file_int(
      * directory's access structure. The memory for this will be
      * released in grab_bsacc when the access structure is recycled */
 
-    dir_idx_params = (bsDirIdxRecT *) ms_malloc(sizeof(bsDirIdxRecT));
+    dir_idx_params = (bsDirIdxRecT *) ms_malloc_waitok(sizeof(bsDirIdxRecT));
 
     if(dir_idx_params == NULL)
     {
@@ -394,7 +394,7 @@ idx_create_index_file_int(
      * access structure. The memory for this will also be released in
      * grab_bsacc when the access structure is recycled.  */
 
-    idx_params = (bsIdxRecT *) ms_malloc(sizeof(bsIdxRecT));
+    idx_params = (bsIdxRecT *) ms_malloc_waitok(sizeof(bsIdxRecT));
 
     if(idx_params == NULL)
     {
@@ -613,7 +613,7 @@ idx_open_index_file(
          * recycled
          */
 
-        dir_idx_params = (bsDirIdxRecT *) ms_malloc(sizeof(bsDirIdxRecT));
+        dir_idx_params = (bsDirIdxRecT *) ms_malloc_waitok(sizeof(bsDirIdxRecT));
 
         if (dir_idx_params == NULL)
         {
@@ -676,7 +676,7 @@ idx_open_index_file(
 
     if (idx_bfap->idx_params == NULL)
     {
-        idx_params =  (bsIdxRecT *) ms_malloc(sizeof(bsIdxRecT));
+        idx_params =  (bsIdxRecT *) ms_malloc_waitok(sizeof(bsIdxRecT));
 
         if(idx_params == NULL)
         {
@@ -5261,7 +5261,7 @@ idx_prune_btree_int (
                  if (idx_bfap->dirTruncp == NULL)
                  {
                      idx_bfap->dirTruncp = 
-                         (void *)ms_malloc(sizeof(idxPruneMsgsT));
+                         (void *)ms_malloc_waitok(sizeof(idxPruneMsgsT));
                      if (idx_bfap->dirTruncp != NULL)
                      {
                          ((idxPruneMsgsT *)idx_bfap->dirTruncp)->msg_cnt=0;

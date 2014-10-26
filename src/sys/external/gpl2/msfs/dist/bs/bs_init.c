@@ -136,11 +136,11 @@ bs_dmn_init(
     bsVdParamsT *vdparamsp = NULL;
     void bs_kernel_init();
 
-    bfdmnparamsp = (bfDmnParamsT *) ms_malloc( sizeof( bfDmnParamsT ));
+    bfdmnparamsp = (bfDmnParamsT *) ms_malloc_waitok( sizeof( bfDmnParamsT ));
     if ( bfdmnparamsp == NULL ) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
-    vdparamsp = (bsVdParamsT *) ms_malloc( sizeof( bsVdParamsT ));
+    vdparamsp = (bsVdParamsT *) ms_malloc_waitok( sizeof( bsVdParamsT ));
     if ( vdparamsp == NULL ) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
@@ -443,7 +443,7 @@ bs_disk_init(
 
     bootBlks = 32;
 
-    rbmtpg = (struct bsMPg *) ms_malloc( sizeof( struct bsMPg ) );
+    rbmtpg = (struct bsMPg *) ms_malloc_waitok( sizeof( struct bsMPg ) );
     if (rbmtpg == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
@@ -1070,7 +1070,7 @@ bs_disk_init(
 
     /* Write the fake super block.  It is zero-filled and contains magic # */
 
-    superBlockPg = (uint32T *) ms_malloc( ADVFS_PGSZ );
+    superBlockPg = (uint32T *) ms_malloc_waitok( ADVFS_PGSZ );
     bzero( (char *)superBlockPg, ADVFS_PGSZ );
     superBlockPg[MSFS_MAGIC_OFFSET / sizeof( uint32T )] = MSFS_MAGIC;
 
@@ -1111,7 +1111,7 @@ bs_disk_init(
     ms_free( rbmtpg );
     rbmtpg = NULL;
 
-    bmtpg = (struct bsMPg *) ms_malloc( sizeof( struct bsMPg ) );
+    bmtpg = (struct bsMPg *) ms_malloc_waitok( sizeof( struct bsMPg ) );
     if (bmtpg == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
@@ -1171,7 +1171,7 @@ bs_disk_init(
     bmtpg = NULL;
 
     if (tagBlks > 0) {
-        bsTDirPgT *tdpgp = (bsTDirPgT*) ms_malloc( sizeof(bsTDirPgT) );
+        bsTDirPgT *tdpgp = (bsTDirPgT*) ms_malloc_waitok( sizeof(bsTDirPgT) );
 
         tagdir_init_pg0( tdpgp );
 
@@ -1381,7 +1381,7 @@ bs_disk_init_v3(
 
     bootBlks = 32;
 
-    bmtpg = (struct bsMPg *) ms_malloc( sizeof( struct bsMPg ) );
+    bmtpg = (struct bsMPg *) ms_malloc_waitok( sizeof( struct bsMPg ) );
     if (bmtpg == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
@@ -1918,7 +1918,7 @@ bs_disk_init_v3(
 
     /* Write the fake super block.  It is zero-filled and contains magic # */
 
-    superBlockPg = (uint32T *) ms_malloc( ADVFS_PGSZ );
+    superBlockPg = (uint32T *) ms_malloc_waitok( ADVFS_PGSZ );
     bzero( (char *)superBlockPg, ADVFS_PGSZ );
     superBlockPg[MSFS_MAGIC_OFFSET / sizeof( uint32T )] = MSFS_MAGIC;
 
@@ -1994,7 +1994,7 @@ bs_disk_init_v3(
     bmtpg = NULL;
 
     if (tagBlks > 0) {
-        bsTDirPgT *tdpgp = (bsTDirPgT*) ms_malloc( sizeof(bsTDirPgT) );
+        bsTDirPgT *tdpgp = (bsTDirPgT*) ms_malloc_waitok( sizeof(bsTDirPgT) );
 
         tagdir_init_pg0( tdpgp );
 
@@ -2196,7 +2196,7 @@ init_sbm(
         sbmFirstBit = (sbmFirstBlk / vdattr->stgCluster) % SBM_BITS_PG;
     }
 
-    sbm = (struct bsStgBm *) ms_malloc( sizeof( struct bsStgBm ) );
+    sbm = (struct bsStgBm *) ms_malloc_waitok( sizeof( struct bsStgBm ) );
     if (sbm == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
@@ -2371,7 +2371,7 @@ vd_extend(struct vd *vdp)
         return 0;
     }
 
-    getioinfop = (getioinfo_t*)ms_malloc( sizeof(getioinfo_t) );
+    getioinfop = (getioinfo_t*)ms_malloc_waitok( sizeof(getioinfo_t) );
     getioinfop->pi_version = PI_VERSION_0;
 
     /*
@@ -2608,7 +2608,7 @@ vd_extend_add_sbm_pgs( vdT *vdp,
         newSbmBitsToSet -= sbmBitsToSet;
     }
 
-    sbmPgp = (struct bsStgBm *)ms_malloc( sizeof(struct bsStgBm) );
+    sbmPgp = (struct bsStgBm *)ms_malloc_waitok( sizeof(struct bsStgBm) );
 
     /*
      *  Initialize the new SBM pages.

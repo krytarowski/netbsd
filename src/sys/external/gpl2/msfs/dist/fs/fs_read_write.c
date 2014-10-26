@@ -779,7 +779,7 @@ _retry:
                  * racing directIO writers to the range of pages we
                  * are going to remove storage for.
                  */
-                arp = (actRangeT *)(ms_malloc( sizeof(actRangeT) ));
+                arp = (actRangeT *)(ms_malloc_waitok( sizeof(actRangeT) ));
 
                 /* Set up active range to include all underlying pages.
                  * Use same calculation here as in bf_setup_truncation.
@@ -886,7 +886,7 @@ _retry:
      */
     if ( directIO && need_stg_alloc ) {
 
-        arp = (actRangeT *)(ms_malloc( sizeof(actRangeT) ));
+        arp = (actRangeT *)(ms_malloc_waitok( sizeof(actRangeT) ));
 
         if (ioflag & IO_APPEND) {
             /* We are APPENDing and the file is opened for directIO, so
@@ -2108,7 +2108,7 @@ fs_write_direct(bfAccessT *bfap,
 
     /* Allocate an active range structure; */
     if ( !arp ) {
-        arp = (actRangeT *)(ms_malloc( sizeof(actRangeT) ));
+        arp = (actRangeT *)(ms_malloc_waitok( sizeof(actRangeT) ));
     } else {
         arp_passed_in = TRUE;
     } 
@@ -2196,7 +2196,7 @@ fs_write_direct(bfAccessT *bfap,
     if (byte_offset_in_page) {
 
         /* Allocate a page buffer. ms_malloc zeroes the page for us. */
-        char *pgbuf = (char *)ms_malloc(ADVFS_PGSZ);
+        char *pgbuf = (char *)ms_malloc_waitok(ADVFS_PGSZ);
 
         nbytes = min(num_to_write, ADVFS_PGSZ - (int)byte_offset_in_page);
         pg_mapped = page_is_mapped(bfap, page_to_write, NULL, TRUE);
@@ -2341,7 +2341,7 @@ fs_write_direct(bfAccessT *bfap,
      * Always wait for it to complete.
      */
     if (last_page_nbytes) {
-        char *pgbuf = (char *)ms_malloc(ADVFS_PGSZ);
+        char *pgbuf = (char *)ms_malloc_waitok(ADVFS_PGSZ);
         trailing_bytes = last_page_nbytes;
 
         /*
@@ -3419,7 +3419,7 @@ _retry_map:
                     pg_stat_cnt = 0;
                     if (uio->uio_iovcnt > 1) {
                         pg_statp = (pgStatT *)
-                            ms_malloc( uio->uio_iovcnt * sizeof(pgStatT) );
+                            ms_malloc_waitok( uio->uio_iovcnt * sizeof(pgStatT) );
                         saved_pg_statp = pg_statp;
                     } else 
                         pg_statp = &local_pg_stats;
@@ -3846,9 +3846,9 @@ fs_read_direct(bfAccessT *bfap,
     bytes_transferred = 0;
 
     /* Allocate an active range structure; */
-    arp = (actRangeT *)(ms_malloc( sizeof(actRangeT) ));
+    arp = (actRangeT *)(ms_malloc_waitok( sizeof(actRangeT) ));
  
-    /* Initialize fields not zero'd by ms_malloc() */
+    /* Initialize fields not zero'd by ms_malloc_waitok() */
     arp->arStartBlock = starting_block;
     arp->arEndBlock = ending_block;
     arp->arState   = AR_DIRECTIO;
@@ -3871,7 +3871,7 @@ fs_read_direct(bfAccessT *bfap,
      * the user's buffer.
      */
     if (byte_offset_in_blk) {
-        char *blkbuf = (char *)ms_malloc(BS_BLKSIZE);
+        char *blkbuf = (char *)ms_malloc_waitok(BS_BLKSIZE);
         int tmp_bytes = min(number_to_read, BS_BLKSIZE - byte_offset_in_blk);
 
         /*
@@ -3929,7 +3929,7 @@ fs_read_direct(bfAccessT *bfap,
         ulong trailing_block = starting_block + (number_to_read / BS_BLKSIZE);
 
         /* Malloc a private buffer. */
-        blkbuf = (char *)ms_malloc(BS_BLKSIZE);
+        blkbuf = (char *)ms_malloc_waitok(BS_BLKSIZE);
 
         /*
          * Read in the whole block and copy the needed bytes

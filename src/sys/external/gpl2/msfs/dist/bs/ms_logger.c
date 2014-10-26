@@ -2006,7 +2006,7 @@ lgr_read_open(
     if (ldP == NULL)
         RAISE_EXCEPTION( E_INVALID_LOG_DESC_POINTER );
 
-    rdP = (rdPgDescT *) ms_malloc( sizeof( rdPgDescT ) );
+    rdP = (rdPgDescT *) ms_malloc_waitok( sizeof( rdPgDescT ) );
     if (rdP == NULL) {
         domain_panic(ldP->dmnP, "lgr_read_open: out of memory");
         RAISE_EXCEPTION (ENO_MORE_MEMORY);
@@ -2265,7 +2265,7 @@ lgr_read(
     *recWords = recHdr.clientWordCnt;
 
     /* Return ptr to data in the log record */
-    *buf = (uint32T *)ms_malloc((*bufWords)*4);
+    *buf = (uint32T *)ms_malloc_waitok((*bufWords)*4);
 
     if ( *buf == NULL ) {
         RAISE_EXCEPTION(ENOMEM);
@@ -2915,7 +2915,7 @@ setup_log_desc(
         nextLogRec->lsn = firstLSN;
         nextLogRec->page = 0;
         nextLogRec->offset = 0;
-        ldP->wrtPgD = (wtPgDescT *)ms_malloc(sizeof(wtPgDescT) * (ldP->pgCnt/4 + 1));
+        ldP->wrtPgD = (wtPgDescT *)ms_malloc_waitok(sizeof(wtPgDescT) * (ldP->pgCnt/4 + 1));
         if (ldP->wrtPgD == NULL)
             RAISE_EXCEPTION( ENO_MORE_MEMORY );
         return EOK;
@@ -3004,7 +3004,7 @@ setup_log_desc(
      * I've only seen at most 4 active pages.
      */
    
-    ldP->wrtPgD = (wtPgDescT *)ms_malloc(sizeof(wtPgDescT) * (ldP->pgCnt/4 + 1));
+    ldP->wrtPgD = (wtPgDescT *)ms_malloc_waitok(sizeof(wtPgDescT) * (ldP->pgCnt/4 + 1));
     if (ldP->wrtPgD == NULL)
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
 
@@ -3113,7 +3113,7 @@ lgr_open(
 
 
     /* Initialize the log descriptor */
-    new_ldP = (logDescT *) ms_malloc( sizeof( logDescT ) );
+    new_ldP = (logDescT *) ms_malloc_waitok( sizeof( logDescT ) );
 
     if (new_ldP == NULL)
     {
@@ -3217,7 +3217,7 @@ lgr_open(
 
         *nextLogRec = new_ldP->nextRec;
 
-        new_ldP->wrtPgD = (wtPgDescT *)ms_malloc(sizeof(wtPgDescT) * (new_ldP->pgCnt/4 + 1));
+        new_ldP->wrtPgD = (wtPgDescT *)ms_malloc_waitok(sizeof(wtPgDescT) * (new_ldP->pgCnt/4 + 1));
         if (new_ldP->wrtPgD == NULL)
             RAISE_EXCEPTION( ENO_MORE_MEMORY );
 

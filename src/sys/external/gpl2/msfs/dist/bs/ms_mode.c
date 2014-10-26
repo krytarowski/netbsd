@@ -75,10 +75,8 @@ mem_trace(
 }
 
 char *
-_ms_malloc(
+ms_malloc(
            unsigned size,       /* in */
-           int ln,              /* in */
-           char *fn,            /* in */
            int flag,            /* in */
            int rad_id           /* in */
            )
@@ -116,11 +114,8 @@ _ms_malloc(
 }
 
 void
-_ms_free(
-         void *ptr,
-         int ln,              /* in */
-         char *fn             /* in */
-
+ms_free(
+         void *ptr
          )
 {
 #ifdef _KERNEL

@@ -1009,7 +1009,7 @@ ss_list_thd_pool ( void )
           case HOT_ADD_UPDATE_MISS:
 
               /* Allocate a list entry for the hot file */
-              hp = (ssHotLLT *)(ms_malloc( sizeof(ssHotLLT) ));
+              hp = (ssHotLLT *)(ms_malloc_waitok( sizeof(ssHotLLT) ));
               if ( !hp ) {
                   break;
               }
@@ -1036,7 +1036,7 @@ ss_list_thd_pool ( void )
 
           case HOT_REMOVE:
               /* Allocate a list entry for the hot file */
-              hp = (ssHotLLT *)(ms_malloc( sizeof(ssHotLLT) ));
+              hp = (ssHotLLT *)(ms_malloc_waitok( sizeof(ssHotLLT) ));
               if ( !hp ) {
                   break;
               }
@@ -1366,7 +1366,7 @@ ss_do_periodic_tasks(ssPeriodicMsgTypeT task)
                         {
                             /* create a list of this domains frag files */
 
-                            ffilep = (struct fragfiles *)ms_malloc(sizeof(struct fragfiles));
+                            ffilep = (struct fragfiles *)ms_malloc_waitok(sizeof(struct fragfiles));
                             if ( ffilep == NULL ) {
                                 ms_printf("ss_do_periodic_tasks; no memory available.\n");
                                 sts = ENOMEM;
@@ -2414,12 +2414,12 @@ ss_insert_frag_onto_list( vdIndexT vdi,
     vd_refed = TRUE;
 
     /* Allocate a list entry for the fragmented file */
-    fp = (ssFragLLT *)(ms_malloc( sizeof(ssFragLLT) ));
+    fp = (ssFragLLT *)(ms_malloc_waitok( sizeof(ssFragLLT) ));
     if(fp == NULL) {
         goto _cleanup;
     }
 
-    /* Initialize fields; ms_malloc() inited struct to zeros.  */
+    /* Initialize fields; ms_malloc_waitok() inited struct to zeros.  */
     fp->ssFragTag     = tag;
     fp->ssFragBfSetId = bfSetId;
     fp->ssFragRatio   = fragRatio;
@@ -5099,7 +5099,7 @@ ss_find_target_vd( bfAccessT *bfap)
      * otherwise we would have to reference and dereference the vdp 
      * many times in the following code.
      */
-    volData = (volDataT *)ms_malloc(bfap->dmnP->vdCnt * sizeof(volDataT));
+    volData = (volDataT *)ms_malloc_waitok(bfap->dmnP->vdCnt * sizeof(volDataT));
     if(volData == NULL) {
         RAISE_EXCEPTION(ENO_MORE_MEMORY);
     }
@@ -5387,7 +5387,7 @@ ss_find_hot_target_vd(domainT *dmnP,         /* in */
      * malloc the most vds that can be valid even though we may
      * use a subset of them.
      */
-    volData = (volDataT *)ms_malloc(dmnP->vdCnt * sizeof(volDataT));
+    volData = (volDataT *)ms_malloc_waitok(dmnP->vdCnt * sizeof(volDataT));
     if(volData == NULL) {
         RAISE_EXCEPTION(ENO_MORE_MEMORY);
     }

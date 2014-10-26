@@ -1637,8 +1637,8 @@ bs_reclaim_cfs_rsvd_vn(
                 /* create a list of the mounted filesets in the same domain
                  * as volume being removed is in.
                  */
-                fsMntp = (struct mountDirs *)ms_malloc(sizeof(struct mountDirs ));
-                fsMntp->mountpt = (char *)ms_malloc(strlen(fsp->mountp->m_stat.f_mntonname) + 1);
+                fsMntp = (struct mountDirs *)ms_malloc_waitok(sizeof(struct mountDirs ));
+                fsMntp->mountpt = (char *)ms_malloc_waitok(strlen(fsp->mountp->m_stat.f_mntonname) + 1);
                 strcpy(fsMntp->mountpt, (char *) fsp->mountp->m_stat.f_mntonname);
 
                 /*
@@ -1655,7 +1655,7 @@ bs_reclaim_cfs_rsvd_vn(
         }
         FILESET_UNLOCK(&FilesetLock );
 
-        fnamep = (char *) ms_malloc( MAX_MNT_PATHLEN+15+1 );
+        fnamep = (char *) ms_malloc_waitok( MAX_MNT_PATHLEN+15+1 );
         /* directory on which mounted + "/mountpt/.tags/M" + tag */
 
         for (fsMntp = fsMntHeadp; fsMntp != NULL; fsMntp = fsMntp->fsNext) {
@@ -1770,7 +1770,7 @@ bs_init_area()
      * twice the minimum desired.
      */
     for (i = 0; i < 2 * AdvfsMinFreeAccess; i++) {
-        new_bfap = (bfAccessT *)ms_malloc(sizeof(bfAccessT));
+        new_bfap = (bfAccessT *)ms_malloc_waitok(sizeof(bfAccessT));
         if (new_bfap == NULL)
             ADVFS_SAD0("bs_init_area: can't get space for access structures");
         init_access(new_bfap);

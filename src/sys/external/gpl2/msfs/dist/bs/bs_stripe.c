@@ -966,7 +966,7 @@ str_create_stripe_hdr (
     uint32T i;
     bsStripeHdrT *stripeHdr;
 
-    stripeHdr = (bsStripeHdrT *) ms_malloc( sizeof (bsStripeHdrT) +
+    stripeHdr = (bsStripeHdrT *) ms_malloc_waitok( sizeof (bsStripeHdrT) +
                                       (segmentCnt * sizeof(bsInMemXtntMapT *)));
     if (stripeHdr == NULL) {
         return ENO_MORE_MEMORY;

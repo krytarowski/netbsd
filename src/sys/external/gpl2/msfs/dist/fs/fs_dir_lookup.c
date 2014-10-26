@@ -1637,7 +1637,7 @@ remove_entry(
     dir_context = VTOC(dir_vp);
     /* dummy up a namei structure to pass to seq_search */
 
-    ndp = (struct nameidata *)ms_malloc(sizeof(struct nameidata));
+    ndp = (struct nameidata *)ms_malloc_waitok(sizeof(struct nameidata));
 
     ndp->ni_dent.d_namlen = strlen(file_name);
     strcpy(ndp->ni_dent.d_name,file_name);
@@ -2276,7 +2276,7 @@ dir_trunc_start( struct vnode *dvp,
      */
     if ( delCnt ) {
         if (!bfap->dirTruncp) {
-            dtinfop = (dtinfoT *)ms_malloc(sizeof(dtinfoT));
+            dtinfop = (dtinfoT *)ms_malloc_waitok(sizeof(dtinfoT));
             if (!dtinfop) {
                 return(delCnt); /* It'll get deleted at reboot time */
             }

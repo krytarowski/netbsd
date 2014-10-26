@@ -1147,35 +1147,36 @@ bfflush_start(
 #define SC_GT( sc1, sc2 ) ((sc1) > (sc2))
 
 char *
-_ms_malloc(
+ms_malloc(
            unsigned size,       /* in */
-           int ln,              /* in */
-           char *fn,            /* in */
            int flag,            /* in */
            int rad_id           /* in */
            );
 
 void
-_ms_free(
-         void *ptr,
-         int ln,              /* in */
-         char *fn             /* in */
-
+ms_free(
+         void *ptr
          );
 
-/* 
+/*
  * Allocate some memory from any RAD.  If memory is not immediately
  * available, wait until it is.
  */
-#define ms_malloc(size)         _ms_malloc(size,__LINE__,__FILE__,M_WAITOK,0)
+static inline char *ms_malloc_waitok(unsigned size)
+{
+    return ms_malloc(size, M_WAITOK, 0);
+}
 
-/* 
+/*
  * Allocate some memory from any RAD but do not wait if no
  * memory is immediately available.
  */
-#define ms_malloc_no_wait(size) _ms_malloc(size,__LINE__,__FILE__,M_NOWAIT,0)
+static inline char *ms_malloc_no_wait(unsigned size)
+{
+    return ms_malloc(size, M_NOWAIT, 0);
+}
 
-/* 
+/*
  * Try to allocate some memory from the specified RAD.  If memory is
  * immediately available on that RAD, return it.  Otherwise:
  * 
@@ -1186,8 +1187,10 @@ _ms_free(
  * RAD, look for memory on other RADs.  If no memory is immediately 
  * available on any RAD, wait for memory to become available on any RAD.
  */
-#define ms_rad_malloc(size, flag, rad_id) \
-    _ms_malloc(size, __LINE__, __FILE__, flag | M_WAITOK, rad_id)
+static inline char *ms_rad_malloc(unsigned size, int flag, int rad_id)
+{
+    return ms_malloc(size, flag | M_WAITOK, rad_id);
+}
 
 /* 
  * Try to allocate some memory from the specified RAD.  If memory is
@@ -1200,10 +1203,10 @@ _ms_free(
  * specified RAD, look for memory on other RADs.  If no memory is 
  * immediately available on any RAD, return NULL.
  */
-#define ms_rad_malloc_no_wait(size, flag, rad_id) \
-    _ms_malloc(size, __LINE__, __FILE__, flag | M_NOWAIT, rad_id)
-
-#define ms_free( ptr )              _ms_free( ptr, __LINE__, __FILE__ )
+static inline char *ms_rad_malloc_no_wait(unsigned size, int flag, int rad_id)
+{
+    return ms_malloc(size, flag | M_NOWAIT, rad_id);
+}
 
 int
 ms_copyin( void *src, void *dest, int len );

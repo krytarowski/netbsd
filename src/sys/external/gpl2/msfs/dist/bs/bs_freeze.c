@@ -300,7 +300,7 @@ freeze_domain( advfsFreezeMsgT *msg )
     /*
      *  Get memory to hold the freeze parameters
      */
-    freezeInfoP = (advfsFreezeInfoT *) ms_malloc( sizeof(advfsFreezeInfoT) );
+    freezeInfoP = (advfsFreezeInfoT *) ms_malloc_waitok( sizeof(advfsFreezeInfoT) );
     freezeInfoP->frziDomainId = msg->frzmDomainId;
     freezeInfoP->frziFlags    = msg->frzmFlags;
     freezeInfoP->frziTimeout  = msg->frzmTimeout;

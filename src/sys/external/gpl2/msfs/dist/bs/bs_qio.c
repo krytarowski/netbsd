@@ -1864,7 +1864,7 @@ wait_to_readyq( struct vd *vdp )
                 if (!tempQ_marker) {
                     mutex_exit(&vdp->waitLazyQ.ioQLock);
                     tempQ_marker = (tempQMarkerT *)
-                        ms_malloc(sizeof(tempQMarkerT));
+                        ms_malloc_waitok(sizeof(tempQMarkerT));
                     mutex_enter(&vdp->waitLazyQ.ioQLock);
                     iop = vdp->waitLazyQ.fwd;
                     continue;
@@ -3556,7 +3556,7 @@ bfflush_sync(
     
     deallocWaiter = FALSE;
 
-    flushWaiter = (flushWaiterT *)ms_malloc(sizeof(flushWaiterT));
+    flushWaiter = (flushWaiterT *)ms_malloc_waitok(sizeof(flushWaiterT));
 
     flushWaiter->waitLsn = waitLsn;
     flushWaiter->cnt = 1;
@@ -3958,7 +3958,7 @@ bfflush(
      * Create a new rangeFlush structure.
      */
     mutex_exit( &bfap->bfIoLock );
-    rfp = (rangeFlushT *)(ms_malloc(sizeof(rangeFlushT)));
+    rfp = (rangeFlushT *)(ms_malloc_waitok(sizeof(rangeFlushT)));
     mutex_init(&rfp->rangeFlushLock, MUTEX_DEFAULT, IPL_NONE);
     rfp->firstPage = first_page;
     rfp->lastPage = last_page;
@@ -5352,7 +5352,7 @@ bs_init_io_thread( void )
 {
     int i, num_initialized_rads = 0;
 
-    IoMsgQH = (msgQHT *) ms_malloc( nrads * sizeof(msgQHT) );
+    IoMsgQH = (msgQHT *) ms_malloc_waitok( nrads * sizeof(msgQHT) );
 
     for (i=0;i<nrads;i++){
         IoMsgQH[i] = NULL;  /* all queues should be NULL unless they and accompanying thread */
@@ -5828,7 +5828,7 @@ smsync_to_readyq( struct vd *vdp, int flushFlag )
             if (!tempQ_marker) {
                 mutex_exit(&smsyncq->ioQLock);
                 tempQ_marker = (tempQMarkerT *)
-                    ms_malloc(sizeof(tempQMarkerT));
+                    ms_malloc_waitok(sizeof(tempQMarkerT));
                 mutex_enter(&smsyncq->ioQLock);
                 iop = smsyncq->fwd;
                 qlen = smsyncq->ioQLen;

@@ -1771,7 +1771,7 @@ filesetnode_init( bfSetT *bfSetp, fileSetNodeT **fsnpA )
 
     KASSERT(!BS_BFS_EQL(bfSetp->bfSetId, nilBfSetId));
 
-    fsnp = (fileSetNodeT*)ms_malloc(sizeof(fileSetNodeT));
+    fsnp = (fileSetNodeT*)ms_malloc_waitok(sizeof(fileSetNodeT));
     fsnp->filesetMagic = FSMAGIC;
     fsnp->bfSetId = bfSetp->bfSetId;
     fsnp->bfSetp = bfSetp;

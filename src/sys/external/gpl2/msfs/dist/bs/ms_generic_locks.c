@@ -120,7 +120,7 @@ bs_lock_mgr_init( void )
      */
     mutex_init( &LockMgrMutex.mutex, MUTEX_DEFAULT, IPL_NONE );
 
-    AdvfsLockStats = (advfsLockStatsT *)ms_malloc( sizeof( advfsLockStatsT ) );
+    AdvfsLockStats = (advfsLockStatsT *)ms_malloc_waitok( sizeof( advfsLockStatsT ) );
     if (AdvfsLockStats != NULL) {
         bzero( AdvfsLockStats, sizeof( advfsLockStatsT ) );
     }

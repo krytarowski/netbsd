@@ -327,7 +327,7 @@ advfs_page_get(struct bsBuf *bp, int flags)
  * Interface to x_page_to_iolist.  Allocate a larger
  * array of ioDesc if one is not enough.
  *
- * SMP - Called with no mutexes held; may sleep in ms_malloc(),
+ * SMP - Called with no mutexes held; may sleep in ms_malloc_waitok(),
  *       but the bsBuf is marked as BUSY or IO_TRANS if it is visible
  *       to other threads. 
  */
@@ -373,7 +373,7 @@ blkMap( struct bsBuf *bp, bfAccessT *bfap )
         }
         step += STEP;
 
-        bp->ioList.ioDesc = (ioDescT *)ms_malloc( step * sizeof( ioDescT ) );
+        bp->ioList.ioDesc = (ioDescT *)ms_malloc_waitok( step * sizeof( ioDescT ) );
         bp->ioList.maxCnt = step;
 
         res = x_page_to_iolist ( bfap, bp->bfPgNum, &bp->ioList);
@@ -564,7 +564,7 @@ blkmap_direct(struct bsBuf *bp,
      * one entry.  Copy the ioDesc to this array.
      */
     if (bytes_left) {
-        ioDesc_Array = (ioDescT *)ms_malloc(sizeof(ioDescT) * ++ioDesc_count);
+        ioDesc_Array = (ioDescT *)ms_malloc_waitok(sizeof(ioDescT) * ++ioDesc_count);
 
         bcopy(&bp->ioDesc, ioDesc_Array, sizeof(ioDescT));
         next_block = bp->ioDesc.blkDesc.vdBlk +
@@ -704,7 +704,7 @@ blkmap_direct(struct bsBuf *bp,
                 max_transfer_size = RDMAXIO;
             }
 
-            tmp_array = (ioDescT *)ms_malloc(sizeof(ioDescT) * ++ioDesc_count);
+            tmp_array = (ioDescT *)ms_malloc_waitok(sizeof(ioDescT) * ++ioDesc_count);
 
             bcopy(ioDesc_Array, tmp_array,
                   sizeof(ioDescT) * (ioDesc_count - 1));
@@ -1266,7 +1266,7 @@ exit:
  * which is found in the cache will be copied from the cache
  * to the user's buffer, avoiding a disk access.
  *
- * A bsBuf will be allocated via ms_malloc() instead of using the pool
+ * A bsBuf will be allocated via ms_malloc_waitok() instead of using the pool
  * of buffers.  This buffer will be released when the transfer has
  * completed.
  *
@@ -2934,7 +2934,7 @@ bs_pinpg_newpage(
  * be completely overwritten will be invalidated and any pages which
  * will be partially overwritten will be flushed to disk.
  *
- * A bsBuf will be allocated via ms_malloc() instead of using the pool
+ * A bsBuf will be allocated via ms_malloc_waitok() instead of using the pool
  * of buffers.  This buffer will be released when the transfer has
  * completed.
  *
@@ -4407,7 +4407,7 @@ buf_remap(
     /*
      * Allocate space for the new ioDesc's
      */
-    tmp = (ioDescT *)ms_malloc(
+    tmp = (ioDescT *)ms_malloc_waitok(
                             blkMap->maxCnt *
                             sizeof( ioDescT ) );
 
@@ -5275,7 +5275,7 @@ msfs_flush_and_invalidate(
      * and always uses it or NO_INVALIDATE which is safe with no range.
      */
     if (fiflags & INVALIDATE_UNWIRED) {
-        arp = (actRangeT *)(ms_malloc( sizeof(actRangeT) ));
+        arp = (actRangeT *)(ms_malloc_waitok( sizeof(actRangeT) ));
         /* arp->arStartBlock and other fields 0'd by ms_malloc */
         arp->arEndBlock = ~0L;       /* biggest possible block */
         arp->arState = AR_INVALIDATE;

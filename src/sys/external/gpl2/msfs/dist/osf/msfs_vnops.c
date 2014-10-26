@@ -1372,7 +1372,7 @@ fs_setattr_truncate( bfAccessT *bfap,
      * which is what we want.
      */
     /* Allocate an active range structure; */
-    arp = (actRangeT *)(ms_malloc( sizeof(actRangeT) ));
+    arp = (actRangeT *)(ms_malloc_waitok( sizeof(actRangeT) ));
 
     arp->arStartBlock = truncationPage * ADVFS_PGSZ_IN_BLKS;
     arp->arEndBlock = ~0L;             /* biggest possible block */
@@ -2100,7 +2100,7 @@ msfs_remove(
     FILESETSTAT( ndp->ni_dvp, msfs_remove );
 
 
-    undel_ndp = (struct nameidata *) ms_malloc( sizeof( struct nameidata ));
+    undel_ndp = (struct nameidata *) ms_malloc_waitok( sizeof( struct nameidata ));
 
     mp = VTOMOUNT(ndp->ni_vp);
     dmnP = GETDOMAINP(mp);
@@ -2444,7 +2444,7 @@ rename_it:
     undel_ndp->ni_vp = NULL;
     VREF(undel_dir_vp);
     undel_ndp->ni_dent.d_namlen = ndp->ni_dent.d_namlen;
-    undel_ndp->ni_dirp = (char *)ms_malloc(NAME_MAX);
+    undel_ndp->ni_dirp = (char *)ms_malloc_waitok(NAME_MAX);
 
     (void)bcopy(
                    ndp->ni_dent.d_name,
@@ -4297,7 +4297,7 @@ msfs_readlink(
     if (((context_ptr->dir_stats.advfs_st_mode & S_IFMT) == S_IFLNK) &&
         (bfap->file_size <= bmtr_max_rec_size())) {
 
-        buffer = (char *) ms_malloc( bmtr_max_rec_size() );
+        buffer = (char *) ms_malloc_waitok( bmtr_max_rec_size() );
 
         isize = bfap->file_size;
         sts = bmtr_get_rec(bfap,
@@ -5297,7 +5297,7 @@ attach_undel_dir(
     struct undel_dir_rec bmt_rec;
 
 
-    undel_ndp = (struct nameidata *) ms_malloc( sizeof( struct nameidata ));
+    undel_ndp = (struct nameidata *) ms_malloc_waitok( sizeof( struct nameidata ));
 
     /*
      * lookup the directory

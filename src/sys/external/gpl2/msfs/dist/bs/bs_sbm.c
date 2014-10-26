@@ -1577,7 +1577,7 @@ add_cache (
                 CHECK_MIG_RSVD_OVERLAP; /* check second chunk */
         }
 
-        new_desc = (stgDescT *) ms_malloc( sizeof( stgDescT ) );
+        new_desc = (stgDescT *) ms_malloc_waitok( sizeof( stgDescT ) );
         if (new_desc == NULL) {
             return NULL;
         }
@@ -1689,7 +1689,7 @@ remove_cache (
         ++AdvfsUpdateCache;
 
         /* insert stgDesc for the first part of the replacement descriptor */
-        if (desc1 = (stgDescT *) ms_malloc(sizeof(stgDescT))) {
+        if (desc1 = (stgDescT *) ms_malloc_waitok(sizeof(stgDescT))) {
             desc1->start_clust = stgDesc->start_clust;
             desc1->num_clust = clustOffset - stgDesc->start_clust;
             desc1->prevp = stgDesc;
@@ -1700,7 +1700,7 @@ remove_cache (
         }
 
         /* insert stgDesc for the second part of the replacement descriptor */
-        if (desc1 && (desc2 = (stgDescT *) ms_malloc(sizeof(stgDescT)))) {
+        if (desc1 && (desc2 = (stgDescT *) ms_malloc_waitok(sizeof(stgDescT)))) {
             desc2->start_clust = clustOffset + clustCnt;
             desc2->num_clust = stgDesc->num_clust - clustCnt - desc1->num_clust;
             desc2->prevp = desc1;

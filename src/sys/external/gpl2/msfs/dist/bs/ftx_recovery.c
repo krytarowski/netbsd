@@ -820,7 +820,7 @@ ftx_recovery_pass(
              * segmented record - get the whole thing into a buffer (lgrrecp)
              * freed as dlrp at end of loop
              */
-            lgrrecp = (uint32T*)ms_malloc( totwordcnt * 4 );
+            lgrrecp = (uint32T*)ms_malloc_waitok( totwordcnt * 4 );
             /* TODO - if (lgrrecp == NULL) ... */
             bcopy( (char*)dlrp, (char*)lgrrecp, segwordcnt * 4 );
 
@@ -1572,7 +1572,7 @@ cfs_list(domainT *dmnP, /* in */
             xidRecoverypp = &(dmnP->xidRecovery.tail->next); 
         }
 
-        *xidRecoverypp = (xidInfoT *) ms_malloc(sizeof(xidInfoT));
+        *xidRecoverypp = (xidInfoT *) ms_malloc_waitok(sizeof(xidInfoT));
         if (*xidRecoverypp == NULL) {
             XID_RECOVERY_UNLOCK(dmnP);
             return ENO_MORE_MEMORY;

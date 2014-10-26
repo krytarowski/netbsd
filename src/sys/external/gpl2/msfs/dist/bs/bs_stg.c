@@ -6682,7 +6682,7 @@ x_page_to_iolist (
         deallocFlag = 0;
     } else {
         blkMap.blkDesc =
-                       (blkDescT *)ms_malloc(ioList->maxCnt * sizeof(blkDescT));
+                       (blkDescT *)ms_malloc_waitok(ioList->maxCnt * sizeof(blkDescT));
         if (blkMap.blkDesc == NULL) {
             return ENO_MORE_MEMORY;
         }

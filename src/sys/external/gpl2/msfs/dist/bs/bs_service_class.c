@@ -123,7 +123,7 @@ sc_init_sc_tbl(
 {
     serviceClassTblT *scTbl;
 
-    scTbl  = (serviceClassTblT *) ms_malloc( sizeof( serviceClassTblT ) );
+    scTbl  = (serviceClassTblT *) ms_malloc_waitok( sizeof( serviceClassTblT ) );
     if (scTbl == NULL) {
         return NULL;
     }
@@ -414,7 +414,7 @@ sc_add_vd_to_class(
      * if the class' vd list is empty then allocate a new list segment
      */
     if (scEntry->vdLst == NULL) {
-        scEntry->vdLst  = (vdLstSgmntT *) ms_malloc( sizeof( vdLstSgmntT ) );
+        scEntry->vdLst  = (vdLstSgmntT *) ms_malloc_waitok( sizeof( vdLstSgmntT ) );
         if (scEntry->vdLst  == NULL) {
             return ENO_MORE_MEMORY;
         }
@@ -461,7 +461,7 @@ sc_add_vd_to_class(
         if (!done) {
             if (vdLstSeg->nextSeg == NULL) {
                 vdLstSeg->nextSeg = 
-                           (vdLstSgmntT *) ms_malloc( sizeof( vdLstSgmntT ) );
+                           (vdLstSgmntT *) ms_malloc_waitok( sizeof( vdLstSgmntT ) );
                 if (vdLstSeg->nextSeg == NULL) {
                     return ENO_MORE_MEMORY;
                } 

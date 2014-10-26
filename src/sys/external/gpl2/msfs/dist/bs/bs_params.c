@@ -741,7 +741,7 @@ bs_get_stripe_xtnt_map(
     idx = 0; /* extent map index */
     use_orig_bfap = 0;
 
-    tmp_xtntsArray = (bsExtentDescT *)ms_malloc(count * sizeof(bsExtentDescT));
+    tmp_xtntsArray = (bsExtentDescT *)ms_malloc_waitok(count * sizeof(bsExtentDescT));
 
     while (nextPage >= 0) {
         ret = get_stripe_next_page( bfap, pg, cloned, &use_orig_bfap,

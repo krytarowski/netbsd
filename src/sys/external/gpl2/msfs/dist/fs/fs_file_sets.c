@@ -92,7 +92,7 @@ fs_fset_create(
     ftxHT ftxH;
 
 
-    dmnParamsp = (bfDmnParamsT *) ms_malloc( sizeof( bfDmnParamsT ));
+    dmnParamsp = (bfDmnParamsT *) ms_malloc_waitok( sizeof( bfDmnParamsT ));
     if (dmnParamsp == NULL) {
         sts = ENO_MORE_MEMORY;
         goto _error;
@@ -307,7 +307,7 @@ fs_fset_get_id(
 
     setOpen = TRUE;
 
-    dmnParamsp = (bfDmnParamsT *) ms_malloc( sizeof( bfDmnParamsT ));
+    dmnParamsp = (bfDmnParamsT *) ms_malloc_waitok( sizeof( bfDmnParamsT ));
     if (dmnParamsp == NULL) {
         sts = ENO_MORE_MEMORY;
         goto _error;
@@ -328,7 +328,7 @@ fs_fset_get_id(
     ms_free( dmnParamsp );
     dmnParamsp = NULL;
     
-    setParamsp = (bfSetParamsT *) ms_malloc( sizeof( bfSetParamsT ));
+    setParamsp = (bfSetParamsT *) ms_malloc_waitok( sizeof( bfSetParamsT ));
     if (setParamsp == NULL) {
         sts = ENO_MORE_MEMORY;
         goto _error;
@@ -524,7 +524,7 @@ fs_fset_delete(
     setOpen = TRUE;
     dmnP = bfSetp->dmnP;
 
-    dmnParamsp = (bfDmnParamsT *) ms_malloc( sizeof( bfDmnParamsT ));
+    dmnParamsp = (bfDmnParamsT *) ms_malloc_waitok( sizeof( bfDmnParamsT ));
     if (dmnParamsp == NULL) {
         sts = ENO_MORE_MEMORY;
         goto _error;
@@ -545,7 +545,7 @@ fs_fset_delete(
     ms_free( dmnParamsp );
     dmnParamsp = NULL;
 
-    setParamsp = (bfSetParamsT *) ms_malloc( sizeof( bfSetParamsT ));
+    setParamsp = (bfSetParamsT *) ms_malloc_waitok( sizeof( bfSetParamsT ));
     if (setParamsp == NULL) {
         sts = ENO_MORE_MEMORY;
         goto _error;
@@ -643,7 +643,7 @@ fs_fset_clone(
 
     dmnP = origBfSetp->dmnP;
     
-    dmnParamsp = (bfDmnParamsT *) ms_malloc( sizeof( bfDmnParamsT ));
+    dmnParamsp = (bfDmnParamsT *) ms_malloc_waitok( sizeof( bfDmnParamsT ));
     if (dmnParamsp == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
@@ -662,7 +662,7 @@ fs_fset_clone(
     ms_free( dmnParamsp );
     dmnParamsp = NULL;
     
-    setParamsp = (bfSetParamsT *) ms_malloc( sizeof( bfSetParamsT ));
+    setParamsp = (bfSetParamsT *) ms_malloc_waitok( sizeof( bfSetParamsT ));
     if (setParamsp == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }
@@ -760,7 +760,7 @@ fs_fset_get_info(
     u_long fmflg = flag ? M_FMOUNT : 0;
 
 
-    dmnParamsp = (bfDmnParamsT *) ms_malloc( sizeof( bfDmnParamsT ));
+    dmnParamsp = (bfDmnParamsT *) ms_malloc_waitok( sizeof( bfDmnParamsT ));
     if (dmnParamsp == NULL) {
         sts = ENO_MORE_MEMORY;
         goto _error;
@@ -886,7 +886,7 @@ fs_fset_name_change(
         RAISE_EXCEPTION (EBUSY);
     }
 
-    setParamsp = (bfSetParamsT *) ms_malloc( sizeof( bfSetParamsT ));
+    setParamsp = (bfSetParamsT *) ms_malloc_waitok( sizeof( bfSetParamsT ));
     if (setParamsp == NULL) {
         RAISE_EXCEPTION( ENO_MORE_MEMORY );
     }

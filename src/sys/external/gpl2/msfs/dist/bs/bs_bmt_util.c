@@ -1456,7 +1456,7 @@ bmtr_put_rec_n_unlk_int(
     uint32T undoRecSize;
     bfAccessT *mdap;
 
-    undoRecp = (bmtrPutRecUndoT *) ms_malloc( sizeof( bmtrPutRecUndoT ));
+    undoRecp = (bmtrPutRecUndoT *) ms_malloc_waitok( sizeof( bmtrPutRecUndoT ));
 
     if ((lk != BMTR_NO_LOCK) && (parentFtxH.hndl == 0)) {
         ADVFS_SAD0( "bmtr_put_rec_n_unlk_int: caller holds mcellList_lk but has no ftx" );
@@ -4803,7 +4803,7 @@ check_xtnt_in_range(
 
 
             /* Allocate a list entry for the extent found in the clear range */
-            xtntp = (ssPackLLT *)(ms_malloc( sizeof(ssPackLLT) ));
+            xtntp = (ssPackLLT *)(ms_malloc_waitok( sizeof(ssPackLLT) ));
 
             /* add this entry to the linked list */
             xtntp->ssPackBfSetId.domainId   = vdp->dmnP->domainId;

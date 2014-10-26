@@ -714,7 +714,7 @@ _ftx_start_i(
  *
  * May return null pointer if allocation failure.
  *
- * NOTE:  The caller MUST NOT HOLD a MUTEX since ms_malloc() can
+ * NOTE:  The caller MUST NOT HOLD a MUTEX since ms_malloc_waitok() can
  *        block.
  */
 
@@ -723,7 +723,7 @@ newftx(void)
 {
     ftxStateT *ftxp; 
 
-    ftxp = (ftxStateT*)ms_malloc(sizeof(ftxStateT));
+    ftxp = (ftxStateT*)ms_malloc_waitok(sizeof(ftxStateT));
     return ftxp;
 }
 
@@ -1462,7 +1462,7 @@ ftx_fail_2(
                     ms_free(lgrrecp);
                 }
                 lgrreclcnt = recwordcnt;
-                lgrrecp = (uint32T*)ms_malloc( lgrreclcnt*4 );
+                lgrrecp = (uint32T*)ms_malloc_waitok( lgrreclcnt*4 );
             }
             bcopy( (char*)ftxDLRp, (char*)lgrrecp, segwordcnt*4 );
 

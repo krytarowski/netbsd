@@ -3335,7 +3335,7 @@ load_from_bmt_xtra_xtnt_rec (
     }
     else
     {
-        rbmtPg = (struct bsMPg *)ms_malloc(sizeof(struct bsMPg));
+        rbmtPg = (struct bsMPg *)ms_malloc_waitok(sizeof(struct bsMPg));
 
         if (sts = (statusT) read_raw_bmt_page(vdp->devVp, vdBlk, rbmtPg)) 
         {

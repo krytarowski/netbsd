@@ -379,7 +379,7 @@ extern kmutex_t LockMgrMutex;
     MsfsSyscallp = msfs_real_syscall;
 
 #ifdef ADVFS_DEBUG
-    AdvfsLockStats = (advfsLockStatsT *)ms_malloc( sizeof( advfsLockStatsT ) );
+    AdvfsLockStats = (advfsLockStatsT *)ms_malloc_waitok( sizeof( advfsLockStatsT ) );
 #else
     bs_lock_mgr_init();
 #endif
@@ -485,9 +485,9 @@ bs_init(int doingRoot)
     ss_kern_init();
 
     if (clu_is_ready()) {
-        GRpgp = (struct bsMPg *)ms_malloc( sizeof( struct bsMPg ) );
+        GRpgp = (struct bsMPg *)ms_malloc_waitok( sizeof( struct bsMPg ) );
     }
-    Dpgp = (struct bsMPg *)ms_malloc( sizeof( struct bsMPg ) );
+    Dpgp = (struct bsMPg *)ms_malloc_waitok( sizeof( struct bsMPg ) );
 }
 
 
@@ -587,7 +587,7 @@ copyin_domain_and_set_names(
 
     if (out_dmnName != NULL) {
         /* copy domain table name */
-        *out_dmnName = ms_malloc( BS_DOMAIN_NAME_SZ );
+        *out_dmnName = ms_malloc_waitok( BS_DOMAIN_NAME_SZ );
 
         error = copyinstr( in_dmnName, *out_dmnName, BS_DOMAIN_NAME_SZ, &size );
         if (error != 0) {
@@ -598,7 +598,7 @@ copyin_domain_and_set_names(
 
     if (out_setName != NULL) {
         /* copy set name 1 */
-        *out_setName = ms_malloc( BS_SET_NAME_SZ );
+        *out_setName = ms_malloc_waitok( BS_SET_NAME_SZ );
 
         error = copyinstr( in_setName, *out_setName, BS_SET_NAME_SZ, &size );
         if (error != 0) {
@@ -610,7 +610,7 @@ copyin_domain_and_set_names(
 
     if (out_setName2 != NULL) {
         /* copy set name 2 */
-        *out_setName2 = ms_malloc( BS_SET_NAME_SZ );
+        *out_setName2 = ms_malloc_waitok( BS_SET_NAME_SZ );
 
         error = copyinstr( in_setName2, *out_setName2, BS_SET_NAME_SZ, &size );
         if (error != 0) {
@@ -670,7 +670,7 @@ open_domain(
     bfDmnParamsT *dmnParamsp = NULL;
     int dmnActive = FALSE, dmnOpen = FALSE;
 
-    dmnParamsp = (bfDmnParamsT *)ms_malloc( sizeof( bfDmnParamsT ));
+    dmnParamsp = (bfDmnParamsT *)ms_malloc_waitok( sizeof( bfDmnParamsT ));
 
     sts = bs_bfdmn_id_activate( dmnId );
     if (sts != EOK) {
@@ -928,7 +928,7 @@ msfs_real_syscall(
 
 
     /* Allocate arguments buffer and copy in from user space */
-    libBufp = (libParamsT *)ms_malloc( sizeof( libParamsT ) );
+    libBufp = (libParamsT *)ms_malloc_waitok( sizeof( libParamsT ) );
     if (parmBufLen > sizeof(libParamsT)) {
         RAISE_EXCEPTION( EBAD_PARAMS );
     } else {
@@ -962,7 +962,7 @@ RETRY:  /* CFS may retry ADD_VOL and REMOVE_VOL */
             savedname = libBufp->getName.name;
 
             /** Copyins **/
-            libBufp->getName.mp = ms_malloc(PATH_MAX+1);
+            libBufp->getName.mp = ms_malloc_waitok(PATH_MAX+1);
             error = copyinstr(savedmp,
                               libBufp->getName.mp,
                               PATH_MAX, &size);
@@ -971,7 +971,7 @@ RETRY:  /* CFS may retry ADD_VOL and REMOVE_VOL */
                 RAISE_EXCEPTION(error);
             }
 
-            libBufp->getName.name = ms_malloc(PATH_MAX+1);
+            libBufp->getName.name = ms_malloc_waitok(PATH_MAX+1);
             error = copyinstr(savedname,
                               libBufp->getName.name,
                               PATH_MAX, &size);
@@ -1012,7 +1012,7 @@ RETRY:  /* CFS may retry ADD_VOL and REMOVE_VOL */
             savedirName = libBufp->undelGet.dirName;
 
             /** Copyins **/
-            libBufp->undelGet.dirName = ms_malloc(PATH_MAX+1);
+            libBufp->undelGet.dirName = ms_malloc_waitok(PATH_MAX+1);
 
             error = copyinstr(savedirName,
                               libBufp->undelGet.dirName,
@@ -1052,7 +1052,7 @@ RETRY:  /* CFS may retry ADD_VOL and REMOVE_VOL */
             savedirName = libBufp->undelAttach.dirName;
 
             /** Copyins **/
-            libBufp->undelAttach.undelDirName = ms_malloc(PATH_MAX+1);
+            libBufp->undelAttach.undelDirName = ms_malloc_waitok(PATH_MAX+1);
             error = copyinstr(saveundelDirname,
                               libBufp->undelAttach.undelDirName,
                               PATH_MAX, &size);
@@ -1061,7 +1061,7 @@ RETRY:  /* CFS may retry ADD_VOL and REMOVE_VOL */
                 RAISE_EXCEPTION(error);
             }
 
-            libBufp->undelAttach.dirName = ms_malloc(PATH_MAX+1);
+            libBufp->undelAttach.dirName = ms_malloc_waitok(PATH_MAX+1);
             error = copyinstr(savedirName,
                               libBufp->undelAttach.dirName,
                               PATH_MAX, &size);
@@ -1099,7 +1099,7 @@ RETRY:  /* CFS may retry ADD_VOL and REMOVE_VOL */
             savedirName = libBufp->undelDetach.dirName;
 
             /** Copyins **/
-            libBufp->undelDetach.dirName = ms_malloc(PATH_MAX+1);
+            libBufp->undelDetach.dirName = ms_malloc_waitok(PATH_MAX+1);
             error = copyinstr(savedirName,
                               libBufp->undelDetach.dirName,
                               PATH_MAX, &size);
@@ -2070,7 +2070,7 @@ RETRY:  /* CFS may retry ADD_VOL and REMOVE_VOL */
                                                  NULL );
             if (error != 0) {RAISE_EXCEPTION( error );}
 
-            libBufp->dmnInit.volName = ms_malloc( MAXPATHLEN+1 );
+            libBufp->dmnInit.volName = ms_malloc_waitok( MAXPATHLEN+1 );
 
             error = copyinstr( libVolName,
                                libBufp->dmnInit.volName,
@@ -2200,7 +2200,7 @@ RETRY:  /* CFS may retry ADD_VOL and REMOVE_VOL */
             /* Preserve user pointer */
             libName = libBufp->removeName.name;
 
-            libBufp->removeName.name = ms_malloc( MAXPATHLEN + 1 );
+            libBufp->removeName.name = ms_malloc_waitok( MAXPATHLEN + 1 );
 
             error = copyinstr( libName,
                                libBufp->removeName.name,
@@ -2315,7 +2315,7 @@ RETRY:  /* CFS may retry ADD_VOL and REMOVE_VOL */
                                                 NULL);
             if (error != 0) {RAISE_EXCEPTION( error );}
 
-            libBufp->addVol.volName = ms_malloc( MAXPATHLEN+1 );
+            libBufp->addVol.volName = ms_malloc_waitok( MAXPATHLEN+1 );
 
             error = copyinstr( libVolName,
                                libBufp->addVol.volName,
@@ -2754,7 +2754,7 @@ RETRY:  /* CFS may retry ADD_VOL and REMOVE_VOL */
                                             NULL );
             if (error != 0) {RAISE_EXCEPTION( error );}
 
-            libBufp->addRemVolDone.volName = ms_malloc( MAXPATHLEN+1 );
+            libBufp->addRemVolDone.volName = ms_malloc_waitok( MAXPATHLEN+1 );
 
             error = copyinstr( libVolName,
                                libBufp->addRemVolDone.volName,
@@ -3192,7 +3192,7 @@ msfs_syscall_op_get_bf_params(libParamsT *libBufp,
         }
     }
 
-    bfparamsp = (bfParamsT *) ms_malloc(sizeof(bfParamsT));
+    bfparamsp = (bfParamsT *) ms_malloc_waitok(sizeof(bfParamsT));
 
     sts = bs_get_bf_params(bfap, bfparamsp, 0);
     if (sts != EOK) {
@@ -3286,7 +3286,7 @@ msfs_syscall_op_set_bf_attributes(libParamsT *libBufp,
         RAISE_EXCEPTION(error);  /* Exception */
     }
 
-    bfparamsp = (bfParamsT *) ms_malloc(sizeof(bfParamsT));
+    bfparamsp = (bfParamsT *) ms_malloc_waitok(sizeof(bfParamsT));
 
     sts = bs_get_bf_params(bfap, bfparamsp, 0);
     if ( sts != EOK ) {
@@ -3339,7 +3339,7 @@ msfs_syscall_op_get_bf_iattributes(libParamsT *libBufp, struct bfAccess *bfap)
     mlBfAttributesT* bfattrp = &libBufp->setBfIAttributes.bfAttributes;
     mlStatusT sts;
 
-    bfiparamsp = (bfIParamsT *) ms_malloc(sizeof(bfIParamsT));
+    bfiparamsp = (bfIParamsT *) ms_malloc_waitok(sizeof(bfIParamsT));
 
     sts = bs_get_bf_iparams(bfap, bfiparamsp, 0);
     if (sts != EOK) {
@@ -3391,7 +3391,7 @@ msfs_syscall_op_set_bf_iattributes(libParamsT *libBufp, struct bfAccess *bfap)
         RAISE_EXCEPTION(error);  /* Exception */
     }
 
-    bfiparamsp = (bfIParamsT *) ms_malloc(sizeof(bfIParamsT));
+    bfiparamsp = (bfIParamsT *) ms_malloc_waitok(sizeof(bfIParamsT));
 
     sts = bs_get_bf_iparams(bfap, bfiparamsp, 0);
     if ( sts != EOK ) {
@@ -3454,7 +3454,7 @@ msfs_syscall_op_get_vol_params(libParamsT *libBufp, opIndexT opIndex)
     }
     dmn_ref=TRUE;
 
-    vdparamsp = (bsVdParamsT *) ms_malloc(sizeof(bsVdParamsT));
+    vdparamsp = (bsVdParamsT *) ms_malloc_waitok(sizeof(bsVdParamsT));
 
     /*
      * Fetch ioq stats which allow counting # bufs per interval.
@@ -3536,7 +3536,7 @@ msfs_syscall_op_get_vol_bf_descs(libParamsT *libBufp)
     mlStatusT sts;
     vdT* vdp;
 
-    libBufp->getVolBfDescs.bfDesc = (mlBfDescT *)ms_malloc(
+    libBufp->getVolBfDescs.bfDesc = (mlBfDescT *)ms_malloc_waitok(
                     libBufp->getVolBfDescs.bfDescSize * sizeof(bsBfDescT));
 
     sts = open_domain(BS_ACC_READ,
@@ -3591,7 +3591,7 @@ msfs_syscall_op_set_vol_ioq_params(libParamsT *libBufp)
     }
     dmn_ref=TRUE;
 
-    vdparamsp = (bsVdParamsT *) ms_malloc(sizeof(bsVdParamsT));
+    vdparamsp = (bsVdParamsT *) ms_malloc_waitok(sizeof(bsVdParamsT));
 
     sts = bs_get_vd_params(dmnP,
                            libBufp->setVolIoQParams.volIndex,
@@ -3641,7 +3641,7 @@ msfs_syscall_op_get_bf_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
      * bother allocating an array to hold them.
      */
     if (libBufp->getBfXtntMap.xtntArraySize != 0) {
-        libBufp->getBfXtntMap.xtntsArray = (bsExtentDescT *)ms_malloc(
+        libBufp->getBfXtntMap.xtntsArray = (bsExtentDescT *)ms_malloc_waitok(
                                             libBufp->getBfXtntMap.xtntArraySize
                                             * sizeof(bsExtentDescT));
     } else {
@@ -3692,7 +3692,7 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
      */
     if (libBufp->getCludioXtntMap.xtntArraySize != 0) {
         libBufp->getCludioXtntMap.xtntsArray = (bsExtentDescT *)
-            ms_malloc( libBufp->getCludioXtntMap.xtntArraySize *
+            ms_malloc_waitok( libBufp->getCludioXtntMap.xtntArraySize *
                        sizeof(bsExtentDescT) );
     } else {
         libBufp->getCludioXtntMap.xtntsArray = NULL;
@@ -3749,7 +3749,7 @@ msfs_syscall_op_get_cludio_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
     }
 
     libBufp->getCludioXtntMap.devtvec = (bsDevtListT *)
-        ms_malloc(sizeof(bsDevtListT));
+        ms_malloc_waitok(sizeof(bsDevtListT));
 
     /* We need to protect against a volume being removed and
      * referencing bad data in the vd structure.
@@ -3813,7 +3813,7 @@ msfs_syscall_op_get_bkup_xtnt_map(libParamsT *libBufp, struct bfAccess *bfap)
      * bother allocating an array to hold them.
      */
     if (libBufp->getBkupXtntMap.xtntArraySize != 0) {
-        libBufp->getBkupXtntMap.xtntsArray = (bsExtentDescT *)ms_malloc(
+        libBufp->getBkupXtntMap.xtntsArray = (bsExtentDescT *)ms_malloc_waitok(
                                           libBufp->getBkupXtntMap.xtntArraySize
                                           * sizeof(bsExtentDescT));
     } else {
@@ -4300,7 +4300,7 @@ msfs_syscall_op_get_dmn_vol_list(libParamsT *libBufp)
     domainT *dmnP;
     mlStatusT sts;
 
-    libBufp->getDmnVolList.volIndexArray = (uint32T *)ms_malloc(
+    libBufp->getDmnVolList.volIndexArray = (uint32T *)ms_malloc_waitok(
                     libBufp->getDmnVolList.volIndexArrayLen * sizeof(uint32T));
 
     sts = open_domain(BS_ACC_READ,
@@ -4434,8 +4434,8 @@ msfs_syscall_op_tag_stat(libParamsT *libBufp)
 
     tag = libBufp->tagStat.tag;
 
-    bs_attrp = (bsBfAttrT *) ms_malloc(sizeof(bsBfAttrT));
-    fs_statp = (statT *) ms_malloc(sizeof(statT));
+    bs_attrp = (bsBfAttrT *) ms_malloc_waitok(sizeof(bsBfAttrT));
+    fs_statp = (statT *) ms_malloc_waitok(sizeof(statT));
 
     while (1) {
         /*
@@ -4619,7 +4619,7 @@ msfs_syscall_op_rem_volume(libParamsT *libBufp, opIndexT opIndex)
     }
     dmn_ref=TRUE;
 
-    vdName = ms_malloc( MAXPATHLEN+1 );
+    vdName = ms_malloc_waitok( MAXPATHLEN+1 );
 
     /* Check the disk; if valid, bump its vdRefCnt */
     {
@@ -4942,7 +4942,7 @@ msfs_syscall_op_ss_get_fraglist(libParamsT *libBufp)
      * bother allocating an array to hold them.
      */
     if (libBufp->ssGetFraglist.ssFragArraySize != 0) {
-        libBufp->ssGetFraglist.ssFragArray = (mlFragDescT *)ms_malloc(
+        libBufp->ssGetFraglist.ssFragArray = (mlFragDescT *)ms_malloc_waitok(
                                  libBufp->ssGetFraglist.ssFragArraySize *
                                  sizeof(mlFragDescT));
     } else {
@@ -5034,7 +5034,7 @@ msfs_syscall_op_ss_get_hotlist(libParamsT *libBufp)
      * allocate an array to hold them.
      */
     if (libBufp->ssGetHotlist.ssHotArraySize != 0) {
-        libBufp->ssGetHotlist.ssHotArray = (mlHotDescT *)ms_malloc(
+        libBufp->ssGetHotlist.ssHotArray = (mlHotDescT *)ms_malloc_waitok(
                               libBufp->ssGetHotlist.ssHotArraySize *
                               sizeof(mlHotDescT));
     } else {

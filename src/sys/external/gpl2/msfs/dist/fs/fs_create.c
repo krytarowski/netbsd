@@ -131,7 +131,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
 
     /*-----------------------------------------------------------------------*/
 
-    new_bs_paramsp = (bfParamsT *) ms_malloc( sizeof( bfParamsT ));
+    new_bs_paramsp = (bfParamsT *) ms_malloc_waitok( sizeof( bfParamsT ));
     
     /*
      * get the domain pointer for the to-be-inserted-in directory

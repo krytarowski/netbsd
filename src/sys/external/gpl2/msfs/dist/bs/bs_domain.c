@@ -517,7 +517,7 @@ start:
         return EOK;
     }
     
-    dmntbl = (bfDmnDescT *)ms_malloc( sizeof( bfDmnDescT ) );
+    dmntbl = (bfDmnDescT *)ms_malloc_waitok( sizeof( bfDmnDescT ) );
     if( dmntbl == NULL ) {
         if (dmnTblLocked)
             DMNTBL_UNLOCK( &DmnTblLock );
@@ -800,7 +800,7 @@ start:
      * check the vd count. If wrong, don't mount the domain.
      */
     if (dmnP->vdCnt != dmnMAttr.vdCnt) {
-        volPathName = ms_malloc( MAXPATHLEN+1 );
+        volPathName = ms_malloc_waitok( MAXPATHLEN+1 );
         if (volPathName == NULL) {
             sts = ENOMEM;
             goto get_attrs_error;
@@ -1067,7 +1067,7 @@ start:
         return EOK;
     }
     
-    dmntbl = (bfDmnDescT *)ms_malloc( sizeof( bfDmnDescT ) );
+    dmntbl = (bfDmnDescT *)ms_malloc_waitok( sizeof( bfDmnDescT ) );
 
     if( dmntbl == NULL ) {
         return ENO_MORE_MEMORY;
@@ -2205,7 +2205,7 @@ bs_bfdmn_sweep(domainT * dmnP)
             bsXtntRT* primXtnt;
             int mcell_index;
 
-            logpgp = (uint32T *)ms_malloc( ADVFS_PGSZ );
+            logpgp = (uint32T *)ms_malloc_waitok( ADVFS_PGSZ );
             if (logpgp == NULL) {
                 sts = ENOMEM;
                 goto err_cleanup;
@@ -2714,7 +2714,7 @@ get_raw_vd_attrs(
         goto err_vclose;
     }
 
-    superBlk = (uint32T *) ms_malloc( ADVFS_PGSZ );
+    superBlk = (uint32T *) ms_malloc_waitok( ADVFS_PGSZ );
     if (superBlk == NULL) {
         sts = ENOMEM;
         goto err_closeall;
@@ -3143,11 +3143,11 @@ bs_vd_add_active(
     int error;
     int dmnVersion;
 
-    bfDmnParamsp = (bfDmnParamsT *) ms_malloc( sizeof( bfDmnParamsT ));
+    bfDmnParamsp = (bfDmnParamsT *) ms_malloc_waitok( sizeof( bfDmnParamsT ));
     if (bfDmnParamsp == NULL) {
         return ( ENO_MORE_MEMORY );
     }
-    bsVdParamsp = (bsVdParamsT *) ms_malloc( sizeof( bsVdParamsT ));
+    bsVdParamsp = (bsVdParamsT *) ms_malloc_waitok( sizeof( bsVdParamsT ));
     if (bsVdParamsp == NULL) {
         ms_free( bfDmnParamsp );
         return ( ENO_MORE_MEMORY );
@@ -3304,7 +3304,7 @@ vd_alloc(
     int i;
     extern int AdvfsReadyQLim;
 
-    if ((vdp = (vdT *)ms_malloc(sizeof(vdT))) == NULL) {
+    if ((vdp = (vdT *)ms_malloc_waitok(sizeof(vdT))) == NULL) {
         return (ENO_MORE_MEMORY);
     }
 
@@ -5556,7 +5556,7 @@ dmn_alloc(
     bfSetIdT rootBfSetId;
     statusT sts = EOK;
 
-    dmnP = (struct domain*) ms_malloc( sizeof( struct domain ) );
+    dmnP = (struct domain*) ms_malloc_waitok( sizeof( struct domain ) );
     if ( !dmnP ) {
         sts = ENO_MORE_MEMORY;
         goto _error_cleanup;
@@ -5616,7 +5616,7 @@ dmn_alloc(
     cv_init( &dmnP->ftxTbld.excCv );
 
     dmnP->ftxTbld.tablep =
-        (ftxSlotT*) ms_malloc( sizeof( ftxSlotT ) * FTX_MAX_FTXH );
+        (ftxSlotT*) ms_malloc_waitok( sizeof( ftxSlotT ) * FTX_MAX_FTXH );
 
     if ( !dmnP->ftxTbld.tablep ) {
         sts = ENO_MORE_MEMORY;
@@ -5847,7 +5847,7 @@ bs_dmn_change(
     bfDmnParamsT *dmnParamsp = NULL;
     int dmnActive = FALSE, dmnOpen = FALSE;
 
-    dmnParamsp = (bfDmnParamsT *) ms_malloc( sizeof( bfDmnParamsT ));
+    dmnParamsp = (bfDmnParamsT *) ms_malloc_waitok( sizeof( bfDmnParamsT ));
     if (dmnParamsp == NULL) {
         sts = ENO_MORE_MEMORY;
         goto _error;
@@ -6049,7 +6049,7 @@ get_domain_disks(
     extern uint32T global_rootdev_count;
 
     if (doingRoot & M_LOCAL_ROOT) {
-        vddp = (vdDescT*)ms_malloc( sizeof( vdDescT ) );
+        vddp = (vdDescT*)ms_malloc_waitok( sizeof( vdDescT ) );
         if ( !vddp ) {
             error = ENOMEM;
             goto _error;
@@ -6067,7 +6067,7 @@ get_domain_disks(
         return EOK;
     } else if (doingRoot & M_GLOBAL_ROOT) {
         for (vdi = 0; vdi < global_rootdev_count; vdi++) {
-            vddp = (vdDescT*)ms_malloc( sizeof( vdDescT ) );
+            vddp = (vdDescT*)ms_malloc_waitok( sizeof( vdDescT ) );
             if ( !vddp ) {
                 error = ENOMEM;
                 goto _error;
@@ -6084,19 +6084,19 @@ get_domain_disks(
         return EOK;
     }
 
-    dmnName = ms_malloc( sizeof( MSFS_DMN_DIR ) + 1 + BS_DOMAIN_NAME_SZ );
+    dmnName = ms_malloc_waitok( sizeof( MSFS_DMN_DIR ) + 1 + BS_DOMAIN_NAME_SZ );
     if (dmnName == NULL) {
         error = ENOMEM;
         goto _error;
     }
 
-    dirBuf = ms_malloc( BS_BLKSIZE );
+    dirBuf = ms_malloc_waitok( BS_BLKSIZE );
     if (dirBuf == NULL) {
         error = ENOMEM;
         goto _error;
     }
 
-    vdName = ms_malloc( MAXPATHLEN+1 );
+    vdName = ms_malloc_waitok( MAXPATHLEN+1 );
     if (vdName == NULL) {
         error = ENOMEM;
         goto _error;
@@ -6357,7 +6357,7 @@ get_vdd(
     struct iovec aiov;
     vdDescT *vdd = NULL;
 
-    vdd = (vdDescT*)ms_malloc( sizeof( vdDescT ) );
+    vdd = (vdDescT*)ms_malloc_waitok( sizeof( vdDescT ) );
     if ( !vdd ) {
         *err = ENOMEM;
         goto _error;
@@ -6480,7 +6480,7 @@ bfDmnDescT *tmpDmnTbl;           /* table for get_domain_disks */
 statusT sts;
 int     i;
 
-    tmpDmnTbl = (bfDmnDescT *)  ms_malloc(sizeof(bfDmnDescT));
+    tmpDmnTbl = (bfDmnDescT *)  ms_malloc_waitok(sizeof(bfDmnDescT));
     if (tmpDmnTbl == NULL)
     {
         return ENO_MORE_MEMORY;
@@ -6658,7 +6658,7 @@ get_domain_major(
     int dirbuflen = 0;
     struct kdirent *kdp = NULL;
 
-    dirBuf = ms_malloc( BS_BLKSIZE );
+    dirBuf = ms_malloc_waitok( BS_BLKSIZE );
     if (dirBuf == NULL) {
         error = ENOMEM;
         goto _error;

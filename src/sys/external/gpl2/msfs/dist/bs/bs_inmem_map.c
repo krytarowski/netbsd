@@ -222,7 +222,7 @@ imm_init_xtnt_map (
     }
     /* FIX - alloc from cache or setup cache */
     xtntMap->subXtntMap = (bsInMemSubXtntMapT *)
-                        ms_malloc(xtntMap->maxCnt * sizeof(bsInMemSubXtntMapT));
+                        ms_malloc_waitok(xtntMap->maxCnt * sizeof(bsInMemSubXtntMapT));
     if (xtntMap->subXtntMap == NULL) {
         return ENO_MORE_MEMORY;
     }
@@ -252,7 +252,7 @@ imm_extend_xtnt_map (
 
     maxCnt = xtntMap->maxCnt + 1;
     newSubXtntMap =
-            (bsInMemSubXtntMapT*)ms_malloc(maxCnt * sizeof(bsInMemSubXtntMapT));
+            (bsInMemSubXtntMapT*)ms_malloc_waitok(maxCnt * sizeof(bsInMemSubXtntMapT));
     if (newSubXtntMap == NULL) {
         return ENO_MORE_MEMORY;
     }
@@ -291,7 +291,7 @@ imm_big_extend_xtnt_map( bsInMemXtntMapT *xtntMap )
 
     maxCnt = xtntMap->maxCnt + 0x10000;
     newSubXtntMap =
-            (bsInMemSubXtntMapT*)ms_malloc(maxCnt * sizeof(bsInMemSubXtntMapT));
+            (bsInMemSubXtntMapT*)ms_malloc_waitok(maxCnt * sizeof(bsInMemSubXtntMapT));
     /* ms_malloc waits. It never returns ENO_MORE_MEMORY */
     KASSERT(newSubXtntMap != NULL);
 
@@ -630,7 +630,7 @@ imm_init_sub_xtnt_map (
     }
 
     subXtntMap->bsXA =
-                 (bsXtntT *)ms_malloc(subXtntMap->maxCnt * sizeof(bsXtntT));
+                 (bsXtntT *)ms_malloc_waitok(subXtntMap->maxCnt * sizeof(bsXtntT));
     if (subXtntMap->bsXA == NULL) {
         return ENO_MORE_MEMORY;
     }
@@ -5520,7 +5520,7 @@ extend_xtnt_map_array(int *cnt, struct extentmapentry **xtnt_array)
     new_count = old_count + 100;
 
     new_array = (struct extentmapentry *)
-            ms_malloc(new_count * sizeof(struct extentmapentry));
+            ms_malloc_waitok(new_count * sizeof(struct extentmapentry));
 
     if (old_count != 0) {
         /* copy the old data to the new, extended list */
