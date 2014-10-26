@@ -564,7 +564,6 @@ new_mcell(
     struct vd* vdp;
     struct bsMC* mcp;
     rbfPgRefHT pgref;
-    vdIndexT vdIndex;
 
     /* select a vd for the new bitfile */
 
