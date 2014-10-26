@@ -323,21 +323,6 @@ typedef struct bfAccess {
     kcondvar_t migWait;            /* will sleep until queue reduced to this size */
 } bfAccessT;
 
-#ifdef ADVFS_TAG_TRACE
-
-void tag_trace(uint, uint, uint16T, uint16T, void*);
-
-#define TAG_TRACE(f, s, v) \
-    tag_trace((uint)(f), (uint)(s), \
-              (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void*)(v))
-
-#else /* ADVFS_TAG_TRACE */
-
-#define TAG_TRACE(f, s, v)
-
-#endif /* ADVFS_TAG_TRACE */
-
-
 /* Test the validity of a page number in a file. */
 /* "Returns" E_BAD_PAGE_RANGE if the page is beyond the end of the file. */
 /* Else "returns" EOK. */

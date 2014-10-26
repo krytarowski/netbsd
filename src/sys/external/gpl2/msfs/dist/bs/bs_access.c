@@ -192,54 +192,6 @@ extern int wait_for_vxlock2(struct vnode *  , int , int );
 ***************  Utility routines ********************************
 ******************************************************************/
 
-#ifdef ADVFS_TAG_TRACE
-#define TAG_TRACE_HISTORY 200
-/* TAG_TRACE_NUM_BUCKETS must be a power of 2 */
-#define TAG_TRACE_NUM_BUCKETS 512
-typedef struct {
-    uint32T       seq;
-    uint16T       mod;
-    uint16T       ln;
-    struct thread *thd;
-    int           hash;
-    int           qual;
-    void          *val;
-} tagTraceElmtT;
-
-typedef struct {
-    int           tagTracePtr;
-    tagTraceElmtT tagTraceBuf[TAG_TRACE_HISTORY];
-} tagTraceT;
-tagTraceT TagTrace[TAG_TRACE_NUM_BUCKETS];
-
-/* For tag tracing, hash can be the file tag. qual can be the set tag */
-/* For SBM block tracing, hash can be the int index. qual can be the SBM pg. */
-void
-tag_trace(uint hash, uint qual, uint16T module, uint16T line, void *value)
-{
-    register tagTraceElmtT *te;
-    extern kmutex_t TraceLock;
-    extern int TraceSequence;
-    tagTraceT *tt;
-
-    simple_lock(&TraceLock);
-
-    tt = &TagTrace[hash & (TAG_TRACE_NUM_BUCKETS - 1)];
-    tt->tagTracePtr = (tt->tagTracePtr + 1) % TAG_TRACE_HISTORY;
-    te = &tt->tagTraceBuf[tt->tagTracePtr];
-    te->thd = (struct thread *)(((long)current_cpu() << 36) |
-                                 (long)current_thread() & 0xffffffff);
-    te->seq = TraceSequence++;
-    te->mod = module;
-    te->ln = line;
-    te->hash = (signed)hash;
-    te->qual = (signed)qual;
-    te->val = value;
-
-    simple_unlock(&TraceLock);
-}
-#endif
-
 /*
  * init_access
  *
