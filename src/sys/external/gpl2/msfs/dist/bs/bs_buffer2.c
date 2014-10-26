@@ -235,32 +235,6 @@ seq_ahead( struct bfAccess *ap,         /* in */
             int ubc_flags               /* in - ubc control */
     );
 
-#ifdef ADVFS_BSBUF_TRACE
-void
-bsbuf_trace( struct bsBuf *bp,
-             uint16T      module,
-             uint16T      line,
-             void         *value)
-{
-    register bsbufTraceElmtT *te;
-    extern kmutex_t TraceLock;
-    extern int TraceSequence;
-
-    simple_lock(&TraceLock);
-
-    bp->trace_ptr = (bp->trace_ptr + 1) % BSBUF_TRACE_HISTORY;
-    te = &bp->trace_buf[bp->trace_ptr];
-    te->thd = (struct thread *)(((long)current_cpu() << 36) |
-                                 (long)current_thread() & 0xffffffff);
-    te->seq = TraceSequence++;
-    te->mod = module;
-    te->ln = line;
-    te->val = value;
-
-    simple_unlock(&TraceLock);
-}
-#endif /* ADVFS_BSBUF_TRACE */
-
 /*
  * bs_get_bsbuf
  *

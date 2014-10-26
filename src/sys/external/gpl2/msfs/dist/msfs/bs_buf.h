@@ -29,20 +29,6 @@
 #include <sys/ucred.h>
 #include <uvm/uvm.h>
 
-#ifdef ADVFS_BSBUF_TRACE
-
-#define BSBUF_TRACE_HISTORY 100
-
-typedef struct {
-  uint32T       seq;
-  uint16T       mod;
-  uint16T       ln;
-  struct thread *thd;
-  void          *val;
-} bsbufTraceElmtT;
-
-#endif /* ADVFS_BSBUF_TRACE */
-
 /* This macro sets the upper 28 bits with the line number, and the lower
  * 36 bits with the thread id.
  */
@@ -129,24 +115,7 @@ struct bsBuf {
     long ioqLn;                   /* cleared(-1) on advfs_page_get(busy) */
                                   /* and set at io completion time */
 #endif
-#ifdef ADVFS_BSBUF_TRACE
-    int trace_ptr;
-    bsbufTraceElmtT trace_buf[BSBUF_TRACE_HISTORY];
-#endif
 };
-
-#ifdef ADVFS_BSBUF_TRACE
-void
-bsbuf_trace( struct bsBuf  *bp,
-             uint16T       module,
-             uint16T       line,
-             void          *value);
-
-#define BSBUF_TRACE( bp, n1 ) \
-    bsbuf_trace((bp), (uint16T)ADVFS_MODULE, (uint16T)__LINE__, (void *)(n1))
-#else
-#define BSBUF_TRACE( bp, n1 )
-#endif
 
 #define BUFIODESC 1     /* How many ioDesc bsBuf contains */
 
