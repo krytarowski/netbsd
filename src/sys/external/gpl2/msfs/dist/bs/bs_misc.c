@@ -4148,7 +4148,6 @@ msfs_syscall_op_fset_create(libParamsT *libBufp,
                             long xid1,
                             long xid2)
 {
-    advfs_ev *advfs_event;
     mlStatusT sts;
 
     sts = fs_fset_create(libBufp->setCreate.domain,
@@ -4160,14 +4159,6 @@ msfs_syscall_op_fset_create(libParamsT *libBufp,
                          &libBufp->setCreate.bfSetId,
                          xid1,
                          xid2);
-
-    if (sts == EOK) {
-        advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-        advfs_event->domain = libBufp->setCreate.domain;
-        advfs_event->fileset = libBufp->setCreate.setName;
-        advfs_post_kernel_event(EVENT_FSET_MK, advfs_event);
-        ms_free(advfs_event);
-    }
 
     return(sts);
 }
@@ -4214,7 +4205,6 @@ mlStatusT
 msfs_syscall_op_fset_clone(libParamsT *libBufp, long xid)
 {
     int size;
-    advfs_ev *advfs_event;
     mlStatusT sts;
 
     /*
@@ -4259,15 +4249,6 @@ msfs_syscall_op_fset_clone(libParamsT *libBufp, long xid)
                         &libBufp->setClone.cloneSetId,
                         xid);
 
-    if (sts == EOK) {
-        advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-        advfs_event->domain = libBufp->setClone.domain;
-        advfs_event->fileset = libBufp->setClone.origSetName;
-        advfs_event->clonefset = libBufp->setClone.cloneSetName;
-        advfs_post_kernel_event(EVENT_FSET_CLONE, advfs_event);
-        ms_free(advfs_event);
-    }
-
     return(sts);
 }
 
@@ -4276,23 +4257,12 @@ msfs_syscall_op_fset_clone(libParamsT *libBufp, long xid)
 mlStatusT
 msfs_syscall_op_fset_rename(libParamsT *libBufp, long xid)
 {
-
-    advfs_ev *advfs_event;
     mlStatusT sts;
 
     sts = fs_fset_name_change(libBufp->setRename.domain,
                               libBufp->setRename.origSetName,
                               libBufp->setRename.newSetName,
                               xid);
-
-    if (sts == EOK) {
-        advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-        advfs_event->domain = libBufp->setRename.domain;
-        advfs_event->fileset = libBufp->setRename.origSetName;
-        advfs_event->renamefset = libBufp->setRename.newSetName;
-        advfs_post_kernel_event(EVENT_FSET_RENAME, advfs_event);
-        ms_free(advfs_event);
-    }
 
     return(sts);
 }
@@ -4303,7 +4273,6 @@ mlStatusT
 msfs_syscall_op_dmn_init(libParamsT *libBufp)
 {
 
-    advfs_ev *advfs_event;
     int error;
     mlStatusT sts;
 
@@ -4319,14 +4288,6 @@ msfs_syscall_op_dmn_init(libParamsT *libBufp)
                        libBufp->dmnInit.bmtPreallocPgs,
                        libBufp->dmnInit.domainVersion,
                        &libBufp->dmnInit.bfDomainId );
-
-    if (sts == EOK) {
-        advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-        advfs_event->special = libBufp->dmnInit.volName;
-        advfs_event->domain = libBufp->dmnInit.domain;
-        advfs_post_kernel_event(EVENT_FDMN_MK, advfs_event);
-        ms_free(advfs_event);
-    }
 
     return(sts);
 }
@@ -4599,8 +4560,6 @@ HANDLE_EXCEPTION:
 mlStatusT
 msfs_syscall_op_add_volume(libParamsT *libBufp, opIndexT opIndex)
 {
-
-    advfs_ev *advfs_event;
     int size, error;
     mlStatusT sts;
     int flag = 0;
@@ -4632,16 +4591,6 @@ msfs_syscall_op_add_volume(libParamsT *libBufp, opIndexT opIndex)
                                         libBufp->addVol.domain,
                                         libBufp->addVol.volName,
                                         sts);
-    }
-
-    if (sts != EOK) {
-        return(sts);  /* Exception */
-    } else {
-        advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-        advfs_event->special = libBufp->addVol.volName;
-        advfs_event->domain = libBufp->addVol.domain;
-        advfs_post_kernel_event(EVENT_FDMN_ADDVOL, advfs_event);
-        ms_free(advfs_event);
     }
 
     return(sts);
@@ -6220,104 +6169,6 @@ bs_get_global_stats(opGetGlobalStatsT *stats)
     stats->CleanupClosed    = cleanup_thread_calls;
     stats->CleanupSkipped   = cleanup_structs_skipped;
     stats->CleanupProcessed = cleanup_structs_processed;
-}
-
-int
-advfs_post_kernel_event(char *evname, advfs_ev *advfs_event)
-{
-    int             i, ret;
-    EvmEvent_t      ev;
-    EvmStatus_t     status;
-    EvmVarValue_t   value;
-
-    /*
-     * We should not be at interrupt level due to possible sleeps
-     * in the event code.  If we are, the path that hits this assertion
-     * should be changed to call EvmEventPostImmedVa().
-     */
-    KASSERT(!AT_INTR_LVL());
-
-    if ((status = EvmEventCreateVa(&ev, EvmITEM_NAME,evname,
-           EvmITEM_NONE)) != EvmERROR_NONE) {
-        printf("Failed to create event \"%s\"",evname);
-        return -1;
-    }
-
-    if (advfs_event->special != NULL) {
-        value.STRING = advfs_event->special;
-        EvmVarSet(ev, "special", EvmTYPE_STRING, value, 0, 0);
-    }
-
-    if (advfs_event->domain != NULL) {
-        value.STRING = advfs_event->domain;
-        EvmVarSet(ev, "domain", EvmTYPE_STRING, value, 0, 0);
-    }
-
-    if (advfs_event->fileset != NULL) {
-        value.STRING = advfs_event->fileset;
-        EvmVarSet(ev, "fileset", EvmTYPE_STRING, value, 0, 0);
-    }
-
-    if (advfs_event->directory != NULL) {
-        value.STRING = advfs_event->directory;
-        EvmVarSet(ev, "directory", EvmTYPE_STRING, value, 0, 0);
-    }
-
-    if (advfs_event->clonefset != NULL) {
-        value.STRING = advfs_event->clonefset;
-        EvmVarSet(ev, "clonefset", EvmTYPE_STRING, value, 0, 0);
-    }
-
-    if (advfs_event->renamefset != NULL) {
-        value.STRING = advfs_event->renamefset;
-        EvmVarSet(ev, "renamefset", EvmTYPE_STRING, value, 0, 0);
-    }
-
-    if (advfs_event->user != NULL) {
-        value.STRING = advfs_event->user;
-        EvmVarSet(ev, "user", EvmTYPE_STRING, value, 0, 0);
-    }
-
-    if (advfs_event->group != NULL) {
-        value.STRING = advfs_event->group;
-        EvmVarSet(ev, "group", EvmTYPE_STRING, value, 0, 0);
-    }
-
-    if (advfs_event->dirTag != NULL) {
-        value.UINT64 = advfs_event->dirTag;
-        EvmVarSet(ev, "dirtag", EvmTYPE_UINT64, value, 0, 0);
-
-        value.UINT64 = advfs_event->dirPg;
-        EvmVarSet(ev, "dirPgNm", EvmTYPE_UINT64, value, 0, 0);
-
-        value.UINT64 = advfs_event->pgOffset;
-        EvmVarSet(ev, "pgOffset", EvmTYPE_UINT64, value, 0, 0);
-        
-        /* send mail to root */
-        
-        EvmItemSetVa(ev, EvmITEM_PRIORITY, 500, EvmITEM_NONE);
-    }
-
-    if (advfs_event->frag != NULL) {
-        value.UINT64 = advfs_event->frag;
-        EvmVarSet(ev, "frag no", EvmTYPE_UINT64, value, 0, 0);
-        
-        value.UINT64 = advfs_event->fragtype;
-        EvmVarSet(ev, "fragtype", EvmTYPE_UINT64, value, 0, 0);
-
-        /* send mail to root */
-        
-        EvmItemSetVa(ev, EvmITEM_PRIORITY, 500, EvmITEM_NONE);
-    }
-
-    EvmItemSet(ev, EvmITEM_CLUSTER_EVENT, EvmTRUE);
-
-    if ((status = EvmEventPost(ev)) != EvmERROR_NONE) {
-        printf("Error posting event \"%s\"\n", evname);
-        return -1;
-    }
-
-    return 0;
 }
 
 /* Remove any unlinked files from the DDL that were not reactivated by

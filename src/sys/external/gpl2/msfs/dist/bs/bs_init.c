@@ -2362,7 +2362,6 @@ vd_extend(struct vd *vdp)
     statusT      sts;
     bsVdAttrT    vdAttr;
     getioinfo_t  *getioinfop;
-    advfs_ev     *advfs_event;
     struct vnode *vnp = NULL;
 
     /*
@@ -2531,14 +2530,6 @@ vd_extend(struct vd *vdp)
     }
     STGMAP_UNLOCK( &vdp->stgMap_lk );
     XTNMAP_UNLOCK( &sbmBfap->xtntMap_lk );
-
-    advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-    if ( advfs_event != NULL ) {
-        advfs_event->special = vdp->vdName;
-        advfs_event->domain = vdp->dmnP->domainName;
-        advfs_post_kernel_event( EVENT_FDMN_VD_EXTEND, advfs_event );
-        ms_free( advfs_event );
-    }
 
     return ESUCCESS;
 

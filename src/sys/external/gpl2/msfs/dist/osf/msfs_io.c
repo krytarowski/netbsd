@@ -179,7 +179,6 @@ _domain_panic(domainT *dmnP, char *msg, int flags)
 {
     char logmsg[1024];
     int errno;
-    advfs_ev advfs_event;
 
     KASSERT(dmnP);
 
@@ -266,25 +265,6 @@ _domain_panic(domainT *dmnP, char *msg, int flags)
 
     if (clu_is_ready()) {
         CC_CFS_DOMAIN_PANIC(dmnP->domainName, dmnP->dmn_panic);
-    }
-
-    if (AT_INTR_LVL()) {
-        EvmEventPostImmedVa(NULL,
-                       EvmITEM_NAME,
-                       EVENT_FDMN_PANIC,
-                       EvmITEM_CLUSTER_EVENT, EvmTRUE,
-                       EvmITEM_VAR_STRING,"domain", dmnP->domainName,
-                       EvmITEM_NONE);
-    } else {
-        /*
-         * NOTE: advfs_event is a local variable, but the EVM routines
-         * called here use malloc (WAITOK).  This will be a problem
-         * if _domain_panic() is ever called with simple locks
-         * held, which currently doesn't seem to be the case. 3/00
-         */
-        bzero(&advfs_event, sizeof(advfs_ev));
-        advfs_event.domain = dmnP->domainName;
-        advfs_post_kernel_event(EVENT_FDMN_PANIC, &advfs_event);
     }
 
     if (!(dmnP->dmn_panic & DMN_PANIC_UNMOUNT)) {

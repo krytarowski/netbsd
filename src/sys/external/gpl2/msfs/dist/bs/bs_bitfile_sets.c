@@ -1239,7 +1239,6 @@ bs_frag_alloc(
     
                 if (freeFrags != grpHdrp->freeFrags) {
         
-                    advfs_ev advfs_event;
                     clupThreadMsgT *msg;
                     extern msgQHT CleanupMsgQH;
         
@@ -1251,23 +1250,6 @@ bs_frag_alloc(
                     ms_uaprintf("'%s' domain at the earliest convenient time and run the command:\n", setp->dmnP->domainName); 
                     ms_uaprintf("  /sbin/advfs/verify %s\n", setp->dmnP->domainName);
                     ms_uaprintf("to check the integrity of the domain's metadata.\n");
-        
-                    if (AT_INTR_LVL()) {
-                        EvmEventPostImmedVa(NULL,
-                                       EvmITEM_NAME,
-                                       EVENT_FSET_BAD_FRAG,
-                                       EvmITEM_CLUSTER_EVENT, EvmTRUE,
-                                       EvmITEM_VAR_STRING,"domain", 
-                                       setp->dmnP->domainName,
-                                       EvmITEM_VAR_STRING,"fileset", 
-                                       setp->bfSetName,
-                                       EvmITEM_NONE);
-                    } else {
-                        bzero(&advfs_event, sizeof(advfs_ev));
-                        advfs_event.domain = setp->dmnP->domainName;
-                        advfs_event.fileset = setp->bfSetName;
-                        advfs_post_kernel_event(EVENT_FSET_BAD_FRAG,&advfs_event);
-                    }
         
                     /*
                      * Set the on-disk flag indicating that this frag group
@@ -1466,7 +1448,6 @@ bs_frag_dealloc(
     grpHdrT *grpHdrp;
     slotsPgT *grpPgp;
     struct vnode *nullvp = NULL;
-    advfs_ev advfsEvent;
 
     if (setp->state == BFS_DELETING) {
         /* nothing to do the entire frag bf will be deleted */
@@ -1756,14 +1737,6 @@ abandoned_frag:
     printf("  fragId.type = %d, fragId.frag = %d\n", fragId.type, fragId.frag);
     printf("  frag remains in use, but will never be accessed again.\n");
     printf("  To restore usage of frag you may run fixfdmn\n");
-
-    bzero(&advfsEvent, sizeof(advfs_ev));
-    advfsEvent.domain = setp->dmnP->domainName;
-    advfsEvent.fileset = setp->bfSetName;
-    advfsEvent.frag = fragId.frag;
-    advfsEvent.fragtype = fragId.type;
- 
-    advfs_post_kernel_event(EVENT_FSET_FRAG_ABANDONED, &advfsEvent); 
 
     goto done;
 }

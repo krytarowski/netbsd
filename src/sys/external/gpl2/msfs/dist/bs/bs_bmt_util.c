@@ -2825,7 +2825,6 @@ start2:
 
 cleanup_corruption:
     {
-    advfs_ev advfs_event;
     uint32T new_head_of_free_list;
 
         if (!AdvfsFixUpBMT) {
@@ -2856,11 +2855,6 @@ cleanup_corruption:
             ms_uaprintf("See the fixfdmn(8) man page for details.  If you do not run fixfdmn,\n");
             ms_uaprintf("AdvFS may use more space than is necessary on the %s volume\n", vd->vdName);
             ms_uaprintf("in the %s domain for its BMT metadata.\n", dmnP->domainName);
-    
-            bzero(&advfs_event, sizeof(advfs_ev));
-            advfs_event.special = vd->vdName;
-            advfs_event.domain = dmnP->domainName;
-            advfs_post_kernel_event(EVENT_FDMN_BAD_MCELL_LIST,&advfs_event);
         }
     
         new_head_of_free_list = ((bad_pages_found == 1) && 

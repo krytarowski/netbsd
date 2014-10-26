@@ -394,7 +394,6 @@ msfs_mount( struct mount *mp,           /* in */
            statusT     sts;
            int         now_time;
            char       *tempstring = NULL;
-           advfs_ev   *advfs_event;
            int         stopFreezefs = 0;
 
 #   ifdef notdef
@@ -764,13 +763,9 @@ msfs_mount( struct mount *mp,           /* in */
                  * names at this time.  We did not have them earlier when
                  * msfs_mountroot() was called so "generic#root" or
                  * "not_generic#root" was used at that time.  
+                 *
+                 * No Events in NetBSD
                  */
-                advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-                advfs_event->domain = dmnName;
-                advfs_event->fileset = setName;
-                advfs_event->directory = mp->m_stat.f_mntonname;
-                advfs_post_kernel_event(EVENT_FSET_MOUNT, advfs_event);
-                ms_free(advfs_event);
             }
         }
 
@@ -945,7 +940,6 @@ advfs_mountfs(struct mount *mp)
     int error;
     statusT sts;
     bfSetT *setp = NULL;
-    advfs_ev *advfs_event;
     bsrRsvd17T bsrRsvd17;
     u_long flag = mp->m_flag & ADVFS_MOUNT_FLAGS;
     int noop;
@@ -1385,18 +1379,6 @@ advfs_mountfs(struct mount *mp)
          */
         noop = 0;
     }
-    else {
-        /*
-         * Issue a mount event for other mounts which are neither cluster
-         * global roots nor cluster local roots.
-         */
-        advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-        advfs_event->domain = dmnName;
-        advfs_event->fileset = setName;
-        advfs_event->directory = mp->m_stat.f_mntonname;
-        advfs_post_kernel_event(EVENT_FSET_MOUNT, advfs_event);
-        ms_free(advfs_event);
-    }
 
     ms_free( dmnName );
 
@@ -1794,7 +1776,6 @@ msfs_unmount(
     extern int advfs_shutting_down;
     char *setName=NULL;
     char dmnName[MNAMELEN];
-    advfs_ev advfs_event;
     u_long advfs_flags = mp->m_flag & ADVFS_MOUNT_FLAGS;
     domainT *dmnP;
     int restart_quotas = FALSE, fragBfClosed = FALSE;
@@ -2000,12 +1981,6 @@ msfs_unmount(
 
     setName = toke_it( mp->m_stat.f_mntfromname, '#', dmnName );
 
-    bzero(&advfs_event, sizeof(advfs_ev));
-    advfs_event.domain = dmnName;
-    advfs_event.fileset = setName;
-    advfs_event.directory = mp->m_stat.f_mntonname;
-    advfs_post_kernel_event(EVENT_FSET_UMOUNT, &advfs_event);
-
     if (mp->m_stat.f_mntonname)
             FREE(mp->m_stat.f_mntonname, M_PATHNAME);
     if (mp->m_stat.f_mntfromname)
@@ -2089,8 +2064,6 @@ advfs_quotactl(
     struct uucred *credp = u.u_cred;
     char *setName=NULL;
     char *dmnName=NULL;
-    char uid_str[20];
-    advfs_ev *advfs_event;
 
     /*
      * In base system :
@@ -2186,32 +2159,18 @@ advfs_quotactl(
     dmnName = ms_malloc( MAX_MNT_PATHLEN );
     setName = toke_it( mp->m_stat.f_mntfromname, '#', dmnName );
 
-    advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-    advfs_event->domain = dmnName;
-    advfs_event->fileset = setName;
-
     switch (cmd) {
 
         case Q_QUOTAON:
             error = advfs_enforce_on(dnp, type);
-            advfs_post_kernel_event(EVENT_QUOTA_ON, advfs_event);
             break;
 
         case Q_QUOTAOFF:
             error = advfs_enforce_off(dnp, type, FtxNilFtxH);
-            advfs_post_kernel_event(EVENT_QUOTA_OFF, advfs_event);
             break;
 
         case Q_SETQUOTA:
             error = advfs_set_quota(dnp, uid, type, QUOTA32, arg, kernaddr);
-            sprintf(uid_str, "%u", uid);
-            if (type == GRPQUOTA) {
-                advfs_event->group = uid_str;
-                advfs_post_kernel_event(EVENT_QUOTA_SETGRP, advfs_event);
-            } else if (type == USRQUOTA) {
-                advfs_event->user = uid_str;
-                advfs_post_kernel_event(EVENT_QUOTA_SETUSR, advfs_event);
-            }
             break;
 
         case Q_SETUSE:
@@ -2228,14 +2187,6 @@ advfs_quotactl(
 
         case Q_SETQUOTA64:
             error = advfs_set_quota(dnp, uid, type, QUOTA64, arg, kernaddr);
-            sprintf(uid_str, "%u", uid);
-            if (type == GRPQUOTA) {
-                advfs_event->group = uid_str;
-                advfs_post_kernel_event(EVENT_QUOTA_SETGRP, advfs_event);
-            } else if (type == USRQUOTA) {
-                advfs_event->user = uid_str;
-                advfs_post_kernel_event(EVENT_QUOTA_SETUSR, advfs_event);
-            }
             break;
 
         case Q_SETUSE64:
@@ -2256,7 +2207,6 @@ advfs_quotactl(
             break;
     }
 
-    ms_free(advfs_event);
     ms_free(dmnName);
     return( error );
 }

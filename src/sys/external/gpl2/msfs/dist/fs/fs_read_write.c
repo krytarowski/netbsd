@@ -427,7 +427,6 @@ fs_post_no_storage_msg( struct vnode *vp,
                         struct bfAccess *bfap )
 {
     int set = 0;
-    advfs_ev *advfs_event;
     extern int fs_full_threshold;
 
     /* Error to controlling terminal. */
@@ -451,11 +450,6 @@ fs_post_no_storage_msg( struct vnode *vp,
     if (set) {
         log(LOG_ERR, "%s: file system full\n",
                              VTOMOUNT(vp)->m_stat.f_mntonname);
-
-        advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-        advfs_event->domain = bfap->dmnP->domainName;
-        advfs_post_kernel_event(EVENT_FDMN_FULL, advfs_event);
-        ms_free(advfs_event);
     }
     return;
 }

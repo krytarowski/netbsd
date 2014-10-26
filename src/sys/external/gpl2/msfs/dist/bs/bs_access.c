@@ -1140,14 +1140,8 @@ get_free_acc(int *retry,        /* In/Out - Retry or error status */
         mutex_exit(&BfAccessFreeLock);
         *retry = EHANDLE_OVF;
         if (!MaxAccessEventPosted) {
-            advfs_ev *advfs_event = NULL;
             ms_printf("Could not create new AdvFS access structure; already at AdvFS memory limit\n");
             ms_printf("as specified by AdvfsAccessMaxPercent value of %d%%.\n", AdvfsAccessMaxPercent);
-            advfs_event = (advfs_ev *)ms_malloc(sizeof(advfs_ev));
-            if (advfs_event) {
-                advfs_post_kernel_event(EVENT_MAX_ACCESS_STRUCT, advfs_event);
-                ms_free(advfs_event);
-            }
 
             MaxAccessEventPosted = TRUE;
         }

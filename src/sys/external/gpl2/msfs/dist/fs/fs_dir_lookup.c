@@ -1354,8 +1354,6 @@ fs_dir_size_notice(
                    uint offset               /* in - offset in dir's page */
                    )
 {                        
-    advfs_ev advfs_event;
-
     uprintf("Warning: Some file(s) of AdvFS fileset = \"%s\" in domain = \"%s\"\n",
                 dirBfap->bfSetp->bfSetName, dirBfap->dmnP->domainName);
     uprintf("belonging to directory tag %d are inaccessible.\n", dirBfap->tag.num);
@@ -1372,14 +1370,6 @@ fs_dir_size_notice(
         aprintf("There is a corrupted directory entry size: on directory page %d, at offset 0x%x\n",
                      pgNm, offset);
         aprintf("  bad size = 0x%x,\n ", entrySize);
-
-        bzero(&advfs_event, sizeof(advfs_ev));
-        advfs_event.domain = dirBfap->dmnP->domainName;
-        advfs_event.fileset = dirBfap->bfSetp->bfSetName;
-        advfs_event.dirTag = dirBfap->tag.num;
-        advfs_event.dirPg = pgNm;
-        advfs_event.pgOffset = offset;
-        advfs_post_kernel_event(EVENT_FSET_INCONSISTENT_DIR_ENTRY, &advfs_event);
     }
 
     return;

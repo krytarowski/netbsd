@@ -858,12 +858,6 @@ start:
             ms_uprintf("Recommend you follow the procedures described\n");
             ms_uprintf("in the 'Trouble Shooting: Can't Clear Bit Twice Error\n");
             ms_uprintf("Message' section of the AdvFS Administration Guide.\n");
-            {
-                advfs_ev advfs_event;
-                bzero(&advfs_event, sizeof(advfs_ev));
-                advfs_event.domain = domainName;
-                advfs_post_kernel_event(EVENT_FDMN_CCBT_IGNORED, &advfs_event);
-            }
         }
         else {
             /* If not the root, then don't allow the activation to occur */
@@ -1466,12 +1460,6 @@ start:
          ms_uprintf("Recommend you follow the procedures described\n");
          ms_uprintf("in the 'Trouble Shooting: Can't Clear Bit Twice Error\n");
          ms_uprintf("Message' section of the AdvFS Administration Guide.\n");
-         {
-             advfs_ev advfs_event;
-             bzero(&advfs_event, sizeof(advfs_ev));
-             advfs_event.domain = domainName;
-             advfs_post_kernel_event(EVENT_FDMN_CCBT_IGNORED, &advfs_event);
-         }
     }
 
     dmnP->ftxLogTag = dmnMAttr.ftxLogTag;
@@ -4627,13 +4615,6 @@ vd_remove(
         ms_uaprintf("domain %s volume %d state is not set to %s.\n",
             dmnP->domainName, vdp->vdIndex,
             (flags & VD_REMOVE_PERM) ? "permanently removed" : "dismounted");
-
-        if (flags & VD_REMOVE_PERM) {
-           advfs_ev advfs_event;
-           bzero(&advfs_event, sizeof(advfs_event));
-           advfs_event.domain = dmnP->domainName;
-           advfs_post_kernel_event(EVENT_FDMN_RMVOL_ERROR, &advfs_event);
-        }
     }
 
     /*
