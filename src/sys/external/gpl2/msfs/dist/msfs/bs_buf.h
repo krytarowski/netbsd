@@ -93,7 +93,7 @@ struct bsBuf {
     struct actRange *actRangep;   /* Active range containing this buffer. */
 
     /* note this field may be invalid when the vm_page isn't held or busy */
-    vm_page_t vmpage;             /* pointer to vm page struct for UBC page */
+    struct vm_page *vmpage;             /* pointer to vm page struct for UBC page */
 
     u_int bufDebug;               /* see flags and note below - no locking */
 
@@ -124,7 +124,7 @@ struct bsBuf {
     ioDescT ioDesc;               /* if buf has one ioDesc, this is it */
 
 #ifdef ADVFS_SMP_ASSERT
-    vm_page_t last_vmpage;        /* previous exchanged vm page struct */
+    struct vm_page *last_vmpage;        /* previous exchanged vm page struct */
     long busyLn;                  /* Set when advfs_page_get(busy) is called */
     long ioqLn;                   /* cleared(-1) on advfs_page_get(busy) */
                                   /* and set at io completion time */
@@ -372,7 +372,7 @@ bs_refpg_get(
          struct bfAccess *bfap,         /* in */
          unsigned long bsPage,          /* in - bf page number */
          bfPageRefHintT refHint,        /* in - hint to do read ahead */
-         vm_page_t *pp,                 /* out - vm_page struct pointer */
+         struct vm_page **pp,                 /* out - vm_page struct pointer */
          vm_policy_t policy,            /* in - vm page locality */
          vm_offset_t offset,            /* in - ubc hint */
          vm_size_t len,                 /* in - ubc hint */
@@ -395,7 +395,7 @@ bs_pinpg_get(
          struct bfAccess *bfap,         /* in */
          unsigned long bsPage,          /* in - bf page number */
          bfPageRefHintT refHint,        /* in - hint to do read ahead */
-         vm_page_t *pp,                 /* out - vm_page struct pointer */
+         struct vm_page **pp,                 /* out - vm_page struct pointer */
          vm_policy_t policy,            /* in - vm page locality */
          vm_offset_t offset,            /* in - ubc hint */
          vm_size_t len,                 /* in - ubc hint */
@@ -403,7 +403,7 @@ bs_pinpg_get(
          );
 
 statusT 
-bs_pinpg_put(vm_page_t plp,                    /* in */
+bs_pinpg_put(struct vm_page *plp,                    /* in */
              int plcnt,                        /* in */
              int ubc_flags);                   /* in */
 

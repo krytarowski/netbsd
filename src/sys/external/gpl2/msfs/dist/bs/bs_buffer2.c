@@ -148,7 +148,7 @@ bs_pinpg_found( bfPageRefHT *bfPageRefH,      /* out */
                struct bfAccess *bfap,         /* in */
                unsigned long bsPage,          /* in */
                bfPageRefHintT refHint,        /* in */
-               vm_page_t pp,                  /* in */
+               struct vm_page *pp,                  /* in */
                int flag,                      /* in */
                short metaCheck,               /* in - metadata check type */
                vm_policy_t vmp,               /* in - vm page locality */
@@ -164,7 +164,7 @@ bs_pinpg_newpage( bfPageRefHT *bfPageRefH,      /* out */
                  struct bfAccess *bfap,         /* in */
                  unsigned long bsPage,          /* in */
                  bfPageRefHintT refHint,        /* in */
-                 vm_page_t pp,                  /* in */
+                 struct vm_page *pp,                  /* in */
                  int flag,                      /* in */
                  short metaCheck,               /* in - metadata check type */
                  vm_policy_t vmp,               /* in - vm page locality */
@@ -329,7 +329,7 @@ int
 advfs_page_get(struct bsBuf *bp, int flags)
 {
     vm_ubc_object_t vop = bp->bfAccess->bfObj;
-    vm_page_t       pp = bp->vmpage;
+    struct vm_page *pp = bp->vmpage;
     vm_offset_t     offset;
     int             result;
 
@@ -789,7 +789,7 @@ bs_refpg_get(
          struct bfAccess *bfap,         /* in */
          unsigned long bsPage,          /* in - bf page number */
          bfPageRefHintT refHint,        /* in - hint to do read ahead */
-         vm_page_t *pp,                 /* out - vm_page struct pointer */
+         struct vm_page **pp,                 /* out - vm_page struct pointer */
          vm_policy_t vmp,               /* in - vm page locality */
          vm_offset_t offset,            /* in - future use */
          vm_size_t len,                 /* in - future use */
@@ -893,7 +893,7 @@ bs_refpg_newpage(
                  unsigned long bsPage,        /* in - bf page number */
                  bfPageRefHintT refHint,      /* in - hint to do read ahead */
                  struct flags flag,           /* in */
-                 vm_page_t pp,                /* in - UBC page pointer */
+                 struct vm_page *pp,                /* in - UBC page pointer */
                  int fetchPages,              /* in - # of pages to prefetch */
                  short metaCheck,             /* in - metadata check type */
                  vm_policy_t vmp,             /* in - vm page locality */
@@ -1116,7 +1116,7 @@ bs_refpg_int(
 {
     struct bsBuf *bp = NULL;
     struct bfAccess *origBfAp;
-    vm_page_t pp;
+    struct vm_page *pp;
     ioDescT *ioListp;
     struct flags flag;
     statusT sts;
@@ -1789,7 +1789,7 @@ bs_pinpg_get(
          struct bfAccess *bfap,         /* in */
          unsigned long bsPage,          /* in - bf page number */
          bfPageRefHintT refHint,        /* in - hint to do read ahead */
-         vm_page_t *pp,                 /* out - vm_page struct pointer */
+         struct vm_page **pp,                 /* out - vm_page struct pointer */
          vm_policy_t vmp,               /* in - vm page locality */
          vm_offset_t offset,            /* in - future use */
          vm_size_t len,                 /* in - future use */
@@ -1811,7 +1811,7 @@ retry_lookup:
                             bfap, bsPage, refHint, PINPG_NOFLAG,
                             BSBUF_CHK_NONE, vmp, offset, len, ubc_flags );
 
-    /* Now that the vm_page_t is pinned, decrement the 
+    /* Now that the struct vm_page *is pinned, decrement the 
      * associated bsBuf's write counter since no bs_unpinpg() is 
      * called by getpage callers. Getpage callers eventually call
      * ubc_page_release() directly and not through AdvFS.
@@ -1987,7 +1987,7 @@ bs_pinpg_ftx( bfPageRefHT *bfPageRefH,       /* out */
  */
 
 statusT
-bs_pinpg_put(vm_page_t plp,             /* in */
+bs_pinpg_put(struct vm_page *plp,             /* in */
              int plcnt,                 /* in */
              int ubc_flags)             /* in */
 {
@@ -1997,7 +1997,7 @@ bs_pinpg_put(vm_page_t plp,             /* in */
     int listLen = 0;
     ioDescT *ioListp;
     int noqfnd;
-    vm_page_t curpg;
+    struct vm_page *curpg;
     ioDescT *ioList=0, *save;
     int listLenMaster=0,
         pageCount;
@@ -2472,7 +2472,7 @@ bs_pinpg_one_int(
 {
     struct bsBuf *bp = NULL;
     statusT sts = EOK;
-    vm_page_t pp;
+    struct vm_page *pp;
     int uflags, directIO;
     extern REPLICATED int SS_is_running;
     struct timeval new_time;
@@ -2583,7 +2583,7 @@ bs_pinpg_found(
                struct bfAccess *bfap,         /* in */
                unsigned long bsPage,          /* in */
                bfPageRefHintT refHint,        /* in */
-               vm_page_t pp,                  /* in */
+               struct vm_page *pp,                  /* in */
                int flag,
                short metaCheck,               /* in - metadata check type */
                vm_policy_t vmp,               /* in - vm page locality */
@@ -2815,7 +2815,7 @@ bs_pinpg_newpage(
                  struct bfAccess *bfap,         /* in */
                  unsigned long bsPage,          /* in */
                  bfPageRefHintT refHint,        /* in */
-                 vm_page_t pp,                  /* in */
+                 struct vm_page *pp,                  /* in */
                  int flag,
                  short metaCheck,               /* in - metadata check type */
                  vm_policy_t vmp,               /* in - vm page locality */
@@ -4213,7 +4213,7 @@ bs_find_page( struct bfAccess *bfap,          /* in */
 {
     int rflags;
     int error;
-    vm_page_t pp;
+    struct vm_page *pp;
 
 
     rflags = B_READ | B_CACHE;
@@ -4827,7 +4827,7 @@ seq_ahead( struct bfAccess *bfap,       /* in */
     int useOrigMap = FALSE;
     bfSetT *bfSetp;
     struct bfAccess *origBfap = NULL;
-    vm_page_t pp;
+    struct vm_page *pp;
     int flags;
     struct timeval new_time;
     int wday;

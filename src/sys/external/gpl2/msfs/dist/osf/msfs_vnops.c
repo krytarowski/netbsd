@@ -6040,7 +6040,7 @@ msfs_objtovp(
 
 int
 msfs_setpgstamp(
-    vm_page_t pp,
+    struct vm_page *pp,
     unsigned int tick)
 {
     return(0);

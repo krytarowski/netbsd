@@ -1317,7 +1317,7 @@ copy_frag_into_vm_page(
                        bfAccessT  *fragBfAccessp,  /* in */
                        bfFragIdT fragId,  /* in */
                        uint32T bytesPerFilePage,  /* in */
-                       vm_page_t pp
+                       struct vm_page *pp
                        )
 {
     int error;
@@ -1469,12 +1469,12 @@ msfs_release(vm_ubc_object_t vop)
 int
 msfs_putpage(
     vm_ubc_object_t vop,
-    vm_page_t *pl,
+    struct vm_page **pl,
     int pcnt,
     int flags,
     struct uucred *cred )
 {
-    vm_page_t pp, plp;
+    struct vm_page *pp, *plp;
     bfPageRefHT page_ref;
     void *page_addr;
     int page;
@@ -1657,7 +1657,7 @@ msfs_getpage(
     vm_offset_t offset,
     vm_size_t len,
     vm_prot_t *protp,
-    vm_page_t *pl,
+    struct vm_page **pl,
     int plsz,
     vm_policy_t vmp,
     int ubc_flags,
@@ -1950,7 +1950,7 @@ msfs_fs_cleanup(vm_offset_t opfs) /*In:Copy of vm_page's fs private field.*/
  */
 
 int
-msfs_fs_replicate(vm_page_t pp) /*In:Copy of vm_page's fs private field.*/
+msfs_fs_replicate(struct vm_page *pp) /*In:Copy of vm_page's fs private field.*/
 {
     struct bsBuf *bp,*origbp;
     int i;
@@ -2017,7 +2017,7 @@ msfs_fs_replicate(vm_page_t pp) /*In:Copy of vm_page's fs private field.*/
  */
 
 int
-msfs_write_check(vm_ubc_object_t vop, vm_page_t pp)
+msfs_write_check(vm_ubc_object_t vop, struct vm_page *pp)
 {
     return(1);
 }
@@ -2402,8 +2402,8 @@ msfs_bread(register struct vnode *vp,
            struct buf **bpp,
            struct uucred *cred)
 {
-    vm_page_t pl[VP_PAGELIST+1];
-    register vm_page_t *pp, lp, fp;
+    struct vm_page *pl[VP_PAGELIST+1];
+    register struct vm_page **pp, *lp, *fp;
     register struct buf *bp;
     int error;
     struct fsContext *cp;
@@ -2505,7 +2505,7 @@ msfs_bread(register struct vnode *vp,
 msfs_brelse(register struct vnode *vp,
             register struct buf *bp)
 {
-    register vm_page_t pp, cp;
+    register struct vm_page *pp, *cp;
 
     FILESETSTAT( vp, msfs_brelse );
 
