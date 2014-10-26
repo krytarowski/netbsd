@@ -6030,7 +6030,7 @@ msfs_syncdata(
 
 int
 msfs_objtovp(
-    vm_ubc_object_t vop,
+    struct uvm_object* vop,
     struct vnode **vp)
 {
     KASSERT(vop->vu_ap);        /* have an access structure */

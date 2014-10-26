@@ -2652,10 +2652,10 @@ msfs_sync_mmap(
              (!clu_is_ready() && bfap->mmapFlush)) &&
             (vp->v_type == VREG || vp->v_type == VNON) &&
             vp->v_object &&
-            ((vm_ubc_object_t)(vp->v_object)->vu_dirtypl != NULL ||
-            (vm_ubc_object_t)(vp->v_object)->vu_dirtywpl != NULL)) {
+            ((struct uvm_object*)(vp->v_object)->vu_dirtypl != NULL ||
+            (struct uvm_object*)(vp->v_object)->vu_dirtywpl != NULL)) {
 
-            (void)ubc_flush_dirty( (vm_ubc_object_t)vp->v_object, 0);
+            (void)ubc_flush_dirty( (struct uvm_object*)vp->v_object, 0);
 
             /* 
              * Check to see if we can clear the mmapFlush flag; only

@@ -365,7 +365,7 @@ bf_get_l(
     struct vnode *nvp;
     struct fsContext *file_context;
     bfAccessT *bfap;
-    struct vm_ubc_object *obj;
+    struct uvm_object *obj;
     statusT sts=EOK;
     struct undel_dir_rec undel_rec;
     uint32T options;
@@ -1135,7 +1135,7 @@ msfs_reclaim(
 
        /* At this point, if there is a bfap, its bfaLock is held */
        if ( bfap && (vp == bfap->bfVp) ) {
-            vm_ubc_object_t vop = vp->v_object;
+            struct uvm_object* vop = vp->v_object;
 
             if((bfap->bfState == BSRA_INVALID ) && vop && vop->vu_dirtypl) {
                 /* invalid access struct can't have any dirty ubc pages */
@@ -1312,7 +1312,7 @@ msfs_reclaim(
 
 int
 copy_frag_into_vm_page(
-                       vm_ubc_object_t vop,
+                       struct uvm_object* vop,
                        vm_offset_t offset,  /* in */
                        bfAccessT  *fragBfAccessp,  /* in */
                        bfFragIdT fragId,  /* in */
@@ -1383,7 +1383,7 @@ copy_frag_into_vm_page(
  * guarded by the bfaLock in the access
  * structure.
  */
-msfs_refer(vm_ubc_object_t vop)
+msfs_refer(struct uvm_object* vop)
 {
     struct fsContext *contextp;
 
@@ -1408,7 +1408,7 @@ msfs_refer(vm_ubc_object_t vop)
  * in the access structure.  The bfaLock in the
  * access structure is seized and released here.
  */
-msfs_release(vm_ubc_object_t vop)
+msfs_release(struct uvm_object* vop)
 {
     struct fsContext *contextp;
     bfAccessT *bfap = vop->vu_ap;
@@ -1468,7 +1468,7 @@ msfs_release(vm_ubc_object_t vop)
 
 int
 msfs_putpage(
-    vm_ubc_object_t vop,
+    struct uvm_object* vop,
     struct vm_page **pl,
     int pcnt,
     int flags,
@@ -1653,7 +1653,7 @@ msfs_putpage(
 
 int
 msfs_getpage(
-    vm_ubc_object_t vop,
+    struct uvm_object* vop,
     vm_offset_t offset,
     vm_size_t len,
     vm_prot_t *protp,
@@ -2017,7 +2017,7 @@ msfs_fs_replicate(struct vm_page *pp) /*In:Copy of vm_page's fs private field.*/
  */
 
 int
-msfs_write_check(vm_ubc_object_t vop, struct vm_page *pp)
+msfs_write_check(struct uvm_object* vop, struct vm_page *pp)
 {
     return(1);
 }
@@ -2551,7 +2551,7 @@ msfs_brelse(register struct vnode *vp,
  */
 
 
-msfs_log_and_meta_flush(vm_ubc_object_t vop,
+msfs_log_and_meta_flush(struct uvm_object* vop,
 			int pgs_to_flush)
 {
     bfAccessT *bfap;

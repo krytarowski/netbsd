@@ -302,7 +302,7 @@ bs_free_bsbuf(
 int
 advfs_page_get(struct bsBuf *bp, int flags)
 {
-    vm_ubc_object_t vop = bp->bfAccess->bfObj;
+    struct uvm_object* vop = bp->bfAccess->bfObj;
     struct vm_page *pp = bp->vmpage;
     vm_offset_t     offset;
     int             result;

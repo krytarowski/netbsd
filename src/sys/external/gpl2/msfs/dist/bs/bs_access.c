@@ -4530,7 +4530,7 @@ void
 check_mv_bfap_to_free(bfAccessT* bfap)
 {
     struct vnode *vp = bfap->bfVp;
-    struct vm_ubc_object *obj = bfap->bfObj;
+    struct uvm_object *obj = bfap->bfObj;
 
     KASSERT(mutex_owned(&bfap->bfaLock));
     KASSERT(mutex_owned(&bfap->bfIoLock));

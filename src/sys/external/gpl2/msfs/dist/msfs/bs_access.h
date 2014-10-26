@@ -214,7 +214,7 @@ typedef struct bfAccess {
      * holding the bfaLock
      */
     struct vnode *bfVp;
-    struct vm_ubc_object *bfObj;
+    struct uvm_object *bfObj;
 
     /*
      * Following fields are protected by bfIoLock

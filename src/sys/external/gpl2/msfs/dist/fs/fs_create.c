@@ -462,7 +462,7 @@ fs_create_file(struct vattr *vap,         /* in - vnode attributes pointer */
      * so must serialize with bs_access_one().
      */
     if ( type == VCHR || type == VBLK || type == VFIFO ) {
-        struct vm_ubc_object *obj;
+        struct uvm_object *obj;
         mutex_enter(&bfap->bfaLock);
         if (obj = bfap->bfObj) {
             bfap->bfObj = NULL;
