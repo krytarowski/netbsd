@@ -344,10 +344,6 @@ struct bfAccessHdr {
     struct bfAccess *freeBwd;
     int len;
     int saved_stats_len;
-#ifdef ADVFS_DEBUG
-    int max;
-    int min;
-#endif
 };
 
 
@@ -514,7 +510,6 @@ limits_of_active_range(
     if (bfap->saved_stats) { \
         ClosedAcc.saved_stats_len++; \
     } \
-    ACCMAX(ClosedAcc); \
     mutex_exit(&BfAccessFreeLock); \
 }
 
@@ -581,7 +576,6 @@ limits_of_active_range(
     } \
     bfap->onFreeList = 1; \
     FreeAcc.len++; \
-    ACCMAX(FreeAcc); \
     if (!advfs_shutting_down && \
         ((NumAccess > MaxAccess) || \
          ((NumAccess > AdvfsMinAccess)  && \
@@ -611,14 +605,12 @@ limits_of_active_range(
         KASSERT(FreeAcc.len > 0); \
         FreeAcc.len--; \
         KASSERT(bfap->dirtyBufList.length == 0); \
-        ACCMIN(FreeAcc); \
     } else { \
         KASSERT(ClosedAcc.len > 0); \
         ClosedAcc.len--; \
         if (bfap->saved_stats) { \
             ClosedAcc.saved_stats_len--; \
         } \
-        ACCMIN(ClosedAcc); \
     } \
     bfap->onFreeList = 0; \
 }
@@ -666,11 +658,4 @@ limits_of_active_range(
     mutex_exit(&BfAccessFreeLock); \
 }
 
-#ifdef ADVFS_DEBUG
-#define ACCMAX(accHdr) if ( accHdr.len > accHdr.max ) accHdr.max = accHdr.len
-#define ACCMIN(accHdr) if ( accHdr.len < accHdr.min ) accHdr.min = accHdr.len
-#else
-#define ACCMAX(accHdr)
-#define ACCMIN(accHdr)
-#endif
 #endif /* _ACCESS_H_ */

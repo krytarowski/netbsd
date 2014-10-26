@@ -287,7 +287,6 @@ init_access(bfAccessT *bfap)
      */
     bfap->bfap_free_time = sched_tick;
     FreeAcc.len++;
-    ACCMAX(FreeAcc);
     NumAccess++;
     mutex_exit(&BfAccessFreeLock);
 
