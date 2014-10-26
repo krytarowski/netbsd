@@ -80,7 +80,7 @@ dyn_double_hashtable(
  */
 
 void
-dyn_kernel_thread_setup()
+dyn_kernel_thread_setup(void)
 {
    DynHashThreadStarted = FALSE;
 }

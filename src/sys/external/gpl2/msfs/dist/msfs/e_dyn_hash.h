@@ -62,6 +62,6 @@ dyn_hash_remove( void * hashtable,
                  int obtain_lock);
 
 extern void 
-dyn_kernel_thread_setup();
+dyn_kernel_thread_setup(void);
 
 #endif  /* _E_KERN_DYN_HASH_H_ */
