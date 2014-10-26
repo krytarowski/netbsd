@@ -313,10 +313,6 @@ advfs_page_get(struct bsBuf *bp, int flags)
     if (!pp && !(flags & ADVFS_GET_NOCACHE))
         ADVFS_SAD2("Advfs can't find expected ubc page", result, (long)bp);
 
-#ifdef ADVFS_SMP_ASSERT
-    if (pp != bp->vmpage)
-        bp->last_vmpage = bp->vmpage;
-#endif
     /* update in case the page was exchanged while it was not busy/held,
      * it is OK if this is invalid on a failure, it may be useful later.
      */
@@ -1865,10 +1861,7 @@ retry_lookup:
                  */
                 if ((sts = advfs_page_get(bp,
                       UBC_GET_BUSY | UBC_GET_HAVEHOLD | UBC_GET_KEEPDIRTY))) {
-#ifdef ADVFS_SMP_ASSERT
-                    ADVFS_SAD2("bs_pinpg_get: failed advfs_page_get",
-                               sts, (long)bp);
-#endif
+
                     clear_state( bp, IO_TRANS );
                     bp->ln = SET_LINE_AND_THREAD(__LINE__);
                     mutex_exit( &bp->bufLock );
@@ -1878,10 +1871,6 @@ retry_lookup:
 
                 bp->lock.state |= (BUSY | KEEPDIRTY);
                 bp->ubc_flags = 0;      /* we keep our hold */
-#ifdef ADVFS_SMP_ASSERT
-                bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-                bp->ioqLn = -1;
-#endif
 
                 link_write_req( bp );
                 mutex_exit( &bp->bufLock );
@@ -1976,9 +1965,6 @@ bs_pinpg_put(struct vm_page *plp,             /* in */
     int listLenMaster=0,
         pageCount;
     long prevLn;
-#ifdef ADVFS_SMP_ASSERT
-    vm_object_t first_pg_object = plp->pg_object;
-#endif
 
     for (curpg = plp, pageCount = 0 ;
          pageCount < plcnt;
@@ -2350,18 +2336,6 @@ bs_wakeup_flush_threads(struct bsBuf *bp,   /* in - Buffer being released */
             mutex_enter(&rfp->rangeFlushLock);
             KASSERT(rfp->outstandingIoCount > 0);
 
-#ifdef ADVFS_SMP_ASSERT
-            /*
-             * The following assertion cannot be applied to metadata
-             * files or clones since their bfap->file_size field, from which
-             * rfp->lastPage is derived on a full-file flush, is
-             * not maintained consistently.
-             */
-            if (!BS_BFTAG_EQL(bfap->bfSetp->dirTag, staticRootTagDirTag) &&
-                (bfap->bfSetp->cloneId == BS_BFSET_ORIG)) {
-                KASSERT(rfp->outstandingIoCount <= ((rfp->lastPage - rfp->firstPage) + 1));
-            }
-#endif
             if (--rfp->outstandingIoCount == 0) {
                 thread_wakeup_one((vm_offset_t)&rfp->outstandingIoCount);
             }
@@ -3540,10 +3514,6 @@ bs_unpinpg(
                 if (!sts) {
                     bp->lock.state |= (BUSY | KEEPDIRTY);
                     bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-                    bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-                    bp->ioqLn = -1;
-#endif
                 }
             }
 
@@ -3569,10 +3539,6 @@ bs_unpinpg(
         } else {
             bp->lock.state |= BUSY;
             bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-            bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-            bp->ioqLn = -1;
-#endif
         }
 
         /*
@@ -3752,10 +3718,6 @@ bs_unpinpg(
                         if (!sts) {
                             bp->lock.state |= (BUSY | KEEPDIRTY);
                             bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-                            bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-                            bp->ioqLn = -1;
-#endif
                         }
                     }
 
@@ -3779,10 +3741,6 @@ bs_unpinpg(
                 } else {
                    bp->lock.state |= BUSY;
                    bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-                   bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-                   bp->ioqLn = -1;
-#endif
                 }
             }
 
@@ -3873,10 +3831,6 @@ bs_unpinpg(
                             if (!sts) {
                                 bp->lock.state |= (BUSY | KEEPDIRTY);
                                 bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-                                bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-                                bp->ioqLn = -1;
-#endif
                             }
                         }
 
@@ -3902,10 +3856,6 @@ bs_unpinpg(
                     } else {
                         bp->lock.state |= BUSY;
                         bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-                        bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-                        bp->ioqLn = -1;
-#endif
                     }
                 }
 
@@ -4125,10 +4075,6 @@ bs_unpinpg(
 
             bp->lock.state |= BUSY;
             bp->ln = SET_LINE_AND_THREAD(__LINE__);
-#ifdef ADVFS_SMP_ASSERT
-            bp->busyLn = SET_LINE_AND_THREAD(__LINE__);
-            bp->ioqLn = -1;
-#endif
             mutex_exit( &bp->bufLock );
             bs_q_list( &bp->ioList.ioDesc[bp->ioList.write],
                        bp->ioList.writeCnt, 
@@ -5178,10 +5124,6 @@ startover:
         if (purge_buffer) {
            mutex_enter( &purge_buffer->bufLock );
            KASSERT(purge_buffer->lock.state & WRITING);
-#ifdef ADVFS_SMP_ASSERT
-           purge_buffer->busyLn = SET_LINE_AND_THREAD(__LINE__);
-           purge_buffer->ioqLn = -1;
-#endif
            purge_buffer->lock.state &= ~REMOVE_FROM_IOQ;
            bs_io_complete( purge_buffer, &s );
         }
@@ -5214,10 +5156,6 @@ startover:
     if (purge_buffer) {
        mutex_enter( &purge_buffer->bufLock );
        KASSERT(purge_buffer->lock.state & WRITING);
-#ifdef ADVFS_SMP_ASSERT
-       purge_buffer->busyLn = SET_LINE_AND_THREAD(__LINE__);
-       purge_buffer->ioqLn = -1;
-#endif
        purge_buffer->lock.state &= ~REMOVE_FROM_IOQ;
        bs_io_complete( purge_buffer, &s );
     }

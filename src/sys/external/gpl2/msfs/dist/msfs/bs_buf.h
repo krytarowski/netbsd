@@ -108,13 +108,6 @@ struct bsBuf {
     short ioCount;                /* number of outstanding I/O's */
     ioListT ioList;               /* buffer's block map info */
     ioDescT ioDesc;               /* if buf has one ioDesc, this is it */
-
-#ifdef ADVFS_SMP_ASSERT
-    struct vm_page *last_vmpage;        /* previous exchanged vm page struct */
-    long busyLn;                  /* Set when advfs_page_get(busy) is called */
-    long ioqLn;                   /* cleared(-1) on advfs_page_get(busy) */
-                                  /* and set at io completion time */
-#endif
 };
 
 #define BUFIODESC 1     /* How many ioDesc bsBuf contains */
