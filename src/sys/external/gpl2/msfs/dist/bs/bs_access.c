@@ -188,6 +188,9 @@ void * BsAccessHashTbl;
 
 extern int wait_for_vxlock2(struct vnode *  , int , int );
 
+void
+init_access(bfAccessT *bfap);
+
 /******************************************************************
 ***************  Utility routines ********************************
 ******************************************************************/
