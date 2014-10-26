@@ -1259,17 +1259,17 @@ domain_panic( struct domain *dmnP,
 
 void
 ms_printf(
-          char *msg, ...
+          const char *msg, ...
           );
 
 void
 ms_uprintf(
-          char *msg, ...
+          const char *msg, ...
           );
 
 void
 ms_uaprintf(
-          char *msg, ...
+          const char *msg, ...
           );
 
 void

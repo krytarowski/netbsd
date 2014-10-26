@@ -277,8 +277,7 @@ macro_sad(
  * write to console and syslog message buffer
  */
 void
-ms_printf(va_alist)
-         va_dcl
+ms_printf(...)
 {
     aprintf((char *)va_alist);
 }
@@ -288,9 +287,7 @@ ms_printf(va_alist)
  */
 #define PRFMAX 128
 void
-ms_uprintf(fmt, va_alist)
-    u_char *fmt;
-    va_dcl
+ms_uprintf(const char *fmt, ...)
 {
     va_list valist;
     int n;
@@ -322,9 +319,7 @@ ms_uprintf(fmt, va_alist)
  * Do both a uprintf() and a aprintf().
  */
 void
-ms_uaprintf(fmt, va_alist)
-    u_char *fmt;
-    va_dcl
+ms_uaprintf(const char *fmt, ...)
 {
     va_list valist;
     int n;
