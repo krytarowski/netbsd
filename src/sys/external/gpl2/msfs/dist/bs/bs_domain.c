@@ -5995,8 +5995,7 @@ bs_domain_init(
                                         DOMAIN_HASH_CHAIN_LENGTH,
                                         DOMAIN_HASH_ELEMENTS_TO_BUCKETS,
                                         DOMAIN_HASH_USECS_BETWEEN_SPLITS,
-                                        offsetof(domainT, dmnHashlinks),
-                                        NULL);
+                                        offsetof(domainT, dmnHashlinks));
 
     if (DomainHashTbl == NULL)
     {
