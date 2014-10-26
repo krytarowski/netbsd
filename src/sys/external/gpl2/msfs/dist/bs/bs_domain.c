@@ -5472,7 +5472,7 @@ dmn_dealloc(
         mutex_exit( &DmnTblMutex );
     }
 
-    KASSERT( BFSET_VALID(dmnP->bfSetDirp) ) 
+    KASSERT( BFSET_VALID(dmnP->bfSetDirp) );
 
     BFSETTBL_LOCK_WRITE( dmnP );
 

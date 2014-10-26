@@ -2122,7 +2122,7 @@ del_xtnt_array(
     }
     else if ((prp = 
               (bsXtntRT *)bmtr_find(mcp, BSR_XTNTS, vdp->dmnP)) != NULL) {
-        KASSERT(FIRST_XTNT_IN_PRIM_MCELL(dmnP->dmnVersion, prp->type))
+        KASSERT(FIRST_XTNT_IN_PRIM_MCELL(dmnP->dmnVersion, prp->type));
         fxp = &prp->firstXtnt.bsXA[0];
         xCnt = prp->firstXtnt.xCnt;
         *nextVdIndex = prp->chainVdIndex;
