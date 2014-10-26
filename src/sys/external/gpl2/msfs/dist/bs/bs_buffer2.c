@@ -4223,7 +4223,7 @@ bs_find_page( struct bfAccess *bfap,          /* in */
  */
 
 void
-_state_block(
+state_block(
     struct bsBuf *bp,   /* in - buffer on which to block */
     int *wait           /* in/out - waited previously? */
     )

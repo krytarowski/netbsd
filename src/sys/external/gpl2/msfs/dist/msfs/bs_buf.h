@@ -283,49 +283,14 @@ typedef enum { Ref=1, Deref=2, Pin=4, Unpin=8, DevRead=0x10,
         mutex_exit(&bp->bfAccess->bfIoLock); \
 }
 
-#ifdef ADVFS_DEBUG
-
-#define MS_VERIFY_IOQUEUE_INTEGRITY(qhdr,callerLocked) \
-{ \
-    if ( !(callerLocked) ) { \
-        mutex_enter(&(qhdr)->ioQLock); \
-    } \
-    check_queue( qhdr ); \
-    if ( !(callerLocked) ) { \
-        mutex_exit(&(qhdr)->ioQLock); \
-    } \
-}
-
-#else 
-
-#define MS_VERIFY_IOQUEUE_INTEGRITY(qhdr,callerLocked)
-
-#endif /* ADVFS_DEBUG */
-
 #define PGREF_EQL(x1, x2) \
     ( (x1) == (x2))
 
-#ifndef ADVFS_DEBUG
-#define state_block( bp, w ) _state_block( bp, w );
-
 void
-_state_block( 
+state_block(
     struct bsBuf *bp,   /* in - buffer on which to block */
     int *wait           /* in/out - waited previously? */
     );
-
-#else
-#define state_block( bp, w ) _state_block( bp, w, __LINE__, __FILE__ );
-
-void
-_state_block( 
-    struct bsBuf *bp,   /* in - buffer on which to block */
-    int *wait,          /* in/out - waited previously? */
-    int ln,
-    char *fn
-    );
-
-#endif  /* ADVFS_DEBUG */
 
 statusT
 bs_pinpg_ftx( bfPageRefHT *bfPageRefH,       /* out */

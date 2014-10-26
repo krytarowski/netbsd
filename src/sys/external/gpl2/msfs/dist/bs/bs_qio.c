@@ -313,7 +313,6 @@ bs_q_blocking(
     ioListp->bwd = vdp->blockingQ.bwd;
     vdp->blockingQ.bwd = tmp;
 
-    MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->blockingQ, TRUE);
 
     mutex_exit( &vdp->blockingQ.ioQLock );
 
@@ -394,7 +393,6 @@ bs_q_flushq(
     ioListp->bwd = vdp->flushQ.bwd;
     vdp->flushQ.bwd = tmp;
 
-    MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->flushQ, TRUE );
     mutex_exit( &vdp->flushQ.ioQLock );
 
     startiocalls[11]++;
@@ -476,7 +474,6 @@ bs_q_ubcreq(
     ioListp->bwd = vdp->ubcReqQ.bwd;
     vdp->ubcReqQ.bwd = tmp;
 
-    MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->ubcReqQ, TRUE );
 
     mutex_exit( &vdp->ubcReqQ.ioQLock );
 
@@ -1723,7 +1720,6 @@ bs_q_lazy(
      * of buffers before we start the device.
      */
     if ( vdp->consolQ.ioQLen ) {
-        MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->consolQ, FALSE );
         startiocalls[3]++;
         bs_startio( vdp, IO_SOMEFLUSH );
     } else {
@@ -1786,7 +1782,6 @@ bs_q_lazy(
             vdp->waitLazyQ.ioQLen += len;
             vdp->waitLazyQ.queue_cnt += len;
 
-            MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->waitLazyQ, TRUE );
             mutex_exit( &vdp->waitLazyQ.ioQLock );
             return;
         }
@@ -1798,7 +1793,6 @@ bs_q_lazy(
     } else {
         /* Sort ioDesc into readyLazyQ.  */
         sort_onto_readyq( vdp, ioListp, len, NULL, NULL );
-        MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->readyLazyQ, FALSE );
     }
 
 }
@@ -1906,13 +1900,11 @@ wait_to_readyq( struct vd *vdp )
         }
     }
 
-    MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->waitLazyQ, TRUE );
     mutex_exit( &vdp->waitLazyQ.ioQLock );
 
     if (tempQ_marker)
         ms_free(tempQ_marker);
 
-    MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->readyLazyQ, FALSE );
 
     /* If the readyLazyQ goes above the threshold, move some off. */
     if ( vdp->readyLazyQ.ioQLen >= vdp->readyLazyQ.lenLimit ) {
@@ -2009,7 +2001,6 @@ ready_to_consolq( struct vd *vdp )
         }
     }
 
-    MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->readyLazyQ, TRUE );
     mutex_exit( &vdp->readyLazyQ.ioQLock );
 
     if ( ioList == NULL ) {
@@ -2038,7 +2029,6 @@ ready_to_consolq( struct vd *vdp )
     HISTOGRAM_UPDATE( Rdy2ConsolSz, ioListLen );
 #endif
 
-    MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->consolQ, TRUE );
 
     mutex_exit( &vdp->consolQ.ioQLock );
 
@@ -2267,7 +2257,6 @@ sort_onto_readyq(
         if (vdp->readyLazyQ.ioQLen > 0)
             KASSERT(vdp->readyLazyQ.fwd != (ioDescT *)&vdp->readyLazyQ );
 
-        MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->readyLazyQ, TRUE );
         mutex_exit( &vdp->readyLazyQ.ioQLock );
 
         if (incoming_lockp)
@@ -2352,7 +2341,6 @@ sort_onto_readyq(
             if (vdp->readyLazyQ.ioQLen > 0)
                 KASSERT(vdp->readyLazyQ.fwd != (ioDescT *)&vdp->readyLazyQ );
 
-            MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->readyLazyQ, TRUE );
             mutex_exit( &vdp->readyLazyQ.ioQLock );
             mutex_exit( &vdp->tempQ.ioQLock );
 
@@ -2429,7 +2417,6 @@ sort_onto_readyq(
             if (vdp->readyLazyQ.ioQLen > 0)
                 KASSERT(vdp->readyLazyQ.fwd != (ioDescT *)&vdp->readyLazyQ );
 
-            MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->readyLazyQ, TRUE );
 
             continue;
         }
@@ -2498,7 +2485,6 @@ sort_onto_readyq(
             KASSERT(vdp->readyLazyQ.fwd != (ioDescT *)&vdp->readyLazyQ );
     }   /* end of subchain loop */
 
-    MS_VERIFY_IOQUEUE_INTEGRITY( &vdp->readyLazyQ, TRUE );
 
     mutex_exit( &vdp->readyLazyQ.ioQLock );
 
@@ -4916,7 +4902,6 @@ again:
             if ( qhdr != (ioDescHdrT *)&vdp->tempQ) {
                 KASSERT(qhdr->ioQLen > 0);
                 qhdr->ioQLen--;
-                MS_VERIFY_IOQUEUE_INTEGRITY( qhdr, lockflag );
             }
 
             /*
@@ -5067,7 +5052,6 @@ again:
             if ( qhdr != (ioDescHdrT *)&vdp->tempQ ) {
                 KASSERT(qhdr->ioQLen > 0);
                 qhdr->ioQLen--;
-                MS_VERIFY_IOQUEUE_INTEGRITY( qhdr, TRUE );
             }
             mutex_exit( lockptr );
         }
@@ -5691,7 +5675,6 @@ add_to_smsync(
             smsyncq->ioQLen++;
             smsyncq->queue_cnt++;
 
-            MS_VERIFY_IOQUEUE_INTEGRITY( smsyncq, TRUE );
 
             mutex_exit( &smsyncq->ioQLock );
             iop = next;
