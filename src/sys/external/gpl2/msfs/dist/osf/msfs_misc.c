@@ -1641,7 +1641,6 @@ msfs_getpage(
     vm_prot_t *protp,
     struct vm_page **pl,
     int plsz,
-    vm_policy_t vmp,
     int ubc_flags,
     struct uucred *cred )
 {
@@ -1776,7 +1775,7 @@ msfs_getpage(
 
         if (!writing) {
             error = bs_refpg_get(bfap, page, refHint,
-                                 pl, vmp, offset, len, ubc_flags);
+                                 pl, offset, len, ubc_flags);
             if (error) {
                 KASSERT(error != E_PAGE_NOT_MAPPED);
                 break;
@@ -1788,7 +1787,7 @@ msfs_getpage(
         }
         else {
             error = bs_pinpg_get(bfap, page, refHint,
-                                 pl, vmp, offset, len, ubc_flags);
+                                 pl, offset, len, ubc_flags);
             if (error) {
                 /* we could be writing a hole or a frag.  in most cases
                  * on the first unmapped page the call we make below to
@@ -1836,7 +1835,7 @@ msfs_getpage(
 have_storage:
                     /* we only retry 1 time and bail out if it fails */
                     error = bs_pinpg_get(bfap, page, refHint,
-                                         pl, vmp, offset, len, ubc_flags);
+                                         pl, offset, len, ubc_flags);
                     if (error)
                         break;
                 }

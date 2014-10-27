@@ -102,7 +102,6 @@ prefetch(
       ioDescT **ioListp,      /* out - list of ioDesc */
       int doRead,             /* in - do we (TRUE) or caller (FALSE) do read */
       short metaCheck,        /* in - metadata check type */
-      vm_policy_t vmp,        /* in - vm page locality */
       vm_offset_t offset,     /* in - starting offset */
       vm_size_t len,          /* in - number of bytes */
       int ubc_flags           /* in - ubc control */
@@ -119,7 +118,6 @@ bs_refpg_int(
          int getflag,                   /* in - is getpage the caller? */
          int fetchPages,                /* in */
          short metaCheck,               /* in - metadata check type */
-         vm_policy_t vmp,               /* in - vm page locality */
          vm_offset_t offset,            /* in - starting offset */
          vm_size_t len,                 /* in - number of bytes */
          int ubc_flags                  /* in - ubc control */
@@ -135,7 +133,6 @@ bs_pinpg_clone( bfPageRefHT *bfPageRefH,    /* out */
          ftxHT ftxH,                        /* in */
          int flag,                          /* in */
          short metaCheck,                   /* in - metadata check type */
-         vm_policy_t vmp,                   /* in - vm page locality */
          vm_offset_t offset,                /* in - starting offset */
          vm_size_t len,                     /* in - number of bytes */
          int ubc_flags                      /* in - ubc control */
@@ -151,7 +148,6 @@ bs_pinpg_found( bfPageRefHT *bfPageRefH,      /* out */
                struct vm_page *pp,                  /* in */
                int flag,                      /* in */
                short metaCheck,               /* in - metadata check type */
-               vm_policy_t vmp,               /* in - vm page locality */
                vm_offset_t offset,            /* in - starting offset */
                vm_size_t len,                 /* in - number of bytes */
                int ubc_flags                  /* in - ubc control */
@@ -167,7 +163,6 @@ bs_pinpg_newpage( bfPageRefHT *bfPageRefH,      /* out */
                  struct vm_page *pp,                  /* in */
                  int flag,                      /* in */
                  short metaCheck,               /* in - metadata check type */
-                 vm_policy_t vmp,               /* in - vm page locality */
                  vm_offset_t offset,            /* in - starting offset */
                  vm_size_t len,                 /* in - number of bytes */
                  int ubc_flags                  /* in - ubc control */
@@ -182,7 +177,6 @@ bs_pinpg_one_int( bfPageRefHT *bfPageRefH,  /* out */
          bfPageRefHintT refHint,            /* in */
          int flag,                          /* in */
          short metaCheck,                   /* in - metadata check type */
-         vm_policy_t vmp,                   /* in - vm page locality */
          vm_offset_t offset,                /* in - starting offset */
          vm_size_t len,                     /* in - number of bytes */
          int ubc_flags                      /* in - ubc control */
@@ -200,7 +194,6 @@ seq_ahead_cont(
     struct bsBuf *bp,       /* in */
     unsigned long bsPage,   /* in - bf page number */
     short metaCheck,        /* in - metadata check type */
-    vm_policy_t vmp,        /* in - vm page locality */
     vm_offset_t offset,     /* in - starting offset */
     vm_size_t len,          /* in - number of bytes */
     int ubc_flags           /* in - ubc control */
@@ -215,7 +208,6 @@ seq_ahead_start(
     ioDescT **ioListp,      /* out - list of ioDesc */
     unsigned long bsPage,   /* in - bf page number */
     short metaCheck,        /* in - metadata check type */
-    vm_policy_t vmp,        /* in - vm page locality */
     vm_offset_t offset,     /* in - starting offset */
     vm_size_t len,          /* in - number of bytes */
     int ubc_flags           /* in - ubc control */
@@ -229,7 +221,6 @@ seq_ahead( struct bfAccess *ap,         /* in */
             int *listLen,               /* in/out */
             ioDescT **ioListp,          /* out */
             short metaCheck,            /* in - metadata check type */
-            vm_policy_t vmp,            /* in - vm page locality */
             vm_offset_t offset,         /* in - starting offset */
             vm_size_t len,              /* in - number of bytes */
             int ubc_flags               /* in - ubc control */
@@ -760,7 +751,6 @@ bs_refpg_get(
          unsigned long bsPage,          /* in - bf page number */
          bfPageRefHintT refHint,        /* in - hint to do read ahead */
          struct vm_page **pp,                 /* out - vm_page struct pointer */
-         vm_policy_t vmp,               /* in - vm page locality */
          vm_offset_t offset,            /* in - future use */
          vm_size_t len,                 /* in - future use */
          int ubc_flags                  /* in - ubc control */
@@ -772,7 +762,7 @@ bs_refpg_get(
     
     sts = bs_refpg_int( (bfPageRefHT *)&bp, &bfPageAddr,
                          bfap, bsPage, refHint, TRUE, 0, BSBUF_CHK_NONE,
-                         vmp, offset, len, ubc_flags);
+                         offset, len, ubc_flags);
 
     if (sts == EOK)
         *pp = bp->vmpage;
@@ -866,7 +856,6 @@ bs_refpg_newpage(
                  struct vm_page *pp,                /* in - UBC page pointer */
                  int fetchPages,              /* in - # of pages to prefetch */
                  short metaCheck,             /* in - metadata check type */
-                 vm_policy_t vmp,             /* in - vm page locality */
                  vm_offset_t offset,          /* in - starting offset */
                  vm_size_t len,               /* in - number of bytes */
                  int ubc_flags                /* in - ubc control */
@@ -1004,10 +993,10 @@ bs_refpg_newpage(
     if( DoReadAhead && refHint == BS_SEQ_AHEAD) {
         if( fetchPages ) {
             prefetch(bfap, bsPage + 1, fetchPages, &listLen, &ioListp, FALSE,
-                     metaCheck, vmp, offset, len, ubc_flags);
+                     metaCheck, offset, len, ubc_flags);
         } else {
             seq_ahead_start(bfap, bp, &listLen, &ioListp, bsPage, metaCheck,
-                            vmp, offset, len, ubc_flags);
+                            offset, len, ubc_flags);
         }
     }
 
@@ -1078,7 +1067,6 @@ bs_refpg_int(
          int getflag,                /* in - is msfs_getpage() the caller? */
          int fetchPages,             /* in */
          short metaCheck,            /* in - metadata check type */
-         vm_policy_t vmp,            /* in - vm page allocation locality */
          vm_offset_t offset,         /* in - starting offset for read */
          vm_size_t len,              /* in - number of bytes to read */
          int ubc_flags               /* in - ubc control */
@@ -1144,8 +1132,7 @@ bs_refpg_int(
                      ADVFS_PGSZ,      /* Block size*/
                      ADVFS_PGSZ,      /* Request byte length */
                      &pp,             /* UBC page */
-                     &flags,
-                     vmp);            /* vm policy */
+                     &flags);
 
     if ( sts ) {
         goto exit;
@@ -1195,10 +1182,10 @@ bs_refpg_int(
             if (DoReadAhead && refHint == BS_SEQ_AHEAD) {
                 if ( fetchPages ) {
                     prefetch(bfap, bsPage + 1, fetchPages, &listLen, &ioListp,
-                             TRUE, metaCheck, vmp, offset, len, ubc_flags);
+                             TRUE, metaCheck, offset, len, ubc_flags);
                 } else if (bsPage) {
                     seq_ahead_cont(bfap, bp, bsPage, metaCheck,
-                                   vmp, offset, len, ubc_flags);
+                                   offset, len, ubc_flags);
                 }
             }
         }
@@ -1216,7 +1203,7 @@ bs_refpg_int(
 
         sts = bs_refpg_newpage(bfPageRefH, bfPageAddr, bfap, bsPage, refHint,
                                flag, pp, fetchPages, metaCheck,
-                               vmp, offset, len, ubc_flags);
+                               offset, len, ubc_flags);
         /* Update statistics counters. */
         if (advfsstats) 
             AdvfsUbcMiss++;
@@ -1760,7 +1747,6 @@ bs_pinpg_get(
          unsigned long bsPage,          /* in - bf page number */
          bfPageRefHintT refHint,        /* in - hint to do read ahead */
          struct vm_page **pp,                 /* out - vm_page struct pointer */
-         vm_policy_t vmp,               /* in - vm page locality */
          vm_offset_t offset,            /* in - future use */
          vm_size_t len,                 /* in - future use */
          int ubc_flags                  /* in - ubc control */
@@ -1779,7 +1765,7 @@ retry_lookup:
     /* This pin avoids the cowing code; already done in msfs_getpage() */
     sts = bs_pinpg_one_int( (bfPageRefHT *)&bp, &bfPageAddr,
                             bfap, bsPage, refHint, PINPG_NOFLAG,
-                            BSBUF_CHK_NONE, vmp, offset, len, ubc_flags );
+                            BSBUF_CHK_NONE, offset, len, ubc_flags );
 
     /* Now that the struct vm_page *is pinned, decrement the 
      * associated bsBuf's write counter since no bs_unpinpg() is 
@@ -2167,7 +2153,6 @@ bs_pinpg_clone( bfPageRefHT *bfPageRefH,   /* out */
          ftxHT ftxH,                       /* in */
          int flag,                         /* in */
          short metaCheck,                  /* in - metadata check type */
-         vm_policy_t vmp,                  /* in - vm page locality */
          vm_offset_t offset,               /* in - starting offset */
          vm_size_t len,                    /* in - number of bytes */
          int ubc_flags                     /* in - ubc control */
@@ -2193,7 +2178,7 @@ bs_pinpg_clone( bfPageRefHT *bfPageRefH,   /* out */
 
     return( bs_pinpg_one_int( bfPageRefH, bfPageAddr, bfap,
                               bsPage, refHint, flag, metaCheck,
-                              vmp, offset, len, ubc_flags ) );
+                              offset, len, ubc_flags ) );
 }
 
 /*
@@ -2412,7 +2397,6 @@ bs_pinpg_one_int(
                  bfPageRefHintT refHint,        /* in */
                  int flag,                      /* in */
                  short metaCheck,               /* in - metadata check type */
-                 vm_policy_t vmp,               /* in - vm page locality */
                  vm_offset_t offset,            /* in - future use */
                  vm_size_t len,                 /* in - future use */
                  int ubc_flags                  /* in - ubc control */
@@ -2439,8 +2423,7 @@ bs_pinpg_one_int(
                      ADVFS_PGSZ,      /* Block size*/
                      ADVFS_PGSZ,      /* Request byte length */
                      &pp,             /* UBC page */
-                     &uflags,
-                     vmp);            /* vm policy */
+                     &uflags);
 
     /*  Exit on error or when DirectIO requests encounter a cache miss.
      *  DirectIO only wants existing cache pages.
@@ -2473,7 +2456,7 @@ bs_pinpg_one_int(
         }
 
         sts = bs_pinpg_found(bfPageRefH, bfPageAddr, bfap, bsPage, refHint,
-                             pp, flag, metaCheck, vmp, offset, len, ubc_flags);
+                             pp, flag, metaCheck, offset, len, ubc_flags);
         /* Update statistics counters. */
         if (advfsstats) 
             AdvfsUbcHit++;
@@ -2486,7 +2469,7 @@ bs_pinpg_one_int(
          */
         sts = bs_pinpg_newpage(bfPageRefH, bfPageAddr, bfap, bsPage, refHint,
                                pp, flag, metaCheck,
-                               vmp, offset, len, ubc_flags);
+                               offset, len, ubc_flags);
         /* Update statistics counters. */
         if (advfsstats) 
             AdvfsUbcMiss++;
@@ -2534,7 +2517,6 @@ bs_pinpg_found(
                struct vm_page *pp,                  /* in */
                int flag,
                short metaCheck,               /* in - metadata check type */
-               vm_policy_t vmp,               /* in - vm page locality */
                vm_offset_t offset,            /* in - future use */
                vm_size_t len,                 /* in - future use */
                int ubc_flags                  /* in - ubc control */
@@ -2737,7 +2719,7 @@ bs_pinpg_found(
     /* Check to do read ahead. */
     if (DoReadAhead && refHint == BS_SEQ_AHEAD && bsPage) {
         seq_ahead_cont(bfap, bp, bsPage, metaCheck,
-                       vmp, offset, len, ubc_flags);
+                       offset, len, ubc_flags);
     }
 
     /* UBC page (pg_hold counter) reference remains until bs_unpinpg. */
@@ -2766,7 +2748,6 @@ bs_pinpg_newpage(
                  struct vm_page *pp,                  /* in */
                  int flag,
                  short metaCheck,               /* in - metadata check type */
-                 vm_policy_t vmp,               /* in - vm page locality */
                  vm_offset_t offset,            /* in - future use */
                  vm_size_t len,                 /* in - future use */
                  int ubc_flags                  /* in - ubc control */
@@ -2873,7 +2854,7 @@ bs_pinpg_newpage(
     /* If reading ahead, attempt to create a read ahead list of buffers. */
     if ( DoReadAhead && refHint == BS_SEQ_AHEAD ) {
         seq_ahead_start(bfap, bp, &listLen, &ioListp, bsPage, metaCheck,
-                        vmp, offset, len, ubc_flags);
+                        offset, len, ubc_flags);
     }
 
     /* Perform the I/O;  ioList is protected by IO_TRANS state. */
@@ -4145,7 +4126,7 @@ bs_find_page( struct bfAccess *bfap,          /* in */
                        PAGE_SIZE,
                        &pp,
                        &rflags,
-                       0 ); /* only checking existence so default vm_policy */
+                       0 );
 
     if (error) {
         return( 0 );
@@ -4454,7 +4435,6 @@ seq_ahead_cont(
     struct bsBuf *bp,       /* in */
     unsigned long bsPage,   /* in - bf page number */
     short metaCheck,        /* in - metadata check type */
-    vm_policy_t vmp,        /* in - vm page locality */
     vm_offset_t offset,     /* in - starting offset */
     vm_size_t len,          /* in - number of bytes */
     int ubc_flags           /* in - ubc control */
@@ -4545,7 +4525,7 @@ seq_ahead_cont(
         mutex_exit( &bfap->bfIoLock );
 
         seq_ahead(bfap, startPage, numBlocks, &listLen, &ioListp, metaCheck,
-                  vmp, offset, len, ubc_flags);
+                  offset, len, ubc_flags);
 
         if( listLen ) {
             if( listLen > 1 ) {
@@ -4570,7 +4550,6 @@ prefetch(
     ioDescT **ioListp,      /* out - list of ioDesc */
     int doRead,             /* in - do we (TRUE) or caller (FALSE) do read */
     short metaCheck,        /* in - metadata check type */
-    vm_policy_t vmp,        /* in - vm page locality */
     vm_offset_t offset,     /* in - starting offset */
     vm_size_t len,          /* in - number of bytes */
     int ubc_flags           /* in - ubc control */
@@ -4588,7 +4567,7 @@ prefetch(
      */
 
     seq_ahead(bfap, bsPage, blkCnt, listLen, ioListp, metaCheck,
-              vmp, offset, len, ubc_flags);
+              offset, len, ubc_flags);
 
     if ( doRead && *listLen ) {
         if( *listLen > 1 ) {
@@ -4615,7 +4594,6 @@ seq_ahead_start(
     ioDescT **ioListp,      /* out - list of ioDesc */
     unsigned long bsPage,   /* in - bf page number */
     short metaCheck,        /* in - metadata check type */
-    vm_policy_t vmp,        /* in - vm page locality */
     vm_offset_t offset,     /* in - starting offset */
     vm_size_t len,          /* in - number of bytes */
     int ubc_flags           /* in - ubc control */
@@ -4704,7 +4682,7 @@ seq_ahead_start(
     mutex_exit( &bfap->bfIoLock );
 
     seq_ahead(bfap, bsPage + 1, numBlocks, listLen, ioListp, metaCheck,
-              vmp, offset, len, ubc_flags);
+              offset, len, ubc_flags);
 
 }
 
@@ -4731,7 +4709,6 @@ seq_ahead( struct bfAccess *bfap,       /* in */
             int *listLen,               /* in/out */
             ioDescT **ioListp,          /* out */
             short metaCheck,            /* in - metadata check type */
-            vm_policy_t vmp,            /* in - vm page locality */
             vm_offset_t offset,         /* in - starting offset */
             vm_size_t len,              /* in - number of bytes */
             int ubc_flags               /* in - ubc control */
@@ -4834,8 +4811,7 @@ seq_ahead( struct bfAccess *bfap,       /* in */
                          ADVFS_PGSZ,      /* Block size*/
                          ADVFS_PGSZ,      /* Request byte length */
                          &pp,             /* UBC page */
-                         &flags,
-                         vmp);            /* vm policy */
+                         &flags);
 
         if (sts) {
             return;

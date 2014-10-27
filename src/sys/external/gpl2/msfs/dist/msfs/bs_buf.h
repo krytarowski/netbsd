@@ -300,7 +300,6 @@ bs_refpg_get(
          unsigned long bsPage,          /* in - bf page number */
          bfPageRefHintT refHint,        /* in - hint to do read ahead */
          struct vm_page **pp,                 /* out - vm_page struct pointer */
-         vm_policy_t policy,            /* in - vm page locality */
          vm_offset_t offset,            /* in - ubc hint */
          vm_size_t len,                 /* in - ubc hint */
          int ubc_flags                  /* in - ubc hint */
@@ -323,7 +322,6 @@ bs_pinpg_get(
          unsigned long bsPage,          /* in - bf page number */
          bfPageRefHintT refHint,        /* in - hint to do read ahead */
          struct vm_page **pp,                 /* out - vm_page struct pointer */
-         vm_policy_t policy,            /* in - vm page locality */
          vm_offset_t offset,            /* in - ubc hint */
          vm_size_t len,                 /* in - ubc hint */
          int ubc_flags                  /* in - ubc hint */
