@@ -2579,28 +2579,3 @@ msfs_log_and_meta_flush(struct uvm_object* vop,
     }
 
 }
-
-
-#ifdef __GNUC__
-/*
- * GCC can insert calls to memset into the assembly language
- * output during character array initialization.
- */
-void memset(
-    void *s,
-    int c,
-    size_t n
-    )
-{
-    char *p;
-    int i;
-
-    p = (char *)s;
-    i = n;
-
-    while (i-- > 0) {
-        *p = c;
-        p++;
-    }
-}
-#endif __GNUCC__
