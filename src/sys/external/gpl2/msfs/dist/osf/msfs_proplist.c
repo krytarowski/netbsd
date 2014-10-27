@@ -67,21 +67,6 @@ extern struct sec_prop_attrs *sec_proplist(char *);
  */
 
 /*
- * debugging
- */
-#ifdef ADVFS_PROPLIST_DEBUG
-int MsfsPlTraceLevel = 0;
-#define DEBUG(level, action) \
-MACRO_BEGIN			\
-	if ((MsfsPlTraceLevel>=level))		\
-            (action);		\
-MACRO_END	
-#else 
-#define DEBUG(level, action)
-#endif /* ADVFS_PROPLIST_DEBUG */
-
-
-/*
  * name/value limits
  */
 int MsfsPlMaxLen = BSR_PL_MAX_LARGE;
@@ -572,9 +557,6 @@ msfs_pl_register_agents()
 {
   statusT sts;
 
-  DEBUG(1,
-	printf("msfs_pl_register_agents\n"));
-
   sts = ftx_register_agent_n2(
 			      FTA_MSFS_SETPROPLIST,
 			      NULL,
@@ -646,10 +628,6 @@ msfs_pl_init_cur(
 		 bfMCIdT   MC                   /* in     */
 		 )
 {
-
-  DEBUG(2,
-	printf("msfs_pl_init_cur\n"));
-
   cur->VD = VD;
   cur->MC = MC;
   cur->pgoff = CELL_TO_PGOFF(cur->MC.cell);
@@ -679,9 +657,6 @@ msfs_pl_cur_to_pnt(
 {
   statusT sts = EOK;
 
-  DEBUG(2,
-	printf("msfs_pl_cur_to_pnt\n"));
-
   if (cur->bmtp == NULL) {
     sts = bmt_refpg(
 		   &cur->pgRef,
@@ -709,9 +684,6 @@ msfs_pl_deref_cur(
 		  bsRecCurT *cur                /* in/out */
 		  )
 {
-  DEBUG(2,
-	printf("msfs_pl_deref_cur\n"));
-
   if (!PGREF_EQL(cur->pgRef, NilBfPageRefH)) {
     (void) bs_derefpg(cur->pgRef, BS_CACHE_IT);
     cur->pgRef = NilBfPageRefH;
@@ -734,9 +706,6 @@ msfs_pl_pin_cur(
 		)
 {
   statusT sts = EOK;
-
-  DEBUG(2,
-	printf("msfs_pl_pin_cur\n"));
 
   if (!cur->is_pined) {
     sts = rbf_pinpg(
@@ -778,14 +747,7 @@ msfs_pl_seek_cur(
   int     first_pass = TRUE;
   statusT sts        = EOK;
 
-  DEBUG(2,
-	printf("msfs_pl_seek_cur\n"));
-
   while (!RECCUR_ISNIL(*cur)) {
-
-    DEBUG(3,
-	  printf("search page %d cell %d\n", cur->MC.page, cur->MC.cell));
-
     /*
      * search current mcell for next record of type rtype
      */
@@ -813,8 +775,6 @@ msfs_pl_seek_cur(
      */
     if (mrecp->type != BSR_NIL) {
       cur->pgoff = ((caddr_t)MREC_TO_REC(mrecp)) - ((caddr_t)cur->bmtp);
-      DEBUG(3,
-	    printf("found page %d cell %d\n", cur->MC.page, cur->MC.cell));
       
       if((cur->pgoff > (ADVFS_PGSZ-sizeof(bsMRT))) ||
          (cur->MC.cell >= BSPG_CELLS)) {
@@ -832,8 +792,6 @@ msfs_pl_seek_cur(
 
   } /* while (!RECCUR_ISNIL(*cur)) */
 
-  DEBUG(3,
-	printf("record not found\n"));
   return sts;
 } /* msfs_pl_seek_cur() */
 
@@ -852,9 +810,6 @@ msfs_pl_next_mc_cur(
   bfMCIdT  nextMC;
   statusT sts = EOK;
   
-  DEBUG(2,
-	printf("msfs_pl_next_mc_cur\n"));
-
   (void) msfs_pl_cur_to_pnt(domain, cur, &sts);
   if (sts != EOK) {
       return sts;
@@ -935,9 +890,6 @@ msfs_setproplist_int(
         advfs_opT *advfs_op;
         mlBfAttributesT *bfattrp = NULL;
 
-	DEBUG(1, 
-	      printf("msfs_setproplist_int\n"));
-
 	bfAccess = VTOA(vp);
 
 	/*
@@ -967,16 +919,8 @@ msfs_setproplist_int(
 				SIZEOF_PROPLIST_HEAD,
 				uiop);
 		if (error) {
-			DEBUG(1,
-			      printf("msfs_setproplist_int: header uiuomove\n"));
 			goto out;
 		}
-
-		DEBUG(2,
-		      printf("msfs_setproplist_int:flags %x namelen %d valuelen %d\n",
-			     proplist_headp->pl_flags,
-			     proplist_headp->pl_namelen,
-			     proplist_headp->pl_valuelen));
 
 		entry_resid = proplist_headp->pl_entrysize -
 			SIZEOF_PROPLIST_HEAD;
@@ -999,8 +943,6 @@ msfs_setproplist_int(
 		     MsfsPlMaxLen) ||
 		    (entry_resid > uiop->uio_resid)
 		    ) {
-			DEBUG(1,
-			      printf("msfs_setproplist_int: Header invalid\n"));
 			error = EINVAL;
 			goto out;
 		}
@@ -1011,8 +953,6 @@ msfs_setproplist_int(
 		error = uiomove((caddr_t)proplist_headp->pl_name,
 				rounded_namelen, uiop);
 		if (error) {
-			DEBUG(1,
-			      printf("msfs_setproplist_int: name uiomove\n"));
 			goto out;
 		}
 		entry_resid -= rounded_namelen;
@@ -1022,8 +962,6 @@ msfs_setproplist_int(
 		 */
 		if ((strlen(proplist_headp->pl_name) + 1) !=
 		    proplist_headp->pl_namelen) {
-			DEBUG(1,
-			      printf("msfs_setproplist_int: Name invalid\n"));
 			error = EINVAL;
 			goto out;
 		}
@@ -1300,9 +1238,6 @@ msfs_pl_set_entry(
       cow_read_locked=FALSE,
       trunc_xfer_locked=FALSE;
 
-  DEBUG(1,
-	printf("msfs_pl_set_entry\n"));
-
   sec_info.sec_type = NULL;
 
   hdr_image = (char *) ms_malloc_waitok( BSR_PROPLIST_PAGE_SIZE );
@@ -1411,10 +1346,6 @@ msfs_pl_set_entry(
    */
 
   if (got_name) {
-
-    DEBUG(2,
-	  printf("msfs_pl_set_entry: found existing %s\n", name_buf));
-
     /*
      * advance hdr to beyond end of current entry,
      * new entry goes after
@@ -1433,11 +1364,6 @@ msfs_pl_set_entry(
     }
 
     rdr.end = *((bsOdRecCurT *) &hdr);
-
-    DEBUG(2,
-	  printf("msfs_pl_set_entry: del prev %d hdr %d end %d\n", 
-		 rdr.hdr.prevMC.cell, rdr.hdr.MC.cell, rdr.end.MC.cell));
-
     rdr.mcellList_lk = &bfAccess->mcellList_lk;
     root_done = TRUE;
 
@@ -1575,8 +1501,6 @@ msfs_pl_set_entry(
        * successful completion.
        */
 
-      DEBUG(1,
-	    printf("msfs_pl_set_entry: deleting alloc'ed mcells\n"));
       if (sync) {
           ftx_special_done_mode(ftx, FTXDONE_LOGSYNC);
       }
@@ -1596,8 +1520,6 @@ msfs_pl_set_entry(
       /* success - delete old property list duplicates chain
        * with the root done.
        */
-      DEBUG(1,
-	    printf("msfs_pl_set_entry: deleting existing entry\n"));
       if (sync) {
           ftx_special_done_mode(ftx, FTXDONE_LOGSYNC);
       }
@@ -1672,16 +1594,10 @@ msfs_pl_fill_hdr_image(
 {
   int error = 0, name_xfer, data_xfer;
 
-  DEBUG(1,
-	printf("msfs_pl_fill_hdr_image\n"));
-
   /*
    * header info
    */
   hdr_image->flags = flags;
-
-  DEBUG(2,
-	printf("hdr_image->flags %lx\n", hdr_image->flags));
 
   hdr_image->pl_num = pl_num; 
 
@@ -1724,11 +1640,6 @@ msfs_pl_create_rec(
     bsMRT *mrecp;
     statusT sts;
 
-    DEBUG(1,
-	  printf("msfs_pl_create_rec\n"));
-    DEBUG(2,
-	  printf("obj %lx size %d type %d\n", obj, size, type));
-
     /*
      * move cur onto it and pin
      */
@@ -1750,8 +1661,6 @@ msfs_pl_create_rec(
      * fill in record header and empty record after
      */
     dat_rec = (caddr_t) msfs_pl_cur_to_pnt(bfAccess->dmnP, cur, &sts);
-    DEBUG(3,
-	  printf("dat_rec %lx\n", dat_rec));
     if (sts == EOK) {
         mrecp = REC_TO_MREC(dat_rec);
         mrecp->type = type;
@@ -1766,12 +1675,6 @@ msfs_pl_create_rec(
          * fill in data
          */
         bcopy(obj, dat_rec, size);
-
-        DEBUG(2,
-              printf("msfs_pl_create_rec cell %d size %d type %d\n", 
-                     cur->MC.cell, 
-                     size,
-                     type));
     }
     return sts;
 }
@@ -1818,9 +1721,6 @@ msfs_pl_findhead_setdata(
   uint64T          flags;
   statusT          sts=EOK;
   caddr_t          recp;
-
-  DEBUG(1,
-	printf("msfs_pl_findhead_setdata\n"));
 
   *mcells_alloced = 0;
 
@@ -1923,9 +1823,6 @@ msfs_pl_findhead_setdata(
 	  mrecp = NEXT_MREC(mrecp);
 	}
 	space = BSC_R_SZ - ((caddr_t)mrecp - (caddr_t)top) - 2*sizeof(bsMRT);
-	DEBUG(2,
-	      printf("free space in VD %d page %d cell %d is %d\n",
-		     hdr->VD, hdr->MC.page, hdr->MC.cell, space));
       }
     } while (
 	     (!RECCUR_ISNIL(*hdr)) &&
@@ -2082,10 +1979,6 @@ msfs_pl_findhead_setdata(
   i = 0;
   while (((name_resid + data_resid) > 0) && i++ < alloced) {
 
-    DEBUG(2,
-	  printf("name_resid %d data_resid %d\n", name_resid, data_resid));
-
-
     dat_rec->pl_num = pl_num;
     dat_rec->pl_seg = i-1;
 
@@ -2167,9 +2060,6 @@ msfs_pl_alloc_mcell(
     delPropRootDoneT rdr;
     int i;
 
-  DEBUG(1,
-	printf("msfs_pl_alloc_mcell: %u mcells\n", nmcell));
-
   if (nmcell == 0) return 0;
 
   sts = FTX_START_N(FTA_MSFS_ALLOC_MCELL, &subftx, ftx, bfAccess->dmnP, 0);
@@ -2190,11 +2080,6 @@ msfs_pl_alloc_mcell(
 				  (size > BSR_PROPLIST_DATA_SIZE ?
 				   BMT_NORMAL_MCELL_PAGE : BMT_NORMAL_MCELL)
 				  );
-    if (sts == EOK)  DEBUG(1,
-      printf ( "old VD.MC-page.cell = %d.%d.%d   new VD.MC-page.cell = %d.%d.%d\n",
-      cur->VD, cur->MC.page, cur->MC.cell, VD, MC.page, MC.cell ));
-    else DEBUG(1,
-      printf ( "allocate_link_new_mcell failed - %d\n", sts ));
 
     /* save end of chain in case dealloc necessary */
     if (i == 0) {
@@ -2373,9 +2258,6 @@ msfs_getproplist_int(
         int clu_clxtnt_locked=FALSE,
             cow_read_locked=FALSE,
             trunc_xfer_locked=FALSE;
-
-	DEBUG(1,
-	      printf("msfs_getproplist_int\n"));
 
 	bfAccess = VTOA(vp);
 
@@ -2561,9 +2443,6 @@ msfs_pl_get_entry(
   statusT sts = EOK;
   bfAccessT *bfAccess = VTOA(vp);
 
-  DEBUG(1,
-	printf("msfs_pl_get_entry\n"));
-
   /*
    * if entry deleted, exit
    */
@@ -2612,9 +2491,6 @@ msfs_pl_get_entry(
     /*
      * found one
      */
-    DEBUG(2,
-	  printf("msfs_pl_get_entry found %s\n",name_buf));
-  
     sec_info->sec_type = sec_proplist(name_buf);
 
   /*
@@ -2716,9 +2592,6 @@ msfs_pl_get_name(
   int resid, xfer, namelen;
   statusT sts;
 
-  DEBUG(1,
-	printf("msfs_pl_get_name\n"));
-
   /*
    * portion in the header
    */
@@ -2754,11 +2627,6 @@ msfs_pl_get_name(
     resid -= xfer;
   }
 
-  if (sts != EOK)
-      DEBUG(2, printf("error encountered. sts = %d\n", sts));
-  else 
-      DEBUG(2, printf("name is %s\n", buffer));
-
   return sts;
 
 } /* msfs_pl_get_name() */
@@ -2790,10 +2658,6 @@ msfs_pl_get_data(
   int sec_data_offset = 0;
   int nbytes = data_resid;
   statusT sts;
-
-  DEBUG(1,
-	printf("msfs_pl_get_data\n"));
-
 
   /*
    * get portion in header record
@@ -2851,10 +2715,6 @@ msfs_pl_get_data(
    * cell containing name data
    */
   while (data_resid > 0) {
-
-    DEBUG(2,
-	  printf("reading data chain, data_resid %d\n", data_resid));
-
     if (!first) {
       error = msfs_pl_seek_cur(domain, hdr, BSR_PROPLIST_DATA);
       if (error != EOK) {
@@ -3018,9 +2878,6 @@ msfs_delproplist_int(
   int clu_clxtnt_locked=FALSE,
       cow_read_locked=FALSE,
       trunc_xfer_locked=FALSE;
-
-  DEBUG(1,
-	printf("msfs_pl_delproplist_int\n"));
 
   name_buf = (char *) ms_malloc_waitok( PROPLIST_NAME_MAX + 1);
 
@@ -3306,19 +3163,11 @@ msfs_pl_del_root_done_int(
 
  /* TODO: modify to return status */ 
 
-  DEBUG(1,
-	printf("msfs_pl_del_root_done\n"));
-
   /*
    * recover pointer root-done and domain pointers
    */
   bcopy(address, &rdr, sizeof(delPropRootDoneT));
 
-  DEBUG(2,
-	printf(
-	       "hdr %d\n",
-	       rdr.hdr.MC.cell 
-	       ));
   /*
    * add mcell chain lock to locks that are released after root done,
    * avoid unlocking during recovery
@@ -3408,12 +3257,6 @@ msfs_pl_del_data_chain(
   statusT sts = EOK;
   mcellPtrRecT fbfm[1];
 
-  DEBUG(1,
-	printf("msfs_pl_del_data_chain: prev %d.%d.%d hdr %d.%d.%d end %d.%d.%d\n",
-	       hdr->prevVD, hdr->prevMC.page, hdr->prevMC.cell,
-	       hdr->VD, hdr->MC.page, hdr->MC.cell,
-               end->VD, end->MC.page, end->MC.cell));
-       
   /*
    * remove data cells from prim chain
    */
@@ -3469,9 +3312,6 @@ msfs_pl_unlink_mcells(
   rbfPgRefHT prevPgPin;
   statusT sts = EOK;
   vdT *vd;
-
-  DEBUG(1,
-	printf("msfs_pl_unlink_mcells\n"));
 
   vd = VD_HTOP(prevVdIndex, domain);
 
@@ -3576,9 +3416,6 @@ msfs_pl_set_entry_v3(
       cow_read_locked=FALSE,
       trunc_xfer_locked=FALSE;
 
-  DEBUG(1,
-	printf("msfs_pl_set_entry_v3\n"));
-
   sec_info.sec_type = NULL;
 
   hdr_image = (char *) ms_malloc_waitok( BSR_PROPLIST_PAGE_SIZE );
@@ -3659,10 +3496,6 @@ msfs_pl_set_entry_v3(
    * if found, delete entry with root done
    */
   if (!RECCUR_ISNIL(hdr)) {
-
-    DEBUG(2,
-	  printf("msfs_pl_set_entry_v3: found existing %s\n", name_buf));
-
     /*
      * advance hdr to beyond end of current entry,
      * new entry goes after
@@ -3676,11 +3509,6 @@ msfs_pl_set_entry_v3(
     }
 
     rdr.end = *((bsOdRecCurT *) &hdr);
-
-    DEBUG(2,
-	  printf("msfs_pl_set_entry_v3: del prev %d hdr %d end %d\n", 
-		 rdr.hdr.prevMC.cell, rdr.hdr.MC.cell, rdr.end.MC.cell));
-
     rdr.mcellList_lk = &bfAccess->mcellList_lk;
     root_done = TRUE;
   }
@@ -3808,8 +3636,6 @@ msfs_pl_set_entry_v3(
        * rootdone, which has already been logged by FTA_MSFS_ALLOC_MCELL's 
        * successful completion.
        */
-      DEBUG(1,
-	    printf("msfs_pl_set_entry_v3: deleting alloc'ed mcells\n"));
       ftx_done_urd(ftx, FTA_MSFS_SETPROPLIST, 0, NULL, 0, NULL);
       MCELLIST_UNLOCK( &(bfAccess->mcellList_lk) );
     }
@@ -3826,9 +3652,6 @@ msfs_pl_set_entry_v3(
       /* success - delete old property list duplicates chain
        * with the root done.
        */
-      DEBUG(1,
-	    printf("msfs_pl_set_entry_v3: deleting existing entry\n"));
-      
       ftx_done_urd(ftx, FTA_MSFS_SETPROPLIST, 0, NULL,
 		   sizeof(rdr), &rdr);
 
@@ -3890,17 +3713,10 @@ msfs_pl_fill_hdr_image_v3(
 {
   int error = 0, name_xfer, data_xfer;
 
-  DEBUG(1,
-	printf("msfs_pl_fill_hdr_image_v3\n"));
-
   /*
    * header info
    */
   hdr_image->flags = flags;
-
-  DEBUG(2,
-	printf("hdr_image->flags %lx\n", hdr_image->flags));
-
   hdr_image->namelen = hp->pl_namelen;
   hdr_image->valuelen = hp->pl_valuelen;
 
@@ -3952,9 +3768,6 @@ msfs_pl_findhead_setdata_v3(
   uint64T flags;
   int alloced=0, i;
   statusT sts=EOK;
-
-  DEBUG(1,
-	printf("msfs_pl_findhead_setdata_v3\n"));
 
   *mcells_alloced = 0;
 
@@ -4062,9 +3875,6 @@ msfs_pl_findhead_setdata_v3(
 	  mrecp = NEXT_MREC(mrecp);
 	}
 	space = BSC_R_SZ - ((caddr_t)mrecp - (caddr_t)top) - 2*sizeof(bsMRT);
-	DEBUG(2,
-	      printf("free space in VD %d page %d cell %d is %d\n",
-		     hdr->VD, hdr->MC.page, hdr->MC.cell, space));
       }
     } while (
 	     (!RECCUR_ISNIL(*hdr)) &&
@@ -4226,10 +4036,6 @@ msfs_pl_findhead_setdata_v3(
    */
   i = 0;
   while (((name_resid + data_resid) > 0) && i++ < alloced) {
-
-    DEBUG(2,
-	  printf("name_resid %d data_resid %d\n", name_resid, data_resid));
-
     /*
      * name portion
      */
@@ -4306,9 +4112,6 @@ msfs_getproplist_int_v3(
         int clu_clxtnt_locked=FALSE,
             cow_read_locked=FALSE,
             trunc_xfer_locked=FALSE;
-
-	DEBUG(1,
-	      printf("msfs_getproplist_int_v3\n"));
 
 	bfAccess = VTOA(vp);
 
@@ -4468,9 +4271,6 @@ msfs_pl_get_entry_v3(
   uint64T rdflags;
   statusT sts;
 
-  DEBUG(1,
-	printf("msfs_pl_get_entry_v3\n"));
-
   /*
    * if entry deleted, exit
    */
@@ -4515,9 +4315,6 @@ msfs_pl_get_entry_v3(
     /*
      * found one
      */
-    DEBUG(2,
-	  printf("msfs_pl_get_entry_v3 found %s\n",name_buf));
-  
     sec_info->sec_type = sec_proplist(name_buf);
 
   /*
@@ -4612,10 +4409,6 @@ msfs_pl_get_name_v3(
   bsPropListPageT_v3 *dat_rec;
   int resid, xfer, namelen;
   statusT sts;
-
-  DEBUG(1,
-	printf("msfs_pl_get_name_v3\n"));
-
   /*
    * portion in the header
    */
@@ -4653,11 +4446,6 @@ msfs_pl_get_name_v3(
   }
 
 end:
-  if (sts != EOK)
-      DEBUG(2, printf("error occured. error code = %d\n", sts));
-  else
-      DEBUG(2, printf("name is %s\n", buffer));
-
   return sts;
 
 } /* msfs_pl_get_name_v3() */
@@ -4684,10 +4472,6 @@ msfs_pl_get_data_v3(
   int sec_data_offset = 0;
   int nbytes = data_resid;
   statusT sts;
-
-  DEBUG(1,
-	printf("msfs_pl_get_data_v3\n"));
-
 
   /*
    * get portion in header record
@@ -4745,9 +4529,6 @@ msfs_pl_get_data_v3(
    * cell containing name data
    */
   while (data_resid > 0) {
-
-    DEBUG(2,
-	  printf("reading data chain, data_resid %d\n", data_resid));
 
     if (!first) {
       sts = msfs_pl_seek_cur(domain, hdr, BSR_PROPLIST_DATA);
@@ -4866,9 +4647,6 @@ msfs_delproplist_int_v3(
   int clu_clxtnt_locked=FALSE,
       cow_read_locked=FALSE,
       trunc_xfer_locked=FALSE;
-
-  DEBUG(1,
-	printf("msfs_pl_delproplist_int_v3\n"));
 
   name_buf = (char *) ms_malloc_waitok( PROPLIST_NAME_MAX + 1);
 
@@ -5113,19 +4891,11 @@ msfs_pl_del_root_done_int_v3(
   int large;
   statusT sts;
 
-  DEBUG(1,
-	printf("msfs_pl_del_root_done\n"));
-
   /*
    * recover pointer root-done and domain pointers
    */
   bcopy(address, &rdr, sizeof(delPropRootDoneT));
 
-  DEBUG(2,
-	printf(
-	       "hdr %d\n",
-	       rdr.hdr.MC.cell 
-	       ));
   /*
    * add mcell chain lock to locks that are released after root done,
    * avoid unlocking during recovery
