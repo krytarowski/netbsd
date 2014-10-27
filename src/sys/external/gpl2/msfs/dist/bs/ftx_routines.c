@@ -62,35 +62,16 @@
 #include "../msfs/ftx_agents.h"
 #include "../msfs/ms_assert.h"
 
-#ifdef MSFS_CRASHTEST
-#include <sys/reboot.h>
-void
-msfs_reboot(
-    int howto
-    );
-#endif  /* MSFS_CRASHTEST */
-
-
 ftxHT FtxNilFtxH = {0,0}; /* Nil ftx for use as root parent */
 
 extern unsigned TrFlags;
-#ifdef MSFS_CRASHTEST
-int CrashEnable = 1;
-int CrashCnt = 0;
-ftxAgentIdT CrashAgent = FTA_NULL;
-int CrashByAgent = 0;
-int CrashPrintRtDn = 0;
-bfDomainIdT CrashDomain = {0, 0};
-#endif /* MSFS_CRASHTEST */
+
 /*
  * Crude transaction profiling:  Count the number of ftx_done's for
  * each agent.  It might also be interesting to record cumulative time
  * spent within each agent, but for this ftx_start would have to be
  * modified to also pass the agent Id.
  */
-#ifdef FTX_PROFILING
-ftxProfT AgentProfStats[FTX_MAX_AGENTS];
-#endif
 
 /* Ftx stats collection can be turned on in dbx by setting FtxStats to 1. */
 int FtxStats = 0;
@@ -157,33 +138,6 @@ addone_cont(
             ftxStateT* ftxp,   /* in/out - ptr to ftx state struct */
             lrDescT* lrdp      /* in/out - ptr to log rec desc */
             );
-
-
-#ifdef ADVFS_FTX_TRACE
-void
-ftx_trace( ftxStateT *ftxp,
-           uint16T   module,
-           uint16T   line,
-           void      *value)
-{
-    register ftxTraceElmtT *te;
-    extern kmutex_t TraceLock;
-    extern int TraceSequence;
-
-    simple_lock(&TraceLock);
-
-    ftxp->trace_ptr = (ftxp->trace_ptr + 1) % FTX_TRACE_HISTORY;
-    te = &ftxp->trace_buf[ftxp->trace_ptr];
-    te->thd = (struct thread *)(((long)current_cpu() << 36) |
-                                 (long)current_thread() & 0xffffffff);
-    te->seq = TraceSequence++;
-    te->mod = module;
-    te->ln = line;
-    te->val = value;
-
-    simple_unlock(&TraceLock);
-}
-#endif /* ADVFS_FTX_TRACE */
 
 /*
  * ftx_register_agent, ftx_register_agent_n, ftx_register_agent_n2
@@ -281,9 +235,6 @@ statusT
 _ftx_start_i(
       ftxHT *ftxH,              /* out - ftx handle */
       ftxHT parentFtxH,         /* in - parent ftx handle */
-#ifdef FTX_PROFILING
-      ftxAgentIdT agentId,      /* in - agent ID */
-#endif FTX_PROFILING
       domainT *dmnP,            /* in - domain pointer */
       int page_reservation,     /* in - ref/pin pages reserved */
       unsigned int atomicRPass, /* in - atomic recovery pass */
@@ -299,16 +250,6 @@ _ftx_start_i(
     ftxHT retFtxH;
     ftxTblDT* ftxTDp;
     int trimwait = 0;
-#ifdef FTX_PROFILING
-    int s;
-    struct timeval new_time;
-#endif
-
-#ifdef FTX_PROFILING
-    TIME_READ(new_time);
-    AgentProfStats[agentId].start_time = new_time;
-    AgentProfStats[agentId].total_calls++;
-#endif
 
     if (dmnP == NULL){
         return EBAD_DOMAIN_POINTER;
@@ -335,28 +276,8 @@ _ftx_start_i(
          * a transaction.  The thread should lock it after starting the
          * transaction.
          */
-#ifdef ADVFS_SMP_ASSERT
-        lock_read(&dmnP->ftxSlotLock);
-#endif
 
         mutex_enter( &FtxMutex );
-
-#ifdef ADVFS_SMP_ASSERT
-        if ( AdvfsEnableAsserts ) {
-            /*
-             * check for more than one root transaction for this thread
-             */
-            thread_t thread = current_thread();
-
-            KASSERT(ftxTDp->rrSlots == FTX_DEF_RR_SLOTS);
-            for ( ftxSlot = 0; ftxSlot < ftxTDp->rrSlots; ftxSlot++ ) {
-                if ( ftxTDp->tablep[ftxSlot].ftxp != NULL ) {
-                   KASSERT(ftxTDp->tablep[ftxSlot].ftxp->thd != thread);
-                }
-            }
-            KASSERT(ftxTDp->rrNextSlot < ftxTDp->rrSlots);
-        }
-#endif /* ADVFS_SMP_ASSERT */
 
         if ( FtxStats ) {
             int slots = ftxTDp->rrNextSlot - ftxTDp->oldestSlot;
@@ -392,9 +313,6 @@ _ftx_start_i(
             /* The caller doesn't want to wait */
             if (flag & FTX_NOWAIT) {
                 mutex_exit( &FtxMutex );
-#ifdef ADVFS_SMP_ASSERT
-                rw_exit(&dmnP->ftxSlotLock);
-#endif
                 return EWOULDBLOCK;
             }
 
@@ -695,9 +613,6 @@ _ftx_start_i(
     clvlp->lkList = NULL;
     clvlp->skipSubsLink = ftxp->lastLogRec;
     clvlp->lastPinS = -1;
-#ifdef FTX_PROFILING
-    clvlp->agentId = agentId;
-#endif
 
     /* return ftx handle */
 
@@ -883,11 +798,6 @@ ftx_done_urdr(
     ftxTblDT* ftxTDp;
     unsigned int lvl;
     lrDescT *lrvecp = NULL;
-#ifdef FTX_PROFILING
-    int s;
-    struct timeval cur_time, start_time;
-    ftxAgentIdT agentId2;
-#endif
 
     /*
      * Range check handle.  This depends on unsigned assignment to test 0.
@@ -929,34 +839,6 @@ ftx_done_urdr(
          */
         ADVFS_SAD1("ftx_done_urdr: N1 not NORMAL ftx", ftxp->type );
     }
-
-#ifdef FTX_PROFILING
-    /*
-     * One argument to this function is the agent ID.  The agent ID
-     * is also stored in the perLvlT structure.  Since we're in the
-     * process of transitioning to the new FTX_START* macros, we have
-     * to assume the one in the perLvl structure is correct.
-     *
-     * There really should be a spin lock surrounding these time
-     * manipulations, but we're content with vague stats.
-     */
-    TIME_READ(cur_time);
-    agentId2 = ftxp->cLvl[lvl].agentId;
-
-    start_time = AgentProfStats[agentId2].start_time;
-
-    /*
-     * Compute cur_time - start_time.
-     */
-    if (cur_time.tv_usec < start_time.tv_usec) {
-        cur_time.tv_usec += 1000000;
-        cur_time.tv_sec -= 1;
-    }
-    AgentProfStats[agentId2].cum_time.tv_sec +=
-        cur_time.tv_sec - start_time.tv_sec;
-    AgentProfStats[agentId2].cum_time.tv_usec +=
-        cur_time.tv_usec - start_time.tv_usec;
-#endif
 
     /* common log record header initialization */
 
@@ -1031,10 +913,6 @@ ftx_done_urdr(
     /***************************************************/
     /***** This is the root ftx completion case ********/
     /***************************************************/
-
-#ifdef ADVFS_SMP_ASSERT
-    rw_exit(&dmnP->ftxSlotLock);
-#endif
 
     if (TrFlags&trFtx) {
         trace_hdr();
@@ -1125,16 +1003,6 @@ ftx_done_urdr(
 
             opxp( ftxH, rdrec->bCnt, ((char*)rdrec +
                                       sizeof(ftxRDHdrT)) );
-#ifdef MSFS_CRASHTEST
-           if ( CrashPrintRtDn && BS_UID_EQL(dmnP->domainId, CrashDomain) ) {
-               /* print out log actions as a debug aid */
-               printf("Ftx Rtdn:  Thr=0x%x  FtxId=0x%x  Agt=%s(%d)\n",
-                      (int)(current_thread()->thread_self),
-                      ftxp->lrh.ftxId,
-                      AgentDescr[rdrec->agentId],
-                      rdrec->agentId);
-            }
-#endif /* MSFS_CRASHTEST */
 
             /*
              * Reset log record descriptor for record header.
@@ -1264,10 +1132,6 @@ ftx_quit(
         ADVFS_SAD0("ftx_quit: lastLogRec not nil");
     }
 
-#ifdef ADVFS_SMP_ASSERT
-    rw_exit(&dmnP->ftxSlotLock);
-#endif
-
     ftxp->undoBackLink = logEndOfRecords;
 
     release_ftx_locks( &ftxp->cLvl[0] );
@@ -1365,11 +1229,6 @@ ftx_fail_2(
     /* check if level in handle matches current level. */
     KASSERT(ftxp->currLvl == ftxH.level);
     lvl = ftxp->currLvl;
-
-#ifdef ADVFS_SMP_ASSERT
-    if (!lvl)
-        rw_exit(&dmnP->ftxSlotLock);
-#endif
 
     clvlp = &ftxp->cLvl[lvl];
 
@@ -2534,9 +2393,6 @@ log_donerec_nunpin(
     logWriteModeT lwmode;
     statusT sts = EOK;
     int pli,reci;
-#ifdef MSFS_CRASHTEST
-    int reboot_flag = 0;
-#endif
 
     donemode = clvlp->donemode;
 
@@ -2571,46 +2427,6 @@ log_donerec_nunpin(
             sts =  E_DOMAIN_PANIC;
             goto _unpin;
         }
-
-#ifdef MSFS_CRASHTEST
-        if (BS_UID_EQL(dmnP->domainId, CrashDomain)) {
-            if (CrashPrintRtDn) {
-                int i;
-
-                for (i = 0; i < ftxp->currLvl; i++) {
-                    printf("    ");
-                }
-
-                printf("Ftx Done: Thr=0x%x  FtxId=0x%x  Agt=%s(%d)\n",
-                       (int)(current_thread()->thread_self),
-                       ftxp->lrh.ftxId,
-                       AgentDescr[ftxp->lrh.agentId],
-                       ftxp->lrh.agentId);
-            }
-
-            if ( CrashEnable ) {
-                if (CrashCnt > 1) {
-                    CrashCnt--;
-                }
-                else if (CrashCnt == 1) {
-                    if (CrashByAgent) {
-                        if (CrashAgent == ftxp->lrh.agentId) {
-                            reboot_flag = 1;
-                        }
-                    }
-                    else {
-                        reboot_flag = 1;
-                    }
-                }
-
-                if (reboot_flag) {
-                    printf("CrashTest Reboot, Agent=%d\n", ftxp->lrh.agentId);
-                    lgr_flush( dmnP->ftxLogP );
-                    msfs_reboot(RB_AUTOBOOT|RB_NOSYNC);
-                }
-            }
-        }
-#endif /* MSFS_CRASHTEST */
 
     } else if ( dmnP->state == BFD_VIRGIN ) {
         ftxp->undoBackLink = logNilRecord;
@@ -3624,14 +3440,3 @@ checklogtrim:
     }
 
 }
-
-#ifdef MSFS_CRASHTEST
-
-void
-msfs_reboot(
-    int howto
-    )
-{
-    boot(RB_BOOT, howto);
-}
-#endif /* MSFS_CRASHTEST */
