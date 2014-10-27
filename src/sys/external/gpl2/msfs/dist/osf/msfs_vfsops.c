@@ -204,10 +204,6 @@ msfs_mountroot(mp, vpp)
     mp->m_uid = 0;
     mp->m_mounth = (struct vnode *)0;
 
-#   ifdef  SER_COMPAT || RT_PREEMPT
-        mp->m_funnel = FUNNEL_NULL;
-#   endif
-
     if (flag & M_GLOBAL_ROOT) {
         /* Mounting cluster global root - must get root dev array
          * from global_rootdev and initialize global_rootdev_count
@@ -433,10 +429,6 @@ msfs_mount( struct mount *mp,           /* in */
     if ( (mp->m_flag & M_DIRECTIO) && !Advfs_enable_dio_mount ) {
         mp->m_flag &= ~M_DIRECTIO;
     }
-
-#   ifdef  SER_COMPAT || RT_PREEMPT
-        mp->m_funnel = FUNNEL_NULL;
-#   endif
 
     MOUNT_UNLOCK(mp);
 
@@ -1157,10 +1149,6 @@ advfs_mountfs(struct mount *mp)
      */
 
     root_context->bf_tag = dn->rootTag;
-#   ifdef ADVFS_DEBUG
-        root_context->file_name[0] = '/';
-        root_context->file_name[1] = '\0';
-#   endif
     root_context->fileSetNode = dn;
     root_context->dirstamp = 0;
     root_context->fs_flag = 0;
