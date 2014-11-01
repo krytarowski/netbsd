@@ -570,7 +570,6 @@ bmtr_create_rec(
     struct bsMC *mcp = NULL;
     void* rPtr = NULL;
     rbfPgRefHT pgref;
-    int ftxStarted = FALSE;
     domainT *dmnP;
     bfAccessT *mdap;
     int file_is_rbmt;
