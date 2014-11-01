@@ -2185,7 +2185,6 @@ bs_bfs_flush (bfSetT *bfSetp  /* in - fileset to be flushed */)
     bfAccessT  *currbfap,                /* File currently being flushed */
                *nextbfap;                /* Next file to flush */
     lkStatesT  accState;                 /* State of current bfap */
-    int        dirty;
 
     /*
      * Walk down the chain of access structures for the fileset,
