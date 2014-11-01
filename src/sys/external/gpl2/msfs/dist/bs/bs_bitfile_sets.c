@@ -2191,8 +2191,6 @@ bs_bfs_flush (bfSetT *bfSetp  /* in - fileset to be flushed */)
      * flushing each file synchronously.
      */
 
-    start:
-
     mutex_enter(&bfSetp->accessChainLock);
 
     currbfap = bfSetp->accessFwd;
