@@ -55,6 +55,7 @@ __RCSID("$NetBSD: cat.c,v 1.54 2013/12/08 08:32:13 spz Exp $");
 #include <err.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <inttypes.h>
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -75,6 +76,7 @@ int
 main(int argc, char *argv[])
 {
 	int ch;
+	int e;
 	struct flock stdout_lock;
 
 	setprogname(argv[0]);
@@ -83,7 +85,9 @@ main(int argc, char *argv[])
 	while ((ch = getopt(argc, argv, "B:beflnstuv")) != -1)
 		switch (ch) {
 		case 'B':
-			bsize = (size_t)strtol(optarg, NULL, 0);
+			bsize = strtoi(optarg, NULL, 0, 0, SIZE_MAX, &e);
+			if (e)
+				errx(EXIT_FAILURE, "Invalid buffer size '%s': %s", optarg, strerror(e));
 			break;
 		case 'b':
 			bflag = nflag = 1;	/* -b implies -n */
