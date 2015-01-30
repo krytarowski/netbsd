@@ -769,11 +769,11 @@ parse_element_type(const char *cp)
 static int
 parse_element_unit(const char *cp)
 {
-	char *p;
+	int e;
 	int i;
 
-	i = (int)strtol(cp, &p, 10);
-	if ((i < 0) || (*p != '\0'))
+	i = (int)strtoi(cp, NULL, 10, 0, INT_MAX, &e);
+	if (e)
 		errx(EXIT_FAILURE, "invalid unit number `%s'", cp);
 
 	return (i);
