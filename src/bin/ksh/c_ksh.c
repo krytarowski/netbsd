@@ -325,7 +325,7 @@ c_print(wp)
 
 				switch ((c = *s++)) {
 				/* Oddly enough, \007 seems more portable than
-				 * \a (due to HP-UX cc, Ultrix cc, old pcc's,
+				 * \a (due to Ultrix cc, old pcc's,
 				 * etc.).
 				 */
 				case 'a': c = '\007'; break;

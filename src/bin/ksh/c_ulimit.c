@@ -113,9 +113,6 @@ c_ulimit(wp)
 #  ifdef UL_GETBREAK /* osf/1 */
 		{ "vmemory(maxaddr)", ULIMIT, UL_GETBREAK, -1, 1, 'v' },
 #  else /* UL_GETBREAK */
-#   ifdef UL_GETMAXBRK /* hpux */
-		{ "vmemory(maxaddr)", ULIMIT, UL_GETMAXBRK, -1, 1, 'v' },
-#   endif /* UL_GETMAXBRK */
 #  endif /* UL_GETBREAK */
 # endif /* UL_GMEMLIM */
 #endif /* RLIMIT_VMEM */

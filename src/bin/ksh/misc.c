@@ -1275,25 +1275,6 @@ reset_nonblock(fd)
 # define MAXPATHLEN PATH
 #endif /* MAXPATHLEN */
 
-#ifdef HPUX_GETWD_BUG
-# include "ksh_dir.h"
-
-/*
- * Work around bug in hpux 10.x C library - getwd/getcwd dump core
- * if current directory is not readable.  Done in macro 'cause code
- * is needed in GETWD and GETCWD cases.
- */
-# define HPUX_GETWD_BUG_CODE \
-	{ \
-	    DIR *d = ksh_opendir("."); \
-	    if (!d) \
-		return (char *) 0; \
-	    closedir(d); \
-	}
-#else /* HPUX_GETWD_BUG */
-# define HPUX_GETWD_BUG_CODE
-#endif /* HPUX_GETWD_BUG */
-
 /* Like getcwd(), except bsize is ignored if buf is 0 (MAXPATHLEN is used) */
 char *
 ksh_get_wd(buf, bsize)
@@ -1303,9 +1284,6 @@ ksh_get_wd(buf, bsize)
 #ifdef HAVE_GETCWD
 	char *b;
 	char *ret;
-
-	/* Before memory allocated */
-	HPUX_GETWD_BUG_CODE
 
 	/* Assume getcwd() available */
 	if (!buf) {
@@ -1328,9 +1306,6 @@ ksh_get_wd(buf, bsize)
 	extern char *getwd ARGS((char *));
 	char *b;
 	int len;
-
-	/* Before memory allocated */
-	HPUX_GETWD_BUG_CODE
 
 	if (buf && bsize > MAXPATHLEN)
 		b = buf;

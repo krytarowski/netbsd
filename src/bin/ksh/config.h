@@ -194,10 +194,6 @@
 #define DEFAULT_PATH "/bin:/usr/bin:/sbin:/usr/sbin"
 #endif
 
-/* Define if your C library's getwd/getcwd function dumps core in unreadable
- * directories.  */
-/* #undef HPUX_GETWD_BUG */
-
 /* Include ksh features? */
 #define KSH 1
 
