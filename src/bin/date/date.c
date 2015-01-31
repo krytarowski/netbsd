@@ -51,6 +51,7 @@ __RCSID("$NetBSD: date.c,v 1.61 2014/09/01 21:42:21 dholland Exp $");
 #include <err.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <inttypes.h>
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -77,7 +78,8 @@ main(int argc, char *argv[])
 	size_t bufsiz;
 	const char *format;
 	int ch;
-	long long val;
+	int e;
+	intmax_t val;
 	struct tm *tm;
 
 	setprogname(argv[0]);
@@ -104,18 +106,7 @@ main(int argc, char *argv[])
 			nflag = 1;
 			break;
 		case 'r':		/* user specified seconds */
-			if (optarg[0] == '\0') {
-				errx(EXIT_FAILURE, "<empty>: Invalid number");
-			}
-			errno = 0;
-			val = strtoll(optarg, &buf, 0);
-			if (errno) {
-				err(EXIT_FAILURE, "%s", optarg);
-			}
-			if (optarg[0] == '\0' || *buf != '\0') {
-				errx(EXIT_FAILURE,
-				    "%s: Invalid number", optarg);
-			}
+			val = estrtoi(optarg, 0, 0, INTMAX_MAX);
 			rflag = 1;
 			tval = (time_t)val;
 			break;
