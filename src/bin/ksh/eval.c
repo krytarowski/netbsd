@@ -47,26 +47,26 @@ typedef struct Expand {
 #define IFS_WS		1	/* have seen IFS white-space */
 #define IFS_NWS		2	/* have seen IFS non-white-space */
 
-static	int	varsub ARGS((Expand *xp, char *sp, char *word, int *stypep, int *slenp));
-static	int	comsub ARGS((Expand *xp, char *cp));
-static	char   *trimsub ARGS((char *str, char *pat, int how));
-static	void	glob ARGS((char *cp, XPtrV *wp, int markdirs));
-static	void	globit ARGS((XString *xs, char **xpp, char *sp, XPtrV *wp,
-			     int check));
-static char	*maybe_expand_tilde ARGS((char *p, XString *dsp, char **dpp,
-					  int isassign));
-static	char   *tilde ARGS((char *acp));
-static	char   *homedir ARGS((char *name));
+static	int	varsub (Expand *xp, char *sp, char *word, int *stypep, int *slenp);
+static	int	comsub (Expand *xp, char *cp);
+static	char   *trimsub (char *str, char *pat, int how);
+static	void	glob (char *cp, XPtrV *wp, int markdirs);
+static	void	globit (XString *xs, char **xpp, char *sp, XPtrV *wp,
+			     int check);
+static char	*maybe_expand_tilde (char *p, XString *dsp, char **dpp,
+					  int isassign);
+static	char   *tilde (char *acp);
+static	char   *homedir (char *name);
 #ifdef BRACE_EXPAND
-static void	alt_expand ARGS((XPtrV *wp, char *start, char *exp_start,
-				 char *end, int fdo));
+static void	alt_expand (XPtrV *wp, char *start, char *exp_start,
+				 char *end, int fdo);
 #endif
 
 /* compile and expand word */
 char *
-substitute(cp, f)
-	const char *cp;
-	int f;
+substitute(
+	const char *cp,
+	int f)
 {
 	struct source *s, *sold;
 
@@ -85,9 +85,9 @@ substitute(cp, f)
  * expand arg-list
  */
 char **
-eval(ap, f)
-	register char **ap;
-	int f;
+eval(
+	register char **ap,
+	int f)
 {
 	XPtrV w;
 
@@ -112,9 +112,9 @@ eval(ap, f)
  * expand string
  */
 char *
-evalstr(cp, f)
-	char *cp;
-	int f;
+evalstr(
+	char *cp,
+	int f)
 {
 	XPtrV w;
 
@@ -130,9 +130,9 @@ evalstr(cp, f)
  * used from iosetup to expand redirection files
  */
 char *
-evalonestr(cp, f)
-	register char *cp;
-	int f;
+evalonestr(
+	register char *cp,
+	int f)
 {
 	XPtrV w;
 
@@ -165,10 +165,10 @@ typedef struct SubType {
 } SubType;
 
 void
-expand(cp, wp, f)
-	char *cp;		/* input word */
-	register XPtrV *wp;	/* output words */
-	int f;			/* DO* flags */
+expand(
+	char *cp,		/* input word */
+	register XPtrV *wp,	/* output words */
+	int f			/* DO* flags */ )
 {
 	register int UNINITIALIZED(c);
 	register int type;	/* expansion type */
@@ -699,12 +699,12 @@ expand(cp, wp, f)
  * Prepare to generate the string returned by ${} substitution.
  */
 static int
-varsub(xp, sp, word, stypep, slenp)
-	Expand *xp;
-	char *sp;
-	char *word;
-	int *stypep;	/* becomes qualifier type */
-	int *slenp;	/* " " len (=, :=, etc.) valid iff *stypep != 0 */
+varsub(
+	Expand *xp,
+	char *sp,
+	char *word,
+	int *stypep,	/* becomes qualifier type */
+	int *slenp	/* " " len (=, :=, etc.) valid iff *stypep != 0 */ )
 {
 	int c;
 	int state;	/* next state: XBASE, XARG, XSUB, XNULLSUB */
@@ -850,9 +850,9 @@ varsub(xp, sp, word, stypep, slenp)
  * Run the command in $(...) and read its output.
  */
 static int
-comsub(xp, cp)
-	register Expand *xp;
-	char *cp;
+comsub(
+	register Expand *xp,
+	char *cp)
 {
 	Source *s, *sold;
 	register struct op *t;
@@ -905,10 +905,10 @@ comsub(xp, cp)
  */
 
 static char *
-trimsub(str, pat, how)
-	register char *str;
-	char *pat;
-	int how;
+trimsub(
+	register char *str,
+	char *pat,
+	int how)
 {
 	register char *end = strchr(str, 0);
 	register char *p, c;
@@ -958,10 +958,10 @@ trimsub(str, pat, how)
 
 /* XXX cp not const 'cause slashes are temporarily replaced with nulls... */
 static void
-glob(cp, wp, markdirs)
-	char *cp;
-	register XPtrV *wp;
-	int markdirs;
+glob(
+	char *cp,
+	register XPtrV *wp,
+	int markdirs)
 {
 	int oldsize = XPsize(*wp);
 
@@ -981,10 +981,10 @@ glob(cp, wp, markdirs)
  * the number of matches found.
  */
 int
-glob_str(cp, wp, markdirs)
-	char *cp;
-	XPtrV *wp;
-	int markdirs;
+glob_str(
+	char *cp,
+	XPtrV *wp,
+	int markdirs)
 {
 	int oldsize = XPsize(*wp);
 	XString xs;
@@ -998,12 +998,12 @@ glob_str(cp, wp, markdirs)
 }
 
 static void
-globit(xs, xpp, sp, wp, check)
-	XString *xs;		/* dest string */
-	char **xpp;		/* ptr to dest end */
-	char *sp;		/* source path */
-	register XPtrV *wp;	/* output list */
-	int check;		/* GF_* flags */
+globit(
+	XString *xs,		/* dest string */
+	char **xpp,		/* ptr to dest end */
+	char *sp,		/* source path */
+	register XPtrV *wp,	/* output list */
+	int check		/* GF_* flags */ )
 {
 	register char *np;	/* next source component */
 	char *xp = *xpp;
@@ -1137,12 +1137,12 @@ globit(xs, xpp, sp, wp, check)
 /* Check if p contains something that needs globbing; if it does, 0 is
  * returned; if not, p is copied into xs/xp after stripping any MAGICs
  */
-static int	copy_non_glob ARGS((XString *xs, char **xpp, char *p));
+static int	copy_non_glob (XString *xs, char **xpp, char *p);
 static int
-copy_non_glob(xs, xpp, p)
-	XString *xs;
-	char **xpp;
-	char *p;
+copy_non_glob(
+	XString *xs,
+	char **xpp,
+	char *p)
 {
 	char *xp;
 	int len = strlen(p);
@@ -1179,10 +1179,10 @@ copy_non_glob(xs, xpp, p)
 
 /* remove MAGIC from string */
 char *
-debunk(dp, sp, dlen)
-	char *dp;
-	const char *sp;
-	size_t dlen;
+debunk(
+	char *dp,
+	const char *sp,
+	size_t dlen)
 {
 	char *d, *s;
 
@@ -1212,11 +1212,11 @@ debunk(dp, sp, dlen)
  * past the name, otherwise returns 0.
  */
 static char *
-maybe_expand_tilde(p, dsp, dpp, isassign)
-	char *p;
-	XString *dsp;
-	char **dpp;
-	int isassign;
+maybe_expand_tilde(
+	char *p,
+	XString *dsp,
+	char **dpp,
+	int isassign)
 {
 	XString ts;
 	char *dp = *dpp;
@@ -1254,8 +1254,7 @@ maybe_expand_tilde(p, dsp, dpp, isassign)
  */
 
 static char *
-tilde(cp)
-	char *cp;
+tilde(char *cp)
 {
 	char *dp;
 
@@ -1281,8 +1280,7 @@ tilde(cp)
  */
 
 static char *
-homedir(name)
-	char *name;
+homedir(char *name)
 {
 	register struct tbl *ap;
 
@@ -1309,11 +1307,11 @@ homedir(name)
 
 #ifdef BRACE_EXPAND
 static void
-alt_expand(wp, start, exp_start, end, fdo)
-	XPtrV *wp;
-	char *start, *exp_start;
-	char *end;
-	int fdo;
+alt_expand(
+	XPtrV *wp,
+	char *start, *exp_start,
+	char *end,
+	int fdo)
 {
 	int UNINITIALIZED(count);
 	char *brace_start, *brace_end, *UNINITIALIZED(comma);
