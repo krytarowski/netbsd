@@ -323,14 +323,8 @@ extern char *ksh_strrchr_dirsep(const char *path);
 # define DIRSEP         '/'
 # define DIRSEPSTR      "/"
 # define ISDIRSEP(c)    ((c) == '/')
-#ifdef __CYGWIN__
-#  define ISABSPATH(s) \
-       (((s)[0] && (s)[1] == ':' && ISDIRSEP((s)[2])) || ISDIRSEP((s)[0]))
-#  define ISRELPATH(s) (!(s)[0] || ((s)[1] != ':' && !ISDIRSEP((s)[0])))
-#else /* __CYGWIN__ */
 # define ISABSPATH(s)	ISDIRSEP((s)[0])
 # define ISRELPATH(s)	(!ISABSPATH(s))
-#endif /* __CYGWIN__ */
 # define ISROOTEDPATH(s) ISABSPATH(s)
 # define FILECHCONV(c)	c
 # define FILECMP(s1, s2) strcmp(s1, s2)

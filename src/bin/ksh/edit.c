@@ -293,11 +293,6 @@ x_mode(onoff)
 
 		set_tty(tty_fd, &cb, TF_WAIT);
 
-#ifdef __CYGWIN__
-		if (edchars.eof == '\0')
-			edchars.eof = '\4';
-#endif /* __CYGWIN__ */
-
 		/* Convert unset values to internal `unset' value */
 		if (edchars.erase == vdisable_c)
 			edchars.erase = -1;
