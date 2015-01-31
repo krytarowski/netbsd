@@ -11,13 +11,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-/* Define if on AIX 3.
-   System headers sometimes define this.
-   We just want to avoid a redefinition error message.  */
-#ifndef _ALL_SOURCE
-/* #undef _ALL_SOURCE */
-#endif
-
 /* Define if the closedir function returns void instead of int.  */
 /* #undef CLOSEDIR_VOID */
 
