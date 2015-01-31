@@ -178,9 +178,6 @@
 /* Define if the pgrp of setpgrp() can't be the pid of a zombie process */
 /* #undef NEED_PGRP_SYNC */
 
-/* Define if you arg running SCO unix */
-/* #undef OS_SCO */
-
 /* Define if you arg running ISC unix */
 /* #undef OS_ISC */
 

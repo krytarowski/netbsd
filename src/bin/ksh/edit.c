@@ -19,10 +19,6 @@ __RCSID("$NetBSD: edit.c,v 1.25 2010/06/05 03:02:37 sjg Exp $");
 #define EXTERN
 #include "edit.h"
 #undef EXTERN
-#ifdef OS_SCO	/* SCO Unix 3.2v4.1 */
-# include <sys/stream.h>	/* needed for <sys/ptem.h> */
-# include <sys/ptem.h>		/* needed for struct winsize */
-#endif /* OS_SCO */
 #include <sys/ioctl.h>
 #include <ctype.h>
 #include "ksh_stat.h"
