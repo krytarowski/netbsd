@@ -30,11 +30,7 @@ __RCSID("$NetBSD: history.c,v 1.11 2011/08/31 16:24:54 plunky Exp $");
 # ifdef EASY_HISTORY
 
 #  ifndef HISTFILE
-#   ifdef OS2
-#    define HISTFILE "history.ksh"
-#   else /* OS2 */
 #    define HISTFILE ".pdksh_history"
-#   endif /* OS2 */
 #  endif
 
 # else

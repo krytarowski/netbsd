@@ -110,7 +110,6 @@ struct ioword {
 #define XERROK	BIT(8)		/* non-zero exit ok (for set -e) */
 #define XCOPROC BIT(9)		/* starting a co-process */
 #define XTIME	BIT(10)		/* timing TCOM command */
-#define XINTACT BIT(11)		/* OS2: proc started from interactive session */
 
 /*
  * flags to control expansion of words (assumed by t->evalflags to fit

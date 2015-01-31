@@ -130,10 +130,6 @@ simplify_path(pathx)
 
 	if ((isrooted = ISROOTEDPATH(pathx)))
 		very_start++;
-#if defined (OS2)
-	if (pathx[0] && pathx[1] == ':')	/* skip a: */
-		very_start += 2;
-#endif /* OS2 */
 
 	/* Before			After
 	 *  /foo/			/foo
@@ -143,11 +139,6 @@ simplify_path(pathx)
 	 *  ..				..
 	 *  ./foo			foo
 	 *  foo/../../../bar		../../bar
-	 * OS2:
-	 *  a:/foo/../..		a:/
-	 *  a:.				a:
-	 *  a:..			a:..
-	 *  a:foo/../../blah		a:../blah
 	 */
 
 	for (cur = t = start = very_start; ; ) {

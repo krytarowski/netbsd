@@ -1062,15 +1062,7 @@ globit(xs, xpp, sp, wp, check)
 				*xp = '\0';
 			}
 		}
-#ifdef OS2 /* Done this way to avoid bug in gcc 2.7.2... */
-    /* Ugly kludge required for command
-     * completion - see how search_access()
-     * is implemented for OS/2...
-     */
-# define KLUDGE_VAL	4
-#else /* OS2 */
 # define KLUDGE_VAL	0
-#endif /* OS2 */
 		XPput(*wp, str_nsave(Xstring(*xs, xp), Xlength(*xs, xp)
 			+ KLUDGE_VAL, ATEMP));
 		return;
@@ -1296,10 +1288,6 @@ homedir(name)
 
 	ap = tenter(&homedirs, name, hash(name));
 	if (!(ap->flag & ISSET)) {
-#ifdef OS2
-		/* No usernames in OS2 - punt */
-		return NULL;
-#else /* OS2 */
 		struct passwd *pw;
 		size_t n;
 
@@ -1315,7 +1303,6 @@ homedir(name)
 			ap->val.s = str_save(pw->pw_dir, APERM);
 		}
 		ap->flag |= DEFINED|ISSET|ALLOC;
-#endif /* OS2 */
 	}
 	return ap->val.s;
 }
