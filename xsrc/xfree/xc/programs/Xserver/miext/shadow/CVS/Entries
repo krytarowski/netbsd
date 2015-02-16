@@ -1,0 +1,23 @@
+D/module////
+/Imakefile/1.1.1.6/Thu Nov 27 02:21:54 2014//
+/shadow.c/1.1.1.6/Thu Nov 27 02:21:54 2014//
+/shadow.h/1.1.1.5/Thu Nov 27 02:21:54 2014//
+/shalloc.c/1.1.1.3/Thu Nov 27 02:21:54 2014//
+/shmodule.c/1.1.1.4/Thu Nov 27 02:21:54 2014//
+/shpacked.c/1.1.1.4/Thu Nov 27 02:21:54 2014//
+/shplanar.c/1.1.1.4/Thu Nov 27 02:21:54 2014//
+/shplanar8.c/1.1.1.4/Thu Nov 27 02:21:54 2014//
+/shrot16pack.c/1.1.1.3/Thu Nov 27 02:21:54 2014//
+/shrot16pack_180.c/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/shrot16pack_270.c/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/shrot16pack_90.c/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/shrot32pack.c/1.1.1.3/Thu Nov 27 02:21:54 2014//
+/shrot32pack_180.c/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/shrot32pack_270.c/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/shrot32pack_90.c/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/shrot8pack.c/1.1.1.3/Thu Nov 27 02:21:54 2014//
+/shrot8pack_180.c/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/shrot8pack_270.c/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/shrot8pack_90.c/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/shrotate.c/1.1.1.2/Thu Nov 27 02:21:54 2014//
+/shrotpack.h/1.1.1.4/Thu Nov 27 02:21:54 2014//

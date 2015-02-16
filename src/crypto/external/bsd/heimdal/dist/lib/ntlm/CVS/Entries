@@ -1,0 +1,15 @@
+/ChangeLog/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/Makefile.am/1.1.1.3/Thu Nov 27 03:00:47 2014//
+/NTMakefile/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/apop.c/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/digest.c/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/heim-auth.h/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/heimntlm.h/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/libheimntlm-exports.def/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/libheimntlm-version.rc/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/ntlm.c/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/ntlm_err.et/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/test_commonauth.c/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/test_ntlm.c/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/version-script.map/1.1.1.2/Thu Nov 27 03:00:47 2014//
+D

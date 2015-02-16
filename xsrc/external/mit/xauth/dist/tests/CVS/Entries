@@ -1,0 +1,16 @@
+/010-xauth-add-inet.script/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/010-xauth-add-inet.stdout/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/020-xauth-add-local.script/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/020-xauth-add-local.stdout/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/030-xauth-extract.script/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/030-xauth-extract.stdout/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/040-xauth-source.script/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/040-xauth-source.stdout/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/090-xauth-bad-usage.script/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/090-xauth-bad-usage.stderr/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/090-xauth-bad-usage.stdout/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/Makefile.am/1.1.1.2/Thu Nov 27 02:21:41 2014//
+/Makefile.in/1.1.1.2/Thu Nov 27 02:21:41 2014//
+/setup-sourced/1.1.1.1/Thu Nov 27 02:21:41 2014//
+/test_xauth.c/1.1.1.2/Thu Nov 27 02:21:41 2014//
+D

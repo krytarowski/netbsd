@@ -1,0 +1,26 @@
+D/common////
+D/ddc////
+D/dixmods////
+D/doc////
+D/dri////
+D/dri2////
+D/exa////
+D/fbdevhw////
+D/i2c////
+D/int10////
+D/loader////
+D/modes////
+D/os-support////
+D/parser////
+D/ramdac////
+D/shadowfb////
+D/utils////
+D/vbe////
+D/vgahw////
+D/x86emu////
+D/xaa////
+/Makefile.am/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/Makefile.in/1.1.1.6/Thu Nov 27 02:21:50 2014//
+/libxorg.c/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/xorg.c/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/xorgconf.cpp/1.1.1.4/Thu Nov 27 02:21:50 2014//

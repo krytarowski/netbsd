@@ -1,0 +1,21 @@
+/alloc.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/char_assignment.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/copy.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/copy_alloc.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/copy_assignment.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/default_noexcept.pass.cpp/1.1.1.2/Fri Nov 28 21:37:04 2014//
+/dtor_noexcept.pass.cpp/1.1.1.2/Fri Nov 28 21:37:04 2014//
+/initializer_list.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/initializer_list_assignment.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/iter_alloc.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/move.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/move_alloc.pass.cpp/1.1.1.4/Fri Nov 28 21:37:04 2014//
+/move_assign_noexcept.pass.cpp/1.1.1.2/Fri Nov 28 21:37:04 2014//
+/move_assignment.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/move_noexcept.pass.cpp/1.1.1.2/Fri Nov 28 21:37:04 2014//
+/pointer_alloc.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/pointer_assignment.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/pointer_size_alloc.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/size_char_alloc.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+/substr.pass.cpp/1.1.1.3/Fri Nov 28 21:37:04 2014//
+D

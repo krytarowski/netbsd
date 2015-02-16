@@ -1,0 +1,11 @@
+D/bsd-core////
+D/libdrm////
+D/scripts////
+D/shared-core////
+D/tests////
+/Makefile.am/1.1.1.2/Fri Nov 28 21:45:47 2014//
+/README/1.1.1.2/Fri Nov 28 21:45:47 2014//
+/autogen.sh/1.1.1.1/Fri Nov 28 21:45:47 2014//
+/configure.ac/1.1.1.2/Fri Nov 28 21:45:47 2014//
+/libdrm.pc.in/1.1.1.1/Fri Nov 28 21:45:47 2014//
+/libdrm_intel.pc.in/1.1.1.1/Fri Nov 28 21:45:47 2014//

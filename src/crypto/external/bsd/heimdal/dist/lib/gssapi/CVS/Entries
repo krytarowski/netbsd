@@ -1,0 +1,29 @@
+D/gssapi////
+D/krb5////
+D/mech////
+D/netlogon////
+D/ntlm////
+D/spnego////
+/ChangeLog/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/Makefile.am/1.1.1.3/Thu Nov 27 03:00:47 2014//
+/NTMakefile/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/gen-oid.pl/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/gss-commands.in/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/gss_acquire_cred.3/1.3/Thu Nov 27 03:00:47 2014//
+/gssapi.3/1.4/Thu Nov 27 03:00:47 2014//
+/gssapi.h/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/gssapi_mech.h/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/gsstool.c/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/libgssapi-exports.def/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/libgssapi-version.rc/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/oid.txt/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/test_acquire_cred.c/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/test_common.c/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/test_common.h/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/test_context.c/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/test_cred.c/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/test_kcred.c/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/test_names.c/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/test_ntlm.c/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/test_oid.c/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/version-script.map/1.1.1.3/Thu Nov 27 03:00:47 2014//

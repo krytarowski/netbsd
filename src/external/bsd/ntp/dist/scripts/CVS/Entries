@@ -1,0 +1,36 @@
+D/build////
+D/calc_tickadj////
+D/deprecated////
+D/lib////
+D/monitoring////
+D/ntp-wait////
+D/ntpsweep////
+D/ntptrace////
+D/rc////
+D/stats////
+/README/1.1.1.2/Fri Nov 28 21:37:15 2014//
+/invoke-plot_summary.menu/1.1.1.1/Fri Nov 28 21:37:15 2014//
+/invoke-summary.menu/1.1.1.1/Fri Nov 28 21:37:15 2014//
+/ntpver.in/1.1.1.2/Fri Nov 28 21:37:15 2014//
+/plot_summary.in/1.1.1.2/Fri Nov 28 21:37:15 2014//
+/plot_summary.texi/1.1.1.1/Fri Nov 28 21:37:15 2014//
+/summary.in/1.1.1.2/Fri Nov 28 21:37:15 2014//
+/summary.texi/1.1.1.1/Fri Nov 28 21:37:15 2014//
+/Makefile.am/1.1.1.4/Sat Dec 20 22:30:12 2014//
+/Makefile.in/1.1.1.4/Sat Dec 20 22:30:12 2014//
+/invoke-plot_summary.texi/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/invoke-summary.texi/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/plot_summary-opts/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/plot_summary-opts.def/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/plot_summary.1plot_summaryman/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/plot_summary.1plot_summarymdoc/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/plot_summary.html/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/plot_summary.man.in/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/plot_summary.mdoc.in/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/summary-opts/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/summary-opts.def/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/summary.1summaryman/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/summary.1summarymdoc/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/summary.html/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/summary.man.in/1.1.1.2/Sat Dec 20 22:30:12 2014//
+/summary.mdoc.in/1.1.1.2/Sat Dec 20 22:30:12 2014//

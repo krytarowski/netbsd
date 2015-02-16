@@ -1,0 +1,10 @@
+/allocate_size.pass.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/allocate_size_hint.pass.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/construct.pass.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/deallocate.pass.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/destroy.pass.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/inner_allocator.pass.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/max_size.pass.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/outer_allocator.pass.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/select_on_container_copy_construction.pass.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+D

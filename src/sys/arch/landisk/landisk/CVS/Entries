@@ -1,0 +1,12 @@
+/autoconf.c/1.7/Fri Nov 28 21:45:45 2014//
+/bus_dma.c/1.15/Fri Nov 28 21:45:45 2014//
+/clock_machdep.c/1.4/Fri Nov 28 21:45:45 2014//
+/consinit.c/1.1/Fri Nov 28 21:45:45 2014//
+/intr.c/1.7/Fri Nov 28 21:45:45 2014//
+/kloader_machdep.c/1.2/Fri Nov 28 21:45:45 2014//
+/landiskreg.h/1.2/Fri Nov 28 21:45:45 2014//
+/locore.S/1.4/Fri Nov 28 21:45:45 2014//
+/machdep.c/1.17/Fri Nov 28 21:45:45 2014//
+/mainbus.c/1.4/Fri Nov 28 21:45:45 2014//
+/shpcic_machdep.c/1.7/Fri Nov 28 21:45:45 2014//
+D

@@ -1,0 +1,17 @@
+D/getaddrinfo////
+/Makefile/1.10/Fri Nov 28 21:46:00 2014//
+/Makefile.inc/1.1/Fri Nov 28 21:46:00 2014//
+/gen_ether_subr/1.1/Fri Nov 28 21:46:00 2014//
+/h_dns_server.c/1.4/Fri Nov 28 21:46:00 2014//
+/h_hostent.c/1.2/Fri Nov 28 21:46:00 2014//
+/h_nsd_recurse.c/1.2/Fri Nov 28 21:46:00 2014//
+/h_protoent.c/1.2/Fri Nov 28 21:46:00 2014//
+/h_servent.c/1.2/Fri Nov 28 21:46:00 2014//
+/hosts/1.1/Fri Nov 28 21:46:00 2014//
+/resolv.conf/1.1/Fri Nov 28 21:46:00 2014//
+/t_ether_aton.c/1.1/Fri Nov 28 21:46:00 2014//
+/t_getprotoent.c/1.2/Fri Nov 28 21:46:00 2014//
+/t_hostent.sh/1.10/Fri Nov 28 21:46:00 2014//
+/t_nsdispatch.sh/1.1/Fri Nov 28 21:46:00 2014//
+/t_protoent.sh/1.2/Fri Nov 28 21:46:00 2014//
+/t_servent.sh/1.1/Fri Nov 28 21:46:00 2014//

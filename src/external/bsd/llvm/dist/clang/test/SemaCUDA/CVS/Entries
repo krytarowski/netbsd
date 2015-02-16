@@ -1,0 +1,14 @@
+D/Inputs////
+/config-type.cu/1.1.1.1/Fri Nov 28 21:37:09 2014//
+/kernel-call.cu/1.1.1.2/Fri Nov 28 21:37:09 2014//
+/launch_bounds.cu/1.1.1.3/Fri Nov 28 21:37:09 2014//
+/lit.local.cfg/1.1.1.1/Fri Nov 28 21:37:09 2014//
+/qualifiers.cu/1.1.1.2/Fri Nov 28 21:37:09 2014//
+/amdgpu-num-gpr-attr.cu/1.1.1.1/Thu Jan 29 19:57:33 2015//
+/function-target.cu/1.1.1.3/Fri Jan 30 01:38:38 2015//
+/implicit-copy.cu/1.1.1.1/Thu Jan 29 19:57:33 2015//
+/implicit-intrinsic.cu/1.1.1.1/Thu Jan 29 19:57:33 2015//
+/implicit-member-target-collision-cxx11.cu/1.1.1.1/Thu Jan 29 19:57:33 2015//
+/implicit-member-target-collision.cu/1.1.1.1/Thu Jan 29 19:57:33 2015//
+/implicit-member-target.cu/1.1.1.1/Thu Jan 29 19:57:33 2015//
+/method-target.cu/1.1.1.1/Thu Jan 29 19:57:33 2015//

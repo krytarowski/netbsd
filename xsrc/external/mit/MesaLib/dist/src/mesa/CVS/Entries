@@ -1,0 +1,24 @@
+D/drivers////
+D/main////
+D/math////
+D/program////
+D/sparc////
+D/state_tracker////
+D/swrast////
+D/swrast_setup////
+D/tnl////
+D/tnl_dd////
+D/vbo////
+D/x86////
+D/x86-64////
+/Android.gen.mk/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/Android.libmesa_dricore.mk/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/Android.libmesa_glsl_utils.mk/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/Android.libmesa_st_mesa.mk/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/Android.mesa_gen_matypes.mk/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/Android.mk/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/Makefile.am/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/Makefile.in/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/Makefile.sources/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/SConscript/1.1.1.2/Sun Dec 21 00:08:39 2014//
+/gl.pc.in/1.1.1.5/Sun Dec 21 00:08:39 2014//

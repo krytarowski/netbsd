@@ -1,0 +1,94 @@
+D/aarch64////
+D/alpha////
+D/arm////
+D/avr////
+D/bfin////
+D/c6x////
+D/cr16////
+D/cris////
+D/epiphany////
+D/fr30////
+D/frv////
+D/h8300////
+D/i386////
+D/ia64////
+D/iq2000////
+D/libbid////
+D/lm32////
+D/m32c////
+D/m32r////
+D/m68k////
+D/mcore////
+D/mep////
+D/microblaze////
+D/mips////
+D/mmix////
+D/moxie////
+D/pa////
+D/pdp11////
+D/picochip////
+D/rl78////
+D/rs6000////
+D/rx////
+D/s390////
+D/score////
+D/sh////
+D/sparc////
+D/spu////
+D/stormy16////
+D/tilegx////
+D/tilepro////
+D/v850////
+D/vax////
+D/vms////
+D/xtensa////
+D/or1k////
+D/riscv////
+/darwin-64.c/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/darwin-crt-tm.c/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/darwin-crt3.c/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/gmon-sol2.c/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/gthr-lynx.h/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/gthr-rtems.h/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/gthr-vxworks.h/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/libgcc-glibc.ver/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/libgcc-libsystem.ver/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/no-sfp-machine.h/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/no-unwind.h/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-crtfm/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-crtstuff-pic/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-darwin/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-dfprules/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-eh-dw2-dip/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-fdpbit/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-fixedpoint-gnu-prefix/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-fpbit/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-freebsd-thread/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-gnu-prefix/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-libgcc-pic/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-libunwind/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-libunwind-elf/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-linux/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-openbsd-thread/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-rtems/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-slibgcc/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-slibgcc-darwin/1.1.1.2/Fri Nov 28 21:37:32 2014//
+/t-slibgcc-elf-ver/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-slibgcc-gld/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-slibgcc-gld-nover/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-slibgcc-hpux/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-slibgcc-libgcc/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-slibgcc-nolc-override/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-slibgcc-sld/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-slibgcc-vms/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-softfp/1.1.1.2/Fri Nov 28 21:37:32 2014//
+/t-softfp-excl/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-softfp-sfdf/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-softfp-tf/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-sol2/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-stack/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-tls/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/t-vxworks/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/unwind-dw2-fde-darwin.c/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/vxlib-tls.c/1.1.1.1/Fri Nov 28 21:37:32 2014//
+/vxlib.c/1.1.1.1/Fri Nov 28 21:37:32 2014//

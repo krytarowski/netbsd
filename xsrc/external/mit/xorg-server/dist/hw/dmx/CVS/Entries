@@ -1,0 +1,54 @@
+D/config////
+D/doc////
+D/examples////
+D/glxProxy////
+D/input////
+D/man////
+/Makefile.am/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/Makefile.in/1.1.1.6/Thu Nov 27 02:21:50 2014//
+/dmx-config.h/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmx.c/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/dmx.h/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmx_glxvisuals.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmx_glxvisuals.h/1.1.1.2/Thu Nov 27 02:21:50 2014//
+/dmxcb.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxcb.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxclient.h/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxcmap.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxcmap.h/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxcursor.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxcursor.h/1.1.1.2/Thu Nov 27 02:21:50 2014//
+/dmxdpms.c/1.1.1.2/Thu Nov 27 02:21:50 2014//
+/dmxdpms.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxextension.c/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/dmxextension.h/1.1.1.2/Thu Nov 27 02:21:50 2014//
+/dmxfont.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxfont.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxgc.c/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/dmxgc.h/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxgcops.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxgcops.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxinit.c/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/dmxinit.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxinput.c/1.1.1.2/Thu Nov 27 02:21:50 2014//
+/dmxinput.h/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxlog.c/1.1.1.2/Thu Nov 27 02:21:50 2014//
+/dmxlog.h/1.1.1.2/Thu Nov 27 02:21:50 2014//
+/dmxpict.c/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/dmxpict.h/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxpixmap.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxpixmap.h/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxprop.c/1.1.1.2/Thu Nov 27 02:21:50 2014//
+/dmxprop.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxscrinit.c/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/dmxscrinit.h/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxshadow.c/1.1.1.2/Thu Nov 27 02:21:50 2014//
+/dmxshadow.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxstat.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/dmxstat.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxsync.c/1.1.1.2/Thu Nov 27 02:21:50 2014//
+/dmxsync.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxvisual.c/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxvisual.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/dmxwindow.c/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/dmxwindow.h/1.1.1.3/Thu Nov 27 02:21:50 2014//

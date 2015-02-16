@@ -1,0 +1,12 @@
+/Makefile/1.6/Fri Nov 28 21:46:00 2014//
+/t_io.c/1.4/Fri Nov 28 21:46:00 2014//
+/t_mbrtowc.c/1.1/Fri Nov 28 21:46:00 2014//
+/t_mbsnrtowcs.c/1.2/Fri Nov 28 21:46:00 2014//
+/t_mbstowcs.c/1.1/Fri Nov 28 21:46:00 2014//
+/t_mbtowc.c/1.1/Fri Nov 28 21:46:00 2014//
+/t_wcscspn.c/1.1/Fri Nov 28 21:46:00 2014//
+/t_wcspbrk.c/1.1/Fri Nov 28 21:46:00 2014//
+/t_wcsspn.c/1.1/Fri Nov 28 21:46:00 2014//
+/t_wcstod.c/1.3/Fri Nov 28 21:46:00 2014//
+/t_wctomb.c/1.3/Fri Nov 28 21:46:00 2014//
+D

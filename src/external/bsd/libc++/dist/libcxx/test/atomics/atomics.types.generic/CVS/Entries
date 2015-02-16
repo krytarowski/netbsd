@@ -1,0 +1,8 @@
+/address.pass.cpp/1.1.1.1/Fri Nov 28 21:37:03 2014//
+/bool.pass.cpp/1.1.1.1/Fri Nov 28 21:37:03 2014//
+/cstdint_typedefs.pass.cpp/1.1.1.1/Fri Nov 28 21:37:03 2014//
+/integral.pass.cpp/1.1.1.1/Fri Nov 28 21:37:03 2014//
+/integral_typedefs.pass.cpp/1.1.1.1/Fri Nov 28 21:37:03 2014//
+/trivially_copyable.fail.cpp/1.1.1.1/Fri Nov 28 21:37:03 2014//
+/trivially_copyable.pass.cpp/1.1.1.1/Fri Nov 28 21:37:03 2014//
+D

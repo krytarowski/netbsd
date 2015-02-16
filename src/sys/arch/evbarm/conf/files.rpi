@@ -1,0 +1,26 @@
+#	$NetBSD: files.rpi,v 1.7 2014/10/03 11:40:54 skrll Exp $
+#
+# Raspberry Pi
+#
+
+file   arch/arm/arm32/arm32_boot.c
+file   arch/arm/arm32/arm32_kvminit.c
+file   arch/arm/arm32/arm32_reboot.c
+
+file	arch/evbarm/rpi/rpi_machdep.c
+file	arch/evbarm/rpi/vcprop_subr.c
+
+# Kernel boot arguments
+defparam opt_machdep.h				BOOT_ARGS
+
+# CPU support and integrated peripherals
+include "arch/arm/broadcom/files.bcm2835"
+
+# Raspberry Pi Mailbox interface
+device	vcmbox: sysmon_envsys
+attach	vcmbox at bcmmboxbus
+file	arch/evbarm/rpi/rpi_vcmbox.c		vcmbox
+
+# Maximum command-line length
+defparam opt_vcprop.h				VCPROP_MAXCMDLINE
+defflag opt_rpi.h				RPI_HWCURSOR

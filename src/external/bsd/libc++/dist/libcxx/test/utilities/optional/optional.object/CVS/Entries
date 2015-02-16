@@ -1,0 +1,10 @@
+D/optional.object.assign////
+D/optional.object.ctor////
+D/optional.object.dtor////
+D/optional.object.observe////
+D/optional.object.swap////
+/optional_const_void.fail.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/optional_not_destructible.fail.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/optional_not_noexcept_destructible.fail.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/optional_void.fail.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/types.pass.cpp/1.1.1.2/Fri Nov 28 21:37:07 2014//

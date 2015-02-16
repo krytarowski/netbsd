@@ -1,0 +1,11 @@
+D/string.access////
+D/string.capacity////
+D/string.cons////
+D/string.iterators////
+D/string.modifiers////
+D/string.nonmembers////
+D/string.ops////
+D/string.require////
+/input_iterator.h/1.1.1.2/Fri Nov 28 21:37:04 2014//
+/test_traits.h/1.1.1.2/Fri Nov 28 21:37:04 2014//
+/types.pass.cpp/1.1.1.2/Fri Nov 28 21:37:04 2014//

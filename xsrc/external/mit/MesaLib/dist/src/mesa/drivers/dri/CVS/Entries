@@ -1,0 +1,12 @@
+D/common////
+D/i915////
+D/i965////
+D/nouveau////
+D/r200////
+D/radeon////
+D/swrast////
+/Android.mk/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/Makefile.am/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/Makefile.in/1.1.1.1/Thu Dec 18 06:02:08 2014//
+/dri.pc.in/1.1.1.2/Sun Dec 21 00:08:40 2014//
+/gen-symbol-redefs.py/1.1.1.1/Thu Dec 18 06:02:08 2014//

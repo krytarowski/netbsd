@@ -1,0 +1,17 @@
+/CHANGES/1.2/Fri Nov 28 21:46:49 2014//
+/Makefile/1.19/Fri Nov 28 21:46:49 2014//
+/as.c/1.4/Fri Nov 28 21:46:49 2014//
+/as.h/1.4/Fri Nov 28 21:46:49 2014//
+/gnuc.h/1.2/Fri Nov 28 21:46:49 2014//
+/ifaddrlist.c/1.10/Fri Nov 28 21:46:49 2014//
+/ifaddrlist.h/1.3/Fri Nov 28 21:46:49 2014//
+/mean.awk/1.5/Fri Nov 28 21:46:49 2014//
+/median.awk/1.5/Fri Nov 28 21:46:49 2014//
+/prog_ops.h/1.1/Fri Nov 28 21:46:49 2014//
+/traceroute.8/1.29/Fri Nov 28 21:46:49 2014//
+/traceroute.c/1.81/Fri Nov 28 21:46:49 2014//
+/traceroute_hostops.c/1.1/Fri Nov 28 21:46:49 2014//
+/traceroute_rumpops.c/1.1/Fri Nov 28 21:46:49 2014//
+/trrt2netbsd/1.4/Fri Nov 28 21:46:49 2014//
+/version.c/1.3/Fri Nov 28 21:46:49 2014//
+D

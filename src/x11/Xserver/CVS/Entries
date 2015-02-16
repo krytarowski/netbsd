@@ -1,0 +1,33 @@
+D/GL////
+D/Xext////
+D/Xfont////
+D/Xserver////
+D/afb////
+D/cfb////
+D/cfb16////
+D/cfb24////
+D/cfb32////
+D/dbe////
+D/dix////
+D/fb////
+D/fontbase////
+D/hw////
+D/include////
+D/iplan2p2////
+D/iplan2p4////
+D/iplan2p8////
+D/lbx////
+D/mfb////
+D/mi////
+D/miext////
+D/os////
+D/printer////
+D/randr////
+D/record////
+D/render////
+D/xinput////
+D/xkb////
+D/xtrap////
+/Makefile/1.13/Fri Nov 28 21:46:54 2014//
+/Makefile.common/1.36/Fri Nov 28 21:46:54 2014//
+/Makefile.serverlib/1.8/Fri Nov 28 21:46:54 2014//

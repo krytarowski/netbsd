@@ -1,0 +1,21 @@
+D/45////
+D/asn1////
+D/com_err////
+D/gssapi////
+D/hcrypto////
+D/hdb////
+D/heimdal////
+D/hx509////
+D/ipc////
+D/kadm5////
+D/kafs////
+D/kdfs////
+D/krb5////
+D/ntlm////
+D/otp////
+D/roken////
+D/sl////
+D/vers////
+D/wind////
+/Makefile.am/1.1.1.3/Thu Nov 27 03:00:47 2014//
+/NTMakefile/1.1.1.2/Thu Nov 27 03:00:47 2014//

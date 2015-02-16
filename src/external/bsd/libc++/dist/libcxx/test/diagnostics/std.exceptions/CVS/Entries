@@ -1,0 +1,10 @@
+D/domain.error////
+D/invalid.argument////
+D/length.error////
+D/logic.error////
+D/out.of.range////
+D/overflow.error////
+D/range.error////
+D/runtime.error////
+D/underflow.error////
+/version.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//

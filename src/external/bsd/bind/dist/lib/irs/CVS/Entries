@@ -1,0 +1,11 @@
+D/include////
+D/win32////
+/Makefile.in/1.1.1.6/Sat Dec 20 22:29:20 2014//
+/api/1.1.1.8/Sat Dec 20 22:29:20 2014//
+/context.c/1.5/Sat Dec 20 22:29:20 2014//
+/dnsconf.c/1.5/Sat Dec 20 22:29:20 2014//
+/gai_strerror.c/1.5/Sat Dec 20 22:29:20 2014//
+/getaddrinfo.c/1.7/Sat Dec 20 22:29:20 2014//
+/getnameinfo.c/1.6/Sat Dec 20 22:29:20 2014//
+/resconf.c/1.8/Sat Dec 20 22:29:20 2014//
+/version.c/1.4/Sat Dec 20 22:29:20 2014//

@@ -1,0 +1,24 @@
+D/AArch64////
+D/ARM////
+D/CppBackend////
+D/Hexagon////
+D/MSP430////
+D/Mips////
+D/NVPTX////
+D/PowerPC////
+D/R600////
+D/Sparc////
+D/SystemZ////
+D/X86////
+D/XCore////
+/LLVMBuild.txt/1.1.1.2/Fri Nov 28 21:37:11 2014//
+/Makefile/1.1.1.1/Fri Nov 28 21:37:11 2014//
+/TargetIntrinsicInfo.cpp/1.1.1.1/Fri Nov 28 21:37:11 2014//
+/CMakeLists.txt/1.1.1.4/Fri Jan 30 01:39:30 2015//
+/README.txt/1.1.1.2/Fri Jan 30 01:39:30 2015//
+/Target.cpp/1.1.1.5/Fri Jan 30 01:39:30 2015//
+/TargetLibraryInfo.cpp/1.1.1.6/Fri Jan 30 01:39:30 2015//
+/TargetLoweringObjectFile.cpp/1.1.1.8/Fri Jan 30 01:39:30 2015//
+/TargetMachine.cpp/1.1.1.7/Fri Jan 30 01:39:30 2015//
+/TargetMachineC.cpp/1.1.1.7/Fri Jan 30 01:39:30 2015//
+/TargetSubtargetInfo.cpp/1.1.1.5/Fri Jan 30 01:39:30 2015//

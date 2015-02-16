@@ -1,0 +1,32 @@
+D/allwinner////
+D/arm////
+D/arm32////
+D/at91////
+D/broadcom////
+D/clps711x////
+D/conf////
+D/cortex////
+D/cortina////
+D/ep93xx////
+D/footbridge////
+D/gemini////
+D/imx////
+D/include////
+D/iomd////
+D/ixp12x0////
+D/mainbus////
+D/marvell////
+D/mpcore////
+D/ofw////
+D/omap////
+D/pic////
+D/s3c2xx0////
+D/sa11x0////
+D/samsung////
+D/vfp////
+D/xscale////
+/Makefile/1.8/Fri Nov 28 21:45:45 2014//
+/Makefile.inc/1.1/Fri Nov 28 21:45:45 2014//
+D/rockchip////
+D/zynq////
+D/amlogic////

@@ -1,0 +1,28 @@
+D/atrun////
+D/comsat////
+D/fingerd////
+D/ftpd////
+D/getNAME////
+D/getty////
+D/httpd////
+D/identd////
+D/ld.aout_so////
+D/ld.elf_so////
+D/lfs_cleanerd////
+D/mail.local////
+D/makekey////
+D/makewhatis////
+D/rexecd////
+D/rlogind////
+D/rpc.rquotad////
+D/rpc.rstatd////
+D/rpc.rusersd////
+D/rpc.rwalld////
+D/rpc.sprayd////
+D/rshd////
+D/talkd////
+D/telnetd////
+D/tftpd////
+D/utmp_update////
+/Makefile/1.61/Fri Nov 28 21:39:52 2014//
+/Makefile.inc/1.9/Fri Nov 28 21:39:52 2014//

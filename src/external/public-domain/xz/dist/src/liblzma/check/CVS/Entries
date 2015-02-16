@@ -1,0 +1,19 @@
+/check.c/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/check.h/1.2/Fri Nov 28 21:37:44 2014//
+/crc32_fast.c/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc32_small.c/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc32_table.c/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc32_table_be.h/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc32_table_le.h/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc32_tablegen.c/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc32_x86.S/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc64_fast.c/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc64_small.c/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc64_table.c/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc64_table_be.h/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc64_table_le.h/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc64_tablegen.c/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc64_x86.S/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/crc_macros.h/1.1.1.1/Fri Nov 28 21:37:44 2014//
+/sha256.c/1.1.1.1/Fri Nov 28 21:37:44 2014//
+D

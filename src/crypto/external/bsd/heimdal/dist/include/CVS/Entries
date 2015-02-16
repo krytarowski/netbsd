@@ -1,0 +1,10 @@
+D/gssapi////
+D/hcrypto////
+D/kadm5////
+/Makefile.am/1.1.1.3/Thu Nov 27 03:00:47 2014//
+/NTMakefile/1.1.1.2/Thu Nov 27 03:00:47 2014//
+/bits.c/1.1.1.3/Thu Nov 27 03:00:47 2014//
+/config.h.w32/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/crypto-headers.h/1.1.1.1/Thu Nov 27 03:00:47 2014//
+/heim_threads.h/1.1.1.3/Thu Nov 27 03:00:47 2014//
+/krb5-types.cross/1.1.1.2/Thu Nov 27 03:00:47 2014//

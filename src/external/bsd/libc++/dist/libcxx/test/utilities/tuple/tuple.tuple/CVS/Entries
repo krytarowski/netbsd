@@ -1,0 +1,14 @@
+D/tuple.assign////
+D/tuple.cnstr////
+D/tuple.creation////
+D/tuple.elem////
+D/tuple.helper////
+D/tuple.rel////
+D/tuple.special////
+D/tuple.swap////
+D/tuple.traits////
+/MoveOnly.h/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/TupleFunction.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/alloc_first.h/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/alloc_last.h/1.1.1.2/Fri Nov 28 21:37:07 2014//
+/empty_member.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//

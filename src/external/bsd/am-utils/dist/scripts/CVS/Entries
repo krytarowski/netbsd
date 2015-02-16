@@ -1,0 +1,22 @@
+/.cvsignore/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/am-eject.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/amd.conf-sample/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/amd2ldif.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/amd2sun.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/ctl-amd.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/ctl-hlfsd.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/fix-amd-map.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/lostaltmail.conf-sample/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/lostaltmail.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/redhat-ctl-amd.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/test-amd.conf/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/test-amd.misc/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/test-attrcache.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/wait4amd.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/wait4amd2die.in/1.1.1.1/Fri Nov 28 21:37:02 2014//
+/Makefile.am/1.1.1.2/Mon Jan 19 22:32:32 2015//
+/amd.conf.5/1.1.1.3/Mon Jan 19 22:32:32 2015//
+/automount2amd.8/1.1.1.3/Mon Jan 19 22:32:32 2015//
+/automount2amd.in/1.1.1.2/Mon Jan 19 22:32:32 2015//
+/fixrmtab.in/1.1.1.2/Mon Jan 19 22:32:32 2015//
+D

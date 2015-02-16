@@ -1,0 +1,33 @@
+D/include////
+D/man////
+D/unix////
+D/win32////
+/Atffile/1.1.1.1/Wed Dec 10 02:25:33 2014//
+/Makefile.in/1.1.1.5/Sat Dec 20 22:29:24 2014//
+/api/1.1.1.12/Sat Dec 20 22:29:24 2014//
+/assert_p.h/1.5/Sat Dec 20 22:29:24 2014//
+/compat.c/1.1.1.3/Wed Dec 10 03:34:45 2014//
+/context.c/1.7/Sat Dec 20 22:29:24 2014//
+/context_p.h/1.4/Sat Dec 20 22:29:24 2014//
+/gai_strerror.c/1.4/Sat Dec 20 22:29:24 2014//
+/getaddrinfo.c/1.7/Sat Dec 20 22:29:24 2014//
+/gethost.c/1.6/Sat Dec 20 22:29:24 2014//
+/getipnode.c/1.6/Sat Dec 20 22:29:24 2014//
+/getnameinfo.c/1.7/Sat Dec 20 22:29:24 2014//
+/getrrset.c/1.6/Sat Dec 20 22:29:24 2014//
+/herror.c/1.6/Sat Dec 20 22:29:24 2014//
+/lwbuffer.c/1.5/Sat Dec 20 22:29:24 2014//
+/lwconfig.c/1.6/Sat Dec 20 22:29:24 2014//
+/lwinetaton.c/1.7/Sat Dec 20 22:29:24 2014//
+/lwinetntop.c/1.4/Sat Dec 20 22:29:25 2014//
+/lwinetpton.c/1.6/Sat Dec 20 22:29:25 2014//
+/lwpacket.c/1.4/Sat Dec 20 22:29:25 2014//
+/lwres_gabn.c/1.5/Sat Dec 20 22:29:25 2014//
+/lwres_gnba.c/1.5/Sat Dec 20 22:29:25 2014//
+/lwres_grbn.c/1.5/Sat Dec 20 22:29:25 2014//
+/lwres_noop.c/1.5/Sat Dec 20 22:29:25 2014//
+/lwresutil.c/1.5/Sat Dec 20 22:29:25 2014//
+/print.c/1.6/Sat Dec 20 22:29:25 2014//
+/print_p.h/1.4/Sat Dec 20 22:29:25 2014//
+/version.c/1.4/Sat Dec 20 22:29:25 2014//
+D/tests////

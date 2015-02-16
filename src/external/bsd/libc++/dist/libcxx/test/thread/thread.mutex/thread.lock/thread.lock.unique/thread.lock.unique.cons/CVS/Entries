@@ -1,0 +1,12 @@
+/copy_assign.fail.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/copy_ctor.fail.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/default.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/move_assign.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/move_ctor.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/mutex.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/mutex_adopt_lock.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/mutex_defer_lock.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/mutex_duration.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/mutex_time_point.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/mutex_try_to_lock.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+D

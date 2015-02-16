@@ -1,0 +1,17 @@
+D/egl-static////
+D/gbm////
+D/graw-gdi////
+D/graw-null////
+D/graw-xlib////
+D/libgl-gdi////
+D/libgl-xlib////
+/dri-vdpau.dyn/1.1.1.1/Thu Dec 18 06:02:07 2014//
+D/dri////
+D/haiku-softpipe////
+D/omx////
+D/opencl////
+D/osmesa////
+D/pipe-loader////
+D/vdpau////
+D/xa////
+D/xvmc////

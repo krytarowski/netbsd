@@ -1,0 +1,29 @@
+D/anvil////
+D/bounce////
+D/cleanup////
+D/discard////
+D/dnsblog////
+D/error////
+D/flush////
+D/local////
+D/master////
+D/oqmgr////
+D/pickup////
+D/pipe////
+D/postfix-script////
+D/postscreen////
+D/proxymap////
+D/qmgr////
+D/scache////
+D/sendmail////
+D/showq////
+D/smtp////
+D/smtpd////
+D/spawn////
+D/tlsmgr////
+D/tlsproxy////
+D/trivial-rewrite////
+D/verify////
+D/virtual////
+/Makefile/1.4/Fri Nov 28 21:37:37 2014//
+/Makefile.inc/1.1/Fri Nov 28 21:37:37 2014//

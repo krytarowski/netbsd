@@ -1,0 +1,17 @@
+/assign_copy.pass.cpp/1.1.1.2/Fri Nov 28 21:37:04 2014//
+/assign_move.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/ctor_comp.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/ctor_comp_container.pass.cpp/1.1.1.2/Fri Nov 28 21:37:04 2014//
+/ctor_comp_rcontainer.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/ctor_copy.pass.cpp/1.1.1.2/Fri Nov 28 21:37:04 2014//
+/ctor_default.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/ctor_iter_iter.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/ctor_iter_iter_comp.pass.cpp/1.1.1.2/Fri Nov 28 21:37:04 2014//
+/ctor_iter_iter_comp_cont.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/ctor_iter_iter_comp_rcont.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/ctor_move.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/default_noexcept.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/dtor_noexcept.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/move_assign_noexcept.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+/move_noexcept.pass.cpp/1.1.1.1/Fri Nov 28 21:37:04 2014//
+D

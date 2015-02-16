@@ -1,0 +1,14 @@
+/Makefile/1.15/Fri Nov 28 22:37:38 2014//
+/clock.c/1.6/Fri Nov 28 21:45:45 2014//
+/clockreg.h/1.3/Fri Nov 28 21:45:45 2014//
+/console.c/1.7/Fri Nov 28 21:45:45 2014//
+/etherfun.c/1.12/Fri Nov 28 21:45:45 2014//
+/etherfun.h/1.5/Fri Nov 28 21:45:45 2014//
+/if_lereg.h/1.4/Fri Nov 28 21:45:45 2014//
+/le_poll.c/1.5/Fri Nov 28 21:45:45 2014//
+/oc_cksum.s/1.2/Fri Nov 28 21:45:45 2014//
+/sboot.c/1.7/Fri Nov 28 21:45:45 2014//
+/sboot.h/1.7/Fri Nov 28 21:45:45 2014//
+/start.s/1.8/Fri Nov 28 21:45:45 2014//
+/version/1.3/Fri Nov 28 21:45:45 2014//
+D

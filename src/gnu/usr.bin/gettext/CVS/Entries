@@ -1,0 +1,26 @@
+D/gettext////
+D/gettextize////
+D/include////
+D/info////
+D/libgrep////
+D/libnlspr////
+D/libnlsut////
+D/locale////
+D/msgattrib////
+D/msgcat////
+D/msgcmp////
+D/msgcomm////
+D/msgconv////
+D/msgen////
+D/msgexec////
+D/msgfilter////
+D/msgfmt////
+D/msggrep////
+D/msginit////
+D/msgmerge////
+D/msgunfmt////
+D/msguniq////
+D/xgettext////
+/Makefile/1.5/Fri Nov 28 21:39:10 2014//
+/Makefile.inc/1.7/Fri Nov 28 21:39:10 2014//
+/Makefile.inc.prog/1.7/Fri Nov 28 21:39:10 2014//

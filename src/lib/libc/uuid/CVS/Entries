@@ -1,0 +1,12 @@
+/Makefile.inc/1.1/Fri Nov 28 21:39:46 2014//
+/uuid.3/1.7/Fri Nov 28 21:39:46 2014//
+/uuid_compare.c/1.2/Fri Nov 28 21:39:46 2014//
+/uuid_create.c/1.1/Fri Nov 28 21:39:46 2014//
+/uuid_create_nil.c/1.2/Fri Nov 28 21:39:46 2014//
+/uuid_equal.c/1.2/Fri Nov 28 21:39:46 2014//
+/uuid_from_string.c/1.1/Fri Nov 28 21:39:46 2014//
+/uuid_hash.c/1.2/Fri Nov 28 21:39:46 2014//
+/uuid_is_nil.c/1.4/Fri Nov 28 21:39:46 2014//
+/uuid_stream.c/1.3/Fri Nov 28 21:39:46 2014//
+/uuid_to_string.c/1.2/Fri Nov 28 21:39:46 2014//
+D

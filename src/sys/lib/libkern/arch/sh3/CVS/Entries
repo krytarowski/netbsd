@@ -1,0 +1,18 @@
+/Makefile.inc/1.19/Fri Nov 28 21:45:47 2014//
+/ashiftrt.S/1.7/Fri Nov 28 21:45:47 2014//
+/ashlsi3.S/1.6/Fri Nov 28 21:45:47 2014//
+/ashrsi3.S/1.6/Fri Nov 28 21:45:47 2014//
+/byte_swap_2.S/1.6/Fri Nov 28 21:45:47 2014//
+/byte_swap_4.S/1.5/Fri Nov 28 21:45:47 2014//
+/byte_swap_8.S/1.2/Fri Nov 28 21:45:47 2014//
+/lshrsi3.S/1.6/Fri Nov 28 21:45:47 2014//
+/movstr.S/1.9/Fri Nov 28 21:45:47 2014//
+/movstrSI.S/1.8/Fri Nov 28 21:45:47 2014//
+/movstrSI12_i4.S/1.2/Fri Nov 28 21:45:47 2014//
+/movstr_i4.S/1.6/Fri Nov 28 21:45:47 2014//
+/mulsi3.S/1.6/Fri Nov 28 21:45:47 2014//
+/sdivsi3.S/1.12/Fri Nov 28 21:45:47 2014//
+/sdivsi3_i4i.S/1.2/Fri Nov 28 21:45:47 2014//
+/udivsi3.S/1.11/Fri Nov 28 21:45:47 2014//
+/udivsi3_i4i.S/1.2/Fri Nov 28 21:45:47 2014//
+D

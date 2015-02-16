@@ -1,0 +1,11 @@
+/Makefile.inc/1.6/Thu Nov 27 02:58:58 2014//
+/atomic_add.S/1.8/Thu Nov 27 02:58:58 2014//
+/atomic_and.S/1.7/Thu Nov 27 02:58:58 2014//
+/atomic_cas.S/1.8/Thu Nov 27 02:58:58 2014//
+/atomic_dec.S/1.7/Thu Nov 27 02:58:58 2014//
+/atomic_inc.S/1.7/Thu Nov 27 02:58:58 2014//
+/atomic_op_asm.h/1.6/Thu Nov 27 02:58:58 2014//
+/atomic_or.S/1.7/Thu Nov 27 02:58:58 2014//
+/atomic_swap.S/1.7/Thu Nov 27 02:58:58 2014//
+/membar_ops.S/1.4/Thu Nov 27 02:58:58 2014//
+D

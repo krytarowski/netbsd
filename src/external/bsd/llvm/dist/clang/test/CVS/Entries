@@ -1,0 +1,49 @@
+D/ARCMT////
+D/ASTMerge////
+D/Analysis////
+D/CXX////
+D/CodeCompletion////
+D/CodeGen////
+D/CodeGenCUDA////
+D/CodeGenCXX////
+D/CodeGenObjC////
+D/CodeGenObjCXX////
+D/CodeGenOpenCL////
+D/Coverage////
+D/Driver////
+D/FixIt////
+D/Format////
+D/Frontend////
+D/Headers////
+D/Index////
+D/Integration////
+D/Layout////
+D/Lexer////
+D/Misc////
+D/Modules////
+D/OpenMP////
+D/PCH////
+D/Parser////
+D/Preprocessor////
+D/Profile////
+D/Rewriter////
+D/Sema////
+D/SemaCUDA////
+D/SemaCXX////
+D/SemaObjC////
+D/SemaObjCXX////
+D/SemaOpenCL////
+D/SemaTemplate////
+D/TableGen////
+D/Tooling////
+D/Unit////
+D/VFS////
+/.clang-format/1.1.1.1/Fri Nov 28 21:37:08 2014//
+/CMakeLists.txt/1.1.1.6/Fri Nov 28 21:37:08 2014//
+/TestRunner.sh/1.1.1.1/Fri Nov 28 21:37:09 2014//
+/cxx-sections.data/1.1.1.1/Fri Nov 28 21:37:09 2014//
+/lit.site.cfg.in/1.1.1.5/Fri Nov 28 21:37:09 2014//
+/make_test_dirs.pl/1.1.1.1/Fri Nov 28 21:37:09 2014//
+/Makefile/1.1.1.5/Fri Jan 30 01:38:05 2015//
+/lit.cfg/1.1.1.8/Fri Jan 30 01:38:05 2015//
+D/CoverageMapping////

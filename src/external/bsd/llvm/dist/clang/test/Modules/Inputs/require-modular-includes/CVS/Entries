@@ -1,0 +1,18 @@
+D/A.framework////
+D/B.framework////
+D/ExcludedFromAnotherModule.framework////
+D/FromAnotherModule.framework////
+D/FromImportedModuleFail.framework////
+D/FromImportedModuleOK.framework////
+D/FromImportedSubModule.framework////
+D/FromNonModularSubframework.framework////
+D/FromSubframework.framework////
+D/FromUmbrella.framework////
+D/IncludeExcluded.framework////
+D/umbrella////
+/AnotherModule.h/1.1.1.1/Fri Nov 28 21:37:09 2014//
+/AnotherModuleExcluded.h/1.1.1.1/Fri Nov 28 21:37:09 2014//
+/C.h/1.1.1.1/Fri Nov 28 21:37:09 2014//
+/NotFramework.h/1.1.1.1/Fri Nov 28 21:37:09 2014//
+/NotInModule.h/1.1.1.1/Fri Nov 28 21:37:09 2014//
+/module.modulemap/1.1.1.1/Fri Nov 28 21:37:09 2014//

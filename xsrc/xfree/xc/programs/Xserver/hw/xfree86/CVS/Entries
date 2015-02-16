@@ -1,0 +1,45 @@
+D/common////
+D/ddc////
+D/doc////
+D/drivers////
+D/dummylib////
+D/etc////
+D/fbdevhw////
+D/getconfig////
+D/i2c////
+D/input////
+D/int10////
+D/loader////
+D/os-support////
+D/parser////
+D/rac////
+D/ramdac////
+D/scanpci////
+D/sdk////
+D/shadowfb////
+D/vbe////
+D/vgahw////
+D/xaa////
+D/xf1bpp////
+D/xf24_32bpp////
+D/xf4bpp////
+D/xf86cfg////
+D/xf86config////
+D/xf8_16bpp////
+D/xf8_32bpp////
+D/xf8_32wid////
+/CHANGELOG/1.7/Thu Nov 27 02:21:54 2014//
+/CHANGELOG.ND/1.1.1.3/Thu Nov 27 02:21:54 2014//
+/CHANGELOG.R5/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/DebuggingHints/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/Domain.note/1.1.1.2/Thu Nov 27 02:21:54 2014//
+/Imakefile/1.1.1.7/Thu Nov 27 02:21:54 2014//
+/Options/1.1.1.4/Thu Nov 27 02:21:54 2014//
+/RAC.Notes/1.1.1.1/Thu Nov 27 02:21:54 2014//
+/Registry/1.1.1.4/Thu Nov 27 02:21:54 2014//
+/XF86Conf.cpp/1.1.1.6/Thu Nov 27 02:21:54 2014//
+/XF86Config.man/1.1.1.5/Thu Nov 27 02:21:54 2014//
+/XF98Conf.cpp/1.1.1.6/Thu Nov 27 02:21:54 2014//
+/XFree86.man/1.1.1.5/Thu Nov 27 02:21:54 2014//
+/xf86Date.h/1.1.1.4/Thu Nov 27 02:21:54 2014//
+/xf86Version.h/1.7/Thu Nov 27 02:21:54 2014//

@@ -1,0 +1,31 @@
+D/bugpoint////
+D/clang////
+D/clang-format////
+D/clang-tblgen////
+D/llc////
+D/lld////
+D/lldb////
+D/lli////
+D/llvm-ar////
+D/llvm-as////
+D/llvm-bcanalyzer////
+D/llvm-cov////
+D/llvm-diff////
+D/llvm-dis////
+D/llvm-dwarfdump////
+D/llvm-extract////
+D/llvm-link////
+D/llvm-mc////
+D/llvm-mcld////
+D/llvm-nm////
+D/llvm-objdump////
+D/llvm-profdata////
+D/llvm-ranlib////
+D/llvm-readobj////
+D/llvm-size////
+D/llvm-symbolizer////
+D/macho-dumpx////
+D/opt////
+D/tblgen////
+/Makefile/1.14/Fri Nov 28 21:37:08 2014//
+/Makefile.inc/1.1/Fri Nov 28 21:37:08 2014//

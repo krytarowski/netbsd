@@ -1,0 +1,12 @@
+/atomic_compare_exchange_strong.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/atomic_compare_exchange_strong_explicit.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/atomic_compare_exchange_weak.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/atomic_compare_exchange_weak_explicit.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/atomic_exchange.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/atomic_exchange_explicit.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/atomic_is_lock_free.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/atomic_load.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/atomic_load_explicit.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/atomic_store.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+/atomic_store_explicit.pass.cpp/1.1.1.1/Fri Nov 28 21:37:07 2014//
+D

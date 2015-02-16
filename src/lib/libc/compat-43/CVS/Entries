@@ -1,0 +1,21 @@
+/Makefile.inc/1.16/Fri Nov 28 21:39:46 2014//
+/creat.3/1.16/Fri Nov 28 21:39:46 2014//
+/creat.c/1.10/Fri Nov 28 21:39:46 2014//
+/getdtablesize.3/1.14/Fri Nov 28 21:39:46 2014//
+/getdtablesize.c/1.10/Fri Nov 28 21:39:46 2014//
+/gethostid.3/1.12/Fri Nov 28 21:39:46 2014//
+/gethostid.c/1.6/Fri Nov 28 21:39:46 2014//
+/getwd.c/1.15/Fri Nov 28 21:39:46 2014//
+/killpg.3/1.16/Fri Nov 28 21:39:46 2014//
+/killpg.c/1.8/Fri Nov 28 21:39:46 2014//
+/sethostid.c/1.7/Fri Nov 28 21:39:46 2014//
+/setpgrp.c/1.8/Fri Nov 28 21:39:46 2014//
+/setrgid.c/1.12/Fri Nov 28 21:39:46 2014//
+/setruid.3/1.10/Fri Nov 28 21:39:46 2014//
+/setruid.c/1.13/Fri Nov 28 21:39:46 2014//
+/sigblock.3/1.17/Fri Nov 28 21:39:46 2014//
+/sigcompat.c/1.13/Fri Nov 28 21:39:46 2014//
+/sigpause.3/1.15/Fri Nov 28 21:39:46 2014//
+/sigsetmask.3/1.19/Fri Nov 28 21:39:46 2014//
+/sigvec.3/1.26/Fri Nov 28 21:39:46 2014//
+D

@@ -1,0 +1,15 @@
+D/hkpclient////
+D/hkpd////
+D/lib////
+D/libbn////
+D/libdigest////
+D/libmj////
+D/libpaa////
+D/librsa////
+D/libverify////
+D/netpgp////
+D/netpgpkeys////
+D/netpgpverify////
+D/pgp2ssh////
+/Makefile.am/1.7/Thu Nov 27 03:00:47 2014//
+/Makefile.in/1.7/Thu Nov 27 03:00:47 2014//

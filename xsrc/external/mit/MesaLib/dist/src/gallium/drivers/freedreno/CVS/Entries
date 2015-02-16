@@ -1,0 +1,40 @@
+/Android.mk/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/Makefile.am/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/Makefile.in/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/Makefile.sources/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/adreno_common.xml.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/adreno_pm4.xml.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/disasm.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_context.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_context.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_draw.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_draw.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_fence.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_fence.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_gmem.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_gmem.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_lowering.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_lowering.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_program.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_program.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_query.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_query.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_query_hw.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_query_hw.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_query_sw.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_query_sw.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_resource.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_resource.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_screen.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_screen.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_state.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_state.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_surface.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_surface.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_texture.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_texture.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_util.c/1.1.1.1/Thu Dec 18 06:02:06 2014//
+/freedreno_util.h/1.1.1.1/Thu Dec 18 06:02:06 2014//
+D/a2xx////
+D/a3xx////
+D/ir3////

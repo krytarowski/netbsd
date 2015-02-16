@@ -1,0 +1,69 @@
+D/dri////
+D/fontconfig////
+D/freetype////
+D/libFS////
+D/libGL////
+D/libGLU////
+D/libGLw////
+D/libI810XvMC////
+D/libICE////
+D/libIntelXvMC////
+D/libSM////
+D/libX11////
+D/libXScrnSaver////
+D/libXTrap////
+D/libXau////
+D/libXaw////
+D/libXaw6////
+D/libXcomposite////
+D/libXcursor////
+D/libXdamage////
+D/libXdmGreet////
+D/libXdmcp////
+D/libXevie////
+D/libXext////
+D/libXfixes////
+D/libXfont////
+D/libXfontcache////
+D/libXft////
+D/libXi////
+D/libXinerama////
+D/libXmu////
+D/libXmuu////
+D/libXpm////
+D/libXrandr////
+D/libXrender////
+D/libXres////
+D/libXt////
+D/libXtst////
+D/libXv////
+D/libXvMC////
+D/libXvMCW////
+D/libXxf86dga////
+D/libXxf86misc////
+D/libXxf86vm////
+D/libchromeXvMC////
+D/libchromeXvMCPro////
+D/libdrm////
+D/libdrm_intel////
+D/libdrm_radeon////
+D/libfontenc////
+D/libglut////
+D/libpciaccess////
+D/libpthread-stubs////
+D/libxcb////
+D/libxkbfile////
+D/libxkbui////
+D/pixman////
+D/xcb-util////
+D/xkeyboard-config////
+/Makefile.inc/1.1.1.1/Fri Nov 28 21:37:38 2014//
+/asm.mk/1.1/Thu Dec 18 06:24:28 2014//
+/driver.mk/1.1/Thu Dec 18 06:24:28 2014//
+/libglsl.mk/1.1/Thu Dec 18 06:24:28 2014//
+/libloader.mk/1.1/Thu Dec 18 06:24:28 2014//
+/libmesa.mk/1.1/Thu Dec 18 06:24:28 2014//
+D/gallium////
+D/libglapi////
+D/dri7////
+/Makefile/1.32/Sun Jan 11 12:41:28 2015//
