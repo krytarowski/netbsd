@@ -2,8 +2,6 @@ D/TEST////
 D/readline////
 /chared.c/1.40/Fri Nov 28 21:39:46 2014//
 /chared.h/1.22/Fri Nov 28 21:39:46 2014//
-/chartype.c/1.10/Fri Nov 28 21:39:46 2014//
-/chartype.h/1.10/Fri Nov 28 21:39:46 2014//
 /common.c/1.29/Fri Nov 28 21:39:46 2014//
 /config.h/1.5/Fri Nov 28 21:39:46 2014//
 /el.c/1.73/Fri Nov 28 21:39:46 2014//
@@ -45,3 +43,5 @@ D/readline////
 /editline.3/1.84/Thu Jan 15 01:45:42 2015//
 /editrc.5/1.29/Thu Jan 15 01:45:42 2015//
 /Makefile/1.53/Fri Feb  6 02:38:35 2015//
+/chartype.c/1.12/Mon Mar  9 20:33:57 2015//
+/chartype.h/1.13/Mon Mar  9 20:33:57 2015//

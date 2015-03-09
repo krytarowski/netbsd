@@ -3,7 +3,6 @@
 /nouveau_subdev_therm_fannil.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_therm_fanpwm.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_therm_fantog.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
-/nouveau_subdev_therm_ic.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_therm_nv40.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_therm_nv50.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_therm_nv84.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
@@ -11,4 +10,5 @@
 /nouveau_subdev_therm_nvd0.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_therm_temp.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /priv.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
+/nouveau_subdev_therm_ic.c/1.2/Mon Mar  9 20:34:14 2015//
 D

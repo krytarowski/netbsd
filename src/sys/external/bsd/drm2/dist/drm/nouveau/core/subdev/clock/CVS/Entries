@@ -1,7 +1,5 @@
-/nouveau_subdev_clock_base.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_clock_nv04.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_clock_nv40.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
-/nouveau_subdev_clock_nv50.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_clock_nv84.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_clock_nva3.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_clock_nvaa.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
@@ -13,4 +11,6 @@
 /nva3.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /pll.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /seq.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
+/nouveau_subdev_clock_base.c/1.2/Mon Mar  9 20:34:14 2015//
+/nouveau_subdev_clock_nv50.c/1.2/Mon Mar  9 20:34:14 2015//
 D

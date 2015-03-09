@@ -5,7 +5,6 @@
 /centralvar.h/1.1/Fri Nov 28 21:45:45 2014//
 /com_ebus.c/1.33/Fri Nov 28 21:45:45 2014//
 /cons.h/1.9/Fri Nov 28 21:45:45 2014//
-/consinit.c/1.27/Fri Nov 28 21:45:45 2014//
 /ebus.c/1.62/Fri Nov 28 21:45:45 2014//
 /ebus_mainbus.c/1.15/Fri Nov 28 21:45:45 2014//
 /ebusvar.h/1.12/Fri Nov 28 21:45:45 2014//
@@ -25,7 +24,6 @@
 /iommureg.h/1.20/Fri Nov 28 21:45:45 2014//
 /iommuvar.h/1.21/Fri Nov 28 21:45:45 2014//
 /kd.c/1.53/Fri Nov 28 21:45:45 2014//
-/lom.c/1.13/Fri Nov 28 21:45:45 2014//
 /lpt_ebus.c/1.24/Fri Nov 28 21:45:45 2014//
 /mkclock.c/1.12/Fri Nov 28 21:45:45 2014//
 /pcf8591_envctrl.c/1.6/Fri Nov 28 21:45:45 2014//
@@ -59,4 +57,6 @@
 /fdc.c/1.43/Wed Jan  7 00:50:06 2015//
 /vpci.c/1.1/Thu Feb 12 04:48:37 2015//
 /vpcivar.h/1.1/Thu Feb 12 04:48:37 2015//
+/consinit.c/1.28/Mon Mar  9 20:34:10 2015//
+/lom.c/1.14/Mon Mar  9 20:34:10 2015//
 D

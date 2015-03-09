@@ -7,7 +7,6 @@
 /mga_arc.c/1.1.1.3/Thu Nov 27 02:21:43 2014//
 /mga_bios.c/1.1.1.4/Thu Nov 27 02:21:43 2014//
 /mga_common.h/1.1.1.2/Thu Nov 27 02:21:43 2014//
-/mga_dac3026.c/1.3/Thu Nov 27 02:21:43 2014//
 /mga_dacG.c/1.1.1.4/Thu Nov 27 02:21:43 2014//
 /mga_dga.c/1.1.1.3/Thu Nov 27 02:21:43 2014//
 /mga_dh.c/1.1.1.3/Thu Nov 27 02:21:43 2014//
@@ -28,7 +27,8 @@
 /mga_shadow.c/1.1.1.4/Thu Nov 27 02:21:43 2014//
 /mga_storm.c/1.1.1.5/Thu Nov 27 02:21:43 2014//
 /mga_ucode.h/1.1.1.1/Thu Nov 27 02:21:43 2014//
-/mga_vga.c/1.3/Thu Nov 27 02:21:43 2014//
 /mga_video.c/1.1.1.4/Thu Nov 27 02:21:43 2014//
 /mgareg_flags.h/1.1.1.2/Thu Nov 27 02:21:43 2014//
+/mga_dac3026.c/1.5/Mon Mar  9 20:31:48 2015//
+/mga_vga.c/1.4/Mon Mar  9 20:31:48 2015//
 D

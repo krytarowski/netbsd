@@ -1,4 +1,4 @@
-/* $NetBSD: amlogic_var.h,v 1.1 2015/02/07 17:20:17 jmcneill Exp $ */
+/* $NetBSD: amlogic_var.h,v 1.6 2015/03/08 12:44:55 jmcneill Exp $ */
 
 /*-
  * Copyright (c) 2015 Jared D. McNeill <jmcneill@invisible.ca>
@@ -55,5 +55,33 @@ extern bus_space_handle_t amlogic_core_bsh;
 extern struct arm32_bus_dma_tag amlogic_dma_tag;
 
 void	amlogic_bootstrap(void);
+
+void	amlogic_cpufreq_init(void);
+
+void	amlogic_usbphy_init(int);
+void	amlogic_eth_init(void);
+void	amlogic_rng_init(void);
+void	amlogic_sdhc_init(void);
+
+int	amlogic_sdhc_select_port(int);
+#define AMLOGIC_SDHC_PORT_B	1
+#define AMLOGIC_SDHC_PORT_C	2
+
+uint32_t amlogic_get_rate_xtal(void);
+uint32_t amlogic_get_rate_sys(void);
+uint32_t amlogic_get_rate_fixed(void);
+uint32_t amlogic_get_rate_a9(void);
+uint32_t amlogic_get_rate_a9periph(void);
+
+static void inline
+amlogic_reg_set_clear(bus_space_tag_t bst, bus_space_handle_t bsh,
+    bus_size_t o, uint32_t set_mask, uint32_t clr_mask)
+{
+	const uint32_t old = bus_space_read_4(bst, bsh, o);
+	const uint32_t new = set_mask | (old & ~clr_mask);
+	if (old != new) {
+		bus_space_write_4(bst, bsh, o, new);
+	}
+}
 
 #endif /* _ARM_AMLOGIC_VAR_H */

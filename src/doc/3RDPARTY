@@ -1,4 +1,4 @@
-#	$NetBSD: 3RDPARTY,v 1.1204 2015/02/11 20:12:22 riastradh Exp $
+#	$NetBSD: 3RDPARTY,v 1.1207 2015/02/23 07:17:37 spz Exp $
 #
 # This file contains a list of the software that has been integrated into
 # NetBSD where we are not the primary maintainer.
@@ -113,8 +113,8 @@ Notes:
 bc includes dc, both of which are in the NetBSD tree.
 
 Package:	bind [named and utils]
-Version:	9.10.1-P1
-Current Vers:	9.10.1-P1
+Version:	9.10.1-P2
+Current Vers:	9.10.1-P2
 Maintainer:	Paul Vixie <vixie@vix.com>
 Archive Site:	ftp://ftp.isc.org/isc/bind9/
 Home Page:	http://www.isc.org/software/bind/
@@ -451,7 +451,7 @@ Before importing a new version of external/gpl3/gcc:
 
 Package:	gdb
 Version:	7.7.1
-Current Vers:	7.8.2
+Current Vers:	7.9
 Maintainer:	FSF
 Archive Site:	ftp://ftp.gnu.org/gnu/gdb/
 Home Page:	http://www.gnu.org/software/gdb/
@@ -1140,7 +1140,7 @@ and more. Vern's ping is gone. We are too different from everyone else
 now to do a new import.
 
 Package:	Postfix
-Version:	2.11.3
+Version:	2.11.4
 Current Vers:	3.0
 Maintainer:	Wietse Venema <wietse@porcupine.org>
 Archive Site:	ftp://postfix.cloud9.net/official/

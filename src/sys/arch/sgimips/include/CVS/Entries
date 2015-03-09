@@ -4,8 +4,6 @@
 /autoconf.h/1.11/Fri Nov 28 21:45:45 2014//
 /bootinfo.h/1.6/Fri Nov 28 21:45:45 2014//
 /bswap.h/1.1/Fri Nov 28 21:45:45 2014//
-/bus_defs.h/1.1/Fri Nov 28 21:45:45 2014//
-/bus_funcs.h/1.1/Fri Nov 28 21:45:45 2014//
 /cdefs.h/1.1/Fri Nov 28 21:45:45 2014//
 /cpu.h/1.4/Fri Nov 28 21:45:45 2014//
 /cpu_counter.h/1.1/Fri Nov 28 21:45:45 2014//
@@ -39,7 +37,6 @@
 /netbsd32_machdep.h/1.2/Fri Nov 28 21:45:45 2014//
 /param.h/1.16/Fri Nov 28 21:45:45 2014//
 /pcb.h/1.1/Fri Nov 28 21:45:45 2014//
-/pci_machdep.h/1.13/Fri Nov 28 21:45:45 2014//
 /pmap.h/1.1/Fri Nov 28 21:45:45 2014//
 /pmc.h/1.1/Fri Nov 28 21:45:45 2014//
 /proc.h/1.1/Fri Nov 28 21:45:45 2014//
@@ -63,4 +60,7 @@
 /wchar_limits.h/1.2/Fri Nov 28 21:45:45 2014//
 /wired_map.h/1.2/Fri Nov 28 21:45:45 2014//
 /z8530var.h/1.10/Fri Nov 28 21:45:45 2014//
+/bus_defs.h/1.2/Mon Mar  9 20:34:10 2015//
+/bus_funcs.h/1.2/Mon Mar  9 20:34:10 2015//
+/pci_machdep.h/1.14/Mon Mar  9 20:34:10 2015//
 D

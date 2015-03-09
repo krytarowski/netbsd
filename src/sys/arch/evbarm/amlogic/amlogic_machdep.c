@@ -1,4 +1,4 @@
-/*	$NetBSD: amlogic_machdep.c,v 1.1 2015/02/07 17:20:16 jmcneill Exp $ */
+/*	$NetBSD: amlogic_machdep.c,v 1.15 2015/03/08 11:22:05 jmcneill Exp $ */
 
 /*
  * Machine dependent functions for kernel setup for TI OSK5912 board.
@@ -125,25 +125,17 @@
  */
 
 #include <sys/cdefs.h>
-__KERNEL_RCSID(0, "$NetBSD: amlogic_machdep.c,v 1.1 2015/02/07 17:20:16 jmcneill Exp $");
+__KERNEL_RCSID(0, "$NetBSD: amlogic_machdep.c,v 1.15 2015/03/08 11:22:05 jmcneill Exp $");
 
 #include "opt_machdep.h"
 #include "opt_ddb.h"
-#include "opt_kgdb.h"
-#include "opt_ipkdb.h"
 #include "opt_md.h"
-#include "opt_com.h"
 #include "opt_amlogic.h"
 #include "opt_arm_debug.h"
+#include "opt_multiprocessor.h"
 
-#include "com.h"
-#if 0
-#include "prcm.h"
-#include "sdhc.h"
-#include "ukbd.h"
-#endif
+#include "amlogic_com.h"
 #include "arml2cc.h"
-#include "act8846pm.h"
 #include "ether.h"
 
 #include <sys/param.h>
@@ -170,9 +162,6 @@ __KERNEL_RCSID(0, "$NetBSD: amlogic_machdep.c,v 1.1 2015/02/07 17:20:16 jmcneill
 #include <machine/db_machdep.h>
 #include <ddb/db_sym.h>
 #include <ddb/db_extern.h>
-#ifdef KGDB
-#include <sys/kgdb.h>
-#endif
 
 #include <machine/bootconfig.h>
 #include <arm/armreg.h>
@@ -182,8 +171,10 @@ __KERNEL_RCSID(0, "$NetBSD: amlogic_machdep.c,v 1.1 2015/02/07 17:20:16 jmcneill
 #include <arm/mainbus/mainbus.h>
 
 #include <arm/amlogic/amlogic_reg.h>
+#include <arm/amlogic/amlogic_crureg.h>
 #include <arm/amlogic/amlogic_var.h>
 #include <arm/amlogic/amlogic_comreg.h>
+#include <arm/amlogic/amlogic_comvar.h>
 
 #include <arm/cortex/pl310_reg.h>
 #include <arm/cortex/scu_reg.h>
@@ -196,9 +187,6 @@ __KERNEL_RCSID(0, "$NetBSD: amlogic_machdep.c,v 1.1 2015/02/07 17:20:16 jmcneill
 #include <evbarm/include/autoconf.h>
 #include <evbarm/amlogic/platform.h>
 
-#include <dev/i2c/i2cvar.h>
-#include <dev/i2c/ddcreg.h>
-
 #include <dev/usb/ukbdvar.h>
 #include <net/if_ether.h>
 
@@ -210,21 +198,12 @@ BootConfig bootconfig;		/* Boot config storage */
 static char bootargs[AMLOGIC_MAX_BOOT_STRING];
 char *boot_args = NULL;
 char *boot_file = NULL;
-#if 0
-static uint8_t amlogic_edid[128];	/* EDID storage */
-#endif
 u_int uboot_args[4] = { 0 };	/* filled in by amlogic_start.S (not in bss) */
 
 /* Same things, but for the free (unused by the kernel) memory. */
 
 extern char KERNEL_BASE_phys[];
 extern char _end[];
-
-#if NCOM > 0
-int use_fb_console = false;
-#else
-int use_fb_console = true;
-#endif
 
 /*
  * Macros to translate between physical and virtual for a subset of the
@@ -235,20 +214,11 @@ int use_fb_console = true;
 /* Prototypes */
 
 void consinit(void);
-#ifdef KGDB
-static void kgdb_port_init(void);
-#endif
 
-static void init_clocks(void);
 static void amlogic_device_register(device_t, void *);
 static void amlogic_reset(void);
 
 bs_protos(bs_notimpl);
-
-#if NCOM > 0
-#include <dev/ic/comreg.h>
-#include <dev/ic/comvar.h>
-#endif
 
 /*
  * Static device mappings. These peripheral registers are mapped at
@@ -290,24 +260,45 @@ amlogic_db_trap(int where)
 }
 #endif
 
-void amlogic_putchar(char c);
-void
+#ifdef VERBOSE_INIT_ARM
+static void
 amlogic_putchar(char c)
 {
 	volatile uint32_t *uartaddr = (volatile uint32_t *)CONSADDR_VA;
 	int timo = 150000;
 
-	while ((uartaddr[UART_STATUS_REG] & UART_STATUS_TX_EMPTY) == 0) {
+	while ((uartaddr[UART_STATUS_REG/4] & UART_STATUS_TX_EMPTY) == 0) {
 		if (--timo == 0)
 			break;
 	}
 
-	uartaddr[UART_WFIFO_REG] = c;
+	uartaddr[UART_WFIFO_REG/4] = c;
 
-	while ((uartaddr[UART_STATUS_REG] & UART_STATUS_TX_EMPTY) == 0) {
+	while ((uartaddr[UART_STATUS_REG/4] & UART_STATUS_TX_EMPTY) == 0) {
 		if (--timo == 0)
 			break;
 	}
+}
+static void
+amlogic_putstr(const char *s)
+{
+	for (const char *p = s; *p; p++) {
+		amlogic_putchar(*p);
+	}
+}
+#define DPRINTF(...)		printf(__VA_ARGS__)
+#define DPRINT(x)		amlogic_putstr(x)
+#else
+#define DPRINTF(...)
+#define DPRINT(x)
+#endif
+
+static psize_t
+amlogic_get_ram_size(void)
+{
+	const bus_space_handle_t ao_bsh =
+	    AMLOGIC_CORE_VBASE + AMLOGIC_SRAM_OFFSET;
+	return bus_space_read_4(&amlogic_bs_tag, ao_bsh, 0) << 20;
 }
 
 /*
@@ -327,76 +318,66 @@ u_int
 initarm(void *arg)
 {
 	psize_t ram_size = 0;
-	char *ptr;
-	*(volatile int *)CONSADDR_VA  = 0x40;	/* output '@' */
-#if 1
-	amlogic_putchar('d');
-#endif
+	DPRINT("initarm:");
 
+	DPRINT(" devmap");
 	pmap_devmap_register(devmap);
-	amlogic_putchar('b');
+
+	DPRINT(" bootstrap");
 	amlogic_bootstrap();
-	amlogic_putchar('!');
 
 #ifdef MULTIPROCESSOR
-	uint32_t scu_cfg = bus_space_read_4(&amlogic_bs_tag,
-	    amlogic_core0_bsh, ROCKCHIP_SCU_OFFSET + SCU_CFG);
-	arm_cpu_max = (scu_cfg & SCU_CFG_CPUMAX) + 1;
-	membar_producer();
+	DPRINT(" ncpu");
+	const bus_addr_t cbar = armreg_cbar_read();
+	if (cbar) {
+		const bus_space_handle_t scu_bsh =
+		    cbar - AMLOGIC_CORE_BASE + AMLOGIC_CORE_VBASE;
+		uint32_t scu_cfg = bus_space_read_4(&amlogic_bs_tag, scu_bsh,
+		    SCU_CFG);
+		arm_cpu_max = (scu_cfg & SCU_CFG_CPUMAX) + 1;
+		membar_producer();
+	}
 #endif
 
 	/* Heads up ... Setup the CPU / MMU / TLB functions. */
+	DPRINT(" cpufunc");
 	if (set_cpufuncs())
 		panic("cpu not recognized!");
 
-	init_clocks();
-
+	DPRINT(" consinit");
 	consinit();
-#ifdef MULTIPROCESSOR
-	arm_cpu_max = 1 + __SHIFTOUT(armreg_l2ctrl_read(), L2CTRL_NUMCPU);
-#endif
 
 #if NARML2CC > 0
         /*
          * Probe the PL310 L2CC
          */
-	printf("probe the PL310 L2CC\n");
+	DPRINTF(" l2cc");
         const bus_space_handle_t pl310_bh =
             AMLOGIC_CORE_VBASE + AMLOGIC_PL310_OFFSET;
         arml2cc_init(&amlogic_bs_tag, pl310_bh, 0);
-        amlogic_putchar('l');
 #endif
 
-	printf("\nuboot arg = %#x, %#x, %#x, %#x\n",
+	DPRINTF(" cbar=%#x", armreg_cbar_read());
+
+	DPRINTF(" ok\n");
+
+	DPRINTF("uboot: args %#x, %#x, %#x, %#x\n",
 	    uboot_args[0], uboot_args[1], uboot_args[2], uboot_args[3]);
-
-#ifdef KGDB
-	kgdb_port_init();
-#endif
 
 	cpu_reset_address = amlogic_reset;
 
-#ifdef VERBOSE_INIT_ARM
 	/* Talk to the user */
-	printf("\nNetBSD/evbarm (amlogic) booting ...\n");
-#endif
+	DPRINTF("\nNetBSD/evbarm (amlogic) booting ...\n");
 
 #ifdef BOOT_ARGS
 	char mi_bootargs[] = BOOT_ARGS;
 	parse_mi_bootargs(mi_bootargs);
 #endif
 
-#ifdef VERBOSE_INIT_ARM
-	printf("initarm: Configuring system ...\n");
-
-	printf("initarm: cbar=%#x\n", armreg_cbar_read());
-	printf("KERNEL_BASE=0x%x, KERNEL_VM_BASE=0x%x, KERNEL_VM_BASE - KERNEL_BASE=0x%x, KERNEL_BASE_VOFFSET=0x%x\n",
+	DPRINTF("KERNEL_BASE=0x%x, KERNEL_VM_BASE=0x%x, KERNEL_VM_BASE - KERNEL_BASE=0x%x, KERNEL_BASE_VOFFSET=0x%x\n",
 		KERNEL_BASE, KERNEL_VM_BASE, KERNEL_VM_BASE - KERNEL_BASE, KERNEL_BASE_VOFFSET);
-#endif
 
-#if notyet
 	ram_size = amlogic_get_ram_size();
-#endif
 
 #ifdef __HAVE_MM_MD_DIRECT_MAPPED_PHYS
 	if (ram_size > KERNEL_VM_BASE - KERNEL_BASE) {
@@ -414,7 +395,7 @@ initarm(void *arg)
 #ifdef MEMSIZE
 	if (ram_size == 0 || ram_size > (unsigned)MEMSIZE * 1024 * 1024)
 		ram_size = (unsigned)MEMSIZE * 1024 * 1024;
-	printf("ram_size = 0x%x\n", (int)ram_size);
+	DPRINTF("ram_size = 0x%x\n", (int)ram_size);
 #else
 	KASSERTMSG(ram_size > 0, "RAM size unknown and MEMSIZE undefined");
 #endif
@@ -434,10 +415,18 @@ initarm(void *arg)
 
 	arm32_bootmem_init(bootconfig.dram[0].address, ram_size,
 	    KERNEL_BASE_PHYS);
-	arm32_kernel_vm_init(KERNEL_VM_BASE, ARM_VECTORS_LOW, 0, devmap,
+	arm32_kernel_vm_init(KERNEL_VM_BASE, ARM_VECTORS_HIGH, 0, devmap,
 	    mapallmem_p);
 
-	printf("bootargs: %s\n", bootargs);
+	if (mapallmem_p) {
+		if (uboot_args[3] < ram_size) {
+			const char * const args = (const char *)
+			    (uboot_args[3] + KERNEL_BASE_VOFFSET);
+			strlcpy(bootargs, args, sizeof(bootargs));
+		}
+	}
+
+	DPRINTF("bootargs: %s\n", bootargs);
 
 	boot_args = bootargs;
 	parse_mi_bootargs(boot_args);
@@ -447,28 +436,11 @@ initarm(void *arg)
 
 	db_trap_callback = amlogic_db_trap;
 
-	if (get_bootconf_option(boot_args, "console",
-		    BOOTOPT_TYPE_STRING, &ptr) && strncmp(ptr, "fb", 2) == 0) {
-		use_fb_console = true;
-	}
-
-#if notyet
-	curcpu()->ci_data.cpu_cc_freq = amlogic_cpu_get_rate();
-#else
-	curcpu()->ci_data.cpu_cc_freq = 1000000;
-#endif
-
 	return initarm_common(KERNEL_VM_BASE, KERNEL_VM_SIZE, NULL, 0);
 
 }
 
-static void
-init_clocks(void)
-{
-	/* NOT YET */
-}
-
-#if NCOM > 0
+#if NAMLOGIC_COM > 0
 #ifndef CONSADDR
 #error Specify the address of the console UART with the CONSADDR option.
 #endif
@@ -487,9 +459,6 @@ static const int conmode = CONMODE;
 void
 consinit(void)
 {
-#if NCOM > 0
-	bus_space_handle_t bh;
-#endif
 	static int consinit_called = 0;
 
 	if (consinit_called != 0)
@@ -497,79 +466,32 @@ consinit(void)
 
 	consinit_called = 1;
 
-	amlogic_putchar('e');
-
-#if NCOM > 0
-	if (bus_space_map(&amlogic_a4x_bs_tag, consaddr, AMLOGIC_UART_SIZE, 0, &bh))
-		panic("Serial console can not be mapped.");
-
-	if (comcnattach(&amlogic_a4x_bs_tag, consaddr, conspeed,
-			AMLOGIC_UART_FREQ, COM_TYPE_NORMAL, conmode))
-		panic("Serial console can not be initialized.");
-
-	bus_space_unmap(&amlogic_a4x_bs_tag, bh, AMLOGIC_UART_SIZE);
+#if NAMLOGIC_COM > 0
+        const bus_space_handle_t bsh =
+            AMLOGIC_CORE_VBASE + (consaddr - AMLOGIC_CORE_BASE);
+	amlogic_com_cnattach(&amlogic_bs_tag, bsh, conspeed, conmode);
 #endif
-
 
 #if NUKBD > 0
 	ukbd_cnattach();	/* allow USB keyboard to become console */
 #endif
-
-	amlogic_putchar('f');
-	amlogic_putchar('g');
 }
 
 void
 amlogic_reset(void)
 {
-#if notyet
 	bus_space_tag_t bst = &amlogic_bs_tag;
-	bus_space_handle_t bsh;
+	bus_space_handle_t bsh = amlogic_core_bsh;
+	bus_size_t off = AMLOGIC_CBUS_OFFSET;
 
-	bus_space_subregion(bst, amlogic_core1_bsh,
-	    ROCKCHIP_CRU_OFFSET, ROCKCHIP_CRU_SIZE, &bsh);
+	bus_space_write_4(bst, bsh, off + WATCHDOG_TC_REG,
+	    WATCHDOG_TC_CPUS | WATCHDOG_TC_ENABLE | 0xfff);
+	bus_space_write_4(bst, bsh, off + WATCHDOG_RESET_REG, 0);
 
-	bus_space_write_4(bst, bsh, CRU_GLB_SRST_FST_REG,
-	    CRU_GLB_SRST_FST_MAGIC);
-#endif
+	for (;;) {
+		__asm("wfi");
+	}
 }
-
-#ifdef KGDB
-#ifndef KGDB_DEVADDR
-#error Specify the address of the kgdb UART with the KGDB_DEVADDR option.
-#endif
-#ifndef KGDB_DEVRATE
-#define KGDB_DEVRATE 115200
-#endif
-
-#ifndef KGDB_DEVMODE
-#define KGDB_DEVMODE ((TTYDEF_CFLAG & ~(CSIZE | CSTOPB | PARENB)) | CS8) /* 8N1 */
-#endif
-static const vaddr_t comkgdbaddr = KGDB_DEVADDR;
-static const int comkgdbspeed = KGDB_DEVRATE;
-static const int comkgdbmode = KGDB_DEVMODE;
-
-void
-static kgdb_port_init(void)
-{
-	static int kgdbsinit_called = 0;
-
-	if (kgdbsinit_called != 0)
-		return;
-
-	kgdbsinit_called = 1;
-
-	bus_space_handle_t bh;
-	if (bus_space_map(&amlogic_a4x_bs_tag, comkgdbaddr, ROCKCHIP_COM_SIZE, 0, &bh))
-		panic("kgdb port can not be mapped.");
-
-	if (com_kgdb_attach(&amlogic_a4x_bs_tag, comkgdbaddr, comkgdbspeed,
-			ROCKCHIP_COM_FREQ, COM_TYPE_NORMAL, comkgdbmode))
-		panic("KGDB uart can not be initialized.");
-
-	bus_space_unmap(&amlogic_a4x_bs_tag, bh, ROCKCHIP_COM_SIZE);
-}
-#endif
 
 void
 amlogic_device_register(device_t self, void *aux)
@@ -583,14 +505,148 @@ amlogic_device_register(device_t self, void *aux)
 		return;
 	}
 
+	if (device_is_a(self, "cpu") && device_unit(self) == 0) {
+		amlogic_cpufreq_init();
+	}
+
 	/*
 	 * We need to tell the A9 Global/Watchdog Timer
 	 * what frequency it runs at.
 	 */
 	if (device_is_a(self, "a9tmr") || device_is_a(self, "a9wdt")) {
                 prop_dictionary_set_uint32(dict, "frequency",
-		    1600000000 / 2);
+		    amlogic_get_rate_a9periph());
 
 		return;
 	}
+
+	if (device_is_a(self, "arml2cc")) {
+		/*
+		 * L2 cache regs are at C4200000 and A9 periph base is
+		 * at C4300000; pass as a negative offset for the benefit
+		 * of armperiph bus.
+		 */
+		prop_dictionary_set_uint32(dict, "offset", 0xfff00000);
+	}
+
+	if (device_is_a(self, "awge") && device_unit(self) == 0) {
+		uint8_t enaddr[ETHER_ADDR_LEN];
+		if (get_bootconf_option(boot_args, "awge0.mac-address",
+		    BOOTOPT_TYPE_MACADDR, enaddr)) {
+			prop_data_t pd = prop_data_create_data(enaddr,
+			    sizeof(enaddr));
+			prop_dictionary_set(dict, "mac-address", pd);
+			prop_object_release(pd);
+		}
+	}
 }
+
+#if defined(MULTIPROCESSOR)
+void amlogic_mpinit(uint32_t);
+
+static void
+amlogic_mpinit_delay(u_int n)
+{
+	for (volatile int i = 0; i < n; i++)
+		;
+}
+
+static void
+amlogic_mpinit_cpu(int cpu)
+{
+	const bus_addr_t cbar = armreg_cbar_read();
+	bus_space_tag_t bst = &amlogic_bs_tag;
+	const bus_space_handle_t scu_bsh =
+	    cbar - AMLOGIC_CORE_BASE + AMLOGIC_CORE_VBASE;
+	const bus_space_handle_t ao_bsh =
+	    AMLOGIC_CORE_VBASE + AMLOGIC_AOBUS_OFFSET;
+	const bus_space_handle_t cbus_bsh =
+	    AMLOGIC_CORE_VBASE + AMLOGIC_CBUS_OFFSET;
+	uint32_t pwr_sts, pwr_cntl0, pwr_cntl1, cpuclk, mempd0;
+
+	pwr_sts = bus_space_read_4(bst, scu_bsh, SCU_CPU_PWR_STS);
+	pwr_sts &= ~(3 << (8 * cpu));
+	bus_space_write_4(bst, scu_bsh, SCU_CPU_PWR_STS, pwr_sts);
+
+	pwr_cntl0 = bus_space_read_4(bst, ao_bsh, AMLOGIC_AOBUS_PWR_CTRL0_REG);
+	pwr_cntl0 &= ~((3 << 18) << ((cpu - 1) * 2));
+	bus_space_write_4(bst, ao_bsh, AMLOGIC_AOBUS_PWR_CTRL0_REG, pwr_cntl0);
+
+	amlogic_mpinit_delay(5000);
+
+	cpuclk = bus_space_read_4(bst, cbus_bsh, AMLOGIC_CBUS_CPU_CLK_CNTL_REG);
+	cpuclk |= (1 << (24 + cpu));
+	bus_space_write_4(bst, cbus_bsh, AMLOGIC_CBUS_CPU_CLK_CNTL_REG, cpuclk);
+
+	mempd0 = bus_space_read_4(bst, ao_bsh, AMLOGIC_AOBUS_PWR_MEM_PD0_REG);
+	mempd0 &= ~((uint32_t)(0xf << 28) >> ((cpu - 1) * 4));
+	bus_space_write_4(bst, ao_bsh, AMLOGIC_AOBUS_PWR_MEM_PD0_REG, mempd0);
+
+	pwr_cntl1 = bus_space_read_4(bst, ao_bsh, AMLOGIC_AOBUS_PWR_CTRL1_REG);
+	pwr_cntl1 &= ~((3 << 4) << ((cpu - 1) * 2));
+	bus_space_write_4(bst, ao_bsh, AMLOGIC_AOBUS_PWR_CTRL1_REG, pwr_cntl1);
+
+	amlogic_mpinit_delay(10000);
+
+	for (;;) {
+		pwr_cntl1 = bus_space_read_4(bst, ao_bsh,
+		    AMLOGIC_AOBUS_PWR_CTRL1_REG) & ((1 << 17) << (cpu - 1));
+		if (pwr_cntl1)
+			break;
+		amlogic_mpinit_delay(10000);
+	}
+
+	pwr_cntl0 = bus_space_read_4(bst, ao_bsh, AMLOGIC_AOBUS_PWR_CTRL0_REG);
+	pwr_cntl0 &= ~(1 << cpu);
+	bus_space_write_4(bst, ao_bsh, AMLOGIC_AOBUS_PWR_CTRL0_REG, pwr_cntl0);
+
+	cpuclk = bus_space_read_4(bst, cbus_bsh, AMLOGIC_CBUS_CPU_CLK_CNTL_REG);
+	cpuclk &= ~(1 << (24 + cpu));
+	bus_space_write_4(bst, cbus_bsh, AMLOGIC_CBUS_CPU_CLK_CNTL_REG, cpuclk);
+
+	bus_space_write_4(bst, scu_bsh, SCU_CPU_PWR_STS, pwr_sts);
+}
+
+void
+amlogic_mpinit(uint32_t mpinit_vec)
+{
+	const bus_addr_t cbar = armreg_cbar_read();
+	bus_space_tag_t bst = &amlogic_bs_tag;
+	volatile int i;
+	uint32_t ctrl, hatched = 0;
+	int cpu;
+
+	if (cbar == 0)
+		return;
+
+	const bus_space_handle_t scu_bsh =
+	    cbar - AMLOGIC_CORE_BASE + AMLOGIC_CORE_VBASE;
+	const bus_space_handle_t cpuconf_bsh =
+	    AMLOGIC_CORE_VBASE + AMLOGIC_CPUCONF_OFFSET;
+
+	const uint32_t scu_cfg = bus_space_read_4(bst, scu_bsh, SCU_CFG);
+	const u_int ncpus = (scu_cfg & SCU_CFG_CPUMAX) + 1;
+	if (ncpus < 2)
+		return;
+
+	for (cpu = 1; cpu < ncpus; cpu++) {
+		bus_space_write_4(bst, cpuconf_bsh,
+		    AMLOGIC_CPUCONF_CPU_ADDR_REG(cpu), mpinit_vec);
+		amlogic_mpinit_cpu(cpu);
+		hatched |= __BIT(cpu);
+	}
+	ctrl = bus_space_read_4(bst, cpuconf_bsh, AMLOGIC_CPUCONF_CTRL_REG);
+	for (cpu = 0; cpu < ncpus; cpu++) {
+		ctrl |= __BIT(cpu);
+	}
+	bus_space_write_4(bst, cpuconf_bsh, AMLOGIC_CPUCONF_CTRL_REG, ctrl);
+
+	__asm __volatile("sev");
+
+	for (i = 0x10000000; i > 0; i--) {
+		__asm __volatile("dmb" ::: "memory");
+		if (arm_cpu_hatched == hatched)
+			break;
+	}
+}
+#endif

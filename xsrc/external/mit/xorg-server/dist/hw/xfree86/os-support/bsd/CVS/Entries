@@ -7,11 +7,11 @@
 /bsd_axp.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
 /bsd_bell.c/1.1.1.2/Thu Nov 27 02:21:50 2014//
 /bsd_ev56.c/1.2/Thu Nov 27 02:21:50 2014//
-/bsd_init.c/1.6/Thu Nov 27 02:21:50 2014//
 /bsd_kmod.c/1.1.1.2/Thu Nov 27 02:21:50 2014//
 /bsd_kqueue_apm.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
 /i386_video.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
 /memrange.h/1.1.1.1/Thu Nov 27 02:21:50 2014//
 /ppc_video.c/1.7/Thu Nov 27 02:21:50 2014//
 /sparc64_video.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/bsd_init.c/1.7/Mon Mar  9 20:31:52 2015//
 D

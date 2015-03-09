@@ -1,4 +1,4 @@
-/*	$NetBSD: stdio.h,v 1.93 2015/01/20 17:29:00 christos Exp $	*/
+/*	$NetBSD: stdio.h,v 1.95 2015/03/05 03:29:02 dholland Exp $	*/
 
 /*-
  * Copyright (c) 1990, 1993
@@ -331,7 +331,9 @@ FILE	*popen(const char *, const char *);
 __END_DECLS
 #endif
 #ifdef _NETBSD_SOURCE
+__BEGIN_DECLS
 FILE	*popenve(const char *, char *const *, char *const *, const char *);
+__END_DECLS
 #endif
 
 /*
@@ -576,8 +578,6 @@ int	 scanf_l(locale_t, const char * __restrict, ...)
     __scanflike(2, 3);
 int	 sscanf_l(const char * __restrict, locale_t,
     const char * __restrict, ...) __scanflike(3, 4);
-int	 vscanf_l(locale_t, const char * __restrict, __va_list)
-    __scanflike(2, 0);
 int	 vscanf_l(locale_t, const char * __restrict, __va_list)
     __scanflike(2, 0);
 int	 vfscanf_l(FILE * __restrict, locale_t, const char * __restrict,

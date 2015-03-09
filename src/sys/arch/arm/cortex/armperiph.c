@@ -31,7 +31,7 @@
 
 #include <sys/cdefs.h>
 
-__KERNEL_RCSID(1, "$NetBSD: armperiph.c,v 1.5 2014/12/05 01:11:25 jmcneill Exp $");
+__KERNEL_RCSID(1, "$NetBSD: armperiph.c,v 1.9 2015/02/28 15:45:12 skrll Exp $");
 
 #include <sys/param.h>
 #include <sys/device.h>
@@ -40,6 +40,7 @@ __KERNEL_RCSID(1, "$NetBSD: armperiph.c,v 1.5 2014/12/05 01:11:25 jmcneill Exp $
 
 #include <arm/mainbus/mainbus.h>
 #include <arm/cortex/mpcore_var.h>
+#include <arm/cortex/gtmr_intr.h>
 
 static int armperiph_match(device_t, cfdata_t, void *);
 static void armperiph_attach(device_t, device_t, void *);
@@ -63,6 +64,8 @@ static const struct armperiph_info a5_devices[] = {
 	{ "armscu", 0x0000, 0 },
 	{ "armgic", 0x1000, 0x0100 },
 	{ "a9tmr",  0x0200, 0 },
+	{ "a9wdt",   0x0600, 0 },
+	{ "arml2cc", 0, 0 },	/* external; needs "offset" property */
 	{ "", 0, 0 },
 };
 #endif
@@ -203,6 +206,11 @@ armperiph_attach(device_t parent, device_t self, void *aux)
 			.mpcaa_off1 = cfg->cfg_devices[i].pi_off1,
 			.mpcaa_off2 = cfg->cfg_devices[i].pi_off2,
 		};
+#if defined(CPU_CORTEXA7) || defined(CPU_CORTEXA15)
+		if (strcmp(mpcaa.mpcaa_name, "armgtmr") == 0) {
+			mpcaa.mpcaa_irq = IRQ_GTMR_PPI_VTIMER;
+		}
+#endif
 
 		config_found(self, &mpcaa, NULL);
 	}

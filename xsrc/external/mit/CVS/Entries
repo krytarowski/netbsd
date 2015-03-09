@@ -1,4 +1,3 @@
-D/MesaDemos////
 D/MesaGLUT////
 D/MesaLib////
 D/appres////
@@ -22,7 +21,6 @@ D/font-adobe-utopia-type1////
 D/font-alias////
 D/font-bh-100dpi////
 D/font-bh-75dpi////
-D/font-bh-lucidatypewriter////
 D/font-bh-lucidatypewriter-100dpi////
 D/font-bh-lucidatypewriter-75dpi////
 D/font-bh-ttf////
@@ -253,3 +251,4 @@ D/glu////
 D/glw////
 D/mesa-demos////
 D/MesaLib7////
+D/xf86-video-ati-kms////

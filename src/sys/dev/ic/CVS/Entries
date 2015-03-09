@@ -153,10 +153,8 @@
 /clmpcc.c/1.51/Fri Nov 28 22:37:39 2014//
 /clmpccreg.h/1.4/Fri Nov 28 21:45:46 2014//
 /clmpccvar.h/1.13/Fri Nov 28 21:45:46 2014//
-/com.c/1.329/Fri Nov 28 22:37:39 2014//
 /com_cpcbus.c/1.11/Fri Nov 28 21:45:46 2014//
 /com_upc.c/1.11/Fri Nov 28 21:45:46 2014//
-/comreg.h/1.23/Fri Nov 28 22:37:39 2014//
 /comvar.h/1.79/Fri Nov 28 22:37:39 2014//
 /cpc700.c/1.19/Fri Nov 28 21:45:46 2014//
 /cpc700reg.h/1.5/Fri Nov 28 21:45:46 2014//
@@ -258,7 +256,6 @@
 /i82586reg.h/1.13/Fri Nov 28 21:45:46 2014//
 /i82586var.h/1.23/Fri Nov 28 21:45:46 2014//
 /i82595reg.h/1.10/Fri Nov 28 21:45:46 2014//
-/i82596.c/1.31/Fri Nov 28 21:45:46 2014//
 /i82596reg.h/1.4/Fri Nov 28 21:45:46 2014//
 /i82596var.h/1.15/Fri Nov 28 21:45:46 2014//
 /i8259reg.h/1.4/Fri Nov 28 21:45:46 2014//
@@ -543,7 +540,6 @@
 /tropic.c/1.44/Fri Nov 28 21:45:46 2014//
 /tropicreg.h/1.6/Fri Nov 28 21:45:46 2014//
 /tropicvar.h/1.14/Fri Nov 28 21:45:46 2014//
-/tulip.c/1.184/Fri Nov 28 21:45:46 2014//
 /tulipreg.h/1.37/Fri Nov 28 21:45:46 2014//
 /tulipvar.h/1.68/Fri Nov 28 21:45:46 2014//
 /uda1341.c/1.1/Fri Nov 28 21:45:46 2014//
@@ -594,10 +590,7 @@
 /isp_netbsd.c/1.88/Wed Jan  7 00:50:16 2015//
 /mvsata.c/1.34/Wed Jan  7 00:50:17 2015//
 /bwi.c/1.25/Sun Jan 11 12:42:09 2015//
-/dwc_gmac.c/1.31/Sun Jan 11 12:42:09 2015//
 /rt2661.c/1.30/Sun Jan 11 12:42:10 2015//
-/vga.c/1.114/Sat Jan 17 00:10:42 2015//
-/vga_raster.c/1.43/Sat Jan 17 00:10:42 2015//
 /vgavar.h/1.33/Sat Jan 17 00:10:42 2015//
 /dwc_mmc_reg.h/1.4/Mon Jan 19 22:34:08 2015//
 /dwc_tmr.c/1.1/Sat Jan 17 15:04:47 2015//
@@ -610,4 +603,11 @@
 /aic7xxx.c/1.132/Sat Feb  7 12:34:24 2015//
 /an.c/1.62/Sat Feb  7 12:34:24 2015//
 /lan9118.c/1.18/Tue Feb 10 11:12:12 2015//
+/com.c/1.332/Mon Mar  9 20:34:12 2015//
+/comreg.h/1.24/Mon Mar  9 20:34:12 2015//
+/dwc_gmac.c/1.32/Mon Mar  9 20:34:12 2015//
+/i82596.c/1.32/Mon Mar  9 20:34:12 2015//
+/tulip.c/1.185/Mon Mar  9 20:34:12 2015//
+/vga.c/1.115/Mon Mar  9 20:34:12 2015//
+/vga_raster.c/1.44/Mon Mar  9 20:34:12 2015//
 D

@@ -87,7 +87,6 @@
 /PANDABOARD/1.17/Fri Nov 28 21:45:45 2014//
 /PANDABOARD_INSTALL/1.2/Fri Nov 28 21:45:45 2014//
 /README.evbarm/1.8/Fri Nov 28 21:45:45 2014//
-/RPI/1.59/Fri Nov 28 22:37:38 2014//
 /SHEEVAPLUG/1.46/Fri Nov 28 21:45:45 2014//
 /SHEEVAPLUG_INSTALL/1.2/Fri Nov 28 21:45:45 2014//
 /SMDK2410/1.57/Fri Nov 28 21:45:45 2014//
@@ -182,7 +181,6 @@
 /mk.nslu2/1.2/Fri Nov 28 21:45:45 2014//
 /mk.odroid/1.1/Fri Nov 28 21:45:45 2014//
 /mk.osk5912/1.2/Fri Nov 28 21:45:45 2014//
-/mk.rpi/1.3/Fri Nov 28 21:45:45 2014//
 /mk.smdk2xx0/1.3/Fri Nov 28 21:45:45 2014//
 /mk.tisdp24xx/1.5/Fri Nov 28 21:45:45 2014//
 /mk.tsarm/1.2/Fri Nov 28 21:45:45 2014//
@@ -220,12 +218,10 @@
 /std.mv2120/1.2/Fri Nov 28 21:45:45 2014//
 /std.n900/1.5/Fri Nov 28 21:45:45 2014//
 /std.netwalker/1.10/Fri Nov 28 21:45:45 2014//
-/std.nitrogen6/1.1/Fri Nov 28 21:45:45 2014//
 /std.npwr_fc/1.6/Fri Nov 28 21:45:45 2014//
 /std.nslu2/1.5/Fri Nov 28 21:45:45 2014//
 /std.osk5912/1.5/Fri Nov 28 21:45:45 2014//
 /std.overo/1.6/Fri Nov 28 21:45:45 2014//
-/std.rpi/1.18/Fri Nov 28 22:37:38 2014//
 /std.smdk2410/1.7/Fri Nov 28 21:45:45 2014//
 /std.smdk2800/1.15/Fri Nov 28 21:45:45 2014//
 /std.tisdp24xx/1.9/Fri Nov 28 21:45:45 2014//
@@ -254,15 +250,22 @@
 /files.zynq/1.1/Fri Jan 23 12:34:09 2015//
 /mk.zynq/1.1/Fri Jan 23 12:34:09 2015//
 /std.zynq/1.1/Fri Jan 23 12:34:09 2015//
-/ODROID-C1/1.1/Sat Feb  7 17:20:16 2015//
 /files.amlogic/1.1/Sat Feb  7 17:20:16 2015//
 /mk.amlogic/1.1/Sat Feb  7 17:20:16 2015//
 /mk.vexpress/1.1/Mon Feb  9 07:47:15 2015//
-/std.amlogic/1.1/Sat Feb  7 17:20:16 2015//
 /CUBIEBOARD/1.38/Mon Feb 16 22:36:03 2015//
 /HUMMINGBIRD_A31/1.22/Mon Feb 16 22:36:03 2015//
 /VEXPRESS_A15/1.2/Mon Feb 16 22:36:03 2015//
 /files.vexpress/1.2/Mon Feb 16 22:36:03 2015//
 /std.vexpress/1.2/Mon Feb 16 22:36:03 2015//
-/RPI_INSTALL/1.7/Mon Feb 16 23:45:08 2015//
+/ODROID-C1/1.8/Mon Mar  9 20:34:09 2015//
+/OVERO_INSTALL/1.1/Fri Feb 27 13:18:11 2015//
+/RPI/1.60/Mon Mar  9 20:34:09 2015//
+/RPI2/1.2/Wed Mar  4 17:02:17 2015//
+/RPI2_INSTALL/1.1/Fri Mar  6 22:29:06 2015//
+/RPI_INSTALL/1.8/Mon Mar  9 20:34:09 2015//
+/mk.rpi/1.4/Mon Mar  9 20:34:09 2015//
+/std.amlogic/1.2/Mon Mar  9 20:34:09 2015//
+/std.nitrogen6/1.2/Mon Mar  9 20:34:09 2015//
+/std.rpi/1.19/Mon Mar  9 20:34:09 2015//
 D

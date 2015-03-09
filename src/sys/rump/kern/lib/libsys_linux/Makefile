@@ -1,4 +1,4 @@
-#	$NetBSD: Makefile,v 1.6 2014/03/13 02:03:47 pooka Exp $
+#	$NetBSD: Makefile,v 1.8 2015/03/08 15:20:07 christos Exp $
 #
 
 .PATH:	${.CURDIR}/../../../../compat/linux/common
@@ -20,3 +20,6 @@ CPPFLAGS+= -DINET6
 
 .include <bsd.lib.mk>
 .include <bsd.klinks.mk>
+
+SYS_P=rump_linux_sys
+.include "../Makefile.sys"

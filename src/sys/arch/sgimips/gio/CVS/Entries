@@ -1,7 +1,6 @@
 /Makefile.giodevs/1.6/Fri Nov 28 21:45:45 2014//
 /devlist2h.awk/1.5/Fri Nov 28 21:45:45 2014//
 /files.gio/1.11/Fri Nov 28 21:45:45 2014//
-/gio.c/1.33/Fri Nov 28 21:45:45 2014//
 /giodevs/1.8/Fri Nov 28 21:45:45 2014//
 /giodevs.h/1.7/Fri Nov 28 21:45:45 2014//
 /giodevs_data.h/1.6/Fri Nov 28 21:45:45 2014//
@@ -16,5 +15,6 @@
 /newport.c/1.18/Fri Nov 28 21:45:45 2014//
 /newportreg.h/1.6/Fri Nov 28 21:45:45 2014//
 /newportvar.h/1.3/Fri Nov 28 21:45:45 2014//
-/pci_gio.c/1.13/Fri Nov 28 21:45:45 2014//
+/gio.c/1.34/Mon Mar  9 20:34:10 2015//
+/pci_gio.c/1.14/Mon Mar  9 20:34:10 2015//
 D

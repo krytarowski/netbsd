@@ -6,7 +6,6 @@
 /t_atoi.c/1.2/Fri Nov 28 21:46:00 2014//
 /t_div.c/1.2/Fri Nov 28 21:46:00 2014//
 /t_exit.c/1.1/Fri Nov 28 21:46:00 2014//
-/t_getenv.c/1.2/Fri Nov 28 21:46:00 2014//
 /t_getenv_thread.c/1.2/Fri Nov 28 21:46:00 2014//
 /t_getopt.sh/1.1/Fri Nov 28 21:46:00 2014//
 /t_hsearch.c/1.4/Fri Nov 28 21:46:00 2014//
@@ -17,4 +16,5 @@
 /Makefile/1.24/Wed Jan  7 00:50:41 2015//
 /t_strtod.c/1.33/Wed Jan  7 00:50:41 2015//
 /t_strtol.c/1.5/Thu Feb  5 20:45:43 2015//
+/t_getenv.c/1.3/Mon Mar  9 20:34:21 2015//
 D

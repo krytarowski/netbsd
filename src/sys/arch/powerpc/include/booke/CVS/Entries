@@ -1,7 +1,6 @@
 /Makefile/1.1/Fri Nov 28 21:45:45 2014//
 /cpuvar.h/1.17/Fri Nov 28 21:45:45 2014//
 /e500var.h/1.7/Fri Nov 28 21:45:45 2014//
-/etsecreg.h/1.5/Fri Nov 28 21:45:45 2014//
 /obiovar.h/1.2/Fri Nov 28 21:45:45 2014//
 /pte.h/1.6/Fri Nov 28 21:45:45 2014//
 /trap.h/1.2/Fri Nov 28 21:45:45 2014//
@@ -11,4 +10,5 @@
 /spr.h/1.13/Wed Jan  7 00:50:05 2015//
 /intr.h/1.9/Fri Jan 30 01:43:02 2015//
 /pmap.h/1.15/Fri Jan 30 01:43:02 2015//
+/etsecreg.h/1.8/Mon Mar  9 20:34:10 2015//
 D

@@ -1,4 +1,4 @@
-#	$NetBSD: Makefile.inc,v 1.68 2015/01/27 20:26:34 jmcneill Exp $
+#	$NetBSD: Makefile.inc,v 1.70 2015/03/06 11:11:55 skrll Exp $
 #
 #	etc.evbarm/Makefile.inc -- evbarm-specific etc Makefile targets
 #
@@ -71,6 +71,8 @@ EVBARM_BOARDS.armv5t+=		SHEEVAPLUG
 #EVBARM_BOARDS.armv6hf+= 	IMX31LITE
 EVBARM_BOARDS.armv6+=		RPI
 EVBARM_BOARDS.armv6hf+=	 	RPI
+KERNEL_SETS.armv6+=		RPI2
+KERNEL_SETS.armv6hf+=	 	RPI2
 EVBARM_BOARDS.armv6+=		TISDP2420
 EVBARM_BOARDS.armv6hf+= 	TISDP2420
 #EVBARM_BOARDS.armv6+=		TISDP2430
@@ -104,9 +106,12 @@ EVBARM_BOARDS.armv7+=		NETWALKER
 EVBARM_BOARDS.armv7hf+=		NETWALKER
 EVBARM_BOARDS.armv7+=		OMAP5EVM
 EVBARM_BOARDS.armv7hf+=		OMAP5EVM
-#EVBARM_BOARDS.armv7+=		OVERO
+EVBARM_BOARDS.armv7+=		OVERO
+EVBARM_BOARDS.armv7hf+=		OVERO
 EVBARM_BOARDS.armv7+=		PANDABOARD
 EVBARM_BOARDS.armv7hf+= 	PANDABOARD
+EVBARM_BOARDS.armv7+=		RPI2
+EVBARM_BOARDS.armv7hf+=	 	RPI2
 EVBARM_BOARDS.armv7+=		KOBO
 EVBARM_BOARDS.armv7hf+= 	KOBO
 .endif
@@ -165,6 +170,7 @@ SNAP_MD_POST_DEPS+=	smp_beagleboard
 
 .if !empty(KERNEL_SETS:MRPI)
 smp_rpi: ${IMAGE.kern}/netbsd-RPI.bin.gz __mkimage
+#            XXX ${IMAGE.kern}/netbsd-RPI2.bin.gz
 .if empty(ALL_KERNELS) || !empty(ALL_KERNELS:MRPI)
 SNAP_MD_POST_DEPS+=	smp_rpi
 .endif

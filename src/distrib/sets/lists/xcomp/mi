@@ -1,4 +1,4 @@
-#	 $NetBSD: mi,v 1.156 2015/02/09 16:27:29 ryoon Exp $
+#	 $NetBSD: mi,v 1.164 2015/03/06 12:01:20 wiz Exp $
 #
 # Note: don't delete entries from here - mark them as "obsolete" instead.
 #
@@ -5240,8 +5240,8 @@
 ./usr/X11R7/include/X11/Xaw/PannerP.h			-unknown-	xorg
 ./usr/X11R7/include/X11/Xaw/Porthole.h			-unknown-	xorg
 ./usr/X11R7/include/X11/Xaw/PortholeP.h			-unknown-	xorg
-./usr/X11R7/include/X11/Xaw/Print.h			-unknown-	xorg
-./usr/X11R7/include/X11/Xaw/PrintSP.h			-unknown-	xorg
+./usr/X11R7/include/X11/Xaw/Print.h			-obsoltete-	obsolete
+./usr/X11R7/include/X11/Xaw/PrintSP.h			-obsolete-	obsolete
 ./usr/X11R7/include/X11/Xaw/Repeater.h			-unknown-	xorg
 ./usr/X11R7/include/X11/Xaw/RepeaterP.h			-unknown-	xorg
 ./usr/X11R7/include/X11/Xaw/Reports.h			-unknown-	xorg
@@ -5332,10 +5332,10 @@
 ./usr/X11R7/include/X11/Xtos.h				-unknown-	xorg
 ./usr/X11R7/include/X11/Xtrans/Xtrans.c			-unknown-	xorg
 ./usr/X11R7/include/X11/Xtrans/Xtrans.h			-unknown-	xorg
-./usr/X11R7/include/X11/Xtrans/Xtransdnet.c		-unknown-	xorg
+./usr/X11R7/include/X11/Xtrans/Xtransdnet.c		-obsolete-	obsolete
 ./usr/X11R7/include/X11/Xtrans/Xtransint.h		-unknown-	xorg
 ./usr/X11R7/include/X11/Xtrans/Xtranslcl.c		-unknown-	xorg
-./usr/X11R7/include/X11/Xtrans/Xtransos2.c		-unknown-	xorg
+./usr/X11R7/include/X11/Xtrans/Xtransos2.c		-obsolete-	obsolete
 ./usr/X11R7/include/X11/Xtrans/Xtranssock.c		-unknown-	xorg
 ./usr/X11R7/include/X11/Xtrans/Xtranstli.c		-obsolete-	obsolete
 ./usr/X11R7/include/X11/Xtrans/Xtransutil.c		-unknown-	xorg
@@ -5790,6 +5790,7 @@
 ./usr/X11R7/include/freetype2/tttags.h			-unknown-	xorg
 ./usr/X11R7/include/freetype2/ttunpat.h			-unknown-	xorg
 ./usr/X11R7/include/ft2build.h				xcomp-obsolete	obsolete
+./usr/X11R7/include/gbm.h				-unknown-	xorg
 ./usr/X11R7/include/libdrm/drm.h			-unknown-	xorg
 ./usr/X11R7/include/libdrm/drm_fourcc.h			-unknown-	xorg
 ./usr/X11R7/include/libdrm/drm_mode.h			-unknown-	xorg
@@ -5852,6 +5853,7 @@
 ./usr/X11R7/include/xcb/xfixes.h			-unknown-	xorg
 ./usr/X11R7/include/xcb/xinerama.h			-unknown-	xorg
 ./usr/X11R7/include/xcb/xinput.h			-unknown-	xorg
+./usr/X11R7/include/xcb/xkb.h				-unknown-	xorg
 ./usr/X11R7/include/xcb/xproto.h			-unknown-	xorg
 ./usr/X11R7/include/xcb/xselinux.h			-unknown-	xorg
 ./usr/X11R7/include/xcb/xtest.h				-unknown-	xorg
@@ -6262,6 +6264,8 @@
 ./usr/X11R7/lib/libfontenc_p.a				-unknown-	profile,xorg
 ./usr/X11R7/lib/libfreetype.a				-unknown-	xorg
 ./usr/X11R7/lib/libfreetype_p.a				-unknown-	profile,xorg
+./usr/X11R7/lib/libgbm.a				-unknown-	xorg
+./usr/X11R7/lib/libgbm_p.a				-unknown-	profile,xorg
 ./usr/X11R7/lib/libglut.a				-unknown-	xorg
 ./usr/X11R7/lib/libglut_p.a				-unknown-	profile,xorg
 ./usr/X11R7/lib/liblbxutil.a				-obsolete-	obsolete
@@ -6362,6 +6366,7 @@
 ./usr/X11R7/lib/pkgconfig/fontsproto.pc			-unknown-	xorg
 ./usr/X11R7/lib/pkgconfig/fontutil.pc			-unknown-	xorg,x11fonts
 ./usr/X11R7/lib/pkgconfig/freetype2.pc			-unknown-	xorg
+./usr/X11R7/lib/pkgconfig/gbm.pc			-unknown-	xorg
 ./usr/X11R7/lib/pkgconfig/gl.pc				-unknown-	xorg
 ./usr/X11R7/lib/pkgconfig/glproto.pc			-unknown-	xorg
 ./usr/X11R7/lib/pkgconfig/glu.pc			-unknown-	xorg
@@ -9321,6 +9326,7 @@
 ./usr/libdata/lint/llib-lfontenc.ln			-unknown-	lint,xorg
 ./usr/libdata/lint/llib-lfreetype.ln			-unknown-	lint,x11
 ./usr/libdata/lint/llib-lfreetype.ln			-unknown-	lint,xorg
+./usr/libdata/lint/llib-lgbm.ln				-unknown-	lint,xorg
 ./usr/libdata/lint/llib-lglut.ln			-unknown-	lint,xorg
 ./usr/libdata/lint/llib-llbxutil.ln			-obsolete-	obsolete,xorg
 ./usr/libdata/lint/llib-llbxutil.ln			-unknown-	lint,x11

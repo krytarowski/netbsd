@@ -1,4 +1,4 @@
-/* $NetBSD: amlogic_intr.h,v 1.1 2015/02/07 17:20:17 jmcneill Exp $ */
+/* $NetBSD: amlogic_intr.h,v 1.5 2015/03/07 21:33:12 jmcneill Exp $ */
 
 /*-
  * Copyright (c) 2015 Jared D. McNeill <jmcneill@invisible.ca>
@@ -29,13 +29,18 @@
 #ifndef _ARM_AMLOGIC_INTR_H
 #define _ARM_AMLOGIC_INTR_H
 
-#define PIC_MAXSOURCES		224
-#define PIC_MAXMAXSOURCES	256
+#define PIC_MAXSOURCES		256
+#define PIC_MAXMAXSOURCES	282
 
 #include <arm/cortex/gic_intr.h>
 #include <arm/cortex/a9tmr_intr.h>
 
+#define AMLOGIC_INTR_GMAC	40
+#define AMLOGIC_INTR_SDIO	60
+#define AMLOGIC_INTR_USB0	62
+#define AMLOGIC_INTR_USB1	63
 #define AMLOGIC_INTR_UART2AO	70
+#define AMLOGIC_INTR_SDHC	110
 #define AMLOGIC_INTR_UART0AO	122
 
 #endif /* _ARM_AMLOGIC_INTR_H */

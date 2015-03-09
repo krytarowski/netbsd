@@ -39,7 +39,6 @@
 /cpuset.3/1.6/Fri Nov 28 21:39:46 2014//
 /ctermid.3/1.11/Fri Nov 28 21:39:46 2014//
 /ctermid.c/1.11/Fri Nov 28 21:39:46 2014//
-/ctype.3/1.21/Fri Nov 28 21:39:46 2014//
 /ctype_.c/1.20/Fri Nov 28 21:39:46 2014//
 /daemon.3/1.15/Fri Nov 28 21:39:46 2014//
 /daemon.c/1.10/Fri Nov 28 21:39:46 2014//
@@ -324,4 +323,5 @@
 /sysctl.c/1.35/Fri Feb  6 02:38:36 2015//
 /utmpx.c/1.33/Fri Feb  6 02:38:36 2015//
 /getdomainname.3/1.16/Sat Feb  7 14:49:47 2015//
+/ctype.3/1.22/Mon Mar  9 20:33:56 2015//
 D

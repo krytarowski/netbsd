@@ -43,7 +43,6 @@
 /ncr5380.c/1.72/Fri Nov 28 21:45:45 2014//
 /ncr5380reg.h/1.23/Fri Nov 28 21:45:45 2014//
 /ncr5380var.h/1.8/Fri Nov 28 21:45:45 2014//
-/nvram.c/1.19/Fri Nov 28 21:45:45 2014//
 /nvramvar.h/1.4/Fri Nov 28 21:45:45 2014//
 /ser.c/1.56/Fri Nov 28 22:37:38 2014//
 /serreg.h/1.2/Fri Nov 28 21:45:45 2014//
@@ -60,4 +59,5 @@
 /zsvar.h/1.17/Fri Nov 28 22:37:38 2014//
 /fd.c/1.83/Wed Jan  7 00:49:40 2015//
 /hdfd.c/1.80/Wed Jan  7 00:49:41 2015//
+/nvram.c/1.20/Mon Mar  9 20:34:09 2015//
 D

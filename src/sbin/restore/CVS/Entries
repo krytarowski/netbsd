@@ -1,5 +1,4 @@
 /Makefile/1.26/Fri Nov 28 21:40:19 2014//
-/dirs.c/1.50/Fri Nov 28 21:40:19 2014//
 /extern.h/1.15/Fri Nov 28 21:40:19 2014//
 /interactive.c/1.27/Fri Nov 28 21:40:19 2014//
 /main.c/1.35/Fri Nov 28 21:40:19 2014//
@@ -7,6 +6,7 @@
 /restore.c/1.21/Fri Nov 28 21:40:19 2014//
 /restore.h/1.20/Fri Nov 28 21:40:19 2014//
 /symtab.c/1.29/Fri Nov 28 21:40:19 2014//
-/tape.c/1.67/Fri Nov 28 21:40:19 2014//
 /utilities.c/1.23/Fri Nov 28 21:40:19 2014//
+/dirs.c/1.51/Mon Mar  9 20:33:58 2015//
+/tape.c/1.68/Mon Mar  9 20:33:58 2015//
 D

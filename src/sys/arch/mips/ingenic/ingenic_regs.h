@@ -1,4 +1,4 @@
-/*	$NetBSD: ingenic_regs.h,v 1.6 2014/12/25 05:10:00 macallan Exp $ */
+/*	$NetBSD: ingenic_regs.h,v 1.8 2015/03/09 13:22:37 macallan Exp $ */
 
 /*-
  * Copyright (c) 2014 Michael Lorenz
@@ -221,7 +221,7 @@ MFC0(uint32_t r, uint32_t s)
 	#define PCR_TXPREEMPH	0x00000080	/* HS transm. pre-emphasis */
 	#define PCR_TXHSXVTUNE1	0x00000060	/* dp/dm voltage adj. */
 	#define PCR_TXVREFTUNE1	0x00000017	/* HS DC voltage adj. */
-	#define PCR_TXRISETUNE1	0x00000001	/* risa/fall wave adj. */
+	#define PCR_TXRISETUNE1	0x00000001	/* rise/fall wave adj. */
 
 #define JZ_UHCCDR	0x1000006c	/* UHC Clock Divider Register */
 #define JZ_SPCR0	0x100000b8	/* SRAM Power Control Registers */
@@ -248,5 +248,21 @@ MFC0(uint32_t r, uint32_t s)
 #define JZ_DSR1		0x10001040	/* source for PDMA */
 #define JZ_DMR1		0x10001044	/* mask for PDMA */
 #define JZ_DPR1		0x10001048	/* pending for PDMA */
+
+/* memory controller */
+#define JZ_DMMAP0	0x13010024
+#define JZ_DMMAP1	0x13010028
+	#define	DMMAP_BASE	0x0000ff00	/* base PADDR of memory chunk */
+	#define DMMAP_MASK	0x000000ff	/* mask which bits of PADDR are
+						 * constant */
+/* USB controllers */
+#define JZ_EHCI_BASE	0x13490000
+#define JZ_OHCI_BASE	0x134a0000
+#define JZ_DWC2_BASE	0x13500000
+
+/* Ethernet */
+#define JZ_DME_BASE	0x16000000
+#define JZ_DME_IO	JZ_DME_BASE
+#define JZ_DME_ADDR	(JZ_DME_BASE + 2)
 
 #endif /* INGENIC_REGS_H */

@@ -1,4 +1,4 @@
-/*	$NetBSD: a9_mpsubr.S,v 1.28 2015/02/07 17:14:32 jmcneill Exp $	*/
+/*	$NetBSD: a9_mpsubr.S,v 1.30 2015/03/04 17:02:17 skrll Exp $	*/
 /*-
  * Copyright (c) 2012 The NetBSD Foundation, Inc.
  * All rights reserved.
@@ -207,9 +207,11 @@ arm_cpuinit:
 #endif
 	mcr	p15, 0, r1, c2, c0, 2	// TTBCR write
 
+#if !defined(CPU_CORTEXA5)
 	XPUTC(#73)
 	mov	r1, #0
 	mcr	p15, 0, r1, c8, c7, 0	// TLBIALL (just this core)
+#endif
 
 	XPUTC(#74)
 	mov	r1, #0			// get KERNEL_PID
@@ -516,6 +518,10 @@ cortex_mpfault:
 // Secondary processors come here after exiting the SKU ROM.
 // Switches to kernel's endian almost immediately.
 //
+
+	.global	cortex_mpstart
+	.type	cortex_mpstart,%object
+
 cortex_mpstart:
 #ifndef MULTIPROCESSOR
 	//

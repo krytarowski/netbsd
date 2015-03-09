@@ -16,12 +16,10 @@
 /nouveau_subdev_fb_nv47.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_fb_nv49.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_fb_nv4e.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
-/nouveau_subdev_fb_nv50.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_fb_nv84.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_fb_nva3.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_fb_nvaa.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_fb_nvaf.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
-/nouveau_subdev_fb_nvc0.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_fb_nve0.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_fb_ramgm107.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nouveau_subdev_fb_ramnv04.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
@@ -41,9 +39,11 @@
 /nouveau_subdev_fb_sddr3.c/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nv04.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /nv40.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
-/nv50.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
-/nvc0.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /priv.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /ramfuc.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
 /ramseq.h/1.1.1.1/Fri Nov 28 21:45:47 2014//
+/nouveau_subdev_fb_nv50.c/1.2/Mon Mar  9 20:34:14 2015//
+/nouveau_subdev_fb_nvc0.c/1.2/Mon Mar  9 20:34:14 2015//
+/nv50.h/1.2/Mon Mar  9 20:34:14 2015//
+/nvc0.h/1.2/Mon Mar  9 20:34:14 2015//
 D
