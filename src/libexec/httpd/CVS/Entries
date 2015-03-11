@@ -3,20 +3,20 @@ D/libbozohttpd////
 D/lua////
 D/small////
 D/testsuite////
-/CHANGES/1.19/Fri Nov 28 21:39:52 2014//
-/Makefile/1.22/Fri Nov 28 21:39:52 2014//
-/Makefile.boot/1.6/Fri Nov 28 21:39:52 2014//
-/bozohttpd.h/1.34/Fri Nov 28 22:37:38 2014//
-/cgi-bozo.c/1.25/Fri Nov 28 21:39:52 2014//
-/daemon-bozo.c/1.16/Fri Nov 28 21:39:52 2014//
-/dir-index-bozo.c/1.20/Fri Nov 28 21:39:52 2014//
-/lua-bozo.c/1.11/Fri Nov 28 21:39:52 2014//
-/main.c/1.8/Fri Nov 28 21:39:52 2014//
-/netbsd_queue.h/1.1/Fri Nov 28 21:39:52 2014//
-/printenv.lua/1.2/Fri Nov 28 21:39:52 2014//
-/ssl-bozo.c/1.18/Fri Nov 28 21:39:52 2014//
-/tilde-luzah-bozo.c/1.10/Fri Nov 28 21:39:52 2014//
-/content-bozo.c/1.11/Sat Dec 20 22:31:07 2014//
-/auth-bozo.c/1.16/Wed Jan  7 00:49:20 2015//
-/bozohttpd.8/1.48/Wed Jan  7 00:49:20 2015//
-/bozohttpd.c/1.61/Fri Jan 30 01:42:54 2015//
+/CHANGES/1.19/Tue Mar 10 12:28:24 2015//
+/Makefile/1.22/Tue Mar 10 12:28:24 2015//
+/Makefile.boot/1.6/Tue Mar 10 12:28:24 2015//
+/auth-bozo.c/1.16/Tue Mar 10 12:28:24 2015//
+/bozohttpd.8/1.48/Tue Mar 10 12:28:24 2015//
+/bozohttpd.c/1.61/Tue Mar 10 12:28:24 2015//
+/bozohttpd.h/1.34/Tue Mar 10 12:28:24 2015//
+/cgi-bozo.c/1.25/Tue Mar 10 12:28:24 2015//
+/content-bozo.c/1.11/Tue Mar 10 12:28:24 2015//
+/daemon-bozo.c/1.16/Tue Mar 10 12:28:24 2015//
+/dir-index-bozo.c/1.20/Tue Mar 10 12:28:24 2015//
+/lua-bozo.c/1.11/Tue Mar 10 12:28:24 2015//
+/main.c/1.8/Tue Mar 10 12:28:24 2015//
+/netbsd_queue.h/1.1/Tue Mar 10 12:28:24 2015//
+/printenv.lua/1.2/Tue Mar 10 12:28:24 2015//
+/ssl-bozo.c/1.18/Tue Mar 10 12:28:24 2015//
+/tilde-luzah-bozo.c/1.10/Tue Mar 10 12:28:24 2015//

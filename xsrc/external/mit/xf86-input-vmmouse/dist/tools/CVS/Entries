@@ -1,7 +1,7 @@
-/50-vmmouse.conf/1.1.1.1/Thu Nov 27 02:21:42 2014//
-/69-xorg-vmmouse.rules.in/1.1.1.2/Thu Nov 27 02:21:42 2014//
-/Makefile.am/1.1.1.5/Thu Nov 27 02:21:42 2014//
-/Makefile.in/1.1.1.5/Thu Nov 27 02:21:42 2014//
-/hal-probe-vmmouse.in/1.1.1.2/Thu Nov 27 02:21:42 2014//
-/vmmouse_detect.c/1.1.1.1/Thu Nov 27 02:21:42 2014//
+/50-vmmouse.conf/1.1.1.1/Tue Mar 10 12:30:55 2015//
+/69-xorg-vmmouse.rules.in/1.1.1.2/Tue Mar 10 12:30:55 2015//
+/Makefile.am/1.1.1.5/Tue Mar 10 12:30:55 2015//
+/Makefile.in/1.1.1.5/Tue Mar 10 12:30:55 2015//
+/hal-probe-vmmouse.in/1.1.1.2/Tue Mar 10 12:30:55 2015//
+/vmmouse_detect.c/1.1.1.1/Tue Mar 10 12:30:55 2015//
 D

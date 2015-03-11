@@ -1,10 +1,10 @@
-/Makefile/1.5/Fri Nov 28 21:38:07 2014//
-/bdinit.c/1.9/Fri Nov 28 21:38:07 2014//
-/bdisp.c/1.17/Fri Nov 28 21:38:07 2014//
-/gomoku.6/1.15/Fri Nov 28 21:38:07 2014//
-/gomoku.h/1.20/Fri Nov 28 21:38:07 2014//
-/main.c/1.26/Fri Nov 28 21:38:07 2014//
-/makemove.c/1.11/Fri Nov 28 21:38:07 2014//
-/pickmove.c/1.22/Fri Nov 28 21:38:07 2014//
-/stoc.c/1.12/Fri Nov 28 21:38:07 2014//
+/Makefile/1.5/Tue Mar 10 12:27:42 2015//
+/bdinit.c/1.9/Tue Mar 10 12:27:42 2015//
+/bdisp.c/1.17/Tue Mar 10 12:27:42 2015//
+/gomoku.6/1.15/Tue Mar 10 12:27:42 2015//
+/gomoku.h/1.20/Tue Mar 10 12:27:42 2015//
+/main.c/1.26/Tue Mar 10 12:27:42 2015//
+/makemove.c/1.11/Tue Mar 10 12:27:42 2015//
+/pickmove.c/1.22/Tue Mar 10 12:27:42 2015//
+/stoc.c/1.12/Tue Mar 10 12:27:42 2015//
 D

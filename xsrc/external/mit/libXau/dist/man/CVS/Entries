@@ -1,12 +1,12 @@
-/Makefile.am/1.1.1.1/Thu Nov 27 02:21:39 2014//
-/Makefile.in/1.1.1.1/Thu Nov 27 02:21:39 2014//
-/Xau.man/1.1.1.1/Thu Nov 27 02:21:39 2014//
-/XauDisposeAuth.man/1.1.1.1/Thu Nov 27 02:21:39 2014//
-/XauFileName.man/1.1.1.1/Thu Nov 27 02:21:39 2014//
-/XauGetAuthByAddr.man/1.1.1.1/Thu Nov 27 02:21:39 2014//
-/XauGetBestAuthByAddr.man/1.1.1.1/Thu Nov 27 02:21:39 2014//
-/XauLockAuth.man/1.1.1.1/Thu Nov 27 02:21:39 2014//
-/XauReadAuth.man/1.1.1.1/Thu Nov 27 02:21:39 2014//
-/XauUnlockAuth.man/1.1.1.1/Thu Nov 27 02:21:39 2014//
-/XauWriteAuth.man/1.1.1.1/Thu Nov 27 02:21:39 2014//
+/Makefile.am/1.1.1.1/Tue Mar 10 12:30:35 2015//
+/Makefile.in/1.1.1.1/Tue Mar 10 12:30:35 2015//
+/Xau.man/1.1.1.1/Tue Mar 10 12:30:35 2015//
+/XauDisposeAuth.man/1.1.1.1/Tue Mar 10 12:30:35 2015//
+/XauFileName.man/1.1.1.1/Tue Mar 10 12:30:35 2015//
+/XauGetAuthByAddr.man/1.1.1.1/Tue Mar 10 12:30:35 2015//
+/XauGetBestAuthByAddr.man/1.1.1.1/Tue Mar 10 12:30:35 2015//
+/XauLockAuth.man/1.1.1.1/Tue Mar 10 12:30:35 2015//
+/XauReadAuth.man/1.1.1.1/Tue Mar 10 12:30:35 2015//
+/XauUnlockAuth.man/1.1.1.1/Tue Mar 10 12:30:35 2015//
+/XauWriteAuth.man/1.1.1.1/Tue Mar 10 12:30:35 2015//
 D
