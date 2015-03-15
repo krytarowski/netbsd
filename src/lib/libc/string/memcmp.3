@@ -37,7 +37,7 @@
 .Os
 .Sh NAME
 .Nm memcmp
-.Nd compare byte string
+.Nd compare byte strings
 .Sh LIBRARY
 .Lb libc
 .Sh SYNOPSIS
@@ -74,10 +74,13 @@ to compare cryptographic secrets, because the time it takes varies
 depending on how many bytes are the same, and thus leaks information
 about the two strings by a timing side channel.
 To compare secrets, hashes, message authentication codes, etc., use
+.Xr consttime_memcmp 3
+or
 .Xr consttime_memequal 3
 instead.
 .Sh SEE ALSO
 .Xr bcmp 3 ,
+.Xr consttime_memcmp 3 ,
 .Xr consttime_memequal 3 ,
 .Xr strcasecmp 3 ,
 .Xr strcmp 3 ,

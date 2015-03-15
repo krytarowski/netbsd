@@ -240,6 +240,7 @@
 #define closelog		_closelog
 #define closelog_r		_closelog_r
 #define confstr			_confstr
+#define consttime_memcmp	_consttime_memcmp
 #define consttime_memequal	_consttime_memequal
 #define csetexpandtc		_csetexpandtc
 #define ctermid			_ctermid

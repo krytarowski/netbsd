@@ -19,7 +19,7 @@ SRCS+=	bcmp.c bcopy.c bzero.c ffs.c memchr.c memcmp.c memset.c
 SRCS+=	strcat.c strcmp.c strcpy.c strcspn.c strlen.c
 SRCS+=	strncat.c strncmp.c strncpy.c strpbrk.c strsep.c
 SRCS+=	strspn.c strstr.c swab.c strnstr.c
-SRCS+=	explicit_memset.c consttime_memequal.c
+SRCS+=	explicit_memset.c consttime_memcmp.c consttime_memequal.c
 
 SRCS+=	memccpy.c memcpy.c memmem.c memmove.c
 SRCS+=	strchr.c strrchr.c
@@ -36,7 +36,8 @@ CPPFLAGS.wmemcmp.c+=	-I${LIBCDIR}/locale
 
 .include "${ARCHDIR}/string/Makefile.inc"
 
-MAN+=	bm.3 bcmp.3 bcopy.3 bstring.3 bzero.3 consttime_memequal.3 \
+MAN+=	bm.3 bcmp.3 bcopy.3 bstring.3 bzero.3 \
+	consttime_memcmp.3 consttime_memequal.3 \
 	explicit_memset.3 ffs.3 index.3 \
 	memccpy.3 memchr.3 memcmp.3 memcpy.3 memmem.3 memmove.3	memset.3 \
 	popcount.3 \
@@ -47,6 +48,7 @@ MAN+=	bm.3 bcmp.3 bcopy.3 bstring.3 bzero.3 consttime_memequal.3 \
 	swab.3 wcstok.3 wcswidth.3 wmemchr.3 wcsdup.3 wcscasecmp.3
 
 MLINKS+=bm.3 bm_comp.3 bm.3 bm_exec.3 bm.3 bm_free.3
+MLINKS+=consttime_memequal.3 consttime_memcmp.3
 MLINKS+=popcount.3 popcountl.3
 MLINKS+=popcount.3 popcountll.3
 MLINKS+=popcount.3 popcount32.3

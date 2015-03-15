@@ -5877,6 +5877,7 @@
 ./usr/share/man/cat3/conjf.0			comp-c-catman		complex,.cat
 ./usr/share/man/cat3/conjl.0			comp-c-catman		complex,.cat
 ./usr/share/man/cat3/consttime_bcmp.0		comp-obsolete		obsolete
+./usr/share/man/cat3/consttime_memcmp.0		comp-c-catman		.cat
 ./usr/share/man/cat3/consttime_memequal.0	comp-c-catman		.cat
 ./usr/share/man/cat3/copysign.0			comp-c-catman		.cat
 ./usr/share/man/cat3/copysignf.0		comp-c-catman		.cat
@@ -12758,6 +12759,7 @@
 ./usr/share/man/html3/conjf.html		comp-c-htmlman		complex,html
 ./usr/share/man/html3/conjl.html		comp-c-htmlman		complex,html
 ./usr/share/man/html3/consttime_bcmp.html	comp-obsolete		obsolete
+./usr/share/man/html3/consttime_memcmp.html	comp-c-htmlman		html
 ./usr/share/man/html3/consttime_memequal.html	comp-c-htmlman		html
 ./usr/share/man/html3/copysign.html		comp-c-htmlman		html
 ./usr/share/man/html3/copysignf.html		comp-c-htmlman		html
@@ -19552,6 +19554,7 @@
 ./usr/share/man/man3/conjf.3			comp-c-man		complex,.man
 ./usr/share/man/man3/conjl.3			comp-c-man		complex,.man
 ./usr/share/man/man3/consttime_bcmp.3		comp-obsolete		obsolete
+./usr/share/man/man3/consttime_memcmp.3		comp-c-man		.man
 ./usr/share/man/man3/consttime_memequal.3	comp-c-man		.man
 ./usr/share/man/man3/copysign.3			comp-c-man		.man
 ./usr/share/man/man3/copysignf.3		comp-c-man		.man

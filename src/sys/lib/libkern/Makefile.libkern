@@ -89,7 +89,7 @@ SRCS+=	xlat_mbr_fstype.c
 SRCS+=	heapsort.c ptree.c rb.c
 
 # for crypto
-SRCS+=	explicit_memset.c consttime_memequal.c
+SRCS+=	explicit_memset.c consttime_memcmp.c consttime_memequal.c
 
 .PATH:	${NETBSDSRCDIR}/common/lib/libc/cdb
 SRCS+=	cdbr.c

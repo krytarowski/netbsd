@@ -416,6 +416,7 @@ unsigned int	popcount32(uint32_t) __constfunc;
 unsigned int	popcount64(uint64_t) __constfunc;
 
 void	*explicit_memset(void *, int, size_t);
+int	consttime_memcmp(const void *, const void *, size_t);
 int	consttime_memequal(const void *, const void *, size_t);
 
 #ifdef notyet

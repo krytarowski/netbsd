@@ -105,6 +105,7 @@ char	*strndup(const char *, size_t);
 char	*strnstr(const char *, const char *, size_t);
 void	*memrchr(const void *, int, size_t);
 void	*explicit_memset(void *, int, size_t);
+int	consttime_memcmp(const void *, const void *, size_t);
 int	consttime_memequal(const void *, const void *, size_t);
 __END_DECLS
 #endif

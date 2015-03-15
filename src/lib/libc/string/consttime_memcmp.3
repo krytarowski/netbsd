@@ -1,6 +1,6 @@
-.\"	$NetBSD: consttime_memequal.3,v 1.4 2014/11/14 22:46:34 wiz Exp $
+.\"	$NetBSD: $
 .\"
-.\" Copyright (c) 2013 The NetBSD Foundation, Inc.
+.\" Copyright (c) 2015 The NetBSD Foundation, Inc.
 .\" All rights reserved.
 .\"
 .\" This documentation is derived from text contributed to The NetBSD
@@ -27,32 +27,35 @@
 .\" ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 .\" POSSIBILITY OF SUCH DAMAGE.
 .\"
-.Dd November 14, 2014
-.Dt CONSTTIME_MEMEQUAL 3
+.\" Created by Kamil Rytarowski, based on ID:
+.\" NetBSD: consttime_memequal.3,v 1.4 2014/11/14 22:46:34 wiz Exp
+.\"
+.Dd March 15, 2015
+.Dt CONSTTIME_MEMCMP 3
 .Os
 .Sh NAME
-.Nm consttime_memequal
-.Nd compare byte strings for equality without timing leaks
+.Nm consttime_memcmp
+.Nd compare byte strings without timing leaks
 .Sh LIBRARY
 .Lb libc
 .Sh SYNOPSIS
 .In string.h
 .Ft int
-.Fn consttime_memequal "void *b1" "void *b2" "size_t len"
+.Fn consttime_memcmp "void *b1" "void *b2" "size_t len"
 .Sh DESCRIPTION
 The
-.Fn consttime_memequal
-function compares
-.Fa len
-bytes of memory at
+.Fn consttime_memcmp
+function
+compares byte string
 .Fa b1
-and
-.Fa b2
-for equality, returning 0 if they are distinct and 1 if they are
-identical.
+against byte string
+.Fa b2 .
+Both strings are assumed to be
+.Fa len
+bytes long.
 .Pp
 The time taken by
-.Fn consttime_memequal
+.Fn consttime_memcmp
 depends on
 .Fa len ,
 but not on the data at
@@ -60,29 +63,45 @@ but not on the data at
 or
 .Fa b2 .
 Thus,
-.Fn consttime_memequal
+.Fn consttime_memcmp
 is appropriate for comparing cryptographic secrets, hashes, message
 authentication codes, etc., without leaking information about them
 through a timing side channel.
 In crypto literature,
-.Fn consttime_memequal
+.Fn consttime_memcmp
 is said to take
 .Sq constant time ,
 meaning time that does not vary depending on the data it processes.
 .Pp
 Note that unlike
-.Xr consttime_memcmp 3 ,
-.Fn consttime_memequal
-does not return a lexicographic ordering on the data at
+.Xr consttime_memequal 3 ,
+.Fn consttime_memcmp
+returns a lexicographic ordering on the data at
 .Fa b1
-and
-.Fa b2 ;
-it tells only whether they are equal.
+and   
+.Fa b2 .
+.Sh RETURN VALUES
+The
+.Fn consttime_memcmp
+function
+returns zero if the two strings are identical,
+otherwise returns the difference between the first two differing bytes
+(treated as unsigned char values, so that
+.Sq Li \e200
+is greater than
+.Sq Li \&\e0 ,
+for example).
+Zero-length strings are always identical.
 .Sh SEE ALSO
+.Xr consttime_memequal 3 ,
 .Xr explicit_memset 3 ,
 .Xr memcmp 3
 .Sh HISTORY
 The
-.Fn consttime_memequal
+.Fn timingsafe_memcmp
 function appeared in
-.Nx 7.0 .
+.Ox 5.6
+and was imported under the new name
+.Fn consttime_memcmp
+into
+.Nx 8.0 .
