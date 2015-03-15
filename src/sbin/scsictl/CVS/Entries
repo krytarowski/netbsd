@@ -1,7 +1,7 @@
-/Makefile/1.4/Tue Mar 10 12:28:27 2015//
-/extern.h/1.7/Tue Mar 10 12:28:27 2015//
-/scsi_sense.c/1.9/Tue Mar 10 12:28:27 2015//
-/scsi_subr.c/1.14/Tue Mar 10 12:28:27 2015//
-/scsictl.8/1.26/Tue Mar 10 12:28:27 2015//
-/scsictl.c/1.38/Tue Mar 10 12:28:27 2015//
+/Makefile/1.4/Fri Nov 28 21:40:19 2014//
+/extern.h/1.7/Fri Nov 28 21:40:19 2014//
+/scsi_sense.c/1.9/Fri Nov 28 21:40:19 2014//
+/scsi_subr.c/1.14/Fri Nov 28 21:40:19 2014//
+/scsictl.8/1.26/Fri Nov 28 21:40:19 2014//
+/scsictl.c/1.38/Fri Nov 28 21:40:19 2014//
 D

@@ -1,14 +1,14 @@
-/Makefile.am/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/Makefile.in/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/driDrawable.c/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/driDrawable.h/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/viaLowLevel.c/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/viaLowLevel.h/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/viaLowLevelPro.c/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/viaXvMC.c/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/viaXvMCPriv.h/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/vldXvMC.h/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/xf86dri.c/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/xf86dri.h/1.1.1.1/Tue Mar 10 12:31:01 2015//
-/xf86dristr.h/1.1.1.1/Tue Mar 10 12:31:01 2015//
+/Makefile.am/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/Makefile.in/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/driDrawable.c/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/driDrawable.h/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/viaLowLevel.c/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/viaLowLevel.h/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/viaLowLevelPro.c/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/viaXvMC.c/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/viaXvMCPriv.h/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/vldXvMC.h/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/xf86dri.c/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/xf86dri.h/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/xf86dristr.h/1.1.1.1/Thu Nov 27 02:21:43 2014//
 D

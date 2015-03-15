@@ -1,10 +1,10 @@
 D/data////
-/Makefile/1.9/Tue Mar 10 12:29:31 2015//
-/README/1.1/Tue Mar 10 12:29:31 2015//
-/debug.c/1.2/Tue Mar 10 12:29:31 2015//
-/main.c/1.2/Tue Mar 10 12:29:31 2015//
-/split.c/1.1/Tue Mar 10 12:29:31 2015//
-/t_exhaust.c/1.7/Tue Mar 10 12:29:31 2015//
-/t_regex.sh/1.1/Tue Mar 10 12:29:31 2015//
-/t_regex_att.c/1.1/Tue Mar 10 12:29:31 2015//
-/test_regex.h/1.1/Tue Mar 10 12:29:31 2015//
+/Makefile/1.9/Fri Nov 28 21:46:00 2014//
+/README/1.1/Fri Nov 28 21:46:00 2014//
+/debug.c/1.2/Fri Nov 28 21:46:00 2014//
+/main.c/1.2/Fri Nov 28 21:46:00 2014//
+/split.c/1.1/Fri Nov 28 21:46:00 2014//
+/t_exhaust.c/1.7/Fri Nov 28 21:46:00 2014//
+/t_regex.sh/1.1/Fri Nov 28 21:46:00 2014//
+/t_regex_att.c/1.1/Fri Nov 28 21:46:00 2014//
+/test_regex.h/1.1/Fri Nov 28 21:46:00 2014//

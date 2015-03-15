@@ -1,13 +1,13 @@
-/Makefile.in/1.1.1.2/Tue Mar 10 12:25:35 2015//
-/ns_date.c/1.1.1.2/Tue Mar 10 12:25:35 2015//
-/ns_name.c/1.2/Tue Mar 10 12:25:35 2015//
-/ns_netint.c/1.1.1.2/Tue Mar 10 12:25:35 2015//
-/ns_newmsg.c/1.1.1.2/Tue Mar 10 12:25:35 2015//
-/ns_parse.c/1.1.1.2/Tue Mar 10 12:25:35 2015//
-/ns_print.c/1.1.1.2/Tue Mar 10 12:25:35 2015//
-/ns_rdata.c/1.1.1.2/Tue Mar 10 12:25:35 2015//
-/ns_samedomain.c/1.1.1.2/Tue Mar 10 12:25:35 2015//
-/ns_sign.c/1.1.1.2/Tue Mar 10 12:25:35 2015//
-/ns_ttl.c/1.1.1.2/Tue Mar 10 12:25:35 2015//
-/ns_verify.c/1.1.1.2/Tue Mar 10 12:25:35 2015//
+/Makefile.in/1.1.1.2/Fri Nov 28 21:37:03 2014//
+/ns_date.c/1.1.1.2/Fri Nov 28 21:37:03 2014//
+/ns_name.c/1.2/Fri Nov 28 21:37:03 2014//
+/ns_netint.c/1.1.1.2/Fri Nov 28 21:37:03 2014//
+/ns_newmsg.c/1.1.1.2/Fri Nov 28 21:37:03 2014//
+/ns_parse.c/1.1.1.2/Fri Nov 28 21:37:03 2014//
+/ns_print.c/1.1.1.2/Fri Nov 28 21:37:03 2014//
+/ns_rdata.c/1.1.1.2/Fri Nov 28 21:37:03 2014//
+/ns_samedomain.c/1.1.1.2/Fri Nov 28 21:37:03 2014//
+/ns_sign.c/1.1.1.2/Fri Nov 28 21:37:03 2014//
+/ns_ttl.c/1.1.1.2/Fri Nov 28 21:37:03 2014//
+/ns_verify.c/1.1.1.2/Fri Nov 28 21:37:03 2014//
 D

@@ -1,8 +1,8 @@
-/autoconf.c/1.12/Tue Mar 10 12:28:55 2015//
-/kloader_machdep.c/1.7/Tue Mar 10 12:28:55 2015//
-/kloader_zaurus.S/1.3/Tue Mar 10 12:28:55 2015//
-/machdep.c/1.35/Tue Mar 10 12:28:55 2015//
-/zaurus_reg.h/1.5/Tue Mar 10 12:28:55 2015//
-/zaurus_start.S/1.1/Tue Mar 10 12:28:55 2015//
-/zaurus_var.h/1.3/Tue Mar 10 12:28:55 2015//
+/autoconf.c/1.12/Fri Nov 28 21:45:46 2014//
+/kloader_machdep.c/1.7/Fri Nov 28 21:45:46 2014//
+/kloader_zaurus.S/1.3/Fri Nov 28 21:45:46 2014//
+/machdep.c/1.35/Fri Nov 28 21:45:46 2014//
+/zaurus_reg.h/1.5/Fri Nov 28 21:45:46 2014//
+/zaurus_start.S/1.1/Fri Nov 28 21:45:46 2014//
+/zaurus_var.h/1.3/Fri Nov 28 21:45:46 2014//
 D

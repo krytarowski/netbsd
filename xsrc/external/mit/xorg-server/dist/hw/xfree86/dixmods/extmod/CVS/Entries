@@ -1,10 +1,10 @@
-/Makefile.am/1.1.1.4/Tue Mar 10 12:31:15 2015//
-/Makefile.in/1.1.1.6/Tue Mar 10 12:31:15 2015//
-/dgaproc.h/1.1.1.4/Tue Mar 10 12:31:15 2015//
-/modinit.c/1.5/Tue Mar 10 12:31:15 2015//
-/modinit.h/1.4/Tue Mar 10 12:31:15 2015//
-/xf86dga2.c/1.1.1.5/Tue Mar 10 12:31:15 2015//
-/xf86vmode.c/1.6/Tue Mar 10 12:31:15 2015//
-/xvmod.c/1.1.1.3/Tue Mar 10 12:31:15 2015//
-/xvmodproc.h/1.1.1.2/Tue Mar 10 12:31:15 2015//
+/Makefile.am/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/Makefile.in/1.1.1.6/Thu Nov 27 02:21:50 2014//
+/dgaproc.h/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/modinit.c/1.5/Thu Nov 27 02:21:50 2014//
+/modinit.h/1.4/Thu Nov 27 02:21:50 2014//
+/xf86dga2.c/1.1.1.5/Thu Nov 27 02:21:50 2014//
+/xf86vmode.c/1.6/Thu Nov 27 02:21:50 2014//
+/xvmod.c/1.1.1.3/Thu Nov 27 02:21:50 2014//
+/xvmodproc.h/1.1.1.2/Thu Nov 27 02:21:50 2014//
 D

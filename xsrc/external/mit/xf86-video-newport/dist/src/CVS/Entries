@@ -1,11 +1,11 @@
-/Makefile.am/1.1.1.1/Tue Mar 10 12:31:00 2015//
-/Makefile.in/1.1.1.1/Tue Mar 10 12:31:00 2015//
-/newport.h/1.3/Tue Mar 10 12:31:00 2015//
-/newport_accel.c/1.1.1.1/Tue Mar 10 12:31:00 2015//
-/newport_cmap.c/1.2/Tue Mar 10 12:31:00 2015//
-/newport_cursor.c/1.1.1.1/Tue Mar 10 12:31:00 2015//
-/newport_driver.c/1.10/Tue Mar 10 12:31:00 2015//
-/newport_regs.c/1.2/Tue Mar 10 12:31:00 2015//
-/newport_regs.h/1.2/Tue Mar 10 12:31:00 2015//
-/newport_shadow.c/1.1.1.1/Tue Mar 10 12:31:00 2015//
+/Makefile.am/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/Makefile.in/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/newport.h/1.3/Thu Nov 27 02:21:43 2014//
+/newport_accel.c/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/newport_cmap.c/1.2/Thu Nov 27 02:21:43 2014//
+/newport_cursor.c/1.1.1.1/Thu Nov 27 02:21:43 2014//
+/newport_driver.c/1.10/Thu Nov 27 02:21:43 2014//
+/newport_regs.c/1.2/Thu Nov 27 02:21:43 2014//
+/newport_regs.h/1.2/Thu Nov 27 02:21:43 2014//
+/newport_shadow.c/1.1.1.1/Thu Nov 27 02:21:43 2014//
 D

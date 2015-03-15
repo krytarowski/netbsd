@@ -5,9 +5,9 @@ D/mips64////
 D/powerpc64////
 D/sparc64////
 D/riscv64////
-/Makefile/1.6/Tue Mar 10 12:25:24 2015//
-/Makefile.compat/1.9/Tue Mar 10 12:25:24 2015//
-/README/1.8/Tue Mar 10 12:25:24 2015//
-/archdirs.mk/1.8/Tue Mar 10 12:25:24 2015//
-/compatsubdir.mk/1.8/Tue Mar 10 12:25:24 2015//
-/m32.mk/1.2/Tue Mar 10 12:25:24 2015//
+/Makefile/1.6/Thu Nov 27 02:59:03 2014//
+/Makefile.compat/1.9/Thu Nov 27 02:59:03 2014//
+/README/1.8/Thu Nov 27 02:59:03 2014//
+/archdirs.mk/1.8/Thu Nov 27 02:59:03 2014//
+/compatsubdir.mk/1.8/Thu Nov 27 02:59:03 2014//
+/m32.mk/1.2/Thu Nov 27 02:59:03 2014//

@@ -2,19 +2,19 @@ D/afb////
 D/cirrus////
 D/retina////
 D/s3////
-/INSTALL.X11/1.1/Tue Mar 10 12:31:54 2015//
-/Imakefile/1.1/Tue Mar 10 12:31:54 2015//
-/README/1.1/Tue Mar 10 12:31:54 2015//
-/Xamiga.man/1.1/Tue Mar 10 12:31:54 2015//
-/amiga.h/1.4/Tue Mar 10 12:31:54 2015//
-/amigaC.c/1.3/Tue Mar 10 12:31:54 2015//
-/amigaCC.h/1.1/Tue Mar 10 12:31:54 2015//
-/amigaCfb.c/1.2/Tue Mar 10 12:31:54 2015//
-/amigaCursor.c/1.3/Tue Mar 10 12:31:54 2015//
-/amigaFbs.c/1.4/Tue Mar 10 12:31:54 2015//
-/amigaInit.c/1.3/Tue Mar 10 12:31:54 2015//
-/amigaIo.c/1.2/Tue Mar 10 12:31:54 2015//
-/amigaKbd.c/1.5/Tue Mar 10 12:31:54 2015//
-/amigaKeyMap.c/1.1/Tue Mar 10 12:31:54 2015//
-/amigaMfb.c/1.1/Tue Mar 10 12:31:54 2015//
-/amigaMouse.c/1.4/Tue Mar 10 12:31:54 2015//
+/INSTALL.X11/1.1/Thu Nov 27 02:21:54 2014//
+/Imakefile/1.1/Thu Nov 27 02:21:54 2014//
+/README/1.1/Thu Nov 27 02:21:54 2014//
+/Xamiga.man/1.1/Thu Nov 27 02:21:54 2014//
+/amiga.h/1.4/Thu Nov 27 02:21:54 2014//
+/amigaC.c/1.3/Thu Nov 27 02:21:54 2014//
+/amigaCC.h/1.1/Thu Nov 27 02:21:54 2014//
+/amigaCfb.c/1.2/Thu Nov 27 02:21:54 2014//
+/amigaCursor.c/1.3/Thu Nov 27 02:21:54 2014//
+/amigaFbs.c/1.4/Thu Nov 27 02:21:54 2014//
+/amigaInit.c/1.3/Thu Nov 27 02:21:54 2014//
+/amigaIo.c/1.2/Thu Nov 27 02:21:54 2014//
+/amigaKbd.c/1.5/Thu Nov 27 02:21:54 2014//
+/amigaKeyMap.c/1.1/Thu Nov 27 02:21:54 2014//
+/amigaMfb.c/1.1/Thu Nov 27 02:21:54 2014//
+/amigaMouse.c/1.4/Thu Nov 27 02:21:54 2014//

@@ -1,14 +1,14 @@
-/Makefile/1.10/Tue Mar 10 12:28:22 2015//
-/libquota.3/1.5/Tue Mar 10 12:28:22 2015//
-/quota_cursor.c/1.6/Tue Mar 10 12:28:22 2015//
-/quota_delete.c/1.4/Tue Mar 10 12:28:22 2015//
-/quota_get.c/1.5/Tue Mar 10 12:28:22 2015//
-/quota_kernel.c/1.6/Tue Mar 10 12:28:22 2015//
-/quota_nfs.c/1.4/Tue Mar 10 12:28:22 2015//
-/quota_oldfiles.c/1.9/Tue Mar 10 12:28:22 2015//
-/quota_open.c/1.7/Tue Mar 10 12:28:22 2015//
-/quota_put.c/1.4/Tue Mar 10 12:28:22 2015//
-/quota_schema.c/1.7/Tue Mar 10 12:28:22 2015//
-/quotapvt.h/1.14/Tue Mar 10 12:28:22 2015//
-/shlib_version/1.4/Tue Mar 10 12:28:22 2015//
+/Makefile/1.10/Fri Nov 28 21:39:46 2014//
+/libquota.3/1.5/Fri Nov 28 21:39:46 2014//
+/quota_cursor.c/1.6/Fri Nov 28 21:39:46 2014//
+/quota_delete.c/1.4/Fri Nov 28 21:39:46 2014//
+/quota_get.c/1.5/Fri Nov 28 21:39:46 2014//
+/quota_kernel.c/1.6/Fri Nov 28 21:39:46 2014//
+/quota_nfs.c/1.4/Fri Nov 28 21:39:46 2014//
+/quota_oldfiles.c/1.9/Fri Nov 28 21:39:46 2014//
+/quota_open.c/1.7/Fri Nov 28 21:39:46 2014//
+/quota_put.c/1.4/Fri Nov 28 21:39:46 2014//
+/quota_schema.c/1.7/Fri Nov 28 21:39:46 2014//
+/quotapvt.h/1.14/Fri Nov 28 21:39:46 2014//
+/shlib_version/1.4/Fri Nov 28 21:39:46 2014//
 D

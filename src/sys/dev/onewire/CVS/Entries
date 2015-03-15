@@ -1,13 +1,13 @@
-/Makefile.onewiredevs/1.2/Tue Mar 10 12:29:06 2015//
-/devlist2h.awk/1.1/Tue Mar 10 12:29:06 2015//
-/files.onewire/1.3/Tue Mar 10 12:29:06 2015//
-/onewire.c/1.16/Tue Mar 10 12:29:06 2015//
-/onewire_bitbang.c/1.1/Tue Mar 10 12:29:06 2015//
-/onewire_subr.c/1.6/Tue Mar 10 12:29:06 2015//
-/onewiredevs/1.2/Tue Mar 10 12:29:06 2015//
-/onewiredevs.h/1.2/Tue Mar 10 12:29:06 2015//
-/onewiredevs_data.h/1.2/Tue Mar 10 12:29:06 2015//
-/onewirereg.h/1.3/Tue Mar 10 12:29:06 2015//
-/onewirevar.h/1.5/Tue Mar 10 12:29:06 2015//
-/owtemp.c/1.17/Tue Mar 10 12:29:06 2015//
+/Makefile.onewiredevs/1.2/Fri Nov 28 21:45:46 2014//
+/devlist2h.awk/1.1/Fri Nov 28 21:45:46 2014//
+/files.onewire/1.3/Fri Nov 28 21:45:46 2014//
+/onewire.c/1.16/Fri Nov 28 21:45:46 2014//
+/onewire_bitbang.c/1.1/Fri Nov 28 21:45:46 2014//
+/onewire_subr.c/1.6/Fri Nov 28 21:45:46 2014//
+/onewiredevs/1.2/Fri Nov 28 21:45:46 2014//
+/onewiredevs.h/1.2/Fri Nov 28 21:45:46 2014//
+/onewiredevs_data.h/1.2/Fri Nov 28 21:45:46 2014//
+/onewirereg.h/1.3/Fri Nov 28 21:45:46 2014//
+/onewirevar.h/1.5/Fri Nov 28 21:45:46 2014//
+/owtemp.c/1.17/Fri Nov 28 21:45:46 2014//
 D

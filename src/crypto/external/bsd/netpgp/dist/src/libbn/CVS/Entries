@@ -1,11 +1,11 @@
-/Makefile/1.2/Tue Mar 10 12:25:24 2015//
-/bignum.c/1.5/Tue Mar 10 12:25:24 2015//
-/bn.h/1.4/Tue Mar 10 12:25:24 2015//
-/libnetpgpbn.3/1.4/Tue Mar 10 12:25:24 2015//
-/misc.c/1.2/Tue Mar 10 12:25:24 2015//
-/misc.h/1.4/Tue Mar 10 12:25:24 2015//
-/rand.c/1.2/Tue Mar 10 12:25:24 2015//
-/rand.h/1.2/Tue Mar 10 12:25:24 2015//
-/stubs.c/1.2/Tue Mar 10 12:25:24 2015//
-/stubs.h/1.2/Tue Mar 10 12:25:24 2015//
+/Makefile/1.2/Thu Nov 27 03:00:47 2014//
+/bignum.c/1.5/Thu Nov 27 03:00:47 2014//
+/bn.h/1.4/Thu Nov 27 03:00:47 2014//
+/libnetpgpbn.3/1.4/Thu Nov 27 03:00:47 2014//
+/misc.c/1.2/Thu Nov 27 03:00:47 2014//
+/misc.h/1.4/Thu Nov 27 03:00:47 2014//
+/rand.c/1.2/Thu Nov 27 03:00:47 2014//
+/rand.h/1.2/Thu Nov 27 03:00:47 2014//
+/stubs.c/1.2/Thu Nov 27 03:00:47 2014//
+/stubs.h/1.2/Thu Nov 27 03:00:47 2014//
 D

@@ -1,14 +1,14 @@
-/bin2c.c/1.1.1.3/Tue Mar 10 12:25:38 2015//
-/common.dj/1.1.1.4/Tue Mar 10 12:25:38 2015//
-/makefile/1.1.1.1/Tue Mar 10 12:25:38 2015//
-/makefile.dj/1.1.1.4/Tue Mar 10 12:25:38 2015//
-/makefile.wc/1.1.1.1/Tue Mar 10 12:25:38 2015//
-/ndis2.c/1.1.1.3/Tue Mar 10 12:25:38 2015//
-/ndis2.h/1.1.1.3/Tue Mar 10 12:25:38 2015//
-/ndis_0.asm/1.1.1.1/Tue Mar 10 12:25:38 2015//
-/pkt_rx0.asm/1.1.1.1/Tue Mar 10 12:25:38 2015//
-/pkt_rx1.s/1.1.1.1/Tue Mar 10 12:25:38 2015//
-/pktdrvr.c/1.1.1.3/Tue Mar 10 12:25:38 2015//
-/pktdrvr.h/1.1.1.3/Tue Mar 10 12:25:38 2015//
-/readme.dos/1.1.1.4/Tue Mar 10 12:25:38 2015//
+/bin2c.c/1.1.1.3/Fri Nov 28 22:37:38 2014//
+/common.dj/1.1.1.4/Fri Nov 28 22:37:38 2014//
+/makefile/1.1.1.1/Fri Nov 28 21:37:08 2014//
+/makefile.dj/1.1.1.4/Fri Nov 28 22:37:38 2014//
+/makefile.wc/1.1.1.1/Fri Nov 28 21:37:08 2014//
+/ndis2.c/1.1.1.3/Fri Nov 28 22:37:38 2014//
+/ndis2.h/1.1.1.3/Fri Nov 28 22:37:38 2014//
+/ndis_0.asm/1.1.1.1/Fri Nov 28 21:37:08 2014//
+/pkt_rx0.asm/1.1.1.1/Fri Nov 28 21:37:08 2014//
+/pkt_rx1.s/1.1.1.1/Fri Nov 28 21:37:08 2014//
+/pktdrvr.c/1.1.1.3/Fri Nov 28 22:37:38 2014//
+/pktdrvr.h/1.1.1.3/Fri Nov 28 22:37:38 2014//
+/readme.dos/1.1.1.4/Fri Nov 28 22:37:38 2014//
 D

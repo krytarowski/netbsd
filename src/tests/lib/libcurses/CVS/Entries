@@ -2,8 +2,8 @@ D/check_files////
 D/director////
 D/slave////
 D/tests////
-/Makefile/1.3/Tue Mar 10 12:29:31 2015//
-/Makefile.inc/1.1/Tue Mar 10 12:29:31 2015//
-/atf.terminfo/1.1/Tue Mar 10 12:29:31 2015//
-/t_curses.sh/1.8/Tue Mar 10 12:29:31 2015//
-/testframe.txt/1.3/Tue Mar 10 12:29:31 2015//
+/Makefile/1.3/Fri Nov 28 21:46:00 2014//
+/Makefile.inc/1.1/Fri Nov 28 21:46:00 2014//
+/atf.terminfo/1.1/Fri Nov 28 21:46:00 2014//
+/t_curses.sh/1.8/Fri Nov 28 21:46:00 2014//
+/testframe.txt/1.3/Fri Nov 28 21:46:00 2014//

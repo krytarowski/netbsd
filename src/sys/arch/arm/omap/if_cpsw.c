@@ -1,4 +1,4 @@
-/*	$NetBSD: if_cpsw.c,v 1.7 2015/02/01 19:32:59 christos Exp $	*/
+/*	$NetBSD: if_cpsw.c,v 1.10 2015/03/13 08:56:35 skrll Exp $	*/
 
 /*
  * Copyright (c) 2013 Jonathan A. Kollasch
@@ -53,7 +53,7 @@
  */
 
 #include <sys/cdefs.h>
-__KERNEL_RCSID(1, "$NetBSD: if_cpsw.c,v 1.7 2015/02/01 19:32:59 christos Exp $");
+__KERNEL_RCSID(1, "$NetBSD: if_cpsw.c,v 1.10 2015/03/13 08:56:35 skrll Exp $");
 
 #include <sys/param.h>
 #include <sys/bus.h>
@@ -542,7 +542,8 @@ cpsw_attach(device_t parent, device_t self, void *aux)
 	    ether_mediastatus);
 
 	/* Initialize MDIO */
-	cpsw_write_4(sc, MDIOCONTROL, MDIOCTL_ENABLE | MDIOCTL_FAULTENB | MDIOCTL_CLKDIV(0xff));
+	cpsw_write_4(sc, MDIOCONTROL,
+	    MDIOCTL_ENABLE | MDIOCTL_FAULTENB | MDIOCTL_CLKDIV(0xff));
 	/* Clear ALE */
 	cpsw_write_4(sc, CPSW_ALE_CONTROL, ALECTL_CLEAR_TABLE);
 
@@ -556,10 +557,15 @@ cpsw_attach(device_t parent, device_t self, void *aux)
 	} else {
 		sc->sc_phy_has_1000t = cpsw_phy_has_1000t(sc);
 		if (sc->sc_phy_has_1000t) {
-			aprint_normal_dev(sc->sc_dev, "1000baseT PHY found. setting RGMII Mode\n");
-			/* Select the Interface RGMII Mode in the Control Module */
+			aprint_normal_dev(sc->sc_dev, "1000baseT PHY found. "
+			    "Setting RGMII Mode\n");
+			/*
+			 * Select the Interface RGMII Mode in the Control
+			 * Module
+			 */
 			sitara_cm_reg_write_4(CPSW_GMII_SEL,
-			    GMIISEL_GMII2_SEL(RGMII_MODE) | GMIISEL_GMII1_SEL(RGMII_MODE));
+			    GMIISEL_GMII2_SEL(RGMII_MODE) |
+			    GMIISEL_GMII1_SEL(RGMII_MODE));
 		}
 
 		ifmedia_set(&sc->sc_mii.mii_media, IFM_ETHER|IFM_AUTO);
@@ -656,7 +662,7 @@ cpsw_start(struct ifnet *ifp)
 				dw[3] |= CPDMA_BD_SOP | CPDMA_BD_OWNER |
 				    MAX(mlen, CPSW_PAD_LEN);
 
-			if (seg == dm->dm_nsegs - 1 && !pad)
+			if ((seg == dm->dm_nsegs - 1) && !pad)
 				dw[3] |= CPDMA_BD_EOP;
 
 			cpsw_set_txdesc(sc, sc->sc_txnext, &bd);
@@ -879,7 +885,7 @@ cpsw_init(struct ifnet *ifp)
 	cpsw_write_4(sc, CPSW_ALE_CONTROL, (3 << 30) | 0x10);
 
 	/* Reset and init Sliver port 1 and 2 */
-	for (i = 0; i < 2; i++) {
+	for (i = 0; i < CPSW_ETH_PORTS; i++) {
 		uint32_t macctl;
 
 		/* Reset */
@@ -976,9 +982,10 @@ cpsw_init(struct ifnet *ifp)
 	cpsw_write_4(sc, CPSW_CPDMA_CPDMA_EOI_VECTOR, CPSW_INTROFF_TX);
 	cpsw_write_4(sc, CPSW_CPDMA_CPDMA_EOI_VECTOR, CPSW_INTROFF_MISC);
 
-	/* Initialze MDIO - ENABLE, PREAMBLE=0, FAULTENB, CLKDIV=0xFF */
+	/* Initialize MDIO - ENABLE, PREAMBLE=0, FAULTENB, CLKDIV=0xFF */
 	/* TODO Calculate MDCLK=CLK/(CLKDIV+1) */
-	cpsw_write_4(sc, MDIOCONTROL, (1<<30) | (1<<18) | 0xFF);
+	cpsw_write_4(sc, MDIOCONTROL,
+	    MDIOCTL_ENABLE | MDIOCTL_FAULTENB | MDIOCTL_CLKDIV(0xff));
 
 	mii_mediachg(mii);
 
@@ -1039,7 +1046,7 @@ cpsw_stop(struct ifnet *ifp, int disable)
 	cpsw_write_4(sc, CPSW_SS_SOFT_RESET, 1);
 	while(cpsw_read_4(sc, CPSW_SS_SOFT_RESET) & 1);
 
-	for (i = 0; i < 2; i++) {
+	for (i = 0; i < CPSW_ETH_PORTS; i++) {
 		cpsw_write_4(sc, CPSW_SL_SOFT_RESET(i), 1);
 		while(cpsw_read_4(sc, CPSW_SL_SOFT_RESET(i)) & 1);
 	}
@@ -1113,7 +1120,8 @@ cpsw_rxintr(void *arg)
 		KASSERT(sc->sc_rxhead < CPSW_NRXDESCS);
 
 		i = sc->sc_rxhead;
-		KERNHIST_LOG(cpswhist, "rxhead %x CP %x\n", i, cpsw_read_4(sc, CPSW_CPDMA_RX_CP(0)), 0, 0);
+		KERNHIST_LOG(cpswhist, "rxhead %x CP %x\n", i,
+		    cpsw_read_4(sc, CPSW_CPDMA_RX_CP(0)), 0, 0);
 		dm = rdp->rx_dm[i];
 		m = rdp->rx_mb[i];
 
@@ -1231,7 +1239,8 @@ cpsw_txintr(void *arg)
 			goto next;
 
 		if (ISSET(dw[3], CPDMA_BD_OWNER)) {
-			printf("pwned %x %x %x\n", cpi, sc->sc_txhead, sc->sc_txnext);
+			printf("pwned %x %x %x\n", cpi, sc->sc_txhead,
+			    sc->sc_txnext);
 			break;
 		}
 
@@ -1367,7 +1376,7 @@ cpsw_ale_entry_set_bcast_mac(uint32_t *ale_entry)
 }
 
 static void
-cpsw_ale_entry_set(uint32_t *ale_entry, ale_entry_filed_t field, uint32_t val)
+cpsw_ale_entry_set(uint32_t *ale_entry, ale_entry_field_t field, uint32_t val)
 {
 	/* Entry type[61:60] is addr entry(1), Mcast fwd state[63:62] is fw(3)*/
 	switch (field) {
@@ -1424,7 +1433,8 @@ cpsw_ale_read_entry(struct cpsw_softc *sc, uint16_t idx, uint32_t *ale_entry)
 }
 
 static void
-cpsw_ale_write_entry(struct cpsw_softc *sc, uint16_t idx, uint32_t *ale_entry)
+cpsw_ale_write_entry(struct cpsw_softc *sc, uint16_t idx,
+    const uint32_t *ale_entry)
 {
 	cpsw_write_4(sc, CPSW_ALE_TBLW0, ale_entry[0]);
 	cpsw_write_4(sc, CPSW_ALE_TBLW1, ale_entry[1]);
@@ -1460,7 +1470,7 @@ cpsw_ale_mc_entry_set(struct cpsw_softc *sc, uint8_t portmask, uint8_t *mac)
 	for (i = 0; i < CPSW_MAX_ALE_ENTRIES; i++) {
 		cpsw_ale_read_entry(sc, i, ale_entry);
 
-		/* Entry Type[61:60] is 0 for free entry */ 
+		/* Entry Type[61:60] is 0 for free entry */
 		if (free_index < 0 && ((ale_entry[1] >> 28) & 3) == 0) {
 			free_index = i;
 		}
@@ -1507,7 +1517,7 @@ cpsw_ale_update_addresses(struct cpsw_softc *sc, int purge)
 	cpsw_ale_write_entry(sc, 0, ale_entry);
 
 	/* Set outgoing MAC Address for Ports 1 and 2. */
-	for (i = 1; i < 3; ++i)
+	for (i = CPSW_CPPI_PORTS; i < (CPSW_ETH_PORTS + CPSW_CPPI_PORTS); ++i)
 		cpsw_ale_set_outgoing_mac(sc, i, mac);
 
 	/* Keep the broadcast address at table entry 1. */

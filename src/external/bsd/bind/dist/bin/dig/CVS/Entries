@@ -1,16 +1,16 @@
 D/include////
 D/win32////
-/Makefile.in/1.1.1.9/Tue Mar 10 12:25:27 2015//
-/dig.1/1.9/Tue Mar 10 12:25:27 2015//
-/dig.c/1.10/Tue Mar 10 12:25:27 2015//
-/dig.docbook/1.1.1.10/Tue Mar 10 12:25:27 2015//
-/dig.html/1.1.1.10/Tue Mar 10 12:25:27 2015//
-/dighost.c/1.14/Tue Mar 10 12:25:27 2015//
-/host.1/1.5/Tue Mar 10 12:25:27 2015//
-/host.c/1.10/Tue Mar 10 12:25:27 2015//
-/host.docbook/1.1.1.5/Tue Mar 10 12:25:27 2015//
-/host.html/1.1.1.6/Tue Mar 10 12:25:27 2015//
-/nslookup.1/1.7/Tue Mar 10 12:25:27 2015//
-/nslookup.c/1.10/Tue Mar 10 12:25:27 2015//
-/nslookup.docbook/1.1.1.7/Tue Mar 10 12:25:27 2015//
-/nslookup.html/1.1.1.9/Tue Mar 10 12:25:27 2015//
+/Makefile.in/1.1.1.9/Sat Dec 20 22:28:48 2014//
+/dig.1/1.9/Sat Dec 20 22:28:48 2014//
+/dig.c/1.10/Sat Dec 20 22:28:48 2014//
+/dig.docbook/1.1.1.10/Sat Dec 20 22:28:48 2014//
+/dig.html/1.1.1.10/Sat Dec 20 22:28:49 2014//
+/dighost.c/1.14/Sat Dec 20 22:28:49 2014//
+/host.1/1.5/Sat Dec 20 22:28:49 2014//
+/host.c/1.10/Sat Dec 20 22:28:49 2014//
+/host.docbook/1.1.1.5/Fri Nov 28 21:37:02 2014//
+/host.html/1.1.1.6/Sat Dec 20 22:28:49 2014//
+/nslookup.1/1.7/Sat Dec 20 22:28:49 2014//
+/nslookup.c/1.10/Sat Dec 20 22:28:49 2014//
+/nslookup.docbook/1.1.1.7/Fri Nov 28 21:37:02 2014//
+/nslookup.html/1.1.1.9/Sat Dec 20 22:28:49 2014//

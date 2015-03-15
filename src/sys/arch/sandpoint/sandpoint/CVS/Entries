@@ -1,12 +1,12 @@
-/autoconf.c/1.27/Tue Mar 10 12:28:53 2015//
-/com_eumb.c/1.8/Tue Mar 10 12:28:53 2015//
-/eumb.c/1.6/Tue Mar 10 12:28:53 2015//
-/eumbvar.h/1.6/Tue Mar 10 12:28:53 2015//
-/flash_cfi.c/1.3/Tue Mar 10 12:28:53 2015//
-/iic_eumb.c/1.19/Tue Mar 10 12:28:53 2015//
-/locore.S/1.24/Tue Mar 10 12:28:53 2015//
-/machdep.c/1.63/Tue Mar 10 12:28:53 2015//
-/mainbus.c/1.29/Tue Mar 10 12:28:53 2015//
-/nhpow.c/1.1/Tue Mar 10 12:28:53 2015//
-/satmgr.c/1.26/Tue Mar 10 12:28:53 2015//
+/autoconf.c/1.27/Fri Nov 28 21:45:45 2014//
+/com_eumb.c/1.8/Fri Nov 28 21:45:45 2014//
+/eumb.c/1.6/Fri Nov 28 21:45:45 2014//
+/eumbvar.h/1.6/Fri Nov 28 21:45:45 2014//
+/flash_cfi.c/1.3/Fri Nov 28 21:45:45 2014//
+/iic_eumb.c/1.19/Fri Nov 28 21:45:45 2014//
+/locore.S/1.24/Fri Nov 28 21:45:45 2014//
+/machdep.c/1.63/Fri Nov 28 21:45:45 2014//
+/mainbus.c/1.29/Fri Nov 28 21:45:45 2014//
+/nhpow.c/1.1/Fri Nov 28 21:45:45 2014//
+/satmgr.c/1.26/Fri Nov 28 21:45:45 2014//
 D

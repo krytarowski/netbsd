@@ -1,8 +1,8 @@
-/Makefile.inc/1.12/Tue Mar 10 12:29:24 2015//
-/bcopy.S/1.14/Tue Mar 10 12:29:24 2015//
-/memcpy.S/1.1/Tue Mar 10 12:29:24 2015//
-/memmove.S/1.1/Tue Mar 10 12:29:24 2015//
-/milli.S/1.1/Tue Mar 10 12:29:24 2015//
-/prefix.h/1.2/Tue Mar 10 12:29:24 2015//
-/spcopy.S/1.1/Tue Mar 10 12:29:24 2015//
+/Makefile.inc/1.12/Fri Nov 28 21:45:47 2014//
+/bcopy.S/1.14/Fri Nov 28 21:45:47 2014//
+/memcpy.S/1.1/Fri Nov 28 21:45:47 2014//
+/memmove.S/1.1/Fri Nov 28 21:45:47 2014//
+/milli.S/1.1/Fri Nov 28 21:45:47 2014//
+/prefix.h/1.2/Fri Nov 28 21:45:47 2014//
+/spcopy.S/1.1/Fri Nov 28 21:45:47 2014//
 D

@@ -1,12 +1,12 @@
-/Makefile/1.5/Tue Mar 10 12:28:43 2015//
-/ahdilabel.c/1.10/Tue Mar 10 12:28:43 2015//
-/build.c/1.3/Tue Mar 10 12:28:43 2015//
-/check.c/1.6/Tue Mar 10 12:28:43 2015//
-/cksum.c/1.3/Tue Mar 10 12:28:43 2015//
-/magic.c/1.3/Tue Mar 10 12:28:43 2015//
-/openraw.c/1.3/Tue Mar 10 12:28:43 2015//
-/privahdi.h/1.3/Tue Mar 10 12:28:43 2015//
-/read.c/1.4/Tue Mar 10 12:28:43 2015//
-/write.c/1.6/Tue Mar 10 12:28:43 2015//
-/writedtab.c/1.5/Tue Mar 10 12:28:43 2015//
+/Makefile/1.5/Fri Nov 28 21:45:45 2014//
+/ahdilabel.c/1.10/Fri Nov 28 21:45:45 2014//
+/build.c/1.3/Fri Nov 28 21:45:45 2014//
+/check.c/1.6/Fri Nov 28 21:45:45 2014//
+/cksum.c/1.3/Fri Nov 28 21:45:45 2014//
+/magic.c/1.3/Fri Nov 28 21:45:45 2014//
+/openraw.c/1.3/Fri Nov 28 21:45:45 2014//
+/privahdi.h/1.3/Fri Nov 28 21:45:45 2014//
+/read.c/1.4/Fri Nov 28 21:45:45 2014//
+/write.c/1.6/Fri Nov 28 21:45:45 2014//
+/writedtab.c/1.5/Fri Nov 28 21:45:45 2014//
 D

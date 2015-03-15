@@ -1,8 +1,8 @@
-/Makefile.inc/1.5/Tue Mar 10 12:28:13 2015//
-/bcmp.S/1.4/Tue Mar 10 12:28:13 2015//
-/bcopy.S/1.4/Tue Mar 10 12:28:13 2015//
-/bzero.S/1.4/Tue Mar 10 12:28:13 2015//
-/ffs.S/1.4/Tue Mar 10 12:28:13 2015//
-/index.S/1.4/Tue Mar 10 12:28:13 2015//
-/memcmp.S/1.4/Tue Mar 10 12:28:13 2015//
+/Makefile.inc/1.5/Fri Nov 28 21:39:46 2014//
+/bcmp.S/1.4/Fri Nov 28 21:39:46 2014//
+/bcopy.S/1.4/Fri Nov 28 21:39:46 2014//
+/bzero.S/1.4/Fri Nov 28 21:39:46 2014//
+/ffs.S/1.4/Fri Nov 28 21:39:46 2014//
+/index.S/1.4/Fri Nov 28 21:39:46 2014//
+/memcmp.S/1.4/Fri Nov 28 21:39:46 2014//
 D

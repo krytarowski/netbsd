@@ -1,7 +1,7 @@
-/fdcisa.c/1.14/Tue Mar 10 12:28:43 2015//
-/isa_dma.c/1.11/Tue Mar 10 12:28:43 2015//
-/isa_hades.c/1.9/Tue Mar 10 12:28:43 2015//
-/isa_machdep.c/1.40/Tue Mar 10 12:28:43 2015//
-/isa_milan.c/1.14/Tue Mar 10 12:28:43 2015//
-/isapnp_machdep.c/1.10/Tue Mar 10 12:28:43 2015//
+/fdcisa.c/1.14/Fri Nov 28 21:45:45 2014//
+/isa_dma.c/1.11/Fri Nov 28 21:45:45 2014//
+/isa_hades.c/1.9/Fri Nov 28 21:45:45 2014//
+/isa_machdep.c/1.40/Fri Nov 28 21:45:45 2014//
+/isa_milan.c/1.14/Fri Nov 28 21:45:45 2014//
+/isapnp_machdep.c/1.10/Fri Nov 28 21:45:45 2014//
 D

@@ -1,9 +1,9 @@
-/Makefile/1.2/Tue Mar 10 12:29:43 2015//
-/defs.h/1.2/Tue Mar 10 12:29:43 2015//
-/mmcformat.8/1.6/Tue Mar 10 12:29:43 2015//
-/mmcformat.c/1.4/Tue Mar 10 12:29:43 2015//
-/uscsi_sense.c/1.1/Tue Mar 10 12:29:43 2015//
-/uscsi_subr.c/1.1/Tue Mar 10 12:29:43 2015//
-/uscsilib.h/1.1/Tue Mar 10 12:29:43 2015//
-/uscsilib_machdep.h/1.1/Tue Mar 10 12:29:43 2015//
+/Makefile/1.2/Fri Nov 28 21:46:48 2014//
+/defs.h/1.2/Fri Nov 28 21:46:48 2014//
+/mmcformat.8/1.6/Fri Nov 28 21:46:48 2014//
+/mmcformat.c/1.4/Fri Nov 28 21:46:48 2014//
+/uscsi_sense.c/1.1/Fri Nov 28 21:46:48 2014//
+/uscsi_subr.c/1.1/Fri Nov 28 21:46:48 2014//
+/uscsilib.h/1.1/Fri Nov 28 21:46:48 2014//
+/uscsilib_machdep.h/1.1/Fri Nov 28 21:46:48 2014//
 D

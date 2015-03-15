@@ -1,14 +1,14 @@
-/AuDispose.c/1.1.1.4/Tue Mar 10 12:31:49 2015//
-/AuFileName.c/1.1.1.4/Tue Mar 10 12:31:49 2015//
-/AuGetAddr.c/1.1.1.5/Tue Mar 10 12:31:49 2015//
-/AuGetBest.c/1.1.1.5/Tue Mar 10 12:31:49 2015//
-/AuLock.c/1.1.1.6/Tue Mar 10 12:31:49 2015//
-/AuRead.c/1.1.1.4/Tue Mar 10 12:31:49 2015//
-/AuUnlock.c/1.1.1.5/Tue Mar 10 12:31:49 2015//
-/AuWrite.c/1.1.1.4/Tue Mar 10 12:31:49 2015//
-/Autest.c/1.1.1.3/Tue Mar 10 12:31:49 2015//
-/Imakefile/1.1.1.4/Tue Mar 10 12:31:49 2015//
-/README/1.1.1.1/Tue Mar 10 12:31:49 2015//
-/Xauth.h/1.1.1.5/Tue Mar 10 12:31:49 2015//
-/k5encode.c/1.1.1.3/Tue Mar 10 12:31:49 2015//
+/AuDispose.c/1.1.1.4/Thu Nov 27 02:21:53 2014//
+/AuFileName.c/1.1.1.4/Thu Nov 27 02:21:53 2014//
+/AuGetAddr.c/1.1.1.5/Thu Nov 27 02:21:53 2014//
+/AuGetBest.c/1.1.1.5/Thu Nov 27 02:21:53 2014//
+/AuLock.c/1.1.1.6/Thu Nov 27 02:21:53 2014//
+/AuRead.c/1.1.1.4/Thu Nov 27 02:21:53 2014//
+/AuUnlock.c/1.1.1.5/Thu Nov 27 02:21:53 2014//
+/AuWrite.c/1.1.1.4/Thu Nov 27 02:21:53 2014//
+/Autest.c/1.1.1.3/Thu Nov 27 02:21:53 2014//
+/Imakefile/1.1.1.4/Thu Nov 27 02:21:53 2014//
+/README/1.1.1.1/Thu Nov 27 02:21:53 2014//
+/Xauth.h/1.1.1.5/Thu Nov 27 02:21:53 2014//
+/k5encode.c/1.1.1.3/Thu Nov 27 02:21:53 2014//
 D

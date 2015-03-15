@@ -1,10 +1,10 @@
-/dwc2_core.c/1.6/Tue Mar 10 12:29:22 2015//
-/dwc2_core.h/1.5/Tue Mar 10 12:29:22 2015//
-/dwc2_coreintr.c/1.8/Tue Mar 10 12:29:22 2015//
-/dwc2_hcd.c/1.15/Tue Mar 10 12:29:22 2015//
-/dwc2_hcd.h/1.9/Tue Mar 10 12:29:22 2015//
-/dwc2_hcdddma.c/1.6/Tue Mar 10 12:29:22 2015//
-/dwc2_hcdintr.c/1.11/Tue Mar 10 12:29:22 2015//
-/dwc2_hcdqueue.c/1.11/Tue Mar 10 12:29:22 2015//
-/dwc2_hw.h/1.2/Tue Mar 10 12:29:22 2015//
+/dwc2_core.c/1.6/Fri Nov 28 21:45:47 2014//
+/dwc2_core.h/1.5/Fri Nov 28 21:45:47 2014//
+/dwc2_coreintr.c/1.8/Fri Nov 28 21:45:47 2014//
+/dwc2_hcd.c/1.15/Fri Nov 28 22:37:39 2014//
+/dwc2_hcd.h/1.9/Fri Nov 28 21:45:47 2014//
+/dwc2_hcdddma.c/1.6/Fri Nov 28 21:45:47 2014//
+/dwc2_hcdintr.c/1.11/Fri Nov 28 22:37:39 2014//
+/dwc2_hcdqueue.c/1.11/Fri Nov 28 21:45:47 2014//
+/dwc2_hw.h/1.2/Fri Nov 28 21:45:47 2014//
 D

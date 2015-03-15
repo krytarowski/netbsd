@@ -19,8 +19,8 @@ D/vbe////
 D/vgahw////
 D/x86emu////
 D/xaa////
-/Makefile.am/1.1.1.4/Tue Mar 10 12:31:15 2015//
-/Makefile.in/1.1.1.6/Tue Mar 10 12:31:15 2015//
-/libxorg.c/1.1.1.1/Tue Mar 10 12:31:15 2015//
-/xorg.c/1.1.1.1/Tue Mar 10 12:31:16 2015//
-/xorgconf.cpp/1.1.1.4/Tue Mar 10 12:31:16 2015//
+/Makefile.am/1.1.1.4/Thu Nov 27 02:21:50 2014//
+/Makefile.in/1.1.1.6/Thu Nov 27 02:21:50 2014//
+/libxorg.c/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/xorg.c/1.1.1.1/Thu Nov 27 02:21:50 2014//
+/xorgconf.cpp/1.1.1.4/Thu Nov 27 02:21:50 2014//

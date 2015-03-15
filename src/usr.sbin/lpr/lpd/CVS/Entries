@@ -1,11 +1,11 @@
-/Makefile/1.18/Tue Mar 10 12:29:43 2015//
-/extern.h/1.12/Tue Mar 10 12:29:43 2015//
-/key.c/1.7/Tue Mar 10 12:29:43 2015//
-/lpd.8/1.35/Tue Mar 10 12:29:43 2015//
-/lpd.c/1.57/Tue Mar 10 12:29:43 2015//
-/lpdchar.c/1.7/Tue Mar 10 12:29:43 2015//
-/modes.c/1.7/Tue Mar 10 12:29:43 2015//
-/printjob.c/1.56/Tue Mar 10 12:29:43 2015//
-/recvjob.c/1.23/Tue Mar 10 12:29:43 2015//
-/ttcompat.c/1.12/Tue Mar 10 12:29:43 2015//
+/Makefile/1.18/Fri Nov 28 21:46:48 2014//
+/extern.h/1.12/Fri Nov 28 21:46:48 2014//
+/key.c/1.7/Fri Nov 28 21:46:48 2014//
+/lpd.8/1.35/Fri Nov 28 21:46:48 2014//
+/lpd.c/1.57/Fri Nov 28 21:46:48 2014//
+/lpdchar.c/1.7/Fri Nov 28 21:46:48 2014//
+/modes.c/1.7/Fri Nov 28 21:46:48 2014//
+/printjob.c/1.56/Fri Nov 28 21:46:48 2014//
+/recvjob.c/1.23/Fri Nov 28 21:46:48 2014//
+/ttcompat.c/1.12/Fri Nov 28 21:46:48 2014//
 D

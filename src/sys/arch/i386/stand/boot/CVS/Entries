@@ -1,9 +1,9 @@
 D/biosboot////
-/Makefile/1.8/Tue Mar 10 12:28:46 2015//
-/Makefile.boot/1.66/Tue Mar 10 12:28:46 2015//
-/biosboot.S/1.8/Tue Mar 10 12:28:46 2015//
-/boot2.c/1.64/Tue Mar 10 12:28:46 2015//
-/conf.c/1.6/Tue Mar 10 12:28:46 2015//
-/devopen.c/1.8/Tue Mar 10 12:28:46 2015//
-/devopen.h/1.4/Tue Mar 10 12:28:46 2015//
-/version/1.16/Tue Mar 10 12:28:46 2015//
+/Makefile/1.8/Fri Nov 28 21:45:45 2014//
+/Makefile.boot/1.66/Fri Nov 28 21:45:45 2014//
+/biosboot.S/1.8/Fri Nov 28 21:45:45 2014//
+/boot2.c/1.64/Sat Jan 17 00:10:27 2015//
+/conf.c/1.6/Fri Nov 28 21:45:45 2014//
+/devopen.c/1.8/Fri Nov 28 21:45:45 2014//
+/devopen.h/1.4/Fri Nov 28 21:45:45 2014//
+/version/1.16/Fri Nov 28 21:45:45 2014//

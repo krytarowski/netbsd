@@ -1,13 +1,13 @@
-/Makefile/1.2/Tue Mar 10 12:28:29 2015//
-/common.c/1.2/Tue Mar 10 12:28:29 2015//
-/common.h/1.1/Tue Mar 10 12:28:29 2015//
-/fetch.3/1.2/Tue Mar 10 12:28:29 2015//
-/fetch.c/1.1/Tue Mar 10 12:28:29 2015//
-/fetch.h/1.1/Tue Mar 10 12:28:29 2015//
-/file.c/1.1/Tue Mar 10 12:28:29 2015//
-/free2net.h/1.2/Tue Mar 10 12:28:29 2015//
-/ftp.c/1.1/Tue Mar 10 12:28:29 2015//
-/ftp.errors/1.1/Tue Mar 10 12:28:29 2015//
-/http.c/1.1/Tue Mar 10 12:28:29 2015//
-/http.errors/1.1/Tue Mar 10 12:28:29 2015//
+/Makefile/1.2/Fri Nov 28 21:40:59 2014//
+/common.c/1.2/Fri Nov 28 21:40:59 2014//
+/common.h/1.1/Fri Nov 28 21:40:59 2014//
+/fetch.3/1.2/Fri Nov 28 21:40:59 2014//
+/fetch.c/1.1/Fri Nov 28 21:40:59 2014//
+/fetch.h/1.1/Fri Nov 28 21:40:59 2014//
+/file.c/1.1/Fri Nov 28 21:40:59 2014//
+/free2net.h/1.2/Fri Nov 28 21:40:59 2014//
+/ftp.c/1.1/Fri Nov 28 21:40:59 2014//
+/ftp.errors/1.1/Fri Nov 28 21:40:59 2014//
+/http.c/1.1/Fri Nov 28 21:40:59 2014//
+/http.errors/1.1/Fri Nov 28 21:40:59 2014//
 D

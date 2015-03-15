@@ -1,12 +1,12 @@
-/Makefile/1.5/Tue Mar 10 12:29:41 2015//
-/bnep.c/1.11/Tue Mar 10 12:29:41 2015//
-/bnep.h/1.2/Tue Mar 10 12:29:41 2015//
-/btpand.8/1.6/Tue Mar 10 12:29:41 2015//
-/btpand.c/1.7/Tue Mar 10 12:29:41 2015//
-/btpand.h/1.4/Tue Mar 10 12:29:41 2015//
-/channel.c/1.4/Tue Mar 10 12:29:41 2015//
-/client.c/1.7/Tue Mar 10 12:29:41 2015//
-/packet.c/1.2/Tue Mar 10 12:29:41 2015//
-/server.c/1.8/Tue Mar 10 12:29:41 2015//
-/tap.c/1.5/Tue Mar 10 12:29:41 2015//
+/Makefile/1.5/Fri Nov 28 21:46:48 2014//
+/bnep.c/1.11/Fri Nov 28 21:46:48 2014//
+/bnep.h/1.2/Fri Nov 28 21:46:48 2014//
+/btpand.8/1.6/Fri Nov 28 21:46:48 2014//
+/btpand.c/1.7/Fri Nov 28 21:46:48 2014//
+/btpand.h/1.4/Fri Nov 28 21:46:48 2014//
+/channel.c/1.4/Fri Nov 28 21:46:48 2014//
+/client.c/1.7/Fri Nov 28 21:46:48 2014//
+/packet.c/1.2/Fri Nov 28 21:46:48 2014//
+/server.c/1.8/Fri Nov 28 21:46:48 2014//
+/tap.c/1.5/Fri Nov 28 21:46:48 2014//
 D

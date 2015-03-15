@@ -1,13 +1,13 @@
-/gumstix_machdep.c/1.50/Tue Mar 10 12:28:44 2015//
-/gumstix_start.S/1.13/Tue Mar 10 12:28:44 2015//
-/gumstixreg.h/1.7/Tue Mar 10 12:28:44 2015//
-/gumstixvar.h/1.6/Tue Mar 10 12:28:44 2015//
-/gxiic.c/1.7/Tue Mar 10 12:28:44 2015//
-/gxio.c/1.20/Tue Mar 10 12:28:44 2015//
-/gxlcd.c/1.3/Tue Mar 10 12:28:44 2015//
-/gxmci.c/1.4/Tue Mar 10 12:28:44 2015//
-/gxpcic.c/1.13/Tue Mar 10 12:28:44 2015//
-/if_sm_gxio.c/1.11/Tue Mar 10 12:28:44 2015//
-/if_smsh_gpmc.c/1.3/Tue Mar 10 12:28:44 2015//
-/if_smsh_gxio.c/1.3/Tue Mar 10 12:28:44 2015//
+/gumstix_machdep.c/1.50/Fri Nov 28 21:45:45 2014//
+/gumstix_start.S/1.13/Fri Nov 28 21:45:45 2014//
+/gumstixreg.h/1.7/Fri Nov 28 21:45:45 2014//
+/gumstixvar.h/1.6/Fri Nov 28 21:45:45 2014//
+/gxiic.c/1.7/Fri Nov 28 21:45:45 2014//
+/gxio.c/1.20/Fri Nov 28 21:45:45 2014//
+/gxlcd.c/1.3/Fri Nov 28 21:45:45 2014//
+/gxmci.c/1.4/Fri Nov 28 21:45:45 2014//
+/gxpcic.c/1.13/Fri Nov 28 21:45:45 2014//
+/if_sm_gxio.c/1.11/Fri Nov 28 21:45:45 2014//
+/if_smsh_gpmc.c/1.3/Fri Nov 28 21:45:45 2014//
+/if_smsh_gxio.c/1.3/Fri Nov 28 21:45:45 2014//
 D

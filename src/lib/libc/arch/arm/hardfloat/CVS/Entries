@@ -1,8 +1,8 @@
-/fabs_ieee754.S/1.1/Tue Mar 10 12:28:13 2015//
-/fpgetmask.S/1.7/Tue Mar 10 12:28:13 2015//
-/fpgetround.c/1.6/Tue Mar 10 12:28:13 2015//
-/fpgetsticky.S/1.6/Tue Mar 10 12:28:13 2015//
-/fpsetmask.S/1.7/Tue Mar 10 12:28:13 2015//
-/fpsetround.c/1.8/Tue Mar 10 12:28:13 2015//
-/fpsetsticky.S/1.6/Tue Mar 10 12:28:13 2015//
+/fabs_ieee754.S/1.1/Fri Nov 28 21:39:46 2014//
+/fpgetmask.S/1.7/Fri Nov 28 21:39:46 2014//
+/fpgetround.c/1.6/Fri Nov 28 21:39:46 2014//
+/fpgetsticky.S/1.6/Fri Nov 28 21:39:46 2014//
+/fpsetmask.S/1.7/Fri Nov 28 21:39:46 2014//
+/fpsetround.c/1.8/Fri Nov 28 21:39:46 2014//
+/fpsetsticky.S/1.6/Fri Nov 28 21:39:46 2014//
 D

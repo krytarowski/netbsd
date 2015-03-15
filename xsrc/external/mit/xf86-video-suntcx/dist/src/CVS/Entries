@@ -1,9 +1,9 @@
-/Makefile.am/1.2/Tue Mar 10 12:31:07 2015//
-/Makefile.in/1.2/Tue Mar 10 12:31:07 2015//
-/compat-api.h/1.1.1.1/Tue Mar 10 12:31:07 2015//
-/tcx.h/1.7/Tue Mar 10 12:31:07 2015//
-/tcx_accel.c/1.9/Tue Mar 10 12:31:07 2015//
-/tcx_cursor.c/1.2/Tue Mar 10 12:31:07 2015//
-/tcx_driver.c/1.9/Tue Mar 10 12:31:07 2015//
-/tcx_regs.h/1.2/Tue Mar 10 12:31:07 2015//
+/Makefile.am/1.2/Thu Nov 27 02:21:44 2014//
+/Makefile.in/1.2/Thu Nov 27 02:21:44 2014//
+/compat-api.h/1.1.1.1/Thu Nov 27 02:21:44 2014//
+/tcx.h/1.7/Thu Nov 27 02:21:44 2014//
+/tcx_accel.c/1.9/Thu Nov 27 02:21:44 2014//
+/tcx_cursor.c/1.2/Thu Nov 27 02:21:44 2014//
+/tcx_driver.c/1.9/Thu Nov 27 02:21:44 2014//
+/tcx_regs.h/1.2/Thu Nov 27 02:21:44 2014//
 D
