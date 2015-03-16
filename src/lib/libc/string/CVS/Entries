@@ -112,8 +112,8 @@
 /wmemcpy.c/1.3/Fri Nov 28 21:39:46 2014//
 /wmemmove.c/1.3/Fri Nov 28 21:39:46 2014//
 /wmemset.c/1.3/Fri Nov 28 21:39:46 2014//
-/Makefile.inc/1.80/Sun Mar 15 21:05:46 2015//
-/consttime_memequal.3/1.4/Sun Mar 15 21:05:46 2015//
-/explicit_memset.3/1.2/Sun Mar 15 21:05:46 2015//
-/memcmp.3/1.11/Sun Mar 15 21:05:46 2015//
+/Makefile.inc/1.80/Mon Mar 16 17:38:53 2015//
+/consttime_memequal.3/1.4/Mon Mar 16 17:38:53 2015//
+/explicit_memset.3/1.2/Mon Mar 16 17:38:53 2015//
+/memcmp.3/1.11/Mon Mar 16 17:38:53 2015//
 D
