@@ -52,7 +52,7 @@ MAN+=	a64l.3 abort.3 abs.3 alloca.3 atexit.3 atof.3 atoi.3 atol.3 atoll.3 \
 	malloc.3 memory.3 mi_vector_hash.3 \
 	posix_memalign.3 posix_openpt.3 ptsname.3 \
 	qabs.3 qdiv.3 quick_exit.3 qsort.3 \
-	radixsort.3 rand48.3 rand.3 random.3 reallocarr.3 reallocarray.3 \
+	radixsort.3 rand48.3 rand.3 random.3 reallocarray.3 \
 	strfmon.3 strsuftoll.3 strtod.3 strtol.3 strtoul.3 strtonum.3 \
 	system.3 \
 	tsearch.3 \
@@ -73,7 +73,8 @@ MLINKS+=hcreate.3 hcreate_r.3 hcreate.3 hdestroy_r.3 hcreate.3 hsearch_r.3
 MLINKS+=hcreate.3 hdestroy1.3 hcreate.3 hdestroy1_r.3
 MLINKS+=insque.3 remque.3
 MLINKS+=lsearch.3 lfind.3
-MLINKS+=malloc.3 calloc.3 malloc.3 realloc.3 malloc.3 free.3
+MLINKS+=malloc.3 calloc.3 malloc.3 realloc.3 malloc.3 reallocarr.3
+MLINKS+=malloc.3 free.3
 MLINKS+=qsort.3 heapsort.3 qsort.3 mergesort.3
 MLINKS+=ptsname.3 ptsname_r.3
 MLINKS+=rand.3 rand_r.3

@@ -1,3 +1,4 @@
+/*	$NetBSD: $	*/
 /*	$OpenBSD: reallocarray.c,v 1.1 2014/05/08 21:43:49 deraadt Exp $	*/
 
 /*-

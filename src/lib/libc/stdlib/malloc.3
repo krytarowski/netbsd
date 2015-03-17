@@ -34,11 +34,11 @@
 .\"     @(#)malloc.3	8.1 (Berkeley) 6/4/93
 .\" $FreeBSD: src/lib/libc/stdlib/malloc.3,v 1.73 2007/06/15 22:32:33 jasone Exp $
 .\"
-.Dd February 5, 2015
+.Dd March 17, 2015
 .Dt MALLOC 3
 .Os
 .Sh NAME
-.Nm malloc , calloc , realloc , free
+.Nm malloc , calloc , realloc , reallocarr , free
 .Nd general purpose memory allocation functions
 .Sh LIBRARY
 .Lb libc
@@ -50,6 +50,8 @@
 .Fn calloc "size_t number" "size_t size"
 .Ft void *
 .Fn realloc "void *ptr" "size_t size"
+.Ft int
+.Fn reallocarr "void *ptr" "size_t number" "size_t size"
 .Ft void
 .Fn free "void *ptr"
 .Sh DESCRIPTION
@@ -106,6 +108,35 @@ function behaves identically to
 for the specified size.
 .Pp
 The
+.Fn reallocarr
+function is a safe extension to
+.Fn realloc ,
+it reallocates the memory in
+.Fa *ptr
+to
+.Fa number
+objects, each
+.Fa size
+bytes in length.
+If the new length is equal to 0 then
+.Fn free
+is called for the given
+.Fa *ptr .
+On successful completion
+.Fn reallocarr
+updates
+.Fa *ptr ,
+otherwise the referenced memory is unmodified.
+This implies that
+.Fn reallocarr
+with new
+.Dv 0
+byte length will set
+.Fa *ptr
+to
+.Dv NULL .
+.Pp
+The
 .Fn free
 function causes the allocated memory referenced by
 .Fa ptr
@@ -144,6 +175,18 @@ The
 .Fn realloc
 function always leaves the original buffer intact
 when an error occurs.
+.Pp
+The
+.Fn reallocarr
+function returns reallocation status and guarantees to leave errno unchanged.
+The return status is preserved from the wrapped
+.Fn realloc
+call or set to
+.Er EOVERFLOW
+when overflow is detected in the multiplication of
+.Fa number
+and
+.Fa size .
 .Pp
 The
 .Fn free
@@ -253,7 +296,6 @@ size = newsize;
 .Xr getpagesize 3 ,
 .Xr memory 3 ,
 .Xr posix_memalign 3 ,
-.Xr reallocarr 3
 .Pp
 For the implementation details, see
 .Xr jemalloc 3 .
@@ -266,3 +308,80 @@ and
 .Fn free
 functions conform to
 .St -isoC .
+.Pp
+.Fn reallocarr
+is a
+.Nx
+extension.
+.Sh HISTORY
+A
+.Fn free
+internal kernel function and a predecessor to
+.Fn malloc ,
+.Fn alloc ,
+first appeared in
+.At v1 .
+C library functions
+.Fn alloc
+and
+.Fn free
+appeared in
+.At v6 .
+The functions
+.Fn malloc ,
+.Fn calloc ,
+and
+.Fn realloc
+first appeared in
+.At v7 .
+.Pp
+A new implementation by Chris Kingsley was introduced in
+.Bx 4.2 ,
+followed by a complete rewrite by Poul-Henning Kamp (
+.Dq phk's malloc
+or
+.Dq new malloc
+) which appeared in
+.Fx 2.2
+and was included in
+.Nx  1.5
+and
+.Ox 2.0 .
+These implementations were all
+.Xr sbrk 2
+based.
+.Pp
+The
+.Fn jemalloc 3
+allocator became the default system allocator first in
+.Fx 7.0
+and then in
+.Nx 5.0 .
+.Pp
+.Fn reallocarr
+first appeared in
+.Nx 8.0 .
+.Sh CAVEATS
+When using
+.Fn malloc
+or
+.Fn realloc
+be wary of overflow when there is multiplication in the
+.Fa size
+argument.
+.Pp
+Signed integer overflow will cause undefined behavior which compilers
+typically handle by wrapping back around to negative numbers.
+Depending on the input, this can result in allocating more or less
+memory than intended.
+.Pp
+An unsigned overflow has defined behavior which will wrap back around and
+return less memory than intended.
+.Pp
+A signed or unsigned integer overflow is a
+.Em security
+risk if less memory is returned than intended.
+Subsequent code may corrupt the heap by writing beyond the memory that was
+allocated.
+An attacker may be able to leverage this heap corruption to execute arbitrary
+code.

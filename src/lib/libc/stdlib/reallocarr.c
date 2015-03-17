@@ -49,24 +49,24 @@ __weak_alias(reallocarr, _reallocarr)
 #endif
 
 int
-reallocarr(void *ptr, size_t num, size_t size)
+reallocarr(void *ptr, size_t number, size_t size)
 {
 	int saved_errno, result;
 	void *optr;
 	void *nptr;
 
-	memcpy(&optr, ptr, sizeof(ptr));
 	saved_errno = errno;
-	if (num == 0 || size == 0) {
+	memcpy(&optr, ptr, sizeof(ptr));
+	if (number == 0 || size == 0) {
 		free(optr);
 		nptr = NULL;
 		memcpy(ptr, &nptr, sizeof(ptr));
 		errno = saved_errno;
 		return 0;
 	}
-	if ((num >= 65535 || size >= 65535) && num > SIZE_MAX / size)
+	if ((number >= 65535 || size >= 65535) && number > SIZE_MAX / size)
 		return EOVERFLOW;
-	nptr = realloc(optr, num * size);
+	nptr = realloc(optr, number * size);
 	if (nptr == NULL) {
 		result = errno;
 	} else {

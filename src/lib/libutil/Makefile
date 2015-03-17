@@ -82,6 +82,7 @@ MLINKS+=efun.3 estrtou.3
 MLINKS+=efun.3 emalloc.3
 MLINKS+=efun.3 ecalloc.3
 MLINKS+=efun.3 erealloc.3
+MLINKS+=efun.3 ereallocarr.3
 MLINKS+=efun.3 efopen.3
 MLINKS+=efun.3 evasprintf.3
 MLINKS+=stat_flags.3 string_to_flags.3
